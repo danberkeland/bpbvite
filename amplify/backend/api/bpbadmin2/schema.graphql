@@ -7,5 +7,6 @@ type Todo @model {
   name: String!
   other: String
   description: String
+  new: String
   nickName: String
 }
