@@ -1,17 +1,15 @@
 
 import React from 'react';
 import './App.css';
-import NewComp1 from './newComp1';
-import NewComp2 from './newComp2';
+import Customers from './Customers';
+import Products from './Products';
 
 function App() {
   return (
     <React.Fragment>
-      <NewComp1 />
-      <NewComp2 />
-      <div className="App">
-     Hello World!
-    </div>
+      <Customers />
+      <Products />
+      
     </React.Fragment>
   );
 }
