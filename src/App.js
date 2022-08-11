@@ -7,10 +7,10 @@ import Products from './Products';
 function App() {
   return (
     <React.Fragment>
-
+      Stuff
       <Customers />
       <Products />
- 
+      More Stuff
     </React.Fragment>
   );
 }
