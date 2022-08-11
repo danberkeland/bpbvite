@@ -9,3 +9,11 @@ type Todo2 @model {
   new: String
   nickName: String
 }
+
+type Todo3 @model {
+  id: ID!
+  name: String!
+  description: String
+  new: String
+  nickName: String
+}
