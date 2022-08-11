@@ -6,5 +6,6 @@ type Todo2 @model {
   id: ID!
   name: String!
   description: String
+  new: String
   nickName: String
 }
