@@ -1,0 +1,41 @@
+{
+  "prod": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-bpbadmin2-prod-74923-authRole",
+      "UnauthRoleArn": "arn:aws:iam::191477602114:role/amplify-bpbadmin2-prod-74923-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::191477602114:role/amplify-bpbadmin2-prod-74923-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-bpbadmin2-prod-74923-deployment",
+      "UnauthRoleName": "amplify-bpbadmin2-prod-74923-unauthRole",
+      "StackName": "amplify-bpbadmin2-prod-74923",
+      "StackId": "arn:aws:cloudformation:us-east-2:191477602114:stack/amplify-bpbadmin2-prod-74923/cb46ddb0-1984-11ed-8f83-06b491efaba2",
+      "AmplifyAppId": "d2nhue3419gd8g"
+    }
+  },
+  "test": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-bpbadmin2-test-75029-authRole",
+      "UnauthRoleArn": "arn:aws:iam::191477602114:role/amplify-bpbadmin2-test-75029-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::191477602114:role/amplify-bpbadmin2-test-75029-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-bpbadmin2-test-75029-deployment",
+      "UnauthRoleName": "amplify-bpbadmin2-test-75029-unauthRole",
+      "StackName": "amplify-bpbadmin2-test-75029",
+      "StackId": "arn:aws:cloudformation:us-east-2:191477602114:stack/amplify-bpbadmin2-test-75029/f229da40-1984-11ed-bd28-064fe35fbe20",
+      "AmplifyAppId": "d2nhue3419gd8g"
+    }
+  },
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-bpbadmin2-dev-75248-authRole",
+      "UnauthRoleArn": "arn:aws:iam::191477602114:role/amplify-bpbadmin2-dev-75248-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::191477602114:role/amplify-bpbadmin2-dev-75248-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-bpbadmin2-dev-75248-deployment",
+      "UnauthRoleName": "amplify-bpbadmin2-dev-75248-unauthRole",
+      "StackName": "amplify-bpbadmin2-dev-75248",
+      "StackId": "arn:aws:cloudformation:us-east-2:191477602114:stack/amplify-bpbadmin2-dev-75248/44ff4c00-1985-11ed-9483-0a366778153e",
+      "AmplifyAppId": "d2nhue3419gd8g"
+    }
+  }
+}
