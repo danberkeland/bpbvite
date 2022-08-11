@@ -9,9 +9,6 @@ function App() {
     <React.Fragment>
       <NewComp1 />
       <NewComp2 />
-      <div className="App">
-     Hello World!
-    </div>
     </React.Fragment>
   );
 }
