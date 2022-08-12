@@ -40,13 +40,9 @@ export const UserResetPassword = () => {
   };
 
   const onSubmit = async (data, form) => {
-    console.log("data", data);
     await Auth.completeNewPassword(user, data.newPassword).then((use) => {
-    console.log(use)
-    setFormType("onNoUser")
-    }
-    
-  );
+      setFormType("onNoUser");
+    });
   };
 
   const isFormFieldValid = (meta) => !!(meta.touched && meta.error);
@@ -99,9 +95,9 @@ export const UserResetPassword = () => {
             ></i>
             <h5>Registration Successful!</h5>
             <p style={{ lineHeight: 1.5, textIndent: "1rem" }}>
-              Your account is registered under name 
-              it'll be valid next 30 days without activation. Please check{" "}
-              <b></b>for activation instructions.
+              Your account is registered under name it'll be valid next 30 days
+              without activation. Please check <b></b>for activation
+              instructions.
             </p>
           </div>
         </Dialog>

@@ -73,6 +73,7 @@ export const Splash = () => {
     await Auth.signIn(data.email, data.password)
       .then((use) => {
         if (use.challengeName === "NEW_PASSWORD_REQUIRED") {
+          setUser(use)
           setFormType("resetPassword");
         } 
       })
