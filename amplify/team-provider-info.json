@@ -23,6 +23,11 @@
       "StackName": "amplify-bpbadmin2-auth-54059",
       "StackId": "arn:aws:cloudformation:us-east-2:191477602114:stack/amplify-bpbadmin2-auth-54059/06189e30-1a3c-11ed-bd80-02fdd3ffd060",
       "AmplifyAppId": "d2nhue3419gd8g"
+    },
+    "categories": {
+      "auth": {
+        "bpbadmin28b7be895": {}
+      }
     }
   }
 }
