@@ -11,5 +11,18 @@
       "StackId": "arn:aws:cloudformation:us-east-2:191477602114:stack/amplify-bpbadmin2-dev-75248/44ff4c00-1985-11ed-9483-0a366778153e",
       "AmplifyAppId": "d2nhue3419gd8g"
     }
+  },
+  "auth": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-bpbadmin2-auth-54059-authRole",
+      "UnauthRoleArn": "arn:aws:iam::191477602114:role/amplify-bpbadmin2-auth-54059-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::191477602114:role/amplify-bpbadmin2-auth-54059-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-bpbadmin2-auth-54059-deployment",
+      "UnauthRoleName": "amplify-bpbadmin2-auth-54059-unauthRole",
+      "StackName": "amplify-bpbadmin2-auth-54059",
+      "StackId": "arn:aws:cloudformation:us-east-2:191477602114:stack/amplify-bpbadmin2-auth-54059/06189e30-1a3c-11ed-bd80-02fdd3ffd060",
+      "AmplifyAppId": "d2nhue3419gd8g"
+    }
   }
 }

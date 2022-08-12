@@ -1,46 +1,358 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createTodo2 = /* GraphQL */ `
-  mutation CreateTodo2(
-    $input: CreateTodo2Input!
-    $condition: ModelTodo2ConditionInput
+export const createLocation = /* GraphQL */ `
+  mutation CreateLocation(
+    $input: CreateLocationInput!
+    $condition: ModelLocationConditionInput
   ) {
-    createTodo2(input: $input, condition: $condition) {
-      id
-      name
-      description
-      nickName
+    createLocation(input: $input, condition: $condition) {
+      locNick
+      locName
+      subs {
+        items {
+          id
+          authType
+          location_id
+          user_id
+          createdAt
+          updatedAt
+          locationSubsId
+          userLocsId
+        }
+        nextToken
+      }
+      zoneName
+      addr1
+      addr2
+      city
+      zip
+      email
+      phone
       createdAt
       updatedAt
     }
   }
 `;
-export const updateTodo2 = /* GraphQL */ `
-  mutation UpdateTodo2(
-    $input: UpdateTodo2Input!
-    $condition: ModelTodo2ConditionInput
+export const updateLocation = /* GraphQL */ `
+  mutation UpdateLocation(
+    $input: UpdateLocationInput!
+    $condition: ModelLocationConditionInput
   ) {
-    updateTodo2(input: $input, condition: $condition) {
-      id
-      name
-      description
-      nickName
+    updateLocation(input: $input, condition: $condition) {
+      locNick
+      locName
+      subs {
+        items {
+          id
+          authType
+          location_id
+          user_id
+          createdAt
+          updatedAt
+          locationSubsId
+          userLocsId
+        }
+        nextToken
+      }
+      zoneName
+      addr1
+      addr2
+      city
+      zip
+      email
+      phone
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteTodo2 = /* GraphQL */ `
-  mutation DeleteTodo2(
-    $input: DeleteTodo2Input!
-    $condition: ModelTodo2ConditionInput
+export const deleteLocation = /* GraphQL */ `
+  mutation DeleteLocation(
+    $input: DeleteLocationInput!
+    $condition: ModelLocationConditionInput
   ) {
-    deleteTodo2(input: $input, condition: $condition) {
+    deleteLocation(input: $input, condition: $condition) {
+      locNick
+      locName
+      subs {
+        items {
+          id
+          authType
+          location_id
+          user_id
+          createdAt
+          updatedAt
+          locationSubsId
+          userLocsId
+        }
+        nextToken
+      }
+      zoneName
+      addr1
+      addr2
+      city
+      zip
+      email
+      phone
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createUser = /* GraphQL */ `
+  mutation CreateUser(
+    $input: CreateUserInput!
+    $condition: ModelUserConditionInput
+  ) {
+    createUser(input: $input, condition: $condition) {
+      name
+      email
+      phone
+      sub
+      locs {
+        items {
+          id
+          authType
+          location_id
+          user_id
+          createdAt
+          updatedAt
+          locationSubsId
+          userLocsId
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateUser = /* GraphQL */ `
+  mutation UpdateUser(
+    $input: UpdateUserInput!
+    $condition: ModelUserConditionInput
+  ) {
+    updateUser(input: $input, condition: $condition) {
+      name
+      email
+      phone
+      sub
+      locs {
+        items {
+          id
+          authType
+          location_id
+          user_id
+          createdAt
+          updatedAt
+          locationSubsId
+          userLocsId
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteUser = /* GraphQL */ `
+  mutation DeleteUser(
+    $input: DeleteUserInput!
+    $condition: ModelUserConditionInput
+  ) {
+    deleteUser(input: $input, condition: $condition) {
+      name
+      email
+      phone
+      sub
+      locs {
+        items {
+          id
+          authType
+          location_id
+          user_id
+          createdAt
+          updatedAt
+          locationSubsId
+          userLocsId
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createLocationUser = /* GraphQL */ `
+  mutation CreateLocationUser(
+    $input: CreateLocationUserInput!
+    $condition: ModelLocationUserConditionInput
+  ) {
+    createLocationUser(input: $input, condition: $condition) {
+      id
+      authType
+      location_id
+      user_id
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneName
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        createdAt
+        updatedAt
+      }
+      user {
+        name
+        email
+        phone
+        sub
+        locs {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      locationSubsId
+      userLocsId
+    }
+  }
+`;
+export const updateLocationUser = /* GraphQL */ `
+  mutation UpdateLocationUser(
+    $input: UpdateLocationUserInput!
+    $condition: ModelLocationUserConditionInput
+  ) {
+    updateLocationUser(input: $input, condition: $condition) {
+      id
+      authType
+      location_id
+      user_id
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneName
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        createdAt
+        updatedAt
+      }
+      user {
+        name
+        email
+        phone
+        sub
+        locs {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      locationSubsId
+      userLocsId
+    }
+  }
+`;
+export const deleteLocationUser = /* GraphQL */ `
+  mutation DeleteLocationUser(
+    $input: DeleteLocationUserInput!
+    $condition: ModelLocationUserConditionInput
+  ) {
+    deleteLocationUser(input: $input, condition: $condition) {
+      id
+      authType
+      location_id
+      user_id
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneName
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        createdAt
+        updatedAt
+      }
+      user {
+        name
+        email
+        phone
+        sub
+        locs {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      locationSubsId
+      userLocsId
+    }
+  }
+`;
+export const createRequest = /* GraphQL */ `
+  mutation CreateRequest(
+    $input: CreateRequestInput!
+    $condition: ModelRequestConditionInput
+  ) {
+    createRequest(input: $input, condition: $condition) {
       id
       name
-      description
-      nickName
+      loc
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateRequest = /* GraphQL */ `
+  mutation UpdateRequest(
+    $input: UpdateRequestInput!
+    $condition: ModelRequestConditionInput
+  ) {
+    updateRequest(input: $input, condition: $condition) {
+      id
+      name
+      loc
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteRequest = /* GraphQL */ `
+  mutation DeleteRequest(
+    $input: DeleteRequestInput!
+    $condition: ModelRequestConditionInput
+  ) {
+    deleteRequest(input: $input, condition: $condition) {
+      id
+      name
+      loc
       createdAt
       updatedAt
     }
