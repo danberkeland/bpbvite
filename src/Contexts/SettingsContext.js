@@ -60,7 +60,7 @@ export const SettingsProvider = (props) => {
         userArray = userArray.filter((use) =>
           use.subs.includes(userDetails.sub)
         );
-
+       
         setUserList(userArray);
       });
     } catch (error) {
