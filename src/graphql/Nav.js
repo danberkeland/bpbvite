@@ -95,6 +95,13 @@ const itemsAuth2 = [
 
 const itemsAuth1 = itemsAuth2.concat([
   {
+    label: "Billing",
+    icon: "pi pi-fw pi-dollar",
+    command: () => {
+      window.location = "/Billing";
+    },
+  },
+  {
     label: "Settings",
     icon: "pi pi-fw pi-cog",
     command: () => {
