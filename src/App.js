@@ -15,8 +15,7 @@ import { UserApplyThanks } from "./Auth/UserApplyThanks";
 
 import Nav from "./graphql/Nav";
 
-import Customers from "./Customers";
-import Products from "./Products";
+import Pages from "./Pages";
 
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
@@ -91,8 +90,7 @@ export function App() {
       {formType === "signedIn" && (
         <React.Fragment>
           <Nav />
-          <Customers />
-          <Products />
+          <Pages />
         </React.Fragment>
       )}
       {formType === "onNoUser" && <Splash />}
