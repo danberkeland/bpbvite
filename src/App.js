@@ -13,7 +13,7 @@ import { UserApplyForm } from "./Auth/UserApplyForm";
 import { UserResetPassword } from "./Auth/UserResetPassword";
 import { UserApplyThanks } from "./Auth/UserApplyThanks";
 
-import Nav from "./Nav";
+import Nav from "./graphql/Nav";
 
 import Customers from "./Customers";
 import Products from "./Products";
