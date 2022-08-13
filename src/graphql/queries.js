@@ -73,6 +73,22 @@ export const getUser = /* GraphQL */ `
       email
       phone
       sub
+      defaultLoc {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneName
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        createdAt
+        updatedAt
+      }
       locs {
         items {
           id
@@ -88,6 +104,7 @@ export const getUser = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      userDefaultLocId
     }
   }
 `;
@@ -111,11 +128,25 @@ export const listUsers = /* GraphQL */ `
         email
         phone
         sub
+        defaultLoc {
+          locNick
+          locName
+          zoneName
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          createdAt
+          updatedAt
+        }
         locs {
           nextToken
         }
         createdAt
         updatedAt
+        userDefaultLocId
       }
       nextToken
     }
@@ -149,11 +180,25 @@ export const getLocationUser = /* GraphQL */ `
         email
         phone
         sub
+        defaultLoc {
+          locNick
+          locName
+          zoneName
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          createdAt
+          updatedAt
+        }
         locs {
           nextToken
         }
         createdAt
         updatedAt
+        userDefaultLocId
       }
       createdAt
       updatedAt
@@ -194,6 +239,7 @@ export const listLocationUsers = /* GraphQL */ `
           sub
           createdAt
           updatedAt
+          userDefaultLocId
         }
         createdAt
         updatedAt

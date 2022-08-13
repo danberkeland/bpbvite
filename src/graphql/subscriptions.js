@@ -98,6 +98,22 @@ export const onCreateUser = /* GraphQL */ `
       email
       phone
       sub
+      defaultLoc {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneName
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        createdAt
+        updatedAt
+      }
       locs {
         items {
           id
@@ -113,6 +129,7 @@ export const onCreateUser = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      userDefaultLocId
     }
   }
 `;
@@ -123,6 +140,22 @@ export const onUpdateUser = /* GraphQL */ `
       email
       phone
       sub
+      defaultLoc {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneName
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        createdAt
+        updatedAt
+      }
       locs {
         items {
           id
@@ -138,6 +171,7 @@ export const onUpdateUser = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      userDefaultLocId
     }
   }
 `;
@@ -148,6 +182,22 @@ export const onDeleteUser = /* GraphQL */ `
       email
       phone
       sub
+      defaultLoc {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneName
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        createdAt
+        updatedAt
+      }
       locs {
         items {
           id
@@ -163,6 +213,7 @@ export const onDeleteUser = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      userDefaultLocId
     }
   }
 `;
@@ -196,11 +247,25 @@ export const onCreateLocationUser = /* GraphQL */ `
         email
         phone
         sub
+        defaultLoc {
+          locNick
+          locName
+          zoneName
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          createdAt
+          updatedAt
+        }
         locs {
           nextToken
         }
         createdAt
         updatedAt
+        userDefaultLocId
       }
       createdAt
       updatedAt
@@ -239,11 +304,25 @@ export const onUpdateLocationUser = /* GraphQL */ `
         email
         phone
         sub
+        defaultLoc {
+          locNick
+          locName
+          zoneName
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          createdAt
+          updatedAt
+        }
         locs {
           nextToken
         }
         createdAt
         updatedAt
+        userDefaultLocId
       }
       createdAt
       updatedAt
@@ -282,11 +361,25 @@ export const onDeleteLocationUser = /* GraphQL */ `
         email
         phone
         sub
+        defaultLoc {
+          locNick
+          locName
+          zoneName
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          createdAt
+          updatedAt
+        }
         locs {
           nextToken
         }
         createdAt
         updatedAt
+        userDefaultLocId
       }
       createdAt
       updatedAt

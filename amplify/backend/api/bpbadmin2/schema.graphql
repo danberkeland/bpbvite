@@ -24,6 +24,7 @@ type User @model {
   email: String!
   phone: String
   sub: String! @primaryKey
+  defaultLoc: Location @hasOne
   locs: [LocationUser] @hasMany
 }
 

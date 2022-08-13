@@ -39,6 +39,8 @@ export function App() {
     authType,
     setUser,
     user,
+    chosen,
+    setChosen
   } = useContext(SettingsContext);
 
   useEffect(() => {
@@ -53,8 +55,12 @@ export function App() {
   }, []);
 
   useEffect(() => {
+    console.log("user",user)
     user &&
       fetchUserDetails(user.username).then((info) => {
+        console.log("userDetails",info)
+        console.log("defaultLoc",info.defaultLoc)
+        info.defaultLoc && setChosen(info.defaultLoc)
         setUserDetails({
           ...userDetails,
           userName: info.name,
@@ -66,7 +72,7 @@ export function App() {
   return (
     <React.Fragment>
    
-      Welcome {userDetails.userName}. Location: {userDetails.locName}. Authtype:{" "}
+      Welcome {userDetails.userName}. Location: {chosen.locName}. Authtype:{" "}
       {authType}.
       {formType === "signedIn" && (
         <React.Fragment>

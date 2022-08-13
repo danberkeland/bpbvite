@@ -119,7 +119,7 @@ function Nav() {
         setItems(itemsAuth3);
         break;
       default:
-        setItems(itemsAuth1);
+        setItems(itemsAuth4);
     }
   }, [authType]);
 
