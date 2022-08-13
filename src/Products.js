@@ -6,7 +6,7 @@ function Products() {
   return (
 
     <React.Fragment>
-      
+      Products
     </React.Fragment>
     
   );
