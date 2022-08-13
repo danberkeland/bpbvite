@@ -76,18 +76,20 @@ export const listAuth = /* GraphQL */ `
   ) {
     listLocationUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        authType
         id
-        locationID
-        userID
+        authType
+        location_id
+        user_id
         location {
-          locName
           locNick
-          subs {
-            items {
-              userID
-            }
-          }
+          locName
+          zoneName
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
           createdAt
           updatedAt
         }
@@ -98,9 +100,12 @@ export const listAuth = /* GraphQL */ `
           sub
           createdAt
           updatedAt
+          userDefaultLocId
         }
         createdAt
         updatedAt
+        locationSubsId
+        userLocsId
       }
       nextToken
     }

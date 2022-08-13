@@ -61,11 +61,12 @@ export const grabAuth = async (loc, sub) => {
   let info = await API.graphql(
     graphqlOperation(listAuth, {
       filter: {
-        locationID: { eq: loc },
-        userID: { eq: sub },
+        location_id: { eq: loc },
+        user_id: { eq: sub },
       },
     })
   );
+  console.log("authInfo",info)
   return info.data.listLocationUsers.items[0].authType;
 };
 

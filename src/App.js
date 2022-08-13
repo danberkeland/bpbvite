@@ -25,6 +25,7 @@ import "primeicons/primeicons.css";
 import {
   checkUser,
   fetchUserDetails,
+  grabAuth,
   setAuthListener,
 } from "./Auth/AuthHelpers";
 
@@ -37,6 +38,7 @@ export function App() {
     setFormType,
     formType,
     authType,
+    setAuthType,
     setUser,
     user,
     chosen,
@@ -68,6 +70,18 @@ export function App() {
         });
       });
   }, [user]);
+
+  useEffect(() => {
+    try {
+      grabAuth(chosen.locNick, userDetails.sub)
+        .then((sub) => {
+          setAuthType(sub);
+        })
+        .catch((err) => setAuthType(4));
+    } catch (err) {
+      console.log(err);
+    }
+  }, [chosen]);
 
   return (
     <React.Fragment>
