@@ -13,6 +13,7 @@ import Settings from "./Pages/Settings/Settings"
 import Billing from "./Pages/Billing/Billing"
 import EODCounts from "./Pages/EODCounts/EODCounts"
 import Logistics from "./Pages/Logistics/Logistics"
+import Locations from "./Pages/Locations/Locations";
 
 function Pages() {
   return (
@@ -29,8 +30,7 @@ function Pages() {
         <Route path="/Billing" element={<Billing />} />
         <Route path="/EODCounts" element={<EODCounts />} />
         <Route path="/Logistics" element={<Logistics />} />
-
-
+        <Route path="/Locations" element={<Locations />} />
       </Routes>
     </Router>
   );

@@ -2,9 +2,9 @@ import { Button } from "primereact/button";
 import { Menubar } from "primereact/menubar";
 import React, { useContext, useEffect, useState } from "react";
 
-import { SettingsContext } from "../Contexts/SettingsContext";
+import { SettingsContext } from "./Contexts/SettingsContext";
 
-import { authSignOut } from "../Auth/AuthHelpers";
+import { authSignOut } from "./Auth/AuthHelpers";
 
 import styled from "styled-components";
 

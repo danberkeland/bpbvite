@@ -25,7 +25,23 @@ export const onCreateLocation = /* GraphQL */ `
       city
       zip
       email
+      firstName
+      lastName
       phone
+      toBePrinted
+      toBeEmailed
+      printDuplicate
+      terms
+      invoicing
+      latestFirstDeliv
+      latestFinalDeliv
+      webpageURL
+      picURL
+      gMap
+      specialInstructions
+      delivOrder
+      qbID
+      currentBalance
       createdAt
       updatedAt
     }
@@ -55,7 +71,23 @@ export const onUpdateLocation = /* GraphQL */ `
       city
       zip
       email
+      firstName
+      lastName
       phone
+      toBePrinted
+      toBeEmailed
+      printDuplicate
+      terms
+      invoicing
+      latestFirstDeliv
+      latestFinalDeliv
+      webpageURL
+      picURL
+      gMap
+      specialInstructions
+      delivOrder
+      qbID
+      currentBalance
       createdAt
       updatedAt
     }
@@ -85,24 +117,6 @@ export const onDeleteLocation = /* GraphQL */ `
       city
       zip
       email
-      phone
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateLocation2 = /* GraphQL */ `
-  subscription OnCreateLocation2 {
-    onCreateLocation2 {
-      id
-      locNick
-      locName
-      zoneName
-      addr1
-      addr2
-      city
-      zip
-      email
       firstName
       lastName
       phone
@@ -125,12 +139,12 @@ export const onCreateLocation2 = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateLocation2 = /* GraphQL */ `
-  subscription OnUpdateLocation2 {
-    onUpdateLocation2 {
+export const onCreateLocationBackup = /* GraphQL */ `
+  subscription OnCreateLocationBackup {
+    onCreateLocationBackup {
       id
-      locNick
-      locName
+      nickName
+      custName
       zoneName
       addr1
       addr2
@@ -145,6 +159,7 @@ export const onUpdateLocation2 = /* GraphQL */ `
       printDuplicate
       terms
       invoicing
+      prodsNotAllowed
       latestFirstDeliv
       latestFinalDeliv
       webpageURL
@@ -152,6 +167,9 @@ export const onUpdateLocation2 = /* GraphQL */ `
       gMap
       specialInstructions
       delivOrder
+      customProd
+      templateProd
+      userSubs
       qbID
       currentBalance
       createdAt
@@ -159,12 +177,12 @@ export const onUpdateLocation2 = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteLocation2 = /* GraphQL */ `
-  subscription OnDeleteLocation2 {
-    onDeleteLocation2 {
+export const onUpdateLocationBackup = /* GraphQL */ `
+  subscription OnUpdateLocationBackup {
+    onUpdateLocationBackup {
       id
-      locNick
-      locName
+      nickName
+      custName
       zoneName
       addr1
       addr2
@@ -179,6 +197,7 @@ export const onDeleteLocation2 = /* GraphQL */ `
       printDuplicate
       terms
       invoicing
+      prodsNotAllowed
       latestFirstDeliv
       latestFinalDeliv
       webpageURL
@@ -186,6 +205,47 @@ export const onDeleteLocation2 = /* GraphQL */ `
       gMap
       specialInstructions
       delivOrder
+      customProd
+      templateProd
+      userSubs
+      qbID
+      currentBalance
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteLocationBackup = /* GraphQL */ `
+  subscription OnDeleteLocationBackup {
+    onDeleteLocationBackup {
+      id
+      nickName
+      custName
+      zoneName
+      addr1
+      addr2
+      city
+      zip
+      email
+      firstName
+      lastName
+      phone
+      toBePrinted
+      toBeEmailed
+      printDuplicate
+      terms
+      invoicing
+      prodsNotAllowed
+      latestFirstDeliv
+      latestFinalDeliv
+      webpageURL
+      picURL
+      gMap
+      specialInstructions
+      delivOrder
+      customProd
+      templateProd
+      userSubs
       qbID
       currentBalance
       createdAt
@@ -212,7 +272,23 @@ export const onCreateUser = /* GraphQL */ `
         city
         zip
         email
+        firstName
+        lastName
         phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
         createdAt
         updatedAt
       }
@@ -254,7 +330,23 @@ export const onUpdateUser = /* GraphQL */ `
         city
         zip
         email
+        firstName
+        lastName
         phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
         createdAt
         updatedAt
       }
@@ -296,7 +388,23 @@ export const onDeleteUser = /* GraphQL */ `
         city
         zip
         email
+        firstName
+        lastName
         phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
         createdAt
         updatedAt
       }
@@ -340,7 +448,23 @@ export const onCreateLocationUser = /* GraphQL */ `
         city
         zip
         email
+        firstName
+        lastName
         phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
         createdAt
         updatedAt
       }
@@ -358,7 +482,23 @@ export const onCreateLocationUser = /* GraphQL */ `
           city
           zip
           email
+          firstName
+          lastName
           phone
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
           createdAt
           updatedAt
         }
@@ -397,7 +537,23 @@ export const onUpdateLocationUser = /* GraphQL */ `
         city
         zip
         email
+        firstName
+        lastName
         phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
         createdAt
         updatedAt
       }
@@ -415,7 +571,23 @@ export const onUpdateLocationUser = /* GraphQL */ `
           city
           zip
           email
+          firstName
+          lastName
           phone
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
           createdAt
           updatedAt
         }
@@ -454,7 +626,23 @@ export const onDeleteLocationUser = /* GraphQL */ `
         city
         zip
         email
+        firstName
+        lastName
         phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
         createdAt
         updatedAt
       }
@@ -472,7 +660,23 @@ export const onDeleteLocationUser = /* GraphQL */ `
           city
           zip
           email
+          firstName
+          lastName
           phone
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
           createdAt
           updatedAt
         }

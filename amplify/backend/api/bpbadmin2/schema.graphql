@@ -15,19 +15,6 @@ type Location @model {
   city: String
   zip: String
   email: String
-  phone: String
-}
-
-type Location2 @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  locNick: String! @primaryKey
-  locName: String!
-  zoneName: String
-  addr1: String
-  addr2: String
-  city: String
-  zip: String
-  email: String
   firstName: String
   lastName: String
   phone: String
@@ -43,6 +30,40 @@ type Location2 @model @auth(rules: [{allow: public}]) {
   gMap: String
   specialInstructions: String
   delivOrder: Int
+  qbID: String
+  currentBalance: String
+}
+
+
+type LocationBackup @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  nickName: String!
+  custName: String!
+  zoneName: String
+  addr1: String
+  addr2: String
+  city: String
+  zip: String
+  email: String
+  firstName: String
+  lastName: String
+  phone: String
+  toBePrinted: Boolean
+  toBeEmailed: Boolean
+  printDuplicate: Boolean
+  terms: String
+  invoicing: String
+  prodsNotAllowed: [String]
+  latestFirstDeliv: Float
+  latestFinalDeliv: Float
+  webpageURL: String
+  picURL: String
+  gMap: String
+  specialInstructions: String
+  delivOrder: Int
+  customProd: [String]
+  templateProd: [String]
+  userSubs: [String]
   qbID: String
   currentBalance: String
 }

@@ -25,7 +25,23 @@ export const getLocation = /* GraphQL */ `
       city
       zip
       email
+      firstName
+      lastName
       phone
+      toBePrinted
+      toBeEmailed
+      printDuplicate
+      terms
+      invoicing
+      latestFirstDeliv
+      latestFinalDeliv
+      webpageURL
+      picURL
+      gMap
+      specialInstructions
+      delivOrder
+      qbID
+      currentBalance
       createdAt
       updatedAt
     }
@@ -58,73 +74,6 @@ export const listLocations = /* GraphQL */ `
         city
         zip
         email
-        phone
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getLocation2 = /* GraphQL */ `
-  query GetLocation2($locNick: String!) {
-    getLocation2(locNick: $locNick) {
-      id
-      locNick
-      locName
-      zoneName
-      addr1
-      addr2
-      city
-      zip
-      email
-      firstName
-      lastName
-      phone
-      toBePrinted
-      toBeEmailed
-      printDuplicate
-      terms
-      invoicing
-      latestFirstDeliv
-      latestFinalDeliv
-      webpageURL
-      picURL
-      gMap
-      specialInstructions
-      delivOrder
-      qbID
-      currentBalance
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listLocation2s = /* GraphQL */ `
-  query ListLocation2s(
-    $locNick: String
-    $filter: ModelLocation2FilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listLocation2s(
-      locNick: $locNick
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        locNick
-        locName
-        zoneName
-        addr1
-        addr2
-        city
-        zip
-        email
         firstName
         lastName
         phone
@@ -140,6 +89,89 @@ export const listLocation2s = /* GraphQL */ `
         gMap
         specialInstructions
         delivOrder
+        qbID
+        currentBalance
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getLocationBackup = /* GraphQL */ `
+  query GetLocationBackup($id: ID!) {
+    getLocationBackup(id: $id) {
+      id
+      nickName
+      custName
+      zoneName
+      addr1
+      addr2
+      city
+      zip
+      email
+      firstName
+      lastName
+      phone
+      toBePrinted
+      toBeEmailed
+      printDuplicate
+      terms
+      invoicing
+      prodsNotAllowed
+      latestFirstDeliv
+      latestFinalDeliv
+      webpageURL
+      picURL
+      gMap
+      specialInstructions
+      delivOrder
+      customProd
+      templateProd
+      userSubs
+      qbID
+      currentBalance
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listLocationBackups = /* GraphQL */ `
+  query ListLocationBackups(
+    $filter: ModelLocationBackupFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listLocationBackups(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        nickName
+        custName
+        zoneName
+        addr1
+        addr2
+        city
+        zip
+        email
+        firstName
+        lastName
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        prodsNotAllowed
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        customProd
+        templateProd
+        userSubs
         qbID
         currentBalance
         createdAt
@@ -168,7 +200,23 @@ export const getUser = /* GraphQL */ `
         city
         zip
         email
+        firstName
+        lastName
         phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
         createdAt
         updatedAt
       }
@@ -220,7 +268,23 @@ export const listUsers = /* GraphQL */ `
           city
           zip
           email
+          firstName
+          lastName
           phone
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
           createdAt
           updatedAt
         }
@@ -254,7 +318,23 @@ export const getLocationUser = /* GraphQL */ `
         city
         zip
         email
+        firstName
+        lastName
         phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
         createdAt
         updatedAt
       }
@@ -272,7 +352,23 @@ export const getLocationUser = /* GraphQL */ `
           city
           zip
           email
+          firstName
+          lastName
           phone
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
           createdAt
           updatedAt
         }
@@ -311,7 +407,23 @@ export const listLocationUsers = /* GraphQL */ `
           city
           zip
           email
+          firstName
+          lastName
           phone
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
           createdAt
           updatedAt
         }
