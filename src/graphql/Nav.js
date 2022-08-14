@@ -110,6 +110,7 @@ const itemsAuth1 = itemsAuth2.concat([
   },
 ]);
 
+
 function Nav() {
   const { setFormType, chosen, authType } = useContext(SettingsContext);
   const [items, setItems] = useState([]);
@@ -125,8 +126,11 @@ function Nav() {
       case 3:
         setItems(itemsAuth3);
         break;
-      default:
+      case 4:
         setItems(itemsAuth4);
+        break
+      default:
+        setItems([])
     }
   }, [authType]);
 

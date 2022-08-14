@@ -17,7 +17,7 @@ import { CenteredContainer, Title } from "../CommonStyles";
 
 export const UserResetPassword = () => {
   const [showMessage, setShowMessage] = useState(false);
-  const { formData, setFormType, user } = useContext(SettingsContext);
+  const { formData, setFormType, user, setIsLoading } = useContext(SettingsContext);
 
   const validate = (data) => {
     let errors = {};
@@ -40,8 +40,10 @@ export const UserResetPassword = () => {
   };
 
   const onSubmit = async (data, form) => {
+    setIsLoading(true)
     await Auth.completeNewPassword(user, data.newPassword).then((use) => {
       setFormType("onNoUser");
+      setIsLoading(false)
     });
   };
 

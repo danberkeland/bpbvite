@@ -40,7 +40,7 @@ const getFormErrorMessage = (meta) => {
 export const Splash = () => {
   const [showMessage, setShowMessage] = useState(false);
 
-  const { formData, setFormType, setUser } = useContext(SettingsContext);
+  const { formData, setFormType, setUser, setIsLoading } = useContext(SettingsContext);
 
   const dialogFooter = (
     <div className="flex justify-content-center">
@@ -70,12 +70,14 @@ export const Splash = () => {
 
   const onSubmit = async (data, form) => {
     console.log("data", data);
+    setIsLoading(true)
     await Auth.signIn(data.email, data.password)
       .then((use) => {
         if (use.challengeName === "NEW_PASSWORD_REQUIRED") {
           setUser(use)
           setFormType("resetPassword");
         } 
+        setIsLoading(false)
       })
       .catch((error) => {
         if (error) {

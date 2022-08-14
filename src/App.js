@@ -83,7 +83,7 @@ export function App() {
         .then((sub) => {
           setAuthType(sub);
         })
-        .catch((err) => setAuthType(4));
+        .catch((err) => setAuthType(0));
     } catch (err) {
       console.log(err);
     }
