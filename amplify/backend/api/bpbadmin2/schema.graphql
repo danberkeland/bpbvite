@@ -43,3 +43,96 @@ type Request @model {
   name: String!
   loc: String!
 }
+
+type Product @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  prodName: String!
+  nickName: String! @primaryKey
+  packGroup: String
+  packSize: Int
+  doughType: String
+  freezerThaw: Boolean
+  eodCount: Boolean
+  packGroupOrder: Int
+  readyTime: Float
+  bakedWhere: [String]
+  wholePrice: Float
+  retailPrice: Float
+  isWhole: Boolean
+  depends: String
+  weight: Float
+  descrip: String
+  picURL: String
+  squareID: String
+  currentStock: Int
+  whoCountedLast: String
+  forBake: String
+  bakeExtra: Int
+  batchSize: Int
+  preshaped: Int
+  prepreshaped: Int
+  updatePreDate: String
+  updateFreezerDate: String
+  backporchbakerypre: Int
+  backporchbakery: Int
+  bpbextrapre: Int
+  bpbextra: Int
+  bpbssetoutpre: Int
+  bpbssetout: Int
+  defaultInclude: Boolean
+  leadTime: Int
+  qbID: String
+  freezerCount: Int
+  freezerClosing: Int
+  sheetMake: Int
+  freezerNorth: Int
+  freezerNorthClosing: Int
+  freezerNorthFlag: String
+}
+
+
+type ProductBackup @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  prodName: String!
+  nickName: String! 
+  packGroup: String
+  packSize: Int
+  doughType: String
+  freezerThaw: Boolean
+  eodCount: Boolean
+  packGroupOrder: Int
+  readyTime: Float
+  bakedWhere: [String]
+  wholePrice: Float
+  retailPrice: Float
+  isWhole: Boolean
+  depends: String
+  weight: Float
+  descrip: String
+  picURL: String
+  squareID: String
+  currentStock: Int
+  whoCountedLast: String
+  forBake: String
+  bakeExtra: Int
+  batchSize: Int
+  preshaped: Int
+  prepreshaped: Int
+  updatePreDate: String
+  updateFreezerDate: String
+  backporchbakerypre: Int
+  backporchbakery: Int
+  bpbextrapre: Int
+  bpbextra: Int
+  bpbssetoutpre: Int
+  bpbssetout: Int
+  defaultInclude: Boolean
+  leadTime: Int
+  qbID: String
+  freezerCount: Int
+  freezerClosing: Int
+  sheetMake: Int
+  freezerNorth: Int
+  freezerNorthClosing: Int
+  freezerNorthFlag: String
+}

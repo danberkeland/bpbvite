@@ -279,3 +279,229 @@ export const listRequests = /* GraphQL */ `
     }
   }
 `;
+export const getProduct = /* GraphQL */ `
+  query GetProduct($nickName: String!) {
+    getProduct(nickName: $nickName) {
+      id
+      prodName
+      nickName
+      packGroup
+      packSize
+      doughType
+      freezerThaw
+      eodCount
+      packGroupOrder
+      readyTime
+      bakedWhere
+      wholePrice
+      retailPrice
+      isWhole
+      depends
+      weight
+      descrip
+      picURL
+      squareID
+      currentStock
+      whoCountedLast
+      forBake
+      bakeExtra
+      batchSize
+      preshaped
+      prepreshaped
+      updatePreDate
+      updateFreezerDate
+      backporchbakerypre
+      backporchbakery
+      bpbextrapre
+      bpbextra
+      bpbssetoutpre
+      bpbssetout
+      defaultInclude
+      leadTime
+      qbID
+      freezerCount
+      freezerClosing
+      sheetMake
+      freezerNorth
+      freezerNorthClosing
+      freezerNorthFlag
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listProducts = /* GraphQL */ `
+  query ListProducts(
+    $nickName: String
+    $filter: ModelProductFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listProducts(
+      nickName: $nickName
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        prodName
+        nickName
+        packGroup
+        packSize
+        doughType
+        freezerThaw
+        eodCount
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        depends
+        weight
+        descrip
+        picURL
+        squareID
+        currentStock
+        whoCountedLast
+        forBake
+        bakeExtra
+        batchSize
+        preshaped
+        prepreshaped
+        updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        defaultInclude
+        leadTime
+        qbID
+        freezerCount
+        freezerClosing
+        sheetMake
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getProductBackup = /* GraphQL */ `
+  query GetProductBackup($id: ID!) {
+    getProductBackup(id: $id) {
+      id
+      prodName
+      nickName
+      packGroup
+      packSize
+      doughType
+      freezerThaw
+      eodCount
+      packGroupOrder
+      readyTime
+      bakedWhere
+      wholePrice
+      retailPrice
+      isWhole
+      depends
+      weight
+      descrip
+      picURL
+      squareID
+      currentStock
+      whoCountedLast
+      forBake
+      bakeExtra
+      batchSize
+      preshaped
+      prepreshaped
+      updatePreDate
+      updateFreezerDate
+      backporchbakerypre
+      backporchbakery
+      bpbextrapre
+      bpbextra
+      bpbssetoutpre
+      bpbssetout
+      defaultInclude
+      leadTime
+      qbID
+      freezerCount
+      freezerClosing
+      sheetMake
+      freezerNorth
+      freezerNorthClosing
+      freezerNorthFlag
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listProductBackups = /* GraphQL */ `
+  query ListProductBackups(
+    $filter: ModelProductBackupFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listProductBackups(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        prodName
+        nickName
+        packGroup
+        packSize
+        doughType
+        freezerThaw
+        eodCount
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        depends
+        weight
+        descrip
+        picURL
+        squareID
+        currentStock
+        whoCountedLast
+        forBake
+        bakeExtra
+        batchSize
+        preshaped
+        prepreshaped
+        updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        defaultInclude
+        leadTime
+        qbID
+        freezerCount
+        freezerClosing
+        sheetMake
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
