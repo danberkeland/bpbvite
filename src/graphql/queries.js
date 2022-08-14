@@ -66,6 +66,89 @@ export const listLocations = /* GraphQL */ `
     }
   }
 `;
+export const getLocation2 = /* GraphQL */ `
+  query GetLocation2($locNick: String!) {
+    getLocation2(locNick: $locNick) {
+      id
+      locNick
+      locName
+      zoneName
+      addr1
+      addr2
+      city
+      zip
+      email
+      firstName
+      lastName
+      phone
+      toBePrinted
+      toBeEmailed
+      printDuplicate
+      terms
+      invoicing
+      latestFirstDeliv
+      latestFinalDeliv
+      webpageURL
+      picURL
+      gMap
+      specialInstructions
+      delivOrder
+      qbID
+      currentBalance
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listLocation2s = /* GraphQL */ `
+  query ListLocation2s(
+    $locNick: String
+    $filter: ModelLocation2FilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listLocation2s(
+      locNick: $locNick
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        locNick
+        locName
+        zoneName
+        addr1
+        addr2
+        city
+        zip
+        email
+        firstName
+        lastName
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getUser = /* GraphQL */ `
   query GetUser($sub: String!) {
     getUser(sub: $sub) {
@@ -345,115 +428,6 @@ export const listProducts = /* GraphQL */ `
       nextToken: $nextToken
       sortDirection: $sortDirection
     ) {
-      items {
-        id
-        prodName
-        nickName
-        packGroup
-        packSize
-        doughType
-        freezerThaw
-        eodCount
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        depends
-        weight
-        descrip
-        picURL
-        squareID
-        currentStock
-        whoCountedLast
-        forBake
-        bakeExtra
-        batchSize
-        preshaped
-        prepreshaped
-        updatePreDate
-        updateFreezerDate
-        backporchbakerypre
-        backporchbakery
-        bpbextrapre
-        bpbextra
-        bpbssetoutpre
-        bpbssetout
-        defaultInclude
-        leadTime
-        qbID
-        freezerCount
-        freezerClosing
-        sheetMake
-        freezerNorth
-        freezerNorthClosing
-        freezerNorthFlag
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getProductBackup = /* GraphQL */ `
-  query GetProductBackup($id: ID!) {
-    getProductBackup(id: $id) {
-      id
-      prodName
-      nickName
-      packGroup
-      packSize
-      doughType
-      freezerThaw
-      eodCount
-      packGroupOrder
-      readyTime
-      bakedWhere
-      wholePrice
-      retailPrice
-      isWhole
-      depends
-      weight
-      descrip
-      picURL
-      squareID
-      currentStock
-      whoCountedLast
-      forBake
-      bakeExtra
-      batchSize
-      preshaped
-      prepreshaped
-      updatePreDate
-      updateFreezerDate
-      backporchbakerypre
-      backporchbakery
-      bpbextrapre
-      bpbextra
-      bpbssetoutpre
-      bpbssetout
-      defaultInclude
-      leadTime
-      qbID
-      freezerCount
-      freezerClosing
-      sheetMake
-      freezerNorth
-      freezerNorthClosing
-      freezerNorthFlag
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listProductBackups = /* GraphQL */ `
-  query ListProductBackups(
-    $filter: ModelProductBackupFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listProductBackups(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         prodName

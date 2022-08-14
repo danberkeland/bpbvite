@@ -16,8 +16,37 @@ type Location @model {
   zip: String
   email: String
   phone: String
-  
 }
+
+type Location2 @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  locNick: String! @primaryKey
+  locName: String!
+  zoneName: String
+  addr1: String
+  addr2: String
+  city: String
+  zip: String
+  email: String
+  firstName: String
+  lastName: String
+  phone: String
+  toBePrinted: Boolean
+  toBeEmailed: Boolean
+  printDuplicate: Boolean
+  terms: String
+  invoicing: String
+  latestFirstDeliv: Float
+  latestFinalDeliv: Float
+  webpageURL: String
+  picURL: String
+  gMap: String
+  specialInstructions: String
+  delivOrder: Int
+  qbID: String
+  currentBalance: String
+}
+
 
 type User @model {
   name: String!
@@ -90,49 +119,3 @@ type Product @model @auth(rules: [{allow: public}]) {
   freezerNorthFlag: String
 }
 
-
-type ProductBackup @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  prodName: String!
-  nickName: String! 
-  packGroup: String
-  packSize: Int
-  doughType: String
-  freezerThaw: Boolean
-  eodCount: Boolean
-  packGroupOrder: Int
-  readyTime: Float
-  bakedWhere: [String]
-  wholePrice: Float
-  retailPrice: Float
-  isWhole: Boolean
-  depends: String
-  weight: Float
-  descrip: String
-  picURL: String
-  squareID: String
-  currentStock: Int
-  whoCountedLast: String
-  forBake: String
-  bakeExtra: Int
-  batchSize: Int
-  preshaped: Int
-  prepreshaped: Int
-  updatePreDate: String
-  updateFreezerDate: String
-  backporchbakerypre: Int
-  backporchbakery: Int
-  bpbextrapre: Int
-  bpbextra: Int
-  bpbssetoutpre: Int
-  bpbssetout: Int
-  defaultInclude: Boolean
-  leadTime: Int
-  qbID: String
-  freezerCount: Int
-  freezerClosing: Int
-  sheetMake: Int
-  freezerNorth: Int
-  freezerNorthClosing: Int
-  freezerNorthFlag: String
-}

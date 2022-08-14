@@ -100,6 +100,117 @@ export const deleteLocation = /* GraphQL */ `
     }
   }
 `;
+export const createLocation2 = /* GraphQL */ `
+  mutation CreateLocation2(
+    $input: CreateLocation2Input!
+    $condition: ModelLocation2ConditionInput
+  ) {
+    createLocation2(input: $input, condition: $condition) {
+      id
+      locNick
+      locName
+      zoneName
+      addr1
+      addr2
+      city
+      zip
+      email
+      firstName
+      lastName
+      phone
+      toBePrinted
+      toBeEmailed
+      printDuplicate
+      terms
+      invoicing
+      latestFirstDeliv
+      latestFinalDeliv
+      webpageURL
+      picURL
+      gMap
+      specialInstructions
+      delivOrder
+      qbID
+      currentBalance
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateLocation2 = /* GraphQL */ `
+  mutation UpdateLocation2(
+    $input: UpdateLocation2Input!
+    $condition: ModelLocation2ConditionInput
+  ) {
+    updateLocation2(input: $input, condition: $condition) {
+      id
+      locNick
+      locName
+      zoneName
+      addr1
+      addr2
+      city
+      zip
+      email
+      firstName
+      lastName
+      phone
+      toBePrinted
+      toBeEmailed
+      printDuplicate
+      terms
+      invoicing
+      latestFirstDeliv
+      latestFinalDeliv
+      webpageURL
+      picURL
+      gMap
+      specialInstructions
+      delivOrder
+      qbID
+      currentBalance
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteLocation2 = /* GraphQL */ `
+  mutation DeleteLocation2(
+    $input: DeleteLocation2Input!
+    $condition: ModelLocation2ConditionInput
+  ) {
+    deleteLocation2(input: $input, condition: $condition) {
+      id
+      locNick
+      locName
+      zoneName
+      addr1
+      addr2
+      city
+      zip
+      email
+      firstName
+      lastName
+      phone
+      toBePrinted
+      toBeEmailed
+      printDuplicate
+      terms
+      invoicing
+      latestFirstDeliv
+      latestFinalDeliv
+      webpageURL
+      picURL
+      gMap
+      specialInstructions
+      delivOrder
+      qbID
+      currentBalance
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createUser = /* GraphQL */ `
   mutation CreateUser(
     $input: CreateUserInput!
@@ -565,168 +676,6 @@ export const deleteProduct = /* GraphQL */ `
     $condition: ModelProductConditionInput
   ) {
     deleteProduct(input: $input, condition: $condition) {
-      id
-      prodName
-      nickName
-      packGroup
-      packSize
-      doughType
-      freezerThaw
-      eodCount
-      packGroupOrder
-      readyTime
-      bakedWhere
-      wholePrice
-      retailPrice
-      isWhole
-      depends
-      weight
-      descrip
-      picURL
-      squareID
-      currentStock
-      whoCountedLast
-      forBake
-      bakeExtra
-      batchSize
-      preshaped
-      prepreshaped
-      updatePreDate
-      updateFreezerDate
-      backporchbakerypre
-      backporchbakery
-      bpbextrapre
-      bpbextra
-      bpbssetoutpre
-      bpbssetout
-      defaultInclude
-      leadTime
-      qbID
-      freezerCount
-      freezerClosing
-      sheetMake
-      freezerNorth
-      freezerNorthClosing
-      freezerNorthFlag
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createProductBackup = /* GraphQL */ `
-  mutation CreateProductBackup(
-    $input: CreateProductBackupInput!
-    $condition: ModelProductBackupConditionInput
-  ) {
-    createProductBackup(input: $input, condition: $condition) {
-      id
-      prodName
-      nickName
-      packGroup
-      packSize
-      doughType
-      freezerThaw
-      eodCount
-      packGroupOrder
-      readyTime
-      bakedWhere
-      wholePrice
-      retailPrice
-      isWhole
-      depends
-      weight
-      descrip
-      picURL
-      squareID
-      currentStock
-      whoCountedLast
-      forBake
-      bakeExtra
-      batchSize
-      preshaped
-      prepreshaped
-      updatePreDate
-      updateFreezerDate
-      backporchbakerypre
-      backporchbakery
-      bpbextrapre
-      bpbextra
-      bpbssetoutpre
-      bpbssetout
-      defaultInclude
-      leadTime
-      qbID
-      freezerCount
-      freezerClosing
-      sheetMake
-      freezerNorth
-      freezerNorthClosing
-      freezerNorthFlag
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateProductBackup = /* GraphQL */ `
-  mutation UpdateProductBackup(
-    $input: UpdateProductBackupInput!
-    $condition: ModelProductBackupConditionInput
-  ) {
-    updateProductBackup(input: $input, condition: $condition) {
-      id
-      prodName
-      nickName
-      packGroup
-      packSize
-      doughType
-      freezerThaw
-      eodCount
-      packGroupOrder
-      readyTime
-      bakedWhere
-      wholePrice
-      retailPrice
-      isWhole
-      depends
-      weight
-      descrip
-      picURL
-      squareID
-      currentStock
-      whoCountedLast
-      forBake
-      bakeExtra
-      batchSize
-      preshaped
-      prepreshaped
-      updatePreDate
-      updateFreezerDate
-      backporchbakerypre
-      backporchbakery
-      bpbextrapre
-      bpbextra
-      bpbssetoutpre
-      bpbssetout
-      defaultInclude
-      leadTime
-      qbID
-      freezerCount
-      freezerClosing
-      sheetMake
-      freezerNorth
-      freezerNorthClosing
-      freezerNorthFlag
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteProductBackup = /* GraphQL */ `
-  mutation DeleteProductBackup(
-    $input: DeleteProductBackupInput!
-    $condition: ModelProductBackupConditionInput
-  ) {
-    deleteProductBackup(input: $input, condition: $condition) {
       id
       prodName
       nickName

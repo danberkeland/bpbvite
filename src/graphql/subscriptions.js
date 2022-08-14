@@ -91,6 +91,108 @@ export const onDeleteLocation = /* GraphQL */ `
     }
   }
 `;
+export const onCreateLocation2 = /* GraphQL */ `
+  subscription OnCreateLocation2 {
+    onCreateLocation2 {
+      id
+      locNick
+      locName
+      zoneName
+      addr1
+      addr2
+      city
+      zip
+      email
+      firstName
+      lastName
+      phone
+      toBePrinted
+      toBeEmailed
+      printDuplicate
+      terms
+      invoicing
+      latestFirstDeliv
+      latestFinalDeliv
+      webpageURL
+      picURL
+      gMap
+      specialInstructions
+      delivOrder
+      qbID
+      currentBalance
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateLocation2 = /* GraphQL */ `
+  subscription OnUpdateLocation2 {
+    onUpdateLocation2 {
+      id
+      locNick
+      locName
+      zoneName
+      addr1
+      addr2
+      city
+      zip
+      email
+      firstName
+      lastName
+      phone
+      toBePrinted
+      toBeEmailed
+      printDuplicate
+      terms
+      invoicing
+      latestFirstDeliv
+      latestFinalDeliv
+      webpageURL
+      picURL
+      gMap
+      specialInstructions
+      delivOrder
+      qbID
+      currentBalance
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteLocation2 = /* GraphQL */ `
+  subscription OnDeleteLocation2 {
+    onDeleteLocation2 {
+      id
+      locNick
+      locName
+      zoneName
+      addr1
+      addr2
+      city
+      zip
+      email
+      firstName
+      lastName
+      phone
+      toBePrinted
+      toBeEmailed
+      printDuplicate
+      terms
+      invoicing
+      latestFirstDeliv
+      latestFinalDeliv
+      webpageURL
+      picURL
+      gMap
+      specialInstructions
+      delivOrder
+      qbID
+      currentBalance
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateUser = /* GraphQL */ `
   subscription OnCreateUser($filter: ModelSubscriptionUserFilterInput) {
     onCreateUser(filter: $filter) {
@@ -526,159 +628,6 @@ export const onUpdateProduct = /* GraphQL */ `
 export const onDeleteProduct = /* GraphQL */ `
   subscription OnDeleteProduct {
     onDeleteProduct {
-      id
-      prodName
-      nickName
-      packGroup
-      packSize
-      doughType
-      freezerThaw
-      eodCount
-      packGroupOrder
-      readyTime
-      bakedWhere
-      wholePrice
-      retailPrice
-      isWhole
-      depends
-      weight
-      descrip
-      picURL
-      squareID
-      currentStock
-      whoCountedLast
-      forBake
-      bakeExtra
-      batchSize
-      preshaped
-      prepreshaped
-      updatePreDate
-      updateFreezerDate
-      backporchbakerypre
-      backporchbakery
-      bpbextrapre
-      bpbextra
-      bpbssetoutpre
-      bpbssetout
-      defaultInclude
-      leadTime
-      qbID
-      freezerCount
-      freezerClosing
-      sheetMake
-      freezerNorth
-      freezerNorthClosing
-      freezerNorthFlag
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateProductBackup = /* GraphQL */ `
-  subscription OnCreateProductBackup {
-    onCreateProductBackup {
-      id
-      prodName
-      nickName
-      packGroup
-      packSize
-      doughType
-      freezerThaw
-      eodCount
-      packGroupOrder
-      readyTime
-      bakedWhere
-      wholePrice
-      retailPrice
-      isWhole
-      depends
-      weight
-      descrip
-      picURL
-      squareID
-      currentStock
-      whoCountedLast
-      forBake
-      bakeExtra
-      batchSize
-      preshaped
-      prepreshaped
-      updatePreDate
-      updateFreezerDate
-      backporchbakerypre
-      backporchbakery
-      bpbextrapre
-      bpbextra
-      bpbssetoutpre
-      bpbssetout
-      defaultInclude
-      leadTime
-      qbID
-      freezerCount
-      freezerClosing
-      sheetMake
-      freezerNorth
-      freezerNorthClosing
-      freezerNorthFlag
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateProductBackup = /* GraphQL */ `
-  subscription OnUpdateProductBackup {
-    onUpdateProductBackup {
-      id
-      prodName
-      nickName
-      packGroup
-      packSize
-      doughType
-      freezerThaw
-      eodCount
-      packGroupOrder
-      readyTime
-      bakedWhere
-      wholePrice
-      retailPrice
-      isWhole
-      depends
-      weight
-      descrip
-      picURL
-      squareID
-      currentStock
-      whoCountedLast
-      forBake
-      bakeExtra
-      batchSize
-      preshaped
-      prepreshaped
-      updatePreDate
-      updateFreezerDate
-      backporchbakerypre
-      backporchbakery
-      bpbextrapre
-      bpbextra
-      bpbssetoutpre
-      bpbssetout
-      defaultInclude
-      leadTime
-      qbID
-      freezerCount
-      freezerClosing
-      sheetMake
-      freezerNorth
-      freezerNorthClosing
-      freezerNorthFlag
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteProductBackup = /* GraphQL */ `
-  subscription OnDeleteProductBackup {
-    onDeleteProductBackup {
       id
       prodName
       nickName

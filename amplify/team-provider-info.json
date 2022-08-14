@@ -10,6 +10,11 @@
       "StackName": "amplify-bpbadmin2-dev-75248",
       "StackId": "arn:aws:cloudformation:us-east-2:191477602114:stack/amplify-bpbadmin2-dev-75248/44ff4c00-1985-11ed-9483-0a366778153e",
       "AmplifyAppId": "d2nhue3419gd8g"
+    },
+    "categories": {
+      "auth": {
+        "bpbadmin28b7be895": {}
+      }
     }
   },
   "auth": {
