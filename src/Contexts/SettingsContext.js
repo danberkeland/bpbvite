@@ -41,6 +41,7 @@ export const SettingsProvider = (props) => {
   });
 
   const [authType, setAuthType] = useState(0);
+  const [ isLoading, setIsLoading ] = useState(false)
 
   useEffect(() => {
     fetchCustomers();
@@ -85,6 +86,8 @@ export const SettingsProvider = (props) => {
         setFormType,
         authType,
         setAuthType,
+        isLoading,
+        setIsLoading
       }}
     >
       {props.children}

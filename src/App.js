@@ -27,6 +27,7 @@ import {
   grabAuth,
   setAuthListener,
 } from "./Auth/AuthHelpers";
+import Loader from "./Loader";
 
 Amplify.configure(awsmobile);
 
@@ -41,7 +42,9 @@ export function App() {
     setUser,
     user,
     chosen,
-    setChosen
+    setChosen,
+    isLoading,
+    setIsLoading
   } = useContext(SettingsContext);
 
   useEffect(() => {
@@ -49,14 +52,17 @@ export function App() {
   }, []);
 
   useEffect(() => {
+    setIsLoading(true)
     checkUser().then((use) => {
       setUser(use);
       setFormType(use ? "signedIn" : "onNoUser");
+      setIsLoading(false)
     });
   }, []);
 
   useEffect(() => {
     console.log("user",user)
+    setIsLoading(true)
     user &&
       fetchUserDetails(user.username).then((info) => {
         console.log("userDetails",info)
@@ -67,6 +73,7 @@ export function App() {
           userName: info.name,
           sub: info.sub,
         });
+        setIsLoading(false)
       });
   }, [user]);
 
@@ -84,6 +91,7 @@ export function App() {
 
   return (
     <React.Fragment>
+      {isLoading && <Loader />}
    
       Welcome {userDetails.userName}. Location: {chosen.locName}. Authtype:{" "}
       {authType}.
