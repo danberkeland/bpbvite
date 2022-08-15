@@ -32,6 +32,7 @@ type Location @model {
   delivOrder: Int
   qbID: String
   currentBalance: String
+  prodsNotAllowed: [LocationProductsNotAllowed] @hasMany
 }
 
 
@@ -138,5 +139,15 @@ type Product @model @auth(rules: [{allow: public}]) {
   freezerNorth: Int
   freezerNorthClosing: Int
   freezerNorthFlag: String
+  locationsNotAllowed: [LocationProductsNotAllowed] @hasMany
+}
+
+
+type LocationProductsNotAllowed @model {
+  id: ID!
+  location_id: String!
+  product_id: String!
+  location: Location! @belongsTo(fields: ["location_id"])
+  product: Product! @belongsTo( fields: ["product_id"])
 }
 

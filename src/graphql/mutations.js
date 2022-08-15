@@ -45,6 +45,18 @@ export const createLocation = /* GraphQL */ `
       delivOrder
       qbID
       currentBalance
+      prodsNotAllowed {
+        items {
+          id
+          location_id
+          product_id
+          createdAt
+          updatedAt
+          locationProdsNotAllowedId
+          productLocationsNotAllowedId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -94,6 +106,18 @@ export const updateLocation = /* GraphQL */ `
       delivOrder
       qbID
       currentBalance
+      prodsNotAllowed {
+        items {
+          id
+          location_id
+          product_id
+          createdAt
+          updatedAt
+          locationProdsNotAllowedId
+          productLocationsNotAllowedId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -143,6 +167,18 @@ export const deleteLocation = /* GraphQL */ `
       delivOrder
       qbID
       currentBalance
+      prodsNotAllowed {
+        items {
+          id
+          location_id
+          product_id
+          createdAt
+          updatedAt
+          locationProdsNotAllowedId
+          productLocationsNotAllowedId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -310,6 +346,9 @@ export const createUser = /* GraphQL */ `
         delivOrder
         qbID
         currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -371,6 +410,9 @@ export const updateUser = /* GraphQL */ `
         delivOrder
         qbID
         currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -432,6 +474,9 @@ export const deleteUser = /* GraphQL */ `
         delivOrder
         qbID
         currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -493,6 +538,9 @@ export const createLocationUser = /* GraphQL */ `
         delivOrder
         qbID
         currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -583,6 +631,9 @@ export const updateLocationUser = /* GraphQL */ `
         delivOrder
         qbID
         currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -673,6 +724,9 @@ export const deleteLocationUser = /* GraphQL */ `
         delivOrder
         qbID
         currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -815,6 +869,18 @@ export const createProduct = /* GraphQL */ `
       freezerNorth
       freezerNorthClosing
       freezerNorthFlag
+      locationsNotAllowed {
+        items {
+          id
+          location_id
+          product_id
+          createdAt
+          updatedAt
+          locationProdsNotAllowedId
+          productLocationsNotAllowedId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -869,6 +935,18 @@ export const updateProduct = /* GraphQL */ `
       freezerNorth
       freezerNorthClosing
       freezerNorthFlag
+      locationsNotAllowed {
+        items {
+          id
+          location_id
+          product_id
+          createdAt
+          updatedAt
+          locationProdsNotAllowedId
+          productLocationsNotAllowedId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -923,8 +1001,323 @@ export const deleteProduct = /* GraphQL */ `
       freezerNorth
       freezerNorthClosing
       freezerNorthFlag
+      locationsNotAllowed {
+        items {
+          id
+          location_id
+          product_id
+          createdAt
+          updatedAt
+          locationProdsNotAllowedId
+          productLocationsNotAllowedId
+        }
+        nextToken
+      }
       createdAt
       updatedAt
+    }
+  }
+`;
+export const createLocationProductsNotAllowed = /* GraphQL */ `
+  mutation CreateLocationProductsNotAllowed(
+    $input: CreateLocationProductsNotAllowedInput!
+    $condition: ModelLocationProductsNotAllowedConditionInput
+  ) {
+    createLocationProductsNotAllowed(input: $input, condition: $condition) {
+      id
+      location_id
+      product_id
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneName
+        addr1
+        addr2
+        city
+        zip
+        email
+        firstName
+        lastName
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      product {
+        id
+        prodName
+        nickName
+        packGroup
+        packSize
+        doughType
+        freezerThaw
+        eodCount
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        depends
+        weight
+        descrip
+        picURL
+        squareID
+        currentStock
+        whoCountedLast
+        forBake
+        bakeExtra
+        batchSize
+        preshaped
+        prepreshaped
+        updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        defaultInclude
+        leadTime
+        qbID
+        freezerCount
+        freezerClosing
+        sheetMake
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        locationsNotAllowed {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      locationProdsNotAllowedId
+      productLocationsNotAllowedId
+    }
+  }
+`;
+export const updateLocationProductsNotAllowed = /* GraphQL */ `
+  mutation UpdateLocationProductsNotAllowed(
+    $input: UpdateLocationProductsNotAllowedInput!
+    $condition: ModelLocationProductsNotAllowedConditionInput
+  ) {
+    updateLocationProductsNotAllowed(input: $input, condition: $condition) {
+      id
+      location_id
+      product_id
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneName
+        addr1
+        addr2
+        city
+        zip
+        email
+        firstName
+        lastName
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      product {
+        id
+        prodName
+        nickName
+        packGroup
+        packSize
+        doughType
+        freezerThaw
+        eodCount
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        depends
+        weight
+        descrip
+        picURL
+        squareID
+        currentStock
+        whoCountedLast
+        forBake
+        bakeExtra
+        batchSize
+        preshaped
+        prepreshaped
+        updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        defaultInclude
+        leadTime
+        qbID
+        freezerCount
+        freezerClosing
+        sheetMake
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        locationsNotAllowed {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      locationProdsNotAllowedId
+      productLocationsNotAllowedId
+    }
+  }
+`;
+export const deleteLocationProductsNotAllowed = /* GraphQL */ `
+  mutation DeleteLocationProductsNotAllowed(
+    $input: DeleteLocationProductsNotAllowedInput!
+    $condition: ModelLocationProductsNotAllowedConditionInput
+  ) {
+    deleteLocationProductsNotAllowed(input: $input, condition: $condition) {
+      id
+      location_id
+      product_id
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneName
+        addr1
+        addr2
+        city
+        zip
+        email
+        firstName
+        lastName
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      product {
+        id
+        prodName
+        nickName
+        packGroup
+        packSize
+        doughType
+        freezerThaw
+        eodCount
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        depends
+        weight
+        descrip
+        picURL
+        squareID
+        currentStock
+        whoCountedLast
+        forBake
+        bakeExtra
+        batchSize
+        preshaped
+        prepreshaped
+        updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        defaultInclude
+        leadTime
+        qbID
+        freezerCount
+        freezerClosing
+        sheetMake
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        locationsNotAllowed {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+      locationProdsNotAllowedId
+      productLocationsNotAllowedId
     }
   }
 `;
