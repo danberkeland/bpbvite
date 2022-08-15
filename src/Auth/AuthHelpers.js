@@ -59,10 +59,10 @@ export const authSignOut = async (setFormType) => {
 export const grabAuth = async (loc, sub) => {
   console.log("grabAuth");
   let info = await API.graphql(
-    graphqlOperation(listAuth, {
+    graphqlOperation(listLocationUsers, {
       filter: {
-        location_id: { eq: loc },
-        user_id: { eq: sub },
+        locNick: { eq: loc },
+        sub: { eq: sub },
       },
     })
   );
