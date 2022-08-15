@@ -17,7 +17,7 @@ export const grabOldLoc = async () => {
   
   export const checkExistsNewLoc = async (old) => {
     try {
-      let loc = await API.graphql(graphqlOperation(getLocation, { sub: old }));
+      let loc = await API.graphql(graphqlOperation(getLocation, { locNick: old }));
       console.log("prod", loc);
       return loc ? true : false;
     } catch (error) {

@@ -54,13 +54,12 @@ export const SettingsProvider = (props) => {
         let userArray = userList.data.listLocationUsers.items.map((use) => ({
           userName: use.user.name,
           sub: use.user.sub,
-          subs: use.location.subs.items.map((loc) => loc.sub),
           locName: use.location.locName,
           locNick: use.location.locNick,
           authType: use.authType,
         }));
         userArray = userArray.filter((use) =>
-          use.subs.includes(userDetails.sub)
+          use.sub===userDetails.sub
         );
        
         setUserList(userArray);
