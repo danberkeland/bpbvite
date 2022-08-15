@@ -1,8 +1,8 @@
 import { Auth, Hub } from "aws-amplify";
 import { API, graphqlOperation } from "aws-amplify";
 
-import { getUser, listAuth, listLocationUsers } from "../customGraphQL/queries";
-import { getLocation } from "../graphql/queries";
+import { listAuth } from "../customGraphQL/queries";
+import { getLocation, getUser, listLocationUsers } from "../graphql/queries";
 
 
 //  Checks for and, if exists, returns full Cognito object for user

@@ -2,21 +2,18 @@
 # all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
 input AMPLIFY {
   globalAuthRule: AuthRule = { allow: public }
-} # FOR TESTING ONLY! 
-
-
+} # FOR TESTING ONLY!
 type Location @model {
   locNick: String! @primaryKey
   locName: String!
   subs: [LocationUser] @hasMany
-  zoneName: String
+  zoneID: ID
+  zone: Zone @hasOne(fields: ["zoneID"])
   addr1: String
   addr2: String
   city: String
   zip: String
   email: String
-  firstName: String
-  lastName: String
   phone: String
   toBePrinted: Boolean
   toBeEmailed: Boolean
@@ -32,11 +29,12 @@ type Location @model {
   delivOrder: Int
   qbID: String
   currentBalance: String
-  prodsNotAllowed: [LocationProductsNotAllowed] @hasMany
+  prodsNotAllowed: [Product] @hasMany
+  customProd: [AltPricing] @hasMany
+  templateProd: [Product] @hasMany
 }
 
-
-type LocationBackup @model @auth(rules: [{allow: public}]) {
+type LocationBackup @model  {
   id: ID!
   nickName: String!
   custName: String!
@@ -70,84 +68,253 @@ type LocationBackup @model @auth(rules: [{allow: public}]) {
 }
 
 
+
 type User @model {
   name: String!
   email: String!
   phone: String
   sub: String! @primaryKey
-  defaultLoc: Location @hasOne
+  locNick: String
+  defaultLoc: Location @hasOne(fields: ["locNick"])
   locs: [LocationUser] @hasMany
 }
 
-type LocationUser @model {
-  id: ID!
-  authType: Int 
-  location_id: String!
-  user_id: String!
-  location: Location! @belongsTo(fields: ["location_id"])
-  user: User! @belongsTo( fields: ["user_id"])
-}
-
-
-type Request @model {
-  id: ID!
-  name: String!
-  loc: String!
-}
-
-type Product @model @auth(rules: [{allow: public}]) {
+type Product @model {
   id: ID!
   prodName: String!
-  nickName: String! @primaryKey
-  packGroup: String
+  prodNick: String! @primaryKey
+  packGroupID: ID
+  packGroup: PackGroup @hasOne(fields: ["packGroupID"])
   packSize: Int
-  doughType: String
+  doughNick: String
+  doughType: Dough @hasOne(fields: ["doughNick"])
   freezerThaw: Boolean
-  eodCount: Boolean
   packGroupOrder: Int
   readyTime: Float
   bakedWhere: [String]
   wholePrice: Float
   retailPrice: Float
   isWhole: Boolean
-  depends: String
+  depends: [Product] @hasMany
   weight: Float
   descrip: String
   picURL: String
   squareID: String
-  currentStock: Int
-  whoCountedLast: String
   forBake: String
   bakeExtra: Int
   batchSize: Int
-  preshaped: Int
-  prepreshaped: Int
-  updatePreDate: String
-  updateFreezerDate: String
-  backporchbakerypre: Int
-  backporchbakery: Int
-  bpbextrapre: Int
-  bpbextra: Int
-  bpbssetoutpre: Int
-  bpbssetout: Int
   defaultInclude: Boolean
   leadTime: Int
   qbID: String
-  freezerCount: Int
-  freezerClosing: Int
-  sheetMake: Int
-  freezerNorth: Int
-  freezerNorthClosing: Int
-  freezerNorthFlag: String
-  locationsNotAllowed: [LocationProductsNotAllowed] @hasMany
+  altPricing: [AltPricing] @hasMany
 }
 
-
-type LocationProductsNotAllowed @model {
+type Zone @model {
   id: ID!
-  location_id: String!
-  product_id: String!
-  location: Location! @belongsTo(fields: ["location_id"])
-  product: Product! @belongsTo( fields: ["product_id"])
+  zoneNum: Int
+  zoneName: String
+  zoneFee: Int
 }
 
+type LocationUser @model {
+  id: ID!
+  authType: Int
+  locNick: String!
+  sub: String!
+  location: Location! @belongsTo(fields: ["locNick"])
+  user: User! @belongsTo(fields: ["sub"])
+}
+
+type AltPricing @model {
+  id: ID!
+  wholePrice: Float
+  locNick: String
+  loc: Location! @belongsTo(fields: ["locNick"])
+  prodNick: String
+  product: Product @belongsTo(fields: ["prodNick"])
+}
+
+type Dough @model {
+  doughNick: String! @primaryKey
+  doughName: String
+  hydration: Float
+  batchSize: Float
+  mixedWhere: String
+  components: [DoughComponent] @hasMany
+  isBakeReady: Boolean
+  buffer: Float
+  saltInDry: Boolean
+}
+
+type DoughComponent @model {
+  id: ID!
+  dough: String
+  componentType: String
+  inventoryID: ID
+  inventoryName: Inventory @hasOne(fields: ["inventoryID"])
+  unitID: ID
+  unit: Unit @hasOne(fields: ["unitID"])
+  amount: Float
+}
+
+type Inventory @model {
+  id: ID!
+  ingName: String!
+  ingNick: String!
+  ingTypeID: ID
+  ingType: IngType @hasOne(fields: ["ingTypeID"])
+  vendors: [Vendor] @hasMany
+  products: [Product] @hasMany
+  unitID: ID
+  unit: Unit @hasOne(fields: ["unitID"])
+  bakeryLocation: String
+  intLocNick: String
+  internalLocation: InternalLoc @hasOne(fields: ["intLocNick"])
+  whoCounted: String
+}
+
+type Unit @model {
+  id: ID!
+  unitName: String
+}
+
+type InternalLoc @model {
+  intLocNick: String! @primaryKey
+  bakeryLoc: String!
+    @index(name: "byBakeryLoc", queryField: "internalByBakeryLoc")
+  intLocDescrip: String!
+}
+
+type IngType @model {
+  id: ID!
+  unitName: String
+}
+
+type Vendor @model {
+  id: ID!
+  vendorName: String!
+  vendorNick: String!
+}
+
+type CroixCount @model {
+  id: ID!
+  prodNick: String!
+  prodName: Product! @hasOne(fields: ["prodNick"])
+  freezerLocation: String!
+  qty: Int
+  whoCounted: String
+}
+
+type EODCount @model {
+  id: ID!
+  prodNick: String!
+  prodName: Product! @hasOne(fields: ["prodNick"])
+  shelfOrFreezer: String
+  location: String
+  qty: Int
+  whoCounted: String
+}
+
+type PocketCount @model {
+  id: ID!
+  doughNick: String!
+  doughType: Dough! @hasOne(fields: ["doughNick"])
+  size: Int
+  qty: Int
+  whoCounted: String
+}
+
+type ActualSetOut @model {
+  id: ID!
+  prodNick: String!
+  prodName: Product! @hasOne(fields: ["prodNick"])
+  qty: Int
+  location: String
+  whoSetOut: String
+}
+
+type CroixSheetCount @model {
+  id: ID!
+  qty: Int
+  whoCounted: String
+}
+
+type PackGroup @model {
+  id: ID!
+  packGroup: String!
+}
+
+type Route @model {
+  id: ID!
+  routeName: String
+  routeStart: Float
+  routeTime: Float
+  RouteDepart: String
+  RouteArrive: String
+  RouteServe: [Zone] @hasMany
+  RouteSched: [String]
+  printOrder: Int
+  driver: String
+}
+
+type OldDough @model {
+  id: ID!
+  doughID: String!
+  dough: Dough @hasOne(fields: ["doughID"])
+  qty: Int
+}
+
+type BucketInfo @model {
+  id: ID!
+  doughID: String!
+  dough: Dough @hasOne(fields: ["doughID"])
+  bucketType: String
+  qty: Int
+  totalDoughWeight: Int
+  whoMixed: String
+}
+
+type Notes @model {
+  id: ID!
+  note: String
+  forWhom: String
+  byWhom: String
+  when: String
+}
+
+type InfoQBAuth @model {
+  id: ID!
+  infoName: String
+  infoContent: String
+}
+
+type EventLog @model {
+  id: ID!
+  eventType: String!
+  eventDescrip: String
+  userID: String
+  user: User @hasOne(fields: ["userID"])
+}
+
+type Invoice @model {
+  id: String! @primaryKey
+  orders: [Order] @hasMany
+  locNick: String!
+  location: Location @hasOne(fields: ["locNick"])
+}
+
+type Order @model {
+  id: ID!
+  qty: Int
+  prodNick: String!
+  product: Product! @hasOne(fields: ["prodNick"])
+  locNick: String!
+  location: Location! @hasOne(fields: ["locNick"])
+  PONote: String
+  fulfill: String
+  SO: Int
+  isWhole: Boolean
+  delivDate: String
+  rate: Float
+  isLate: Int
+}

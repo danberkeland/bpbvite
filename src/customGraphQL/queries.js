@@ -37,7 +37,7 @@ export const getUser = /* GraphQL */ `
         subs {
           nextToken
         }
-        zoneName
+        zone
         addr1
         addr2
         city
@@ -51,8 +51,8 @@ export const getUser = /* GraphQL */ `
         items {
           id
           authType
-          location_id
-          user_id
+          locNick
+          sub
           createdAt
           updatedAt
           locationSubsId
@@ -78,12 +78,12 @@ export const listAuth = /* GraphQL */ `
       items {
         id
         authType
-        location_id
-        user_id
+        locNick
+        sub
         location {
           locNick
           locName
-          zoneName
+          zone
           addr1
           addr2
           city

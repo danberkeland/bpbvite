@@ -29,6 +29,9 @@ export const grabOldLoc = async () => {
   export const updateNewLoc = async (old) => {
     delete old.createdAt;
     delete old.updatedAt;
+    delete old.zoneName;
+    delete old.firstName;
+    delete old.lastName;
     delete old.id
     old.locNick = old.nickName
     delete old.nickName

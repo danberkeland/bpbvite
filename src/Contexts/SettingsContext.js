@@ -50,6 +50,7 @@ export const SettingsProvider = (props) => {
   const fetchCustomers = async () => {
     try {
       grabLocationUsers().then((userList) => {
+        console.log("userStuff",userList.data.listLocationUsers.items)
         let userArray = userList.data.listLocationUsers.items.map((use) => ({
           userName: use.user.name,
           sub: use.user.sub,
