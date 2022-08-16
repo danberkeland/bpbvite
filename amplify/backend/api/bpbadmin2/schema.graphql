@@ -3,10 +3,12 @@
 input AMPLIFY {
   globalAuthRule: AuthRule = { allow: public }
 } # FOR TESTING ONLY!
+
+
 type Location @model {
   locNick: String! @primaryKey
   locName: String!
-  subs: [LocationUser] @hasMany
+  subs: [LocationUser] @hasMany(indexName: "byLoc", fields: ["locNick"])
   zoneID: ID
   zone: Zone @hasOne(fields: ["zoneID"])
   addr1: String
@@ -29,9 +31,27 @@ type Location @model {
   delivOrder: Int
   qbID: String
   currentBalance: String
-  prodsNotAllowed: [Product] @hasMany
-  customProd: [AltPricing] @hasMany
-  templateProd: [Product] @hasMany
+  prodsNotAllowed: [ProdsNotAllowed] @hasMany(indexName: "byProd", fields: ["locNick"])
+  customProd: [AltPricing] @hasMany(indexName: "byLoc", fields: ["locNick"])
+  templateProd: [TemplateProd] @hasMany(indexName: "byTemp", fields: ["locNick"])
+}
+
+
+type TemplateProd @model {
+  id: ID!
+  locNick: String! @index(name: "byLoc")
+  prodNick: String! @index(name: "byTemp")
+  location: Location! @belongsTo(fields: ["locNick"])
+  product: Product! @belongsTo(fields: ["prodNick"])
+}
+
+
+type ProdsNotAllowed @model {
+  id: ID!
+  locNick: String! @index(name: "byLoc")
+  prodNick: String! @index(name: "byProd")
+  location: Location! @belongsTo(fields: ["locNick"])
+  product: Product! @belongsTo(fields: ["prodNick"])
 }
 
 type LocationBackup @model  {
@@ -76,7 +96,7 @@ type User @model {
   sub: String! @primaryKey
   locNick: String
   defaultLoc: Location @hasOne(fields: ["locNick"])
-  locs: [LocationUser] @hasMany
+  locs: [LocationUser] @hasMany(indexName: "bySub", fields: ["sub"])
 }
 
 type Product @model {
@@ -95,7 +115,6 @@ type Product @model {
   wholePrice: Float
   retailPrice: Float
   isWhole: Boolean
-  depends: [Product] @hasMany
   weight: Float
   descrip: String
   picURL: String
@@ -106,8 +125,21 @@ type Product @model {
   defaultInclude: Boolean
   leadTime: Int
   qbID: String
-  altPricing: [AltPricing] @hasMany
+  depends: [ProductDepend] @hasMany(indexName: "byProdDepends", fields: ["prodNick"])
+  altPricing: [AltPricing] @hasMany(indexName: "byProd", fields: ["prodNick"])
+  templateProd: [TemplateProd] @hasMany(indexName: "byTemp", fields: ["prodNick"])
+  prodsNotAllowed: [ProdsNotAllowed] @hasMany(indexName: "byProd", fields: ["prodNick"])
 }
+
+
+type ProductDepend @model {
+  id: ID!
+  prod1Nick: String @index(name: "byProd1")
+  prod1: Product! @belongsTo(fields: ["prod1Nick"])
+  prod2Nick: String @index(name: "byProd2")
+  prod2: Product @belongsTo(fields: ["prod2Nick"])
+}
+
 
 type Zone @model {
   id: ID!
@@ -119,8 +151,8 @@ type Zone @model {
 type LocationUser @model {
   id: ID!
   authType: Int
-  locNick: String!
-  sub: String!
+  locNick: String! @index(name: "byLoc", sortKeyFields: ["authType"])
+  sub: String! @index(name: "bySub", sortKeyFields: ["authType"])
   location: Location! @belongsTo(fields: ["locNick"])
   user: User! @belongsTo(fields: ["sub"])
 }
@@ -128,9 +160,9 @@ type LocationUser @model {
 type AltPricing @model {
   id: ID!
   wholePrice: Float
-  locNick: String
+  locNick: String @index(name: "byLoc", sortKeyFields: ["wholePrice"])
   loc: Location! @belongsTo(fields: ["locNick"])
-  prodNick: String
+  prodNick: String @index(name: "byProd", sortKeyFields: ["wholePrice"])
   product: Product @belongsTo(fields: ["prodNick"])
 }
 
