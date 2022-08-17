@@ -98,7 +98,7 @@ type User @model {
 
 type Location @model {
   locNick: String! @primaryKey
-  locName: String!
+  locName: String! 
   subs: [LocationUser] @hasMany(indexName: "byLoc", fields: ["locNick"])
   zoneID: String
   zone: Zone @hasOne(fields: ["zoneID"])
@@ -391,6 +391,7 @@ type ZoneRoute @model {
 
 type LocationUser @model {
   id: ID!
+  type: String! @index(name: "locUsersByAuthType", queryField: "locUsersByAuthType", sortKeyFields: ["authType"])
   authType: Int
   locNick: String! @index(name: "byLoc", sortKeyFields: ["authType"])
   sub: String! @index(name: "bySub", sortKeyFields: ["authType"])

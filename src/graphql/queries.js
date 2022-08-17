@@ -193,6 +193,136 @@ export const listProductBackups = /* GraphQL */ `
     }
   }
 `;
+export const getUser = /* GraphQL */ `
+  query GetUser($sub: String!) {
+    getUser(sub: $sub) {
+      name
+      email
+      phone
+      sub
+      locNick
+      defaultLoc {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      locs {
+        items {
+          id
+          type
+          authType
+          locNick
+          sub
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUsers = /* GraphQL */ `
+  query ListUsers(
+    $sub: String
+    $filter: ModelUserFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUsers(
+      sub: $sub
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        name
+        email
+        phone
+        sub
+        locNick
+        defaultLoc {
+          locNick
+          locName
+          zoneID
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          createdAt
+          updatedAt
+        }
+        locs {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getLocation = /* GraphQL */ `
   query GetLocation($locNick: String!) {
     getLocation(locNick: $locNick) {
@@ -201,6 +331,7 @@ export const getLocation = /* GraphQL */ `
       subs {
         items {
           id
+          type
           authType
           locNick
           sub
@@ -334,135 +465,6 @@ export const listLocations = /* GraphQL */ `
           nextToken
         }
         templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getUser = /* GraphQL */ `
-  query GetUser($sub: String!) {
-    getUser(sub: $sub) {
-      name
-      email
-      phone
-      sub
-      locNick
-      defaultLoc {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
-          zoneNick
-          zoneName
-          description
-          zoneFee
-          createdAt
-          updatedAt
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      locs {
-        items {
-          id
-          authType
-          locNick
-          sub
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listUsers = /* GraphQL */ `
-  query ListUsers(
-    $sub: String
-    $filter: ModelUserFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listUsers(
-      sub: $sub
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        name
-        email
-        phone
-        sub
-        locNick
-        defaultLoc {
-          locNick
-          locName
-          zoneID
-          addr1
-          addr2
-          city
-          zip
-          email
-          phone
-          toBePrinted
-          toBeEmailed
-          printDuplicate
-          terms
-          invoicing
-          latestFirstDeliv
-          latestFinalDeliv
-          webpageURL
-          picURL
-          gMap
-          specialInstructions
-          delivOrder
-          qbID
-          currentBalance
-          createdAt
-          updatedAt
-        }
-        locs {
           nextToken
         }
         createdAt
@@ -762,6 +764,373 @@ export const listProducts = /* GraphQL */ `
     }
   }
 `;
+export const getInvoice = /* GraphQL */ `
+  query GetInvoice($id: String!) {
+    getInvoice(id: $id) {
+      id
+      orders {
+        items {
+          id
+          qty
+          prodNick
+          locNick
+          ItemNote
+          SO
+          isWhole
+          delivDate
+          rate
+          isLate
+          createdAt
+          updatedAt
+          invoiceOrdersId
+        }
+        nextToken
+      }
+      locNick
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      fulfill
+      delivDate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listInvoices = /* GraphQL */ `
+  query ListInvoices(
+    $id: String
+    $filter: ModelInvoiceFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listInvoices(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        orders {
+          nextToken
+        }
+        locNick
+        location {
+          locNick
+          locName
+          zoneID
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          createdAt
+          updatedAt
+        }
+        fulfill
+        delivDate
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getOrder = /* GraphQL */ `
+  query GetOrder($id: ID!) {
+    getOrder(id: $id) {
+      id
+      qty
+      prodNick
+      product {
+        id
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
+      }
+      locNick
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      ItemNote
+      SO
+      isWhole
+      delivDate
+      rate
+      isLate
+      createdAt
+      updatedAt
+      invoiceOrdersId
+    }
+  }
+`;
+export const listOrders = /* GraphQL */ `
+  query ListOrders(
+    $filter: ModelOrderFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listOrders(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        qty
+        prodNick
+        product {
+          id
+          prodName
+          prodNick
+          packGroupID
+          packSize
+          doughNick
+          freezerThaw
+          packGroupOrder
+          readyTime
+          bakedWhere
+          wholePrice
+          retailPrice
+          isWhole
+          weight
+          descrip
+          picURL
+          squareID
+          forBake
+          bakeExtra
+          batchSize
+          defaultInclude
+          leadTime
+          qbID
+          createdAt
+          updatedAt
+          inventoryProductId
+          productEODCountId
+          productActualSetOutId
+        }
+        locNick
+        location {
+          locNick
+          locName
+          zoneID
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          createdAt
+          updatedAt
+        }
+        ItemNote
+        SO
+        isWhole
+        delivDate
+        rate
+        isLate
+        createdAt
+        updatedAt
+        invoiceOrdersId
+      }
+      nextToken
+    }
+  }
+`;
 export const getZone = /* GraphQL */ `
   query GetZone($zoneNick: String!) {
     getZone(zoneNick: $zoneNick) {
@@ -869,6 +1238,33 @@ export const listRoutes = /* GraphQL */ `
         zoneRoute {
           nextToken
         }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getPackGroup = /* GraphQL */ `
+  query GetPackGroup($id: ID!) {
+    getPackGroup(id: $id) {
+      id
+      packGroup
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listPackGroups = /* GraphQL */ `
+  query ListPackGroups(
+    $filter: ModelPackGroupFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPackGroups(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        packGroup
         createdAt
         updatedAt
       }
@@ -1030,6 +1426,68 @@ export const listDoughComponents = /* GraphQL */ `
         createdAt
         updatedAt
         doughComponentsId
+      }
+      nextToken
+    }
+  }
+`;
+export const getBucketInfo = /* GraphQL */ `
+  query GetBucketInfo($id: ID!) {
+    getBucketInfo(id: $id) {
+      id
+      doughID
+      dough {
+        doughNick
+        doughName
+        hydration
+        batchSize
+        mixedWhere
+        components {
+          nextToken
+        }
+        isBakeReady
+        buffer
+        saltInDry
+        createdAt
+        updatedAt
+      }
+      bucketType
+      qty
+      totalDoughWeight
+      whoMixed
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listBucketInfos = /* GraphQL */ `
+  query ListBucketInfos(
+    $filter: ModelBucketInfoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listBucketInfos(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        doughID
+        dough {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        bucketType
+        qty
+        totalDoughWeight
+        whoMixed
+        createdAt
+        updatedAt
       }
       nextToken
     }
@@ -1297,6 +1755,35 @@ export const listVendors = /* GraphQL */ `
         createdAt
         updatedAt
         inventoryVendorId
+      }
+      nextToken
+    }
+  }
+`;
+export const getInfoQBAuth = /* GraphQL */ `
+  query GetInfoQBAuth($id: ID!) {
+    getInfoQBAuth(id: $id) {
+      id
+      infoName
+      infoContent
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listInfoQBAuths = /* GraphQL */ `
+  query ListInfoQBAuths(
+    $filter: ModelInfoQBAuthFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listInfoQBAuths(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        infoName
+        infoContent
+        createdAt
+        updatedAt
       }
       nextToken
     }
@@ -1695,33 +2182,6 @@ export const listCroixSheetCounts = /* GraphQL */ `
     }
   }
 `;
-export const getPackGroup = /* GraphQL */ `
-  query GetPackGroup($id: ID!) {
-    getPackGroup(id: $id) {
-      id
-      packGroup
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listPackGroups = /* GraphQL */ `
-  query ListPackGroups(
-    $filter: ModelPackGroupFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listPackGroups(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        packGroup
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getOldDough = /* GraphQL */ `
   query GetOldDough($id: ID!) {
     getOldDough(id: $id) {
@@ -1778,68 +2238,6 @@ export const listOldDoughs = /* GraphQL */ `
     }
   }
 `;
-export const getBucketInfo = /* GraphQL */ `
-  query GetBucketInfo($id: ID!) {
-    getBucketInfo(id: $id) {
-      id
-      doughID
-      dough {
-        doughNick
-        doughName
-        hydration
-        batchSize
-        mixedWhere
-        components {
-          nextToken
-        }
-        isBakeReady
-        buffer
-        saltInDry
-        createdAt
-        updatedAt
-      }
-      bucketType
-      qty
-      totalDoughWeight
-      whoMixed
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listBucketInfos = /* GraphQL */ `
-  query ListBucketInfos(
-    $filter: ModelBucketInfoFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listBucketInfos(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        doughID
-        dough {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        bucketType
-        qty
-        totalDoughWeight
-        whoMixed
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getNotes = /* GraphQL */ `
   query GetNotes($id: ID!) {
     getNotes(id: $id) {
@@ -1866,35 +2264,6 @@ export const listNotes = /* GraphQL */ `
         forWhom
         byWhom
         when
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getInfoQBAuth = /* GraphQL */ `
-  query GetInfoQBAuth($id: ID!) {
-    getInfoQBAuth(id: $id) {
-      id
-      infoName
-      infoContent
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listInfoQBAuths = /* GraphQL */ `
-  query ListInfoQBAuths(
-    $filter: ModelInfoQBAuthFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listInfoQBAuths(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        infoName
-        infoContent
         createdAt
         updatedAt
       }
@@ -1976,372 +2345,6 @@ export const listEventLogs = /* GraphQL */ `
         }
         createdAt
         updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getInvoice = /* GraphQL */ `
-  query GetInvoice($id: String!) {
-    getInvoice(id: $id) {
-      id
-      orders {
-        items {
-          id
-          qty
-          prodNick
-          locNick
-          PONote
-          fulfill
-          SO
-          isWhole
-          delivDate
-          rate
-          isLate
-          createdAt
-          updatedAt
-          invoiceOrdersId
-        }
-        nextToken
-      }
-      locNick
-      location {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
-          zoneNick
-          zoneName
-          description
-          zoneFee
-          createdAt
-          updatedAt
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listInvoices = /* GraphQL */ `
-  query ListInvoices(
-    $id: String
-    $filter: ModelInvoiceFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listInvoices(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        orders {
-          nextToken
-        }
-        locNick
-        location {
-          locNick
-          locName
-          zoneID
-          addr1
-          addr2
-          city
-          zip
-          email
-          phone
-          toBePrinted
-          toBeEmailed
-          printDuplicate
-          terms
-          invoicing
-          latestFirstDeliv
-          latestFinalDeliv
-          webpageURL
-          picURL
-          gMap
-          specialInstructions
-          delivOrder
-          qbID
-          currentBalance
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getOrder = /* GraphQL */ `
-  query GetOrder($id: ID!) {
-    getOrder(id: $id) {
-      id
-      qty
-      prodNick
-      product {
-        id
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        depends {
-          nextToken
-        }
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        productVendor {
-          nextToken
-        }
-        EODCount {
-          id
-          prodNick
-          shelfOrFreezer
-          startOrFinish
-          location
-          qty
-          whoCounted
-          createdAt
-          updatedAt
-        }
-        ActualSetOut {
-          id
-          prodNick
-          qty
-          location
-          whoSetOut
-          createdAt
-          updatedAt
-          actualSetOutProdNameId
-        }
-        createdAt
-        updatedAt
-        inventoryProductId
-        productEODCountId
-        productActualSetOutId
-      }
-      locNick
-      location {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
-          zoneNick
-          zoneName
-          description
-          zoneFee
-          createdAt
-          updatedAt
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      PONote
-      fulfill
-      SO
-      isWhole
-      delivDate
-      rate
-      isLate
-      createdAt
-      updatedAt
-      invoiceOrdersId
-    }
-  }
-`;
-export const listOrders = /* GraphQL */ `
-  query ListOrders(
-    $filter: ModelOrderFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listOrders(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        qty
-        prodNick
-        product {
-          id
-          prodName
-          prodNick
-          packGroupID
-          packSize
-          doughNick
-          freezerThaw
-          packGroupOrder
-          readyTime
-          bakedWhere
-          wholePrice
-          retailPrice
-          isWhole
-          weight
-          descrip
-          picURL
-          squareID
-          forBake
-          bakeExtra
-          batchSize
-          defaultInclude
-          leadTime
-          qbID
-          createdAt
-          updatedAt
-          inventoryProductId
-          productEODCountId
-          productActualSetOutId
-        }
-        locNick
-        location {
-          locNick
-          locName
-          zoneID
-          addr1
-          addr2
-          city
-          zip
-          email
-          phone
-          toBePrinted
-          toBeEmailed
-          printDuplicate
-          terms
-          invoicing
-          latestFirstDeliv
-          latestFinalDeliv
-          webpageURL
-          picURL
-          gMap
-          specialInstructions
-          delivOrder
-          qbID
-          currentBalance
-          createdAt
-          updatedAt
-        }
-        PONote
-        fulfill
-        SO
-        isWhole
-        delivDate
-        rate
-        isLate
-        createdAt
-        updatedAt
-        invoiceOrdersId
       }
       nextToken
     }
@@ -3123,6 +3126,7 @@ export const getLocationUser = /* GraphQL */ `
   query GetLocationUser($id: ID!) {
     getLocationUser(id: $id) {
       id
+      type
       authType
       locNick
       sub
@@ -3226,6 +3230,7 @@ export const listLocationUsers = /* GraphQL */ `
     listLocationUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        type
         authType
         locNick
         sub
@@ -3670,6 +3675,72 @@ export const internalByBakeryLoc = /* GraphQL */ `
         intLocNick
         bakeryLoc
         intLocDescrip
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const locUsersByAuthType = /* GraphQL */ `
+  query LocUsersByAuthType(
+    $type: String!
+    $authType: ModelIntKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelLocationUserFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    locUsersByAuthType(
+      type: $type
+      authType: $authType
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        type
+        authType
+        locNick
+        sub
+        location {
+          locNick
+          locName
+          zoneID
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          createdAt
+          updatedAt
+        }
+        user {
+          name
+          email
+          phone
+          sub
+          locNick
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }

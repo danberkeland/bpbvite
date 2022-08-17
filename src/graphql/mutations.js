@@ -286,6 +286,231 @@ export const deleteProductBackup = /* GraphQL */ `
     }
   }
 `;
+export const createUser = /* GraphQL */ `
+  mutation CreateUser(
+    $input: CreateUserInput!
+    $condition: ModelUserConditionInput
+  ) {
+    createUser(input: $input, condition: $condition) {
+      name
+      email
+      phone
+      sub
+      locNick
+      defaultLoc {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      locs {
+        items {
+          id
+          type
+          authType
+          locNick
+          sub
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateUser = /* GraphQL */ `
+  mutation UpdateUser(
+    $input: UpdateUserInput!
+    $condition: ModelUserConditionInput
+  ) {
+    updateUser(input: $input, condition: $condition) {
+      name
+      email
+      phone
+      sub
+      locNick
+      defaultLoc {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      locs {
+        items {
+          id
+          type
+          authType
+          locNick
+          sub
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteUser = /* GraphQL */ `
+  mutation DeleteUser(
+    $input: DeleteUserInput!
+    $condition: ModelUserConditionInput
+  ) {
+    deleteUser(input: $input, condition: $condition) {
+      name
+      email
+      phone
+      sub
+      locNick
+      defaultLoc {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      locs {
+        items {
+          id
+          type
+          authType
+          locNick
+          sub
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createLocation = /* GraphQL */ `
   mutation CreateLocation(
     $input: CreateLocationInput!
@@ -297,6 +522,7 @@ export const createLocation = /* GraphQL */ `
       subs {
         items {
           id
+          type
           authType
           locNick
           sub
@@ -384,6 +610,7 @@ export const updateLocation = /* GraphQL */ `
       subs {
         items {
           id
+          type
           authType
           locNick
           sub
@@ -471,6 +698,7 @@ export const deleteLocation = /* GraphQL */ `
       subs {
         items {
           id
+          type
           authType
           locNick
           sub
@@ -537,228 +765,6 @@ export const deleteLocation = /* GraphQL */ `
           id
           locNick
           prodNick
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createUser = /* GraphQL */ `
-  mutation CreateUser(
-    $input: CreateUserInput!
-    $condition: ModelUserConditionInput
-  ) {
-    createUser(input: $input, condition: $condition) {
-      name
-      email
-      phone
-      sub
-      locNick
-      defaultLoc {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
-          zoneNick
-          zoneName
-          description
-          zoneFee
-          createdAt
-          updatedAt
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      locs {
-        items {
-          id
-          authType
-          locNick
-          sub
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateUser = /* GraphQL */ `
-  mutation UpdateUser(
-    $input: UpdateUserInput!
-    $condition: ModelUserConditionInput
-  ) {
-    updateUser(input: $input, condition: $condition) {
-      name
-      email
-      phone
-      sub
-      locNick
-      defaultLoc {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
-          zoneNick
-          zoneName
-          description
-          zoneFee
-          createdAt
-          updatedAt
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      locs {
-        items {
-          id
-          authType
-          locNick
-          sub
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteUser = /* GraphQL */ `
-  mutation DeleteUser(
-    $input: DeleteUserInput!
-    $condition: ModelUserConditionInput
-  ) {
-    deleteUser(input: $input, condition: $condition) {
-      name
-      email
-      phone
-      sub
-      locNick
-      defaultLoc {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
-          zoneNick
-          zoneName
-          description
-          zoneFee
-          createdAt
-          updatedAt
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      locs {
-        items {
-          id
-          authType
-          locNick
-          sub
           createdAt
           updatedAt
         }
@@ -1339,6 +1345,705 @@ export const deleteProduct = /* GraphQL */ `
     }
   }
 `;
+export const createInvoice = /* GraphQL */ `
+  mutation CreateInvoice(
+    $input: CreateInvoiceInput!
+    $condition: ModelInvoiceConditionInput
+  ) {
+    createInvoice(input: $input, condition: $condition) {
+      id
+      orders {
+        items {
+          id
+          qty
+          prodNick
+          locNick
+          ItemNote
+          SO
+          isWhole
+          delivDate
+          rate
+          isLate
+          createdAt
+          updatedAt
+          invoiceOrdersId
+        }
+        nextToken
+      }
+      locNick
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      fulfill
+      delivDate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateInvoice = /* GraphQL */ `
+  mutation UpdateInvoice(
+    $input: UpdateInvoiceInput!
+    $condition: ModelInvoiceConditionInput
+  ) {
+    updateInvoice(input: $input, condition: $condition) {
+      id
+      orders {
+        items {
+          id
+          qty
+          prodNick
+          locNick
+          ItemNote
+          SO
+          isWhole
+          delivDate
+          rate
+          isLate
+          createdAt
+          updatedAt
+          invoiceOrdersId
+        }
+        nextToken
+      }
+      locNick
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      fulfill
+      delivDate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteInvoice = /* GraphQL */ `
+  mutation DeleteInvoice(
+    $input: DeleteInvoiceInput!
+    $condition: ModelInvoiceConditionInput
+  ) {
+    deleteInvoice(input: $input, condition: $condition) {
+      id
+      orders {
+        items {
+          id
+          qty
+          prodNick
+          locNick
+          ItemNote
+          SO
+          isWhole
+          delivDate
+          rate
+          isLate
+          createdAt
+          updatedAt
+          invoiceOrdersId
+        }
+        nextToken
+      }
+      locNick
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      fulfill
+      delivDate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createOrder = /* GraphQL */ `
+  mutation CreateOrder(
+    $input: CreateOrderInput!
+    $condition: ModelOrderConditionInput
+  ) {
+    createOrder(input: $input, condition: $condition) {
+      id
+      qty
+      prodNick
+      product {
+        id
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
+      }
+      locNick
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      ItemNote
+      SO
+      isWhole
+      delivDate
+      rate
+      isLate
+      createdAt
+      updatedAt
+      invoiceOrdersId
+    }
+  }
+`;
+export const updateOrder = /* GraphQL */ `
+  mutation UpdateOrder(
+    $input: UpdateOrderInput!
+    $condition: ModelOrderConditionInput
+  ) {
+    updateOrder(input: $input, condition: $condition) {
+      id
+      qty
+      prodNick
+      product {
+        id
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
+      }
+      locNick
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      ItemNote
+      SO
+      isWhole
+      delivDate
+      rate
+      isLate
+      createdAt
+      updatedAt
+      invoiceOrdersId
+    }
+  }
+`;
+export const deleteOrder = /* GraphQL */ `
+  mutation DeleteOrder(
+    $input: DeleteOrderInput!
+    $condition: ModelOrderConditionInput
+  ) {
+    deleteOrder(input: $input, condition: $condition) {
+      id
+      qty
+      prodNick
+      product {
+        id
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
+      }
+      locNick
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      ItemNote
+      SO
+      isWhole
+      delivDate
+      rate
+      isLate
+      createdAt
+      updatedAt
+      invoiceOrdersId
+    }
+  }
+`;
 export const createZone = /* GraphQL */ `
   mutation CreateZone(
     $input: CreateZoneInput!
@@ -1499,6 +2204,45 @@ export const deleteRoute = /* GraphQL */ `
         }
         nextToken
       }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createPackGroup = /* GraphQL */ `
+  mutation CreatePackGroup(
+    $input: CreatePackGroupInput!
+    $condition: ModelPackGroupConditionInput
+  ) {
+    createPackGroup(input: $input, condition: $condition) {
+      id
+      packGroup
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updatePackGroup = /* GraphQL */ `
+  mutation UpdatePackGroup(
+    $input: UpdatePackGroupInput!
+    $condition: ModelPackGroupConditionInput
+  ) {
+    updatePackGroup(input: $input, condition: $condition) {
+      id
+      packGroup
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deletePackGroup = /* GraphQL */ `
+  mutation DeletePackGroup(
+    $input: DeletePackGroupInput!
+    $condition: ModelPackGroupConditionInput
+  ) {
+    deletePackGroup(input: $input, condition: $condition) {
+      id
+      packGroup
       createdAt
       updatedAt
     }
@@ -1777,6 +2521,102 @@ export const deleteDoughComponent = /* GraphQL */ `
       createdAt
       updatedAt
       doughComponentsId
+    }
+  }
+`;
+export const createBucketInfo = /* GraphQL */ `
+  mutation CreateBucketInfo(
+    $input: CreateBucketInfoInput!
+    $condition: ModelBucketInfoConditionInput
+  ) {
+    createBucketInfo(input: $input, condition: $condition) {
+      id
+      doughID
+      dough {
+        doughNick
+        doughName
+        hydration
+        batchSize
+        mixedWhere
+        components {
+          nextToken
+        }
+        isBakeReady
+        buffer
+        saltInDry
+        createdAt
+        updatedAt
+      }
+      bucketType
+      qty
+      totalDoughWeight
+      whoMixed
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateBucketInfo = /* GraphQL */ `
+  mutation UpdateBucketInfo(
+    $input: UpdateBucketInfoInput!
+    $condition: ModelBucketInfoConditionInput
+  ) {
+    updateBucketInfo(input: $input, condition: $condition) {
+      id
+      doughID
+      dough {
+        doughNick
+        doughName
+        hydration
+        batchSize
+        mixedWhere
+        components {
+          nextToken
+        }
+        isBakeReady
+        buffer
+        saltInDry
+        createdAt
+        updatedAt
+      }
+      bucketType
+      qty
+      totalDoughWeight
+      whoMixed
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteBucketInfo = /* GraphQL */ `
+  mutation DeleteBucketInfo(
+    $input: DeleteBucketInfoInput!
+    $condition: ModelBucketInfoConditionInput
+  ) {
+    deleteBucketInfo(input: $input, condition: $condition) {
+      id
+      doughID
+      dough {
+        doughNick
+        doughName
+        hydration
+        batchSize
+        mixedWhere
+        components {
+          nextToken
+        }
+        isBakeReady
+        buffer
+        saltInDry
+        createdAt
+        updatedAt
+      }
+      bucketType
+      qty
+      totalDoughWeight
+      whoMixed
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -2212,6 +3052,48 @@ export const deleteVendor = /* GraphQL */ `
       createdAt
       updatedAt
       inventoryVendorId
+    }
+  }
+`;
+export const createInfoQBAuth = /* GraphQL */ `
+  mutation CreateInfoQBAuth(
+    $input: CreateInfoQBAuthInput!
+    $condition: ModelInfoQBAuthConditionInput
+  ) {
+    createInfoQBAuth(input: $input, condition: $condition) {
+      id
+      infoName
+      infoContent
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateInfoQBAuth = /* GraphQL */ `
+  mutation UpdateInfoQBAuth(
+    $input: UpdateInfoQBAuthInput!
+    $condition: ModelInfoQBAuthConditionInput
+  ) {
+    updateInfoQBAuth(input: $input, condition: $condition) {
+      id
+      infoName
+      infoContent
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteInfoQBAuth = /* GraphQL */ `
+  mutation DeleteInfoQBAuth(
+    $input: DeleteInfoQBAuthInput!
+    $condition: ModelInfoQBAuthConditionInput
+  ) {
+    deleteInfoQBAuth(input: $input, condition: $condition) {
+      id
+      infoName
+      infoContent
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -2959,45 +3841,6 @@ export const deleteCroixSheetCount = /* GraphQL */ `
     }
   }
 `;
-export const createPackGroup = /* GraphQL */ `
-  mutation CreatePackGroup(
-    $input: CreatePackGroupInput!
-    $condition: ModelPackGroupConditionInput
-  ) {
-    createPackGroup(input: $input, condition: $condition) {
-      id
-      packGroup
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updatePackGroup = /* GraphQL */ `
-  mutation UpdatePackGroup(
-    $input: UpdatePackGroupInput!
-    $condition: ModelPackGroupConditionInput
-  ) {
-    updatePackGroup(input: $input, condition: $condition) {
-      id
-      packGroup
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deletePackGroup = /* GraphQL */ `
-  mutation DeletePackGroup(
-    $input: DeletePackGroupInput!
-    $condition: ModelPackGroupConditionInput
-  ) {
-    deletePackGroup(input: $input, condition: $condition) {
-      id
-      packGroup
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createOldDough = /* GraphQL */ `
   mutation CreateOldDough(
     $input: CreateOldDoughInput!
@@ -3085,102 +3928,6 @@ export const deleteOldDough = /* GraphQL */ `
     }
   }
 `;
-export const createBucketInfo = /* GraphQL */ `
-  mutation CreateBucketInfo(
-    $input: CreateBucketInfoInput!
-    $condition: ModelBucketInfoConditionInput
-  ) {
-    createBucketInfo(input: $input, condition: $condition) {
-      id
-      doughID
-      dough {
-        doughNick
-        doughName
-        hydration
-        batchSize
-        mixedWhere
-        components {
-          nextToken
-        }
-        isBakeReady
-        buffer
-        saltInDry
-        createdAt
-        updatedAt
-      }
-      bucketType
-      qty
-      totalDoughWeight
-      whoMixed
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateBucketInfo = /* GraphQL */ `
-  mutation UpdateBucketInfo(
-    $input: UpdateBucketInfoInput!
-    $condition: ModelBucketInfoConditionInput
-  ) {
-    updateBucketInfo(input: $input, condition: $condition) {
-      id
-      doughID
-      dough {
-        doughNick
-        doughName
-        hydration
-        batchSize
-        mixedWhere
-        components {
-          nextToken
-        }
-        isBakeReady
-        buffer
-        saltInDry
-        createdAt
-        updatedAt
-      }
-      bucketType
-      qty
-      totalDoughWeight
-      whoMixed
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteBucketInfo = /* GraphQL */ `
-  mutation DeleteBucketInfo(
-    $input: DeleteBucketInfoInput!
-    $condition: ModelBucketInfoConditionInput
-  ) {
-    deleteBucketInfo(input: $input, condition: $condition) {
-      id
-      doughID
-      dough {
-        doughNick
-        doughName
-        hydration
-        batchSize
-        mixedWhere
-        components {
-          nextToken
-        }
-        isBakeReady
-        buffer
-        saltInDry
-        createdAt
-        updatedAt
-      }
-      bucketType
-      qty
-      totalDoughWeight
-      whoMixed
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createNotes = /* GraphQL */ `
   mutation CreateNotes(
     $input: CreateNotesInput!
@@ -3224,48 +3971,6 @@ export const deleteNotes = /* GraphQL */ `
       forWhom
       byWhom
       when
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createInfoQBAuth = /* GraphQL */ `
-  mutation CreateInfoQBAuth(
-    $input: CreateInfoQBAuthInput!
-    $condition: ModelInfoQBAuthConditionInput
-  ) {
-    createInfoQBAuth(input: $input, condition: $condition) {
-      id
-      infoName
-      infoContent
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateInfoQBAuth = /* GraphQL */ `
-  mutation UpdateInfoQBAuth(
-    $input: UpdateInfoQBAuthInput!
-    $condition: ModelInfoQBAuthConditionInput
-  ) {
-    updateInfoQBAuth(input: $input, condition: $condition) {
-      id
-      infoName
-      infoContent
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteInfoQBAuth = /* GraphQL */ `
-  mutation DeleteInfoQBAuth(
-    $input: DeleteInfoQBAuthInput!
-    $condition: ModelInfoQBAuthConditionInput
-  ) {
-    deleteInfoQBAuth(input: $input, condition: $condition) {
-      id
-      infoName
-      infoContent
       createdAt
       updatedAt
     }
@@ -3430,705 +4135,6 @@ export const deleteEventLog = /* GraphQL */ `
       }
       createdAt
       updatedAt
-    }
-  }
-`;
-export const createInvoice = /* GraphQL */ `
-  mutation CreateInvoice(
-    $input: CreateInvoiceInput!
-    $condition: ModelInvoiceConditionInput
-  ) {
-    createInvoice(input: $input, condition: $condition) {
-      id
-      orders {
-        items {
-          id
-          qty
-          prodNick
-          locNick
-          PONote
-          fulfill
-          SO
-          isWhole
-          delivDate
-          rate
-          isLate
-          createdAt
-          updatedAt
-          invoiceOrdersId
-        }
-        nextToken
-      }
-      locNick
-      location {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
-          zoneNick
-          zoneName
-          description
-          zoneFee
-          createdAt
-          updatedAt
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateInvoice = /* GraphQL */ `
-  mutation UpdateInvoice(
-    $input: UpdateInvoiceInput!
-    $condition: ModelInvoiceConditionInput
-  ) {
-    updateInvoice(input: $input, condition: $condition) {
-      id
-      orders {
-        items {
-          id
-          qty
-          prodNick
-          locNick
-          PONote
-          fulfill
-          SO
-          isWhole
-          delivDate
-          rate
-          isLate
-          createdAt
-          updatedAt
-          invoiceOrdersId
-        }
-        nextToken
-      }
-      locNick
-      location {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
-          zoneNick
-          zoneName
-          description
-          zoneFee
-          createdAt
-          updatedAt
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteInvoice = /* GraphQL */ `
-  mutation DeleteInvoice(
-    $input: DeleteInvoiceInput!
-    $condition: ModelInvoiceConditionInput
-  ) {
-    deleteInvoice(input: $input, condition: $condition) {
-      id
-      orders {
-        items {
-          id
-          qty
-          prodNick
-          locNick
-          PONote
-          fulfill
-          SO
-          isWhole
-          delivDate
-          rate
-          isLate
-          createdAt
-          updatedAt
-          invoiceOrdersId
-        }
-        nextToken
-      }
-      locNick
-      location {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
-          zoneNick
-          zoneName
-          description
-          zoneFee
-          createdAt
-          updatedAt
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createOrder = /* GraphQL */ `
-  mutation CreateOrder(
-    $input: CreateOrderInput!
-    $condition: ModelOrderConditionInput
-  ) {
-    createOrder(input: $input, condition: $condition) {
-      id
-      qty
-      prodNick
-      product {
-        id
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        depends {
-          nextToken
-        }
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        productVendor {
-          nextToken
-        }
-        EODCount {
-          id
-          prodNick
-          shelfOrFreezer
-          startOrFinish
-          location
-          qty
-          whoCounted
-          createdAt
-          updatedAt
-        }
-        ActualSetOut {
-          id
-          prodNick
-          qty
-          location
-          whoSetOut
-          createdAt
-          updatedAt
-          actualSetOutProdNameId
-        }
-        createdAt
-        updatedAt
-        inventoryProductId
-        productEODCountId
-        productActualSetOutId
-      }
-      locNick
-      location {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
-          zoneNick
-          zoneName
-          description
-          zoneFee
-          createdAt
-          updatedAt
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      PONote
-      fulfill
-      SO
-      isWhole
-      delivDate
-      rate
-      isLate
-      createdAt
-      updatedAt
-      invoiceOrdersId
-    }
-  }
-`;
-export const updateOrder = /* GraphQL */ `
-  mutation UpdateOrder(
-    $input: UpdateOrderInput!
-    $condition: ModelOrderConditionInput
-  ) {
-    updateOrder(input: $input, condition: $condition) {
-      id
-      qty
-      prodNick
-      product {
-        id
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        depends {
-          nextToken
-        }
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        productVendor {
-          nextToken
-        }
-        EODCount {
-          id
-          prodNick
-          shelfOrFreezer
-          startOrFinish
-          location
-          qty
-          whoCounted
-          createdAt
-          updatedAt
-        }
-        ActualSetOut {
-          id
-          prodNick
-          qty
-          location
-          whoSetOut
-          createdAt
-          updatedAt
-          actualSetOutProdNameId
-        }
-        createdAt
-        updatedAt
-        inventoryProductId
-        productEODCountId
-        productActualSetOutId
-      }
-      locNick
-      location {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
-          zoneNick
-          zoneName
-          description
-          zoneFee
-          createdAt
-          updatedAt
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      PONote
-      fulfill
-      SO
-      isWhole
-      delivDate
-      rate
-      isLate
-      createdAt
-      updatedAt
-      invoiceOrdersId
-    }
-  }
-`;
-export const deleteOrder = /* GraphQL */ `
-  mutation DeleteOrder(
-    $input: DeleteOrderInput!
-    $condition: ModelOrderConditionInput
-  ) {
-    deleteOrder(input: $input, condition: $condition) {
-      id
-      qty
-      prodNick
-      product {
-        id
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        depends {
-          nextToken
-        }
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        productVendor {
-          nextToken
-        }
-        EODCount {
-          id
-          prodNick
-          shelfOrFreezer
-          startOrFinish
-          location
-          qty
-          whoCounted
-          createdAt
-          updatedAt
-        }
-        ActualSetOut {
-          id
-          prodNick
-          qty
-          location
-          whoSetOut
-          createdAt
-          updatedAt
-          actualSetOutProdNameId
-        }
-        createdAt
-        updatedAt
-        inventoryProductId
-        productEODCountId
-        productActualSetOutId
-      }
-      locNick
-      location {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
-          zoneNick
-          zoneName
-          description
-          zoneFee
-          createdAt
-          updatedAt
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      PONote
-      fulfill
-      SO
-      isWhole
-      delivDate
-      rate
-      isLate
-      createdAt
-      updatedAt
-      invoiceOrdersId
     }
   }
 `;
@@ -5678,6 +5684,7 @@ export const createLocationUser = /* GraphQL */ `
   ) {
     createLocationUser(input: $input, condition: $condition) {
       id
+      type
       authType
       locNick
       sub
@@ -5779,6 +5786,7 @@ export const updateLocationUser = /* GraphQL */ `
   ) {
     updateLocationUser(input: $input, condition: $condition) {
       id
+      type
       authType
       locNick
       sub
@@ -5880,6 +5888,7 @@ export const deleteLocationUser = /* GraphQL */ `
   ) {
     deleteLocationUser(input: $input, condition: $condition) {
       id
+      type
       authType
       locNick
       sub
