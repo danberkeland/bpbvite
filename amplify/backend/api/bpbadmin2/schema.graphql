@@ -86,6 +86,17 @@ type ProductBackup @model @auth(rules: [{ allow: public }]) {
 
 # Base Schemas
 
+
+type User @model {
+  name: String!
+  email: String!
+  phone: String
+  sub: String! @primaryKey
+  locNick: String
+  defaultLoc: Location @hasOne(fields: ["locNick"])
+  locs: [LocationUser] @hasMany(indexName: "bySub", fields: ["sub"])
+}
+
 type Location @model {
   locNick: String! @primaryKey
   locName: String!
@@ -119,15 +130,6 @@ type Location @model {
     @hasMany(indexName: "byTemp", fields: ["locNick"])
 }
 
-type User @model {
-  name: String!
-  email: String!
-  phone: String
-  sub: String! @primaryKey
-  locNick: String
-  defaultLoc: Location @hasOne(fields: ["locNick"])
-  locs: [LocationUser] @hasMany(indexName: "bySub", fields: ["sub"])
-}
 
 type Product @model {
   id: ID!
@@ -167,6 +169,33 @@ type Product @model {
   ActualSetOut: ActualSetOut @hasOne
 }
 
+
+
+type Invoice @model {
+  id: String! @primaryKey
+  orders: [Order] @hasMany
+  locNick: String!
+  location: Location @hasOne(fields: ["locNick"])
+  fulfill: String
+  delivDate: String
+}
+
+
+type Order @model {
+  id: ID!
+  qty: Int
+  prodNick: String!
+  product: Product! @hasOne(fields: ["prodNick"])
+  locNick: String!
+  location: Location! @hasOne(fields: ["locNick"])
+  ItemNote: String
+  SO: Int
+  isWhole: Boolean
+  delivDate: String
+  rate: Float
+  isLate: Int
+}
+
 type Zone @model {
   zoneNick: String! @primaryKey
   zoneName: String
@@ -186,6 +215,12 @@ type Route @model {
   printOrder: Int
   driver: String
   zoneRoute: [ZoneRoute] @hasMany(indexName: "byRoute", fields: ["routeNick"])
+}
+
+
+type PackGroup @model {
+  id: ID!
+  packGroup: String!
 }
 
 type Dough @model {
@@ -208,6 +243,17 @@ type DoughComponent @model {
   unitID: ID
   unit: Unit @hasOne(fields: ["unitID"])
   amount: Float
+}
+
+
+type BucketInfo @model {
+  id: ID!
+  doughID: String!
+  dough: Dough @hasOne(fields: ["doughID"])
+  bucketType: String
+  qty: Int
+  totalDoughWeight: Int
+  whoMixed: String
 }
 
 type Inventory @model {
@@ -250,6 +296,19 @@ type Vendor @model {
     @hasMany(indexName: "byVend", fields: ["vendorNick"])
 }
 
+
+type InfoQBAuth @model {
+  id: ID!
+  infoName: String
+  infoContent: String
+}
+
+
+
+
+
+# Dynamic Counts
+
 type EODCount @model {
   id: ID!
   prodNick: String!
@@ -285,10 +344,6 @@ type CroixSheetCount @model {
   whoCounted: String
 }
 
-type PackGroup @model {
-  id: ID!
-  packGroup: String!
-}
 
 type OldDough @model {
   id: ID!
@@ -297,15 +352,6 @@ type OldDough @model {
   qty: Int
 }
 
-type BucketInfo @model {
-  id: ID!
-  doughID: String!
-  dough: Dough @hasOne(fields: ["doughID"])
-  bucketType: String
-  qty: Int
-  totalDoughWeight: Int
-  whoMixed: String
-}
 
 type Notes @model {
   id: ID!
@@ -315,11 +361,6 @@ type Notes @model {
   when: String
 }
 
-type InfoQBAuth @model {
-  id: ID!
-  infoName: String
-  infoContent: String
-}
 
 type EventLog @model {
   id: ID!
@@ -327,29 +368,6 @@ type EventLog @model {
   eventDescrip: String
   userID: String
   user: User @hasOne(fields: ["userID"])
-}
-
-type Invoice @model {
-  id: String! @primaryKey
-  orders: [Order] @hasMany
-  locNick: String!
-  location: Location @hasOne(fields: ["locNick"])
-}
-
-type Order @model {
-  id: ID!
-  qty: Int
-  prodNick: String!
-  product: Product! @hasOne(fields: ["prodNick"])
-  locNick: String!
-  location: Location! @hasOne(fields: ["locNick"])
-  PONote: String
-  fulfill: String
-  SO: Int
-  isWhole: Boolean
-  delivDate: String
-  rate: Float
-  isLate: Int
 }
 
 # Join Schemas
