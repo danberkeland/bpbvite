@@ -30,6 +30,32 @@ export const grabOldProd = async () => {
   export const updateNewProd = async (old) => {
     delete old.createdAt;
     delete old.updatedAt;
+    delete old.packGroup;
+    delete old.doughType;
+    delete old.eodCount;
+    delete old.depends;
+    delete old.currentStock;
+    delete old.whoCountedLast;
+    delete old.preshaped;
+    delete old.prepreshaped
+    delete old.updatePreDate
+    delete old.updateFreezerDate
+    delete old.backporchbakerypre
+    delete old.backporchbakery
+    delete old.bpbextrapre
+    delete old.bpbextra
+    delete old.bpbssetoutpre
+    delete old.bpbssetout
+    delete old.freezerCount
+    delete old.freezerClosing
+    delete old.sheetMake
+    delete old.freezerNorth
+    delete old.freezerNorthClosing
+    delete old.freezerNorthFlag
+  
+
+    old.prodNick = old.nickName
+    delete old.nickName
   
     console.log("updateOld", old);
     try {
@@ -42,6 +68,33 @@ export const grabOldProd = async () => {
   export const createNewProd = async (old) => {
     delete old.createdAt;
     delete old.updatedAt;
+    delete old.packGroup;
+    delete old.doughType;
+    delete old.eodCount;
+    delete old.depends;
+    delete old.currentStock;
+    delete old.whoCountedLast;
+    delete old.preshaped;
+    delete old.prepreshaped
+    delete old.updatePreDate
+    delete old.updateFreezerDate
+    delete old.backporchbakerypre
+    delete old.backporchbakery
+    delete old.bpbextrapre
+    delete old.bpbextra
+    delete old.bpbssetoutpre
+    delete old.bpbssetout
+    delete old.freezerCount
+    delete old.freezerClosing
+    delete old.sheetMake
+    delete old.freezerNorth
+    delete old.freezerNorthClosing
+    delete old.freezerNorthFlag
+  
+
+    old.prodNick = old.nickName
+    delete old.nickName
+  
   
     console.log("createOld", old);
     try {
