@@ -86,7 +86,6 @@ type ProductBackup @model @auth(rules: [{ allow: public }]) {
 
 # Base Schemas
 
-
 type User @model {
   name: String!
   email: String!
@@ -130,7 +129,6 @@ type Location @model {
     @hasMany(indexName: "byTemp", fields: ["locNick"])
 }
 
-
 type Product @model {
   id: ID!
   prodName: String!
@@ -169,8 +167,6 @@ type Product @model {
   ActualSetOut: ActualSetOut @hasOne
 }
 
-
-
 type Invoice @model {
   id: String! @primaryKey
   orders: [Order] @hasMany
@@ -179,7 +175,6 @@ type Invoice @model {
   fulfill: String
   delivDate: String
 }
-
 
 type Order @model {
   id: ID!
@@ -217,7 +212,6 @@ type Route @model {
   zoneRoute: [ZoneRoute] @hasMany(indexName: "byRoute", fields: ["routeNick"])
 }
 
-
 type PackGroup @model {
   id: ID!
   packGroup: String!
@@ -244,7 +238,6 @@ type DoughComponent @model {
   unit: Unit @hasOne(fields: ["unitID"])
   amount: Float
 }
-
 
 type BucketInfo @model {
   id: ID!
@@ -296,16 +289,11 @@ type Vendor @model {
     @hasMany(indexName: "byVend", fields: ["vendorNick"])
 }
 
-
 type InfoQBAuth @model {
   id: ID!
   infoName: String
   infoContent: String
 }
-
-
-
-
 
 # Dynamic Counts
 
@@ -344,14 +332,12 @@ type CroixSheetCount @model {
   whoCounted: String
 }
 
-
 type OldDough @model {
   id: ID!
   doughID: String!
   dough: Dough @hasOne(fields: ["doughID"])
   qty: Int
 }
-
 
 type Notes @model {
   id: ID!
@@ -360,7 +346,6 @@ type Notes @model {
   byWhom: String
   when: String
 }
-
 
 type EventLog @model {
   id: ID!
