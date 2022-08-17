@@ -1,972 +1,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateLocation = /* GraphQL */ `
-  subscription OnCreateLocation($filter: ModelSubscriptionLocationFilterInput) {
-    onCreateLocation(filter: $filter) {
-      locNick
-      locName
-      subs {
-        items {
-          id
-          authType
-          locNick
-          sub
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      zoneID
-      zone {
-        id
-        zoneNum
-        zoneName
-        zoneFee
-        createdAt
-        updatedAt
-        routeRouteServeId
-      }
-      addr1
-      addr2
-      city
-      zip
-      email
-      phone
-      toBePrinted
-      toBeEmailed
-      printDuplicate
-      terms
-      invoicing
-      latestFirstDeliv
-      latestFinalDeliv
-      webpageURL
-      picURL
-      gMap
-      specialInstructions
-      delivOrder
-      qbID
-      currentBalance
-      prodsNotAllowed {
-        items {
-          id
-          locNick
-          prodNick
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      customProd {
-        items {
-          id
-          wholePrice
-          locNick
-          prodNick
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      templateProd {
-        items {
-          id
-          locNick
-          prodNick
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateLocation = /* GraphQL */ `
-  subscription OnUpdateLocation($filter: ModelSubscriptionLocationFilterInput) {
-    onUpdateLocation(filter: $filter) {
-      locNick
-      locName
-      subs {
-        items {
-          id
-          authType
-          locNick
-          sub
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      zoneID
-      zone {
-        id
-        zoneNum
-        zoneName
-        zoneFee
-        createdAt
-        updatedAt
-        routeRouteServeId
-      }
-      addr1
-      addr2
-      city
-      zip
-      email
-      phone
-      toBePrinted
-      toBeEmailed
-      printDuplicate
-      terms
-      invoicing
-      latestFirstDeliv
-      latestFinalDeliv
-      webpageURL
-      picURL
-      gMap
-      specialInstructions
-      delivOrder
-      qbID
-      currentBalance
-      prodsNotAllowed {
-        items {
-          id
-          locNick
-          prodNick
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      customProd {
-        items {
-          id
-          wholePrice
-          locNick
-          prodNick
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      templateProd {
-        items {
-          id
-          locNick
-          prodNick
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteLocation = /* GraphQL */ `
-  subscription OnDeleteLocation($filter: ModelSubscriptionLocationFilterInput) {
-    onDeleteLocation(filter: $filter) {
-      locNick
-      locName
-      subs {
-        items {
-          id
-          authType
-          locNick
-          sub
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      zoneID
-      zone {
-        id
-        zoneNum
-        zoneName
-        zoneFee
-        createdAt
-        updatedAt
-        routeRouteServeId
-      }
-      addr1
-      addr2
-      city
-      zip
-      email
-      phone
-      toBePrinted
-      toBeEmailed
-      printDuplicate
-      terms
-      invoicing
-      latestFirstDeliv
-      latestFinalDeliv
-      webpageURL
-      picURL
-      gMap
-      specialInstructions
-      delivOrder
-      qbID
-      currentBalance
-      prodsNotAllowed {
-        items {
-          id
-          locNick
-          prodNick
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      customProd {
-        items {
-          id
-          wholePrice
-          locNick
-          prodNick
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      templateProd {
-        items {
-          id
-          locNick
-          prodNick
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateTemplateProd = /* GraphQL */ `
-  subscription OnCreateTemplateProd(
-    $filter: ModelSubscriptionTemplateProdFilterInput
-  ) {
-    onCreateTemplateProd(filter: $filter) {
-      id
-      locNick
-      prodNick
-      location {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
-          id
-          zoneNum
-          zoneName
-          zoneFee
-          createdAt
-          updatedAt
-          routeRouteServeId
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      product {
-        id
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        depends {
-          nextToken
-        }
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        productDependsId
-        inventoryProductsId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateTemplateProd = /* GraphQL */ `
-  subscription OnUpdateTemplateProd(
-    $filter: ModelSubscriptionTemplateProdFilterInput
-  ) {
-    onUpdateTemplateProd(filter: $filter) {
-      id
-      locNick
-      prodNick
-      location {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
-          id
-          zoneNum
-          zoneName
-          zoneFee
-          createdAt
-          updatedAt
-          routeRouteServeId
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      product {
-        id
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        depends {
-          nextToken
-        }
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        productDependsId
-        inventoryProductsId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteTemplateProd = /* GraphQL */ `
-  subscription OnDeleteTemplateProd(
-    $filter: ModelSubscriptionTemplateProdFilterInput
-  ) {
-    onDeleteTemplateProd(filter: $filter) {
-      id
-      locNick
-      prodNick
-      location {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
-          id
-          zoneNum
-          zoneName
-          zoneFee
-          createdAt
-          updatedAt
-          routeRouteServeId
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      product {
-        id
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        depends {
-          nextToken
-        }
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        productDependsId
-        inventoryProductsId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateProdsNotAllowed = /* GraphQL */ `
-  subscription OnCreateProdsNotAllowed(
-    $filter: ModelSubscriptionProdsNotAllowedFilterInput
-  ) {
-    onCreateProdsNotAllowed(filter: $filter) {
-      id
-      locNick
-      prodNick
-      location {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
-          id
-          zoneNum
-          zoneName
-          zoneFee
-          createdAt
-          updatedAt
-          routeRouteServeId
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      product {
-        id
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        depends {
-          nextToken
-        }
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        productDependsId
-        inventoryProductsId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateProdsNotAllowed = /* GraphQL */ `
-  subscription OnUpdateProdsNotAllowed(
-    $filter: ModelSubscriptionProdsNotAllowedFilterInput
-  ) {
-    onUpdateProdsNotAllowed(filter: $filter) {
-      id
-      locNick
-      prodNick
-      location {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
-          id
-          zoneNum
-          zoneName
-          zoneFee
-          createdAt
-          updatedAt
-          routeRouteServeId
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      product {
-        id
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        depends {
-          nextToken
-        }
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        productDependsId
-        inventoryProductsId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteProdsNotAllowed = /* GraphQL */ `
-  subscription OnDeleteProdsNotAllowed(
-    $filter: ModelSubscriptionProdsNotAllowedFilterInput
-  ) {
-    onDeleteProdsNotAllowed(filter: $filter) {
-      id
-      locNick
-      prodNick
-      location {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
-          id
-          zoneNum
-          zoneName
-          zoneFee
-          createdAt
-          updatedAt
-          routeRouteServeId
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      product {
-        id
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        depends {
-          nextToken
-        }
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        productDependsId
-        inventoryProductsId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateLocationBackup = /* GraphQL */ `
   subscription OnCreateLocationBackup(
     $filter: ModelSubscriptionLocationBackupFilterInput
@@ -1087,6 +121,411 @@ export const onDeleteLocationBackup = /* GraphQL */ `
     }
   }
 `;
+export const onCreateProductBackup = /* GraphQL */ `
+  subscription OnCreateProductBackup {
+    onCreateProductBackup {
+      id
+      prodName
+      nickName
+      packGroup
+      packSize
+      doughType
+      freezerThaw
+      eodCount
+      packGroupOrder
+      readyTime
+      bakedWhere
+      wholePrice
+      retailPrice
+      isWhole
+      depends
+      weight
+      descrip
+      picURL
+      squareID
+      currentStock
+      whoCountedLast
+      forBake
+      bakeExtra
+      batchSize
+      preshaped
+      prepreshaped
+      updatePreDate
+      updateFreezerDate
+      backporchbakerypre
+      backporchbakery
+      bpbextrapre
+      bpbextra
+      bpbssetoutpre
+      bpbssetout
+      defaultInclude
+      leadTime
+      qbID
+      freezerCount
+      freezerClosing
+      sheetMake
+      freezerNorth
+      freezerNorthClosing
+      freezerNorthFlag
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateProductBackup = /* GraphQL */ `
+  subscription OnUpdateProductBackup {
+    onUpdateProductBackup {
+      id
+      prodName
+      nickName
+      packGroup
+      packSize
+      doughType
+      freezerThaw
+      eodCount
+      packGroupOrder
+      readyTime
+      bakedWhere
+      wholePrice
+      retailPrice
+      isWhole
+      depends
+      weight
+      descrip
+      picURL
+      squareID
+      currentStock
+      whoCountedLast
+      forBake
+      bakeExtra
+      batchSize
+      preshaped
+      prepreshaped
+      updatePreDate
+      updateFreezerDate
+      backporchbakerypre
+      backporchbakery
+      bpbextrapre
+      bpbextra
+      bpbssetoutpre
+      bpbssetout
+      defaultInclude
+      leadTime
+      qbID
+      freezerCount
+      freezerClosing
+      sheetMake
+      freezerNorth
+      freezerNorthClosing
+      freezerNorthFlag
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteProductBackup = /* GraphQL */ `
+  subscription OnDeleteProductBackup {
+    onDeleteProductBackup {
+      id
+      prodName
+      nickName
+      packGroup
+      packSize
+      doughType
+      freezerThaw
+      eodCount
+      packGroupOrder
+      readyTime
+      bakedWhere
+      wholePrice
+      retailPrice
+      isWhole
+      depends
+      weight
+      descrip
+      picURL
+      squareID
+      currentStock
+      whoCountedLast
+      forBake
+      bakeExtra
+      batchSize
+      preshaped
+      prepreshaped
+      updatePreDate
+      updateFreezerDate
+      backporchbakerypre
+      backporchbakery
+      bpbextrapre
+      bpbextra
+      bpbssetoutpre
+      bpbssetout
+      defaultInclude
+      leadTime
+      qbID
+      freezerCount
+      freezerClosing
+      sheetMake
+      freezerNorth
+      freezerNorthClosing
+      freezerNorthFlag
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateLocation = /* GraphQL */ `
+  subscription OnCreateLocation($filter: ModelSubscriptionLocationFilterInput) {
+    onCreateLocation(filter: $filter) {
+      locNick
+      locName
+      subs {
+        items {
+          id
+          authType
+          locNick
+          sub
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      zoneID
+      zone {
+        zoneNick
+        zoneName
+        description
+        zoneFee
+        zoneRoute {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      addr1
+      addr2
+      city
+      zip
+      email
+      phone
+      toBePrinted
+      toBeEmailed
+      printDuplicate
+      terms
+      invoicing
+      latestFirstDeliv
+      latestFinalDeliv
+      webpageURL
+      picURL
+      gMap
+      specialInstructions
+      delivOrder
+      qbID
+      currentBalance
+      prodsNotAllowed {
+        items {
+          id
+          locNick
+          prodNick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      customProd {
+        items {
+          id
+          wholePrice
+          locNick
+          prodNick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      templateProd {
+        items {
+          id
+          locNick
+          prodNick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateLocation = /* GraphQL */ `
+  subscription OnUpdateLocation($filter: ModelSubscriptionLocationFilterInput) {
+    onUpdateLocation(filter: $filter) {
+      locNick
+      locName
+      subs {
+        items {
+          id
+          authType
+          locNick
+          sub
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      zoneID
+      zone {
+        zoneNick
+        zoneName
+        description
+        zoneFee
+        zoneRoute {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      addr1
+      addr2
+      city
+      zip
+      email
+      phone
+      toBePrinted
+      toBeEmailed
+      printDuplicate
+      terms
+      invoicing
+      latestFirstDeliv
+      latestFinalDeliv
+      webpageURL
+      picURL
+      gMap
+      specialInstructions
+      delivOrder
+      qbID
+      currentBalance
+      prodsNotAllowed {
+        items {
+          id
+          locNick
+          prodNick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      customProd {
+        items {
+          id
+          wholePrice
+          locNick
+          prodNick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      templateProd {
+        items {
+          id
+          locNick
+          prodNick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteLocation = /* GraphQL */ `
+  subscription OnDeleteLocation($filter: ModelSubscriptionLocationFilterInput) {
+    onDeleteLocation(filter: $filter) {
+      locNick
+      locName
+      subs {
+        items {
+          id
+          authType
+          locNick
+          sub
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      zoneID
+      zone {
+        zoneNick
+        zoneName
+        description
+        zoneFee
+        zoneRoute {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      addr1
+      addr2
+      city
+      zip
+      email
+      phone
+      toBePrinted
+      toBeEmailed
+      printDuplicate
+      terms
+      invoicing
+      latestFirstDeliv
+      latestFinalDeliv
+      webpageURL
+      picURL
+      gMap
+      specialInstructions
+      delivOrder
+      qbID
+      currentBalance
+      prodsNotAllowed {
+        items {
+          id
+          locNick
+          prodNick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      customProd {
+        items {
+          id
+          wholePrice
+          locNick
+          prodNick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      templateProd {
+        items {
+          id
+          locNick
+          prodNick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateUser = /* GraphQL */ `
   subscription OnCreateUser($filter: ModelSubscriptionUserFilterInput) {
     onCreateUser(filter: $filter) {
@@ -1103,13 +542,12 @@ export const onCreateUser = /* GraphQL */ `
         }
         zoneID
         zone {
-          id
-          zoneNum
+          zoneNick
           zoneName
+          description
           zoneFee
           createdAt
           updatedAt
-          routeRouteServeId
         }
         addr1
         addr2
@@ -1175,13 +613,12 @@ export const onUpdateUser = /* GraphQL */ `
         }
         zoneID
         zone {
-          id
-          zoneNum
+          zoneNick
           zoneName
+          description
           zoneFee
           createdAt
           updatedAt
-          routeRouteServeId
         }
         addr1
         addr2
@@ -1247,13 +684,12 @@ export const onDeleteUser = /* GraphQL */ `
         }
         zoneID
         zone {
-          id
-          zoneNum
+          zoneNick
           zoneName
+          description
           zoneFee
           createdAt
           updatedAt
-          routeRouteServeId
         }
         addr1
         addr2
@@ -1340,38 +776,6 @@ export const onCreateProduct = /* GraphQL */ `
       wholePrice
       retailPrice
       isWhole
-      depends {
-        items {
-          id
-          prodName
-          prodNick
-          packGroupID
-          packSize
-          doughNick
-          freezerThaw
-          packGroupOrder
-          readyTime
-          bakedWhere
-          wholePrice
-          retailPrice
-          isWhole
-          weight
-          descrip
-          picURL
-          squareID
-          forBake
-          bakeExtra
-          batchSize
-          defaultInclude
-          leadTime
-          qbID
-          createdAt
-          updatedAt
-          productDependsId
-          inventoryProductsId
-        }
-        nextToken
-      }
       weight
       descrip
       picURL
@@ -1382,6 +786,16 @@ export const onCreateProduct = /* GraphQL */ `
       defaultInclude
       leadTime
       qbID
+      depends {
+        items {
+          id
+          prod1Nick
+          prod2Nick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       altPricing {
         items {
           id
@@ -1413,10 +827,102 @@ export const onCreateProduct = /* GraphQL */ `
         }
         nextToken
       }
+      productVendor {
+        items {
+          id
+          prodNick
+          vendorNick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      EODCount {
+        id
+        prodNick
+        product {
+          id
+          prodName
+          prodNick
+          packGroupID
+          packSize
+          doughNick
+          freezerThaw
+          packGroupOrder
+          readyTime
+          bakedWhere
+          wholePrice
+          retailPrice
+          isWhole
+          weight
+          descrip
+          picURL
+          squareID
+          forBake
+          bakeExtra
+          batchSize
+          defaultInclude
+          leadTime
+          qbID
+          createdAt
+          updatedAt
+          inventoryProductId
+          productEODCountId
+          productActualSetOutId
+        }
+        shelfOrFreezer
+        startOrFinish
+        location
+        qty
+        whoCounted
+        createdAt
+        updatedAt
+      }
+      ActualSetOut {
+        id
+        prodNick
+        prodName {
+          id
+          prodName
+          prodNick
+          packGroupID
+          packSize
+          doughNick
+          freezerThaw
+          packGroupOrder
+          readyTime
+          bakedWhere
+          wholePrice
+          retailPrice
+          isWhole
+          weight
+          descrip
+          picURL
+          squareID
+          forBake
+          bakeExtra
+          batchSize
+          defaultInclude
+          leadTime
+          qbID
+          createdAt
+          updatedAt
+          inventoryProductId
+          productEODCountId
+          productActualSetOutId
+        }
+        qty
+        location
+        whoSetOut
+        createdAt
+        updatedAt
+        actualSetOutProdNameId
+      }
       createdAt
       updatedAt
-      productDependsId
-      inventoryProductsId
+      inventoryProductId
+      productEODCountId
+      productActualSetOutId
     }
   }
 `;
@@ -1457,38 +963,6 @@ export const onUpdateProduct = /* GraphQL */ `
       wholePrice
       retailPrice
       isWhole
-      depends {
-        items {
-          id
-          prodName
-          prodNick
-          packGroupID
-          packSize
-          doughNick
-          freezerThaw
-          packGroupOrder
-          readyTime
-          bakedWhere
-          wholePrice
-          retailPrice
-          isWhole
-          weight
-          descrip
-          picURL
-          squareID
-          forBake
-          bakeExtra
-          batchSize
-          defaultInclude
-          leadTime
-          qbID
-          createdAt
-          updatedAt
-          productDependsId
-          inventoryProductsId
-        }
-        nextToken
-      }
       weight
       descrip
       picURL
@@ -1499,6 +973,16 @@ export const onUpdateProduct = /* GraphQL */ `
       defaultInclude
       leadTime
       qbID
+      depends {
+        items {
+          id
+          prod1Nick
+          prod2Nick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       altPricing {
         items {
           id
@@ -1530,10 +1014,102 @@ export const onUpdateProduct = /* GraphQL */ `
         }
         nextToken
       }
+      productVendor {
+        items {
+          id
+          prodNick
+          vendorNick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      EODCount {
+        id
+        prodNick
+        product {
+          id
+          prodName
+          prodNick
+          packGroupID
+          packSize
+          doughNick
+          freezerThaw
+          packGroupOrder
+          readyTime
+          bakedWhere
+          wholePrice
+          retailPrice
+          isWhole
+          weight
+          descrip
+          picURL
+          squareID
+          forBake
+          bakeExtra
+          batchSize
+          defaultInclude
+          leadTime
+          qbID
+          createdAt
+          updatedAt
+          inventoryProductId
+          productEODCountId
+          productActualSetOutId
+        }
+        shelfOrFreezer
+        startOrFinish
+        location
+        qty
+        whoCounted
+        createdAt
+        updatedAt
+      }
+      ActualSetOut {
+        id
+        prodNick
+        prodName {
+          id
+          prodName
+          prodNick
+          packGroupID
+          packSize
+          doughNick
+          freezerThaw
+          packGroupOrder
+          readyTime
+          bakedWhere
+          wholePrice
+          retailPrice
+          isWhole
+          weight
+          descrip
+          picURL
+          squareID
+          forBake
+          bakeExtra
+          batchSize
+          defaultInclude
+          leadTime
+          qbID
+          createdAt
+          updatedAt
+          inventoryProductId
+          productEODCountId
+          productActualSetOutId
+        }
+        qty
+        location
+        whoSetOut
+        createdAt
+        updatedAt
+        actualSetOutProdNameId
+      }
       createdAt
       updatedAt
-      productDependsId
-      inventoryProductsId
+      inventoryProductId
+      productEODCountId
+      productActualSetOutId
     }
   }
 `;
@@ -1574,38 +1150,6 @@ export const onDeleteProduct = /* GraphQL */ `
       wholePrice
       retailPrice
       isWhole
-      depends {
-        items {
-          id
-          prodName
-          prodNick
-          packGroupID
-          packSize
-          doughNick
-          freezerThaw
-          packGroupOrder
-          readyTime
-          bakedWhere
-          wholePrice
-          retailPrice
-          isWhole
-          weight
-          descrip
-          picURL
-          squareID
-          forBake
-          bakeExtra
-          batchSize
-          defaultInclude
-          leadTime
-          qbID
-          createdAt
-          updatedAt
-          productDependsId
-          inventoryProductsId
-        }
-        nextToken
-      }
       weight
       descrip
       picURL
@@ -1616,6 +1160,16 @@ export const onDeleteProduct = /* GraphQL */ `
       defaultInclude
       leadTime
       qbID
+      depends {
+        items {
+          id
+          prod1Nick
+          prod2Nick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       altPricing {
         items {
           id
@@ -1647,712 +1201,246 @@ export const onDeleteProduct = /* GraphQL */ `
         }
         nextToken
       }
+      productVendor {
+        items {
+          id
+          prodNick
+          vendorNick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      EODCount {
+        id
+        prodNick
+        product {
+          id
+          prodName
+          prodNick
+          packGroupID
+          packSize
+          doughNick
+          freezerThaw
+          packGroupOrder
+          readyTime
+          bakedWhere
+          wholePrice
+          retailPrice
+          isWhole
+          weight
+          descrip
+          picURL
+          squareID
+          forBake
+          bakeExtra
+          batchSize
+          defaultInclude
+          leadTime
+          qbID
+          createdAt
+          updatedAt
+          inventoryProductId
+          productEODCountId
+          productActualSetOutId
+        }
+        shelfOrFreezer
+        startOrFinish
+        location
+        qty
+        whoCounted
+        createdAt
+        updatedAt
+      }
+      ActualSetOut {
+        id
+        prodNick
+        prodName {
+          id
+          prodName
+          prodNick
+          packGroupID
+          packSize
+          doughNick
+          freezerThaw
+          packGroupOrder
+          readyTime
+          bakedWhere
+          wholePrice
+          retailPrice
+          isWhole
+          weight
+          descrip
+          picURL
+          squareID
+          forBake
+          bakeExtra
+          batchSize
+          defaultInclude
+          leadTime
+          qbID
+          createdAt
+          updatedAt
+          inventoryProductId
+          productEODCountId
+          productActualSetOutId
+        }
+        qty
+        location
+        whoSetOut
+        createdAt
+        updatedAt
+        actualSetOutProdNameId
+      }
       createdAt
       updatedAt
-      productDependsId
-      inventoryProductsId
+      inventoryProductId
+      productEODCountId
+      productActualSetOutId
     }
   }
 `;
 export const onCreateZone = /* GraphQL */ `
   subscription OnCreateZone($filter: ModelSubscriptionZoneFilterInput) {
     onCreateZone(filter: $filter) {
-      id
-      zoneNum
+      zoneNick
       zoneName
+      description
       zoneFee
+      zoneRoute {
+        items {
+          id
+          routeNick
+          zoneNick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
-      routeRouteServeId
     }
   }
 `;
 export const onUpdateZone = /* GraphQL */ `
   subscription OnUpdateZone($filter: ModelSubscriptionZoneFilterInput) {
     onUpdateZone(filter: $filter) {
-      id
-      zoneNum
+      zoneNick
       zoneName
+      description
       zoneFee
+      zoneRoute {
+        items {
+          id
+          routeNick
+          zoneNick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
-      routeRouteServeId
     }
   }
 `;
 export const onDeleteZone = /* GraphQL */ `
   subscription OnDeleteZone($filter: ModelSubscriptionZoneFilterInput) {
     onDeleteZone(filter: $filter) {
-      id
-      zoneNum
+      zoneNick
       zoneName
+      description
       zoneFee
-      createdAt
-      updatedAt
-      routeRouteServeId
-    }
-  }
-`;
-export const onCreateLocationUser = /* GraphQL */ `
-  subscription OnCreateLocationUser(
-    $filter: ModelSubscriptionLocationUserFilterInput
-  ) {
-    onCreateLocationUser(filter: $filter) {
-      id
-      authType
-      locNick
-      sub
-      location {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
+      zoneRoute {
+        items {
           id
-          zoneNum
-          zoneName
-          zoneFee
-          createdAt
-          updatedAt
-          routeRouteServeId
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      user {
-        name
-        email
-        phone
-        sub
-        locNick
-        defaultLoc {
-          locNick
-          locName
-          zoneID
-          addr1
-          addr2
-          city
-          zip
-          email
-          phone
-          toBePrinted
-          toBeEmailed
-          printDuplicate
-          terms
-          invoicing
-          latestFirstDeliv
-          latestFinalDeliv
-          webpageURL
-          picURL
-          gMap
-          specialInstructions
-          delivOrder
-          qbID
-          currentBalance
+          routeNick
+          zoneNick
           createdAt
           updatedAt
         }
-        locs {
-          nextToken
-        }
-        createdAt
-        updatedAt
+        nextToken
       }
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdateLocationUser = /* GraphQL */ `
-  subscription OnUpdateLocationUser(
-    $filter: ModelSubscriptionLocationUserFilterInput
-  ) {
-    onUpdateLocationUser(filter: $filter) {
-      id
-      authType
-      locNick
-      sub
-      location {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
+export const onCreateRoute = /* GraphQL */ `
+  subscription OnCreateRoute($filter: ModelSubscriptionRouteFilterInput) {
+    onCreateRoute(filter: $filter) {
+      routeNick
+      routeName
+      routeStart
+      routeTime
+      RouteDepart
+      RouteArrive
+      RouteSched
+      printOrder
+      driver
+      zoneRoute {
+        items {
           id
-          zoneNum
-          zoneName
-          zoneFee
-          createdAt
-          updatedAt
-          routeRouteServeId
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      user {
-        name
-        email
-        phone
-        sub
-        locNick
-        defaultLoc {
-          locNick
-          locName
-          zoneID
-          addr1
-          addr2
-          city
-          zip
-          email
-          phone
-          toBePrinted
-          toBeEmailed
-          printDuplicate
-          terms
-          invoicing
-          latestFirstDeliv
-          latestFinalDeliv
-          webpageURL
-          picURL
-          gMap
-          specialInstructions
-          delivOrder
-          qbID
-          currentBalance
+          routeNick
+          zoneNick
           createdAt
           updatedAt
         }
-        locs {
-          nextToken
-        }
-        createdAt
-        updatedAt
+        nextToken
       }
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeleteLocationUser = /* GraphQL */ `
-  subscription OnDeleteLocationUser(
-    $filter: ModelSubscriptionLocationUserFilterInput
-  ) {
-    onDeleteLocationUser(filter: $filter) {
-      id
-      authType
-      locNick
-      sub
-      location {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
+export const onUpdateRoute = /* GraphQL */ `
+  subscription OnUpdateRoute($filter: ModelSubscriptionRouteFilterInput) {
+    onUpdateRoute(filter: $filter) {
+      routeNick
+      routeName
+      routeStart
+      routeTime
+      RouteDepart
+      RouteArrive
+      RouteSched
+      printOrder
+      driver
+      zoneRoute {
+        items {
           id
-          zoneNum
-          zoneName
-          zoneFee
-          createdAt
-          updatedAt
-          routeRouteServeId
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      user {
-        name
-        email
-        phone
-        sub
-        locNick
-        defaultLoc {
-          locNick
-          locName
-          zoneID
-          addr1
-          addr2
-          city
-          zip
-          email
-          phone
-          toBePrinted
-          toBeEmailed
-          printDuplicate
-          terms
-          invoicing
-          latestFirstDeliv
-          latestFinalDeliv
-          webpageURL
-          picURL
-          gMap
-          specialInstructions
-          delivOrder
-          qbID
-          currentBalance
+          routeNick
+          zoneNick
           createdAt
           updatedAt
         }
-        locs {
-          nextToken
-        }
-        createdAt
-        updatedAt
+        nextToken
       }
       createdAt
       updatedAt
     }
   }
 `;
-export const onCreateAltPricing = /* GraphQL */ `
-  subscription OnCreateAltPricing(
-    $filter: ModelSubscriptionAltPricingFilterInput
-  ) {
-    onCreateAltPricing(filter: $filter) {
-      id
-      wholePrice
-      locNick
-      loc {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
+export const onDeleteRoute = /* GraphQL */ `
+  subscription OnDeleteRoute($filter: ModelSubscriptionRouteFilterInput) {
+    onDeleteRoute(filter: $filter) {
+      routeNick
+      routeName
+      routeStart
+      routeTime
+      RouteDepart
+      RouteArrive
+      RouteSched
+      printOrder
+      driver
+      zoneRoute {
+        items {
           id
-          zoneNum
-          zoneName
-          zoneFee
-          createdAt
-          updatedAt
-          routeRouteServeId
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      prodNick
-      product {
-        id
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
+          routeNick
+          zoneNick
           createdAt
           updatedAt
         }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        depends {
-          nextToken
-        }
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        productDependsId
-        inventoryProductsId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateAltPricing = /* GraphQL */ `
-  subscription OnUpdateAltPricing(
-    $filter: ModelSubscriptionAltPricingFilterInput
-  ) {
-    onUpdateAltPricing(filter: $filter) {
-      id
-      wholePrice
-      locNick
-      loc {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
-          id
-          zoneNum
-          zoneName
-          zoneFee
-          createdAt
-          updatedAt
-          routeRouteServeId
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      prodNick
-      product {
-        id
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        depends {
-          nextToken
-        }
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        productDependsId
-        inventoryProductsId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteAltPricing = /* GraphQL */ `
-  subscription OnDeleteAltPricing(
-    $filter: ModelSubscriptionAltPricingFilterInput
-  ) {
-    onDeleteAltPricing(filter: $filter) {
-      id
-      wholePrice
-      locNick
-      loc {
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneID
-        zone {
-          id
-          zoneNum
-          zoneName
-          zoneFee
-          createdAt
-          updatedAt
-          routeRouteServeId
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      prodNick
-      product {
-        id
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        depends {
-          nextToken
-        }
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        productDependsId
-        inventoryProductsId
+        nextToken
       }
       createdAt
       updatedAt
@@ -2370,7 +1458,6 @@ export const onCreateDough = /* GraphQL */ `
       components {
         items {
           id
-          dough
           componentType
           inventoryID
           unitID
@@ -2400,7 +1487,6 @@ export const onUpdateDough = /* GraphQL */ `
       components {
         items {
           id
-          dough
           componentType
           inventoryID
           unitID
@@ -2430,7 +1516,6 @@ export const onDeleteDough = /* GraphQL */ `
       components {
         items {
           id
-          dough
           componentType
           inventoryID
           unitID
@@ -2455,7 +1540,6 @@ export const onCreateDoughComponent = /* GraphQL */ `
   ) {
     onCreateDoughComponent(filter: $filter) {
       id
-      dough
       componentType
       inventoryID
       inventoryName {
@@ -2469,10 +1553,10 @@ export const onCreateDoughComponent = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        vendors {
+        vendor {
           nextToken
         }
-        products {
+        product {
           nextToken
         }
         unitID
@@ -2515,7 +1599,6 @@ export const onUpdateDoughComponent = /* GraphQL */ `
   ) {
     onUpdateDoughComponent(filter: $filter) {
       id
-      dough
       componentType
       inventoryID
       inventoryName {
@@ -2529,10 +1612,10 @@ export const onUpdateDoughComponent = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        vendors {
+        vendor {
           nextToken
         }
-        products {
+        product {
           nextToken
         }
         unitID
@@ -2575,7 +1658,6 @@ export const onDeleteDoughComponent = /* GraphQL */ `
   ) {
     onDeleteDoughComponent(filter: $filter) {
       id
-      dough
       componentType
       inventoryID
       inventoryName {
@@ -2589,10 +1671,10 @@ export const onDeleteDoughComponent = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        vendors {
+        vendor {
           nextToken
         }
-        products {
+        product {
           nextToken
         }
         unitID
@@ -2644,18 +1726,17 @@ export const onCreateInventory = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      vendors {
+      vendor {
         items {
-          id
           vendorName
           vendorNick
           createdAt
           updatedAt
-          inventoryVendorsId
+          inventoryVendorId
         }
         nextToken
       }
-      products {
+      product {
         items {
           id
           prodName
@@ -2682,8 +1763,9 @@ export const onCreateInventory = /* GraphQL */ `
           qbID
           createdAt
           updatedAt
-          productDependsId
-          inventoryProductsId
+          inventoryProductId
+          productEODCountId
+          productActualSetOutId
         }
         nextToken
       }
@@ -2724,18 +1806,17 @@ export const onUpdateInventory = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      vendors {
+      vendor {
         items {
-          id
           vendorName
           vendorNick
           createdAt
           updatedAt
-          inventoryVendorsId
+          inventoryVendorId
         }
         nextToken
       }
-      products {
+      product {
         items {
           id
           prodName
@@ -2762,8 +1843,9 @@ export const onUpdateInventory = /* GraphQL */ `
           qbID
           createdAt
           updatedAt
-          productDependsId
-          inventoryProductsId
+          inventoryProductId
+          productEODCountId
+          productActualSetOutId
         }
         nextToken
       }
@@ -2804,18 +1886,17 @@ export const onDeleteInventory = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      vendors {
+      vendor {
         items {
-          id
           vendorName
           vendorNick
           createdAt
           updatedAt
-          inventoryVendorsId
+          inventoryVendorId
         }
         nextToken
       }
-      products {
+      product {
         items {
           id
           prodName
@@ -2842,8 +1923,9 @@ export const onDeleteInventory = /* GraphQL */ `
           qbID
           createdAt
           updatedAt
-          productDependsId
-          inventoryProductsId
+          inventoryProductId
+          productEODCountId
+          productActualSetOutId
         }
         nextToken
       }
@@ -2971,258 +2053,63 @@ export const onDeleteIngType = /* GraphQL */ `
 export const onCreateVendor = /* GraphQL */ `
   subscription OnCreateVendor($filter: ModelSubscriptionVendorFilterInput) {
     onCreateVendor(filter: $filter) {
-      id
       vendorName
       vendorNick
+      productVendor {
+        items {
+          id
+          prodNick
+          vendorNick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
-      inventoryVendorsId
+      inventoryVendorId
     }
   }
 `;
 export const onUpdateVendor = /* GraphQL */ `
   subscription OnUpdateVendor($filter: ModelSubscriptionVendorFilterInput) {
     onUpdateVendor(filter: $filter) {
-      id
       vendorName
       vendorNick
+      productVendor {
+        items {
+          id
+          prodNick
+          vendorNick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
-      inventoryVendorsId
+      inventoryVendorId
     }
   }
 `;
 export const onDeleteVendor = /* GraphQL */ `
   subscription OnDeleteVendor($filter: ModelSubscriptionVendorFilterInput) {
     onDeleteVendor(filter: $filter) {
-      id
       vendorName
       vendorNick
-      createdAt
-      updatedAt
-      inventoryVendorsId
-    }
-  }
-`;
-export const onCreateCroixCount = /* GraphQL */ `
-  subscription OnCreateCroixCount(
-    $filter: ModelSubscriptionCroixCountFilterInput
-  ) {
-    onCreateCroixCount(filter: $filter) {
-      id
-      prodNick
-      prodName {
-        id
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
+      productVendor {
+        items {
           id
-          packGroup
+          prodNick
+          vendorNick
           createdAt
           updatedAt
         }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        depends {
-          nextToken
-        }
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        productDependsId
-        inventoryProductsId
+        nextToken
       }
-      freezerLocation
-      qty
-      whoCounted
       createdAt
       updatedAt
-    }
-  }
-`;
-export const onUpdateCroixCount = /* GraphQL */ `
-  subscription OnUpdateCroixCount(
-    $filter: ModelSubscriptionCroixCountFilterInput
-  ) {
-    onUpdateCroixCount(filter: $filter) {
-      id
-      prodNick
-      prodName {
-        id
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        depends {
-          nextToken
-        }
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        productDependsId
-        inventoryProductsId
-      }
-      freezerLocation
-      qty
-      whoCounted
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteCroixCount = /* GraphQL */ `
-  subscription OnDeleteCroixCount(
-    $filter: ModelSubscriptionCroixCountFilterInput
-  ) {
-    onDeleteCroixCount(filter: $filter) {
-      id
-      prodNick
-      prodName {
-        id
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        depends {
-          nextToken
-        }
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        productDependsId
-        inventoryProductsId
-      }
-      freezerLocation
-      qty
-      whoCounted
-      createdAt
-      updatedAt
+      inventoryVendorId
     }
   }
 `;
@@ -3231,7 +2118,7 @@ export const onCreateEODCount = /* GraphQL */ `
     onCreateEODCount(filter: $filter) {
       id
       prodNick
-      prodName {
+      product {
         id
         prodName
         prodNick
@@ -3263,9 +2150,6 @@ export const onCreateEODCount = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
-        depends {
-          nextToken
-        }
         weight
         descrip
         picURL
@@ -3276,6 +2160,9 @@ export const onCreateEODCount = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        depends {
+          nextToken
+        }
         altPricing {
           nextToken
         }
@@ -3285,12 +2172,38 @@ export const onCreateEODCount = /* GraphQL */ `
         prodsNotAllowed {
           nextToken
         }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
         createdAt
         updatedAt
-        productDependsId
-        inventoryProductsId
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
       }
       shelfOrFreezer
+      startOrFinish
       location
       qty
       whoCounted
@@ -3304,7 +2217,7 @@ export const onUpdateEODCount = /* GraphQL */ `
     onUpdateEODCount(filter: $filter) {
       id
       prodNick
-      prodName {
+      product {
         id
         prodName
         prodNick
@@ -3336,9 +2249,6 @@ export const onUpdateEODCount = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
-        depends {
-          nextToken
-        }
         weight
         descrip
         picURL
@@ -3349,6 +2259,9 @@ export const onUpdateEODCount = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        depends {
+          nextToken
+        }
         altPricing {
           nextToken
         }
@@ -3358,12 +2271,38 @@ export const onUpdateEODCount = /* GraphQL */ `
         prodsNotAllowed {
           nextToken
         }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
         createdAt
         updatedAt
-        productDependsId
-        inventoryProductsId
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
       }
       shelfOrFreezer
+      startOrFinish
       location
       qty
       whoCounted
@@ -3377,7 +2316,7 @@ export const onDeleteEODCount = /* GraphQL */ `
     onDeleteEODCount(filter: $filter) {
       id
       prodNick
-      prodName {
+      product {
         id
         prodName
         prodNick
@@ -3409,9 +2348,6 @@ export const onDeleteEODCount = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
-        depends {
-          nextToken
-        }
         weight
         descrip
         picURL
@@ -3422,6 +2358,9 @@ export const onDeleteEODCount = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        depends {
+          nextToken
+        }
         altPricing {
           nextToken
         }
@@ -3431,12 +2370,38 @@ export const onDeleteEODCount = /* GraphQL */ `
         prodsNotAllowed {
           nextToken
         }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
         createdAt
         updatedAt
-        productDependsId
-        inventoryProductsId
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
       }
       shelfOrFreezer
+      startOrFinish
       location
       qty
       whoCounted
@@ -3574,9 +2539,6 @@ export const onCreateActualSetOut = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
-        depends {
-          nextToken
-        }
         weight
         descrip
         picURL
@@ -3587,6 +2549,9 @@ export const onCreateActualSetOut = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        depends {
+          nextToken
+        }
         altPricing {
           nextToken
         }
@@ -3596,16 +2561,42 @@ export const onCreateActualSetOut = /* GraphQL */ `
         prodsNotAllowed {
           nextToken
         }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
         createdAt
         updatedAt
-        productDependsId
-        inventoryProductsId
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
       }
       qty
       location
       whoSetOut
       createdAt
       updatedAt
+      actualSetOutProdNameId
     }
   }
 `;
@@ -3648,9 +2639,6 @@ export const onUpdateActualSetOut = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
-        depends {
-          nextToken
-        }
         weight
         descrip
         picURL
@@ -3661,6 +2649,9 @@ export const onUpdateActualSetOut = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        depends {
+          nextToken
+        }
         altPricing {
           nextToken
         }
@@ -3670,16 +2661,42 @@ export const onUpdateActualSetOut = /* GraphQL */ `
         prodsNotAllowed {
           nextToken
         }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
         createdAt
         updatedAt
-        productDependsId
-        inventoryProductsId
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
       }
       qty
       location
       whoSetOut
       createdAt
       updatedAt
+      actualSetOutProdNameId
     }
   }
 `;
@@ -3722,9 +2739,6 @@ export const onDeleteActualSetOut = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
-        depends {
-          nextToken
-        }
         weight
         descrip
         picURL
@@ -3735,6 +2749,9 @@ export const onDeleteActualSetOut = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        depends {
+          nextToken
+        }
         altPricing {
           nextToken
         }
@@ -3744,16 +2761,42 @@ export const onDeleteActualSetOut = /* GraphQL */ `
         prodsNotAllowed {
           nextToken
         }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
         createdAt
         updatedAt
-        productDependsId
-        inventoryProductsId
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
       }
       qty
       location
       whoSetOut
       createdAt
       updatedAt
+      actualSetOutProdNameId
     }
   }
 `;
@@ -3827,93 +2870,6 @@ export const onDeletePackGroup = /* GraphQL */ `
     onDeletePackGroup(filter: $filter) {
       id
       packGroup
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateRoute = /* GraphQL */ `
-  subscription OnCreateRoute($filter: ModelSubscriptionRouteFilterInput) {
-    onCreateRoute(filter: $filter) {
-      id
-      routeName
-      routeStart
-      routeTime
-      RouteDepart
-      RouteArrive
-      RouteServe {
-        items {
-          id
-          zoneNum
-          zoneName
-          zoneFee
-          createdAt
-          updatedAt
-          routeRouteServeId
-        }
-        nextToken
-      }
-      RouteSched
-      printOrder
-      driver
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateRoute = /* GraphQL */ `
-  subscription OnUpdateRoute($filter: ModelSubscriptionRouteFilterInput) {
-    onUpdateRoute(filter: $filter) {
-      id
-      routeName
-      routeStart
-      routeTime
-      RouteDepart
-      RouteArrive
-      RouteServe {
-        items {
-          id
-          zoneNum
-          zoneName
-          zoneFee
-          createdAt
-          updatedAt
-          routeRouteServeId
-        }
-        nextToken
-      }
-      RouteSched
-      printOrder
-      driver
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteRoute = /* GraphQL */ `
-  subscription OnDeleteRoute($filter: ModelSubscriptionRouteFilterInput) {
-    onDeleteRoute(filter: $filter) {
-      id
-      routeName
-      routeStart
-      routeTime
-      RouteDepart
-      RouteArrive
-      RouteServe {
-        items {
-          id
-          zoneNum
-          zoneName
-          zoneFee
-          createdAt
-          updatedAt
-          routeRouteServeId
-        }
-        nextToken
-      }
-      RouteSched
-      printOrder
-      driver
       createdAt
       updatedAt
     }
@@ -4353,13 +3309,12 @@ export const onCreateInvoice = /* GraphQL */ `
         }
         zoneID
         zone {
-          id
-          zoneNum
+          zoneNick
           zoneName
+          description
           zoneFee
           createdAt
           updatedAt
-          routeRouteServeId
         }
         addr1
         addr2
@@ -4430,13 +3385,12 @@ export const onUpdateInvoice = /* GraphQL */ `
         }
         zoneID
         zone {
-          id
-          zoneNum
+          zoneNick
           zoneName
+          description
           zoneFee
           createdAt
           updatedAt
-          routeRouteServeId
         }
         addr1
         addr2
@@ -4507,13 +3461,12 @@ export const onDeleteInvoice = /* GraphQL */ `
         }
         zoneID
         zone {
-          id
-          zoneNum
+          zoneNick
           zoneName
+          description
           zoneFee
           createdAt
           updatedAt
-          routeRouteServeId
         }
         addr1
         addr2
@@ -4590,9 +3543,6 @@ export const onCreateOrder = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
-        depends {
-          nextToken
-        }
         weight
         descrip
         picURL
@@ -4603,6 +3553,9 @@ export const onCreateOrder = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        depends {
+          nextToken
+        }
         altPricing {
           nextToken
         }
@@ -4612,10 +3565,35 @@ export const onCreateOrder = /* GraphQL */ `
         prodsNotAllowed {
           nextToken
         }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
         createdAt
         updatedAt
-        productDependsId
-        inventoryProductsId
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
       }
       locNick
       location {
@@ -4626,13 +3604,12 @@ export const onCreateOrder = /* GraphQL */ `
         }
         zoneID
         zone {
-          id
-          zoneNum
+          zoneNick
           zoneName
+          description
           zoneFee
           createdAt
           updatedAt
-          routeRouteServeId
         }
         addr1
         addr2
@@ -4717,9 +3694,6 @@ export const onUpdateOrder = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
-        depends {
-          nextToken
-        }
         weight
         descrip
         picURL
@@ -4730,6 +3704,9 @@ export const onUpdateOrder = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        depends {
+          nextToken
+        }
         altPricing {
           nextToken
         }
@@ -4739,10 +3716,35 @@ export const onUpdateOrder = /* GraphQL */ `
         prodsNotAllowed {
           nextToken
         }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
         createdAt
         updatedAt
-        productDependsId
-        inventoryProductsId
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
       }
       locNick
       location {
@@ -4753,13 +3755,12 @@ export const onUpdateOrder = /* GraphQL */ `
         }
         zoneID
         zone {
-          id
-          zoneNum
+          zoneNick
           zoneName
+          description
           zoneFee
           createdAt
           updatedAt
-          routeRouteServeId
         }
         addr1
         addr2
@@ -4844,9 +3845,6 @@ export const onDeleteOrder = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
-        depends {
-          nextToken
-        }
         weight
         descrip
         picURL
@@ -4857,6 +3855,9 @@ export const onDeleteOrder = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        depends {
+          nextToken
+        }
         altPricing {
           nextToken
         }
@@ -4866,10 +3867,35 @@ export const onDeleteOrder = /* GraphQL */ `
         prodsNotAllowed {
           nextToken
         }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
         createdAt
         updatedAt
-        productDependsId
-        inventoryProductsId
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
       }
       locNick
       location {
@@ -4880,13 +3906,12 @@ export const onDeleteOrder = /* GraphQL */ `
         }
         zoneID
         zone {
-          id
-          zoneNum
+          zoneNick
           zoneName
+          description
           zoneFee
           createdAt
           updatedAt
-          routeRouteServeId
         }
         addr1
         addr2
@@ -4930,6 +3955,2589 @@ export const onDeleteOrder = /* GraphQL */ `
       createdAt
       updatedAt
       invoiceOrdersId
+    }
+  }
+`;
+export const onCreateTemplateProd = /* GraphQL */ `
+  subscription OnCreateTemplateProd(
+    $filter: ModelSubscriptionTemplateProdFilterInput
+  ) {
+    onCreateTemplateProd(filter: $filter) {
+      id
+      locNick
+      prodNick
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      product {
+        id
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateTemplateProd = /* GraphQL */ `
+  subscription OnUpdateTemplateProd(
+    $filter: ModelSubscriptionTemplateProdFilterInput
+  ) {
+    onUpdateTemplateProd(filter: $filter) {
+      id
+      locNick
+      prodNick
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      product {
+        id
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteTemplateProd = /* GraphQL */ `
+  subscription OnDeleteTemplateProd(
+    $filter: ModelSubscriptionTemplateProdFilterInput
+  ) {
+    onDeleteTemplateProd(filter: $filter) {
+      id
+      locNick
+      prodNick
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      product {
+        id
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateProdsNotAllowed = /* GraphQL */ `
+  subscription OnCreateProdsNotAllowed(
+    $filter: ModelSubscriptionProdsNotAllowedFilterInput
+  ) {
+    onCreateProdsNotAllowed(filter: $filter) {
+      id
+      locNick
+      prodNick
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      product {
+        id
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateProdsNotAllowed = /* GraphQL */ `
+  subscription OnUpdateProdsNotAllowed(
+    $filter: ModelSubscriptionProdsNotAllowedFilterInput
+  ) {
+    onUpdateProdsNotAllowed(filter: $filter) {
+      id
+      locNick
+      prodNick
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      product {
+        id
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteProdsNotAllowed = /* GraphQL */ `
+  subscription OnDeleteProdsNotAllowed(
+    $filter: ModelSubscriptionProdsNotAllowedFilterInput
+  ) {
+    onDeleteProdsNotAllowed(filter: $filter) {
+      id
+      locNick
+      prodNick
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      product {
+        id
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateProductDepend = /* GraphQL */ `
+  subscription OnCreateProductDepend(
+    $filter: ModelSubscriptionProductDependFilterInput
+  ) {
+    onCreateProductDepend(filter: $filter) {
+      id
+      prod1Nick
+      prod1 {
+        id
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
+      }
+      prod2Nick
+      prod2 {
+        id
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateProductDepend = /* GraphQL */ `
+  subscription OnUpdateProductDepend(
+    $filter: ModelSubscriptionProductDependFilterInput
+  ) {
+    onUpdateProductDepend(filter: $filter) {
+      id
+      prod1Nick
+      prod1 {
+        id
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
+      }
+      prod2Nick
+      prod2 {
+        id
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteProductDepend = /* GraphQL */ `
+  subscription OnDeleteProductDepend(
+    $filter: ModelSubscriptionProductDependFilterInput
+  ) {
+    onDeleteProductDepend(filter: $filter) {
+      id
+      prod1Nick
+      prod1 {
+        id
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
+      }
+      prod2Nick
+      prod2 {
+        id
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateZoneRoute = /* GraphQL */ `
+  subscription OnCreateZoneRoute(
+    $filter: ModelSubscriptionZoneRouteFilterInput
+  ) {
+    onCreateZoneRoute(filter: $filter) {
+      id
+      routeNick
+      route {
+        routeNick
+        routeName
+        routeStart
+        routeTime
+        RouteDepart
+        RouteArrive
+        RouteSched
+        printOrder
+        driver
+        zoneRoute {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      zoneNick
+      zone {
+        zoneNick
+        zoneName
+        description
+        zoneFee
+        zoneRoute {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateZoneRoute = /* GraphQL */ `
+  subscription OnUpdateZoneRoute(
+    $filter: ModelSubscriptionZoneRouteFilterInput
+  ) {
+    onUpdateZoneRoute(filter: $filter) {
+      id
+      routeNick
+      route {
+        routeNick
+        routeName
+        routeStart
+        routeTime
+        RouteDepart
+        RouteArrive
+        RouteSched
+        printOrder
+        driver
+        zoneRoute {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      zoneNick
+      zone {
+        zoneNick
+        zoneName
+        description
+        zoneFee
+        zoneRoute {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteZoneRoute = /* GraphQL */ `
+  subscription OnDeleteZoneRoute(
+    $filter: ModelSubscriptionZoneRouteFilterInput
+  ) {
+    onDeleteZoneRoute(filter: $filter) {
+      id
+      routeNick
+      route {
+        routeNick
+        routeName
+        routeStart
+        routeTime
+        RouteDepart
+        RouteArrive
+        RouteSched
+        printOrder
+        driver
+        zoneRoute {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      zoneNick
+      zone {
+        zoneNick
+        zoneName
+        description
+        zoneFee
+        zoneRoute {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateLocationUser = /* GraphQL */ `
+  subscription OnCreateLocationUser(
+    $filter: ModelSubscriptionLocationUserFilterInput
+  ) {
+    onCreateLocationUser(filter: $filter) {
+      id
+      authType
+      locNick
+      sub
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      user {
+        name
+        email
+        phone
+        sub
+        locNick
+        defaultLoc {
+          locNick
+          locName
+          zoneID
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          createdAt
+          updatedAt
+        }
+        locs {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateLocationUser = /* GraphQL */ `
+  subscription OnUpdateLocationUser(
+    $filter: ModelSubscriptionLocationUserFilterInput
+  ) {
+    onUpdateLocationUser(filter: $filter) {
+      id
+      authType
+      locNick
+      sub
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      user {
+        name
+        email
+        phone
+        sub
+        locNick
+        defaultLoc {
+          locNick
+          locName
+          zoneID
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          createdAt
+          updatedAt
+        }
+        locs {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteLocationUser = /* GraphQL */ `
+  subscription OnDeleteLocationUser(
+    $filter: ModelSubscriptionLocationUserFilterInput
+  ) {
+    onDeleteLocationUser(filter: $filter) {
+      id
+      authType
+      locNick
+      sub
+      location {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      user {
+        name
+        email
+        phone
+        sub
+        locNick
+        defaultLoc {
+          locNick
+          locName
+          zoneID
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          createdAt
+          updatedAt
+        }
+        locs {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateAltPricing = /* GraphQL */ `
+  subscription OnCreateAltPricing(
+    $filter: ModelSubscriptionAltPricingFilterInput
+  ) {
+    onCreateAltPricing(filter: $filter) {
+      id
+      wholePrice
+      locNick
+      loc {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      prodNick
+      product {
+        id
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAltPricing = /* GraphQL */ `
+  subscription OnUpdateAltPricing(
+    $filter: ModelSubscriptionAltPricingFilterInput
+  ) {
+    onUpdateAltPricing(filter: $filter) {
+      id
+      wholePrice
+      locNick
+      loc {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      prodNick
+      product {
+        id
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAltPricing = /* GraphQL */ `
+  subscription OnDeleteAltPricing(
+    $filter: ModelSubscriptionAltPricingFilterInput
+  ) {
+    onDeleteAltPricing(filter: $filter) {
+      id
+      wholePrice
+      locNick
+      loc {
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneID
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      prodNick
+      product {
+        id
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateProductVendor = /* GraphQL */ `
+  subscription OnCreateProductVendor(
+    $filter: ModelSubscriptionProductVendorFilterInput
+  ) {
+    onCreateProductVendor(filter: $filter) {
+      id
+      prodNick
+      vendorNick
+      product {
+        id
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
+      }
+      vendor {
+        vendorName
+        vendorNick
+        productVendor {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        inventoryVendorId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateProductVendor = /* GraphQL */ `
+  subscription OnUpdateProductVendor(
+    $filter: ModelSubscriptionProductVendorFilterInput
+  ) {
+    onUpdateProductVendor(filter: $filter) {
+      id
+      prodNick
+      vendorNick
+      product {
+        id
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
+      }
+      vendor {
+        vendorName
+        vendorNick
+        productVendor {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        inventoryVendorId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteProductVendor = /* GraphQL */ `
+  subscription OnDeleteProductVendor(
+    $filter: ModelSubscriptionProductVendorFilterInput
+  ) {
+    onDeleteProductVendor(filter: $filter) {
+      id
+      prodNick
+      vendorNick
+      product {
+        id
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          id
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          id
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+          actualSetOutProdNameId
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+        productEODCountId
+        productActualSetOutId
+      }
+      vendor {
+        vendorName
+        vendorNick
+        productVendor {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        inventoryVendorId
+      }
+      createdAt
+      updatedAt
     }
   }
 `;

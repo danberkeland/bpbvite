@@ -18,8 +18,10 @@ function Locations() {
     setIsLoading(true);
     grabOldLoc()
       .then((oldLoc) => {
+        console.log("oldLoc",oldLoc)
         for (let old of oldLoc) {
           checkExistsNewLoc(old.nickName).then((exists) => {
+            console.log("exists",exists)
             if (exists) {
               updateNewLoc(old);
             } else {

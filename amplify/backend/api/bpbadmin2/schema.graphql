@@ -3,58 +3,9 @@
 input AMPLIFY {
   globalAuthRule: AuthRule = { allow: public }
 } # FOR TESTING ONLY!
+# Backup Schemas
 
-
-type Location @model {
-  locNick: String! @primaryKey
-  locName: String!
-  subs: [LocationUser] @hasMany(indexName: "byLoc", fields: ["locNick"])
-  zoneID: ID
-  zone: Zone @hasOne(fields: ["zoneID"])
-  addr1: String
-  addr2: String
-  city: String
-  zip: String
-  email: String
-  phone: String
-  toBePrinted: Boolean
-  toBeEmailed: Boolean
-  printDuplicate: Boolean
-  terms: String
-  invoicing: String
-  latestFirstDeliv: Float
-  latestFinalDeliv: Float
-  webpageURL: String
-  picURL: String
-  gMap: String
-  specialInstructions: String
-  delivOrder: Int
-  qbID: String
-  currentBalance: String
-  prodsNotAllowed: [ProdsNotAllowed] @hasMany(indexName: "byProd", fields: ["locNick"])
-  customProd: [AltPricing] @hasMany(indexName: "byLoc", fields: ["locNick"])
-  templateProd: [TemplateProd] @hasMany(indexName: "byTemp", fields: ["locNick"])
-}
-
-
-type TemplateProd @model {
-  id: ID!
-  locNick: String! @index(name: "byLoc")
-  prodNick: String! @index(name: "byTemp")
-  location: Location! @belongsTo(fields: ["locNick"])
-  product: Product! @belongsTo(fields: ["prodNick"])
-}
-
-
-type ProdsNotAllowed @model {
-  id: ID!
-  locNick: String! @index(name: "byLoc")
-  prodNick: String! @index(name: "byProd")
-  location: Location! @belongsTo(fields: ["locNick"])
-  product: Product! @belongsTo(fields: ["prodNick"])
-}
-
-type LocationBackup @model  {
+type LocationBackup @model {
   id: ID!
   nickName: String!
   custName: String!
@@ -87,7 +38,86 @@ type LocationBackup @model  {
   currentBalance: String
 }
 
+type ProductBackup @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  prodName: String!
+  nickName: String!
+  packGroup: String
+  packSize: Int
+  doughType: String
+  freezerThaw: Boolean
+  eodCount: Boolean
+  packGroupOrder: Int
+  readyTime: Float
+  bakedWhere: [String]
+  wholePrice: Float
+  retailPrice: Float
+  isWhole: Boolean
+  depends: String
+  weight: Float
+  descrip: String
+  picURL: String
+  squareID: String
+  currentStock: Int
+  whoCountedLast: String
+  forBake: String
+  bakeExtra: Int
+  batchSize: Int
+  preshaped: Int
+  prepreshaped: Int
+  updatePreDate: String
+  updateFreezerDate: String
+  backporchbakerypre: Int
+  backporchbakery: Int
+  bpbextrapre: Int
+  bpbextra: Int
+  bpbssetoutpre: Int
+  bpbssetout: Int
+  defaultInclude: Boolean
+  leadTime: Int
+  qbID: String
+  freezerCount: Int
+  freezerClosing: Int
+  sheetMake: Int
+  freezerNorth: Int
+  freezerNorthClosing: Int
+  freezerNorthFlag: String
+}
 
+# Base Schemas
+
+type Location @model {
+  locNick: String! @primaryKey
+  locName: String!
+  subs: [LocationUser] @hasMany(indexName: "byLoc", fields: ["locNick"])
+  zoneID: String
+  zone: Zone @hasOne(fields: ["zoneID"])
+  addr1: String
+  addr2: String
+  city: String
+  zip: String
+  email: String
+  phone: String
+  toBePrinted: Boolean
+  toBeEmailed: Boolean
+  printDuplicate: Boolean
+  terms: String
+  invoicing: String
+  latestFirstDeliv: Float
+  latestFinalDeliv: Float
+  webpageURL: String
+  picURL: String
+  gMap: String
+  specialInstructions: String
+  delivOrder: Int
+  qbID: String
+  currentBalance: String
+  prodsNotAllowed: [ProdsNotAllowed]
+    @hasMany(indexName: "byProd", fields: ["locNick"])
+  customProd: [AltPricing] @hasMany(indexName: "byLoc", fields: ["locNick"])
+  templateProd: [TemplateProd]
+    @hasMany(indexName: "byTemp", fields: ["locNick"])
+}
 
 type User @model {
   name: String!
@@ -125,45 +155,37 @@ type Product @model {
   defaultInclude: Boolean
   leadTime: Int
   qbID: String
-  depends: [ProductDepend] @hasMany(indexName: "byProdDepends", fields: ["prodNick"])
+  depends: [ProductDepend] @hasMany(indexName: "byProd2", fields: ["prodNick"])
   altPricing: [AltPricing] @hasMany(indexName: "byProd", fields: ["prodNick"])
-  templateProd: [TemplateProd] @hasMany(indexName: "byTemp", fields: ["prodNick"])
-  prodsNotAllowed: [ProdsNotAllowed] @hasMany(indexName: "byProd", fields: ["prodNick"])
+  templateProd: [TemplateProd]
+    @hasMany(indexName: "byTemp", fields: ["prodNick"])
+  prodsNotAllowed: [ProdsNotAllowed]
+    @hasMany(indexName: "byProd", fields: ["prodNick"])
+  productVendor: [ProductVendor]
+    @hasMany(indexName: "byProd", fields: ["prodNick"])
+  EODCount: EODCount @hasOne
+  ActualSetOut: ActualSetOut @hasOne
 }
-
-
-type ProductDepend @model {
-  id: ID!
-  prod1Nick: String @index(name: "byProd1")
-  prod1: Product! @belongsTo(fields: ["prod1Nick"])
-  prod2Nick: String @index(name: "byProd2")
-  prod2: Product @belongsTo(fields: ["prod2Nick"])
-}
-
 
 type Zone @model {
-  id: ID!
-  zoneNum: Int
+  zoneNick: String! @primaryKey
   zoneName: String
+  description: String
   zoneFee: Int
+  zoneRoute: [ZoneRoute] @hasMany(indexName: "byZone", fields: ["zoneNick"])
 }
 
-type LocationUser @model {
-  id: ID!
-  authType: Int
-  locNick: String! @index(name: "byLoc", sortKeyFields: ["authType"])
-  sub: String! @index(name: "bySub", sortKeyFields: ["authType"])
-  location: Location! @belongsTo(fields: ["locNick"])
-  user: User! @belongsTo(fields: ["sub"])
-}
-
-type AltPricing @model {
-  id: ID!
-  wholePrice: Float
-  locNick: String @index(name: "byLoc", sortKeyFields: ["wholePrice"])
-  loc: Location! @belongsTo(fields: ["locNick"])
-  prodNick: String @index(name: "byProd", sortKeyFields: ["wholePrice"])
-  product: Product @belongsTo(fields: ["prodNick"])
+type Route @model {
+  routeNick: String! @primaryKey
+  routeName: String
+  routeStart: Float
+  routeTime: Float
+  RouteDepart: String
+  RouteArrive: String
+  RouteSched: [String]
+  printOrder: Int
+  driver: String
+  zoneRoute: [ZoneRoute] @hasMany(indexName: "byRoute", fields: ["routeNick"])
 }
 
 type Dough @model {
@@ -180,7 +202,6 @@ type Dough @model {
 
 type DoughComponent @model {
   id: ID!
-  dough: String
   componentType: String
   inventoryID: ID
   inventoryName: Inventory @hasOne(fields: ["inventoryID"])
@@ -195,8 +216,8 @@ type Inventory @model {
   ingNick: String!
   ingTypeID: ID
   ingType: IngType @hasOne(fields: ["ingTypeID"])
-  vendors: [Vendor] @hasMany
-  products: [Product] @hasMany
+  vendor: [Vendor] @hasMany
+  product: [Product] @hasMany
   unitID: ID
   unit: Unit @hasOne(fields: ["unitID"])
   bakeryLocation: String
@@ -223,25 +244,18 @@ type IngType @model {
 }
 
 type Vendor @model {
-  id: ID!
   vendorName: String!
-  vendorNick: String!
-}
-
-type CroixCount @model {
-  id: ID!
-  prodNick: String!
-  prodName: Product! @hasOne(fields: ["prodNick"])
-  freezerLocation: String!
-  qty: Int
-  whoCounted: String
+  vendorNick: String! @primaryKey
+  productVendor: [ProductVendor]
+    @hasMany(indexName: "byVend", fields: ["vendorNick"])
 }
 
 type EODCount @model {
   id: ID!
   prodNick: String!
-  prodName: Product! @hasOne(fields: ["prodNick"])
+  product: Product! @belongsTo(fields: ["prodNick"])
   shelfOrFreezer: String
+  startOrFinish: String
   location: String
   qty: Int
   whoCounted: String
@@ -259,7 +273,7 @@ type PocketCount @model {
 type ActualSetOut @model {
   id: ID!
   prodNick: String!
-  prodName: Product! @hasOne(fields: ["prodNick"])
+  prodName: Product! @belongsTo
   qty: Int
   location: String
   whoSetOut: String
@@ -274,19 +288,6 @@ type CroixSheetCount @model {
 type PackGroup @model {
   id: ID!
   packGroup: String!
-}
-
-type Route @model {
-  id: ID!
-  routeName: String
-  routeStart: Float
-  routeTime: Float
-  RouteDepart: String
-  RouteArrive: String
-  RouteServe: [Zone] @hasMany
-  RouteSched: [String]
-  printOrder: Int
-  driver: String
 }
 
 type OldDough @model {
@@ -349,4 +350,64 @@ type Order @model {
   delivDate: String
   rate: Float
   isLate: Int
+}
+
+# Join Schemas
+
+type TemplateProd @model {
+  id: ID!
+  locNick: String! @index(name: "byLoc")
+  prodNick: String! @index(name: "byTemp")
+  location: Location! @belongsTo(fields: ["locNick"])
+  product: Product! @belongsTo(fields: ["prodNick"])
+}
+
+type ProdsNotAllowed @model {
+  id: ID!
+  locNick: String! @index(name: "byLoc")
+  prodNick: String! @index(name: "byProd")
+  location: Location! @belongsTo(fields: ["locNick"])
+  product: Product! @belongsTo(fields: ["prodNick"])
+}
+
+type ProductDepend @model {
+  id: ID!
+  prod1Nick: String @index(name: "byProd1")
+  prod1: Product! @belongsTo(fields: ["prod1Nick"])
+  prod2Nick: String @index(name: "byProd2")
+  prod2: Product @belongsTo(fields: ["prod2Nick"])
+}
+
+type ZoneRoute @model {
+  id: ID!
+  routeNick: String @index(name: "byRoute")
+  route: Route! @belongsTo(fields: ["routeNick"])
+  zoneNick: String @index(name: "byZone")
+  zone: Zone @belongsTo(fields: ["zoneNick"])
+}
+
+type LocationUser @model {
+  id: ID!
+  authType: Int
+  locNick: String! @index(name: "byLoc", sortKeyFields: ["authType"])
+  sub: String! @index(name: "bySub", sortKeyFields: ["authType"])
+  location: Location! @belongsTo(fields: ["locNick"])
+  user: User! @belongsTo(fields: ["sub"])
+}
+
+type AltPricing @model {
+  id: ID!
+  wholePrice: Float
+  locNick: String @index(name: "byLoc", sortKeyFields: ["wholePrice"])
+  loc: Location! @belongsTo(fields: ["locNick"])
+  prodNick: String @index(name: "byProd", sortKeyFields: ["wholePrice"])
+  product: Product @belongsTo(fields: ["prodNick"])
+}
+
+type ProductVendor @model {
+  id: ID!
+  prodNick: String! @index(name: "byProd")
+  vendorNick: String! @index(name: "byVend")
+  product: Product! @belongsTo(fields: ["prodNick"])
+  vendor: Vendor! @belongsTo(fields: ["vendorNick"])
 }
