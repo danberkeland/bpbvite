@@ -28,6 +28,7 @@ export const grabOldProd = async () => {
   };
   
   export const updateNewProd = async (old) => {
+    delete old.id;
     delete old.createdAt;
     delete old.updatedAt;
     delete old.packGroup;
@@ -66,6 +67,7 @@ export const grabOldProd = async () => {
   };
   
   export const createNewProd = async (old) => {
+    delete old.id;
     delete old.createdAt;
     delete old.updatedAt;
     delete old.packGroup;

@@ -202,12 +202,13 @@ export const getUser = /* GraphQL */ `
       sub
       locNick
       defaultLoc {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -251,7 +252,7 @@ export const getUser = /* GraphQL */ `
       locs {
         items {
           id
-          type
+          Type
           authType
           locNick
           sub
@@ -287,9 +288,10 @@ export const listUsers = /* GraphQL */ `
         sub
         locNick
         defaultLoc {
+          Type
           locNick
           locName
-          zoneID
+          zoneNick
           addr1
           addr2
           city
@@ -326,12 +328,13 @@ export const listUsers = /* GraphQL */ `
 export const getLocation = /* GraphQL */ `
   query GetLocation($locNick: String!) {
     getLocation(locNick: $locNick) {
+      Type
       locNick
       locName
       subs {
         items {
           id
-          type
+          Type
           authType
           locNick
           sub
@@ -340,7 +343,7 @@ export const getLocation = /* GraphQL */ `
         }
         nextToken
       }
-      zoneID
+      zoneNick
       zone {
         zoneNick
         zoneName
@@ -386,6 +389,7 @@ export const getLocation = /* GraphQL */ `
         items {
           id
           wholePrice
+          wholePrice2
           locNick
           prodNick
           createdAt
@@ -424,12 +428,13 @@ export const listLocations = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -477,7 +482,7 @@ export const listLocations = /* GraphQL */ `
 export const getProduct = /* GraphQL */ `
   query GetProduct($prodNick: String!) {
     getProduct(prodNick: $prodNick) {
-      id
+      Type
       prodName
       prodNick
       packGroupID
@@ -535,6 +540,7 @@ export const getProduct = /* GraphQL */ `
         items {
           id
           wholePrice
+          wholePrice2
           locNick
           prodNick
           createdAt
@@ -573,10 +579,9 @@ export const getProduct = /* GraphQL */ `
         nextToken
       }
       EODCount {
-        id
         prodNick
         product {
-          id
+          Type
           prodName
           prodNick
           packGroupID
@@ -602,8 +607,6 @@ export const getProduct = /* GraphQL */ `
           createdAt
           updatedAt
           inventoryProductId
-          productEODCountId
-          productActualSetOutId
         }
         shelfOrFreezer
         startOrFinish
@@ -614,10 +617,9 @@ export const getProduct = /* GraphQL */ `
         updatedAt
       }
       ActualSetOut {
-        id
         prodNick
         prodName {
-          id
+          Type
           prodName
           prodNick
           packGroupID
@@ -643,21 +645,16 @@ export const getProduct = /* GraphQL */ `
           createdAt
           updatedAt
           inventoryProductId
-          productEODCountId
-          productActualSetOutId
         }
         qty
         location
         whoSetOut
         createdAt
         updatedAt
-        actualSetOutProdNameId
       }
       createdAt
       updatedAt
       inventoryProductId
-      productEODCountId
-      productActualSetOutId
     }
   }
 `;
@@ -677,7 +674,7 @@ export const listProducts = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -734,7 +731,6 @@ export const listProducts = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -745,20 +741,16 @@ export const listProducts = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       nextToken
     }
@@ -770,6 +762,7 @@ export const getInvoice = /* GraphQL */ `
       id
       orders {
         items {
+          Type
           id
           qty
           prodNick
@@ -780,7 +773,7 @@ export const getInvoice = /* GraphQL */ `
           delivDate
           rate
           isLate
-          createdAt
+          createdOn
           updatedAt
           invoiceOrdersId
         }
@@ -788,12 +781,13 @@ export const getInvoice = /* GraphQL */ `
       }
       locNick
       location {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -863,9 +857,10 @@ export const listInvoices = /* GraphQL */ `
         }
         locNick
         location {
+          Type
           locNick
           locName
-          zoneID
+          zoneNick
           addr1
           addr2
           city
@@ -901,11 +896,12 @@ export const listInvoices = /* GraphQL */ `
 export const getOrder = /* GraphQL */ `
   query GetOrder($id: ID!) {
     getOrder(id: $id) {
+      Type
       id
       qty
       prodNick
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -962,7 +958,6 @@ export const getOrder = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -973,29 +968,26 @@ export const getOrder = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       locNick
       location {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -1042,7 +1034,7 @@ export const getOrder = /* GraphQL */ `
       delivDate
       rate
       isLate
-      createdAt
+      createdOn
       updatedAt
       invoiceOrdersId
     }
@@ -1056,11 +1048,12 @@ export const listOrders = /* GraphQL */ `
   ) {
     listOrders(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
+        Type
         id
         qty
         prodNick
         product {
-          id
+          Type
           prodName
           prodNick
           packGroupID
@@ -1086,14 +1079,13 @@ export const listOrders = /* GraphQL */ `
           createdAt
           updatedAt
           inventoryProductId
-          productEODCountId
-          productActualSetOutId
         }
         locNick
         location {
+          Type
           locNick
           locName
-          zoneID
+          zoneNick
           addr1
           addr2
           city
@@ -1123,7 +1115,7 @@ export const listOrders = /* GraphQL */ `
         delivDate
         rate
         isLate
-        createdAt
+        createdOn
         updatedAt
         invoiceOrdersId
       }
@@ -1518,7 +1510,7 @@ export const getInventory = /* GraphQL */ `
       }
       product {
         items {
-          id
+          Type
           prodName
           prodNick
           packGroupID
@@ -1544,8 +1536,6 @@ export const getInventory = /* GraphQL */ `
           createdAt
           updatedAt
           inventoryProductId
-          productEODCountId
-          productActualSetOutId
         }
         nextToken
       }
@@ -1790,12 +1780,11 @@ export const listInfoQBAuths = /* GraphQL */ `
   }
 `;
 export const getEODCount = /* GraphQL */ `
-  query GetEODCount($id: ID!) {
-    getEODCount(id: $id) {
-      id
+  query GetEODCount($prodNick: String!) {
+    getEODCount(prodNick: $prodNick) {
       prodNick
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -1852,7 +1841,6 @@ export const getEODCount = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -1863,20 +1851,16 @@ export const getEODCount = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       shelfOrFreezer
       startOrFinish
@@ -1890,16 +1874,23 @@ export const getEODCount = /* GraphQL */ `
 `;
 export const listEODCounts = /* GraphQL */ `
   query ListEODCounts(
+    $prodNick: String
     $filter: ModelEODCountFilterInput
     $limit: Int
     $nextToken: String
+    $sortDirection: ModelSortDirection
   ) {
-    listEODCounts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listEODCounts(
+      prodNick: $prodNick
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
       items {
-        id
         prodNick
         product {
-          id
+          Type
           prodName
           prodNick
           packGroupID
@@ -1925,14 +1916,158 @@ export const listEODCounts = /* GraphQL */ `
           createdAt
           updatedAt
           inventoryProductId
-          productEODCountId
-          productActualSetOutId
         }
         shelfOrFreezer
         startOrFinish
         location
         qty
         whoCounted
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getActualSetOut = /* GraphQL */ `
+  query GetActualSetOut($prodNick: String!) {
+    getActualSetOut(prodNick: $prodNick) {
+      prodNick
+      prodName {
+        Type
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+      }
+      qty
+      location
+      whoSetOut
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listActualSetOuts = /* GraphQL */ `
+  query ListActualSetOuts(
+    $prodNick: String
+    $filter: ModelActualSetOutFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listActualSetOuts(
+      prodNick: $prodNick
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        prodNick
+        prodName {
+          Type
+          prodName
+          prodNick
+          packGroupID
+          packSize
+          doughNick
+          freezerThaw
+          packGroupOrder
+          readyTime
+          bakedWhere
+          wholePrice
+          retailPrice
+          isWhole
+          weight
+          descrip
+          picURL
+          squareID
+          forBake
+          bakeExtra
+          batchSize
+          defaultInclude
+          leadTime
+          qbID
+          createdAt
+          updatedAt
+          inventoryProductId
+        }
+        qty
+        location
+        whoSetOut
         createdAt
         updatedAt
       }
@@ -1995,155 +2130,6 @@ export const listPocketCounts = /* GraphQL */ `
         whoCounted
         createdAt
         updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getActualSetOut = /* GraphQL */ `
-  query GetActualSetOut($id: ID!) {
-    getActualSetOut(id: $id) {
-      id
-      prodNick
-      prodName {
-        id
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        depends {
-          nextToken
-        }
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        productVendor {
-          nextToken
-        }
-        EODCount {
-          id
-          prodNick
-          shelfOrFreezer
-          startOrFinish
-          location
-          qty
-          whoCounted
-          createdAt
-          updatedAt
-        }
-        ActualSetOut {
-          id
-          prodNick
-          qty
-          location
-          whoSetOut
-          createdAt
-          updatedAt
-          actualSetOutProdNameId
-        }
-        createdAt
-        updatedAt
-        inventoryProductId
-        productEODCountId
-        productActualSetOutId
-      }
-      qty
-      location
-      whoSetOut
-      createdAt
-      updatedAt
-      actualSetOutProdNameId
-    }
-  }
-`;
-export const listActualSetOuts = /* GraphQL */ `
-  query ListActualSetOuts(
-    $filter: ModelActualSetOutFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listActualSetOuts(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        prodNick
-        prodName {
-          id
-          prodName
-          prodNick
-          packGroupID
-          packSize
-          doughNick
-          freezerThaw
-          packGroupOrder
-          readyTime
-          bakedWhere
-          wholePrice
-          retailPrice
-          isWhole
-          weight
-          descrip
-          picURL
-          squareID
-          forBake
-          bakeExtra
-          batchSize
-          defaultInclude
-          leadTime
-          qbID
-          createdAt
-          updatedAt
-          inventoryProductId
-          productEODCountId
-          productActualSetOutId
-        }
-        qty
-        location
-        whoSetOut
-        createdAt
-        updatedAt
-        actualSetOutProdNameId
       }
       nextToken
     }
@@ -2285,9 +2271,10 @@ export const getEventLog = /* GraphQL */ `
         sub
         locNick
         defaultLoc {
+          Type
           locNick
           locName
-          zoneID
+          zoneNick
           addr1
           addr2
           city
@@ -2357,12 +2344,13 @@ export const getTemplateProd = /* GraphQL */ `
       locNick
       prodNick
       location {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -2404,7 +2392,7 @@ export const getTemplateProd = /* GraphQL */ `
         updatedAt
       }
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -2461,7 +2449,6 @@ export const getTemplateProd = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -2472,20 +2459,16 @@ export const getTemplateProd = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       createdAt
       updatedAt
@@ -2504,9 +2487,10 @@ export const listTemplateProds = /* GraphQL */ `
         locNick
         prodNick
         location {
+          Type
           locNick
           locName
-          zoneID
+          zoneNick
           addr1
           addr2
           city
@@ -2531,7 +2515,7 @@ export const listTemplateProds = /* GraphQL */ `
           updatedAt
         }
         product {
-          id
+          Type
           prodName
           prodNick
           packGroupID
@@ -2557,8 +2541,6 @@ export const listTemplateProds = /* GraphQL */ `
           createdAt
           updatedAt
           inventoryProductId
-          productEODCountId
-          productActualSetOutId
         }
         createdAt
         updatedAt
@@ -2574,12 +2556,13 @@ export const getProdsNotAllowed = /* GraphQL */ `
       locNick
       prodNick
       location {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -2621,7 +2604,7 @@ export const getProdsNotAllowed = /* GraphQL */ `
         updatedAt
       }
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -2678,7 +2661,6 @@ export const getProdsNotAllowed = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -2689,20 +2671,16 @@ export const getProdsNotAllowed = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       createdAt
       updatedAt
@@ -2725,9 +2703,10 @@ export const listProdsNotAlloweds = /* GraphQL */ `
         locNick
         prodNick
         location {
+          Type
           locNick
           locName
-          zoneID
+          zoneNick
           addr1
           addr2
           city
@@ -2752,7 +2731,7 @@ export const listProdsNotAlloweds = /* GraphQL */ `
           updatedAt
         }
         product {
-          id
+          Type
           prodName
           prodNick
           packGroupID
@@ -2778,8 +2757,6 @@ export const listProdsNotAlloweds = /* GraphQL */ `
           createdAt
           updatedAt
           inventoryProductId
-          productEODCountId
-          productActualSetOutId
         }
         createdAt
         updatedAt
@@ -2794,7 +2771,7 @@ export const getProductDepend = /* GraphQL */ `
       id
       prod1Nick
       prod1 {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -2851,7 +2828,6 @@ export const getProductDepend = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -2862,24 +2838,20 @@ export const getProductDepend = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       prod2Nick
       prod2 {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -2936,7 +2908,6 @@ export const getProductDepend = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -2947,20 +2918,16 @@ export const getProductDepend = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       createdAt
       updatedAt
@@ -2978,7 +2945,7 @@ export const listProductDepends = /* GraphQL */ `
         id
         prod1Nick
         prod1 {
-          id
+          Type
           prodName
           prodNick
           packGroupID
@@ -3004,12 +2971,10 @@ export const listProductDepends = /* GraphQL */ `
           createdAt
           updatedAt
           inventoryProductId
-          productEODCountId
-          productActualSetOutId
         }
         prod2Nick
         prod2 {
-          id
+          Type
           prodName
           prodNick
           packGroupID
@@ -3035,8 +3000,6 @@ export const listProductDepends = /* GraphQL */ `
           createdAt
           updatedAt
           inventoryProductId
-          productEODCountId
-          productActualSetOutId
         }
         createdAt
         updatedAt
@@ -3126,17 +3089,18 @@ export const getLocationUser = /* GraphQL */ `
   query GetLocationUser($id: ID!) {
     getLocationUser(id: $id) {
       id
-      type
+      Type
       authType
       locNick
       sub
       location {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -3184,9 +3148,10 @@ export const getLocationUser = /* GraphQL */ `
         sub
         locNick
         defaultLoc {
+          Type
           locNick
           locName
-          zoneID
+          zoneNick
           addr1
           addr2
           city
@@ -3230,14 +3195,15 @@ export const listLocationUsers = /* GraphQL */ `
     listLocationUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        type
+        Type
         authType
         locNick
         sub
         location {
+          Type
           locNick
           locName
-          zoneID
+          zoneNick
           addr1
           addr2
           city
@@ -3282,14 +3248,16 @@ export const getAltPricing = /* GraphQL */ `
     getAltPricing(id: $id) {
       id
       wholePrice
+      wholePrice2
       locNick
       loc {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -3332,7 +3300,7 @@ export const getAltPricing = /* GraphQL */ `
       }
       prodNick
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -3389,7 +3357,6 @@ export const getAltPricing = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -3400,20 +3367,16 @@ export const getAltPricing = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       createdAt
       updatedAt
@@ -3430,11 +3393,13 @@ export const listAltPricings = /* GraphQL */ `
       items {
         id
         wholePrice
+        wholePrice2
         locNick
         loc {
+          Type
           locNick
           locName
-          zoneID
+          zoneNick
           addr1
           addr2
           city
@@ -3460,7 +3425,7 @@ export const listAltPricings = /* GraphQL */ `
         }
         prodNick
         product {
-          id
+          Type
           prodName
           prodNick
           packGroupID
@@ -3486,8 +3451,6 @@ export const listAltPricings = /* GraphQL */ `
           createdAt
           updatedAt
           inventoryProductId
-          productEODCountId
-          productActualSetOutId
         }
         createdAt
         updatedAt
@@ -3503,7 +3466,7 @@ export const getProductVendor = /* GraphQL */ `
       prodNick
       vendorNick
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -3560,7 +3523,6 @@ export const getProductVendor = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -3571,20 +3533,16 @@ export const getProductVendor = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       vendor {
         vendorName
@@ -3613,7 +3571,7 @@ export const listProductVendors = /* GraphQL */ `
         prodNick
         vendorNick
         product {
-          id
+          Type
           prodName
           prodNick
           packGroupID
@@ -3639,8 +3597,6 @@ export const listProductVendors = /* GraphQL */ `
           createdAt
           updatedAt
           inventoryProductId
-          productEODCountId
-          productActualSetOutId
         }
         vendor {
           vendorName
@@ -3651,6 +3607,268 @@ export const listProductVendors = /* GraphQL */ `
         }
         createdAt
         updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const locSortAZ = /* GraphQL */ `
+  query LocSortAZ(
+    $Type: String!
+    $locName: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelLocationFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    locSortAZ(
+      Type: $Type
+      locName: $locName
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        Type
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        zoneNick
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const prodSortAZ = /* GraphQL */ `
+  query ProdSortAZ(
+    $Type: String!
+    $prodName: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelProductFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    prodSortAZ(
+      Type: $Type
+      prodName: $prodName
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        Type
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+      }
+      nextToken
+    }
+  }
+`;
+export const orderByCreatedAt = /* GraphQL */ `
+  query OrderByCreatedAt(
+    $Type: String!
+    $createdOn: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelOrderFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    orderByCreatedAt(
+      Type: $Type
+      createdOn: $createdOn
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        Type
+        id
+        qty
+        prodNick
+        product {
+          Type
+          prodName
+          prodNick
+          packGroupID
+          packSize
+          doughNick
+          freezerThaw
+          packGroupOrder
+          readyTime
+          bakedWhere
+          wholePrice
+          retailPrice
+          isWhole
+          weight
+          descrip
+          picURL
+          squareID
+          forBake
+          bakeExtra
+          batchSize
+          defaultInclude
+          leadTime
+          qbID
+          createdAt
+          updatedAt
+          inventoryProductId
+        }
+        locNick
+        location {
+          Type
+          locNick
+          locName
+          zoneNick
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          createdAt
+          updatedAt
+        }
+        ItemNote
+        SO
+        isWhole
+        delivDate
+        rate
+        isLate
+        createdOn
+        updatedAt
+        invoiceOrdersId
       }
       nextToken
     }
@@ -3684,7 +3902,7 @@ export const internalByBakeryLoc = /* GraphQL */ `
 `;
 export const locUsersByAuthType = /* GraphQL */ `
   query LocUsersByAuthType(
-    $type: String!
+    $Type: String!
     $authType: ModelIntKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelLocationUserFilterInput
@@ -3692,7 +3910,7 @@ export const locUsersByAuthType = /* GraphQL */ `
     $nextToken: String
   ) {
     locUsersByAuthType(
-      type: $type
+      Type: $Type
       authType: $authType
       sortDirection: $sortDirection
       filter: $filter
@@ -3701,14 +3919,15 @@ export const locUsersByAuthType = /* GraphQL */ `
     ) {
       items {
         id
-        type
+        Type
         authType
         locNick
         sub
         location {
+          Type
           locNick
           locName
-          zoneID
+          zoneNick
           addr1
           addr2
           city

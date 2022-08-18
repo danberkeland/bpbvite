@@ -298,12 +298,13 @@ export const createUser = /* GraphQL */ `
       sub
       locNick
       defaultLoc {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -347,7 +348,7 @@ export const createUser = /* GraphQL */ `
       locs {
         items {
           id
-          type
+          Type
           authType
           locNick
           sub
@@ -373,12 +374,13 @@ export const updateUser = /* GraphQL */ `
       sub
       locNick
       defaultLoc {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -422,7 +424,7 @@ export const updateUser = /* GraphQL */ `
       locs {
         items {
           id
-          type
+          Type
           authType
           locNick
           sub
@@ -448,12 +450,13 @@ export const deleteUser = /* GraphQL */ `
       sub
       locNick
       defaultLoc {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -497,7 +500,7 @@ export const deleteUser = /* GraphQL */ `
       locs {
         items {
           id
-          type
+          Type
           authType
           locNick
           sub
@@ -517,12 +520,13 @@ export const createLocation = /* GraphQL */ `
     $condition: ModelLocationConditionInput
   ) {
     createLocation(input: $input, condition: $condition) {
+      Type
       locNick
       locName
       subs {
         items {
           id
-          type
+          Type
           authType
           locNick
           sub
@@ -531,7 +535,7 @@ export const createLocation = /* GraphQL */ `
         }
         nextToken
       }
-      zoneID
+      zoneNick
       zone {
         zoneNick
         zoneName
@@ -577,6 +581,7 @@ export const createLocation = /* GraphQL */ `
         items {
           id
           wholePrice
+          wholePrice2
           locNick
           prodNick
           createdAt
@@ -605,12 +610,13 @@ export const updateLocation = /* GraphQL */ `
     $condition: ModelLocationConditionInput
   ) {
     updateLocation(input: $input, condition: $condition) {
+      Type
       locNick
       locName
       subs {
         items {
           id
-          type
+          Type
           authType
           locNick
           sub
@@ -619,7 +625,7 @@ export const updateLocation = /* GraphQL */ `
         }
         nextToken
       }
-      zoneID
+      zoneNick
       zone {
         zoneNick
         zoneName
@@ -665,6 +671,7 @@ export const updateLocation = /* GraphQL */ `
         items {
           id
           wholePrice
+          wholePrice2
           locNick
           prodNick
           createdAt
@@ -693,12 +700,13 @@ export const deleteLocation = /* GraphQL */ `
     $condition: ModelLocationConditionInput
   ) {
     deleteLocation(input: $input, condition: $condition) {
+      Type
       locNick
       locName
       subs {
         items {
           id
-          type
+          Type
           authType
           locNick
           sub
@@ -707,7 +715,7 @@ export const deleteLocation = /* GraphQL */ `
         }
         nextToken
       }
-      zoneID
+      zoneNick
       zone {
         zoneNick
         zoneName
@@ -753,6 +761,7 @@ export const deleteLocation = /* GraphQL */ `
         items {
           id
           wholePrice
+          wholePrice2
           locNick
           prodNick
           createdAt
@@ -781,7 +790,7 @@ export const createProduct = /* GraphQL */ `
     $condition: ModelProductConditionInput
   ) {
     createProduct(input: $input, condition: $condition) {
-      id
+      Type
       prodName
       prodNick
       packGroupID
@@ -839,6 +848,7 @@ export const createProduct = /* GraphQL */ `
         items {
           id
           wholePrice
+          wholePrice2
           locNick
           prodNick
           createdAt
@@ -877,10 +887,9 @@ export const createProduct = /* GraphQL */ `
         nextToken
       }
       EODCount {
-        id
         prodNick
         product {
-          id
+          Type
           prodName
           prodNick
           packGroupID
@@ -906,8 +915,6 @@ export const createProduct = /* GraphQL */ `
           createdAt
           updatedAt
           inventoryProductId
-          productEODCountId
-          productActualSetOutId
         }
         shelfOrFreezer
         startOrFinish
@@ -918,10 +925,9 @@ export const createProduct = /* GraphQL */ `
         updatedAt
       }
       ActualSetOut {
-        id
         prodNick
         prodName {
-          id
+          Type
           prodName
           prodNick
           packGroupID
@@ -947,21 +953,16 @@ export const createProduct = /* GraphQL */ `
           createdAt
           updatedAt
           inventoryProductId
-          productEODCountId
-          productActualSetOutId
         }
         qty
         location
         whoSetOut
         createdAt
         updatedAt
-        actualSetOutProdNameId
       }
       createdAt
       updatedAt
       inventoryProductId
-      productEODCountId
-      productActualSetOutId
     }
   }
 `;
@@ -971,7 +972,7 @@ export const updateProduct = /* GraphQL */ `
     $condition: ModelProductConditionInput
   ) {
     updateProduct(input: $input, condition: $condition) {
-      id
+      Type
       prodName
       prodNick
       packGroupID
@@ -1029,6 +1030,7 @@ export const updateProduct = /* GraphQL */ `
         items {
           id
           wholePrice
+          wholePrice2
           locNick
           prodNick
           createdAt
@@ -1067,10 +1069,9 @@ export const updateProduct = /* GraphQL */ `
         nextToken
       }
       EODCount {
-        id
         prodNick
         product {
-          id
+          Type
           prodName
           prodNick
           packGroupID
@@ -1096,8 +1097,6 @@ export const updateProduct = /* GraphQL */ `
           createdAt
           updatedAt
           inventoryProductId
-          productEODCountId
-          productActualSetOutId
         }
         shelfOrFreezer
         startOrFinish
@@ -1108,10 +1107,9 @@ export const updateProduct = /* GraphQL */ `
         updatedAt
       }
       ActualSetOut {
-        id
         prodNick
         prodName {
-          id
+          Type
           prodName
           prodNick
           packGroupID
@@ -1137,21 +1135,16 @@ export const updateProduct = /* GraphQL */ `
           createdAt
           updatedAt
           inventoryProductId
-          productEODCountId
-          productActualSetOutId
         }
         qty
         location
         whoSetOut
         createdAt
         updatedAt
-        actualSetOutProdNameId
       }
       createdAt
       updatedAt
       inventoryProductId
-      productEODCountId
-      productActualSetOutId
     }
   }
 `;
@@ -1161,7 +1154,7 @@ export const deleteProduct = /* GraphQL */ `
     $condition: ModelProductConditionInput
   ) {
     deleteProduct(input: $input, condition: $condition) {
-      id
+      Type
       prodName
       prodNick
       packGroupID
@@ -1219,6 +1212,7 @@ export const deleteProduct = /* GraphQL */ `
         items {
           id
           wholePrice
+          wholePrice2
           locNick
           prodNick
           createdAt
@@ -1257,10 +1251,9 @@ export const deleteProduct = /* GraphQL */ `
         nextToken
       }
       EODCount {
-        id
         prodNick
         product {
-          id
+          Type
           prodName
           prodNick
           packGroupID
@@ -1286,8 +1279,6 @@ export const deleteProduct = /* GraphQL */ `
           createdAt
           updatedAt
           inventoryProductId
-          productEODCountId
-          productActualSetOutId
         }
         shelfOrFreezer
         startOrFinish
@@ -1298,10 +1289,9 @@ export const deleteProduct = /* GraphQL */ `
         updatedAt
       }
       ActualSetOut {
-        id
         prodNick
         prodName {
-          id
+          Type
           prodName
           prodNick
           packGroupID
@@ -1327,21 +1317,16 @@ export const deleteProduct = /* GraphQL */ `
           createdAt
           updatedAt
           inventoryProductId
-          productEODCountId
-          productActualSetOutId
         }
         qty
         location
         whoSetOut
         createdAt
         updatedAt
-        actualSetOutProdNameId
       }
       createdAt
       updatedAt
       inventoryProductId
-      productEODCountId
-      productActualSetOutId
     }
   }
 `;
@@ -1354,6 +1339,7 @@ export const createInvoice = /* GraphQL */ `
       id
       orders {
         items {
+          Type
           id
           qty
           prodNick
@@ -1364,7 +1350,7 @@ export const createInvoice = /* GraphQL */ `
           delivDate
           rate
           isLate
-          createdAt
+          createdOn
           updatedAt
           invoiceOrdersId
         }
@@ -1372,12 +1358,13 @@ export const createInvoice = /* GraphQL */ `
       }
       locNick
       location {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -1434,6 +1421,7 @@ export const updateInvoice = /* GraphQL */ `
       id
       orders {
         items {
+          Type
           id
           qty
           prodNick
@@ -1444,7 +1432,7 @@ export const updateInvoice = /* GraphQL */ `
           delivDate
           rate
           isLate
-          createdAt
+          createdOn
           updatedAt
           invoiceOrdersId
         }
@@ -1452,12 +1440,13 @@ export const updateInvoice = /* GraphQL */ `
       }
       locNick
       location {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -1514,6 +1503,7 @@ export const deleteInvoice = /* GraphQL */ `
       id
       orders {
         items {
+          Type
           id
           qty
           prodNick
@@ -1524,7 +1514,7 @@ export const deleteInvoice = /* GraphQL */ `
           delivDate
           rate
           isLate
-          createdAt
+          createdOn
           updatedAt
           invoiceOrdersId
         }
@@ -1532,12 +1522,13 @@ export const deleteInvoice = /* GraphQL */ `
       }
       locNick
       location {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -1591,11 +1582,12 @@ export const createOrder = /* GraphQL */ `
     $condition: ModelOrderConditionInput
   ) {
     createOrder(input: $input, condition: $condition) {
+      Type
       id
       qty
       prodNick
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -1652,7 +1644,6 @@ export const createOrder = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -1663,29 +1654,26 @@ export const createOrder = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       locNick
       location {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -1732,7 +1720,7 @@ export const createOrder = /* GraphQL */ `
       delivDate
       rate
       isLate
-      createdAt
+      createdOn
       updatedAt
       invoiceOrdersId
     }
@@ -1744,11 +1732,12 @@ export const updateOrder = /* GraphQL */ `
     $condition: ModelOrderConditionInput
   ) {
     updateOrder(input: $input, condition: $condition) {
+      Type
       id
       qty
       prodNick
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -1805,7 +1794,6 @@ export const updateOrder = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -1816,29 +1804,26 @@ export const updateOrder = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       locNick
       location {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -1885,7 +1870,7 @@ export const updateOrder = /* GraphQL */ `
       delivDate
       rate
       isLate
-      createdAt
+      createdOn
       updatedAt
       invoiceOrdersId
     }
@@ -1897,11 +1882,12 @@ export const deleteOrder = /* GraphQL */ `
     $condition: ModelOrderConditionInput
   ) {
     deleteOrder(input: $input, condition: $condition) {
+      Type
       id
       qty
       prodNick
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -1958,7 +1944,6 @@ export const deleteOrder = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -1969,29 +1954,26 @@ export const deleteOrder = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       locNick
       location {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -2038,7 +2020,7 @@ export const deleteOrder = /* GraphQL */ `
       delivDate
       rate
       isLate
-      createdAt
+      createdOn
       updatedAt
       invoiceOrdersId
     }
@@ -2648,7 +2630,7 @@ export const createInventory = /* GraphQL */ `
       }
       product {
         items {
-          id
+          Type
           prodName
           prodNick
           packGroupID
@@ -2674,8 +2656,6 @@ export const createInventory = /* GraphQL */ `
           createdAt
           updatedAt
           inventoryProductId
-          productEODCountId
-          productActualSetOutId
         }
         nextToken
       }
@@ -2729,7 +2709,7 @@ export const updateInventory = /* GraphQL */ `
       }
       product {
         items {
-          id
+          Type
           prodName
           prodNick
           packGroupID
@@ -2755,8 +2735,6 @@ export const updateInventory = /* GraphQL */ `
           createdAt
           updatedAt
           inventoryProductId
-          productEODCountId
-          productActualSetOutId
         }
         nextToken
       }
@@ -2810,7 +2788,7 @@ export const deleteInventory = /* GraphQL */ `
       }
       product {
         items {
-          id
+          Type
           prodName
           prodNick
           packGroupID
@@ -2836,8 +2814,6 @@ export const deleteInventory = /* GraphQL */ `
           createdAt
           updatedAt
           inventoryProductId
-          productEODCountId
-          productActualSetOutId
         }
         nextToken
       }
@@ -3103,10 +3079,9 @@ export const createEODCount = /* GraphQL */ `
     $condition: ModelEODCountConditionInput
   ) {
     createEODCount(input: $input, condition: $condition) {
-      id
       prodNick
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -3163,7 +3138,6 @@ export const createEODCount = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -3174,20 +3148,16 @@ export const createEODCount = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       shelfOrFreezer
       startOrFinish
@@ -3205,10 +3175,9 @@ export const updateEODCount = /* GraphQL */ `
     $condition: ModelEODCountConditionInput
   ) {
     updateEODCount(input: $input, condition: $condition) {
-      id
       prodNick
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -3265,7 +3234,6 @@ export const updateEODCount = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -3276,20 +3244,16 @@ export const updateEODCount = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       shelfOrFreezer
       startOrFinish
@@ -3307,10 +3271,9 @@ export const deleteEODCount = /* GraphQL */ `
     $condition: ModelEODCountConditionInput
   ) {
     deleteEODCount(input: $input, condition: $condition) {
-      id
       prodNick
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -3367,7 +3330,6 @@ export const deleteEODCount = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -3378,26 +3340,304 @@ export const deleteEODCount = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       shelfOrFreezer
       startOrFinish
       location
       qty
       whoCounted
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createActualSetOut = /* GraphQL */ `
+  mutation CreateActualSetOut(
+    $input: CreateActualSetOutInput!
+    $condition: ModelActualSetOutConditionInput
+  ) {
+    createActualSetOut(input: $input, condition: $condition) {
+      prodNick
+      prodName {
+        Type
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+      }
+      qty
+      location
+      whoSetOut
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateActualSetOut = /* GraphQL */ `
+  mutation UpdateActualSetOut(
+    $input: UpdateActualSetOutInput!
+    $condition: ModelActualSetOutConditionInput
+  ) {
+    updateActualSetOut(input: $input, condition: $condition) {
+      prodNick
+      prodName {
+        Type
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+      }
+      qty
+      location
+      whoSetOut
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteActualSetOut = /* GraphQL */ `
+  mutation DeleteActualSetOut(
+    $input: DeleteActualSetOutInput!
+    $condition: ModelActualSetOutConditionInput
+  ) {
+    deleteActualSetOut(input: $input, condition: $condition) {
+      prodNick
+      prodName {
+        Type
+        prodName
+        prodNick
+        packGroupID
+        packGroup {
+          id
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+      }
+      qty
+      location
+      whoSetOut
       createdAt
       updatedAt
     }
@@ -3493,309 +3733,6 @@ export const deletePocketCount = /* GraphQL */ `
       whoCounted
       createdAt
       updatedAt
-    }
-  }
-`;
-export const createActualSetOut = /* GraphQL */ `
-  mutation CreateActualSetOut(
-    $input: CreateActualSetOutInput!
-    $condition: ModelActualSetOutConditionInput
-  ) {
-    createActualSetOut(input: $input, condition: $condition) {
-      id
-      prodNick
-      prodName {
-        id
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        depends {
-          nextToken
-        }
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        productVendor {
-          nextToken
-        }
-        EODCount {
-          id
-          prodNick
-          shelfOrFreezer
-          startOrFinish
-          location
-          qty
-          whoCounted
-          createdAt
-          updatedAt
-        }
-        ActualSetOut {
-          id
-          prodNick
-          qty
-          location
-          whoSetOut
-          createdAt
-          updatedAt
-          actualSetOutProdNameId
-        }
-        createdAt
-        updatedAt
-        inventoryProductId
-        productEODCountId
-        productActualSetOutId
-      }
-      qty
-      location
-      whoSetOut
-      createdAt
-      updatedAt
-      actualSetOutProdNameId
-    }
-  }
-`;
-export const updateActualSetOut = /* GraphQL */ `
-  mutation UpdateActualSetOut(
-    $input: UpdateActualSetOutInput!
-    $condition: ModelActualSetOutConditionInput
-  ) {
-    updateActualSetOut(input: $input, condition: $condition) {
-      id
-      prodNick
-      prodName {
-        id
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        depends {
-          nextToken
-        }
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        productVendor {
-          nextToken
-        }
-        EODCount {
-          id
-          prodNick
-          shelfOrFreezer
-          startOrFinish
-          location
-          qty
-          whoCounted
-          createdAt
-          updatedAt
-        }
-        ActualSetOut {
-          id
-          prodNick
-          qty
-          location
-          whoSetOut
-          createdAt
-          updatedAt
-          actualSetOutProdNameId
-        }
-        createdAt
-        updatedAt
-        inventoryProductId
-        productEODCountId
-        productActualSetOutId
-      }
-      qty
-      location
-      whoSetOut
-      createdAt
-      updatedAt
-      actualSetOutProdNameId
-    }
-  }
-`;
-export const deleteActualSetOut = /* GraphQL */ `
-  mutation DeleteActualSetOut(
-    $input: DeleteActualSetOutInput!
-    $condition: ModelActualSetOutConditionInput
-  ) {
-    deleteActualSetOut(input: $input, condition: $condition) {
-      id
-      prodNick
-      prodName {
-        id
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        depends {
-          nextToken
-        }
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        productVendor {
-          nextToken
-        }
-        EODCount {
-          id
-          prodNick
-          shelfOrFreezer
-          startOrFinish
-          location
-          qty
-          whoCounted
-          createdAt
-          updatedAt
-        }
-        ActualSetOut {
-          id
-          prodNick
-          qty
-          location
-          whoSetOut
-          createdAt
-          updatedAt
-          actualSetOutProdNameId
-        }
-        createdAt
-        updatedAt
-        inventoryProductId
-        productEODCountId
-        productActualSetOutId
-      }
-      qty
-      location
-      whoSetOut
-      createdAt
-      updatedAt
-      actualSetOutProdNameId
     }
   }
 `;
@@ -3993,9 +3930,10 @@ export const createEventLog = /* GraphQL */ `
         sub
         locNick
         defaultLoc {
+          Type
           locNick
           locName
-          zoneID
+          zoneNick
           addr1
           addr2
           city
@@ -4047,9 +3985,10 @@ export const updateEventLog = /* GraphQL */ `
         sub
         locNick
         defaultLoc {
+          Type
           locNick
           locName
-          zoneID
+          zoneNick
           addr1
           addr2
           city
@@ -4101,9 +4040,10 @@ export const deleteEventLog = /* GraphQL */ `
         sub
         locNick
         defaultLoc {
+          Type
           locNick
           locName
-          zoneID
+          zoneNick
           addr1
           addr2
           city
@@ -4148,12 +4088,13 @@ export const createTemplateProd = /* GraphQL */ `
       locNick
       prodNick
       location {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -4195,7 +4136,7 @@ export const createTemplateProd = /* GraphQL */ `
         updatedAt
       }
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -4252,7 +4193,6 @@ export const createTemplateProd = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -4263,20 +4203,16 @@ export const createTemplateProd = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       createdAt
       updatedAt
@@ -4293,12 +4229,13 @@ export const updateTemplateProd = /* GraphQL */ `
       locNick
       prodNick
       location {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -4340,7 +4277,7 @@ export const updateTemplateProd = /* GraphQL */ `
         updatedAt
       }
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -4397,7 +4334,6 @@ export const updateTemplateProd = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -4408,20 +4344,16 @@ export const updateTemplateProd = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       createdAt
       updatedAt
@@ -4438,12 +4370,13 @@ export const deleteTemplateProd = /* GraphQL */ `
       locNick
       prodNick
       location {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -4485,7 +4418,7 @@ export const deleteTemplateProd = /* GraphQL */ `
         updatedAt
       }
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -4542,7 +4475,6 @@ export const deleteTemplateProd = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -4553,20 +4485,16 @@ export const deleteTemplateProd = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       createdAt
       updatedAt
@@ -4583,12 +4511,13 @@ export const createProdsNotAllowed = /* GraphQL */ `
       locNick
       prodNick
       location {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -4630,7 +4559,7 @@ export const createProdsNotAllowed = /* GraphQL */ `
         updatedAt
       }
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -4687,7 +4616,6 @@ export const createProdsNotAllowed = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -4698,20 +4626,16 @@ export const createProdsNotAllowed = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       createdAt
       updatedAt
@@ -4728,12 +4652,13 @@ export const updateProdsNotAllowed = /* GraphQL */ `
       locNick
       prodNick
       location {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -4775,7 +4700,7 @@ export const updateProdsNotAllowed = /* GraphQL */ `
         updatedAt
       }
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -4832,7 +4757,6 @@ export const updateProdsNotAllowed = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -4843,20 +4767,16 @@ export const updateProdsNotAllowed = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       createdAt
       updatedAt
@@ -4873,12 +4793,13 @@ export const deleteProdsNotAllowed = /* GraphQL */ `
       locNick
       prodNick
       location {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -4920,7 +4841,7 @@ export const deleteProdsNotAllowed = /* GraphQL */ `
         updatedAt
       }
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -4977,7 +4898,6 @@ export const deleteProdsNotAllowed = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -4988,20 +4908,16 @@ export const deleteProdsNotAllowed = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       createdAt
       updatedAt
@@ -5017,7 +4933,7 @@ export const createProductDepend = /* GraphQL */ `
       id
       prod1Nick
       prod1 {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -5074,7 +4990,6 @@ export const createProductDepend = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -5085,24 +5000,20 @@ export const createProductDepend = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       prod2Nick
       prod2 {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -5159,7 +5070,6 @@ export const createProductDepend = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -5170,20 +5080,16 @@ export const createProductDepend = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       createdAt
       updatedAt
@@ -5199,7 +5105,7 @@ export const updateProductDepend = /* GraphQL */ `
       id
       prod1Nick
       prod1 {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -5256,7 +5162,6 @@ export const updateProductDepend = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -5267,24 +5172,20 @@ export const updateProductDepend = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       prod2Nick
       prod2 {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -5341,7 +5242,6 @@ export const updateProductDepend = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -5352,20 +5252,16 @@ export const updateProductDepend = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       createdAt
       updatedAt
@@ -5381,7 +5277,7 @@ export const deleteProductDepend = /* GraphQL */ `
       id
       prod1Nick
       prod1 {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -5438,7 +5334,6 @@ export const deleteProductDepend = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -5449,24 +5344,20 @@ export const deleteProductDepend = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       prod2Nick
       prod2 {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -5523,7 +5414,6 @@ export const deleteProductDepend = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -5534,20 +5424,16 @@ export const deleteProductDepend = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       createdAt
       updatedAt
@@ -5684,17 +5570,18 @@ export const createLocationUser = /* GraphQL */ `
   ) {
     createLocationUser(input: $input, condition: $condition) {
       id
-      type
+      Type
       authType
       locNick
       sub
       location {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -5742,9 +5629,10 @@ export const createLocationUser = /* GraphQL */ `
         sub
         locNick
         defaultLoc {
+          Type
           locNick
           locName
-          zoneID
+          zoneNick
           addr1
           addr2
           city
@@ -5786,17 +5674,18 @@ export const updateLocationUser = /* GraphQL */ `
   ) {
     updateLocationUser(input: $input, condition: $condition) {
       id
-      type
+      Type
       authType
       locNick
       sub
       location {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -5844,9 +5733,10 @@ export const updateLocationUser = /* GraphQL */ `
         sub
         locNick
         defaultLoc {
+          Type
           locNick
           locName
-          zoneID
+          zoneNick
           addr1
           addr2
           city
@@ -5888,17 +5778,18 @@ export const deleteLocationUser = /* GraphQL */ `
   ) {
     deleteLocationUser(input: $input, condition: $condition) {
       id
-      type
+      Type
       authType
       locNick
       sub
       location {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -5946,9 +5837,10 @@ export const deleteLocationUser = /* GraphQL */ `
         sub
         locNick
         defaultLoc {
+          Type
           locNick
           locName
-          zoneID
+          zoneNick
           addr1
           addr2
           city
@@ -5991,14 +5883,16 @@ export const createAltPricing = /* GraphQL */ `
     createAltPricing(input: $input, condition: $condition) {
       id
       wholePrice
+      wholePrice2
       locNick
       loc {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -6041,7 +5935,7 @@ export const createAltPricing = /* GraphQL */ `
       }
       prodNick
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -6098,7 +5992,6 @@ export const createAltPricing = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -6109,20 +6002,16 @@ export const createAltPricing = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       createdAt
       updatedAt
@@ -6137,14 +6026,16 @@ export const updateAltPricing = /* GraphQL */ `
     updateAltPricing(input: $input, condition: $condition) {
       id
       wholePrice
+      wholePrice2
       locNick
       loc {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -6187,7 +6078,7 @@ export const updateAltPricing = /* GraphQL */ `
       }
       prodNick
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -6244,7 +6135,6 @@ export const updateAltPricing = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -6255,20 +6145,16 @@ export const updateAltPricing = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       createdAt
       updatedAt
@@ -6283,14 +6169,16 @@ export const deleteAltPricing = /* GraphQL */ `
     deleteAltPricing(input: $input, condition: $condition) {
       id
       wholePrice
+      wholePrice2
       locNick
       loc {
+        Type
         locNick
         locName
         subs {
           nextToken
         }
-        zoneID
+        zoneNick
         zone {
           zoneNick
           zoneName
@@ -6333,7 +6221,7 @@ export const deleteAltPricing = /* GraphQL */ `
       }
       prodNick
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -6390,7 +6278,6 @@ export const deleteAltPricing = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -6401,20 +6288,16 @@ export const deleteAltPricing = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       createdAt
       updatedAt
@@ -6431,7 +6314,7 @@ export const createProductVendor = /* GraphQL */ `
       prodNick
       vendorNick
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -6488,7 +6371,6 @@ export const createProductVendor = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -6499,20 +6381,16 @@ export const createProductVendor = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       vendor {
         vendorName
@@ -6539,7 +6417,7 @@ export const updateProductVendor = /* GraphQL */ `
       prodNick
       vendorNick
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -6596,7 +6474,6 @@ export const updateProductVendor = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -6607,20 +6484,16 @@ export const updateProductVendor = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       vendor {
         vendorName
@@ -6647,7 +6520,7 @@ export const deleteProductVendor = /* GraphQL */ `
       prodNick
       vendorNick
       product {
-        id
+        Type
         prodName
         prodNick
         packGroupID
@@ -6704,7 +6577,6 @@ export const deleteProductVendor = /* GraphQL */ `
           nextToken
         }
         EODCount {
-          id
           prodNick
           shelfOrFreezer
           startOrFinish
@@ -6715,20 +6587,16 @@ export const deleteProductVendor = /* GraphQL */ `
           updatedAt
         }
         ActualSetOut {
-          id
           prodNick
           qty
           location
           whoSetOut
           createdAt
           updatedAt
-          actualSetOutProdNameId
         }
         createdAt
         updatedAt
         inventoryProductId
-        productEODCountId
-        productActualSetOutId
       }
       vendor {
         vendorName

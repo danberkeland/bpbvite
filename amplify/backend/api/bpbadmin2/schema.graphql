@@ -84,6 +84,8 @@ type ProductBackup @model @auth(rules: [{ allow: public }]) {
   freezerNorthFlag: String
 }
 
+
+
 # Base Schemas
 
 type User @model {
@@ -97,11 +99,18 @@ type User @model {
 }
 
 type Location @model {
+  Type: String
+    @default(value: "Location")
+    @index(
+      name: "locSortAZ"
+      queryField: "locSortAZ"
+      sortKeyFields: ["locName"]
+    )
   locNick: String! @primaryKey
-  locName: String! 
+  locName: String!
   subs: [LocationUser] @hasMany(indexName: "byLoc", fields: ["locNick"])
-  zoneID: String
-  zone: Zone @hasOne(fields: ["zoneID"])
+  zoneNick: String
+  zone: Zone @hasOne(fields: ["zoneNick"])
   addr1: String
   addr2: String
   city: String
@@ -130,7 +139,13 @@ type Location @model {
 }
 
 type Product @model {
-  id: ID!
+  Type: String
+    @default(value: "Product")
+    @index(
+      name: "prodSortAZ"
+      queryField: "prodSortAZ"
+      sortKeyFields: ["prodName"]
+    )
   prodName: String!
   prodNick: String! @primaryKey
   packGroupID: ID
@@ -163,8 +178,9 @@ type Product @model {
     @hasMany(indexName: "byProd", fields: ["prodNick"])
   productVendor: [ProductVendor]
     @hasMany(indexName: "byProd", fields: ["prodNick"])
-  EODCount: EODCount @hasOne
-  ActualSetOut: ActualSetOut @hasOne
+  EODCount: EODCount @hasOne(fields: ["prodNick"])
+  ActualSetOut: ActualSetOut @hasOne(fields: ["prodNick"])
+  
 }
 
 type Invoice @model {
@@ -176,7 +192,14 @@ type Invoice @model {
   delivDate: String
 }
 
-type Order @model {
+type Order @model (timestamps: { createdAt: "createdOn"})  {
+  Type: String
+    @default(value: "Orders")
+    @index(
+      name: "orderByCreatedAt"
+      queryField: "orderByCreatedAt"
+      sortKeyFields: ["createdOn"]
+    )
   id: ID!
   qty: Int
   prodNick: String!
@@ -189,6 +212,7 @@ type Order @model {
   delivDate: String
   rate: Float
   isLate: Int
+  createdOn: AWSDateTime!
 }
 
 type Zone @model {
@@ -297,16 +321,27 @@ type InfoQBAuth @model {
 
 # Dynamic Counts
 
+
 type EODCount @model {
-  id: ID!
-  prodNick: String!
-  product: Product! @belongsTo(fields: ["prodNick"])
+  prodNick: String! @primaryKey
+  product: Product @belongsTo(fields: ["prodNick"])
   shelfOrFreezer: String
   startOrFinish: String
   location: String
   qty: Int
   whoCounted: String
 }
+
+
+type ActualSetOut @model {
+  prodNick: String! @primaryKey
+  prodName: Product! @belongsTo(fields: ["prodNick"])
+  qty: Int
+  location: String
+  whoSetOut: String
+}
+
+
 
 type PocketCount @model {
   id: ID!
@@ -315,15 +350,6 @@ type PocketCount @model {
   size: Int
   qty: Int
   whoCounted: String
-}
-
-type ActualSetOut @model {
-  id: ID!
-  prodNick: String!
-  prodName: Product! @belongsTo
-  qty: Int
-  location: String
-  whoSetOut: String
 }
 
 type CroixSheetCount @model {
@@ -391,18 +417,25 @@ type ZoneRoute @model {
 
 type LocationUser @model {
   id: ID!
-  type: String! @index(name: "locUsersByAuthType", queryField: "locUsersByAuthType", sortKeyFields: ["authType"])
+  Type: String!
+    @default(value: "LocationUser")
+    @index(
+      name: "locUsersByAuthType"
+      queryField: "locUsersByAuthType"
+      sortKeyFields: ["authType"]
+    )
   authType: Int
-  locNick: String! @index(name: "byLoc", sortKeyFields: ["authType"])
-  sub: String! @index(name: "bySub", sortKeyFields: ["authType"])
-  location: Location! @belongsTo(fields: ["locNick"])
-  user: User! @belongsTo(fields: ["sub"])
+  locNick: String! @index(name: "byLoc")
+  sub: String! @index(name: "bySub")
+  location: Location @belongsTo(fields: ["locNick"])
+  user: User @belongsTo(fields: ["sub"])
 }
 
 type AltPricing @model {
   id: ID!
   wholePrice: Float
-  locNick: String @index(name: "byLoc", sortKeyFields: ["wholePrice"])
+  wholePrice2: Float
+  locNick: String @index(name: "byLoc", sortKeyFields: ["wholePrice", "wholePrice2"])
   loc: Location! @belongsTo(fields: ["locNick"])
   prodNick: String @index(name: "byProd", sortKeyFields: ["wholePrice"])
   product: Product @belongsTo(fields: ["prodNick"])

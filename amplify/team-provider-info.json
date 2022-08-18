@@ -32,6 +32,12 @@
     "categories": {
       "auth": {
         "bpbadmin28b7be895": {}
+      },
+      "function": {
+        "testfunction": {
+          "deploymentBucketName": "amplify-bpbadmin2-auth-54059-deployment",
+          "s3Key": "amplify-builds/testfunction-6956494e77333543756c-build.zip"
+        }
       }
     }
   }
