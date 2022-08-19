@@ -760,9 +760,9 @@ export const onCreateProduct = /* GraphQL */ `
       Type
       prodName
       prodNick
-      packGroupID
+      packGroupNick
       packGroup {
-        id
+        packGroupNick
         packGroup
         createdAt
         updatedAt
@@ -775,7 +775,7 @@ export const onCreateProduct = /* GraphQL */ `
         hydration
         batchSize
         mixedWhere
-        components {
+        buckets {
           nextToken
         }
         isBakeReady
@@ -859,7 +859,7 @@ export const onCreateProduct = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupID
+          packGroupNick
           packSize
           doughNick
           freezerThaw
@@ -897,7 +897,7 @@ export const onCreateProduct = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupID
+          packGroupNick
           packSize
           doughNick
           freezerThaw
@@ -939,9 +939,9 @@ export const onUpdateProduct = /* GraphQL */ `
       Type
       prodName
       prodNick
-      packGroupID
+      packGroupNick
       packGroup {
-        id
+        packGroupNick
         packGroup
         createdAt
         updatedAt
@@ -954,7 +954,7 @@ export const onUpdateProduct = /* GraphQL */ `
         hydration
         batchSize
         mixedWhere
-        components {
+        buckets {
           nextToken
         }
         isBakeReady
@@ -1038,7 +1038,7 @@ export const onUpdateProduct = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupID
+          packGroupNick
           packSize
           doughNick
           freezerThaw
@@ -1076,7 +1076,7 @@ export const onUpdateProduct = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupID
+          packGroupNick
           packSize
           doughNick
           freezerThaw
@@ -1118,9 +1118,9 @@ export const onDeleteProduct = /* GraphQL */ `
       Type
       prodName
       prodNick
-      packGroupID
+      packGroupNick
       packGroup {
-        id
+        packGroupNick
         packGroup
         createdAt
         updatedAt
@@ -1133,7 +1133,7 @@ export const onDeleteProduct = /* GraphQL */ `
         hydration
         batchSize
         mixedWhere
-        components {
+        buckets {
           nextToken
         }
         isBakeReady
@@ -1217,7 +1217,7 @@ export const onDeleteProduct = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupID
+          packGroupNick
           packSize
           doughNick
           freezerThaw
@@ -1255,7 +1255,7 @@ export const onDeleteProduct = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupID
+          packGroupNick
           packSize
           doughNick
           freezerThaw
@@ -1291,243 +1291,6 @@ export const onDeleteProduct = /* GraphQL */ `
     }
   }
 `;
-export const onCreateInvoice = /* GraphQL */ `
-  subscription OnCreateInvoice($filter: ModelSubscriptionInvoiceFilterInput) {
-    onCreateInvoice(filter: $filter) {
-      id
-      orders {
-        items {
-          Type
-          id
-          qty
-          prodNick
-          locNick
-          ItemNote
-          SO
-          isWhole
-          delivDate
-          rate
-          isLate
-          createdOn
-          updatedAt
-          invoiceOrdersId
-        }
-        nextToken
-      }
-      locNick
-      location {
-        Type
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneNick
-        zone {
-          zoneNick
-          zoneName
-          description
-          zoneFee
-          createdAt
-          updatedAt
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      fulfill
-      delivDate
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateInvoice = /* GraphQL */ `
-  subscription OnUpdateInvoice($filter: ModelSubscriptionInvoiceFilterInput) {
-    onUpdateInvoice(filter: $filter) {
-      id
-      orders {
-        items {
-          Type
-          id
-          qty
-          prodNick
-          locNick
-          ItemNote
-          SO
-          isWhole
-          delivDate
-          rate
-          isLate
-          createdOn
-          updatedAt
-          invoiceOrdersId
-        }
-        nextToken
-      }
-      locNick
-      location {
-        Type
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneNick
-        zone {
-          zoneNick
-          zoneName
-          description
-          zoneFee
-          createdAt
-          updatedAt
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      fulfill
-      delivDate
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteInvoice = /* GraphQL */ `
-  subscription OnDeleteInvoice($filter: ModelSubscriptionInvoiceFilterInput) {
-    onDeleteInvoice(filter: $filter) {
-      id
-      orders {
-        items {
-          Type
-          id
-          qty
-          prodNick
-          locNick
-          ItemNote
-          SO
-          isWhole
-          delivDate
-          rate
-          isLate
-          createdOn
-          updatedAt
-          invoiceOrdersId
-        }
-        nextToken
-      }
-      locNick
-      location {
-        Type
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneNick
-        zone {
-          zoneNick
-          zoneName
-          description
-          zoneFee
-          createdAt
-          updatedAt
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      fulfill
-      delivDate
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateOrder = /* GraphQL */ `
   subscription OnCreateOrder($filter: ModelSubscriptionOrderFilterInput) {
     onCreateOrder(filter: $filter) {
@@ -1539,9 +1302,9 @@ export const onCreateOrder = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -1671,7 +1434,6 @@ export const onCreateOrder = /* GraphQL */ `
       isLate
       createdOn
       updatedAt
-      invoiceOrdersId
     }
   }
 `;
@@ -1686,9 +1448,9 @@ export const onUpdateOrder = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -1818,7 +1580,6 @@ export const onUpdateOrder = /* GraphQL */ `
       isLate
       createdOn
       updatedAt
-      invoiceOrdersId
     }
   }
 `;
@@ -1833,9 +1594,9 @@ export const onDeleteOrder = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -1965,7 +1726,6 @@ export const onDeleteOrder = /* GraphQL */ `
       isLate
       createdOn
       updatedAt
-      invoiceOrdersId
     }
   }
 `;
@@ -2121,7 +1881,7 @@ export const onCreatePackGroup = /* GraphQL */ `
     $filter: ModelSubscriptionPackGroupFilterInput
   ) {
     onCreatePackGroup(filter: $filter) {
-      id
+      packGroupNick
       packGroup
       createdAt
       updatedAt
@@ -2133,7 +1893,7 @@ export const onUpdatePackGroup = /* GraphQL */ `
     $filter: ModelSubscriptionPackGroupFilterInput
   ) {
     onUpdatePackGroup(filter: $filter) {
-      id
+      packGroupNick
       packGroup
       createdAt
       updatedAt
@@ -2145,7 +1905,7 @@ export const onDeletePackGroup = /* GraphQL */ `
     $filter: ModelSubscriptionPackGroupFilterInput
   ) {
     onDeletePackGroup(filter: $filter) {
-      id
+      packGroupNick
       packGroup
       createdAt
       updatedAt
@@ -2160,16 +1920,19 @@ export const onCreateDough = /* GraphQL */ `
       hydration
       batchSize
       mixedWhere
-      components {
+      buckets {
         items {
           id
-          componentType
-          inventoryID
-          unitID
-          amount
+          bucketType
+          invId
+          doughNick
+          qty
+          unitNick
+          totalDoughWeight
+          whoMixed
           createdAt
           updatedAt
-          doughComponentsId
+          doughBucketsId
         }
         nextToken
       }
@@ -2189,16 +1952,19 @@ export const onUpdateDough = /* GraphQL */ `
       hydration
       batchSize
       mixedWhere
-      components {
+      buckets {
         items {
           id
-          componentType
-          inventoryID
-          unitID
-          amount
+          bucketType
+          invId
+          doughNick
+          qty
+          unitNick
+          totalDoughWeight
+          whoMixed
           createdAt
           updatedAt
-          doughComponentsId
+          doughBucketsId
         }
         nextToken
       }
@@ -2218,16 +1984,19 @@ export const onDeleteDough = /* GraphQL */ `
       hydration
       batchSize
       mixedWhere
-      components {
+      buckets {
         items {
           id
-          componentType
-          inventoryID
-          unitID
-          amount
+          bucketType
+          invId
+          doughNick
+          qty
+          unitNick
+          totalDoughWeight
+          whoMixed
           createdAt
           updatedAt
-          doughComponentsId
+          doughBucketsId
         }
         nextToken
       }
@@ -2239,197 +2008,59 @@ export const onDeleteDough = /* GraphQL */ `
     }
   }
 `;
-export const onCreateDoughComponent = /* GraphQL */ `
-  subscription OnCreateDoughComponent(
-    $filter: ModelSubscriptionDoughComponentFilterInput
-  ) {
-    onCreateDoughComponent(filter: $filter) {
-      id
-      componentType
-      inventoryID
-      inventoryName {
-        id
-        ingName
-        ingNick
-        ingTypeID
-        ingType {
-          id
-          unitName
-          createdAt
-          updatedAt
-        }
-        vendor {
-          nextToken
-        }
-        product {
-          nextToken
-        }
-        unitID
-        unit {
-          id
-          unitName
-          createdAt
-          updatedAt
-        }
-        bakeryLocation
-        intLocNick
-        internalLocation {
-          intLocNick
-          bakeryLoc
-          intLocDescrip
-          createdAt
-          updatedAt
-        }
-        whoCounted
-        createdAt
-        updatedAt
-      }
-      unitID
-      unit {
-        id
-        unitName
-        createdAt
-        updatedAt
-      }
-      amount
-      createdAt
-      updatedAt
-      doughComponentsId
-    }
-  }
-`;
-export const onUpdateDoughComponent = /* GraphQL */ `
-  subscription OnUpdateDoughComponent(
-    $filter: ModelSubscriptionDoughComponentFilterInput
-  ) {
-    onUpdateDoughComponent(filter: $filter) {
-      id
-      componentType
-      inventoryID
-      inventoryName {
-        id
-        ingName
-        ingNick
-        ingTypeID
-        ingType {
-          id
-          unitName
-          createdAt
-          updatedAt
-        }
-        vendor {
-          nextToken
-        }
-        product {
-          nextToken
-        }
-        unitID
-        unit {
-          id
-          unitName
-          createdAt
-          updatedAt
-        }
-        bakeryLocation
-        intLocNick
-        internalLocation {
-          intLocNick
-          bakeryLoc
-          intLocDescrip
-          createdAt
-          updatedAt
-        }
-        whoCounted
-        createdAt
-        updatedAt
-      }
-      unitID
-      unit {
-        id
-        unitName
-        createdAt
-        updatedAt
-      }
-      amount
-      createdAt
-      updatedAt
-      doughComponentsId
-    }
-  }
-`;
-export const onDeleteDoughComponent = /* GraphQL */ `
-  subscription OnDeleteDoughComponent(
-    $filter: ModelSubscriptionDoughComponentFilterInput
-  ) {
-    onDeleteDoughComponent(filter: $filter) {
-      id
-      componentType
-      inventoryID
-      inventoryName {
-        id
-        ingName
-        ingNick
-        ingTypeID
-        ingType {
-          id
-          unitName
-          createdAt
-          updatedAt
-        }
-        vendor {
-          nextToken
-        }
-        product {
-          nextToken
-        }
-        unitID
-        unit {
-          id
-          unitName
-          createdAt
-          updatedAt
-        }
-        bakeryLocation
-        intLocNick
-        internalLocation {
-          intLocNick
-          bakeryLoc
-          intLocDescrip
-          createdAt
-          updatedAt
-        }
-        whoCounted
-        createdAt
-        updatedAt
-      }
-      unitID
-      unit {
-        id
-        unitName
-        createdAt
-        updatedAt
-      }
-      amount
-      createdAt
-      updatedAt
-      doughComponentsId
-    }
-  }
-`;
 export const onCreateBucketInfo = /* GraphQL */ `
   subscription OnCreateBucketInfo(
     $filter: ModelSubscriptionBucketInfoFilterInput
   ) {
     onCreateBucketInfo(filter: $filter) {
       id
-      doughID
+      bucketType
+      invId
+      inventoryItem {
+        id
+        ingName
+        ingNick
+        ingTypeNick
+        ingType {
+          ingTypeNick
+          ingType
+          createdAt
+          updatedAt
+        }
+        vendor {
+          nextToken
+        }
+        product {
+          nextToken
+        }
+        unitNick
+        unit {
+          unitNick
+          unitName
+          createdAt
+          updatedAt
+        }
+        bakeryLocation
+        intLocNick
+        internalLocation {
+          intLocNick
+          bakeryLoc
+          intLocDescrip
+          createdAt
+          updatedAt
+        }
+        whoCounted
+        createdAt
+        updatedAt
+      }
+      doughNick
       dough {
         doughNick
         doughName
         hydration
         batchSize
         mixedWhere
-        components {
+        buckets {
           nextToken
         }
         isBakeReady
@@ -2438,12 +2069,19 @@ export const onCreateBucketInfo = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      bucketType
       qty
+      unitNick
+      unit {
+        unitNick
+        unitName
+        createdAt
+        updatedAt
+      }
       totalDoughWeight
       whoMixed
       createdAt
       updatedAt
+      doughBucketsId
     }
   }
 `;
@@ -2453,14 +2091,53 @@ export const onUpdateBucketInfo = /* GraphQL */ `
   ) {
     onUpdateBucketInfo(filter: $filter) {
       id
-      doughID
+      bucketType
+      invId
+      inventoryItem {
+        id
+        ingName
+        ingNick
+        ingTypeNick
+        ingType {
+          ingTypeNick
+          ingType
+          createdAt
+          updatedAt
+        }
+        vendor {
+          nextToken
+        }
+        product {
+          nextToken
+        }
+        unitNick
+        unit {
+          unitNick
+          unitName
+          createdAt
+          updatedAt
+        }
+        bakeryLocation
+        intLocNick
+        internalLocation {
+          intLocNick
+          bakeryLoc
+          intLocDescrip
+          createdAt
+          updatedAt
+        }
+        whoCounted
+        createdAt
+        updatedAt
+      }
+      doughNick
       dough {
         doughNick
         doughName
         hydration
         batchSize
         mixedWhere
-        components {
+        buckets {
           nextToken
         }
         isBakeReady
@@ -2469,12 +2146,19 @@ export const onUpdateBucketInfo = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      bucketType
       qty
+      unitNick
+      unit {
+        unitNick
+        unitName
+        createdAt
+        updatedAt
+      }
       totalDoughWeight
       whoMixed
       createdAt
       updatedAt
+      doughBucketsId
     }
   }
 `;
@@ -2484,14 +2168,53 @@ export const onDeleteBucketInfo = /* GraphQL */ `
   ) {
     onDeleteBucketInfo(filter: $filter) {
       id
-      doughID
+      bucketType
+      invId
+      inventoryItem {
+        id
+        ingName
+        ingNick
+        ingTypeNick
+        ingType {
+          ingTypeNick
+          ingType
+          createdAt
+          updatedAt
+        }
+        vendor {
+          nextToken
+        }
+        product {
+          nextToken
+        }
+        unitNick
+        unit {
+          unitNick
+          unitName
+          createdAt
+          updatedAt
+        }
+        bakeryLocation
+        intLocNick
+        internalLocation {
+          intLocNick
+          bakeryLoc
+          intLocDescrip
+          createdAt
+          updatedAt
+        }
+        whoCounted
+        createdAt
+        updatedAt
+      }
+      doughNick
       dough {
         doughNick
         doughName
         hydration
         batchSize
         mixedWhere
-        components {
+        buckets {
           nextToken
         }
         isBakeReady
@@ -2500,10 +2223,104 @@ export const onDeleteBucketInfo = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      bucketType
       qty
+      unitNick
+      unit {
+        unitNick
+        unitName
+        createdAt
+        updatedAt
+      }
       totalDoughWeight
       whoMixed
+      createdAt
+      updatedAt
+      doughBucketsId
+    }
+  }
+`;
+export const onCreatePocketCount = /* GraphQL */ `
+  subscription OnCreatePocketCount(
+    $filter: ModelSubscriptionPocketCountFilterInput
+  ) {
+    onCreatePocketCount(filter: $filter) {
+      doughNick
+      doughType {
+        doughNick
+        doughName
+        hydration
+        batchSize
+        mixedWhere
+        buckets {
+          nextToken
+        }
+        isBakeReady
+        buffer
+        saltInDry
+        createdAt
+        updatedAt
+      }
+      size
+      qty
+      whoCounted
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdatePocketCount = /* GraphQL */ `
+  subscription OnUpdatePocketCount(
+    $filter: ModelSubscriptionPocketCountFilterInput
+  ) {
+    onUpdatePocketCount(filter: $filter) {
+      doughNick
+      doughType {
+        doughNick
+        doughName
+        hydration
+        batchSize
+        mixedWhere
+        buckets {
+          nextToken
+        }
+        isBakeReady
+        buffer
+        saltInDry
+        createdAt
+        updatedAt
+      }
+      size
+      qty
+      whoCounted
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeletePocketCount = /* GraphQL */ `
+  subscription OnDeletePocketCount(
+    $filter: ModelSubscriptionPocketCountFilterInput
+  ) {
+    onDeletePocketCount(filter: $filter) {
+      doughNick
+      doughType {
+        doughNick
+        doughName
+        hydration
+        batchSize
+        mixedWhere
+        buckets {
+          nextToken
+        }
+        isBakeReady
+        buffer
+        saltInDry
+        createdAt
+        updatedAt
+      }
+      size
+      qty
+      whoCounted
       createdAt
       updatedAt
     }
@@ -2517,10 +2334,10 @@ export const onCreateInventory = /* GraphQL */ `
       id
       ingName
       ingNick
-      ingTypeID
+      ingTypeNick
       ingType {
-        id
-        unitName
+        ingTypeNick
+        ingType
         createdAt
         updatedAt
       }
@@ -2539,7 +2356,7 @@ export const onCreateInventory = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupID
+          packGroupNick
           packSize
           doughNick
           freezerThaw
@@ -2565,9 +2382,9 @@ export const onCreateInventory = /* GraphQL */ `
         }
         nextToken
       }
-      unitID
+      unitNick
       unit {
-        id
+        unitNick
         unitName
         createdAt
         updatedAt
@@ -2595,10 +2412,10 @@ export const onUpdateInventory = /* GraphQL */ `
       id
       ingName
       ingNick
-      ingTypeID
+      ingTypeNick
       ingType {
-        id
-        unitName
+        ingTypeNick
+        ingType
         createdAt
         updatedAt
       }
@@ -2617,7 +2434,7 @@ export const onUpdateInventory = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupID
+          packGroupNick
           packSize
           doughNick
           freezerThaw
@@ -2643,9 +2460,9 @@ export const onUpdateInventory = /* GraphQL */ `
         }
         nextToken
       }
-      unitID
+      unitNick
       unit {
-        id
+        unitNick
         unitName
         createdAt
         updatedAt
@@ -2673,10 +2490,10 @@ export const onDeleteInventory = /* GraphQL */ `
       id
       ingName
       ingNick
-      ingTypeID
+      ingTypeNick
       ingType {
-        id
-        unitName
+        ingTypeNick
+        ingType
         createdAt
         updatedAt
       }
@@ -2695,7 +2512,7 @@ export const onDeleteInventory = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupID
+          packGroupNick
           packSize
           doughNick
           freezerThaw
@@ -2721,9 +2538,9 @@ export const onDeleteInventory = /* GraphQL */ `
         }
         nextToken
       }
-      unitID
+      unitNick
       unit {
-        id
+        unitNick
         unitName
         createdAt
         updatedAt
@@ -2746,7 +2563,7 @@ export const onDeleteInventory = /* GraphQL */ `
 export const onCreateUnit = /* GraphQL */ `
   subscription OnCreateUnit($filter: ModelSubscriptionUnitFilterInput) {
     onCreateUnit(filter: $filter) {
-      id
+      unitNick
       unitName
       createdAt
       updatedAt
@@ -2756,7 +2573,7 @@ export const onCreateUnit = /* GraphQL */ `
 export const onUpdateUnit = /* GraphQL */ `
   subscription OnUpdateUnit($filter: ModelSubscriptionUnitFilterInput) {
     onUpdateUnit(filter: $filter) {
-      id
+      unitNick
       unitName
       createdAt
       updatedAt
@@ -2766,7 +2583,7 @@ export const onUpdateUnit = /* GraphQL */ `
 export const onDeleteUnit = /* GraphQL */ `
   subscription OnDeleteUnit($filter: ModelSubscriptionUnitFilterInput) {
     onDeleteUnit(filter: $filter) {
-      id
+      unitNick
       unitName
       createdAt
       updatedAt
@@ -2815,8 +2632,8 @@ export const onDeleteInternalLoc = /* GraphQL */ `
 export const onCreateIngType = /* GraphQL */ `
   subscription OnCreateIngType($filter: ModelSubscriptionIngTypeFilterInput) {
     onCreateIngType(filter: $filter) {
-      id
-      unitName
+      ingTypeNick
+      ingType
       createdAt
       updatedAt
     }
@@ -2825,8 +2642,8 @@ export const onCreateIngType = /* GraphQL */ `
 export const onUpdateIngType = /* GraphQL */ `
   subscription OnUpdateIngType($filter: ModelSubscriptionIngTypeFilterInput) {
     onUpdateIngType(filter: $filter) {
-      id
-      unitName
+      ingTypeNick
+      ingType
       createdAt
       updatedAt
     }
@@ -2835,8 +2652,8 @@ export const onUpdateIngType = /* GraphQL */ `
 export const onDeleteIngType = /* GraphQL */ `
   subscription OnDeleteIngType($filter: ModelSubscriptionIngTypeFilterInput) {
     onDeleteIngType(filter: $filter) {
-      id
-      unitName
+      ingTypeNick
+      ingType
       createdAt
       updatedAt
     }
@@ -2905,6 +2722,312 @@ export const onDeleteVendor = /* GraphQL */ `
     }
   }
 `;
+export const onCreateProductVendor = /* GraphQL */ `
+  subscription OnCreateProductVendor(
+    $filter: ModelSubscriptionProductVendorFilterInput
+  ) {
+    onCreateProductVendor(filter: $filter) {
+      id
+      prodNick
+      vendorNick
+      product {
+        Type
+        prodName
+        prodNick
+        packGroupNick
+        packGroup {
+          packGroupNick
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+      }
+      vendor {
+        vendorName
+        vendorNick
+        productVendor {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        inventoryVendorId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateProductVendor = /* GraphQL */ `
+  subscription OnUpdateProductVendor(
+    $filter: ModelSubscriptionProductVendorFilterInput
+  ) {
+    onUpdateProductVendor(filter: $filter) {
+      id
+      prodNick
+      vendorNick
+      product {
+        Type
+        prodName
+        prodNick
+        packGroupNick
+        packGroup {
+          packGroupNick
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+      }
+      vendor {
+        vendorName
+        vendorNick
+        productVendor {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        inventoryVendorId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteProductVendor = /* GraphQL */ `
+  subscription OnDeleteProductVendor(
+    $filter: ModelSubscriptionProductVendorFilterInput
+  ) {
+    onDeleteProductVendor(filter: $filter) {
+      id
+      prodNick
+      vendorNick
+      product {
+        Type
+        prodName
+        prodNick
+        packGroupNick
+        packGroup {
+          packGroupNick
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+      }
+      vendor {
+        vendorName
+        vendorNick
+        productVendor {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        inventoryVendorId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateInfoQBAuth = /* GraphQL */ `
   subscription OnCreateInfoQBAuth(
     $filter: ModelSubscriptionInfoQBAuthFilterInput
@@ -2952,9 +3075,9 @@ export const onCreateEODCount = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -3045,9 +3168,9 @@ export const onUpdateEODCount = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -3138,9 +3261,9 @@ export const onDeleteEODCount = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -3233,9 +3356,9 @@ export const onCreateActualSetOut = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -3326,9 +3449,9 @@ export const onUpdateActualSetOut = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -3419,9 +3542,9 @@ export const onDeleteActualSetOut = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -3502,96 +3625,6 @@ export const onDeleteActualSetOut = /* GraphQL */ `
     }
   }
 `;
-export const onCreatePocketCount = /* GraphQL */ `
-  subscription OnCreatePocketCount(
-    $filter: ModelSubscriptionPocketCountFilterInput
-  ) {
-    onCreatePocketCount(filter: $filter) {
-      id
-      doughNick
-      doughType {
-        doughNick
-        doughName
-        hydration
-        batchSize
-        mixedWhere
-        components {
-          nextToken
-        }
-        isBakeReady
-        buffer
-        saltInDry
-        createdAt
-        updatedAt
-      }
-      size
-      qty
-      whoCounted
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdatePocketCount = /* GraphQL */ `
-  subscription OnUpdatePocketCount(
-    $filter: ModelSubscriptionPocketCountFilterInput
-  ) {
-    onUpdatePocketCount(filter: $filter) {
-      id
-      doughNick
-      doughType {
-        doughNick
-        doughName
-        hydration
-        batchSize
-        mixedWhere
-        components {
-          nextToken
-        }
-        isBakeReady
-        buffer
-        saltInDry
-        createdAt
-        updatedAt
-      }
-      size
-      qty
-      whoCounted
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeletePocketCount = /* GraphQL */ `
-  subscription OnDeletePocketCount(
-    $filter: ModelSubscriptionPocketCountFilterInput
-  ) {
-    onDeletePocketCount(filter: $filter) {
-      id
-      doughNick
-      doughType {
-        doughNick
-        doughName
-        hydration
-        batchSize
-        mixedWhere
-        components {
-          nextToken
-        }
-        isBakeReady
-        buffer
-        saltInDry
-        createdAt
-        updatedAt
-      }
-      size
-      qty
-      whoCounted
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateCroixSheetCount = /* GraphQL */ `
   subscription OnCreateCroixSheetCount(
     $filter: ModelSubscriptionCroixSheetCountFilterInput
@@ -3635,14 +3668,14 @@ export const onCreateOldDough = /* GraphQL */ `
   subscription OnCreateOldDough($filter: ModelSubscriptionOldDoughFilterInput) {
     onCreateOldDough(filter: $filter) {
       id
-      doughID
+      doughNick
       dough {
         doughNick
         doughName
         hydration
         batchSize
         mixedWhere
-        components {
+        buckets {
           nextToken
         }
         isBakeReady
@@ -3661,14 +3694,14 @@ export const onUpdateOldDough = /* GraphQL */ `
   subscription OnUpdateOldDough($filter: ModelSubscriptionOldDoughFilterInput) {
     onUpdateOldDough(filter: $filter) {
       id
-      doughID
+      doughNick
       dough {
         doughNick
         doughName
         hydration
         batchSize
         mixedWhere
-        components {
+        buckets {
           nextToken
         }
         isBakeReady
@@ -3687,14 +3720,14 @@ export const onDeleteOldDough = /* GraphQL */ `
   subscription OnDeleteOldDough($filter: ModelSubscriptionOldDoughFilterInput) {
     onDeleteOldDough(filter: $filter) {
       id
-      doughID
+      doughNick
       dough {
         doughNick
         doughName
         hydration
         batchSize
         mixedWhere
-        components {
+        buckets {
           nextToken
         }
         isBakeReady
@@ -3964,9 +3997,9 @@ export const onCreateTemplateProd = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -4104,9 +4137,9 @@ export const onUpdateTemplateProd = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -4244,9 +4277,9 @@ export const onDeleteTemplateProd = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -4384,9 +4417,9 @@ export const onCreateProdsNotAllowed = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -4524,9 +4557,9 @@ export const onUpdateProdsNotAllowed = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -4664,9 +4697,9 @@ export const onDeleteProdsNotAllowed = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -4755,9 +4788,9 @@ export const onCreateProductDepend = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -4835,9 +4868,9 @@ export const onCreateProductDepend = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -4926,9 +4959,9 @@ export const onUpdateProductDepend = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -5006,9 +5039,9 @@ export const onUpdateProductDepend = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -5097,9 +5130,9 @@ export const onDeleteProductDepend = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -5177,9 +5210,9 @@ export const onDeleteProductDepend = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -5748,9 +5781,9 @@ export const onCreateAltPricing = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -5890,9 +5923,9 @@ export const onUpdateAltPricing = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -6032,9 +6065,9 @@ export const onDeleteAltPricing = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -6106,312 +6139,6 @@ export const onDeleteAltPricing = /* GraphQL */ `
         createdAt
         updatedAt
         inventoryProductId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateProductVendor = /* GraphQL */ `
-  subscription OnCreateProductVendor(
-    $filter: ModelSubscriptionProductVendorFilterInput
-  ) {
-    onCreateProductVendor(filter: $filter) {
-      id
-      prodNick
-      vendorNick
-      product {
-        Type
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        depends {
-          nextToken
-        }
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        productVendor {
-          nextToken
-        }
-        EODCount {
-          prodNick
-          shelfOrFreezer
-          startOrFinish
-          location
-          qty
-          whoCounted
-          createdAt
-          updatedAt
-        }
-        ActualSetOut {
-          prodNick
-          qty
-          location
-          whoSetOut
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-        inventoryProductId
-      }
-      vendor {
-        vendorName
-        vendorNick
-        productVendor {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        inventoryVendorId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateProductVendor = /* GraphQL */ `
-  subscription OnUpdateProductVendor(
-    $filter: ModelSubscriptionProductVendorFilterInput
-  ) {
-    onUpdateProductVendor(filter: $filter) {
-      id
-      prodNick
-      vendorNick
-      product {
-        Type
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        depends {
-          nextToken
-        }
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        productVendor {
-          nextToken
-        }
-        EODCount {
-          prodNick
-          shelfOrFreezer
-          startOrFinish
-          location
-          qty
-          whoCounted
-          createdAt
-          updatedAt
-        }
-        ActualSetOut {
-          prodNick
-          qty
-          location
-          whoSetOut
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-        inventoryProductId
-      }
-      vendor {
-        vendorName
-        vendorNick
-        productVendor {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        inventoryVendorId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteProductVendor = /* GraphQL */ `
-  subscription OnDeleteProductVendor(
-    $filter: ModelSubscriptionProductVendorFilterInput
-  ) {
-    onDeleteProductVendor(filter: $filter) {
-      id
-      prodNick
-      vendorNick
-      product {
-        Type
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        depends {
-          nextToken
-        }
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        productVendor {
-          nextToken
-        }
-        EODCount {
-          prodNick
-          shelfOrFreezer
-          startOrFinish
-          location
-          qty
-          whoCounted
-          createdAt
-          updatedAt
-        }
-        ActualSetOut {
-          prodNick
-          qty
-          location
-          whoSetOut
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-        inventoryProductId
-      }
-      vendor {
-        vendorName
-        vendorNick
-        productVendor {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        inventoryVendorId
       }
       createdAt
       updatedAt

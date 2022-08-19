@@ -148,8 +148,8 @@ type Product @model {
     )
   prodName: String!
   prodNick: String! @primaryKey
-  packGroupID: ID
-  packGroup: PackGroup @hasOne(fields: ["packGroupID"])
+  packGroupNick: String
+  packGroup: PackGroup @hasOne(fields: ["packGroupNick"])
   packSize: Int
   doughNick: String
   doughType: Dough @hasOne(fields: ["doughNick"])
@@ -181,15 +181,6 @@ type Product @model {
   EODCount: EODCount @hasOne(fields: ["prodNick"])
   ActualSetOut: ActualSetOut @hasOne(fields: ["prodNick"])
   
-}
-
-type Invoice @model {
-  id: String! @primaryKey
-  orders: [Order] @hasMany
-  locNick: String!
-  location: Location @hasOne(fields: ["locNick"])
-  fulfill: String
-  delivDate: String
 }
 
 type Order @model (timestamps: { createdAt: "createdOn"})  {
@@ -237,8 +228,8 @@ type Route @model {
 }
 
 type PackGroup @model {
-  id: ID!
-  packGroup: String!
+  packGroupNick: String! @primaryKey
+  packGroup: String
 }
 
 type Dough @model {
@@ -247,42 +238,46 @@ type Dough @model {
   hydration: Float
   batchSize: Float
   mixedWhere: String
-  components: [DoughComponent] @hasMany
+  buckets: [BucketInfo] @hasMany
   isBakeReady: Boolean
   buffer: Float
   saltInDry: Boolean
 }
 
-type DoughComponent @model {
-  id: ID!
-  componentType: String
-  inventoryID: ID
-  inventoryName: Inventory @hasOne(fields: ["inventoryID"])
-  unitID: ID
-  unit: Unit @hasOne(fields: ["unitID"])
-  amount: Float
-}
-
 type BucketInfo @model {
   id: ID!
-  doughID: String!
-  dough: Dough @hasOne(fields: ["doughID"])
-  bucketType: String
+  bucketType: String!
+  invId: ID
+  inventoryItem: Inventory @hasOne(fields: ["invId"])
+  doughNick: String
+  dough: Dough @hasOne(fields: ["doughNick"])
   qty: Int
+  unitNick: String
+  unit: Unit @hasOne(fields:["unitNick"])
   totalDoughWeight: Int
   whoMixed: String
+}
+
+
+
+type PocketCount @model {
+  doughNick: String! @primaryKey(sortKeyFields: ["size"])
+  doughType: Dough! @hasOne(fields: ["doughNick"])
+  size: Int!
+  qty: Int
+  whoCounted: String
 }
 
 type Inventory @model {
   id: ID!
   ingName: String!
   ingNick: String!
-  ingTypeID: ID
-  ingType: IngType @hasOne(fields: ["ingTypeID"])
+  ingTypeNick: String
+  ingType: IngType @hasOne(fields: ["ingTypeNick"])
   vendor: [Vendor] @hasMany
   product: [Product] @hasMany
-  unitID: ID
-  unit: Unit @hasOne(fields: ["unitID"])
+  unitNick: String
+  unit: Unit @hasOne(fields: ["unitNick"])
   bakeryLocation: String
   intLocNick: String
   internalLocation: InternalLoc @hasOne(fields: ["intLocNick"])
@@ -290,7 +285,7 @@ type Inventory @model {
 }
 
 type Unit @model {
-  id: ID!
+  unitNick: String! @primaryKey
   unitName: String
 }
 
@@ -302,8 +297,8 @@ type InternalLoc @model {
 }
 
 type IngType @model {
-  id: ID!
-  unitName: String
+  ingTypeNick: String! @primaryKey
+  ingType: String
 }
 
 type Vendor @model {
@@ -313,13 +308,23 @@ type Vendor @model {
     @hasMany(indexName: "byVend", fields: ["vendorNick"])
 }
 
+
+type ProductVendor @model {
+  id: ID!
+  prodNick: String! @index(name: "byProd")
+  vendorNick: String! @index(name: "byVend")
+  product: Product! @belongsTo(fields: ["prodNick"])
+  vendor: Vendor! @belongsTo(fields: ["vendorNick"])
+}
+
+
 type InfoQBAuth @model {
   id: ID!
   infoName: String
   infoContent: String
 }
 
-# Dynamic Counts
+ #Dynamic Counts
 
 
 type EODCount @model {
@@ -342,16 +347,6 @@ type ActualSetOut @model {
 }
 
 
-
-type PocketCount @model {
-  id: ID!
-  doughNick: String!
-  doughType: Dough! @hasOne(fields: ["doughNick"])
-  size: Int
-  qty: Int
-  whoCounted: String
-}
-
 type CroixSheetCount @model {
   id: ID!
   qty: Int
@@ -360,8 +355,8 @@ type CroixSheetCount @model {
 
 type OldDough @model {
   id: ID!
-  doughID: String!
-  dough: Dough @hasOne(fields: ["doughID"])
+  doughNick: String!
+  dough: Dough @hasOne(fields: ["doughNick"])
   qty: Int
 }
 
@@ -441,10 +436,3 @@ type AltPricing @model {
   product: Product @belongsTo(fields: ["prodNick"])
 }
 
-type ProductVendor @model {
-  id: ID!
-  prodNick: String! @index(name: "byProd")
-  vendorNick: String! @index(name: "byVend")
-  product: Product! @belongsTo(fields: ["prodNick"])
-  vendor: Vendor! @belongsTo(fields: ["vendorNick"])
-}

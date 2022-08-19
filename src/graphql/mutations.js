@@ -793,9 +793,9 @@ export const createProduct = /* GraphQL */ `
       Type
       prodName
       prodNick
-      packGroupID
+      packGroupNick
       packGroup {
-        id
+        packGroupNick
         packGroup
         createdAt
         updatedAt
@@ -808,7 +808,7 @@ export const createProduct = /* GraphQL */ `
         hydration
         batchSize
         mixedWhere
-        components {
+        buckets {
           nextToken
         }
         isBakeReady
@@ -892,7 +892,7 @@ export const createProduct = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupID
+          packGroupNick
           packSize
           doughNick
           freezerThaw
@@ -930,7 +930,7 @@ export const createProduct = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupID
+          packGroupNick
           packSize
           doughNick
           freezerThaw
@@ -975,9 +975,9 @@ export const updateProduct = /* GraphQL */ `
       Type
       prodName
       prodNick
-      packGroupID
+      packGroupNick
       packGroup {
-        id
+        packGroupNick
         packGroup
         createdAt
         updatedAt
@@ -990,7 +990,7 @@ export const updateProduct = /* GraphQL */ `
         hydration
         batchSize
         mixedWhere
-        components {
+        buckets {
           nextToken
         }
         isBakeReady
@@ -1074,7 +1074,7 @@ export const updateProduct = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupID
+          packGroupNick
           packSize
           doughNick
           freezerThaw
@@ -1112,7 +1112,7 @@ export const updateProduct = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupID
+          packGroupNick
           packSize
           doughNick
           freezerThaw
@@ -1157,9 +1157,9 @@ export const deleteProduct = /* GraphQL */ `
       Type
       prodName
       prodNick
-      packGroupID
+      packGroupNick
       packGroup {
-        id
+        packGroupNick
         packGroup
         createdAt
         updatedAt
@@ -1172,7 +1172,7 @@ export const deleteProduct = /* GraphQL */ `
         hydration
         batchSize
         mixedWhere
-        components {
+        buckets {
           nextToken
         }
         isBakeReady
@@ -1256,7 +1256,7 @@ export const deleteProduct = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupID
+          packGroupNick
           packSize
           doughNick
           freezerThaw
@@ -1294,7 +1294,7 @@ export const deleteProduct = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupID
+          packGroupNick
           packSize
           doughNick
           freezerThaw
@@ -1330,252 +1330,6 @@ export const deleteProduct = /* GraphQL */ `
     }
   }
 `;
-export const createInvoice = /* GraphQL */ `
-  mutation CreateInvoice(
-    $input: CreateInvoiceInput!
-    $condition: ModelInvoiceConditionInput
-  ) {
-    createInvoice(input: $input, condition: $condition) {
-      id
-      orders {
-        items {
-          Type
-          id
-          qty
-          prodNick
-          locNick
-          ItemNote
-          SO
-          isWhole
-          delivDate
-          rate
-          isLate
-          createdOn
-          updatedAt
-          invoiceOrdersId
-        }
-        nextToken
-      }
-      locNick
-      location {
-        Type
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneNick
-        zone {
-          zoneNick
-          zoneName
-          description
-          zoneFee
-          createdAt
-          updatedAt
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      fulfill
-      delivDate
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateInvoice = /* GraphQL */ `
-  mutation UpdateInvoice(
-    $input: UpdateInvoiceInput!
-    $condition: ModelInvoiceConditionInput
-  ) {
-    updateInvoice(input: $input, condition: $condition) {
-      id
-      orders {
-        items {
-          Type
-          id
-          qty
-          prodNick
-          locNick
-          ItemNote
-          SO
-          isWhole
-          delivDate
-          rate
-          isLate
-          createdOn
-          updatedAt
-          invoiceOrdersId
-        }
-        nextToken
-      }
-      locNick
-      location {
-        Type
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneNick
-        zone {
-          zoneNick
-          zoneName
-          description
-          zoneFee
-          createdAt
-          updatedAt
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      fulfill
-      delivDate
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteInvoice = /* GraphQL */ `
-  mutation DeleteInvoice(
-    $input: DeleteInvoiceInput!
-    $condition: ModelInvoiceConditionInput
-  ) {
-    deleteInvoice(input: $input, condition: $condition) {
-      id
-      orders {
-        items {
-          Type
-          id
-          qty
-          prodNick
-          locNick
-          ItemNote
-          SO
-          isWhole
-          delivDate
-          rate
-          isLate
-          createdOn
-          updatedAt
-          invoiceOrdersId
-        }
-        nextToken
-      }
-      locNick
-      location {
-        Type
-        locNick
-        locName
-        subs {
-          nextToken
-        }
-        zoneNick
-        zone {
-          zoneNick
-          zoneName
-          description
-          zoneFee
-          createdAt
-          updatedAt
-        }
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        prodsNotAllowed {
-          nextToken
-        }
-        customProd {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      fulfill
-      delivDate
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createOrder = /* GraphQL */ `
   mutation CreateOrder(
     $input: CreateOrderInput!
@@ -1590,9 +1344,9 @@ export const createOrder = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -1722,7 +1476,6 @@ export const createOrder = /* GraphQL */ `
       isLate
       createdOn
       updatedAt
-      invoiceOrdersId
     }
   }
 `;
@@ -1740,9 +1493,9 @@ export const updateOrder = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -1872,7 +1625,6 @@ export const updateOrder = /* GraphQL */ `
       isLate
       createdOn
       updatedAt
-      invoiceOrdersId
     }
   }
 `;
@@ -1890,9 +1642,9 @@ export const deleteOrder = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -2022,7 +1774,6 @@ export const deleteOrder = /* GraphQL */ `
       isLate
       createdOn
       updatedAt
-      invoiceOrdersId
     }
   }
 `;
@@ -2197,7 +1948,7 @@ export const createPackGroup = /* GraphQL */ `
     $condition: ModelPackGroupConditionInput
   ) {
     createPackGroup(input: $input, condition: $condition) {
-      id
+      packGroupNick
       packGroup
       createdAt
       updatedAt
@@ -2210,7 +1961,7 @@ export const updatePackGroup = /* GraphQL */ `
     $condition: ModelPackGroupConditionInput
   ) {
     updatePackGroup(input: $input, condition: $condition) {
-      id
+      packGroupNick
       packGroup
       createdAt
       updatedAt
@@ -2223,7 +1974,7 @@ export const deletePackGroup = /* GraphQL */ `
     $condition: ModelPackGroupConditionInput
   ) {
     deletePackGroup(input: $input, condition: $condition) {
-      id
+      packGroupNick
       packGroup
       createdAt
       updatedAt
@@ -2241,16 +1992,19 @@ export const createDough = /* GraphQL */ `
       hydration
       batchSize
       mixedWhere
-      components {
+      buckets {
         items {
           id
-          componentType
-          inventoryID
-          unitID
-          amount
+          bucketType
+          invId
+          doughNick
+          qty
+          unitNick
+          totalDoughWeight
+          whoMixed
           createdAt
           updatedAt
-          doughComponentsId
+          doughBucketsId
         }
         nextToken
       }
@@ -2273,16 +2027,19 @@ export const updateDough = /* GraphQL */ `
       hydration
       batchSize
       mixedWhere
-      components {
+      buckets {
         items {
           id
-          componentType
-          inventoryID
-          unitID
-          amount
+          bucketType
+          invId
+          doughNick
+          qty
+          unitNick
+          totalDoughWeight
+          whoMixed
           createdAt
           updatedAt
-          doughComponentsId
+          doughBucketsId
         }
         nextToken
       }
@@ -2305,16 +2062,19 @@ export const deleteDough = /* GraphQL */ `
       hydration
       batchSize
       mixedWhere
-      components {
+      buckets {
         items {
           id
-          componentType
-          inventoryID
-          unitID
-          amount
+          bucketType
+          invId
+          doughNick
+          qty
+          unitNick
+          totalDoughWeight
+          whoMixed
           createdAt
           updatedAt
-          doughComponentsId
+          doughBucketsId
         }
         nextToken
       }
@@ -2326,186 +2086,6 @@ export const deleteDough = /* GraphQL */ `
     }
   }
 `;
-export const createDoughComponent = /* GraphQL */ `
-  mutation CreateDoughComponent(
-    $input: CreateDoughComponentInput!
-    $condition: ModelDoughComponentConditionInput
-  ) {
-    createDoughComponent(input: $input, condition: $condition) {
-      id
-      componentType
-      inventoryID
-      inventoryName {
-        id
-        ingName
-        ingNick
-        ingTypeID
-        ingType {
-          id
-          unitName
-          createdAt
-          updatedAt
-        }
-        vendor {
-          nextToken
-        }
-        product {
-          nextToken
-        }
-        unitID
-        unit {
-          id
-          unitName
-          createdAt
-          updatedAt
-        }
-        bakeryLocation
-        intLocNick
-        internalLocation {
-          intLocNick
-          bakeryLoc
-          intLocDescrip
-          createdAt
-          updatedAt
-        }
-        whoCounted
-        createdAt
-        updatedAt
-      }
-      unitID
-      unit {
-        id
-        unitName
-        createdAt
-        updatedAt
-      }
-      amount
-      createdAt
-      updatedAt
-      doughComponentsId
-    }
-  }
-`;
-export const updateDoughComponent = /* GraphQL */ `
-  mutation UpdateDoughComponent(
-    $input: UpdateDoughComponentInput!
-    $condition: ModelDoughComponentConditionInput
-  ) {
-    updateDoughComponent(input: $input, condition: $condition) {
-      id
-      componentType
-      inventoryID
-      inventoryName {
-        id
-        ingName
-        ingNick
-        ingTypeID
-        ingType {
-          id
-          unitName
-          createdAt
-          updatedAt
-        }
-        vendor {
-          nextToken
-        }
-        product {
-          nextToken
-        }
-        unitID
-        unit {
-          id
-          unitName
-          createdAt
-          updatedAt
-        }
-        bakeryLocation
-        intLocNick
-        internalLocation {
-          intLocNick
-          bakeryLoc
-          intLocDescrip
-          createdAt
-          updatedAt
-        }
-        whoCounted
-        createdAt
-        updatedAt
-      }
-      unitID
-      unit {
-        id
-        unitName
-        createdAt
-        updatedAt
-      }
-      amount
-      createdAt
-      updatedAt
-      doughComponentsId
-    }
-  }
-`;
-export const deleteDoughComponent = /* GraphQL */ `
-  mutation DeleteDoughComponent(
-    $input: DeleteDoughComponentInput!
-    $condition: ModelDoughComponentConditionInput
-  ) {
-    deleteDoughComponent(input: $input, condition: $condition) {
-      id
-      componentType
-      inventoryID
-      inventoryName {
-        id
-        ingName
-        ingNick
-        ingTypeID
-        ingType {
-          id
-          unitName
-          createdAt
-          updatedAt
-        }
-        vendor {
-          nextToken
-        }
-        product {
-          nextToken
-        }
-        unitID
-        unit {
-          id
-          unitName
-          createdAt
-          updatedAt
-        }
-        bakeryLocation
-        intLocNick
-        internalLocation {
-          intLocNick
-          bakeryLoc
-          intLocDescrip
-          createdAt
-          updatedAt
-        }
-        whoCounted
-        createdAt
-        updatedAt
-      }
-      unitID
-      unit {
-        id
-        unitName
-        createdAt
-        updatedAt
-      }
-      amount
-      createdAt
-      updatedAt
-      doughComponentsId
-    }
-  }
-`;
 export const createBucketInfo = /* GraphQL */ `
   mutation CreateBucketInfo(
     $input: CreateBucketInfoInput!
@@ -2513,14 +2093,53 @@ export const createBucketInfo = /* GraphQL */ `
   ) {
     createBucketInfo(input: $input, condition: $condition) {
       id
-      doughID
+      bucketType
+      invId
+      inventoryItem {
+        id
+        ingName
+        ingNick
+        ingTypeNick
+        ingType {
+          ingTypeNick
+          ingType
+          createdAt
+          updatedAt
+        }
+        vendor {
+          nextToken
+        }
+        product {
+          nextToken
+        }
+        unitNick
+        unit {
+          unitNick
+          unitName
+          createdAt
+          updatedAt
+        }
+        bakeryLocation
+        intLocNick
+        internalLocation {
+          intLocNick
+          bakeryLoc
+          intLocDescrip
+          createdAt
+          updatedAt
+        }
+        whoCounted
+        createdAt
+        updatedAt
+      }
+      doughNick
       dough {
         doughNick
         doughName
         hydration
         batchSize
         mixedWhere
-        components {
+        buckets {
           nextToken
         }
         isBakeReady
@@ -2529,12 +2148,19 @@ export const createBucketInfo = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      bucketType
       qty
+      unitNick
+      unit {
+        unitNick
+        unitName
+        createdAt
+        updatedAt
+      }
       totalDoughWeight
       whoMixed
       createdAt
       updatedAt
+      doughBucketsId
     }
   }
 `;
@@ -2545,14 +2171,53 @@ export const updateBucketInfo = /* GraphQL */ `
   ) {
     updateBucketInfo(input: $input, condition: $condition) {
       id
-      doughID
+      bucketType
+      invId
+      inventoryItem {
+        id
+        ingName
+        ingNick
+        ingTypeNick
+        ingType {
+          ingTypeNick
+          ingType
+          createdAt
+          updatedAt
+        }
+        vendor {
+          nextToken
+        }
+        product {
+          nextToken
+        }
+        unitNick
+        unit {
+          unitNick
+          unitName
+          createdAt
+          updatedAt
+        }
+        bakeryLocation
+        intLocNick
+        internalLocation {
+          intLocNick
+          bakeryLoc
+          intLocDescrip
+          createdAt
+          updatedAt
+        }
+        whoCounted
+        createdAt
+        updatedAt
+      }
+      doughNick
       dough {
         doughNick
         doughName
         hydration
         batchSize
         mixedWhere
-        components {
+        buckets {
           nextToken
         }
         isBakeReady
@@ -2561,12 +2226,19 @@ export const updateBucketInfo = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      bucketType
       qty
+      unitNick
+      unit {
+        unitNick
+        unitName
+        createdAt
+        updatedAt
+      }
       totalDoughWeight
       whoMixed
       createdAt
       updatedAt
+      doughBucketsId
     }
   }
 `;
@@ -2577,14 +2249,53 @@ export const deleteBucketInfo = /* GraphQL */ `
   ) {
     deleteBucketInfo(input: $input, condition: $condition) {
       id
-      doughID
+      bucketType
+      invId
+      inventoryItem {
+        id
+        ingName
+        ingNick
+        ingTypeNick
+        ingType {
+          ingTypeNick
+          ingType
+          createdAt
+          updatedAt
+        }
+        vendor {
+          nextToken
+        }
+        product {
+          nextToken
+        }
+        unitNick
+        unit {
+          unitNick
+          unitName
+          createdAt
+          updatedAt
+        }
+        bakeryLocation
+        intLocNick
+        internalLocation {
+          intLocNick
+          bakeryLoc
+          intLocDescrip
+          createdAt
+          updatedAt
+        }
+        whoCounted
+        createdAt
+        updatedAt
+      }
+      doughNick
       dough {
         doughNick
         doughName
         hydration
         batchSize
         mixedWhere
-        components {
+        buckets {
           nextToken
         }
         isBakeReady
@@ -2593,10 +2304,107 @@ export const deleteBucketInfo = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      bucketType
       qty
+      unitNick
+      unit {
+        unitNick
+        unitName
+        createdAt
+        updatedAt
+      }
       totalDoughWeight
       whoMixed
+      createdAt
+      updatedAt
+      doughBucketsId
+    }
+  }
+`;
+export const createPocketCount = /* GraphQL */ `
+  mutation CreatePocketCount(
+    $input: CreatePocketCountInput!
+    $condition: ModelPocketCountConditionInput
+  ) {
+    createPocketCount(input: $input, condition: $condition) {
+      doughNick
+      doughType {
+        doughNick
+        doughName
+        hydration
+        batchSize
+        mixedWhere
+        buckets {
+          nextToken
+        }
+        isBakeReady
+        buffer
+        saltInDry
+        createdAt
+        updatedAt
+      }
+      size
+      qty
+      whoCounted
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updatePocketCount = /* GraphQL */ `
+  mutation UpdatePocketCount(
+    $input: UpdatePocketCountInput!
+    $condition: ModelPocketCountConditionInput
+  ) {
+    updatePocketCount(input: $input, condition: $condition) {
+      doughNick
+      doughType {
+        doughNick
+        doughName
+        hydration
+        batchSize
+        mixedWhere
+        buckets {
+          nextToken
+        }
+        isBakeReady
+        buffer
+        saltInDry
+        createdAt
+        updatedAt
+      }
+      size
+      qty
+      whoCounted
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deletePocketCount = /* GraphQL */ `
+  mutation DeletePocketCount(
+    $input: DeletePocketCountInput!
+    $condition: ModelPocketCountConditionInput
+  ) {
+    deletePocketCount(input: $input, condition: $condition) {
+      doughNick
+      doughType {
+        doughNick
+        doughName
+        hydration
+        batchSize
+        mixedWhere
+        buckets {
+          nextToken
+        }
+        isBakeReady
+        buffer
+        saltInDry
+        createdAt
+        updatedAt
+      }
+      size
+      qty
+      whoCounted
       createdAt
       updatedAt
     }
@@ -2611,10 +2419,10 @@ export const createInventory = /* GraphQL */ `
       id
       ingName
       ingNick
-      ingTypeID
+      ingTypeNick
       ingType {
-        id
-        unitName
+        ingTypeNick
+        ingType
         createdAt
         updatedAt
       }
@@ -2633,7 +2441,7 @@ export const createInventory = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupID
+          packGroupNick
           packSize
           doughNick
           freezerThaw
@@ -2659,9 +2467,9 @@ export const createInventory = /* GraphQL */ `
         }
         nextToken
       }
-      unitID
+      unitNick
       unit {
-        id
+        unitNick
         unitName
         createdAt
         updatedAt
@@ -2690,10 +2498,10 @@ export const updateInventory = /* GraphQL */ `
       id
       ingName
       ingNick
-      ingTypeID
+      ingTypeNick
       ingType {
-        id
-        unitName
+        ingTypeNick
+        ingType
         createdAt
         updatedAt
       }
@@ -2712,7 +2520,7 @@ export const updateInventory = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupID
+          packGroupNick
           packSize
           doughNick
           freezerThaw
@@ -2738,9 +2546,9 @@ export const updateInventory = /* GraphQL */ `
         }
         nextToken
       }
-      unitID
+      unitNick
       unit {
-        id
+        unitNick
         unitName
         createdAt
         updatedAt
@@ -2769,10 +2577,10 @@ export const deleteInventory = /* GraphQL */ `
       id
       ingName
       ingNick
-      ingTypeID
+      ingTypeNick
       ingType {
-        id
-        unitName
+        ingTypeNick
+        ingType
         createdAt
         updatedAt
       }
@@ -2791,7 +2599,7 @@ export const deleteInventory = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupID
+          packGroupNick
           packSize
           doughNick
           freezerThaw
@@ -2817,9 +2625,9 @@ export const deleteInventory = /* GraphQL */ `
         }
         nextToken
       }
-      unitID
+      unitNick
       unit {
-        id
+        unitNick
         unitName
         createdAt
         updatedAt
@@ -2845,7 +2653,7 @@ export const createUnit = /* GraphQL */ `
     $condition: ModelUnitConditionInput
   ) {
     createUnit(input: $input, condition: $condition) {
-      id
+      unitNick
       unitName
       createdAt
       updatedAt
@@ -2858,7 +2666,7 @@ export const updateUnit = /* GraphQL */ `
     $condition: ModelUnitConditionInput
   ) {
     updateUnit(input: $input, condition: $condition) {
-      id
+      unitNick
       unitName
       createdAt
       updatedAt
@@ -2871,7 +2679,7 @@ export const deleteUnit = /* GraphQL */ `
     $condition: ModelUnitConditionInput
   ) {
     deleteUnit(input: $input, condition: $condition) {
-      id
+      unitNick
       unitName
       createdAt
       updatedAt
@@ -2926,8 +2734,8 @@ export const createIngType = /* GraphQL */ `
     $condition: ModelIngTypeConditionInput
   ) {
     createIngType(input: $input, condition: $condition) {
-      id
-      unitName
+      ingTypeNick
+      ingType
       createdAt
       updatedAt
     }
@@ -2939,8 +2747,8 @@ export const updateIngType = /* GraphQL */ `
     $condition: ModelIngTypeConditionInput
   ) {
     updateIngType(input: $input, condition: $condition) {
-      id
-      unitName
+      ingTypeNick
+      ingType
       createdAt
       updatedAt
     }
@@ -2952,8 +2760,8 @@ export const deleteIngType = /* GraphQL */ `
     $condition: ModelIngTypeConditionInput
   ) {
     deleteIngType(input: $input, condition: $condition) {
-      id
-      unitName
+      ingTypeNick
+      ingType
       createdAt
       updatedAt
     }
@@ -3031,6 +2839,315 @@ export const deleteVendor = /* GraphQL */ `
     }
   }
 `;
+export const createProductVendor = /* GraphQL */ `
+  mutation CreateProductVendor(
+    $input: CreateProductVendorInput!
+    $condition: ModelProductVendorConditionInput
+  ) {
+    createProductVendor(input: $input, condition: $condition) {
+      id
+      prodNick
+      vendorNick
+      product {
+        Type
+        prodName
+        prodNick
+        packGroupNick
+        packGroup {
+          packGroupNick
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+      }
+      vendor {
+        vendorName
+        vendorNick
+        productVendor {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        inventoryVendorId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateProductVendor = /* GraphQL */ `
+  mutation UpdateProductVendor(
+    $input: UpdateProductVendorInput!
+    $condition: ModelProductVendorConditionInput
+  ) {
+    updateProductVendor(input: $input, condition: $condition) {
+      id
+      prodNick
+      vendorNick
+      product {
+        Type
+        prodName
+        prodNick
+        packGroupNick
+        packGroup {
+          packGroupNick
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+      }
+      vendor {
+        vendorName
+        vendorNick
+        productVendor {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        inventoryVendorId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteProductVendor = /* GraphQL */ `
+  mutation DeleteProductVendor(
+    $input: DeleteProductVendorInput!
+    $condition: ModelProductVendorConditionInput
+  ) {
+    deleteProductVendor(input: $input, condition: $condition) {
+      id
+      prodNick
+      vendorNick
+      product {
+        Type
+        prodName
+        prodNick
+        packGroupNick
+        packGroup {
+          packGroupNick
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+      }
+      vendor {
+        vendorName
+        vendorNick
+        productVendor {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        inventoryVendorId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createInfoQBAuth = /* GraphQL */ `
   mutation CreateInfoQBAuth(
     $input: CreateInfoQBAuthInput!
@@ -3084,9 +3201,9 @@ export const createEODCount = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -3180,9 +3297,9 @@ export const updateEODCount = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -3276,9 +3393,9 @@ export const deleteEODCount = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -3372,9 +3489,9 @@ export const createActualSetOut = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -3466,9 +3583,9 @@ export const updateActualSetOut = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -3560,9 +3677,9 @@ export const deleteActualSetOut = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -3643,99 +3760,6 @@ export const deleteActualSetOut = /* GraphQL */ `
     }
   }
 `;
-export const createPocketCount = /* GraphQL */ `
-  mutation CreatePocketCount(
-    $input: CreatePocketCountInput!
-    $condition: ModelPocketCountConditionInput
-  ) {
-    createPocketCount(input: $input, condition: $condition) {
-      id
-      doughNick
-      doughType {
-        doughNick
-        doughName
-        hydration
-        batchSize
-        mixedWhere
-        components {
-          nextToken
-        }
-        isBakeReady
-        buffer
-        saltInDry
-        createdAt
-        updatedAt
-      }
-      size
-      qty
-      whoCounted
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updatePocketCount = /* GraphQL */ `
-  mutation UpdatePocketCount(
-    $input: UpdatePocketCountInput!
-    $condition: ModelPocketCountConditionInput
-  ) {
-    updatePocketCount(input: $input, condition: $condition) {
-      id
-      doughNick
-      doughType {
-        doughNick
-        doughName
-        hydration
-        batchSize
-        mixedWhere
-        components {
-          nextToken
-        }
-        isBakeReady
-        buffer
-        saltInDry
-        createdAt
-        updatedAt
-      }
-      size
-      qty
-      whoCounted
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deletePocketCount = /* GraphQL */ `
-  mutation DeletePocketCount(
-    $input: DeletePocketCountInput!
-    $condition: ModelPocketCountConditionInput
-  ) {
-    deletePocketCount(input: $input, condition: $condition) {
-      id
-      doughNick
-      doughType {
-        doughNick
-        doughName
-        hydration
-        batchSize
-        mixedWhere
-        components {
-          nextToken
-        }
-        isBakeReady
-        buffer
-        saltInDry
-        createdAt
-        updatedAt
-      }
-      size
-      qty
-      whoCounted
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createCroixSheetCount = /* GraphQL */ `
   mutation CreateCroixSheetCount(
     $input: CreateCroixSheetCountInput!
@@ -3785,14 +3809,14 @@ export const createOldDough = /* GraphQL */ `
   ) {
     createOldDough(input: $input, condition: $condition) {
       id
-      doughID
+      doughNick
       dough {
         doughNick
         doughName
         hydration
         batchSize
         mixedWhere
-        components {
+        buckets {
           nextToken
         }
         isBakeReady
@@ -3814,14 +3838,14 @@ export const updateOldDough = /* GraphQL */ `
   ) {
     updateOldDough(input: $input, condition: $condition) {
       id
-      doughID
+      doughNick
       dough {
         doughNick
         doughName
         hydration
         batchSize
         mixedWhere
-        components {
+        buckets {
           nextToken
         }
         isBakeReady
@@ -3843,14 +3867,14 @@ export const deleteOldDough = /* GraphQL */ `
   ) {
     deleteOldDough(input: $input, condition: $condition) {
       id
-      doughID
+      doughNick
       dough {
         doughNick
         doughName
         hydration
         batchSize
         mixedWhere
-        components {
+        buckets {
           nextToken
         }
         isBakeReady
@@ -4139,9 +4163,9 @@ export const createTemplateProd = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -4280,9 +4304,9 @@ export const updateTemplateProd = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -4421,9 +4445,9 @@ export const deleteTemplateProd = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -4562,9 +4586,9 @@ export const createProdsNotAllowed = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -4703,9 +4727,9 @@ export const updateProdsNotAllowed = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -4844,9 +4868,9 @@ export const deleteProdsNotAllowed = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -4936,9 +4960,9 @@ export const createProductDepend = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -5016,9 +5040,9 @@ export const createProductDepend = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -5108,9 +5132,9 @@ export const updateProductDepend = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -5188,9 +5212,9 @@ export const updateProductDepend = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -5280,9 +5304,9 @@ export const deleteProductDepend = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -5360,9 +5384,9 @@ export const deleteProductDepend = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -5938,9 +5962,9 @@ export const createAltPricing = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -6081,9 +6105,9 @@ export const updateAltPricing = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -6224,9 +6248,9 @@ export const deleteAltPricing = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupID
+        packGroupNick
         packGroup {
-          id
+          packGroupNick
           packGroup
           createdAt
           updatedAt
@@ -6298,315 +6322,6 @@ export const deleteAltPricing = /* GraphQL */ `
         createdAt
         updatedAt
         inventoryProductId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createProductVendor = /* GraphQL */ `
-  mutation CreateProductVendor(
-    $input: CreateProductVendorInput!
-    $condition: ModelProductVendorConditionInput
-  ) {
-    createProductVendor(input: $input, condition: $condition) {
-      id
-      prodNick
-      vendorNick
-      product {
-        Type
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        depends {
-          nextToken
-        }
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        productVendor {
-          nextToken
-        }
-        EODCount {
-          prodNick
-          shelfOrFreezer
-          startOrFinish
-          location
-          qty
-          whoCounted
-          createdAt
-          updatedAt
-        }
-        ActualSetOut {
-          prodNick
-          qty
-          location
-          whoSetOut
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-        inventoryProductId
-      }
-      vendor {
-        vendorName
-        vendorNick
-        productVendor {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        inventoryVendorId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateProductVendor = /* GraphQL */ `
-  mutation UpdateProductVendor(
-    $input: UpdateProductVendorInput!
-    $condition: ModelProductVendorConditionInput
-  ) {
-    updateProductVendor(input: $input, condition: $condition) {
-      id
-      prodNick
-      vendorNick
-      product {
-        Type
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        depends {
-          nextToken
-        }
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        productVendor {
-          nextToken
-        }
-        EODCount {
-          prodNick
-          shelfOrFreezer
-          startOrFinish
-          location
-          qty
-          whoCounted
-          createdAt
-          updatedAt
-        }
-        ActualSetOut {
-          prodNick
-          qty
-          location
-          whoSetOut
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-        inventoryProductId
-      }
-      vendor {
-        vendorName
-        vendorNick
-        productVendor {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        inventoryVendorId
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteProductVendor = /* GraphQL */ `
-  mutation DeleteProductVendor(
-    $input: DeleteProductVendorInput!
-    $condition: ModelProductVendorConditionInput
-  ) {
-    deleteProductVendor(input: $input, condition: $condition) {
-      id
-      prodNick
-      vendorNick
-      product {
-        Type
-        prodName
-        prodNick
-        packGroupID
-        packGroup {
-          id
-          packGroup
-          createdAt
-          updatedAt
-        }
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isWhole
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        depends {
-          nextToken
-        }
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        productVendor {
-          nextToken
-        }
-        EODCount {
-          prodNick
-          shelfOrFreezer
-          startOrFinish
-          location
-          qty
-          whoCounted
-          createdAt
-          updatedAt
-        }
-        ActualSetOut {
-          prodNick
-          qty
-          location
-          whoSetOut
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-        inventoryProductId
-      }
-      vendor {
-        vendorName
-        vendorNick
-        productVendor {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        inventoryVendorId
       }
       createdAt
       updatedAt
