@@ -274,6 +274,156 @@ export const onDeleteProductBackup = /* GraphQL */ `
     }
   }
 `;
+export const onCreateOrderBackup = /* GraphQL */ `
+  subscription OnCreateOrderBackup {
+    onCreateOrderBackup {
+      id
+      qty
+      prodName
+      custName
+      PONote
+      route
+      SO
+      isWhole
+      delivDate
+      timeStamp
+      rate
+      isLate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateOrderBackup = /* GraphQL */ `
+  subscription OnUpdateOrderBackup {
+    onUpdateOrderBackup {
+      id
+      qty
+      prodName
+      custName
+      PONote
+      route
+      SO
+      isWhole
+      delivDate
+      timeStamp
+      rate
+      isLate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteOrderBackup = /* GraphQL */ `
+  subscription OnDeleteOrderBackup {
+    onDeleteOrderBackup {
+      id
+      qty
+      prodName
+      custName
+      PONote
+      route
+      SO
+      isWhole
+      delivDate
+      timeStamp
+      rate
+      isLate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateRouteBackup = /* GraphQL */ `
+  subscription OnCreateRouteBackup {
+    onCreateRouteBackup {
+      id
+      routeName
+      routeStart
+      routeTime
+      RouteDepart
+      RouteArrive
+      RouteServe
+      RouteSched
+      printOrder
+      driver
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateRouteBackup = /* GraphQL */ `
+  subscription OnUpdateRouteBackup {
+    onUpdateRouteBackup {
+      id
+      routeName
+      routeStart
+      routeTime
+      RouteDepart
+      RouteArrive
+      RouteServe
+      RouteSched
+      printOrder
+      driver
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteRouteBackup = /* GraphQL */ `
+  subscription OnDeleteRouteBackup {
+    onDeleteRouteBackup {
+      id
+      routeName
+      routeStart
+      routeTime
+      RouteDepart
+      RouteArrive
+      RouteServe
+      RouteSched
+      printOrder
+      driver
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateZoneBackup = /* GraphQL */ `
+  subscription OnCreateZoneBackup {
+    onCreateZoneBackup {
+      id
+      zoneNum
+      zoneName
+      zoneFee
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateZoneBackup = /* GraphQL */ `
+  subscription OnUpdateZoneBackup {
+    onUpdateZoneBackup {
+      id
+      zoneNum
+      zoneName
+      zoneFee
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteZoneBackup = /* GraphQL */ `
+  subscription OnDeleteZoneBackup {
+    onDeleteZoneBackup {
+      id
+      zoneNum
+      zoneName
+      zoneFee
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateUser = /* GraphQL */ `
   subscription OnCreateUser($filter: ModelSubscriptionUserFilterInput) {
     onCreateUser(filter: $filter) {

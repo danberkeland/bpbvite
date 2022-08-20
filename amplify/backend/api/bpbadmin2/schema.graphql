@@ -85,6 +85,45 @@ type ProductBackup @model @auth(rules: [{ allow: public }]) {
 }
 
 
+type OrderBackup @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  qty: Int
+  prodName: String!
+  custName: String
+  PONote: String
+  route: String
+  SO: Int
+  isWhole: Boolean
+  delivDate: String
+  timeStamp: String
+  rate: Float
+  isLate: Int
+}
+
+
+
+type RouteBackup @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  routeName: String
+  routeStart: Float
+  routeTime: Float
+  RouteDepart: String
+  RouteArrive: String
+  RouteServe: [String]
+  RouteSched: [String]
+  printOrder: Int
+  driver: String
+}
+
+type ZoneBackup @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  zoneNum: Int
+  zoneName: String
+  zoneFee: Int
+}
+
+
+
 
 # Base Schemas
 

@@ -193,6 +193,127 @@ export const listProductBackups = /* GraphQL */ `
     }
   }
 `;
+export const getOrderBackup = /* GraphQL */ `
+  query GetOrderBackup($id: ID!) {
+    getOrderBackup(id: $id) {
+      id
+      qty
+      prodName
+      custName
+      PONote
+      route
+      SO
+      isWhole
+      delivDate
+      timeStamp
+      rate
+      isLate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listOrderBackups = /* GraphQL */ `
+  query ListOrderBackups(
+    $filter: ModelOrderBackupFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listOrderBackups(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        qty
+        prodName
+        custName
+        PONote
+        route
+        SO
+        isWhole
+        delivDate
+        timeStamp
+        rate
+        isLate
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getRouteBackup = /* GraphQL */ `
+  query GetRouteBackup($id: ID!) {
+    getRouteBackup(id: $id) {
+      id
+      routeName
+      routeStart
+      routeTime
+      RouteDepart
+      RouteArrive
+      RouteServe
+      RouteSched
+      printOrder
+      driver
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listRouteBackups = /* GraphQL */ `
+  query ListRouteBackups(
+    $filter: ModelRouteBackupFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRouteBackups(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        routeName
+        routeStart
+        routeTime
+        RouteDepart
+        RouteArrive
+        RouteServe
+        RouteSched
+        printOrder
+        driver
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getZoneBackup = /* GraphQL */ `
+  query GetZoneBackup($id: ID!) {
+    getZoneBackup(id: $id) {
+      id
+      zoneNum
+      zoneName
+      zoneFee
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listZoneBackups = /* GraphQL */ `
+  query ListZoneBackups(
+    $filter: ModelZoneBackupFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listZoneBackups(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        zoneNum
+        zoneName
+        zoneFee
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getUser = /* GraphQL */ `
   query GetUser($sub: String!) {
     getUser(sub: $sub) {

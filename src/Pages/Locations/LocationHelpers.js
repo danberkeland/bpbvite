@@ -30,6 +30,7 @@ export const grabOldLoc = async () => {
   export const updateNewLoc = async (old) => {
     delete old.createdAt;
     delete old.updatedAt;
+    old.zoneNick = old.zoneName
     delete old.zoneName;
     delete old.firstName;
     delete old.lastName;
@@ -53,6 +54,7 @@ export const grabOldLoc = async () => {
   export const createNewLoc = async (old) => {
     delete old.createdAt;
     delete old.updatedAt;
+    old.zoneNick = old.zoneName
     delete old.zoneName;
     delete old.firstName;
     delete old.lastName;

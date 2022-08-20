@@ -286,6 +286,183 @@ export const deleteProductBackup = /* GraphQL */ `
     }
   }
 `;
+export const createOrderBackup = /* GraphQL */ `
+  mutation CreateOrderBackup(
+    $input: CreateOrderBackupInput!
+    $condition: ModelOrderBackupConditionInput
+  ) {
+    createOrderBackup(input: $input, condition: $condition) {
+      id
+      qty
+      prodName
+      custName
+      PONote
+      route
+      SO
+      isWhole
+      delivDate
+      timeStamp
+      rate
+      isLate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateOrderBackup = /* GraphQL */ `
+  mutation UpdateOrderBackup(
+    $input: UpdateOrderBackupInput!
+    $condition: ModelOrderBackupConditionInput
+  ) {
+    updateOrderBackup(input: $input, condition: $condition) {
+      id
+      qty
+      prodName
+      custName
+      PONote
+      route
+      SO
+      isWhole
+      delivDate
+      timeStamp
+      rate
+      isLate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteOrderBackup = /* GraphQL */ `
+  mutation DeleteOrderBackup(
+    $input: DeleteOrderBackupInput!
+    $condition: ModelOrderBackupConditionInput
+  ) {
+    deleteOrderBackup(input: $input, condition: $condition) {
+      id
+      qty
+      prodName
+      custName
+      PONote
+      route
+      SO
+      isWhole
+      delivDate
+      timeStamp
+      rate
+      isLate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createRouteBackup = /* GraphQL */ `
+  mutation CreateRouteBackup(
+    $input: CreateRouteBackupInput!
+    $condition: ModelRouteBackupConditionInput
+  ) {
+    createRouteBackup(input: $input, condition: $condition) {
+      id
+      routeName
+      routeStart
+      routeTime
+      RouteDepart
+      RouteArrive
+      RouteServe
+      RouteSched
+      printOrder
+      driver
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateRouteBackup = /* GraphQL */ `
+  mutation UpdateRouteBackup(
+    $input: UpdateRouteBackupInput!
+    $condition: ModelRouteBackupConditionInput
+  ) {
+    updateRouteBackup(input: $input, condition: $condition) {
+      id
+      routeName
+      routeStart
+      routeTime
+      RouteDepart
+      RouteArrive
+      RouteServe
+      RouteSched
+      printOrder
+      driver
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteRouteBackup = /* GraphQL */ `
+  mutation DeleteRouteBackup(
+    $input: DeleteRouteBackupInput!
+    $condition: ModelRouteBackupConditionInput
+  ) {
+    deleteRouteBackup(input: $input, condition: $condition) {
+      id
+      routeName
+      routeStart
+      routeTime
+      RouteDepart
+      RouteArrive
+      RouteServe
+      RouteSched
+      printOrder
+      driver
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createZoneBackup = /* GraphQL */ `
+  mutation CreateZoneBackup(
+    $input: CreateZoneBackupInput!
+    $condition: ModelZoneBackupConditionInput
+  ) {
+    createZoneBackup(input: $input, condition: $condition) {
+      id
+      zoneNum
+      zoneName
+      zoneFee
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateZoneBackup = /* GraphQL */ `
+  mutation UpdateZoneBackup(
+    $input: UpdateZoneBackupInput!
+    $condition: ModelZoneBackupConditionInput
+  ) {
+    updateZoneBackup(input: $input, condition: $condition) {
+      id
+      zoneNum
+      zoneName
+      zoneFee
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteZoneBackup = /* GraphQL */ `
+  mutation DeleteZoneBackup(
+    $input: DeleteZoneBackupInput!
+    $condition: ModelZoneBackupConditionInput
+  ) {
+    deleteZoneBackup(input: $input, condition: $condition) {
+      id
+      zoneNum
+      zoneName
+      zoneFee
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createUser = /* GraphQL */ `
   mutation CreateUser(
     $input: CreateUserInput!
