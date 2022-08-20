@@ -334,6 +334,66 @@ export const onDeleteOrderBackup = /* GraphQL */ `
     }
   }
 `;
+export const onCreateStandingBackup = /* GraphQL */ `
+  subscription OnCreateStandingBackup {
+    onCreateStandingBackup {
+      id
+      timeStamp
+      prodName
+      custName
+      isStand
+      Sun
+      Mon
+      Tue
+      Wed
+      Thu
+      Fri
+      Sat
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateStandingBackup = /* GraphQL */ `
+  subscription OnUpdateStandingBackup {
+    onUpdateStandingBackup {
+      id
+      timeStamp
+      prodName
+      custName
+      isStand
+      Sun
+      Mon
+      Tue
+      Wed
+      Thu
+      Fri
+      Sat
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteStandingBackup = /* GraphQL */ `
+  subscription OnDeleteStandingBackup {
+    onDeleteStandingBackup {
+      id
+      timeStamp
+      prodName
+      custName
+      isStand
+      Sun
+      Mon
+      Tue
+      Wed
+      Thu
+      Fri
+      Sat
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateRouteBackup = /* GraphQL */ `
   subscription OnCreateRouteBackup {
     onCreateRouteBackup {
@@ -439,6 +499,12 @@ export const onCreateUser = /* GraphQL */ `
         subs {
           nextToken
         }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -510,6 +576,12 @@ export const onUpdateUser = /* GraphQL */ `
         locNick
         locName
         subs {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
           nextToken
         }
         zoneNick
@@ -585,6 +657,12 @@ export const onDeleteUser = /* GraphQL */ `
         subs {
           nextToken
         }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -657,6 +735,41 @@ export const onCreateLocation = /* GraphQL */ `
           locNick
           sub
           createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      standing {
+        items {
+          id
+          qty
+          prodNick
+          locNick
+          ItemNote
+          isWhole
+          isStand
+          dayOfWeek
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      orders {
+        items {
+          Type
+          id
+          qty
+          prodNick
+          locNick
+          ItemNote
+          SO
+          isWhole
+          delivDate
+          rate
+          isLate
+          createdOn
           updatedAt
         }
         nextToken
@@ -748,6 +861,41 @@ export const onUpdateLocation = /* GraphQL */ `
         }
         nextToken
       }
+      standing {
+        items {
+          id
+          qty
+          prodNick
+          locNick
+          ItemNote
+          isWhole
+          isStand
+          dayOfWeek
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      orders {
+        items {
+          Type
+          id
+          qty
+          prodNick
+          locNick
+          ItemNote
+          SO
+          isWhole
+          delivDate
+          rate
+          isLate
+          createdOn
+          updatedAt
+        }
+        nextToken
+      }
       zoneNick
       zone {
         zoneNick
@@ -831,6 +979,41 @@ export const onDeleteLocation = /* GraphQL */ `
           locNick
           sub
           createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      standing {
+        items {
+          id
+          qty
+          prodNick
+          locNick
+          ItemNote
+          isWhole
+          isStand
+          dayOfWeek
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      orders {
+        items {
+          Type
+          id
+          qty
+          prodNick
+          locNick
+          ItemNote
+          SO
+          isWhole
+          delivDate
+          rate
+          isLate
+          createdOn
           updatedAt
         }
         nextToken
@@ -1535,6 +1718,12 @@ export const onCreateOrder = /* GraphQL */ `
         subs {
           nextToken
         }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -1679,6 +1868,12 @@ export const onUpdateOrder = /* GraphQL */ `
         locNick
         locName
         subs {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
           nextToken
         }
         zoneNick
@@ -1827,6 +2022,12 @@ export const onDeleteOrder = /* GraphQL */ `
         subs {
           nextToken
         }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -1875,6 +2076,459 @@ export const onDeleteOrder = /* GraphQL */ `
       rate
       isLate
       createdOn
+      updatedAt
+    }
+  }
+`;
+export const onCreateStanding = /* GraphQL */ `
+  subscription OnCreateStanding($filter: ModelSubscriptionStandingFilterInput) {
+    onCreateStanding(filter: $filter) {
+      id
+      qty
+      prodNick
+      product {
+        Type
+        prodName
+        prodNick
+        packGroupNick
+        packGroup {
+          packGroupNick
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+      }
+      locNick
+      location {
+        Type
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
+        zoneNick
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      ItemNote
+      isWhole
+      isStand
+      dayOfWeek
+      startDate
+      endDate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateStanding = /* GraphQL */ `
+  subscription OnUpdateStanding($filter: ModelSubscriptionStandingFilterInput) {
+    onUpdateStanding(filter: $filter) {
+      id
+      qty
+      prodNick
+      product {
+        Type
+        prodName
+        prodNick
+        packGroupNick
+        packGroup {
+          packGroupNick
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+      }
+      locNick
+      location {
+        Type
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
+        zoneNick
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      ItemNote
+      isWhole
+      isStand
+      dayOfWeek
+      startDate
+      endDate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteStanding = /* GraphQL */ `
+  subscription OnDeleteStanding($filter: ModelSubscriptionStandingFilterInput) {
+    onDeleteStanding(filter: $filter) {
+      id
+      qty
+      prodNick
+      product {
+        Type
+        prodName
+        prodNick
+        packGroupNick
+        packGroup {
+          packGroupNick
+          packGroup
+          createdAt
+          updatedAt
+        }
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isWhole
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+      }
+      locNick
+      location {
+        Type
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
+        zoneNick
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      ItemNote
+      isWhole
+      isStand
+      dayOfWeek
+      startDate
+      endDate
+      createdAt
       updatedAt
     }
   }
@@ -4102,6 +4756,12 @@ export const onCreateTemplateProd = /* GraphQL */ `
         subs {
           nextToken
         }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -4240,6 +4900,12 @@ export const onUpdateTemplateProd = /* GraphQL */ `
         locNick
         locName
         subs {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
           nextToken
         }
         zoneNick
@@ -4382,6 +5048,12 @@ export const onDeleteTemplateProd = /* GraphQL */ `
         subs {
           nextToken
         }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -4520,6 +5192,12 @@ export const onCreateProdsNotAllowed = /* GraphQL */ `
         locNick
         locName
         subs {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
           nextToken
         }
         zoneNick
@@ -4662,6 +5340,12 @@ export const onUpdateProdsNotAllowed = /* GraphQL */ `
         subs {
           nextToken
         }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -4800,6 +5484,12 @@ export const onDeleteProdsNotAllowed = /* GraphQL */ `
         locNick
         locName
         subs {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
           nextToken
         }
         zoneNick
@@ -5577,6 +6267,12 @@ export const onCreateLocationUser = /* GraphQL */ `
         subs {
           nextToken
         }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -5678,6 +6374,12 @@ export const onUpdateLocationUser = /* GraphQL */ `
         locNick
         locName
         subs {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
           nextToken
         }
         zoneNick
@@ -5783,6 +6485,12 @@ export const onDeleteLocationUser = /* GraphQL */ `
         subs {
           nextToken
         }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -5883,6 +6591,12 @@ export const onCreateAltPricing = /* GraphQL */ `
         locNick
         locName
         subs {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
           nextToken
         }
         zoneNick
@@ -6027,6 +6741,12 @@ export const onUpdateAltPricing = /* GraphQL */ `
         subs {
           nextToken
         }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -6167,6 +6887,12 @@ export const onDeleteAltPricing = /* GraphQL */ `
         locNick
         locName
         subs {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
           nextToken
         }
         zoneNick

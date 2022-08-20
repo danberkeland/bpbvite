@@ -101,6 +101,23 @@ type OrderBackup @model @auth(rules: [{allow: public}]) {
 }
 
 
+type StandingBackup @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  timeStamp: String
+  prodName: String
+  custName: String
+  isStand: Boolean
+  Sun: Int
+  Mon: Int
+  Tue: Int
+  Wed: Int
+  Thu: Int
+  Fri: Int
+  Sat: Int
+}
+
+
+
 
 type RouteBackup @model @auth(rules: [{allow: public}]) {
   id: ID!
@@ -148,6 +165,8 @@ type Location @model {
   locNick: String! @primaryKey
   locName: String!
   subs: [LocationUser] @hasMany(indexName: "byLoc", fields: ["locNick"])
+  standing: [Standing] @hasMany(indexName: "byLoc", fields: ["locNick"])
+  orders: [Order] @hasMany(indexName: "byLoc", fields: ["locNick"])
   zoneNick: String
   zone: Zone @hasOne(fields: ["zoneNick"])
   addr1: String
@@ -234,7 +253,7 @@ type Order @model (timestamps: { createdAt: "createdOn"})  {
   qty: Int
   prodNick: String!
   product: Product! @hasOne(fields: ["prodNick"])
-  locNick: String!
+  locNick: String! @index(name: "byLoc")
   location: Location! @hasOne(fields: ["locNick"])
   ItemNote: String
   SO: Int
@@ -244,6 +263,24 @@ type Order @model (timestamps: { createdAt: "createdOn"})  {
   isLate: Int
   createdOn: AWSDateTime!
 }
+
+
+type Standing @model {
+  id: ID!
+  qty: Int
+  prodNick: String!  @index(name: "byProd")
+  product: Product @hasOne(fields: ["prodNick"])
+  locNick: String! @index(name: "byLoc")
+  location: Location @hasOne(fields: ["locNick"])
+  ItemNote: String
+  isWhole: Boolean
+  isStand: Boolean
+  dayOfWeek: String
+  startDate: String!
+  endDate: String
+  
+}
+
 
 type Zone @model {
   zoneNick: String! @primaryKey
