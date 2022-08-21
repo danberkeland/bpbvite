@@ -820,7 +820,6 @@ export const onCreateLocation = /* GraphQL */ `
         items {
           id
           wholePrice
-          wholePrice2
           locNick
           prodNick
           createdAt
@@ -942,7 +941,6 @@ export const onUpdateLocation = /* GraphQL */ `
         items {
           id
           wholePrice
-          wholePrice2
           locNick
           prodNick
           createdAt
@@ -1064,7 +1062,6 @@ export const onDeleteLocation = /* GraphQL */ `
         items {
           id
           wholePrice
-          wholePrice2
           locNick
           prodNick
           createdAt
@@ -1093,13 +1090,7 @@ export const onCreateProduct = /* GraphQL */ `
       Type
       prodName
       prodNick
-      packGroupNick
-      packGroup {
-        packGroupNick
-        packGroup
-        createdAt
-        updatedAt
-      }
+      packGroup
       packSize
       doughNick
       doughType {
@@ -1134,6 +1125,41 @@ export const onCreateProduct = /* GraphQL */ `
       defaultInclude
       leadTime
       qbID
+      standing {
+        items {
+          id
+          qty
+          prodNick
+          locNick
+          ItemNote
+          isWhole
+          isStand
+          dayOfWeek
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      orders {
+        items {
+          Type
+          id
+          qty
+          prodNick
+          locNick
+          ItemNote
+          SO
+          isWhole
+          delivDate
+          rate
+          isLate
+          createdOn
+          updatedAt
+        }
+        nextToken
+      }
       depends {
         items {
           id
@@ -1148,7 +1174,6 @@ export const onCreateProduct = /* GraphQL */ `
         items {
           id
           wholePrice
-          wholePrice2
           locNick
           prodNick
           createdAt
@@ -1192,7 +1217,7 @@ export const onCreateProduct = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupNick
+          packGroup
           packSize
           doughNick
           freezerThaw
@@ -1230,7 +1255,7 @@ export const onCreateProduct = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupNick
+          packGroup
           packSize
           doughNick
           freezerThaw
@@ -1272,13 +1297,7 @@ export const onUpdateProduct = /* GraphQL */ `
       Type
       prodName
       prodNick
-      packGroupNick
-      packGroup {
-        packGroupNick
-        packGroup
-        createdAt
-        updatedAt
-      }
+      packGroup
       packSize
       doughNick
       doughType {
@@ -1313,6 +1332,41 @@ export const onUpdateProduct = /* GraphQL */ `
       defaultInclude
       leadTime
       qbID
+      standing {
+        items {
+          id
+          qty
+          prodNick
+          locNick
+          ItemNote
+          isWhole
+          isStand
+          dayOfWeek
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      orders {
+        items {
+          Type
+          id
+          qty
+          prodNick
+          locNick
+          ItemNote
+          SO
+          isWhole
+          delivDate
+          rate
+          isLate
+          createdOn
+          updatedAt
+        }
+        nextToken
+      }
       depends {
         items {
           id
@@ -1327,7 +1381,6 @@ export const onUpdateProduct = /* GraphQL */ `
         items {
           id
           wholePrice
-          wholePrice2
           locNick
           prodNick
           createdAt
@@ -1371,7 +1424,7 @@ export const onUpdateProduct = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupNick
+          packGroup
           packSize
           doughNick
           freezerThaw
@@ -1409,7 +1462,7 @@ export const onUpdateProduct = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupNick
+          packGroup
           packSize
           doughNick
           freezerThaw
@@ -1451,13 +1504,7 @@ export const onDeleteProduct = /* GraphQL */ `
       Type
       prodName
       prodNick
-      packGroupNick
-      packGroup {
-        packGroupNick
-        packGroup
-        createdAt
-        updatedAt
-      }
+      packGroup
       packSize
       doughNick
       doughType {
@@ -1492,6 +1539,41 @@ export const onDeleteProduct = /* GraphQL */ `
       defaultInclude
       leadTime
       qbID
+      standing {
+        items {
+          id
+          qty
+          prodNick
+          locNick
+          ItemNote
+          isWhole
+          isStand
+          dayOfWeek
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      orders {
+        items {
+          Type
+          id
+          qty
+          prodNick
+          locNick
+          ItemNote
+          SO
+          isWhole
+          delivDate
+          rate
+          isLate
+          createdOn
+          updatedAt
+        }
+        nextToken
+      }
       depends {
         items {
           id
@@ -1506,7 +1588,6 @@ export const onDeleteProduct = /* GraphQL */ `
         items {
           id
           wholePrice
-          wholePrice2
           locNick
           prodNick
           createdAt
@@ -1550,7 +1631,7 @@ export const onDeleteProduct = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupNick
+          packGroup
           packSize
           doughNick
           freezerThaw
@@ -1588,7 +1669,7 @@ export const onDeleteProduct = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupNick
+          packGroup
           packSize
           doughNick
           freezerThaw
@@ -1635,13 +1716,7 @@ export const onCreateOrder = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -1673,6 +1748,12 @@ export const onCreateOrder = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -1787,13 +1868,7 @@ export const onUpdateOrder = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -1825,6 +1900,12 @@ export const onUpdateOrder = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -1939,13 +2020,7 @@ export const onDeleteOrder = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -1977,6 +2052,12 @@ export const onDeleteOrder = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -2090,13 +2171,7 @@ export const onCreateStanding = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -2128,6 +2203,12 @@ export const onCreateStanding = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -2241,13 +2322,7 @@ export const onUpdateStanding = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -2279,6 +2354,12 @@ export const onUpdateStanding = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -2392,13 +2473,7 @@ export const onDeleteStanding = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -2430,6 +2505,12 @@ export const onDeleteStanding = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -3160,7 +3241,7 @@ export const onCreateInventory = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupNick
+          packGroup
           packSize
           doughNick
           freezerThaw
@@ -3238,7 +3319,7 @@ export const onUpdateInventory = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupNick
+          packGroup
           packSize
           doughNick
           freezerThaw
@@ -3316,7 +3397,7 @@ export const onDeleteInventory = /* GraphQL */ `
           Type
           prodName
           prodNick
-          packGroupNick
+          packGroup
           packSize
           doughNick
           freezerThaw
@@ -3538,13 +3619,7 @@ export const onCreateProductVendor = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -3576,6 +3651,12 @@ export const onCreateProductVendor = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -3640,13 +3721,7 @@ export const onUpdateProductVendor = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -3678,6 +3753,12 @@ export const onUpdateProductVendor = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -3742,13 +3823,7 @@ export const onDeleteProductVendor = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -3780,6 +3855,12 @@ export const onDeleteProductVendor = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -3879,13 +3960,7 @@ export const onCreateEODCount = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -3917,6 +3992,12 @@ export const onCreateEODCount = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -3972,13 +4053,7 @@ export const onUpdateEODCount = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -4010,6 +4085,12 @@ export const onUpdateEODCount = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -4065,13 +4146,7 @@ export const onDeleteEODCount = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -4103,6 +4178,12 @@ export const onDeleteEODCount = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -4160,13 +4241,7 @@ export const onCreateActualSetOut = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -4198,6 +4273,12 @@ export const onCreateActualSetOut = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -4253,13 +4334,7 @@ export const onUpdateActualSetOut = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -4291,6 +4366,12 @@ export const onUpdateActualSetOut = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -4346,13 +4427,7 @@ export const onDeleteActualSetOut = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -4384,6 +4459,12 @@ export const onDeleteActualSetOut = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -4807,13 +4888,7 @@ export const onCreateTemplateProd = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -4845,6 +4920,12 @@ export const onCreateTemplateProd = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -4953,13 +5034,7 @@ export const onUpdateTemplateProd = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -4991,6 +5066,12 @@ export const onUpdateTemplateProd = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -5099,13 +5180,7 @@ export const onDeleteTemplateProd = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -5137,6 +5212,12 @@ export const onDeleteTemplateProd = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -5245,13 +5326,7 @@ export const onCreateProdsNotAllowed = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -5283,6 +5358,12 @@ export const onCreateProdsNotAllowed = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -5391,13 +5472,7 @@ export const onUpdateProdsNotAllowed = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -5429,6 +5504,12 @@ export const onUpdateProdsNotAllowed = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -5537,13 +5618,7 @@ export const onDeleteProdsNotAllowed = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -5575,6 +5650,12 @@ export const onDeleteProdsNotAllowed = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -5628,13 +5709,7 @@ export const onCreateProductDepend = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -5666,6 +5741,12 @@ export const onCreateProductDepend = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -5708,13 +5789,7 @@ export const onCreateProductDepend = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -5746,6 +5821,12 @@ export const onCreateProductDepend = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -5799,13 +5880,7 @@ export const onUpdateProductDepend = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -5837,6 +5912,12 @@ export const onUpdateProductDepend = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -5879,13 +5960,7 @@ export const onUpdateProductDepend = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -5917,6 +5992,12 @@ export const onUpdateProductDepend = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -5970,13 +6051,7 @@ export const onDeleteProductDepend = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -6008,6 +6083,12 @@ export const onDeleteProductDepend = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -6050,13 +6131,7 @@ export const onDeleteProductDepend = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -6088,6 +6163,12 @@ export const onDeleteProductDepend = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -6584,7 +6665,6 @@ export const onCreateAltPricing = /* GraphQL */ `
     onCreateAltPricing(filter: $filter) {
       id
       wholePrice
-      wholePrice2
       locNick
       loc {
         Type
@@ -6645,13 +6725,7 @@ export const onCreateAltPricing = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -6683,6 +6757,12 @@ export const onCreateAltPricing = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -6732,7 +6812,6 @@ export const onUpdateAltPricing = /* GraphQL */ `
     onUpdateAltPricing(filter: $filter) {
       id
       wholePrice
-      wholePrice2
       locNick
       loc {
         Type
@@ -6793,13 +6872,7 @@ export const onUpdateAltPricing = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -6831,6 +6904,12 @@ export const onUpdateAltPricing = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }
@@ -6880,7 +6959,6 @@ export const onDeleteAltPricing = /* GraphQL */ `
     onDeleteAltPricing(filter: $filter) {
       id
       wholePrice
-      wholePrice2
       locNick
       loc {
         Type
@@ -6941,13 +7019,7 @@ export const onDeleteAltPricing = /* GraphQL */ `
         Type
         prodName
         prodNick
-        packGroupNick
-        packGroup {
-          packGroupNick
-          packGroup
-          createdAt
-          updatedAt
-        }
+        packGroup
         packSize
         doughNick
         doughType {
@@ -6979,6 +7051,12 @@ export const onDeleteAltPricing = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
         depends {
           nextToken
         }

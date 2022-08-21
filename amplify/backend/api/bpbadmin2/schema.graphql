@@ -142,7 +142,7 @@ type ZoneBackup @model @auth(rules: [{allow: public}]) {
 
 
 
-# Base Schemas
+# Base Schemas 123
 
 type User @model {
   name: String!
@@ -206,8 +206,7 @@ type Product @model {
     )
   prodName: String!
   prodNick: String! @primaryKey
-  packGroupNick: String
-  packGroup: PackGroup @hasOne(fields: ["packGroupNick"])
+  packGroup: String
   packSize: Int
   doughNick: String
   doughType: Dough @hasOne(fields: ["doughNick"])
@@ -228,6 +227,8 @@ type Product @model {
   defaultInclude: Boolean
   leadTime: Int
   qbID: String
+  standing: [Standing] @hasMany(indexName: "byProd", fields: ["prodNick"])
+  orders: [Order] @hasMany(indexName: "byProd", fields: ["prodNick"])
   depends: [ProductDepend] @hasMany(indexName: "byProd2", fields: ["prodNick"])
   altPricing: [AltPricing] @hasMany(indexName: "byProd", fields: ["prodNick"])
   templateProd: [TemplateProd]
@@ -251,7 +252,7 @@ type Order @model (timestamps: { createdAt: "createdOn"})  {
     )
   id: ID!
   qty: Int
-  prodNick: String!
+  prodNick: String! @index(name: "byProd")
   product: Product! @hasOne(fields: ["prodNick"])
   locNick: String! @index(name: "byLoc")
   location: Location! @hasOne(fields: ["locNick"])
@@ -505,8 +506,7 @@ type LocationUser @model {
 type AltPricing @model {
   id: ID!
   wholePrice: Float
-  wholePrice2: Float
-  locNick: String @index(name: "byLoc", sortKeyFields: ["wholePrice", "wholePrice2"])
+  locNick: String @index(name: "byLoc", sortKeyFields: ["wholePrice"])
   loc: Location! @belongsTo(fields: ["locNick"])
   prodNick: String @index(name: "byProd", sortKeyFields: ["wholePrice"])
   product: Product @belongsTo(fields: ["prodNick"])

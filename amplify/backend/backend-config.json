@@ -18,7 +18,7 @@
     }
   },
   "auth": {
-    "bpbadmin28b7be895": {
+    "bpbadmin26ba422de": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -45,11 +45,5 @@
       }
     }
   },
-  "function": {
-    "testfunction": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    }
-  }
+  "function": {}
 }
