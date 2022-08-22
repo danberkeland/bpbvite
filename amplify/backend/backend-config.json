@@ -17,33 +17,25 @@
       }
     }
   },
-  "auth": {
-    "bpbadmin26ba422de": {
-      "service": "Cognito",
+  "function": {
+    "bpbadmin2amplify": {
       "providerPlugin": "awscloudformation",
-      "dependsOn": [],
-      "customAuth": false,
-      "frontendAuthConfig": {
-        "socialProviders": [],
-        "usernameAttributes": [
-          "EMAIL"
-        ],
-        "signupAttributes": [
-          "EMAIL"
-        ],
-        "passwordProtectionSettings": {
-          "passwordPolicyMinLength": 8,
-          "passwordPolicyCharacters": []
-        },
-        "mfaConfiguration": "OFF",
-        "mfaTypes": [
-          "SMS"
-        ],
-        "verificationMechanisms": [
-          "EMAIL"
-        ]
-      }
+      "service": "LambdaLayer",
+      "build": true
+    },
+    "grabOrder": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "bpbadmin2amplify",
+          "attributes": [
+            "Arn"
+          ]
+        }
+      ]
     }
-  },
-  "function": {}
+  }
 }

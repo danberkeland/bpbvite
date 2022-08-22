@@ -50,6 +50,40 @@
     "categories": {
       "auth": {
         "bpbadmin26ba422de": {}
+      },
+      "function": {
+        "bpbadmin2amplify": {
+          "deploymentBucketName": "amplify-bpbadmin2-authnext-111358-deployment",
+          "s3Key": "amplify-builds/bpbadmin2amplify-LambdaLayerVersionbc614766-build.zip"
+        }
+      }
+    }
+  },
+  "authtwo": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-bpbadmin2-authtwo-174610-authRole",
+      "UnauthRoleArn": "arn:aws:iam::191477602114:role/amplify-bpbadmin2-authtwo-174610-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::191477602114:role/amplify-bpbadmin2-authtwo-174610-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-bpbadmin2-authtwo-174610-deployment",
+      "UnauthRoleName": "amplify-bpbadmin2-authtwo-174610-unauthRole",
+      "StackName": "amplify-bpbadmin2-authtwo-174610",
+      "StackId": "arn:aws:cloudformation:us-east-2:191477602114:stack/amplify-bpbadmin2-authtwo-174610/d2345120-21b3-11ed-8a56-020aef9766d4",
+      "AmplifyAppId": "d2nhue3419gd8g"
+    },
+    "categories": {
+      "auth": {
+        "bpbadmin26ba422de": {}
+      },
+      "function": {
+        "grabOrder": {
+          "deploymentBucketName": "amplify-bpbadmin2-authtwo-174610-deployment",
+          "s3Key": "amplify-builds/grabOrder-79316476736d484d6f4a-build.zip"
+        },
+        "bpbadmin2amplify": {
+          "deploymentBucketName": "amplify-bpbadmin2-authtwo-174610-deployment",
+          "s3Key": "amplify-builds/bpbadmin2amplify-LambdaLayerVersionffbb95cf-build.zip"
+        }
       }
     }
   }

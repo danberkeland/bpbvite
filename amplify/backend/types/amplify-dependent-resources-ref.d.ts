@@ -6,15 +6,15 @@ export type AmplifyDependentResourcesAttributes = {
             "GraphQLAPIEndpointOutput": "string"
         }
     },
-    "auth": {
-        "bpbadmin26ba422de": {
-            "IdentityPoolId": "string",
-            "IdentityPoolName": "string",
-            "UserPoolId": "string",
-            "UserPoolArn": "string",
-            "UserPoolName": "string",
-            "AppClientIDWeb": "string",
-            "AppClientID": "string"
+    "function": {
+        "bpbadmin2amplify": {
+            "Arn": "string"
+        },
+        "grabOrder": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string",
+            "LambdaExecutionRole": "string"
         }
     }
 }
