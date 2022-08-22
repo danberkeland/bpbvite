@@ -7,10 +7,7 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "function": {
-        "bpbadmin2amplify": {
-            "Arn": "string"
-        },
-        "grabOrder": {
+        "testingGrQL": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",

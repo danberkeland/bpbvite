@@ -18,21 +18,18 @@
     }
   },
   "function": {
-    "bpbadmin2amplify": {
-      "providerPlugin": "awscloudformation",
-      "service": "LambdaLayer",
-      "build": true
-    },
-    "grabOrder": {
+    "testingGrQL": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda",
       "dependsOn": [
         {
-          "category": "function",
-          "resourceName": "bpbadmin2amplify",
+          "category": "api",
+          "resourceName": "bpbadmin2",
           "attributes": [
-            "Arn"
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
           ]
         }
       ]
