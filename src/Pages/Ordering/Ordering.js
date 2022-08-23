@@ -8,6 +8,8 @@ import { Dropdown } from 'primereact/dropdown';
 
 import { SettingsContext } from "../../Contexts/SettingsContext";
 
+import { ConvertDateToBPBDate } from "../../GlobalHelpers";
+
 import { testingGrQL } from "../../restAPIs";
 
 import { remap, remapStanding } from "./Remaps";
@@ -20,18 +22,6 @@ const locs = [
   {label: 'novo', value: 'novo'},
   {label: 'scout1', value: 'scout1'}
 ];
-
-const ConvertDateToBPBDate = (date) => {
-  let delivDate = date.toISOString();
-    delivDate = delivDate.split("T")[0];
-    let splitDate = delivDate.split("-");
-    let day = splitDate[1];
-    let mo = splitDate[2];
-    let year = splitDate[0];
-    let finalDate = day + "/" + mo + "/" + year;
-    console.log(finalDate);
-    return finalDate
-}
 
 function Ordering() {
   const { setIsLoading } = useContext(SettingsContext);
@@ -59,7 +49,7 @@ function Ordering() {
 
   return (
     <React.Fragment>
-      <Button label="remap Orders" />
+      <Button label="remap Orders" disabled/>
       <Button label="remap Standing" disabled />
       <div>
         <div className="card">
