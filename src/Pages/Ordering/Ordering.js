@@ -15,17 +15,17 @@ function Ordering() {
   const [mockOrder, setMockOrder] = useState({});
 
   useEffect(() => {
-    testingGrQL("whole", "08/20/2022", "Sat").then((result) => {
+    testingGrQL("high", "08/20/2022", "Sat").then((result) => {
       setMockOrder(result);
     });
   }, []);
 
   return (
     <React.Fragment>
-      <Button label="remap Orders" onClick={remap(setIsLoading)} disabled />
+      <Button label="remap Orders" />
       <Button
         label="remap Standing"
-        onClick={remapStanding(setIsLoading)}
+       
         disabled
       />
       <div>

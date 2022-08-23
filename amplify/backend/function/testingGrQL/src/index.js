@@ -6,6 +6,8 @@
 	REGION
 Amplify Params - DO NOT EDIT */
 
+
+
 import { default as fetch, Request } from "node-fetch";
 
 const GRAPHQL_ENDPOINT = process.env.API_BPBADMIN2_GRAPHQLAPIENDPOINTOUTPUT;
@@ -35,17 +37,22 @@ const query = /* GraphQL */ `
   }
 `;
 
-const variables = {
-  locNick: "whole",
-  dayOfWeek: "Sat",
-  delivDate: "08/20/2022",
-};
+
 
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
 export const handler = async (event) => {
   console.log(`EVENT: ${JSON.stringify(event)}`);
+  
+  
+
+  const variables = {
+    locNick: event.locNick,
+    delivDate: event.delivDate,
+    dayOfWeek: event.dayOfWeek,
+  };
+
 
   /** @type {import('node-fetch').RequestInit} */
   const options = {
