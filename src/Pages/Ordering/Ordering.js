@@ -3,16 +3,12 @@ import React, { useContext, useEffect, useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Calendar } from "primereact/calendar";
-import { Button } from "primereact/button";
 import { Dropdown } from 'primereact/dropdown';
 
 import { SettingsContext } from "../../Contexts/SettingsContext";
 
-import { ConvertDateToBPBDate } from "../../GlobalHelpers";
-
 import { testingGrQL } from "../../restAPIs";
 
-import { remap, remapStanding } from "./Remaps";
 import moment from "moment";
 
 const locs = [
@@ -25,7 +21,7 @@ const locs = [
 
 function Ordering() {
   const { setIsLoading } = useContext(SettingsContext);
-  const [ mockOrder, setMockOrder ] = useState({});
+  const [ orderList, setOrderList ] = useState({});
   const [ date, setDate ] = useState();
   const [ dayOfWeek, setDayOfWeek ] = useState('')
   const [ chosen, setChosen ] = useState('')
@@ -33,15 +29,17 @@ function Ordering() {
   useEffect(() => {
     setIsLoading(true);
     testingGrQL(chosen, date, dayOfWeek).then((result) => {
-      setMockOrder(result);
+      console.log("result",result.errors)
+      !result.errors && setOrderList(result);
       setIsLoading(false);
     });
     console.log("chosen",chosen)
   }, [date, dayOfWeek, chosen]);
 
   const handleDate = (date) => {
-    let finalDate = ConvertDateToBPBDate(date)
+    let finalDate = moment(date.toISOString()).format('L')
     let dayOfWeek = moment(date.toISOString()).format('ddd')
+    console.log(finalDate)
     console.log(dayOfWeek)
     setDayOfWeek(dayOfWeek)
     setDate(finalDate);
@@ -49,8 +47,6 @@ function Ordering() {
 
   return (
     <React.Fragment>
-      <Button label="remap Orders" disabled/>
-      <Button label="remap Standing" disabled />
       <div>
         <div className="card">
           <Calendar
@@ -58,7 +54,7 @@ function Ordering() {
             onChange={(e) => handleDate(e.value)}
           ></Calendar>
           <Dropdown value={chosen} options={locs} onChange={e => setChosen(e.value)} optionLabel="label" placeholder="location" />
-          <DataTable value={mockOrder} responsiveLayout="scroll">
+          <DataTable value={orderList} responsiveLayout="scroll">
             <Column field="prod" header="Product"></Column>
             <Column field="qty" header="Qty"></Column>
             <Column field="type" header="Type"></Column>

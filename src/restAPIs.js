@@ -18,6 +18,7 @@ export const testingGrQL = async (locNick, delivDate, dayOfWeek) => {
       } catch(err) {
         console.log("Error grabbing testingGrQL", err);
       }
+    console.log("testOrder",testOrder)
     return testOrder.data.body
   }
   

@@ -16,25 +16,28 @@ const GRAPHQL_API_KEY = process.env.API_BPBADMIN2_GRAPHQLAPIKEYOUTPUT;
 const query = /* GraphQL */ `
   query MyQuery($locNick: String!, $delivDate: String!, $dayOfWeek: String!) {
     getLocation(locNick: $locNick) {
-      orders(filter: { delivDate: { eq: $delivDate } }) {
-        items {
-          product {
-            prodName
-          }
-          qty
-          rate
+    orders(filter: {delivDate: {eq: $delivDate}}) {
+      items {
+        product {
+          prodName
+          wholePrice
         }
+        qty
       }
-      standing(filter: { dayOfWeek: { eq: $dayOfWeek } }) {
-        items {
-          product {
-            prodName
-          }
-          qty
+    }
+    standing(filter: {dayOfWeek: {eq: $dayOfWeek}}) {
+      items {
+        product {
+          prodName
+          wholePrice
         }
+        qty
       }
     }
   }
+}
+
+ 
 `;
 
 
@@ -84,16 +87,18 @@ export const handler = async (event) => {
       "prod": ord.product.prodName,
       "qty": ord.qty,
       "type": "C",
-      "rate": ord.rate
+      "rate": ord.product.wholePrice
       
       }))
     standing = list.standing.items.map(stand => ({
       "prod": stand.product.prodName,
       "qty": stand.qty,
-      "type": "S"
+      "type": "S",
+      "rate": stand.product.wholePrice
      
       }))
     prods = [ ...orders, ...standing ]
+    console.log(prods)
     names = Array.from(new Set(prods.map(pro => pro.prod)))
     
     for (let name of names){
@@ -104,10 +109,10 @@ export const handler = async (event) => {
     }
     
     
-    if (body.errors) statusCode = 400;
+   
   } catch (error) {
     statusCode = 400;
-    body = {
+    final = {
       errors: [
         {
           status: response.status,
