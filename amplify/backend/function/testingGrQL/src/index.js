@@ -20,6 +20,7 @@ const query = /* GraphQL */ `
             prodName
           }
           qty
+          rate
         }
       }
       standing(filter: { dayOfWeek: { eq: $dayOfWeek } }) {
@@ -60,14 +61,42 @@ export const handler = async (event) => {
   let statusCode = 200;
   let body;
   let list;
+  let orders= {}
+  let standing = {}
+  let prods = {}
+  let names = []
+  let final = []
 
   let response;
 
   try {
     response = await fetch(request);
-    body = await response.json();
-
-    console.log(list);
+    body = await response.json()
+    list = body.data.getLocation
+    orders = list.orders.items.map(ord => ({
+      "prod": ord.product.prodName,
+      "qty": ord.qty,
+      "type": "C",
+      "rate": ord.rate
+      
+      }))
+    standing = list.standing.items.map(stand => ({
+      "prod": stand.product.prodName,
+      "qty": stand.qty,
+      "type": "S"
+     
+      }))
+    prods = [ ...orders, ...standing ]
+    names = Array.from(new Set(prods.map(pro => pro.prod)))
+    
+    for (let name of names){
+      let first = prods.find((obj) =>
+            obj.prod === name
+);
+    final.push(first)
+    }
+    
+    
     if (body.errors) statusCode = 400;
   } catch (error) {
     statusCode = 400;
@@ -84,6 +113,6 @@ export const handler = async (event) => {
 
   return {
     statusCode,
-    body: body,
+    body: final,
   };
 };

@@ -12,6 +12,7 @@
     "@types/react-dom": "^18.0.6",
     "amplify": "0.0.11",
     "aws-amplify": "^4.3.28",
+    "axios": "^0.27.2",
     "final-form": "^4.20.7",
     "primeicons": "^5.0.0",
     "primereact": "^8.3.0",

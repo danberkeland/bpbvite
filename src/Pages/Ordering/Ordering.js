@@ -1,84 +1,43 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
+
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 
 import { SettingsContext } from "../../Contexts/SettingsContext";
 
-import {
-  grabOldOrd,
-  checkExistsNewOrd,
-  updateNewOrd,
-  createNewOrd,
-  grabOldStand,
-  checkExistsNewStand,
-  createNewStand,
-  updateNewStand,
-  grabNewStand,
-} from "./OrderingHelpers";
-
 import { Button } from "primereact/button";
+import { testingGrQL } from "../../restAPIs";
 
-import { grabOldProd } from "../Products/ProductHelpers";
-import { grabOldLoc } from "../Locations/LocationHelpers";
+import { remap, remapStanding } from "./Remaps";
 
 function Ordering() {
   const { setIsLoading } = useContext(SettingsContext);
+  const [mockOrder, setMockOrder] = useState({});
 
-  const remap = async () => {
-    let prods = await grabOldProd();
-    let locs = await grabOldLoc();
-
-    setIsLoading(true);
-    grabOldOrd()
-      .then((oldOrd) => {
-        console.log("oldOrd", oldOrd);
-        for (let old of oldOrd) {
-          checkExistsNewOrd(old.id).then((exists) => {
-            console.log("exists", exists);
-            if (exists) {
-              updateNewOrd(old, prods, locs);
-            } else {
-              createNewOrd(old, prods, locs);
-            }
-          });
-        }
-      })
-      .then((e) => {
-        setIsLoading(false);
-        console.log("Ordering DB updated");
-      });
-  };
-
-  const remapStanding = async () => {
-    let prods = await grabOldProd();
-    let locs = await grabOldLoc();
-    let newStand = await grabNewStand();
-
-    const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    let oldStand = grabOldStand();
-
-    grabOldStand()
-      .then((oldStand) => {
-        console.log("oldOrd", oldStand);
-        for (let old of oldStand) {
-          for (let day of daysOfWeek) {
-            let exists = checkExistsNewStand(newStand, old, day, prods, locs);
-            if (exists) {
-              updateNewStand(old, day, prods, locs, exists);
-            } else {
-              createNewStand(old, day, prods, locs);
-            }
-          }
-        }
-      })
-      .then((e) => {
-        setIsLoading(false);
-        console.log("Ordering DB updated");
-      });
-  };
+  useEffect(() => {
+    testingGrQL("whole", "08/20/2022", "Sat").then((result) => {
+      setMockOrder(result);
+    });
+  }, []);
 
   return (
     <React.Fragment>
-      <Button label="remap Orders" onClick={remap} />
-      <Button label="remap Standing" onClick={remapStanding} />
+      <Button label="remap Orders" onClick={remap(setIsLoading)} disabled />
+      <Button
+        label="remap Standing"
+        onClick={remapStanding(setIsLoading)}
+        disabled
+      />
+      <div>
+        <div className="card">
+          <DataTable value={mockOrder} responsiveLayout="scroll">
+            <Column field="prod" header="Product"></Column>
+            <Column field="qty" header="Qty"></Column>
+            <Column field="type" header="Type"></Column>
+            <Column field="rate" header="Rate"></Column>
+          </DataTable>
+        </div>
+      </div>
     </React.Fragment>
   );
 }
