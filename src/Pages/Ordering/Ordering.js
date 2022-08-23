@@ -2,40 +2,79 @@ import React, { useContext, useEffect, useState } from "react";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { Calendar } from "primereact/calendar";
+import { Button } from "primereact/button";
+import { Dropdown } from 'primereact/dropdown';
 
 import { SettingsContext } from "../../Contexts/SettingsContext";
 
-import { Button } from "primereact/button";
 import { testingGrQL } from "../../restAPIs";
 
 import { remap, remapStanding } from "./Remaps";
+import moment from "moment";
+
+const locs = [
+  {label: 'high', value: 'high'},
+  {label: 'whole', value: 'whole'},
+  {label: 'lincoln', value: 'lincoln'},
+  {label: 'novo', value: 'novo'},
+  {label: 'scout1', value: 'scout1'}
+];
+
+const ConvertDateToBPBDate = (date) => {
+  let delivDate = date.toISOString();
+    delivDate = delivDate.split("T")[0];
+    let splitDate = delivDate.split("-");
+    let day = splitDate[1];
+    let mo = splitDate[2];
+    let year = splitDate[0];
+    let finalDate = day + "/" + mo + "/" + year;
+    console.log(finalDate);
+    return finalDate
+}
 
 function Ordering() {
   const { setIsLoading } = useContext(SettingsContext);
-  const [mockOrder, setMockOrder] = useState({});
+  const [ mockOrder, setMockOrder ] = useState({});
+  const [ date, setDate ] = useState();
+  const [ dayOfWeek, setDayOfWeek ] = useState('')
+  const [ chosen, setChosen ] = useState('')
 
   useEffect(() => {
-    testingGrQL("high", "08/20/2022", "Sat").then((result) => {
+    setIsLoading(true);
+    testingGrQL(chosen, date, dayOfWeek).then((result) => {
       setMockOrder(result);
+      setIsLoading(false);
     });
-  }, []);
+    console.log("chosen",chosen)
+  }, [date, dayOfWeek, chosen]);
+
+  const handleDate = (date) => {
+    let finalDate = ConvertDateToBPBDate(date)
+    let dayOfWeek = moment(date.toISOString()).format('ddd')
+    console.log(dayOfWeek)
+    setDayOfWeek(dayOfWeek)
+    setDate(finalDate);
+  };
 
   return (
     <React.Fragment>
       <Button label="remap Orders" />
-      <Button
-        label="remap Standing"
-       
-        disabled
-      />
+      <Button label="remap Standing" disabled />
       <div>
         <div className="card">
+          <Calendar
+            value={date}
+            onChange={(e) => handleDate(e.value)}
+          ></Calendar>
+          <Dropdown value={chosen} options={locs} onChange={e => setChosen(e.value)} optionLabel="label" placeholder="location" />
           <DataTable value={mockOrder} responsiveLayout="scroll">
             <Column field="prod" header="Product"></Column>
             <Column field="qty" header="Qty"></Column>
             <Column field="type" header="Type"></Column>
             <Column field="rate" header="Rate"></Column>
           </DataTable>
+          
         </div>
       </div>
     </React.Fragment>

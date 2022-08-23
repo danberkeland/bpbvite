@@ -93,7 +93,7 @@
       "function": {
         "testingGrQL": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
-          "s3Key": "amplify-builds/testingGrQL-2b7639735537745a4141-build.zip"
+          "s3Key": "amplify-builds/testingGrQL-7a676f51523659566563-build.zip"
         }
       },
       "auth": {
