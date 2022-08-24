@@ -38,7 +38,7 @@ function Locations() {
 
   return (
     <React.Fragment>
-      <Button label="remap Locations" onClick={remap} />
+      <Button label="remap Locations" onClick={remap} disabled />
     </React.Fragment>
   );
 }

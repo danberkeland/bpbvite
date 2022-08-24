@@ -102,9 +102,9 @@ function Settings() {
 
   return (
     <React.Fragment>
-      <Button label="remap Zones" onClick={remapZones} />
-      <Button label="remap Routes" onClick={remapRoutes} />
-      <Button label="remap ZoneRoute" onClick={remapZoneRoute} />
+      <Button label="remap Zones" onClick={remapZones} disabled/>
+      <Button label="remap Routes" onClick={remapRoutes} disabled/>
+      <Button label="remap ZoneRoute" onClick={remapZoneRoute} disabled/>
 
     </React.Fragment>
   );

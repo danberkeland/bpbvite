@@ -38,7 +38,7 @@ function Products() {
 
   return (
     <React.Fragment>
-      <Button label="remap Products" onClick={remap} />
+      <Button label="remap Products" onClick={remap} disabled/>
     </React.Fragment>
   );
 }
