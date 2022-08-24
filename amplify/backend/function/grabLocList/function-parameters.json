@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "api": {
+      "bpbadmin2": [
+        "Query"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

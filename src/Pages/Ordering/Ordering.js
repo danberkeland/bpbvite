@@ -7,17 +7,17 @@ import { Dropdown } from 'primereact/dropdown';
 
 import { SettingsContext } from "../../Contexts/SettingsContext";
 
-import { testingGrQL } from "../../restAPIs";
+import { grabLocList, testingGrQL } from "../../restAPIs";
 
 import moment from "moment";
 
-const locs = [
-  {label: 'high', value: 'high'},
-  {label: 'whole', value: 'whole'},
-  {label: 'lincoln', value: 'lincoln'},
-  {label: 'novo', value: 'novo'},
-  {label: 'scout1', value: 'scout1'}
-];
+// const locs = [
+//   {label: 'high', value: 'high'},
+//   {label: 'whole', value: 'whole'},
+//   {label: 'lincoln', value: 'lincoln'},
+//   {label: 'novo', value: 'novo'},
+//   {label: 'scout1', value: 'scout1'}
+// ];
 
 function Ordering() {
   const { setIsLoading } = useContext(SettingsContext);
@@ -25,6 +25,17 @@ function Ordering() {
   const [ date, setDate ] = useState();
   const [ dayOfWeek, setDayOfWeek ] = useState('')
   const [ chosen, setChosen ] = useState('')
+  const [ locList, setLocList] = useState([])
+
+  useEffect(() => {
+    setIsLoading(true);
+    grabLocList().then((result) => {
+      console.log("result",result.errors)
+      setLocList(result);
+      setIsLoading(false);
+    });
+    console.log("chosen",chosen)
+  }, []);
 
   useEffect(() => {
     setIsLoading(true);
@@ -53,7 +64,7 @@ function Ordering() {
             value={date}
             onChange={(e) => handleDate(e.value)}
           ></Calendar>
-          <Dropdown value={chosen} options={locs} onChange={e => setChosen(e.value)} optionLabel="label" placeholder="location" />
+          <Dropdown value={chosen} options={locList} onChange={e => setChosen(e.value)} optionLabel="label" placeholder="location" />
           <DataTable value={orderList} responsiveLayout="scroll">
             <Column field="prod" header="Product"></Column>
             <Column field="qty" header="Qty"></Column>

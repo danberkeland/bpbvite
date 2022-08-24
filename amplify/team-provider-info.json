@@ -19,6 +19,10 @@
         "testingGrQL": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
           "s3Key": "amplify-builds/testingGrQL-3932433347596f754630-build.zip"
+        },
+        "grabLocList": {
+          "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+          "s3Key": "amplify-builds/grabLocList-78742b33504269474876-build.zip"
         }
       }
     }
