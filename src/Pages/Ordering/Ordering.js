@@ -30,13 +30,13 @@ function Ordering() {
   useEffect(() => {
     setIsLoading(true);
     grabLocList().then((result) => {
-      console.log("result",result.errors)
+      console.log(result)
       setLocList(result);
       setIsLoading(false);
     });
-    console.log("chosen",chosen)
   }, []);
 
+  
   useEffect(() => {
     setIsLoading(true);
     testingGrQL(chosen, date, dayOfWeek).then((result) => {

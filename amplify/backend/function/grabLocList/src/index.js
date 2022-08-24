@@ -49,17 +49,21 @@ export const handler = async (event) => {
   let statusCode = 200;
   let body;
   let response;
+  let final
 
   try {
     response = await fetch(request);
     body = await response.json();
-    console.log(body)
+    final = body.data.locSortAZ.items.map(obj => ({
+      label: obj.locName,
+      value: obj.locNick
+    }))
   } catch (error) {
     statusCode = 400;
   }
 
   return {
     statusCode,
-    body: body.data.locSortAZ.items
+    body: final
   };
 };
