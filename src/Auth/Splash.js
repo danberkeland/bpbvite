@@ -82,6 +82,7 @@ export const Splash = () => {
       .catch((error) => {
         if (error) {
           setShowMessage(true);
+          setIsLoading(false);
         }
       });
   };
