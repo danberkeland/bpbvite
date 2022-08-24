@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_testingGrQL = "https://q086lcz3fa.execute-api.us-east-2.amazonaws.com/auth/testingGrQL"
+const API_testingGrQL = "https://dltjjr5aja.execute-api.us-east-2.amazonaws.com/dev/testingGrQL"
 
 
 export const testingGrQL = async (locNick, delivDate, dayOfWeek) => {
