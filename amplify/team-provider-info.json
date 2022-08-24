@@ -37,8 +37,7 @@
     },
     "categories": {
       "auth": {
-        "bpbadmin2db0d25d4": {},
-        "bpbadmin28b7be895": {}
+        "bpbadmin2db0d25d4": {}
       },
       "function": {
         "testingGrQL": {
