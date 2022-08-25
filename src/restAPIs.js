@@ -21,19 +21,17 @@ export const testingGrQL = async (locNick, delivDate, dayOfWeek) => {
     console.log("testOrder",testOrder)
     return testOrder.data.body
   }
-  
-  
-  export const grabLocList = async () => {
-    let locList
-    try {
-      locList = await axios.post(
-          API_grabLocList,
-          {}
-        );
-        
-      } catch(err) {
-        console.log("Error grabbing locList", err);
-      }
-    console.log("locList",locList)
-    return locList.data.body
-  }
+
+export const grabLocList = async () => {
+  let locList
+  try {
+    locList = await axios.post(
+        API_grabLocList,
+        {}
+      );
+    } catch(err) {
+      console.log("Error grabbing locList", err);
+    }
+  console.log("grabLocList Response:",locList.status)
+  return locList.data.body
+}

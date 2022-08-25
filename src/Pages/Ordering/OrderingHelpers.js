@@ -4,13 +4,34 @@ import {
   listOrderBackups,
   getOrder,
   listStandingBackups,
-  listStandings
+  listStandings,
+  locSortAZ
 } from "../../graphql/queries";
 import {
   updateOrder,
   createOrder,
   createStanding,
 } from "../../graphql/mutations";
+
+// Alternative to API Gateway + Lambda
+export const grabLocNames = async () => {
+  const response = await API.graphql(graphqlOperation(
+    locSortAZ, 
+    {
+      Type: "Location",
+      limit: 1000
+    }
+  ));
+
+  const returnValue = response.data.locSortAZ.items.map( item => {
+    return {
+      label: item.locName, 
+      value: item.locNick
+    }
+  });
+
+  return returnValue;
+};
 
 export const grabOldOrd = async () => {
   const loc = await API.graphql(

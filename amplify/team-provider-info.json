@@ -18,11 +18,11 @@
       "function": {
         "testingGrQL": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
-          "s3Key": "amplify-builds/testingGrQL-3643594c633169376d31-build.zip"
+          "s3Key": "amplify-builds/testingGrQL-59412f4c56344f7a3263-build.zip"
         },
         "grabLocList": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
-          "s3Key": "amplify-builds/grabLocList-35687837793763375567-build.zip"
+          "s3Key": "amplify-builds/grabLocList-587739336e4b446f6b52-build.zip"
         }
       }
     }
