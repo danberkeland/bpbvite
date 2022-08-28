@@ -212,6 +212,11 @@ type Product @model {
   doughType: Dough @hasOne(fields: ["doughNick"])
   freezerThaw: Boolean
   packGroupOrder: Int
+  shapeDay: Int
+  shapeNick: String
+  bakeDay: Int
+  bakeNick: String
+  guarantee: String
   readyTime: Float
   bakedWhere: [String]
   wholePrice: Float

@@ -1110,6 +1110,11 @@ export const onCreateProduct = /* GraphQL */ `
       }
       freezerThaw
       packGroupOrder
+      shapeDay
+      shapeNick
+      bakeDay
+      bakeNick
+      guarantee
       readyTime
       bakedWhere
       wholePrice
@@ -1222,6 +1227,11 @@ export const onCreateProduct = /* GraphQL */ `
           doughNick
           freezerThaw
           packGroupOrder
+          shapeDay
+          shapeNick
+          bakeDay
+          bakeNick
+          guarantee
           readyTime
           bakedWhere
           wholePrice
@@ -1260,6 +1270,11 @@ export const onCreateProduct = /* GraphQL */ `
           doughNick
           freezerThaw
           packGroupOrder
+          shapeDay
+          shapeNick
+          bakeDay
+          bakeNick
+          guarantee
           readyTime
           bakedWhere
           wholePrice
@@ -1317,6 +1332,11 @@ export const onUpdateProduct = /* GraphQL */ `
       }
       freezerThaw
       packGroupOrder
+      shapeDay
+      shapeNick
+      bakeDay
+      bakeNick
+      guarantee
       readyTime
       bakedWhere
       wholePrice
@@ -1429,6 +1449,11 @@ export const onUpdateProduct = /* GraphQL */ `
           doughNick
           freezerThaw
           packGroupOrder
+          shapeDay
+          shapeNick
+          bakeDay
+          bakeNick
+          guarantee
           readyTime
           bakedWhere
           wholePrice
@@ -1467,6 +1492,11 @@ export const onUpdateProduct = /* GraphQL */ `
           doughNick
           freezerThaw
           packGroupOrder
+          shapeDay
+          shapeNick
+          bakeDay
+          bakeNick
+          guarantee
           readyTime
           bakedWhere
           wholePrice
@@ -1524,6 +1554,11 @@ export const onDeleteProduct = /* GraphQL */ `
       }
       freezerThaw
       packGroupOrder
+      shapeDay
+      shapeNick
+      bakeDay
+      bakeNick
+      guarantee
       readyTime
       bakedWhere
       wholePrice
@@ -1636,6 +1671,11 @@ export const onDeleteProduct = /* GraphQL */ `
           doughNick
           freezerThaw
           packGroupOrder
+          shapeDay
+          shapeNick
+          bakeDay
+          bakeNick
+          guarantee
           readyTime
           bakedWhere
           wholePrice
@@ -1674,6 +1714,11 @@ export const onDeleteProduct = /* GraphQL */ `
           doughNick
           freezerThaw
           packGroupOrder
+          shapeDay
+          shapeNick
+          bakeDay
+          bakeNick
+          guarantee
           readyTime
           bakedWhere
           wholePrice
@@ -1733,6 +1778,11 @@ export const onCreateOrder = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -1885,6 +1935,11 @@ export const onUpdateOrder = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -2037,6 +2092,11 @@ export const onDeleteOrder = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -2188,6 +2248,11 @@ export const onCreateStanding = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -2339,6 +2404,11 @@ export const onUpdateStanding = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -2490,6 +2560,11 @@ export const onDeleteStanding = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -3246,6 +3321,11 @@ export const onCreateInventory = /* GraphQL */ `
           doughNick
           freezerThaw
           packGroupOrder
+          shapeDay
+          shapeNick
+          bakeDay
+          bakeNick
+          guarantee
           readyTime
           bakedWhere
           wholePrice
@@ -3324,6 +3404,11 @@ export const onUpdateInventory = /* GraphQL */ `
           doughNick
           freezerThaw
           packGroupOrder
+          shapeDay
+          shapeNick
+          bakeDay
+          bakeNick
+          guarantee
           readyTime
           bakedWhere
           wholePrice
@@ -3402,6 +3487,11 @@ export const onDeleteInventory = /* GraphQL */ `
           doughNick
           freezerThaw
           packGroupOrder
+          shapeDay
+          shapeNick
+          bakeDay
+          bakeNick
+          guarantee
           readyTime
           bakedWhere
           wholePrice
@@ -3636,6 +3726,11 @@ export const onCreateProductVendor = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -3738,6 +3833,11 @@ export const onUpdateProductVendor = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -3840,6 +3940,11 @@ export const onDeleteProductVendor = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -3977,6 +4082,11 @@ export const onCreateEODCount = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -4070,6 +4180,11 @@ export const onUpdateEODCount = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -4163,6 +4278,11 @@ export const onDeleteEODCount = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -4258,6 +4378,11 @@ export const onCreateActualSetOut = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -4351,6 +4476,11 @@ export const onUpdateActualSetOut = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -4444,6 +4574,11 @@ export const onDeleteActualSetOut = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -4905,6 +5040,11 @@ export const onCreateTemplateProd = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -5051,6 +5191,11 @@ export const onUpdateTemplateProd = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -5197,6 +5342,11 @@ export const onDeleteTemplateProd = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -5343,6 +5493,11 @@ export const onCreateProdsNotAllowed = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -5489,6 +5644,11 @@ export const onUpdateProdsNotAllowed = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -5635,6 +5795,11 @@ export const onDeleteProdsNotAllowed = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -5726,6 +5891,11 @@ export const onCreateProductDepend = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -5806,6 +5976,11 @@ export const onCreateProductDepend = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -5897,6 +6072,11 @@ export const onUpdateProductDepend = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -5977,6 +6157,11 @@ export const onUpdateProductDepend = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -6068,6 +6253,11 @@ export const onDeleteProductDepend = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -6148,6 +6338,11 @@ export const onDeleteProductDepend = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -6742,6 +6937,11 @@ export const onCreateAltPricing = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -6889,6 +7089,11 @@ export const onUpdateAltPricing = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
@@ -7036,6 +7241,11 @@ export const onDeleteAltPricing = /* GraphQL */ `
         }
         freezerThaw
         packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
         readyTime
         bakedWhere
         wholePrice
