@@ -16,11 +16,16 @@ function Ordering() {
   const { setIsLoading } = useContext(SettingsContext);
   const [ orderList, setOrderList ] = useState({});
   const [ standList, setStandList ] = useState({})
+  const [selectedProducts, setSelectedProducts] = useState(null);
   const [ date, setDate ] = useState();
   const [ dayOfWeek, setDayOfWeek ] = useState('')
   const [ chosen, setChosen ] = useState('')
   const [ standChosen, setStandChosen ] = useState('')
   const [ locList, setLocList] = useState([])
+
+  useEffect(() => {
+    console.log("standing",selectedProducts)
+  },[selectedProducts])
 
   useEffect(() => {
     setIsLoading(true);
@@ -87,7 +92,9 @@ function Ordering() {
             <Column field="rate" header="Rate"></Column>
           </DataTable>
           <Dropdown value={standChosen} options={locList} onChange={e => setStandChosen(e.value)} optionLabel="label" placeholder="location" />
-          <DataTable value={standList} responsiveLayout="scroll">
+          <DataTable value={standList} responsiveLayout="scroll" selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)}>
+            <Column selectionMode="multiple" headerStyle={{ width: '3rem' }} exportable={false}></Column>
+            <Column field="id" header="id"></Column>
             <Column field="prod" header="Product"></Column>
             <Column field="qty" header="Qty"></Column>
             <Column field="type" header="Type"></Column>

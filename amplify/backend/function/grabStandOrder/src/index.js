@@ -16,6 +16,7 @@ const query = /* GraphQL */ `
     getLocation(locNick: $locNick) {
       standing {
         items {
+          id
           dayOfWeek
           product {
             prodName
