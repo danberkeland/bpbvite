@@ -7,28 +7,19 @@ import { Dropdown } from 'primereact/dropdown';
 
 import { SettingsContext } from "../../Contexts/SettingsContext";
 
-import { grabLocList, testingGrQL } from "../../restAPIs";
+import { grabLocList, testingGrQL, grabStandOrder } from "../../restAPIs";
 
 import moment from "moment";
 
-import { API, graphqlOperation } from "aws-amplify";
-import { locSortAZ } from "../../graphql/queries";
-import { grabLocNames } from "./OrderingHelpers";
-
-// const locs = [
-//   {label: 'high', value: 'high'},
-//   {label: 'whole', value: 'whole'},
-//   {label: 'lincoln', value: 'lincoln'},
-//   {label: 'novo', value: 'novo'},
-//   {label: 'scout1', value: 'scout1'}
-// ];
 
 function Ordering() {
   const { setIsLoading } = useContext(SettingsContext);
   const [ orderList, setOrderList ] = useState({});
+  const [ standList, setStandList ] = useState({})
   const [ date, setDate ] = useState();
   const [ dayOfWeek, setDayOfWeek ] = useState('')
   const [ chosen, setChosen ] = useState('')
+  const [ standChosen, setStandChosen ] = useState('')
   const [ locList, setLocList] = useState([])
 
   useEffect(() => {
@@ -59,6 +50,18 @@ function Ordering() {
     console.log("chosen",chosen)
   }, [date, dayOfWeek, chosen]);
 
+  useEffect(() => {
+    setIsLoading(true);
+    grabStandOrder(standChosen).then((result) => {
+      console.log("result",result.errors)
+      console.log("StandList",result)
+      !result.errors && setStandList(result);
+      setIsLoading(false);
+    });
+    console.log("standChosen",standChosen)
+  }, [standChosen]);
+
+
   const handleDate = (date) => {
     let finalDate = moment(date.toISOString()).format('L')
     let dayOfWeek = moment(date.toISOString()).format('ddd')
@@ -83,7 +86,14 @@ function Ordering() {
             <Column field="type" header="Type"></Column>
             <Column field="rate" header="Rate"></Column>
           </DataTable>
-          
+          <Dropdown value={standChosen} options={locList} onChange={e => setStandChosen(e.value)} optionLabel="label" placeholder="location" />
+          <DataTable value={standList} responsiveLayout="scroll">
+            <Column field="prod" header="Product"></Column>
+            <Column field="qty" header="Qty"></Column>
+            <Column field="type" header="Type"></Column>
+            <Column field="dayOfWeek" header="dayOfWeek"></Column>
+            
+          </DataTable>
         </div>
       </div>
     </React.Fragment>

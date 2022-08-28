@@ -127,11 +127,15 @@
       "function": {
         "testingGrQL": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
-          "s3Key": "amplify-builds/testingGrQL-3643594c633169376d31-build.zip"
+          "s3Key": "amplify-builds/testingGrQL-642f42666a69682f634b-build.zip"
         },
         "grabLocList": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
-          "s3Key": "amplify-builds/grabLocList-53467930724159346d46-build.zip"
+          "s3Key": "amplify-builds/grabLocList-6955315865526847324e-build.zip"
+        },
+        "grabStandOrder": {
+          "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
+          "s3Key": "amplify-builds/grabStandOrder-54383730537a78342f70-build.zip"
         }
       },
       "auth": {

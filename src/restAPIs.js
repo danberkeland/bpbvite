@@ -2,6 +2,7 @@ import axios from "axios";
 
 const API_testingGrQL = "https://dltjjr5aja.execute-api.us-east-2.amazonaws.com/dev/testingGrQL"
 const API_grabLocList = "https://lkho363aq2.execute-api.us-east-2.amazonaws.com/dev/grabloclist"
+const API_grabStandOrder = "https://ab83b5yb6c.execute-api.us-east-2.amazonaws.com/auth/grabStandOrder"
 
 export const testingGrQL = async (locNick, delivDate, dayOfWeek) => {
     let testOrder
@@ -34,4 +35,22 @@ export const grabLocList = async () => {
     }
   console.log("grabLocList Response:",locList.status)
   return locList.data.body
+}
+
+
+export const grabStandOrder = async (locNick) => {
+  let testOrder
+  try {
+      testOrder = await axios.post(
+        API_grabStandOrder,
+        {
+          locNick: locNick
+        }
+      );
+      
+    } catch(err) {
+      console.log("Error grabbing testingGrQL", err);
+    }
+  console.log("testOrder",testOrder)
+  return testOrder.data.body
 }

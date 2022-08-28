@@ -12,19 +12,11 @@ const GRAPHQL_ENDPOINT = process.env.API_BPBADMIN2_GRAPHQLAPIENDPOINTOUTPUT;
 const GRAPHQL_API_KEY = process.env.API_BPBADMIN2_GRAPHQLAPIKEYOUTPUT;
 
 const query = /* GraphQL */ `
-  query MyQuery($locNick: String!, $delivDate: String!, $dayOfWeek: String!) {
+  query MyQuery($locNick: String!) {
     getLocation(locNick: $locNick) {
-      orders(filter: { delivDate: { eq: $delivDate } }) {
+      standing {
         items {
-          product {
-            prodName
-            wholePrice
-          }
-          qty
-        }
-      }
-      standing(filter: { dayOfWeek: { eq: $dayOfWeek } }) {
-        items {
+          dayOfWeek
           product {
             prodName
             wholePrice
@@ -44,8 +36,6 @@ export const handler = async (event) => {
 
   const variables = {
     locNick: event.locNick,
-    delivDate: event.delivDate,
-    dayOfWeek: event.dayOfWeek,
   };
 
   /** @type {import('node-fetch').RequestInit} */
@@ -62,11 +52,8 @@ export const handler = async (event) => {
   let statusCode = 200;
   let body;
   let list;
-  let orders = {};
+
   let standing = {};
-  let prods = {};
-  let names = [];
-  let final = [];
 
   let response;
 
@@ -74,41 +61,20 @@ export const handler = async (event) => {
     response = await fetch(request);
     body = await response.json();
     list = body.data.getLocation;
-    orders = list.orders.items.map((ord) => ({
-      prod: ord.product.prodName,
-      qty: ord.qty,
-      type: "C",
-      rate: ord.product.wholePrice,
-    }));
+
     standing = list.standing.items.map((stand) => ({
       prod: stand.product.prodName,
       qty: stand.qty,
+      dayOfWeek: stand.dayOfWeek,
       type: "S",
       rate: stand.product.wholePrice,
     }));
-    prods = [...orders, ...standing];
-    console.log(prods);
-    names = Array.from(new Set(prods.map((pro) => pro.prod)));
-
-    for (let name of names) {
-      let first = prods.find((obj) => obj.prod === name);
-      final.push(first);
-    }
   } catch (error) {
     statusCode = 400;
-    final = {
-      errors: [
-        {
-          status: response.status,
-          message: error.message,
-          stack: error.stack,
-        },
-      ],
-    };
   }
 
   return {
     statusCode,
-    body: final,
+    body: standing,
   };
 };
