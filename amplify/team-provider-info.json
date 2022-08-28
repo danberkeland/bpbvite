@@ -127,11 +127,11 @@
       "function": {
         "testingGrQL": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
-          "s3Key": "amplify-builds/testingGrQL-4b4779345432304c767a-build.zip"
+          "s3Key": "amplify-builds/testingGrQL-3643594c633169376d31-build.zip"
         },
         "grabLocList": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
-          "s3Key": "amplify-builds/grabLocList-77787642635068794758-build.zip"
+          "s3Key": "amplify-builds/grabLocList-53467930724159346d46-build.zip"
         }
       },
       "auth": {

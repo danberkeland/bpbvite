@@ -14,14 +14,30 @@ const GRAPHQL_ENDPOINT = process.env.API_BPBADMIN2_GRAPHQLAPIENDPOINTOUTPUT;
 const GRAPHQL_API_KEY = process.env.API_BPBADMIN2_GRAPHQLAPIKEYOUTPUT;
 
 const query = /* GraphQL */ `
-query MyQuery {
-  locSortAZ(Type: "Location", limit: 1000) {
-    items {
-      locName
-      locNick
+  query MyQuery($locNick: String!, $delivDate: String!, $dayOfWeek: String!) {
+    getLocation(locNick: $locNick) {
+    orders(filter: {delivDate: {eq: $delivDate}}) {
+      items {
+        product {
+          prodName
+          wholePrice
+        }
+        qty
+      }
+    }
+    standing(filter: {dayOfWeek: {eq: $dayOfWeek}}) {
+      items {
+        product {
+          prodName
+          wholePrice
+        }
+        qty
+        isStand
+      }
     }
   }
 }
+
  
 `;
 
@@ -32,7 +48,14 @@ query MyQuery {
  */
 export const handler = async (event) => {
   console.log(`EVENT: ${JSON.stringify(event)}`);
- 
+  
+  
+
+  const variables = {
+    locNick: event.locNick,
+    delivDate: event.delivDate,
+    dayOfWeek: event.dayOfWeek,
+  };
 
 
   /** @type {import('node-fetch').RequestInit} */
@@ -41,29 +64,68 @@ export const handler = async (event) => {
     headers: {
       "x-api-key": GRAPHQL_API_KEY,
     },
-    body: JSON.stringify({ query }),
+    body: JSON.stringify({ query, variables }),
   };
 
   const request = new Request(GRAPHQL_ENDPOINT, options);
 
   let statusCode = 200;
   let body;
+  let list;
+  let orders= {}
+  let standing = {}
+  let prods = {}
+  let names = []
+  let final = []
+
   let response;
-  let final
 
   try {
     response = await fetch(request);
-    body = await response.json();
-    final = body.data.locSortAZ.items.map(obj => ({
-      label: obj.locName,
-      value: obj.locNick
-    }))
+    body = await response.json()
+    list = body.data.getLocation
+    orders = list.orders.items.map(ord => ({
+      "prod": ord.product.prodName,
+      "qty": ord.qty,
+      "type": "C",
+      "rate": ord.product.wholePrice
+      
+      }))
+    standing = list.standing.items.map(stand => ({
+      "prod": stand.product.prodName,
+      "qty": stand.qty,
+      "type": stand.isStand ? "S" : "H",
+      "rate": stand.product.wholePrice
+     
+      }))
+    prods = [ ...orders, ...standing ]
+    console.log(prods)
+    names = Array.from(new Set(prods.map(pro => pro.prod)))
+    
+    for (let name of names){
+      let first = prods.find((obj) =>
+            obj.prod === name
+);
+    final.push(first)
+    }
+    
+    
+   
   } catch (error) {
     statusCode = 400;
+    final = {
+      errors: [
+        {
+          status: response.status,
+          message: error.message,
+          stack: error.stack,
+        },
+      ],
+    };
   }
 
   return {
     statusCode,
-    body: final
+    body: final,
   };
 };
