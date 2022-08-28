@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "{\"createdOn\":\"Windows\",\"createdBy\":\"Amplify\",\"createdWith\":\"9.2.1\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
+  "Description": "{\"createdOn\":\"Linux\",\"createdBy\":\"Amplify\",\"createdWith\":\"9.2.1\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
   "Parameters": {
     "CloudWatchRule": {
       "Type": "String",
@@ -110,12 +110,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "bpbadmin2LambdaRole6b8f85f6",
+            "bpbadmin2LambdaRole157d8b1b",
             {
               "Fn::Join": [
                 "",
                 [
-                  "bpbadmin2LambdaRole6b8f85f6",
+                  "bpbadmin2LambdaRole157d8b1b",
                   "-",
                   {
                     "Ref": "env"
