@@ -217,6 +217,7 @@ type Product @model {
   bakeDay: Int
   bakeNick: String
   guarantee: String
+  transferStage: String
   readyTime: Float
   bakedWhere: [String]
   wholePrice: Float
