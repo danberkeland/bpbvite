@@ -1184,6 +1184,7 @@ export const createProduct = /* GraphQL */ `
       bakeDay
       bakeNick
       guarantee
+      transferStage
       readyTime
       bakedWhere
       wholePrice
@@ -1301,6 +1302,7 @@ export const createProduct = /* GraphQL */ `
           bakeDay
           bakeNick
           guarantee
+          transferStage
           readyTime
           bakedWhere
           wholePrice
@@ -1344,6 +1346,7 @@ export const createProduct = /* GraphQL */ `
           bakeDay
           bakeNick
           guarantee
+          transferStage
           readyTime
           bakedWhere
           wholePrice
@@ -1409,6 +1412,7 @@ export const updateProduct = /* GraphQL */ `
       bakeDay
       bakeNick
       guarantee
+      transferStage
       readyTime
       bakedWhere
       wholePrice
@@ -1526,6 +1530,7 @@ export const updateProduct = /* GraphQL */ `
           bakeDay
           bakeNick
           guarantee
+          transferStage
           readyTime
           bakedWhere
           wholePrice
@@ -1569,6 +1574,7 @@ export const updateProduct = /* GraphQL */ `
           bakeDay
           bakeNick
           guarantee
+          transferStage
           readyTime
           bakedWhere
           wholePrice
@@ -1634,6 +1640,7 @@ export const deleteProduct = /* GraphQL */ `
       bakeDay
       bakeNick
       guarantee
+      transferStage
       readyTime
       bakedWhere
       wholePrice
@@ -1751,6 +1758,7 @@ export const deleteProduct = /* GraphQL */ `
           bakeDay
           bakeNick
           guarantee
+          transferStage
           readyTime
           bakedWhere
           wholePrice
@@ -1794,6 +1802,7 @@ export const deleteProduct = /* GraphQL */ `
           bakeDay
           bakeNick
           guarantee
+          transferStage
           readyTime
           bakedWhere
           wholePrice
@@ -1861,6 +1870,7 @@ export const createOrder = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -2021,6 +2031,7 @@ export const updateOrder = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -2181,6 +2192,7 @@ export const deleteOrder = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -2340,6 +2352,7 @@ export const createStanding = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -2499,6 +2512,7 @@ export const updateStanding = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -2658,6 +2672,7 @@ export const deleteStanding = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -3456,6 +3471,7 @@ export const createInventory = /* GraphQL */ `
           bakeDay
           bakeNick
           guarantee
+          transferStage
           readyTime
           bakedWhere
           wholePrice
@@ -3540,6 +3556,7 @@ export const updateInventory = /* GraphQL */ `
           bakeDay
           bakeNick
           guarantee
+          transferStage
           readyTime
           bakedWhere
           wholePrice
@@ -3624,6 +3641,7 @@ export const deleteInventory = /* GraphQL */ `
           bakeDay
           bakeNick
           guarantee
+          transferStage
           readyTime
           bakedWhere
           wholePrice
@@ -3894,6 +3912,7 @@ export const createProductVendor = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -4002,6 +4021,7 @@ export const updateProductVendor = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -4110,6 +4130,7 @@ export const deleteProductVendor = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -4258,6 +4279,7 @@ export const createEODCount = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -4359,6 +4381,7 @@ export const updateEODCount = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -4460,6 +4483,7 @@ export const deleteEODCount = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -4561,6 +4585,7 @@ export const createActualSetOut = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -4660,6 +4685,7 @@ export const updateActualSetOut = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -4759,6 +4785,7 @@ export const deleteActualSetOut = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -5256,6 +5283,7 @@ export const createTemplateProd = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -5408,6 +5436,7 @@ export const updateTemplateProd = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -5560,6 +5589,7 @@ export const deleteTemplateProd = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -5712,6 +5742,7 @@ export const createProdsNotAllowed = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -5864,6 +5895,7 @@ export const updateProdsNotAllowed = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -6016,6 +6048,7 @@ export const deleteProdsNotAllowed = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -6113,6 +6146,7 @@ export const createProductDepend = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -6198,6 +6232,7 @@ export const createProductDepend = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -6295,6 +6330,7 @@ export const updateProductDepend = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -6380,6 +6416,7 @@ export const updateProductDepend = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -6477,6 +6514,7 @@ export const deleteProductDepend = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -6562,6 +6600,7 @@ export const deleteProductDepend = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -7168,6 +7207,7 @@ export const createAltPricing = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -7321,6 +7361,7 @@ export const updateAltPricing = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
@@ -7474,6 +7515,7 @@ export const deleteAltPricing = /* GraphQL */ `
         bakeDay
         bakeNick
         guarantee
+        transferStage
         readyTime
         bakedWhere
         wholePrice
