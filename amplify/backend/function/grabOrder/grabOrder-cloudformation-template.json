@@ -63,12 +63,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "grabStandOrder",
+            "grabOrder",
             {
               "Fn::Join": [
                 "",
                 [
-                  "grabStandOrder",
+                  "grabOrder",
                   "-",
                   {
                     "Ref": "env"
@@ -118,12 +118,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "bpbadmin2LambdaRole19015942",
+            "bpbadmin2LambdaRoleea5e5c66",
             {
               "Fn::Join": [
                 "",
                 [
-                  "bpbadmin2LambdaRole19015942",
+                  "bpbadmin2LambdaRoleea5e5c66",
                   "-",
                   {
                     "Ref": "env"

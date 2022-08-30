@@ -1,10 +1,12 @@
+
+
 /* Amplify Params - DO NOT EDIT
 	API_BPBADMIN2_GRAPHQLAPIENDPOINTOUTPUT
 	API_BPBADMIN2_GRAPHQLAPIIDOUTPUT
 	API_BPBADMIN2_GRAPHQLAPIKEYOUTPUT
 	ENV
 	REGION
-Amplify Params - DO NOT EDIT */
+Amplify Params -- DO NOT EDIT */
 
 import fetch, { Request } from "/opt/nodejs/node_modules/node-fetch/lib/index.mjs";
 
