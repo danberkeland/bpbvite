@@ -27,6 +27,10 @@
     "apibpbadmin2GraphQLAPIKeyOutput": {
       "Type": "String",
       "Default": "apibpbadmin2GraphQLAPIKeyOutput"
+    },
+    "functionbpbadmin2fetchLayerArn": {
+      "Type": "String",
+      "Default": "functionbpbadmin2fetchLayerArn"
     }
   },
   "Conditions": {
@@ -100,7 +104,11 @@
           ]
         },
         "Runtime": "nodejs14.x",
-        "Layers": [],
+        "Layers": [
+          {
+            "Ref": "functionbpbadmin2fetchLayerArn"
+          }
+        ],
         "Timeout": 25
       }
     },

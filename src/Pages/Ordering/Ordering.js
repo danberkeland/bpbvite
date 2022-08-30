@@ -47,13 +47,14 @@ function Ordering() {
 
   useEffect(() => {
     setIsLoading(true);
-    testingGrQL(chosen, date, dayOfWeek).then((result) => {
+    console.log("date",date)
+    testingGrQL(chosen, date).then((result) => {
       console.log("result",result.errors)
       !result.errors && setOrderList(result);
       setIsLoading(false);
     });
     console.log("chosen",chosen)
-  }, [date, dayOfWeek, chosen]);
+  }, [date, chosen]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -67,14 +68,6 @@ function Ordering() {
   }, [standChosen]);
 
 
-  const handleDate = (date) => {
-    let finalDate = moment(date.toISOString()).format('L')
-    let dayOfWeek = moment(date.toISOString()).format('ddd')
-    console.log(finalDate)
-    console.log(dayOfWeek)
-    setDayOfWeek(dayOfWeek)
-    setDate(finalDate);
-  };
 
   return (
     <React.Fragment>
@@ -82,7 +75,7 @@ function Ordering() {
         <div className="card">
           <Calendar
             value={date}
-            onChange={(e) => handleDate(e.value)}
+            onChange={(e) => setDate(e.value.toString())}
           ></Calendar>
           <Dropdown value={chosen} options={locList} onChange={e => setChosen(e.value)} optionLabel="label" placeholder="location" />
           <DataTable value={orderList} responsiveLayout="scroll">
