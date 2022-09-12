@@ -7,20 +7,14 @@ import { Dropdown } from 'primereact/dropdown';
 
 import { SettingsContext } from "../../Contexts/SettingsContext";
 
-import { grabLocList, testingGrQL, grabStandOrder } from "../../restAPIs";
-
-import moment from "moment";
-
+import { grabLocList, testingGrQL } from "../../restAPIs";
 
 function Ordering() {
   const { setIsLoading } = useContext(SettingsContext);
   const [ orderList, setOrderList ] = useState({});
-  const [ standList, setStandList ] = useState({})
   const [selectedProducts, setSelectedProducts] = useState(null);
   const [ date, setDate ] = useState();
-  const [ dayOfWeek, setDayOfWeek ] = useState('')
   const [ chosen, setChosen ] = useState('')
-  const [ standChosen, setStandChosen ] = useState('')
   const [ locList, setLocList] = useState([])
 
   useEffect(() => {
@@ -29,44 +23,21 @@ function Ordering() {
 
   useEffect(() => {
     setIsLoading(true);
-
-    // current Method with API Gateway + Lambda
     grabLocList().then((result) => {
-      console.log(result)
-      setLocList(result);
+      !result.errors && setLocList(result);
       setIsLoading(false);
     });
 
-    // alternate method with an existing GraphQL function + clean up on the client side
-    /*
-    grabLocNames().then((response) => {
-      console.log("FROM GRAPHQL:", response)
-    }); 
-    */
   }, []);
 
   useEffect(() => {
     setIsLoading(true);
-    console.log("date",date)
     testingGrQL(chosen, date).then((result) => {
-      console.log("result",result.errors)
       !result.errors && setOrderList(result);
       setIsLoading(false);
     });
     console.log("chosen",chosen)
   }, [date, chosen]);
-
-  useEffect(() => {
-    setIsLoading(true);
-    grabStandOrder(standChosen).then((result) => {
-      console.log("result",result.errors)
-      console.log("StandList",result)
-      !result.errors && setStandList(result);
-      setIsLoading(false);
-    });
-    console.log("standChosen",standChosen)
-  }, [standChosen]);
-
 
 
   return (

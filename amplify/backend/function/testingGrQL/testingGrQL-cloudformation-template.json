@@ -31,6 +31,10 @@
     "functionbpbadmin2fetchLayerArn": {
       "Type": "String",
       "Default": "functionbpbadmin2fetchLayerArn"
+    },
+    "functionbpbadmin2testFetchLayerArn": {
+      "Type": "String",
+      "Default": "functionbpbadmin2testFetchLayerArn"
     }
   },
   "Conditions": {
@@ -106,7 +110,7 @@
         "Runtime": "nodejs14.x",
         "Layers": [
           {
-            "Ref": "functionbpbadmin2fetchLayerArn"
+            "Ref": "functionbpbadmin2testFetchLayerArn"
           }
         ],
         "Timeout": 25

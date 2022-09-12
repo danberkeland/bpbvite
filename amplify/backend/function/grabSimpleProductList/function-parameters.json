@@ -9,7 +9,7 @@
   "lambdaLayers": [
     {
       "type": "ProjectLayer",
-      "resourceName": "bpbadmin2fetchLayer",
+      "resourceName": "bpbadmin2testFetchLayer",
       "env": "auththree",
       "version": "Always choose latest version",
       "isLatestVersionSelected": true

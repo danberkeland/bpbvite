@@ -1,5 +1,5 @@
-import { Button } from "primereact/button";
-import { Menubar } from "primereact/menubar";
+import { TabMenu } from "primereact/tabmenu";
+import { PanelMenu } from "primereact/panelmenu";
 import React, { useContext, useEffect, useState } from "react";
 
 import { SettingsContext } from "./Contexts/SettingsContext";
@@ -9,10 +9,30 @@ import { authSignOut } from "./Auth/AuthHelpers";
 import styled from "styled-components";
 
 const TopBar = styled.div`
-  display: grid;
-  grid-template-columns: 10fr 1fr;
+  display: block;
   background-color: white;
 `;
+
+const itemsAuth4min = [
+  {
+    icon: "pi pi-fw pi-home",
+    command: () => {
+      window.location = "/CustomerNews";
+    },
+  },
+  {
+    icon: "pi pi-fw pi-shopping-cart",
+    command: () => {
+      window.location = "/Ordering";
+    },
+  },
+  {
+    icon: "pi pi-fw pi-tags",
+    command: () => {
+      window.location = "/CustomerOrdering";
+    },
+  },
+];
 
 const itemsAuth4 = [
   {
@@ -110,7 +130,6 @@ const itemsAuth1 = itemsAuth2.concat([
   },
 ]);
 
-
 function Nav() {
   const { setFormType, chosen, authType } = useContext(SettingsContext);
   const [items, setItems] = useState([]);
@@ -128,9 +147,9 @@ function Nav() {
         break;
       case 4:
         setItems(itemsAuth4);
-        break
+        break;
       default:
-        setItems([])
+        setItems([]);
     }
   }, [authType]);
 
@@ -138,10 +157,13 @@ function Nav() {
     authSignOut(setFormType);
   };
   return (
-    <TopBar>
-      <Menubar model={items} />
-      <Button onClick={signOut} label={"Sign Out"}></Button>
-    </TopBar>
+    <React.Fragment>
+      <button onClick={signOut}>Sign Out</button>
+      <PanelMenu className="mypanel" model={items} />
+      <div className="menuContainer">
+        <TabMenu className="menubar" model={itemsAuth4min} />
+      </div>
+    </React.Fragment>
   );
 }
 

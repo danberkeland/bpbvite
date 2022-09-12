@@ -25,7 +25,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "bpbadmin2fetchLayer",
+          "resourceName": "bpbadmin2testFetchLayer",
           "attributes": [
             "Arn"
           ]
@@ -114,19 +114,19 @@
       "service": "Lambda",
       "dependsOn": [
         {
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
           "category": "api",
           "resourceName": "bpbadmin2",
           "attributes": [
             "GraphQLAPIIdOutput",
             "GraphQLAPIEndpointOutput",
             "GraphQLAPIKeyOutput"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "bpbadmin2fetchLayer",
-          "attributes": [
-            "Arn"
           ]
         }
       ]
@@ -137,19 +137,19 @@
       "service": "Lambda",
       "dependsOn": [
         {
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
           "category": "api",
           "resourceName": "bpbadmin2",
           "attributes": [
             "GraphQLAPIIdOutput",
             "GraphQLAPIEndpointOutput",
             "GraphQLAPIKeyOutput"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "bpbadmin2fetchLayer",
-          "attributes": [
-            "Arn"
           ]
         }
       ]
@@ -160,6 +160,13 @@
       "service": "Lambda",
       "dependsOn": [
         {
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
           "category": "api",
           "resourceName": "bpbadmin2",
           "attributes": [
@@ -167,15 +174,13 @@
             "GraphQLAPIEndpointOutput",
             "GraphQLAPIKeyOutput"
           ]
-        },
-        {
-          "category": "function",
-          "resourceName": "bpbadmin2fetchLayer",
-          "attributes": [
-            "Arn"
-          ]
         }
       ]
+    },
+    "bpbadmin2testFetchLayer": {
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer",
+      "build": true
     }
   },
   "auth": {

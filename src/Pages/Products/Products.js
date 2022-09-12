@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 
 import { SettingsContext } from "../../Contexts/SettingsContext";
 
@@ -9,21 +9,28 @@ import {
   createNewProd,
 } from "./ProductHelpers";
 
-import { API, graphqlOperation } from "aws-amplify";
-
 import { Button } from "primereact/button";
-import { listProducts } from "../../graphql/queries";
 import { DataTable } from "primereact/datatable";
 import { Column } from 'primereact/column';
-import { MultiSelect } from 'primereact/multiselect';
+import { grabDetailedProductList } from "../../restAPIs";
 
-// Page to perform CRUD on product data
 
 function Products() {
   const { setIsLoading } = useContext(SettingsContext);
 
   const [productData, setProductData] = useState([{}]);
   const [selectedProduct, setSelectedProduct] = useState();
+
+  
+  useEffect(() => {
+    setIsLoading(true);
+    grabDetailedProductList().then((result) => {
+      console.log(result)
+      setProductData(result);
+      setIsLoading(false);
+    });
+
+  }, []);
   
   const remap = () => {
     setIsLoading(true);
@@ -47,24 +54,10 @@ function Products() {
       });
   };
 
-  const fetchProducts = async () => {
-    // manually supplies data to display in table
-    // would be nice to limit query by bake location, dough type, product group...
-    //    (should be able to do that with graphqlOperation)
-    setIsLoading(true)
-    const response = await API.graphql(
-      graphqlOperation(listProducts,{limit: 1000})
-    );
-    setIsLoading(false)
-
-    setProductData(response.data.listProducts.items);
-    console.log("Product Items:", productData);
-  }
 
   return (
     <React.Fragment>
       <Button label="remap Products" onClick={remap} disabled/>
-      <Button label="List Products" onClick={fetchProducts} />
 
       <pre>Selected Product: {JSON.stringify(selectedProduct, null, 4)}</pre>
    

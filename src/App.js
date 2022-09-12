@@ -92,9 +92,11 @@ export function App() {
   return (
     <React.Fragment>
       {isLoading && <Loader />}
-   
-      Welcome {userDetails.userName}. Location: {chosen.locName}. Authtype:{" "}
-      {authType}.
+      <h1>Back Porch Bakery</h1>
+      <h2>Welcome {userDetails.userName}.</h2>
+      <h3>Location: {chosen.locName}</h3>
+      <h4>AuthType: {authType}</h4>
+    
       {formType === "signedIn" && (
         <React.Fragment>
           <Nav />

@@ -5,9 +5,63 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+h2, h3, h4 {
+  font-weight: normal;
+  margin: 5px 20px;
+}
+
+h1 {
+  margin: 10px 20px;
+  color: #006aff;
+}
+
+h3, h4 {
+  color: grey;
+}
+
+button {
+  width: 100%;
+  margin: auto;
+  margin-top: 20px;
+  padding: 10px;
+  color:#005ad9;
+  background-color: #f0f1f2;
+  font-size: 1.3em;
+  border: none;
+}
+
+button:hover {
+  background-color: #e2e3e3;
+}
+
+.menubar {
+  
+  font-size: 2em;
+}
+
+.menubar .p-menuitem-icon {
+  font-size: 2em;
+}
+
+
+.p-tabmenu  {
+  background: #fbfafa;
+  border: 1px solid #dee2e6;
+  border-width: 0 0 2px 0;
+}
+
+.menuContainer {
+  position: fixed;
+  bottom: 0;
+  z-index: 200;
+  width: 100%;
+  margin-left: 20px;
 }

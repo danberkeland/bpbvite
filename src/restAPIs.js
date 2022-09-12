@@ -66,7 +66,7 @@ export const grabDetailedProductList = async () => {
     console.log("Error grabbing prodList", err);
   }
   console.log("grabDetailedProductList Response:", prodList.status);
-  return prodList.data.body;
+  return prodList.data.body.items;
 };
 
 
