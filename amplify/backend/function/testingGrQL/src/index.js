@@ -51,6 +51,8 @@ export const handler = async (event) => {
     dayOfWeek: dayOfWeek,
   };
 
+  
+
   /** @type {import('node-fetch').RequestInit} */
   const options = {
     method: "POST",

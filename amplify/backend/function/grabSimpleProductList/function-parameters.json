@@ -2,8 +2,7 @@
   "permissions": {
     "api": {
       "bpbadmin2": [
-        "Query",
-        "Mutation"
+        "Query"
       ]
     }
   },
@@ -11,9 +10,9 @@
     {
       "type": "ProjectLayer",
       "resourceName": "bpbadmin2fetchLayer",
+      "env": "auththree",
       "version": "Always choose latest version",
-      "isLatestVersionSelected": true,
-      "env": "auththree"
+      "isLatestVersionSelected": true
     }
   ]
 }

@@ -107,6 +107,75 @@
           ]
         }
       ]
+    },
+    "grabDetailedProductList": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "bpbadmin2",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "bpbadmin2fetchLayer",
+          "attributes": [
+            "Arn"
+          ]
+        }
+      ]
+    },
+    "grabSimpleProductList": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "bpbadmin2",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "bpbadmin2fetchLayer",
+          "attributes": [
+            "Arn"
+          ]
+        }
+      ]
+    },
+    "grabProductById": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "bpbadmin2",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "bpbadmin2fetchLayer",
+          "attributes": [
+            "Arn"
+          ]
+        }
+      ]
     }
   },
   "auth": {

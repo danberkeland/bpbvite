@@ -84,16 +84,7 @@ function Ordering() {
             <Column field="type" header="Type"></Column>
             <Column field="rate" header="Rate"></Column>
           </DataTable>
-          <Dropdown value={standChosen} options={locList} onChange={e => setStandChosen(e.value)} optionLabel="label" placeholder="location" />
-          <DataTable value={standList} responsiveLayout="scroll" selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)}>
-            <Column selectionMode="multiple" headerStyle={{ width: '3rem' }} exportable={false}></Column>
-            <Column field="id" header="id"></Column>
-            <Column field="prod" header="Product"></Column>
-            <Column field="qty" header="Qty"></Column>
-            <Column field="type" header="Type"></Column>
-            <Column field="dayOfWeek" header="dayOfWeek"></Column>
-            
-          </DataTable>
+          
         </div>
       </div>
     </React.Fragment>
