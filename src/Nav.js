@@ -152,12 +152,12 @@ function Nav() {
   };
   return (
     <React.Fragment>
-      <PanelMenu className="mypanel" model={items} />
+      <PanelMenu className="mypanel" model={items} style={{width: '100%', height: '550px'}} />
 
       <div className="tabContainer">
         <TabMenu className="tabMenu" model={itemsAuth4min} />
-      </div>
       <button onClick={signOut}>Sign Out</button>
+      </div>
     </React.Fragment>
   );
 }
