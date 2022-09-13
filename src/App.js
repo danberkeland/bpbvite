@@ -13,7 +13,7 @@ import { UserApplyForm } from "./Auth/UserApplyForm";
 import { UserResetPassword } from "./Auth/UserResetPassword";
 import { UserApplyThanks } from "./Auth/UserApplyThanks";
 
-import Nav from "./Nav";
+import { NavSide, NavBottom } from "./Nav";
 
 import Pages from "./Pages";
 
@@ -100,7 +100,7 @@ export function App() {
     
       {formType === "signedIn" && (
         <React.Fragment>
-          <Nav />
+          <NavBottom />
           <Pages />
         </React.Fragment>
       )}

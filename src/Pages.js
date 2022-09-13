@@ -14,6 +14,7 @@ import Billing from "./Pages/Billing/Billing"
 import EODCounts from "./Pages/EODCounts/EODCounts"
 import Logistics from "./Pages/Logistics/Logistics"
 import Locations from "./Pages/Locations/Locations";
+import { NavSide } from "./Nav";
 
 function Pages() {
   return (
@@ -31,6 +32,7 @@ function Pages() {
         <Route path="/EODCounts" element={<EODCounts />} />
         <Route path="/Logistics" element={<Logistics />} />
         <Route path="/Locations" element={<Locations />} />
+        <Route path="/" element={<NavSide />} />
       </Routes>
     </Router>
   );

@@ -30,7 +30,7 @@ const itemsAuth4min = [
     label: "More",
     icon: "pi pi-fw pi-bars",
     command: () => {
-      window.location = "/CustomerOrdering";
+      window.location = "/";
     },
   },
 ];
@@ -140,8 +140,7 @@ const itemsAuth1 = itemsAuth2.concat([
           window.location = "/CustomerOrdering";
         },
       },
-    ]
-    
+    ],
   },
   {
     label: "Settings",
@@ -152,7 +151,43 @@ const itemsAuth1 = itemsAuth2.concat([
   },
 ]);
 
-function Nav() {
+export function NavSide() {
+  const { setFormType, chosen, authType } = useContext(SettingsContext);
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    switch (authType) {
+      case 1:
+        setItems(itemsAuth1);
+        break;
+      case 2:
+        setItems(itemsAuth2);
+        break;
+      case 3:
+        setItems(itemsAuth3);
+        break;
+      case 4:
+        setItems(itemsAuth4);
+        break;
+      default:
+        setItems([]);
+    }
+  }, [authType]);
+
+  return (
+    <React.Fragment>
+      <div className="panelMenu">
+        <PanelMenu
+          className="mypanel"
+          model={items}
+          style={{ width: "100%", height: "1500px" }}
+        />
+      </div>
+    </React.Fragment>
+  );
+}
+
+export function NavBottom() {
   const { setFormType, chosen, authType } = useContext(SettingsContext);
   const [items, setItems] = useState([]);
 
@@ -185,17 +220,6 @@ function Nav() {
         <TabMenu className="tabMenu" model={itemsAuth4min} />
         <button onClick={signOut}>Sign Out</button>
       </div>
-      <div className="panelMenu">
-        <PanelMenu
-          className="mypanel"
-          model={items}
-          style={{ width: "100%", height: "1500px" }}
-        />
-      </div>
-
-      
     </React.Fragment>
   );
 }
-
-export default Nav;
