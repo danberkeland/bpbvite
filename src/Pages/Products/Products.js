@@ -69,15 +69,7 @@ function Products() {
       >
         <Column field="prodNick" header="Nickname (ID)" sortable />
         <Column field="prodName" header="Product Name" sortable />
-        <Column 
-          field="bakedWhere" 
-          header="Bake Location" 
-          filter="true" 
-          sortable 
-        />
-        <Column field="readyTime" header="Ready Time" sortable />
-        <Column field="doughNick" header="Dough Nickname" sortable />
-        <Column field="doughType" header="Dough Type" sortable />
+        
       </DataTable>
 
     </React.Fragment>
