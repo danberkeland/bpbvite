@@ -94,7 +94,7 @@ export function App() {
     <React.Fragment>
       {isLoading && <Loader />}
       <h1>Back Porch Bakery</h1>
-      <h2>Welcome {userDetails.userName}.</h2>
+      <h2>Welcome, {userDetails.userName}.</h2>
       <h3>Location: {chosen.locName}</h3>
       <h4>AuthType: {authType}</h4>
     

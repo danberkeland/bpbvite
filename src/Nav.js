@@ -152,12 +152,20 @@ function Nav() {
   };
   return (
     <React.Fragment>
-      <PanelMenu className="mypanel" model={items} style={{width: '100%', height: '550px'}} />
-
+      <div className="greyBar"></div>
       <div className="tabContainer">
         <TabMenu className="tabMenu" model={itemsAuth4min} />
-      <button onClick={signOut}>Sign Out</button>
+        <button onClick={signOut}>Sign Out</button>
       </div>
+      <div className="panelMenu">
+        <PanelMenu
+          className="mypanel"
+          model={items}
+          style={{ width: "100%", height: "550px" }}
+        />
+      </div>
+
+      
     </React.Fragment>
   );
 }
