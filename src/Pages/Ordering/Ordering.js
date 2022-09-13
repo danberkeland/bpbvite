@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -8,9 +8,10 @@ import { Dropdown } from 'primereact/dropdown';
 import { SettingsContext } from "../../Contexts/SettingsContext";
 
 import { grabLocList, testingGrQL } from "../../restAPIs";
+import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
 function Ordering() {
-  const { setIsLoading } = useContext(SettingsContext);
+  const { setIsLoading } = useSettingsStore();
   const [ orderList, setOrderList ] = useState({});
   const [selectedProducts, setSelectedProducts] = useState(null);
   const [ date, setDate ] = useState();

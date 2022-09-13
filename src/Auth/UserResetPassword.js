@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Amplify, Auth } from "aws-amplify";
 
 import { Form, Field } from "react-final-form";
@@ -14,10 +14,11 @@ import { classNames } from "primereact/utils";
 import "./Splash.css";
 
 import { CenteredContainer, Title } from "../CommonStyles";
+import { useSettingsStore } from "../Contexts/SettingsZustand";
 
 export const UserResetPassword = () => {
   const [showMessage, setShowMessage] = useState(false);
-  const { formData, setFormType, user, setIsLoading } = useContext(SettingsContext);
+  const { formData, setFormType, user, setIsLoading } = useSettingsStore(SettingsContext);
 
   const validate = (data) => {
     let errors = {};

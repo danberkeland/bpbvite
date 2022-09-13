@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Form, Field } from "react-final-form";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
@@ -12,12 +12,13 @@ import "./Splash.css";
 
 import { CenteredContainer, Title } from "../CommonStyles";
 import { SettingsContext } from "../Contexts/SettingsContext";
+import { useSettingsStore } from "../Contexts/SettingsZustand";
 
 export const UserApplyForm = () => {
   const [showMessage, setShowMessage] = useState(false);
   const [formData, setFormData] = useState({});
 
-  const { setFormType } = useContext(SettingsContext)
+  const { setFormType } = useSettingsStore(SettingsContext)
 
   const validate = (data) => {
     let errors = {};

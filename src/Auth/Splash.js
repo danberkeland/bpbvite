@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Auth } from "aws-amplify";
 
 import { Form, Field } from "react-final-form";
@@ -12,6 +12,7 @@ import "./Splash.css";
 
 import { CenteredContainer, Title } from "../CommonStyles";
 import { SettingsContext } from "../Contexts/SettingsContext";
+import { useSettingsStore } from "../Contexts/SettingsZustand";
 
 const validate = (data) => {
   let errors = {};
@@ -40,7 +41,7 @@ const getFormErrorMessage = (meta) => {
 export const Splash = () => {
   const [showMessage, setShowMessage] = useState(false);
 
-  const { formData, setFormType, setUser, setIsLoading } = useContext(SettingsContext);
+  const { formData, setFormType, setUser, setIsLoading } = useSettingsStore(SettingsContext);
 
   const dialogFooter = (
     <div className="flex justify-content-center">

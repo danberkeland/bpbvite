@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 
 import { SettingsContext } from "../../Contexts/SettingsContext";
 
@@ -17,10 +17,11 @@ import {
 } from "./SettingsHelpers";
 
 import { Button } from "primereact/button";
+import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
 
 function Settings() {
-  const { setIsLoading } = useContext(SettingsContext);
+  const { setIsLoading } = useSettingsStore();
 
   const remapZones = async () => {
 

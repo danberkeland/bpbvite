@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 
 import { SettingsContext } from "../../Contexts/SettingsContext";
 
@@ -10,9 +10,10 @@ import {
 } from "./LocationHelpers";
 
 import { Button } from "primereact/button";
+import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
 function Locations() {
-  const { setIsLoading } = useContext(SettingsContext);
+  const { setIsLoading } = useSettingsStore();
 
   const remap = () => {
     setIsLoading(true);

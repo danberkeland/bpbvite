@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 
 
 import { ProgressSpinner } from 'primereact/progressspinner';
@@ -6,6 +6,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 
 import styled from 'styled-components'
 import { SettingsContext } from './Contexts/SettingsContext';
+import { useSettingsStore } from './Contexts/SettingsZustand';
 
 const LoaderSetup = styled.div`
     width: 100%;
@@ -28,7 +29,7 @@ const LoaderBack = styled.div`
 
 const Loader = () => {
 
-    const { isLoading } = useContext(SettingsContext)
+    const { isLoading } = useSettingsStore (SettingsContext)
     
     return (
         
