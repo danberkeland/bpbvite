@@ -61,13 +61,13 @@ function Products() {
 
       <pre>Selected Product: {JSON.stringify(selectedProduct, null, 4)}</pre>
    
-      <DataTable 
+      <DataTable className="dataTable"
         value={productData} 
         selectionMode="single" metaKeySelection={false} 
         selection={selectedProduct} onSelectionChange={e => setSelectedProduct(e.value)}
         sortField="prodNick" sortOrder={1} responsiveLayout="scroll"
       >
-        <Column field="prodNick" header="Nickname (ID)" sortable />
+        <Column field="prodNick" header="ID" sortable />
         <Column field="prodName" header="Product Name" sortable />
         
       </DataTable>
