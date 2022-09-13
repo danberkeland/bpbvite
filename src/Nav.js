@@ -161,7 +161,7 @@ function Nav() {
         <PanelMenu
           className="mypanel"
           model={items}
-          style={{ width: "100%", height: "550px" }}
+          style={{ width: "100%", height: "700px" }}
         />
       </div>
 
