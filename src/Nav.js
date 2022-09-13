@@ -1,7 +1,6 @@
 import { TabMenu } from "primereact/tabmenu";
 import { PanelMenu } from "primereact/panelmenu";
 
-
 import React, { useContext, useEffect, useState } from "react";
 
 import { SettingsContext } from "./Contexts/SettingsContext";
@@ -153,13 +152,12 @@ function Nav() {
   };
   return (
     <React.Fragment>
-      <button onClick={signOut}>Sign Out</button>
-
       <PanelMenu className="mypanel" model={items} />
 
       <div className="tabContainer">
         <TabMenu className="tabMenu" model={itemsAuth4min} />
       </div>
+      <button onClick={signOut}>Sign Out</button>
     </React.Fragment>
   );
 }
