@@ -57,15 +57,26 @@ button:hover {
 }
 
 
-.tabContainer .tabMenu  .p-menuitem-icon {
-  font-size: 2em;
-}
+
+
 
 .tabContainer .tabMenu .p-tabmenu-nav {
   display: flex;
   justify-content: space-around;
-  margin: 0;
 }
+
+
+.tabContainer .tabMenu .p-menuitem-link {
+  flex-direction: column;
+  justify-content: center;
+}
+
+.tabContainer .tabMenu  .p-menuitem-icon {
+  font-size: 2em;
+}
+
+
+
 
 .tabContainer {
   z-index: 200;

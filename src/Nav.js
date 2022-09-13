@@ -26,6 +26,13 @@ const itemsAuth4min = [
       window.location = "/CustomerOrdering";
     },
   },
+  {
+    label: "More",
+    icon: "pi pi-fw pi-bars",
+    command: () => {
+      window.location = "/CustomerOrdering";
+    },
+  },
 ];
 
 const itemsAuth4 = [
