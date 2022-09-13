@@ -62,7 +62,6 @@ button:hover {
 }
 
 .tabContainer .tabMenu .p-tabmenu-nav {
- 
   display: flex;
   justify-content: space-around;
   margin: 0;
@@ -75,10 +74,15 @@ button:hover {
   bottom: 0;
 }
 
-.panelMenu .mypanel .p-panelmenu-header-link{
+.panelMenu .mypanel .p-panelmenu-header-link {
   border: 0;
+  font-size: 1.2em;
   background-color: white;
   height: 70px;
+}
+
+.panelMenu .mypanel .p-menuitem-icon {
+  font-size: 1.2em;
 }
 
 
