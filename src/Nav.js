@@ -111,9 +111,30 @@ const itemsAuth1 = itemsAuth2.concat([
   {
     label: "Billing",
     icon: "pi pi-fw pi-dollar",
-    command: () => {
-      window.location = "/Billing";
-    },
+    items: [
+      {
+        label: "Customer News",
+        icon: "pi pi-fw pi-home",
+        command: () => {
+          window.location = "/CustomerNews";
+        },
+      },
+      {
+        label: "Ordering",
+        icon: "pi pi-fw pi-shopping-cart",
+        command: () => {
+          window.location = "/Ordering";
+        },
+      },
+      {
+        label: "Products",
+        icon: "pi pi-fw pi-tags",
+        command: () => {
+          window.location = "/CustomerOrdering";
+        },
+      },
+    ]
+    
   },
   {
     label: "Settings",
@@ -161,7 +182,7 @@ function Nav() {
         <PanelMenu
           className="mypanel"
           model={items}
-          style={{ width: "100%", height: "700px" }}
+          style={{ width: "100%", height: "1500px" }}
         />
       </div>
 
