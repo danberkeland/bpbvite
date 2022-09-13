@@ -42,26 +42,13 @@ button:hover {
   background-color: #e2e3e3;
 }
 
-.menubar {
-  
+
+
+.tabContainer .tabMenu  .p-menuitem-icon {
   font-size: 2em;
 }
 
-.menubar .p-menuitem-icon {
-  font-size: 2em;
-}
-
-
-.p-tabmenu  {
-  background: #fbfafa;
-  border: 1px solid #dee2e6;
-  border-width: 0 0 2px 0;
-}
-
-.menuContainer {
-  position: fixed;
-  bottom: 0;
-  z-index: 200;
-  width: 100%;
-  margin-left: 20px;
+.tabContainer .tabMenu .p-tabmenu-nav {
+  display: flex;
+  justify-content: space-around;
 }

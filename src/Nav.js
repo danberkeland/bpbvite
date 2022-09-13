@@ -1,14 +1,12 @@
 import { TabMenu } from "primereact/tabmenu";
 import { PanelMenu } from "primereact/panelmenu";
-import { ScrollPanel } from "primereact/scrollpanel";
-import "./index.css";
+
+
 import React, { useContext, useEffect, useState } from "react";
 
 import { SettingsContext } from "./Contexts/SettingsContext";
 
 import { authSignOut } from "./Auth/AuthHelpers";
-
-
 
 const itemsAuth4min = [
   {
@@ -156,16 +154,11 @@ function Nav() {
   return (
     <React.Fragment>
       <button onClick={signOut}>Sign Out</button>
-      
-        <ScrollPanel
-          style={{ width: "100%", height: "500px" }}
-          className="custombar1"
-        >
-          <PanelMenu className="mypanel" model={items} />
-        </ScrollPanel>
-     
-      <div className="menuContainer">
-        <TabMenu className="menubar" model={itemsAuth4min} />
+
+      <PanelMenu className="mypanel" model={items} />
+
+      <div className="tabContainer">
+        <TabMenu className="tabMenu" model={itemsAuth4min} />
       </div>
     </React.Fragment>
   );
