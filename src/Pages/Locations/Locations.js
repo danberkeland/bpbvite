@@ -1,7 +1,5 @@
 import React from "react";
 
-import { SettingsContext } from "../../Contexts/SettingsContext";
-
 import {
   grabOldLoc,
   checkExistsNewLoc,
@@ -13,16 +11,16 @@ import { Button } from "primereact/button";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
 function Locations() {
-  const { setIsLoading } = useSettingsStore();
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
   const remap = () => {
     setIsLoading(true);
     grabOldLoc()
       .then((oldLoc) => {
-        console.log("oldLoc",oldLoc)
+        console.log("oldLoc", oldLoc);
         for (let old of oldLoc) {
           checkExistsNewLoc(old.nickName).then((exists) => {
-            console.log("exists",exists)
+            console.log("exists", exists);
             if (exists) {
               updateNewLoc(old);
             } else {

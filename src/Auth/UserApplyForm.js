@@ -4,21 +4,19 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { Dialog } from "primereact/dialog";
-import { Divider } from "primereact/divider";
 import { classNames } from "primereact/utils";
 
 
 import "./Splash.css";
 
 import { CenteredContainer, Title } from "../CommonStyles";
-import { SettingsContext } from "../Contexts/SettingsContext";
 import { useSettingsStore } from "../Contexts/SettingsZustand";
 
 export const UserApplyForm = () => {
   const [showMessage, setShowMessage] = useState(false);
   const [formData, setFormData] = useState({});
 
-  const { setFormType } = useSettingsStore(SettingsContext)
+  const setFormType = useSettingsStore((state) => state.setFormType)
 
   const validate = (data) => {
     let errors = {};

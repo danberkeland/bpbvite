@@ -11,7 +11,7 @@ import { classNames } from "primereact/utils";
 import "./Splash.css";
 
 import { CenteredContainer, Title } from "../CommonStyles";
-import { SettingsContext } from "../Contexts/SettingsContext";
+
 import { useSettingsStore } from "../Contexts/SettingsZustand";
 
 const validate = (data) => {
@@ -41,7 +41,10 @@ const getFormErrorMessage = (meta) => {
 export const Splash = () => {
   const [showMessage, setShowMessage] = useState(false);
 
-  const { formData, setFormType, setUser, setIsLoading } = useSettingsStore(SettingsContext);
+  const formData = useSettingsStore((state) => state.formData)
+  const setFormType = useSettingsStore((state) => state.setFormType)
+  const setUser = useSettingsStore((state) => state.setUser)
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading)
 
   const dialogFooter = (
     <div className="flex justify-content-center">
@@ -75,6 +78,7 @@ export const Splash = () => {
     await Auth.signIn(data.email, data.password)
       .then((use) => {
         if (use.challengeName === "NEW_PASSWORD_REQUIRED") {
+          console.log("user",use)
           setUser(use)
           setFormType("resetPassword");
         } 

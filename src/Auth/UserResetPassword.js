@@ -3,8 +3,6 @@ import { Amplify, Auth } from "aws-amplify";
 
 import { Form, Field } from "react-final-form";
 
-import { SettingsContext } from "../Contexts/SettingsContext";
-
 import { Button } from "primereact/button";
 import { Password } from "primereact/password";
 import { InputText } from "primereact/inputtext";
@@ -18,7 +16,11 @@ import { useSettingsStore } from "../Contexts/SettingsZustand";
 
 export const UserResetPassword = () => {
   const [showMessage, setShowMessage] = useState(false);
-  const { formData, setFormType, user, setIsLoading } = useSettingsStore(SettingsContext);
+  
+  const formData = useSettingsStore((state) => state.formData)
+  const setFormType = useSettingsStore((state) => state.setFormType)
+  const user = useSettingsStore((state) => state.user)
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading)
 
   const validate = (data) => {
     let errors = {};

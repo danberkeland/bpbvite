@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { SettingsContext, useSettingsStore } from "../../Contexts/SettingsZustand";
+import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
 import {
   grabOldProd,
@@ -16,7 +16,7 @@ import { grabDetailedProductList } from "../../restAPIs";
 
 
 function Products() {
-  const { setIsLoading } = useSettingsStore()
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading)
 
   const [productData, setProductData] = useState([{}]);
   const [selectedProduct, setSelectedProduct] = useState();

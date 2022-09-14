@@ -3,7 +3,6 @@ import { PanelMenu } from "primereact/panelmenu";
 
 import React, { useEffect, useState } from "react";
 
-import { SettingsContext } from "./Contexts/SettingsContext";
 import { useSettingsStore } from "./Contexts/SettingsZustand";
 
 import { authSignOut } from "./Auth/AuthHelpers";
@@ -153,7 +152,7 @@ const itemsAuth1 = itemsAuth2.concat([
 ]);
 
 export function NavSide() {
-  const { authType } = useSettingsStore(SettingsContext);
+  const authType = useSettingsStore((state) => state.authType)
   const [items, setItems] = useState([]);
 
   useEffect(() => {
@@ -189,7 +188,8 @@ export function NavSide() {
 }
 
 export function NavBottom() {
-  const { setFormType, authType } = useSettingsStore(SettingsContext);
+  const setFormType = useSettingsStore((state) => state.setFormType)
+  const authType = useSettingsStore((state) => state.authType)
   const [items, setItems] = useState([]);
 
   useEffect(() => {

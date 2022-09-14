@@ -30,36 +30,22 @@ import { useSettingsStore } from "./Contexts/SettingsZustand";
 Amplify.configure(awsmobile);
 
 export function App() {
-  const [
-    userDetails,
-    setUserDetails,
-    setFormType,
-    formType,
-    authType,
-    setAuthType,
-    setUser,
-    setUserList,
-    user,
-    chosen,
-    setChosen,
-    isLoading,
-    setIsLoading,
-  ] = useSettingsStore((state) => [
-    state.userDetails,
-    state.setUserDetails,
-    state.setFormType,
-    state.formType,
-    state.authType,
-    state.setAuthType,
-    state.setUser,
-    state.setUserList,
-    state.user,
-    state.chosen,
-    state.setChosen,
-    state.isLoading,
-    state.setIsLoading,
-  ]);
+  
+  const userDetails = useSettingsStore((state) => state.userDetails)
+  const setUserDetails = useSettingsStore((state) => state.setUserDetails)
+  const setFormType = useSettingsStore((state) => state.setFormType)
+  const formType = useSettingsStore((state) => state.formType)
+  const authType = useSettingsStore((state) => state.authType)
+  const setAuthType = useSettingsStore((state) => state.setAuthType)
+  const setUser = useSettingsStore((state) => state.setUser)
+  const setUserList = useSettingsStore((state) => state.setUserList)
+  const user = useSettingsStore((state) => state.user)
+  const chosen = useSettingsStore((state) => state.chosen)
+  const setChosen = useSettingsStore((state) => state.setChosen)
+  const isLoading = useSettingsStore((state) => state.isLoading)
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading)
 
+ 
   useEffect(() => {
     fetchCustomers();
   }, [userDetails.sub]);
@@ -71,7 +57,6 @@ export function App() {
         let userArray = userList.data.listLocationUsers.items.map((use) => ({
           userName: use.user.name,
           sub: use.user.sub,
-          subs: use.location.subs.items.map((use) => use.user.sub),
           locName: use.location.locName,
           locNick: use.location.locNick,
           authType: use.authType,
@@ -92,6 +77,7 @@ export function App() {
   useEffect(() => {
     setIsLoading(true);
     checkUser().then((use) => {
+      console.log("checkUser",use)
       setUser(use);
       setFormType(use ? "signedIn" : "onNoUser");
       setIsLoading(false);

@@ -39,7 +39,7 @@ export const setAuthListener = (setFormType, setUser, setUserDetails) => {
         console.log("New User Signed in");
         setFormType("signedIn");
         checkUser().then((use) => {
-        
+          console.log("use",use)
           setUser(use);
         });
         break;

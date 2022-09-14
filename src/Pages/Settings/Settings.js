@@ -1,7 +1,5 @@
 import React from "react";
 
-import { SettingsContext } from "../../Contexts/SettingsContext";
-
 import {
   grabOldZone,
   checkExistsNewZone,
@@ -13,26 +11,23 @@ import {
   createNewRoute,
   grabZoneRoute,
   checkExistsNewZoneRoute,
-  createNewZoneRoute
+  createNewZoneRoute,
 } from "./SettingsHelpers";
 
 import { Button } from "primereact/button";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
-
 function Settings() {
-  const { setIsLoading } = useSettingsStore();
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
   const remapZones = async () => {
-
-    
     setIsLoading(true);
     grabOldZone()
       .then((oldZone) => {
-        console.log("oldZone",oldZone)
+        console.log("oldZone", oldZone);
         for (let old of oldZone) {
           checkExistsNewZone(old.zoneName).then((exists) => {
-            console.log("exists",exists)
+            console.log("exists", exists);
             if (exists) {
               updateNewZone(old);
             } else {
@@ -48,15 +43,13 @@ function Settings() {
   };
 
   const remapRoutes = async () => {
-
-    
     setIsLoading(true);
     grabOldRoute()
       .then((oldRoute) => {
-        console.log("oldRoute",oldRoute)
+        console.log("oldRoute", oldRoute);
         for (let old of oldRoute) {
           checkExistsNewRoute(old.routeName).then((exists) => {
-            console.log("exists",exists)
+            console.log("exists", exists);
             if (exists) {
               updateNewRoute(old);
             } else {
@@ -71,42 +64,35 @@ function Settings() {
       });
   };
 
-
   const remapZoneRoute = async () => {
-
-    
     setIsLoading(true);
 
-    let zones = await grabOldZone()
-    let routes = await grabOldRoute()
-    let zoneRoute = await grabZoneRoute()
+    let zones = await grabOldZone();
+    let routes = await grabOldRoute();
+    let zoneRoute = await grabZoneRoute();
 
-    console.log("zones", zones)
-    console.log("routes",routes)
-    console.log("zoneRoute",zoneRoute)
+    console.log("zones", zones);
+    console.log("routes", routes);
+    console.log("zoneRoute", zoneRoute);
 
-    for (let rte of routes){
-      for (let serve of rte.RouteServe){
-        console.log("routeServe", rte.routeName, serve)
-        let exists = checkExistsNewZoneRoute(zoneRoute,rte.routeName, serve)
-          
+    for (let rte of routes) {
+      for (let serve of rte.RouteServe) {
+        console.log("routeServe", rte.routeName, serve);
+        let exists = checkExistsNewZoneRoute(zoneRoute, rte.routeName, serve);
+
         if (!exists) {
-            await createNewZoneRoute(rte.routeName, serve);
-          }   
+          await createNewZoneRoute(rte.routeName, serve);
+        }
       }
     }
     setIsLoading(false);
-
-   
   };
-
 
   return (
     <React.Fragment>
-      <Button label="remap Zones" onClick={remapZones} disabled/>
-      <Button label="remap Routes" onClick={remapRoutes} disabled/>
-      <Button label="remap ZoneRoute" onClick={remapZoneRoute} disabled/>
-
+      <Button label="remap Zones" onClick={remapZones} disabled />
+      <Button label="remap Routes" onClick={remapRoutes} disabled />
+      <Button label="remap ZoneRoute" onClick={remapZoneRoute} disabled />
     </React.Fragment>
   );
 }
