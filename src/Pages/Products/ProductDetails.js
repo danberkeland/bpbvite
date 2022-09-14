@@ -120,6 +120,8 @@ function ProductDetails({ selectedProduct }) {
             </span>
             {getFormErrorMessage("packSize")}
           </div>
+          <div className="greyBar"></div>
+          <button >+ DELETE PRODUCT</button>
         </form>
       )}
 
