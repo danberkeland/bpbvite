@@ -85,7 +85,7 @@ function Products() {
           filterDisplay="row"
           filters={filter}
         >
-          <Column field="prodName" header="Product Name" filter />
+          <Column field="prodName" filterPlaceholder="Search Products" filter />
         </DataTable>
         <div className="bottomSpace"></div>
         </React.Fragment>
