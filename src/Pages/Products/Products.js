@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
+import { FilterMatchMode, FilterOperator } from 'primereact/api';
 
 import {
   grabOldProd,
@@ -19,6 +20,7 @@ function Products() {
 
   const [productData, setProductData] = useState([{}]);
   const [selectedProduct, setSelectedProduct] = useState("");
+  const [ filter, setFilter ] = useState({'prodName': { value: null, matchMode: FilterMatchMode.CONTAINS },})
 
   useEffect(() => {
     setIsLoading(true);
@@ -69,6 +71,7 @@ function Products() {
         <div></div>
       )}
       {selectedProduct === "" ? (
+        <React.Fragment>
         <DataTable
           className="dataTable"
           value={productData}
@@ -79,10 +82,13 @@ function Products() {
           sortField="prodNick"
           sortOrder={1}
           responsiveLayout="scroll"
+          filterDisplay="row"
+          filters={filter}
         >
-          <Column field="prodNick" header="ID" sortable />
-          <Column field="prodName" header="Product Name" sortable />
+          <Column field="prodName" header="Product Name" filter />
         </DataTable>
+        <div className="bottomSpace"></div>
+        </React.Fragment>
       ) : (
         <div></div>
       )}
