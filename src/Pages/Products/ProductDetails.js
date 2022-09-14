@@ -3,19 +3,20 @@ import React, { useState } from "react";
 import { Button } from "primereact/button";
 import { useFormik } from "formik";
 import { InputText } from "primereact/inputtext";
-import { classNames } from 'primereact/utils';
+import { classNames } from "primereact/utils";
 
 function ProductDetails({ selectedProduct }) {
   const [edit, setEdit] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [formData, setFormData] = useState({});
 
-  const buttonStyle = { width: "80px", margin: "20px", fontSize: "1.2em" };
+  const editButtonStyle = { width: "100px", margin: "20px", fontSize: "1.2em",backgroundColor: "#006aff" };
+  const submitButtonStyle = { width: "100px", margin: "20px", fontSize: "1.2em",backgroundColor: "red" };
 
   const formik = useFormik({
     initialValues: {
       wholePrice: selectedProduct.wholePrice,
-      packSize: selectedProduct.packSize
+      packSize: selectedProduct.packSize,
     },
     validate: (data) => {
       let errors = {};
@@ -34,10 +35,15 @@ function ProductDetails({ selectedProduct }) {
     },
   });
 
-  const isFormFieldValid = (name) => !!(formik.touched[name] && formik.errors[name]);
-    const getFormErrorMessage = (name) => {
-        return isFormFieldValid(name) && <small className="p-error">{formik.errors[name]}</small>;
-    };
+  const isFormFieldValid = (name) =>
+    !!(formik.touched[name] && formik.errors[name]);
+  const getFormErrorMessage = (name) => {
+    return (
+      isFormFieldValid(name) && (
+        <small className="p-error">{formik.errors[name]}</small>
+      )
+    );
+  };
 
   const handleEdit = () => {
     setEdit(!edit);
@@ -56,8 +62,8 @@ function ProductDetails({ selectedProduct }) {
           <h1>{selectedProduct.prodName}</h1>
           <Button
             label="Edit"
-            className="p-button-raised p-button-rounded"
-            style={buttonStyle}
+            className="editButton p-button-raised p-button-rounded"
+            style={editButtonStyle}
             onClick={handleEdit}
           />
           <h2>ID: {selectedProduct.prodNick}</h2>
@@ -68,12 +74,15 @@ function ProductDetails({ selectedProduct }) {
         <form onSubmit={formik.handleSubmit} className="p-fluid">
           <h1>{selectedProduct.prodName}</h1>
           <h2>ID: {selectedProduct.prodNick}</h2>
-          <Button
-            label="Submit"
-            className="submitButton p-button-raised p-button-rounded"
-            style={buttonStyle}
-            onClick={handleSubmit}
-          />
+          <div className="submitButton">
+            <Button
+              label="Submit"
+              className="p-button-raised p-button-rounded"
+              style={submitButtonStyle}
+              onClick={handleSubmit}
+            />
+          </div>
+
           <div className="field">
             <span className="p-float-label">
               <InputText
@@ -119,7 +128,7 @@ function ProductDetails({ selectedProduct }) {
             {getFormErrorMessage("packSize")}
           </div>
           <div className="greyBar"></div>
-          <button >+ DELETE PRODUCT</button>
+          <button>+ DELETE PRODUCT</button>
         </form>
       )}
 
