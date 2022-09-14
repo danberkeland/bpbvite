@@ -30,6 +30,10 @@ function ProductList({
 
   return (
     <React.Fragment>
+      <React.Fragment>
+          <button >+ CREATE PRODUCT</button>
+          
+        </React.Fragment>
       <DataTable
         className="dataTable"
         value={productData}
