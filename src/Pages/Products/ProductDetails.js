@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Button } from "primereact/button";
 import { useFormik } from "formik";
 import { InputText } from "primereact/inputtext";
+import { InputNumber } from 'primereact/inputnumber';
 import { classNames } from "primereact/utils";
 
 function ProductDetails({ selectedProduct }) {
@@ -102,9 +103,10 @@ function ProductDetails({ selectedProduct }) {
             >
               WholePrice
             </label>
-            <InputText
+            <InputNumber
               id="wholePrice"
               name="wholePrice"
+              mode="decimal" minFractionDigits={2} maxFractionDigits={2}
               value={formik.values.wholePrice}
               onChange={formik.handleChange}
               className={classNames({
@@ -123,7 +125,7 @@ function ProductDetails({ selectedProduct }) {
             >
               packSize
             </label>
-            <InputText
+            <InputNumber
               id="packSize"
               name="packSize"
               value={formik.values.packSize}
