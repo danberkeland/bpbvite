@@ -69,7 +69,7 @@ function Products() {
         <div></div>
       )}
       {selectedProduct === "" ? (
-        <ProductList />
+        <ProductList selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct}/>
       ) : (
         <div></div>
       )}
