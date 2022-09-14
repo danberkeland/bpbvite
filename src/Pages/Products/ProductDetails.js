@@ -81,7 +81,6 @@ function ProductDetails({ selectedProduct }) {
                 name="wholePrice"
                 value={formik.values.wholePrice}
                 onChange={formik.handleChange}
-                autoFocus
                 className={classNames({
                   "p-invalid": isFormFieldValid("wholePrice"),
                 })}
@@ -104,7 +103,6 @@ function ProductDetails({ selectedProduct }) {
                 name="packSize"
                 value={formik.values.packSize}
                 onChange={formik.handleChange}
-                autoFocus
                 className={classNames({
                   "p-invalid": isFormFieldValid("packSize"),
                 })}
