@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
-import { FilterMatchMode, FilterOperator } from 'primereact/api';
+import { FilterMatchMode } from 'primereact/api';
 
 import {
   grabOldProd,
@@ -11,17 +11,15 @@ import {
 } from "./ProductHelpers";
 
 import { Button } from "primereact/button";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
 import { grabDetailedProductList } from "../../restAPIs";
+import ProductList from "./ProductList";
 
 function Products() {
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
   const [productData, setProductData] = useState([{}]);
   const [selectedProduct, setSelectedProduct] = useState("");
-  const [ filter, setFilter ] = useState({'prodName': { value: null, matchMode: FilterMatchMode.CONTAINS },})
-
+  
   useEffect(() => {
     setIsLoading(true);
     grabDetailedProductList().then((result) => {
@@ -59,7 +57,7 @@ function Products() {
 
   return (
     <React.Fragment>
-      {/*<Button label="remap Products" onClick={remap} disabled/>*/}
+      <Button label="remap Products" onClick={remap} disabled/>
       {selectedProduct !== "" ? (
         <React.Fragment>
           <button onClick={handleProdClick}>PRODUCT LIST</button>
@@ -71,24 +69,7 @@ function Products() {
         <div></div>
       )}
       {selectedProduct === "" ? (
-        <React.Fragment>
-        <DataTable
-          className="dataTable"
-          value={productData}
-          selectionMode="single"
-          metaKeySelection={false}
-          selection={selectedProduct}
-          onSelectionChange={(e) => setSelectedProduct(e.value)}
-          sortField="prodNick"
-          sortOrder={1}
-          responsiveLayout="scroll"
-          filterDisplay="row"
-          filters={filter}
-        >
-          <Column field="prodName" filterPlaceholder="Search Products" filter />
-        </DataTable>
-        <div className="bottomSpace"></div>
-        </React.Fragment>
+        <ProductList />
       ) : (
         <div></div>
       )}
