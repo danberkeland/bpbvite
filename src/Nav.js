@@ -180,9 +180,10 @@ export function NavSide() {
         <PanelMenu
           className="mypanel"
           model={items}
-          style={{ width: "100%", height: "1500px" }}
+          style={{ width: "100%"}}
         />
       </div>
+      <div className="bottomSpace"></div>
     </React.Fragment>
   );
 }
