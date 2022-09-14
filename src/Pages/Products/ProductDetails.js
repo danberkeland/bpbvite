@@ -10,8 +10,18 @@ function ProductDetails({ selectedProduct }) {
   const [showMessage, setShowMessage] = useState(false);
   const [formData, setFormData] = useState({});
 
-  const editButtonStyle = { width: "100px", margin: "20px", fontSize: "1.2em",backgroundColor: "#006aff" };
-  const submitButtonStyle = { width: "100px", margin: "20px", fontSize: "1.2em",backgroundColor: "red" };
+  const editButtonStyle = {
+    width: "100px",
+    margin: "20px",
+    fontSize: "1.2em",
+    backgroundColor: "#006aff",
+  };
+  const submitButtonStyle = {
+    width: "100px",
+    margin: "20px",
+    fontSize: "1.2em",
+    backgroundColor: "red",
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -84,47 +94,45 @@ function ProductDetails({ selectedProduct }) {
           </div>
 
           <div className="field">
-            <span className="p-float-label">
-              <InputText
-                id="wholePrice"
-                name="wholePrice"
-                value={formik.values.wholePrice}
-                onChange={formik.handleChange}
-                className={classNames({
-                  "p-invalid": isFormFieldValid("wholePrice"),
-                })}
-              />
-              <label
-                htmlFor="wholePrice"
-                className={classNames({
-                  "p-error": isFormFieldValid("wholePrice"),
-                })}
-              >
-                WholePrice
-              </label>
-            </span>
+            <label
+              htmlFor="wholePrice"
+              className={classNames({
+                "p-error": isFormFieldValid("wholePrice"),
+              })}
+            >
+              WholePrice
+            </label>
+            <InputText
+              id="wholePrice"
+              name="wholePrice"
+              value={formik.values.wholePrice}
+              onChange={formik.handleChange}
+              className={classNames({
+                "p-invalid": isFormFieldValid("wholePrice"),
+              })}
+            />
+
             {getFormErrorMessage("wholePrice")}
           </div>
           <div className="field">
-            <span className="p-float-label">
-              <InputText
-                id="packSize"
-                name="packSize"
-                value={formik.values.packSize}
-                onChange={formik.handleChange}
-                className={classNames({
-                  "p-invalid": isFormFieldValid("packSize"),
-                })}
-              />
-              <label
-                htmlFor="packSize"
-                className={classNames({
-                  "p-error": isFormFieldValid("packSize"),
-                })}
-              >
-                packSize
-              </label>
-            </span>
+            <label
+              htmlFor="packSize"
+              className={classNames({
+                "p-error": isFormFieldValid("packSize"),
+              })}
+            >
+              packSize
+            </label>
+            <InputText
+              id="packSize"
+              name="packSize"
+              value={formik.values.packSize}
+              onChange={formik.handleChange}
+              className={classNames({
+                "p-invalid": isFormFieldValid("packSize"),
+              })}
+            />
+
             {getFormErrorMessage("packSize")}
           </div>
           <div className="greyBar"></div>

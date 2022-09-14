@@ -134,3 +134,10 @@ button:hover {
 .productDetails {
   display: block;
 }
+
+.field {
+  display: flex;
+  margin: 20px 20px;
+  width: 90%;
+  align-items: center;
+}
