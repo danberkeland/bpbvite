@@ -13,10 +13,17 @@ code {
     monospace;
 }
 
-h2, h3 {
+h2 {
   font-weight: normal;
+  color: black;
   margin: 5px 20px;
   font-size: 1.2em;
+}
+
+h3 {
+  font-weight: normal;
+  margin: 5px 20px;
+  font-size: 1em;
 }
 
 h4 {

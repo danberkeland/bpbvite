@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
-import { FilterMatchMode } from 'primereact/api';
 
 import {
   grabOldProd,
@@ -13,13 +12,14 @@ import {
 import { Button } from "primereact/button";
 import { grabDetailedProductList } from "../../restAPIs";
 import ProductList from "./ProductList";
+import ProductDetails from "./ProductDetails";
 
 function Products() {
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
   const [productData, setProductData] = useState([{}]);
   const [selectedProduct, setSelectedProduct] = useState("");
-  
+
   useEffect(() => {
     setIsLoading(true);
     grabDetailedProductList().then((result) => {
@@ -52,24 +52,27 @@ function Products() {
   };
 
   const handleProdClick = () => {
-    setSelectedProduct("")
-  }
+    setSelectedProduct("");
+  };
 
   return (
     <React.Fragment>
-      <Button label="remap Products" onClick={remap} disabled/>
+      {/*<Button label="remap Products" onClick={remap} disabled />*/}
       {selectedProduct !== "" ? (
         <React.Fragment>
           <button onClick={handleProdClick}>PRODUCT LIST</button>
-          <pre>
-            Selected Product: {JSON.stringify(selectedProduct, null, 4)}
-          </pre>
+          <ProductDetails selectedProduct={selectedProduct}/>
         </React.Fragment>
       ) : (
         <div></div>
       )}
       {selectedProduct === "" ? (
-        <ProductList selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct}/>
+        <ProductList
+          selectedProduct={selectedProduct}
+          setSelectedProduct={setSelectedProduct}
+          productData={productData}
+          setProductData={setProductData}
+        />
       ) : (
         <div></div>
       )}

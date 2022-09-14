@@ -7,11 +7,14 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { grabDetailedProductList } from "../../restAPIs";
 
-function ProductList({ selectedProduct, setSelectedProduct }) {
+function ProductList({
+  selectedProduct,
+  setSelectedProduct,
+  productData,
+  setProductData,
+}) {
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
-  const [productData, setProductData] = useState([{}]);
-  
   const [filter, setFilter] = useState({
     prodName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
