@@ -2,14 +2,12 @@ import React, { useState } from "react";
 
 import { Button } from "primereact/button";
 import { useFormik } from "formik";
-import { InputNumber } from 'primereact/inputnumber';
-import { InputText } from 'primereact/inputtext';
+import { InputNumber } from "primereact/inputnumber";
+import { InputText } from "primereact/inputtext";
 import { classNames } from "primereact/utils";
 import { createProduct } from "../../restAPIs";
 
-
 function CreateProduct({ edit, setEdit }) {
-  
   const [showMessage, setShowMessage] = useState(false);
   const [formData, setFormData] = useState({});
 
@@ -22,8 +20,8 @@ function CreateProduct({ edit, setEdit }) {
 
   const formik = useFormik({
     initialValues: {
-        prodNick: "",
-        prodName: "",
+      prodNick: "",
+      prodName: "",
       wholePrice: 0,
       packSize: 0,
     },
@@ -41,8 +39,11 @@ function CreateProduct({ edit, setEdit }) {
       return errors;
     },
     onSubmit: (data) => {
-      console.log("data",data)
-      createProduct(data)
+      console.log("data", data);
+      createProduct(data).then(() => {
+        window.location = "/Products";
+      });
+
       setFormData(data);
       setShowMessage(true);
 
@@ -60,109 +61,105 @@ function CreateProduct({ edit, setEdit }) {
     );
   };
 
-
-
-
   return (
+    <form onSubmit={formik.handleSubmit} className="p-fluid">
+      <div className="submitButton">
+        <Button
+          label="Submit"
+          className="p-button-raised p-button-rounded"
+          style={submitButtonStyle}
+        />
+      </div>
+      <div className="field">
+        <label
+          htmlFor="prodNick"
+          className={classNames({
+            "p-error": isFormFieldValid("prodNick"),
+          })}
+        >
+          Product ID
+        </label>
+        <InputText
+          id="prodNick"
+          name="prodNick"
+          value={formik.values.prodNick}
+          onChange={formik.handleChange}
+          className={classNames({
+            "p-invalid": isFormFieldValid("prodNick"),
+          })}
+        />
 
-        <form onSubmit={formik.handleSubmit} className="p-fluid">
-          
-          <div className="submitButton">
-            <Button
-              label="Submit"
-              className="p-button-raised p-button-rounded"
-              style={submitButtonStyle}
-            />
-          </div>
-          <div className="field">
-            <label
-              htmlFor="prodNick"
-              className={classNames({
-                "p-error": isFormFieldValid("prodNick"),
-              })}
-            >
-              Product ID
-            </label>
-            <InputText
-              id="prodNick"
-              name="prodNick"
-              value={formik.values.prodNick}
-              onChange={formik.handleChange}
-              className={classNames({
-                "p-invalid": isFormFieldValid("prodNick"),
-              })}
-            />
+        {getFormErrorMessage("prodNick")}
+      </div>
+      <div className="field">
+        <label
+          htmlFor="proddName"
+          className={classNames({
+            "p-error": isFormFieldValid("prodName"),
+          })}
+        >
+          Product Name
+        </label>
+        <InputText
+          id="prodName"
+          name="prodName"
+          value={formik.values.prodName}
+          onChange={formik.handleChange}
+          className={classNames({
+            "p-invalid": isFormFieldValid("prodName"),
+          })}
+        />
 
-            {getFormErrorMessage("prodNick")}
-          </div>
-          <div className="field">
-            <label
-              htmlFor="proddName"
-              className={classNames({
-                "p-error": isFormFieldValid("prodName"),
-              })}
-            >
-              Product Name
-            </label>
-            <InputText
-              id="prodName"
-              name="prodName"
-              value={formik.values.prodName}
-              onChange={formik.handleChange}
-              className={classNames({
-                "p-invalid": isFormFieldValid("prodName"),
-              })}
-            />
+        {getFormErrorMessage("prodName")}
+      </div>
 
-            {getFormErrorMessage("prodName")}
-          </div>
+      <div className="field">
+        <label
+          htmlFor="wholePrice"
+          className={classNames({
+            "p-error": isFormFieldValid("wholePrice"),
+          })}
+        >
+          WholePrice
+        </label>
+        <InputNumber
+          id="wholePrice"
+          name="wholePrice"
+          mode="decimal"
+          minFractionDigits={2}
+          maxFractionDigits={2}
+          value={formik.values.wholePrice}
+          onChange={formik.handleChange}
+          className={classNames({
+            "p-invalid": isFormFieldValid("wholePrice"),
+          })}
+        />
 
-          <div className="field">
-            <label
-              htmlFor="wholePrice"
-              className={classNames({
-                "p-error": isFormFieldValid("wholePrice"),
-              })}
-            >
-              WholePrice
-            </label>
-            <InputNumber
-              id="wholePrice"
-              name="wholePrice"
-              mode="decimal" minFractionDigits={2} maxFractionDigits={2}
-              value={formik.values.wholePrice}
-              onChange={formik.handleChange}
-              className={classNames({
-                "p-invalid": isFormFieldValid("wholePrice"),
-              })}
-            />
+        {getFormErrorMessage("wholePrice")}
+      </div>
+      <div className="field">
+        <label
+          htmlFor="packSize"
+          className={classNames({
+            "p-error": isFormFieldValid("packSize"),
+          })}
+        >
+          packSize
+        </label>
+        <InputNumber
+          id="packSize"
+          name="packSize"
+          value={formik.values.packSize}
+          onChange={formik.handleChange}
+          className={classNames({
+            "p-invalid": isFormFieldValid("packSize"),
+          })}
+        />
 
-            {getFormErrorMessage("wholePrice")}
-          </div>
-          <div className="field">
-            <label
-              htmlFor="packSize"
-              className={classNames({
-                "p-error": isFormFieldValid("packSize"),
-              })}
-            >
-              packSize
-            </label>
-            <InputNumber
-              id="packSize"
-              name="packSize"
-              value={formik.values.packSize}
-              onChange={formik.handleChange}
-              className={classNames({
-                "p-invalid": isFormFieldValid("packSize"),
-              })}
-            />
-
-            {getFormErrorMessage("packSize")}
-          </div>
-          <div className="greyBar"></div>
-        </form>
-    
+        {getFormErrorMessage("packSize")}
+      </div>
+      <div className="greyBar"></div>
+    </form>
   );
 }
 

@@ -2,11 +2,11 @@ import React, { useState } from "react";
 
 import { Button } from "primereact/button";
 import { useFormik } from "formik";
-import { InputNumber } from 'primereact/inputnumber';
+import { InputNumber } from "primereact/inputnumber";
 import { classNames } from "primereact/utils";
 import { deleteProduct } from "../../restAPIs";
-import { confirmDialog } from 'primereact/confirmdialog'; // To use confirmDialog method
-import { ConfirmDialog } from 'primereact/confirmdialog'; // To use <ConfirmDialog> tag
+import { confirmDialog } from "primereact/confirmdialog"; // To use confirmDialog method
+import { ConfirmDialog } from "primereact/confirmdialog"; // To use <ConfirmDialog> tag
 
 function ProductDetails({ selectedProduct }) {
   const [edit, setEdit] = useState(false);
@@ -66,15 +66,19 @@ function ProductDetails({ selectedProduct }) {
     setEdit(!edit);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     confirmDialog({
-        message: `Are you sure you want to delete `+selectedProduct.prodName+"?",
-        header: 'Confirmation',
-        icon: 'pi pi-exclamation-triangle',
-        accept: () => deleteProduct({prodNick: selectedProduct.prodNick})
-        
+      message:
+        `Are you sure you want to delete ` + selectedProduct.prodName + "?",
+      header: "Confirmation",
+      icon: "pi pi-exclamation-triangle",
+      accept: () => {
+        deleteProduct({ prodNick: selectedProduct.prodNick }).then(() => {
+          window.location = "/Products";
+        });
+      },
     });
-}
+  };
 
   return (
     <React.Fragment>
@@ -118,7 +122,9 @@ function ProductDetails({ selectedProduct }) {
             <InputNumber
               id="wholePrice"
               name="wholePrice"
-              mode="decimal" minFractionDigits={2} maxFractionDigits={2}
+              mode="decimal"
+              minFractionDigits={2}
+              maxFractionDigits={2}
               value={formik.values.wholePrice}
               onChange={formik.handleChange}
               className={classNames({
@@ -150,7 +156,9 @@ function ProductDetails({ selectedProduct }) {
             {getFormErrorMessage("packSize")}
           </div>
           <div className="greyBar"></div>
-          <button type="button" onClick={confirmDelete}>+ DELETE PRODUCT</button>
+          <button type="button" onClick={confirmDelete}>
+            + DELETE PRODUCT
+          </button>
           <ConfirmDialog />
         </form>
       )}
