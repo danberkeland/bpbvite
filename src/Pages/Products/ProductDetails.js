@@ -4,7 +4,7 @@ import { Button } from "primereact/button";
 import { useFormik } from "formik";
 import { InputNumber } from "primereact/inputnumber";
 import { classNames } from "primereact/utils";
-import { deleteProduct } from "../../restAPIs";
+import { deleteProduct, updateProduct } from "../../restAPIs";
 import { confirmDialog } from "primereact/confirmdialog"; // To use confirmDialog method
 import { ConfirmDialog } from "primereact/confirmdialog"; // To use <ConfirmDialog> tag
 
@@ -40,11 +40,14 @@ function ProductDetails({ selectedProduct }) {
 
       return errors;
     },
-    onSubmit: (data) => {
-      setFormData(data);
-      setShowMessage(true);
-
-      formik.resetForm();
+    onSubmit: async (data) => {
+      console.log("data",data)
+      data.prodNick = selectedProduct.prodNick
+      data.prodName = selectedProduct.prodName
+      updateProduct(data).then(() => {
+        window.location = "/Products";
+      });
+      
     },
   });
 
@@ -62,10 +65,6 @@ function ProductDetails({ selectedProduct }) {
     setEdit(!edit);
   };
 
-  const handleSubmit = () => {
-    setEdit(!edit);
-  };
-
   const confirmDelete = async () => {
     confirmDialog({
       message:
@@ -79,6 +78,7 @@ function ProductDetails({ selectedProduct }) {
       },
     });
   };
+
 
   return (
     <React.Fragment>
@@ -104,9 +104,9 @@ function ProductDetails({ selectedProduct }) {
           <div className="submitButton">
             <Button
               label="Submit"
+              type="submit"
               className="p-button-raised p-button-rounded"
               style={submitButtonStyle}
-              onClick={handleSubmit}
             />
           </div>
 
@@ -123,10 +123,14 @@ function ProductDetails({ selectedProduct }) {
               id="wholePrice"
               name="wholePrice"
               mode="decimal"
+              type={"number"}
               minFractionDigits={2}
               maxFractionDigits={2}
               value={formik.values.wholePrice}
-              onChange={formik.handleChange}
+              onClick={(values) => {
+                console.log("values",values.target.value)
+                formik.setFieldValue('wholePrice', values.target.value);
+            }}
               className={classNames({
                 "p-invalid": isFormFieldValid("wholePrice"),
               })}
@@ -146,8 +150,13 @@ function ProductDetails({ selectedProduct }) {
             <InputNumber
               id="packSize"
               name="packSize"
+              type="number"
               value={formik.values.packSize}
-              onChange={formik.handleChange}
+              onClick={(values) => {
+                console.log("values",values.target.value)
+                formik.setFieldValue('packSize', values.target.value);
+            }}
+              
               className={classNames({
                 "p-invalid": isFormFieldValid("packSize"),
               })}

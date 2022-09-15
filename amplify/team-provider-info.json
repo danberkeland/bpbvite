@@ -168,6 +168,10 @@
         "deleteProduct": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
           "s3Key": "amplify-builds/deleteProduct-6d4f5638636b57736159-build.zip"
+        },
+        "updateProduct": {
+          "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
+          "s3Key": "amplify-builds/updateProduct-78314844735453586e62-build.zip"
         }
       },
       "auth": {

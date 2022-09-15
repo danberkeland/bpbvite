@@ -144,3 +144,27 @@ export const deleteProduct = async (event) => {
   return prod.data.body;
 };
 
+
+export const updateProduct = async (event) => {
+  console.log("event",event)
+  let prod;
+  try {
+    prod = await axios.post(
+      API_bpbadmin2 + "product/updateproduct",
+      {
+        prodNick: event.prodNick,
+        prodName: event.prodName,
+        packSize: event.packSize.toString(),
+        wholePrice: event.wholePrice.toString()
+      }
+    );
+
+  } catch (err) {
+    console.log("Error updating Product", err);
+  }
+  console.log("updateProduct Response:", prod.status);
+  return prod.data.body;
+};
+
+
+
