@@ -82,6 +82,7 @@ function CreateProduct({ edit, setEdit }) {
         <InputText
           id="prodNick"
           name="prodNick"
+          autoCorrect="off"
           value={formik.values.prodNick}
           onChange={formik.handleChange}
           className={classNames({
