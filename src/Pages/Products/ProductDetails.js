@@ -71,7 +71,7 @@ function ProductDetails({ selectedProduct }) {
         message: `Are you sure you want to delete `+selectedProduct.prodName+"?",
         header: 'Confirmation',
         icon: 'pi pi-exclamation-triangle',
-        accept: () => deleteProduct(selectedProduct.id)
+        accept: () => deleteProduct({prodNick: selectedProduct.prodNick})
         
     });
 }
@@ -150,7 +150,7 @@ function ProductDetails({ selectedProduct }) {
             {getFormErrorMessage("packSize")}
           </div>
           <div className="greyBar"></div>
-          <button onClick={confirmDelete}>+ DELETE PRODUCT</button>
+          <button type="button" onClick={confirmDelete}>+ DELETE PRODUCT</button>
           <ConfirmDialog />
         </form>
       )}

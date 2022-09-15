@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "api": {
+      "bpbadmin2": [
+        "Mutation"
+      ]
+    }
+  },
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "bpbadmin2testFetchLayer",
+      "env": "auththree",
+      "version": "Always choose latest version",
+      "isLatestVersionSelected": true
+    }
+  ]
+}

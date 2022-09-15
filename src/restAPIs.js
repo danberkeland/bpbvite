@@ -70,11 +70,6 @@ export const grabDetailedProductList = async () => {
 };
 
 
-export const deleteProduct = async (id) => {
-  
-}
-
-
 
 export const grabSimpleProductList = async () => {
   let prodList;
@@ -127,3 +122,25 @@ export const createProduct = async (event) => {
   console.log("createProduct Response:", prod.status);
   return prod.data.body;
 };
+
+
+
+export const deleteProduct = async (event) => {
+  console.log("event",event)
+  let prod;
+  try {
+    prod = await axios.post(
+      API_bpbadmin2 + "product/deleteproduct",
+      {
+        prodNick: event.prodNick
+     
+      }
+    );
+
+  } catch (err) {
+    console.log("Error deleting Product", err);
+  }
+  console.log("deleteProduct Response:", prod.status);
+  return prod.data.body;
+};
+
