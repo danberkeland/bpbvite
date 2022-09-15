@@ -2,9 +2,11 @@ import React, { useState } from "react";
 
 import { Button } from "primereact/button";
 import { useFormik } from "formik";
-import { InputText } from "primereact/inputtext";
 import { InputNumber } from 'primereact/inputnumber';
 import { classNames } from "primereact/utils";
+import { deleteProduct } from "../../restAPIs";
+import { confirmDialog } from 'primereact/confirmdialog'; // To use confirmDialog method
+import { ConfirmDialog } from 'primereact/confirmdialog'; // To use <ConfirmDialog> tag
 
 function ProductDetails({ selectedProduct }) {
   const [edit, setEdit] = useState(false);
@@ -63,6 +65,16 @@ function ProductDetails({ selectedProduct }) {
   const handleSubmit = () => {
     setEdit(!edit);
   };
+
+  const confirmDelete = () => {
+    confirmDialog({
+        message: `Are you sure you want to delete `+selectedProduct.prodName+"?",
+        header: 'Confirmation',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => deleteProduct(selectedProduct.id)
+        
+    });
+}
 
   return (
     <React.Fragment>
@@ -138,7 +150,8 @@ function ProductDetails({ selectedProduct }) {
             {getFormErrorMessage("packSize")}
           </div>
           <div className="greyBar"></div>
-          <button>+ DELETE PRODUCT</button>
+          <button onClick={confirmDelete}>+ DELETE PRODUCT</button>
+          <ConfirmDialog />
         </form>
       )}
 

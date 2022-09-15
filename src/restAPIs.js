@@ -70,6 +70,11 @@ export const grabDetailedProductList = async () => {
 };
 
 
+export const deleteProduct = async (id) => {
+  
+}
+
+
 
 export const grabSimpleProductList = async () => {
   let prodList;
