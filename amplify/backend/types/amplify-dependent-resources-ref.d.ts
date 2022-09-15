@@ -54,6 +54,12 @@ export type AmplifyDependentResourcesAttributes = {
         },
         "bpbadmin2testFetchLayer": {
             "Arn": "string"
+        },
+        "createProduct": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string",
+            "LambdaExecutionRole": "string"
         }
     },
     "auth": {

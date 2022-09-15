@@ -160,6 +160,10 @@
         "bpbadmin2testFetchLayer": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
           "s3Key": "amplify-builds/bpbadmin2testFetchLayer-LambdaLayerVersion29511cdf-build.zip"
+        },
+        "createProduct": {
+          "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
+          "s3Key": "amplify-builds/createProduct-3333494d41376a314b4b-build.zip"
         }
       },
       "auth": {

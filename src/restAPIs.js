@@ -105,3 +105,25 @@ export const grabProductById = async (prodNick) => {
   console.log("grabProductById Response:", prod.status);
   return prod.data.body;
 };
+
+
+export const createProduct = async (event) => {
+  console.log("event",event)
+  let prod;
+  try {
+    prod = await axios.post(
+      API_bpbadmin2 + "product/createproduct",
+      {
+        prodNick: event.prodNick,
+        prodName: event.prodName,
+        packSize: event.packSize,
+        wholePrice: event.wholePrice
+      }
+    );
+
+  } catch (err) {
+    console.log("Error creating Product", err);
+  }
+  console.log("createProduct Response:", prod.status);
+  return prod.data.body;
+};

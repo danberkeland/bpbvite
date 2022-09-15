@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from "primereact/utils";
+import { createProduct } from "../../restAPIs";
 
 
 function CreateProduct({ edit, setEdit }) {
@@ -40,6 +41,8 @@ function CreateProduct({ edit, setEdit }) {
       return errors;
     },
     onSubmit: (data) => {
+      console.log("data",data)
+      createProduct(data)
       setFormData(data);
       setShowMessage(true);
 
@@ -58,9 +61,6 @@ function CreateProduct({ edit, setEdit }) {
   };
 
 
-  const handleSubmit = () => {
-    setEdit(!edit);
-  };
 
 
   return (
@@ -72,7 +72,6 @@ function CreateProduct({ edit, setEdit }) {
               label="Submit"
               className="p-button-raised p-button-rounded"
               style={submitButtonStyle}
-              onClick={handleSubmit}
             />
           </div>
           <div className="field">
