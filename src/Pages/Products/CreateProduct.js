@@ -126,14 +126,14 @@ function CreateProduct({ edit, setEdit }) {
           id="wholePrice"
           name="wholePrice"
           mode="decimal"
-          type={"number"}
+       
           minFractionDigits={2}
           maxFractionDigits={2}
-          value={formik.values.wholePrice}
-          onClick={(values) => {
-            console.log("values",values.target.value)
-            formik.setFieldValue('wholePrice', values.target.value);
-        }}
+          value={Number(formik.values.wholePrice)}
+          onChange={(values) => {
+          
+            formik.setFieldValue("wholePrice", values.value);
+          }}
           className={classNames({
             "p-invalid": isFormFieldValid("wholePrice"),
           })}
@@ -153,12 +153,12 @@ function CreateProduct({ edit, setEdit }) {
         <InputNumber
           id="packSize"
           name="packSize"
-          type={"number"}
-          value={formik.values.packSize}
-          onClick={(values) => {
-            console.log("values",values.target.value)
-            formik.setFieldValue('packSize', values.target.value);
-        }}
+      
+          value={Number(formik.values.packSize)}
+          onChange={(values) => {
+           
+            formik.setFieldValue("packSize", values.value);
+          }}
           className={classNames({
             "p-invalid": isFormFieldValid("packSize"),
           })}

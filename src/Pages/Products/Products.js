@@ -23,7 +23,7 @@ function Products() {
   useEffect(() => {
     setIsLoading(true);
     grabDetailedProductList().then((result) => {
-      console.log(result);
+    
       setProductData(result);
       setIsLoading(false);
     });
