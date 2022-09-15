@@ -7,6 +7,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { grabDetailedProductList } from "../../restAPIs";
+import CreateProduct from "./CreateProduct";
 
 const submitButtonStyle = {
   width: "100px",
@@ -74,6 +75,7 @@ function ProductList({
         </React.Fragment>
       ) : (
         <React.Fragment>
+          
           <div className="submitButton">
             <Button
               label="Submit"
@@ -83,6 +85,7 @@ function ProductList({
             />
           </div>
           <button onClick={handleClick}>+ PRODUCT LIST</button>
+          <CreateProduct />
         </React.Fragment>
       )}
     </React.Fragment>

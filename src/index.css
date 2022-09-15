@@ -136,7 +136,8 @@ button:hover {
 }
 
 .field {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
   margin: 20px 20px;
   width: 90%;
   align-items: center;
