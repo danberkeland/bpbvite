@@ -23,7 +23,17 @@
         "grabLocList": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
           "s3Key": "amplify-builds/grabLocList-35687837793763375567-build.zip"
-        }
+        },
+        "grabStandOrder": {},
+        "grabOrder": {},
+        "grabDetailedProductList": {},
+        "grabSimpleProductList": {},
+        "grabProductById": {},
+        "createProduct": {},
+        "deleteProduct": {},
+        "updateProduct": {},
+        "grabDetailedLocationList": {},
+        "grabSimpleLocationList": {}
       }
     }
   },
@@ -172,6 +182,22 @@
         "updateProduct": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
           "s3Key": "amplify-builds/updateProduct-78314844735453586e62-build.zip"
+        },
+        "grabDetailedLocationList": {
+          "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
+          "s3Key": "amplify-builds/grabDetailedLocationList-346577332f447168524e-build.zip"
+        },
+        "bpbadmin2anotherTest": {
+          "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
+          "s3Key": "amplify-builds/bpbadmin2anotherTest-LambdaLayerVersion33932fa9-build.zip"
+        },
+        "grabSimpleLocationList": {
+          "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
+          "s3Key": "amplify-builds/grabSimpleLocationList-7a586542685578424443-build.zip"
+        },
+        "bpbrouter": {
+          "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
+          "s3Key": "amplify-builds/bpbrouter-6e6c584a326732335965-build.zip"
         }
       },
       "auth": {

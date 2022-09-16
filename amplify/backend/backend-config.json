@@ -250,6 +250,87 @@
           ]
         }
       ]
+    },
+    "bpbadmin2anotherTest": {
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer",
+      "build": true
+    },
+    "grabDetailedLocationList": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "bpbadmin2",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer",
+          "attributes": [
+            "Arn"
+          ]
+        }
+      ]
+    },
+    "grabSimpleLocationList": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "bpbadmin2",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ]
+        },
+        {
+          "category": "auth",
+          "resourceName": "bpbadmin2db0d25d4",
+          "attributes": [
+            "UserPoolId"
+          ]
+        }
+      ]
+    },
+    "bpbrouter": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "bpbadmin2",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ]
+        },
+        {
+          "category": "auth",
+          "resourceName": "bpbadmin2db0d25d4",
+          "attributes": [
+            "UserPoolId"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer",
+          "attributes": [
+            "Arn"
+          ]
+        }
+      ]
     }
   },
   "auth": {

@@ -3,7 +3,16 @@
     "api": {
       "bpbadmin2": [
         "Query",
-        "Mutation"
+        "Mutation",
+        "Subscription"
+      ]
+    },
+    "auth": {
+      "bpbadmin2db0d25d4": [
+        "create",
+        "read",
+        "update",
+        "delete"
       ]
     }
   },
@@ -11,9 +20,9 @@
     {
       "type": "ProjectLayer",
       "resourceName": "bpbadmin2testFetchLayer",
+      "env": "auththree",
       "version": "Always choose latest version",
-      "isLatestVersionSelected": true,
-      "env": "auththree"
+      "isLatestVersionSelected": true
     }
   ]
 }

@@ -10,6 +10,9 @@ const API_grabStandOrder =
 const API_bpbadmin2 =
   "https://7el0c3e6wi.execute-api.us-east-2.amazonaws.com/auth/";
 
+const API_bpbrouterAuth =
+  "https://8gw70qn5eb.execute-api.us-east-2.amazonaws.com/auth";
+
 export const testingGrQL = async (locNick, delivDate) => {
   console.log("delivDate", delivDate);
   let testOrder;
@@ -25,8 +28,6 @@ export const testingGrQL = async (locNick, delivDate) => {
   return testOrder.data.body;
 };
 
-
-
 export const grabLocList = async () => {
   let locList;
   try {
@@ -37,8 +38,6 @@ export const grabLocList = async () => {
   console.log("grabLocList Response:", locList.status);
   return locList.data.body;
 };
-
-
 
 export const grabStandOrder = async (locNick) => {
   let testOrder;
@@ -53,23 +52,20 @@ export const grabStandOrder = async (locNick) => {
   return testOrder.data.body;
 };
 
-
-
 export const grabDetailedProductList = async () => {
   let prodList;
   try {
     prodList = await axios.post(
-      API_bpbadmin2 + "product/grabdetailedproductlist",
+      API_bpbrouterAuth + "/products/grabDetailedProductList",
       {}
     );
   } catch (err) {
     console.log("Error grabbing prodList", err);
   }
   console.log("grabDetailedProductList Response:", prodList.status);
+  console.log("prodList",prodList.data.body.items)
   return prodList.data.body.items;
 };
-
-
 
 export const grabSimpleProductList = async () => {
   let prodList;
@@ -78,15 +74,12 @@ export const grabSimpleProductList = async () => {
       API_bpbadmin2 + "product/grabsimpleproductlist",
       {}
     );
-
   } catch (err) {
     console.log("Error grabbing prodList", err);
   }
   console.log("grabSimpleProductList Response:", prodList.status);
   return prodList.data.body;
 };
-
-
 
 export const grabProductById = async (prodNick) => {
   let prod;
@@ -101,21 +94,16 @@ export const grabProductById = async (prodNick) => {
   return prod.data.body;
 };
 
-
 export const createProduct = async (event) => {
-  console.log("event",event)
+  console.log("event", event);
   let prod;
   try {
-    prod = await axios.post(
-      API_bpbadmin2 + "product/createproduct",
-      {
-        prodNick: event.prodNick,
-        prodName: event.prodName,
-        packSize: event.packSize,
-        wholePrice: event.wholePrice
-      }
-    );
-
+    prod = await axios.post(API_bpbadmin2 + "product/createproduct", {
+      prodNick: event.prodNick,
+      prodName: event.prodName,
+      packSize: event.packSize,
+      wholePrice: event.wholePrice,
+    });
   } catch (err) {
     console.log("Error creating Product", err);
   }
@@ -123,20 +111,13 @@ export const createProduct = async (event) => {
   return prod.data.body;
 };
 
-
-
 export const deleteProduct = async (event) => {
-  console.log("event",event)
+  console.log("event", event);
   let prod;
   try {
-    prod = await axios.post(
-      API_bpbadmin2 + "product/deleteproduct",
-      {
-        prodNick: event.prodNick
-     
-      }
-    );
-
+    prod = await axios.post(API_bpbadmin2 + "product/deleteproduct", {
+      prodNick: event.prodNick,
+    });
   } catch (err) {
     console.log("Error deleting Product", err);
   }
@@ -144,27 +125,19 @@ export const deleteProduct = async (event) => {
   return prod.data.body;
 };
 
-
 export const updateProduct = async (event) => {
-  console.log("event",event)
+  console.log("event", event);
   let prod;
   try {
-    prod = await axios.post(
-      API_bpbadmin2 + "product/updateproduct",
-      {
-        prodNick: event.prodNick,
-        prodName: event.prodName,
-        packSize: event.packSize.toString(),
-        wholePrice: event.wholePrice.toString()
-      }
-    );
-
+    prod = await axios.post(API_bpbadmin2 + "product/updateproduct", {
+      prodNick: event.prodNick,
+      prodName: event.prodName,
+      packSize: event.packSize.toString(),
+      wholePrice: event.wholePrice.toString(),
+    });
   } catch (err) {
     console.log("Error updating Product", err);
   }
   console.log("updateProduct Response:", prod.status);
   return prod.data.body;
 };
-
-
-
