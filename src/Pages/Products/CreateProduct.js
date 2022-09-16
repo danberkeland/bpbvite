@@ -40,9 +40,10 @@ function CreateProduct({ edit, setEdit }) {
     },
     onSubmit: (data) => {
       console.log("data", data);
-      createProduct(data).then(() => {
-        window.location = "/Products";
-      });
+      createProduct(data)
+      .then(() => {
+      window.location = "/Products";})
+    
 
       setFormData(data);
       setShowMessage(true);
@@ -66,6 +67,7 @@ function CreateProduct({ edit, setEdit }) {
       <div className="submitButton">
         <Button
           label="Submit"
+          type="submit"
           className="p-button-raised p-button-rounded"
           style={submitButtonStyle}
         />
@@ -94,7 +96,7 @@ function CreateProduct({ edit, setEdit }) {
       </div>
       <div className="field">
         <label
-          htmlFor="proddName"
+          htmlFor="prodName"
           className={classNames({
             "p-error": isFormFieldValid("prodName"),
           })}

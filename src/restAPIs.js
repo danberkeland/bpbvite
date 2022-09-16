@@ -98,16 +98,13 @@ export const createProduct = async (event) => {
   console.log("event", event);
   let prod;
   try {
-    prod = await axios.post(API_bpbrouterAuth + "/products/createProduct", {
-      prodNick: event.prodNick,
-      prodName: event.prodName,
-      packSize: event.packSize,
-      wholePrice: event.wholePrice,
-    });
+    prod = await axios.post(API_bpbrouterAuth + "/products/createProduct", 
+      event
+    );
   } catch (err) {
     console.log("Error creating Product", err);
   }
-  console.log("createProduct Response:", prod.status);
+  console.log("createProduct Response:", prod);
   return prod.data.body;
 };
 

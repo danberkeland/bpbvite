@@ -24,7 +24,7 @@ export const handler = async (event) => {
     
     try {
         const { default: queryFunction } = await import(`./routes${event.path}/index.js`);
-        body = await queryFunction(event);
+        body = await queryFunction(event.body ? event.body : "");
     } catch(error) {
         console.log(error)
         statusCode = 400;
@@ -34,6 +34,7 @@ export const handler = async (event) => {
       "statusCode": statusCode,
       "headers": headers,
       "body": JSON.stringify(body)
+     
       
   };
 };
