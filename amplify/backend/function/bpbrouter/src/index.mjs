@@ -24,7 +24,7 @@ export const handler = async (event) => {
     
     try {
         const { default: queryFunction } = await import(`./routes${event.path}/index.js`);
-        body = await queryFunction();
+        body = await queryFunction(event);
     } catch(error) {
         console.log(error)
         statusCode = 400;

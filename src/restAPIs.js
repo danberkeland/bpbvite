@@ -98,7 +98,7 @@ export const createProduct = async (event) => {
   console.log("event", event);
   let prod;
   try {
-    prod = await axios.post(API_bpbadmin2 + "product/createproduct", {
+    prod = await axios.post(API_bpbrouterAuth + "/products/createProduct", {
       prodNick: event.prodNick,
       prodName: event.prodName,
       packSize: event.packSize,
