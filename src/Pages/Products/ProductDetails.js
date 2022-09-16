@@ -72,7 +72,8 @@ function ProductDetails({ selectedProduct }) {
       header: "Confirmation",
       icon: "pi pi-exclamation-triangle",
       accept: () => {
-        deleteProduct({ prodNick: selectedProduct.prodNick }).then(() => {
+        deleteProduct({ prodNick: selectedProduct.prodNick })
+        .then(() => {
           window.location = "/Products";
         });
       },

@@ -63,7 +63,7 @@ export const grabDetailedProductList = async () => {
     console.log("Error grabbing prodList", err);
   }
   console.log("grabDetailedProductList Response:", prodList.status);
-  console.log("prodList",prodList.data.body.items)
+  console.log("prodList", prodList.data.body.items);
   return prodList.data.body.items;
 };
 
@@ -98,7 +98,8 @@ export const createProduct = async (event) => {
   console.log("event", event);
   let prod;
   try {
-    prod = await axios.post(API_bpbrouterAuth + "/products/createProduct", 
+    prod = await axios.post(
+      API_bpbrouterAuth + "/products/createProduct",
       event
     );
   } catch (err) {
@@ -112,13 +113,14 @@ export const deleteProduct = async (event) => {
   console.log("event", event);
   let prod;
   try {
-    prod = await axios.post(API_bpbadmin2 + "product/deleteproduct", {
-      prodNick: event.prodNick,
-    });
+    prod = await axios.post(
+      API_bpbrouterAuth + "/products/deleteProduct",
+      event
+    );
   } catch (err) {
     console.log("Error deleting Product", err);
   }
-  console.log("deleteProduct Response:", prod.status);
+  console.log("deleteProduct Response:", prod);
   return prod.data.body;
 };
 
@@ -126,15 +128,10 @@ export const updateProduct = async (event) => {
   console.log("event", event);
   let prod;
   try {
-    prod = await axios.post(API_bpbadmin2 + "product/updateproduct", {
-      prodNick: event.prodNick,
-      prodName: event.prodName,
-      packSize: event.packSize.toString(),
-      wholePrice: event.wholePrice.toString(),
-    });
+    prod = await axios.post(API_bpbrouterAuth + "/products/updateProduct", event);
   } catch (err) {
     console.log("Error updating Product", err);
   }
-  console.log("updateProduct Response:", prod.status);
+  console.log("updateProduct Response:", prod);
   return prod.data.body;
 };
