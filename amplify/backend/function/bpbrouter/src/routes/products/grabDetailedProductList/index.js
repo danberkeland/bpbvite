@@ -1,6 +1,3 @@
-
-
-
 /* Amplify Params - DO NOT EDIT
 	API_BPBADMIN2_GRAPHQLAPIENDPOINTOUTPUT
 	API_BPBADMIN2_GRAPHQLAPIIDOUTPUT
@@ -17,9 +14,9 @@ const GRAPHQL_ENDPOINT = process.env.API_BPBADMIN2_GRAPHQLAPIENDPOINTOUTPUT;
 const GRAPHQL_API_KEY = process.env.API_BPBADMIN2_GRAPHQLAPIKEYOUTPUT;
 
 const headers = {
-	"Access-Control-Allow-Origin": "*",
-	"Access-Control-Allow-Headers": "*",
-	"Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "*",
+  "Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
 };
 
 const query = /* GraphQL */ `
@@ -93,11 +90,10 @@ const grabDetailedProductList = async (event) => {
   }
 
   return {
-    "statusCode": statusCode,
-    "headers": headers,
-    "body": list,
+    statusCode: statusCode,
+    headers: headers,
+    body: list,
   };
 };
-
 
 export default grabDetailedProductList;

@@ -21,21 +21,23 @@ const headers = {
 
 const query = /* GraphQL */ `
   mutation MyMutation(
-    $prodNick: String!
-    $prodName: String
-    $wholePrice: Float
-    $packSize: Int
+    $locNick: String!
+    $locName: String!
+    $email: String
+    $city: String
   ) {
-    updateProduct(
+    createLocation(
       input: {
-        prodName: $prodName
-        prodNick: $prodNick
-        wholePrice: $wholePrice
-        packSize: $packSize
+        locName: $locName
+        locNick: $locNick
+        city: $city
+        email: $email
       }
     ) {
-      prodNick
-      prodName
+      email
+      locName
+      locNick
+      city
     }
   }
 `;
@@ -43,8 +45,8 @@ const query = /* GraphQL */ `
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
-const updateProduct = async (event) => {
-  console.log(`EVENT: ${JSON.stringify(event)}`);
+const createLocation = async (event) => {
+  console.log(`EVENT2: ${JSON.stringify(event)}`);
 
   const variables = event;
 
@@ -92,4 +94,4 @@ const updateProduct = async (event) => {
   };
 };
 
-export default updateProduct;
+export default createLocation;

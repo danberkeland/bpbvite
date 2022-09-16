@@ -2,12 +2,11 @@ import React, { useState } from "react";
 
 import { Button } from "primereact/button";
 import { useFormik } from "formik";
-import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { classNames } from "primereact/utils";
-import { createProduct } from "../../restAPIs";
+import { createLocation } from "../../restAPIs";
 
-function CreateProduct({ edit, setEdit }) {
+function CreateLocation({ edit, setEdit }) {
   const [showMessage, setShowMessage] = useState(false);
   const [formData, setFormData] = useState({});
 
@@ -20,29 +19,29 @@ function CreateProduct({ edit, setEdit }) {
 
   const formik = useFormik({
     initialValues: {
-      prodNick: "",
-      prodName: "",
-      wholePrice: 0,
-      packSize: 0,
+      locNick: "",
+      locName: "",
+      city: "",
+      email: "",
     },
     validate: (data) => {
       let errors = {};
 
-      if (!data.prodNick) {
-        errors.prodNick = "ID is required.";
+      if (!data.locNick) {
+        errors.locNick = "ID is required.";
       }
 
-      if (!data.prodName) {
-        errors.prodName = "Product Name is required.";
+      if (!data.locName) {
+        errors.locName = "Location Name is required.";
       }
 
       return errors;
     },
     onSubmit: (data) => {
       console.log("data", data);
-      createProduct(data)
+      createLocation(data)
       .then(() => {
-      window.location = "/Products";})
+      window.location = "/Locations";})
     
 
       setFormData(data);
@@ -74,104 +73,95 @@ function CreateProduct({ edit, setEdit }) {
       </div>
       <div className="field">
         <label
-          htmlFor="prodNick"
+          htmlFor="locNick"
           className={classNames({
-            "p-error": isFormFieldValid("prodNick"),
+            "p-error": isFormFieldValid("locNick"),
           })}
         >
-          Product ID
+          Location ID
         </label>
         <InputText
-          id="prodNick"
-          name="prodNick"
+          id="locNick"
+          name="locNick"
           autoCorrect="off"
-          value={formik.values.prodNick}
+          value={formik.values.locNick}
           onChange={formik.handleChange}
           className={classNames({
-            "p-invalid": isFormFieldValid("prodNick"),
+            "p-invalid": isFormFieldValid("locNick"),
           })}
         />
 
-        {getFormErrorMessage("prodNick")}
+        {getFormErrorMessage("locNick")}
       </div>
       <div className="field">
         <label
-          htmlFor="prodName"
+          htmlFor="locName"
           className={classNames({
-            "p-error": isFormFieldValid("prodName"),
+            "p-error": isFormFieldValid("locName"),
           })}
         >
-          Product Name
+          Location Name
         </label>
         <InputText
-          id="prodName"
-          name="prodName"
-          value={formik.values.prodName}
+          id="locName"
+          name="locName"
+          value={formik.values.locName}
           onChange={formik.handleChange}
           className={classNames({
-            "p-invalid": isFormFieldValid("prodName"),
+            "p-invalid": isFormFieldValid("locName"),
           })}
         />
 
-        {getFormErrorMessage("prodName")}
+        {getFormErrorMessage("locName")}
       </div>
 
       <div className="field">
         <label
-          htmlFor="wholePrice"
+          htmlFor="city"
           className={classNames({
-            "p-error": isFormFieldValid("wholePrice"),
+            "p-error": isFormFieldValid("city"),
           })}
         >
-          WholePrice
+          City
         </label>
-        <InputNumber
-          id="wholePrice"
-          name="wholePrice"
-          mode="decimal"
-       
-          minFractionDigits={2}
-          maxFractionDigits={2}
-          value={Number(formik.values.wholePrice)}
-          onChange={(values) => {
+        <InputText
+          id="city"
+          name="city"
           
-            formik.setFieldValue("wholePrice", values.value);
-          }}
+          value={formik.values.city}
+          onChange={formik.handleChange}
           className={classNames({
-            "p-invalid": isFormFieldValid("wholePrice"),
+            "p-invalid": isFormFieldValid("city"),
           })}
         />
 
-        {getFormErrorMessage("wholePrice")}
+        {getFormErrorMessage("city")}
       </div>
       <div className="field">
         <label
-          htmlFor="packSize"
+          htmlFor="email"
           className={classNames({
-            "p-error": isFormFieldValid("packSize"),
+            "p-error": isFormFieldValid("email"),
           })}
         >
-          packSize
+          Email
         </label>
-        <InputNumber
-          id="packSize"
-          name="packSize"
+        <InputText
+          id="email"
+          name="email"
       
-          value={Number(formik.values.packSize)}
-          onChange={(values) => {
-           
-            formik.setFieldValue("packSize", values.value);
-          }}
+          value={formik.values.email}
+          onChange={formik.handleChange}
           className={classNames({
-            "p-invalid": isFormFieldValid("packSize"),
+            "p-invalid": isFormFieldValid("email"),
           })}
         />
 
-        {getFormErrorMessage("packSize")}
+        {getFormErrorMessage("email")}
       </div>
       <div className="greyBar"></div>
     </form>
   );
 }
 
-export default CreateProduct;
+export default CreateLocation;

@@ -10,21 +10,21 @@ import fetch, {
   Request,
 } from "/opt/nodejs/node_modules/node-fetch/lib/index.mjs";
 
-
-const headers = {
-	"Access-Control-Allow-Origin": "*",
-	"Access-Control-Allow-Headers": "*",
-	"Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
-	
-};
-
 const GRAPHQL_ENDPOINT = process.env.API_BPBADMIN2_GRAPHQLAPIENDPOINTOUTPUT;
 const GRAPHQL_API_KEY = process.env.API_BPBADMIN2_GRAPHQLAPIKEYOUTPUT;
+
+const headers = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "*",
+  "Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
+};
 
 const query = /* GraphQL */ `
   query MyQuery {
     listLocations {
       items {
+        locName
+        locNick
         Type
         zoneNick
         addr1
@@ -81,15 +81,14 @@ const grabDetailedLocationList = async (event) => {
     list = body.data.listLocations;
     console.log("list", list);
   } catch (error) {
-    console.log("error",error);
     statusCode = 400;
   }
 
   return {
-    "statusCode": statusCode,
-    "headers": headers,
-    "body": list,
+    statusCode: statusCode,
+    headers: headers,
+    body: list,
   };
 };
 
-export default grabDetailedLocationList
+export default grabDetailedLocationList;

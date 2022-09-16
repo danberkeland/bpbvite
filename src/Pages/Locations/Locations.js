@@ -1,43 +1,51 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-import {
-  grabOldLoc,
-  checkExistsNewLoc,
-  updateNewLoc,
-  createNewLoc,
-} from "./LocationHelpers";
-
-import { Button } from "primereact/button";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
+
+import { grabDetailedLocationList } from "../../restAPIs";
+import LocationList from "./LocationList";
+import LocationDetails from "./LocationDetails";
 
 function Locations() {
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
-  const remap = () => {
+  const [locationData, setLocationData] = useState([{}]);
+  const [selectedLocation, setSelectedLocation] = useState("");
+
+  useEffect(() => {
     setIsLoading(true);
-    grabOldLoc()
-      .then((oldLoc) => {
-        console.log("oldLoc", oldLoc);
-        for (let old of oldLoc) {
-          checkExistsNewLoc(old.nickName).then((exists) => {
-            console.log("exists", exists);
-            if (exists) {
-              updateNewLoc(old);
-            } else {
-              createNewLoc(old);
-            }
-          });
-        }
-      })
-      .then((e) => {
-        setIsLoading(false);
-        console.log("Location DB updated");
-      });
+    grabDetailedLocationList().then((result) => {
+    
+      setLocationData(result);
+      setIsLoading(false);
+    });
+  }, []);
+
+  const handleLocClick = () => {
+    setSelectedLocation("");
   };
 
   return (
     <React.Fragment>
-      <Button label="remap Locations" onClick={remap} disabled />
+      
+      {selectedLocation !== "" ? (
+        <React.Fragment>
+          <button onClick={handleLocClick}>LOCATION LIST</button>
+          <LocationDetails selectedLocation={selectedLocation}/>
+        </React.Fragment>
+      ) : (
+        <div></div>
+      )}
+      {selectedLocation === "" ? (
+        <LocationList
+          selectedLocation={selectedLocation}
+          setSelectedLocation={setSelectedLocation}
+          locationData={locationData}
+          setLocationData={setLocationData}
+        />
+      ) : (
+        <div></div>
+      )}
     </React.Fragment>
   );
 }

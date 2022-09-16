@@ -52,21 +52,6 @@ export const grabStandOrder = async (locNick) => {
   return testOrder.data.body;
 };
 
-export const grabDetailedProductList = async () => {
-  let prodList;
-  try {
-    prodList = await axios.post(
-      API_bpbrouterAuth + "/products/grabDetailedProductList",
-      {}
-    );
-  } catch (err) {
-    console.log("Error grabbing prodList", err);
-  }
-  console.log("grabDetailedProductList Response:", prodList.status);
-  console.log("prodList", prodList.data.body.items);
-  return prodList.data.body.items;
-};
-
 export const grabSimpleProductList = async () => {
   let prodList;
   try {
@@ -92,6 +77,24 @@ export const grabProductById = async (prodNick) => {
   }
   console.log("grabProductById Response:", prod.status);
   return prod.data.body;
+};
+
+// Product
+
+
+export const grabDetailedProductList = async () => {
+  let prodList;
+  try {
+    prodList = await axios.post(
+      API_bpbrouterAuth + "/products/grabDetailedProductList",
+      {}
+    );
+  } catch (err) {
+    console.log("Error grabbing prodList", err);
+  }
+  console.log("grabDetailedProductList Response:", prodList.status);
+  console.log("prodList", prodList.data.body.items);
+  return prodList.data.body.items;
 };
 
 export const createProduct = async (event) => {
@@ -135,3 +138,65 @@ export const updateProduct = async (event) => {
   console.log("updateProduct Response:", prod);
   return prod.data.body;
 };
+
+
+
+// Location
+
+export const grabDetailedLocationList = async () => {
+  let locList;
+  try {
+    locList = await axios.post(
+      API_bpbrouterAuth + "/locations/grabDetailedLocationList",
+      {}
+    );
+  } catch (err) {
+    console.log("Error grabbing locList", err);
+  }
+  console.log("grabDetailedLocationList Response:", locList);
+  
+  return locList.data.body.items;
+};
+
+export const createLocation = async (event) => {
+  console.log("event", event);
+  let loc;
+  try {
+    loc = await axios.post(
+      API_bpbrouterAuth + "/locations/createLocation",
+      event
+    );
+  } catch (err) {
+    console.log("Error creating Location", err);
+  }
+  console.log("createLocation Response:", loc);
+  return loc.data.body;
+};
+
+export const deleteLocation = async (event) => {
+  console.log("event", event);
+  let loc;
+  try {
+    loc = await axios.post(
+      API_bpbrouterAuth + "/locations/deleteLocation",
+      event
+    );
+  } catch (err) {
+    console.log("Error deleting Location", err);
+  }
+  console.log("deleteLocation Response:", loc);
+  return loc.data.body;
+};
+
+export const updateLocation = async (event) => {
+  console.log("event", event);
+  let loc;
+  try {
+    loc = await axios.post(API_bpbrouterAuth + "/locations/updateLocation", event);
+  } catch (err) {
+    console.log("Error updating Location", err);
+  }
+  console.log("updateLocation Response:", loc);
+  return loc.data.body;
+};
+
