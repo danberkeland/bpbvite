@@ -33,7 +33,6 @@ function ProductList({
   useEffect(() => {
     setIsLoading(true);
     grabDetailedProductList().then((result) => {
-      
       setProductData(result);
       setIsLoading(false);
     });
@@ -50,7 +49,11 @@ function ProductList({
   return (
     <React.Fragment>
       {!isCreate ? (
-        <motion.div initial={{ opacity: 0}} animate={{ opacity: 1}} exit={{ opacity: 0}}>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
           <button onClick={handleClick}>+ CREATE PRODUCT</button>
 
           <DataTable
@@ -76,7 +79,6 @@ function ProductList({
         </motion.div>
       ) : (
         <React.Fragment>
-          
           <div className="submitButton">
             <Button
               label="Submit"
