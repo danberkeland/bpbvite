@@ -6,6 +6,8 @@ import React, { useEffect, useState } from "react";
 import { useSettingsStore } from "./Contexts/SettingsZustand";
 
 import { authSignOut } from "./Auth/AuthHelpers";
+import { motion } from "framer-motion";
+
 
 const itemsAuth4min = [
   {
@@ -175,7 +177,11 @@ export function NavSide() {
   }, [authType]);
 
   return (
-    <React.Fragment>
+    <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
       <div className="panelMenu">
         <PanelMenu
           className="mypanel"
@@ -184,7 +190,7 @@ export function NavSide() {
         />
       </div>
       <div className="bottomSpace"></div>
-    </React.Fragment>
+    </motion.div>
   );
 }
 
@@ -216,12 +222,16 @@ export function NavBottom() {
     authSignOut(setFormType);
   };
   return (
-    <React.Fragment>
+    <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
       <div className="greyBar"></div>
       <div className="tabContainer">
         <TabMenu className="tabMenu" model={itemsAuth4min} />
         <button onClick={signOut}>Sign Out</button>
       </div>
-    </React.Fragment>
+    </motion.div>
   );
 }

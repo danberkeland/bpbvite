@@ -28,10 +28,10 @@ function Locations() {
 
   return (
     <motion.div
-    initial={{ width: 0 }}
-    animate={{ width: "100%" }}
-    exit={{ width: 0, transition: { duration: 0.1 } }}
-  >
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
       
       {selectedLocation !== "" ? (
         <motion.div
