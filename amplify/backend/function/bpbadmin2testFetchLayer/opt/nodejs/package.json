@@ -2,7 +2,8 @@
   "version": "1.0.0",
   "description": "Dropped node-fetch into version 2",
   "main": "index.js",
-  "dependencies": {
+  "type": "module",
+    "dependencies": {
     "moment": "^2.29.4",
     "node-fetch": "^2.6.7"
   },
