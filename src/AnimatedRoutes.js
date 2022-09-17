@@ -14,7 +14,7 @@ import Logistics from "./Pages/Logistics/Logistics";
 import Locations from "./Pages/Locations/Locations";
 import { NavSide } from "./Nav";
 
-import { AnimatePresence } from "framer-motion/dist/framer-motion";
+import { AnimatePresence } from "framer-motion";
 
 function AnimatedRoutes({ Routes, Route, useLocation }) {
   const location = useLocation();
