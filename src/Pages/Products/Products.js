@@ -13,6 +13,7 @@ import { Button } from "primereact/button";
 import { grabDetailedProductList } from "../../restAPIs";
 import ProductList from "./ProductList";
 import ProductDetails from "./ProductDetails";
+import { motion } from "framer-motion";
 
 function Products() {
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
@@ -23,7 +24,6 @@ function Products() {
   useEffect(() => {
     setIsLoading(true);
     grabDetailedProductList().then((result) => {
-    
       setProductData(result);
       setIsLoading(false);
     });
@@ -56,27 +56,37 @@ function Products() {
   };
 
   return (
-    <React.Fragment>
+    <motion.div
+      initial={{ width: 0 }}
+      animate={{ width: "100%" }}
+      exit={{ width: 0, transition: { duration: 0.1 } }}
+    >
       {/*<Button label="remap Products" onClick={remap} disabled />*/}
       {selectedProduct !== "" ? (
         <React.Fragment>
           <button onClick={handleProdClick}>PRODUCT LIST</button>
-          <ProductDetails selectedProduct={selectedProduct}/>
+          <ProductDetails selectedProduct={selectedProduct} />
         </React.Fragment>
       ) : (
         <div></div>
       )}
       {selectedProduct === "" ? (
-        <ProductList
-          selectedProduct={selectedProduct}
-          setSelectedProduct={setSelectedProduct}
-          productData={productData}
-          setProductData={setProductData}
-        />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <ProductList
+            selectedProduct={selectedProduct}
+            setSelectedProduct={setSelectedProduct}
+            productData={productData}
+            setProductData={setProductData}
+          />
+        </motion.div>
       ) : (
         <div></div>
       )}
-    </React.Fragment>
+    </motion.div>
   );
 }
 

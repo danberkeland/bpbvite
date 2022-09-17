@@ -6,6 +6,7 @@ import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { classNames } from "primereact/utils";
 import { createProduct } from "../../restAPIs";
+import { motion } from 'framer-motion'
 
 function CreateProduct({ edit, setEdit }) {
   const [showMessage, setShowMessage] = useState(false);
@@ -63,6 +64,7 @@ function CreateProduct({ edit, setEdit }) {
   };
 
   return (
+    <motion.div initial={{ opacity: 0}} animate={{ opacity: 1}} exit={{ opacity: 0}}>
     <form onSubmit={formik.handleSubmit} className="p-fluid">
       <div className="submitButton">
         <Button
@@ -171,6 +173,7 @@ function CreateProduct({ edit, setEdit }) {
       </div>
       <div className="greyBar"></div>
     </form>
+    </motion.div>
   );
 }
 

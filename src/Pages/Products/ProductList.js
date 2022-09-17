@@ -8,6 +8,7 @@ import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { grabDetailedProductList } from "../../restAPIs";
 import CreateProduct from "./CreateProduct";
+import { motion } from "framer-motion";
 
 const submitButtonStyle = {
   width: "100px",
@@ -49,7 +50,7 @@ function ProductList({
   return (
     <React.Fragment>
       {!isCreate ? (
-        <React.Fragment>
+        <motion.div initial={{ opacity: 0}} animate={{ opacity: 1}} exit={{ opacity: 0}}>
           <button onClick={handleClick}>+ CREATE PRODUCT</button>
 
           <DataTable
@@ -72,7 +73,7 @@ function ProductList({
             />
           </DataTable>
           <div className="bottomSpace"></div>
-        </React.Fragment>
+        </motion.div>
       ) : (
         <React.Fragment>
           
