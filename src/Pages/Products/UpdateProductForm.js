@@ -10,8 +10,6 @@ import { ConfirmDialog } from "primereact/confirmdialog"; // To use <ConfirmDial
 import { motion } from "framer-motion";
 
 function UpdateProductForm({ selectedProduct }) {
- 
-
   const submitButtonStyle = {
     width: "100px",
     margin: "20px",
@@ -53,7 +51,6 @@ function UpdateProductForm({ selectedProduct }) {
     );
   };
 
-
   const confirmDelete = async () => {
     confirmDialog({
       message:
@@ -69,82 +66,79 @@ function UpdateProductForm({ selectedProduct }) {
   };
 
   return (
-    
-    
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
-          <form onSubmit={formik.handleSubmit} className="p-fluid">
-            <h1>{selectedProduct.prodName}</h1>
-            <h2>ID: {selectedProduct.prodNick}</h2>
-            <div className="submitButton">
-              <Button
-                label="Submit"
-                type="submit"
-                className="p-button-raised p-button-rounded"
-                style={submitButtonStyle}
-              />
-            </div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <form onSubmit={formik.handleSubmit} className="p-fluid">
+        <h1>{selectedProduct.prodName}</h1>
+        <h2>ID: {selectedProduct.prodNick}</h2>
+        <div className="submitButton">
+          <Button
+            label="Submit"
+            type="submit"
+            className="p-button-raised p-button-rounded"
+            style={submitButtonStyle}
+          />
+        </div>
 
-            <div className="field">
-              <label
-                htmlFor="wholePrice"
-                className={classNames({
-                  "p-error": isFormFieldValid("wholePrice"),
-                })}
-              >
-                WholePrice
-              </label>
-              <InputNumber
-                id="wholePrice"
-                name="wholePrice"
-                mode="decimal"
-                minFractionDigits={2}
-                maxFractionDigits={2}
-                value={Number(formik.values.wholePrice)}
-                onChange={(values) => {
-                  formik.setFieldValue("wholePrice", values.value);
-                }}
-                className={classNames({
-                  "p-invalid": isFormFieldValid("wholePrice"),
-                })}
-              />
+        <div className="field">
+          <label
+            htmlFor="wholePrice"
+            className={classNames({
+              "p-error": isFormFieldValid("wholePrice"),
+            })}
+          >
+            WholePrice
+          </label>
+          <InputNumber
+            id="wholePrice"
+            name="wholePrice"
+            mode="decimal"
+            minFractionDigits={2}
+            maxFractionDigits={2}
+            value={Number(formik.values.wholePrice)}
+            onChange={(values) => {
+              formik.setFieldValue("wholePrice", values.value);
+            }}
+            className={classNames({
+              "p-invalid": isFormFieldValid("wholePrice"),
+            })}
+          />
 
-              {getFormErrorMessage("wholePrice")}
-            </div>
-            <div className="field">
-              <label
-                htmlFor="packSize"
-                className={classNames({
-                  "p-error": isFormFieldValid("packSize"),
-                })}
-              >
-                packSize
-              </label>
-              <InputNumber
-                id="packSize"
-                name="packSize"
-                value={Number(formik.values.packSize)}
-                onChange={(values) => {
-                  formik.setFieldValue("packSize", values.value);
-                }}
-                className={classNames({
-                  "p-invalid": isFormFieldValid("packSize"),
-                })}
-              />
+          {getFormErrorMessage("wholePrice")}
+        </div>
+        <div className="field">
+          <label
+            htmlFor="packSize"
+            className={classNames({
+              "p-error": isFormFieldValid("packSize"),
+            })}
+          >
+            packSize
+          </label>
+          <InputNumber
+            id="packSize"
+            name="packSize"
+            value={Number(formik.values.packSize)}
+            onChange={(values) => {
+              formik.setFieldValue("packSize", values.value);
+            }}
+            className={classNames({
+              "p-invalid": isFormFieldValid("packSize"),
+            })}
+          />
 
-              {getFormErrorMessage("packSize")}
-            </div>
-            <div className="greyBar"></div>
-            <button type="button" onClick={confirmDelete}>
-              + DELETE PRODUCT
-            </button>
-            <ConfirmDialog />
-          </form>
-        </motion.div>
-      
+          {getFormErrorMessage("packSize")}
+        </div>
+        <div className="greyBar"></div>
+        <button type="button" onClick={confirmDelete}>
+          + DELETE PRODUCT
+        </button>
+        <ConfirmDialog />
+      </form>
+    </motion.div>
   );
 }
 

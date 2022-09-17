@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import { InputText } from "primereact/inputtext";
 import { classNames } from "primereact/utils";
 import { createLocation } from "../../restAPIs";
+import { motion } from 'framer-motion'
 
 function CreateLocation({ edit, setEdit }) {
   const [showMessage, setShowMessage] = useState(false);
@@ -62,6 +63,7 @@ function CreateLocation({ edit, setEdit }) {
   };
 
   return (
+    <motion.div initial={{ opacity: 0}} animate={{ opacity: 1}} exit={{ opacity: 0}}>
     <form onSubmit={formik.handleSubmit} className="p-fluid">
       <div className="submitButton">
         <Button
@@ -161,6 +163,7 @@ function CreateLocation({ edit, setEdit }) {
       </div>
       <div className="greyBar"></div>
     </form>
+    </motion.div>
   );
 }
 

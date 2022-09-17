@@ -7,10 +7,9 @@ import { classNames } from "primereact/utils";
 import { deleteLocation, updateLocation } from "../../restAPIs";
 import { confirmDialog } from "primereact/confirmdialog"; // To use confirmDialog method
 import { ConfirmDialog } from "primereact/confirmdialog"; // To use <ConfirmDialog> tag
+import { motion } from "framer-motion";
 
 function UpdateLocationForm({ selectedLocation }) {
-  
-
   const submitButtonStyle = {
     width: "100px",
     margin: "20px",
@@ -33,13 +32,12 @@ function UpdateLocationForm({ selectedLocation }) {
       return errors;
     },
     onSubmit: async (data) => {
-      console.log("data",data)
-      data.locNick = selectedLocation.locNick
-      data.locName = selectedLocation.locName
+      console.log("data", data);
+      data.locNick = selectedLocation.locNick;
+      data.locName = selectedLocation.locName;
       updateLocation(data).then(() => {
         window.location = "/Locations";
       });
-      
     },
   });
 
@@ -53,7 +51,6 @@ function UpdateLocationForm({ selectedLocation }) {
     );
   };
 
-
   const confirmDelete = async () => {
     confirmDialog({
       message:
@@ -61,83 +58,80 @@ function UpdateLocationForm({ selectedLocation }) {
       header: "Confirmation",
       icon: "pi pi-exclamation-triangle",
       accept: () => {
-        deleteLocation({ locNick: selectedLocation.locNick })
-        .then(() => {
+        deleteLocation({ locNick: selectedLocation.locNick }).then(() => {
           window.location = "/Locations";
         });
       },
     });
   };
 
-
   return (
-    <React.Fragment>
-    
-        <form onSubmit={formik.handleSubmit} className="p-fluid">
-          <h1>{selectedLocation.locName}</h1>
-          <h2>ID: {selectedLocation.locNick}</h2>
-          <div className="submitButton">
-            <Button
-              label="Submit"
-              type="submit"
-              className="p-button-raised p-button-rounded"
-              style={submitButtonStyle}
-            />
-          </div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <form onSubmit={formik.handleSubmit} className="p-fluid">
+        <h1>{selectedLocation.locName}</h1>
+        <h2>ID: {selectedLocation.locNick}</h2>
+        <div className="submitButton">
+          <Button
+            label="Submit"
+            type="submit"
+            className="p-button-raised p-button-rounded"
+            style={submitButtonStyle}
+          />
+        </div>
 
-          <div className="field">
-            <label
-              htmlFor="city"
-              className={classNames({
-                "p-error": isFormFieldValid("city"),
-              })}
-            >
-              City
-            </label>
-            <InputText
-              id="city"
-              name="city"
-              
-              value={formik.values.city}
-              onChange={formik.handleChange}
-              className={classNames({
-                "p-invalid": isFormFieldValid("city"),
-              })}
-            />
+        <div className="field">
+          <label
+            htmlFor="city"
+            className={classNames({
+              "p-error": isFormFieldValid("city"),
+            })}
+          >
+            City
+          </label>
+          <InputText
+            id="city"
+            name="city"
+            value={formik.values.city}
+            onChange={formik.handleChange}
+            className={classNames({
+              "p-invalid": isFormFieldValid("city"),
+            })}
+          />
 
-            {getFormErrorMessage("city")}
-          </div>
-          <div className="field">
-            <label
-              htmlFor="email"
-              className={classNames({
-                "p-error": isFormFieldValid("email"),
-              })}
-            >
-              Email
-            </label>
-            <InputText
-              id="email"
-              name="email"
-              
-              value={formik.values.email}
-              onChange={formik.handleChange}
-              
-              className={classNames({
-                "p-invalid": isFormFieldValid("email"),
-              })}
-            />
+          {getFormErrorMessage("city")}
+        </div>
+        <div className="field">
+          <label
+            htmlFor="email"
+            className={classNames({
+              "p-error": isFormFieldValid("email"),
+            })}
+          >
+            Email
+          </label>
+          <InputText
+            id="email"
+            name="email"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            className={classNames({
+              "p-invalid": isFormFieldValid("email"),
+            })}
+          />
 
-            {getFormErrorMessage("email")}
-          </div>
-          <div className="greyBar"></div>
-          <button type="button" onClick={confirmDelete}>
-            + DELETE LOCATION
-          </button>
-          <ConfirmDialog />
-        </form>
-     
-    </React.Fragment>
+          {getFormErrorMessage("email")}
+        </div>
+        <div className="greyBar"></div>
+        <button type="button" onClick={confirmDelete}>
+          + DELETE LOCATION
+        </button>
+        <ConfirmDialog />
+      </form>
+    </motion.div>
   );
 }
 
