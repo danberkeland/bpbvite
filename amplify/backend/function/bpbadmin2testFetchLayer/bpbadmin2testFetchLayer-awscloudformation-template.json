@@ -20,7 +20,7 @@
     }
   },
   "Resources": {
-    "LambdaLayerVersioned9d6bb4": {
+    "LambdaLayerVersion7b641226": {
       "Type": "AWS::Lambda::LayerVersion",
       "Properties": {
         "CompatibleRuntimes": {
@@ -51,13 +51,50 @@
       "DeletionPolicy": "Delete",
       "UpdateReplacePolicy": "Retain"
     },
-    "LambdaLayerPermissionPrivateed9d6bb4": {
+    "LambdaLayerPermissionPrivate7b641226": {
       "Type": "AWS::Lambda::LayerVersionPermission",
       "Properties": {
         "Action": "lambda:GetLayerVersion",
         "LayerVersionArn": {
-          "Ref": "LambdaLayerVersioned9d6bb4"
+          "Ref": "LambdaLayerVersion7b641226"
         },
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    },
+    "LambdaLayerVersioned9d6bb4": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs14.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": "amplify-builds/bpbadmin2testFetchLayer-LambdaLayerVersioned9d6bb4-build.zip"
+        },
+        "Description": "Updated layer version 2022-09-17T11:41:08.439Z",
+        "LayerName": {
+          "Fn::Sub": [
+            "bpbadmin2testFetchLayer-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivateed9d6bb4": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": "arn:aws:lambda:us-east-2:191477602114:layer:bpbadmin2testFetchLayer-auththree:3",
         "Principal": {
           "Ref": "AWS::AccountId"
         }
@@ -104,7 +141,7 @@
   "Outputs": {
     "Arn": {
       "Value": {
-        "Ref": "LambdaLayerVersioned9d6bb4"
+        "Ref": "LambdaLayerVersion7b641226"
       }
     }
   }

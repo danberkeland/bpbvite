@@ -41,7 +41,6 @@ import fetch, {
   
     let statusCode = 200;
     let body;
-    let list;
   
     let response;
   
@@ -63,9 +62,9 @@ import fetch, {
     return {
       statusCode: statusCode,
       headers: headers,
-      errors: body,
+      errors: body.errors,
       body: {
-        body: list,
+        body: body.data,
         event: event,
         variables: variables,
       },

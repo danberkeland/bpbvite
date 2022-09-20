@@ -25,6 +25,8 @@ function ProductList({
 }) {
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
+  
+
   const [filter, setFilter] = useState({
     prodName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
