@@ -8,7 +8,7 @@ Amplify Params - DO NOT EDIT */
 
 import fetch, {
     Request,
-  } from "/opt/nodejs/node_modules/node-fetch/lib/index.mjs";
+  } from "../../opt/nodejs/node_modules/node-fetch/lib/index.mjs"
   
   const GRAPHQL_ENDPOINT = process.env.API_BPBADMIN2_GRAPHQLAPIENDPOINTOUTPUT;
   const GRAPHQL_API_KEY = process.env.API_BPBADMIN2_GRAPHQLAPIKEYOUTPUT;
