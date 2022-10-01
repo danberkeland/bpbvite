@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { FilterMatchMode } from "primereact/api";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { grabDetailedProductList } from "../../restAPIs";
+
 import CreateProduct from "./CreateProduct";
 import { motion } from "framer-motion";
 
@@ -23,22 +22,10 @@ function ProductList({
   productData,
   setProductData,
 }) {
-  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
-
-  
-
   const [filter, setFilter] = useState({
     prodName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
   const [isCreate, setIsCreate] = useState(false);
-
-  useEffect(() => {
-    setIsLoading(true);
-    grabDetailedProductList().then((result) => {
-      setProductData(result);
-      setIsLoading(false);
-    });
-  }, []);
 
   const handleClick = () => {
     setIsCreate(!isCreate);

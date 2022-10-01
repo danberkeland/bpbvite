@@ -1,15 +1,12 @@
 import React from "react";
 
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
-
-
 import AnimatedRoutes from "./AnimatedRoutes";
 
-function Pages() {
+function Pages(props) {
   return (
-    <Router>
-      <AnimatedRoutes Routes={Routes} Route={Route} useLocation={useLocation} />
-    </Router>
+   
+      <AnimatedRoutes Routes={props.Routes} Route={props.Route} useLocation={props.useLocation} />
+  
   );
 }
 

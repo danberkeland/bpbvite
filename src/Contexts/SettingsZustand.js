@@ -7,7 +7,7 @@ const store = (set) => ({
   setUser: (user) => set(() => ({ user: user })),
   formType: "",
   setFormType: (formType) => set(() => ({ formType: formType })),
-  authType: 0,
+  authType: 1,
   setAuthType: authType => set(() => ({ authType: authType })),
   isLoading: false,
   setIsLoading: (isLoading) => set(() => ({ isLoading: isLoading })),

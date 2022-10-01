@@ -4,7 +4,7 @@
 	API_BPBADMIN2_GRAPHQLAPIKEYOUTPUT
 	ENV
 	REGION
-Amplify Params - DO NOT EDIT */
+Amplify Params -- DO NOT EDIT */
 
 import fetch, {
     Request,

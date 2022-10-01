@@ -2,14 +2,6 @@ import React, { useState, useEffect } from "react";
 
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
-import {
-  grabOldProd,
-  checkExistsNewProd,
-  updateNewProd,
-  createNewProd,
-} from "./ProductHelpers";
-
-import { Button } from "primereact/button";
 import { grabDetailedProductList } from "../../restAPIs";
 import ProductList from "./ProductList";
 import ProductDetails from "./ProductDetails";
@@ -29,27 +21,6 @@ function Products() {
     });
   }, []);
 
-  const remap = () => {
-    setIsLoading(true);
-    grabOldProd()
-      .then((oldProd) => {
-        console.log("oldProd", oldProd);
-        for (let old of oldProd) {
-          checkExistsNewProd(old.prodNick).then((exists) => {
-            console.log("exists", exists);
-            if (exists) {
-              updateNewProd(old);
-            } else {
-              createNewProd(old);
-            }
-          });
-        }
-      })
-      .then((e) => {
-        setIsLoading(false);
-        console.log("Product DB updated");
-      });
-  };
 
   const handleProdClick = () => {
     setSelectedProduct("");
@@ -61,7 +32,7 @@ function Products() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-      {/*<Button label="remap Products" onClick={remap} disabled />*/}
+    
       {selectedProduct !== "" ? (
         <React.Fragment>
           <button onClick={handleProdClick}>PRODUCT LIST</button>

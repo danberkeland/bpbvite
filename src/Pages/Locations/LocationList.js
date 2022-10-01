@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { FilterMatchMode } from "primereact/api";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { grabDetailedLocationList } from "../../restAPIs";
+
 import CreateLocation from "./CreateLocation";
 import { motion } from "framer-motion";
 
@@ -23,21 +22,10 @@ function LocationList({
   locationData,
   setLocationData,
 }) {
-  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
-
   const [filter, setFilter] = useState({
     locName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
   const [isCreate, setIsCreate] = useState(false);
-
-  useEffect(() => {
-    setIsLoading(true);
-    grabDetailedLocationList().then((result) => {
-      
-      setLocationData(result);
-      setIsLoading(false);
-    });
-  }, []);
 
   const handleClick = () => {
     setIsCreate(!isCreate);
@@ -51,10 +39,10 @@ function LocationList({
     <React.Fragment>
       {!isCreate ? (
         <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      >
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
           <button onClick={handleClick}>+ CREATE LOCATION</button>
 
           <DataTable
@@ -77,10 +65,9 @@ function LocationList({
             />
           </DataTable>
           <div className="bottomSpace"></div>
-          </motion.div>
+        </motion.div>
       ) : (
         <React.Fragment>
-          
           <div className="submitButton">
             <Button
               label="Submit"
