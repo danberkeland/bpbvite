@@ -2,6 +2,12 @@
 import create from "zustand";
 import { devtools } from "zustand/middleware";
 
+
+const { DateTime } = require("luxon");
+
+let today = DateTime.now().setZone("America/Los_Angeles").toString().split("T")[0]
+
+
 const store = (set) => ({
   user: "",
   setUser: (user) => set(() => ({ user: user })),
@@ -47,6 +53,8 @@ const store = (set) => ({
   setIsModified: (isModified) => set(() => ({ isModified: isModified })),
   locList: [],
   setLocList: (locList) => set(() => ({ locList: locList })),
+  delivDate: today,
+  setDelivDate: (delivDate) => set(() => ({ delivDate: delivDate })),
   
 });
 

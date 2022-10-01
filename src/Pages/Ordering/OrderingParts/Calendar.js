@@ -1,8 +1,11 @@
 import React from "react";
 import { Calendar } from "primereact/calendar";
+import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 
 export const Cal = () => {
-  const delivDate = "01/01/2022";
+  const delivDate = useSettingsStore((state) => state.delivDate);
+  const setIsModified = useSettingsStore((state) => state.setIsModified);
+  const setDelivDate = useSettingsStore((state) => state.setDelivDate);
   
 
   const calDateSetter = (e) => {
@@ -12,8 +15,8 @@ export const Cal = () => {
     var yyyy = today.getFullYear();
 
     let newToday = yyyy + "-" + mm + "-" + dd;
-    //setIsModified(false)
-    //setDelivDate(newToday)
+    setIsModified(false)
+    setDelivDate(newToday)
   };
 
   const convertToDisplayDate = (d) => {
