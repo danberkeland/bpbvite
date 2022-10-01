@@ -55,6 +55,8 @@ const store = (set) => ({
   setLocList: (locList) => set(() => ({ locList: locList })),
   delivDate: today,
   setDelivDate: (delivDate) => set(() => ({ delivDate: delivDate })),
+  route: 'deliv',
+  setRoute: (route) => set(() => ({ route: route })),
   
 });
 

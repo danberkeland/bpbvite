@@ -31,13 +31,13 @@ export const Cal = () => {
   };
 
   return (
-    <div className="field col-12 md:col-4">
+    
       <Calendar
         id="touchUI"
         value={convertToDisplayDate(delivDate)}
         onChange={(e) => calDateSetter(e)}
         touchUI
       />
-    </div>
+   
   );
 };

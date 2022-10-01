@@ -8,6 +8,7 @@ import { InputText } from "primereact/inputtext";
 //import { DataScroll } from "./OrderingParts/DataScroller";
 import { Cal } from "./OrderingParts/Calendar";
 import { AddProduct } from "./OrderingParts/AddProduct";
+import { Fulfill } from "./OrderingParts/FullfillOptions";
 
 import styled from "styled-components";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
@@ -44,13 +45,13 @@ const PONote = () => {
   };
 
   return (
-    <React.Fragment>
+    <BasicContainer>
       <InputText
         value={ponote}
         onChange={(e) => handlePonote(e.target.value, setPonote, setIsModified)}
         placeholder="PO#/Special Instructions..."
       />
-    </React.Fragment>
+    </BasicContainer>
   );
 };
 
@@ -99,19 +100,18 @@ const CustList = () => {
   const setIsModified = useSettingsStore((state) => state.setIsModified);
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
-
   useEffect(() => {
     setIsLoading(true);
     grabDetailedLocationList().then((result) => {
-      setLocList(result)
+      setLocList(result);
       setIsLoading(false);
     });
   }, []);
 
-  const locs = locList.map(loc => ({
+  const locs = locList.map((loc) => ({
     label: loc.locName,
-    value: loc.locNick
-  }))
+    value: loc.locNick,
+  }));
 
   return (
     <Dropdown
@@ -135,9 +135,9 @@ export const Ordering = () => {
         <CustList />
         <Cal />
       </BasicContainer>
-      {/*<Fulfill />
+      <Fulfill />
       <PONote />
-  <DataScroll />*/}
+  {/*<DataScroll />*/}
     </React.Fragment>
   );
 };
