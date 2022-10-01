@@ -95,24 +95,29 @@ const CustList = () => {
   const chosen = useSettingsStore((state) => state.chosen);
   const setChosen = useSettingsStore((state) => state.setChosen);
   const locList = useSettingsStore((state) => state.locList);
+  const setLocList = useSettingsStore((state) => state.setLocList);
   const setIsModified = useSettingsStore((state) => state.setIsModified);
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
-  const [locationData, setLocationData] = useState([{}]);
 
   useEffect(() => {
     setIsLoading(true);
     grabDetailedLocationList().then((result) => {
-      setLocationData(result);
+      setLocList(result)
       setIsLoading(false);
     });
   }, []);
+
+  const locs = locList.map(loc => ({
+    label: loc.locName,
+    value: loc.locNick
+  }))
 
   return (
     <Dropdown
       value={chosen}
       name="custDropDown"
-      options={[]}
+      options={locs}
       onChange={(e) => {
         setIsModified(false);
         setChosen(e.value);

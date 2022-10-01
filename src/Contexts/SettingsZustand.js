@@ -45,8 +45,8 @@ const store = (set) => ({
   setPonote: (ponote) => set(() => ({ ponote: ponote })),
   isModified: false,
   setIsModified: (isModified) => set(() => ({ isModified: isModified })),
-  locList: false,
-  setLocList: (locList) => set(() => ({ isModified: locList })),
+  locList: [],
+  setLocList: (locList) => set(() => ({ locList: locList })),
   
 });
 
