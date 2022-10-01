@@ -41,6 +41,13 @@ const store = (set) => ({
     authType: "",
   },
   setUserDetails: (userDetails) => set(() => ({ userDetails: userDetails })),
+  ponote: "",
+  setPonote: (ponote) => set(() => ({ ponote: ponote })),
+  isModified: false,
+  setIsModified: (isModified) => set(() => ({ isModified: isModified })),
+  locList: false,
+  setLocList: (locList) => set(() => ({ isModified: locList })),
+  
 });
 
 export const useSettingsStore = create(devtools(store));
