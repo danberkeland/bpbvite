@@ -3,6 +3,7 @@ import { Calendar } from "primereact/calendar";
 
 export const Cal = () => {
   const delivDate = "01/01/2022";
+  
 
   const calDateSetter = (e) => {
     var today = e.value;
