@@ -33,6 +33,7 @@ import {
 } from "./Auth/AuthHelpers";
 import Loader from "./Loader";
 import { useSettingsStore } from "./Contexts/SettingsZustand";
+import { grabDetailedProductList } from "./restAPIs";
 
 Amplify.configure(awsmobile);
 
@@ -50,6 +51,7 @@ export function App() {
   const setChosen = useSettingsStore((state) => state.setChosen);
   const isLoading = useSettingsStore((state) => state.isLoading);
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
+  const setProdList = useSettingsStore((state) => state.setProdList)
 
   useEffect(() => {
     fetchCustomers();
@@ -119,6 +121,16 @@ export function App() {
       console.log(err);
     }
   }, [chosen]);
+
+  
+  useEffect(() => {
+    setIsLoading(true);
+    grabDetailedProductList().then((result) => {
+      setProdList(result);
+      setIsLoading(false);
+    });
+  }, []);
+
 
   return (
     <Router>

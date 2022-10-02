@@ -58,7 +58,9 @@ const store = (set) => ({
   route: 'deliv',
   setRoute: (route) => set(() => ({ route: route })),
   items: [],
-  setItems: (items) => set (() => ({ items: items }))
+  setItems: (items) => set (() => ({ items: items })),
+  prodList: [],
+  setProdList: (prodList) => set (() => ({ prodList: prodList }))
   
 });
 

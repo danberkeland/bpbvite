@@ -1,25 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
-import { grabDetailedProductList } from "../../restAPIs";
 import ProductList from "./ProductList";
 import ProductDetails from "./ProductDetails";
 import { motion } from "framer-motion";
 
 function Products() {
-  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
-
-  const [productData, setProductData] = useState([{}]);
+  
+  const prodList = useSettingsStore((state) => state.prodList)
+  
   const [selectedProduct, setSelectedProduct] = useState("");
-
-  useEffect(() => {
-    setIsLoading(true);
-    grabDetailedProductList().then((result) => {
-      setProductData(result);
-      setIsLoading(false);
-    });
-  }, []);
 
 
   const handleProdClick = () => {
@@ -50,8 +41,8 @@ function Products() {
           <ProductList
             selectedProduct={selectedProduct}
             setSelectedProduct={setSelectedProduct}
-            productData={productData}
-            setProductData={setProductData}
+            productData={prodList}
+            setProductData={prodList}
           />
         </motion.div>
       ) : (

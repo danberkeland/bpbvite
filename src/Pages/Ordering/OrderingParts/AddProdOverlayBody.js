@@ -5,6 +5,7 @@ import { Button } from "primereact/button";
 import { InputNumber } from "primereact/inputnumber";
 
 import styled from "styled-components";
+import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 //import { ToggleContext } from "../../Contexts/ToggleContexts";
 //mport { addOrder } from "../../helpers/addOrder";
 
@@ -36,8 +37,12 @@ export const AddProdOverlayBody = () => {
 
   const [pickedProd, setPickedProd] = useState('')
   const [qty, setQty] = useState(0)
+  const prodList = useSettingsStore((state) => state.prodList)
+  const productList = prodList.map(prod => {
+    return {label: prod.prodName, value: prod.prodNick}})
+
 /*
-  const products = findAvailableProducts(database[0], chosen, delivDate, database[1])
+  const products = 
   const productList = products.map(prod => {
     return {label: prod.trueProdName, value: prod.prodName}})
 
@@ -49,15 +54,16 @@ export const AddProdOverlayBody = () => {
       ponote: ponote 
     }
 
-
+    */
     const makeChange = (e, simpleItem) => {
-      
+      /*
       if (e !== 0){
         setIsModified(true)
         let newOrder = addOrder(database, curr, simpleItem, e)
         setCurrentOrder(newOrder)
      
       }
+      */
     }
     
   return (
@@ -84,5 +90,5 @@ export const AddProdOverlayBody = () => {
           
         </BasicContainer>
      
-  );*/
+  );
 };
