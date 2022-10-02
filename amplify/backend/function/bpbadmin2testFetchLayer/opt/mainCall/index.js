@@ -27,6 +27,7 @@ import fetch, {
     console.log(`EVENT2: ${JSON.stringify(event)}`);
   
     const variables = event;
+    const nothing = 0
   
     /** @type {import('node-fetch').RequestInit} */
     const options = {

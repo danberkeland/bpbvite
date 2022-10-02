@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 
-//import { Fulfill } from "./OrderingParts/FulfillOptions";
 //import { DataScroll } from "./OrderingParts/DataScroller";
 import { Cal } from "./OrderingParts/Calendar";
 import { AddProduct } from "./OrderingParts/AddProduct";
@@ -113,14 +112,20 @@ const CustList = () => {
     value: loc.locNick,
   }));
 
+  const handleChosen = (e) => {
+    console.log(e)
+    let ind = locList.findIndex(loc => loc.locNick === e.value)
+    setChosen(locList[ind])
+  }
+
   return (
     <Dropdown
-      value={chosen}
+      value={chosen.locNick}
       name="custDropDown"
       options={locs}
       onChange={(e) => {
         setIsModified(false);
-        setChosen(e.value);
+        handleChosen(e);
       }}
       placeholder="Select a Customer"
     />
