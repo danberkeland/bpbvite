@@ -4,7 +4,7 @@ import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 
-//import { DataScroll } from "./OrderingParts/DataScroller";
+import { DataScroll } from "./OrderingParts/DataScroller";
 import { Cal } from "./OrderingParts/Calendar";
 import { AddProduct } from "./OrderingParts/AddProduct";
 import { Fulfill } from "./OrderingParts/FullfillOptions";
@@ -44,13 +44,13 @@ const PONote = () => {
   };
 
   return (
-    <BasicContainer>
+    <React.Fragment>
       <InputText
         value={ponote}
         onChange={(e) => handlePonote(e.target.value, setPonote, setIsModified)}
         placeholder="PO#/Special Instructions..."
       />
-    </BasicContainer>
+    </React.Fragment>
   );
 };
 
@@ -105,7 +105,7 @@ const CustList = () => {
       setLocList(result);
       setIsLoading(false);
     });
-  }, []);
+  }, [setIsLoading, setLocList]);
 
   const locs = locList.map((loc) => ({
     label: loc.locName,
@@ -113,10 +113,10 @@ const CustList = () => {
   }));
 
   const handleChosen = (e) => {
-    console.log(e)
-    let ind = locList.findIndex(loc => loc.locNick === e.value)
-    setChosen(locList[ind])
-  }
+    console.log(e);
+    let ind = locList.findIndex((loc) => loc.locNick === e.value);
+    setChosen(locList[ind]);
+  };
 
   return (
     <Dropdown
@@ -133,7 +133,6 @@ const CustList = () => {
 };
 
 export const Ordering = () => {
-
   const op = useRef(null);
 
   return (
@@ -142,10 +141,10 @@ export const Ordering = () => {
       <BasicContainer>
         <CustList />
         <Cal />
+        <Fulfill />
+        <PONote />
+        <DataScroll />
       </BasicContainer>
-      <Fulfill />
-      <PONote />
-  {/*<DataScroll />*/}
     </React.Fragment>
   );
 };

@@ -11,7 +11,7 @@ const BasicContainer = styled.div`
   width: 90%;
   border: 1px solid lightgray;
   padding: 10px 10px;
-  margin: 10px auto 10px auto;
+  margin: 15px auto 15px auto;
   box-sizing: border-box;
 `;
 
@@ -19,6 +19,7 @@ const FulfillOptions = styled.div`
   display: grid;
   grid-template-columns: 1fr 0.5fr 1fr 0.5fr 1fr 0.5fr;
   margin: 2px;
+  padding: 10px 10px;
   align-items: center;
   justify-items: right;
 `;
@@ -36,7 +37,7 @@ export const Fulfill = () => {
   };
 
   return (
-    <BasicContainer>
+    <React.Fragment>
       <FulfillOptions>
         <label htmlFor="fulfilldeliv">Delivery</label>
         <RadioButton
@@ -65,6 +66,6 @@ export const Fulfill = () => {
           onChange={(e) => handleChange(e.value)}
         />
       </FulfillOptions>
-    </BasicContainer>
+    </React.Fragment>
   );
 };

@@ -60,7 +60,9 @@ const store = (set) => ({
   items: [],
   setItems: (items) => set (() => ({ items: items })),
   prodList: [],
-  setProdList: (prodList) => set (() => ({ prodList: prodList }))
+  setProdList: (prodList) => set (() => ({ prodList: prodList })),
+  currentOrder: [],
+  setCurrentOrder: (currentOrder) => set (() => ({ currentOrder: currentOrder }))
   
 });
 

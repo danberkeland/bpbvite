@@ -1,4 +1,4 @@
-import React, {useState, useContext} from "react";
+import React, {useState} from "react";
 
 import { Dropdown } from 'primereact/dropdown';
 import { Button } from "primereact/button";
@@ -6,7 +6,7 @@ import { InputNumber } from "primereact/inputnumber";
 
 import styled from "styled-components";
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
-//import { ToggleContext } from "../../Contexts/ToggleContexts";
+
 //mport { addOrder } from "../../helpers/addOrder";
 
 //import { findAvailableProducts } from "../../helpers/findAvailableProducts";
