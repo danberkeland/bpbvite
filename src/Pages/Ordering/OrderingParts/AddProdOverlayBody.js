@@ -32,16 +32,22 @@ export const AddProdOverlayBody = () => {
   /*
   const { database, setIsModified, currentOrder, setCurrentOrder, chosen, delivDate, route, ponote } = useContext(ToggleContext)
 
-  
+  */
 
   const [pickedProd, setPickedProd] = useState('')
   const [qty, setQty] = useState(0)
-
+/*
   const products = findAvailableProducts(database[0], chosen, delivDate, database[1])
   const productList = products.map(prod => {
     return {label: prod.trueProdName, value: prod.prodName}})
 
-    let curr = {curr: currentOrder, chosen: chosen, delivDate: delivDate, route: route, ponote: ponote }
+    let curr = {
+      curr: currentOrder, 
+      chosen: chosen, 
+      delivDate: delivDate, 
+      route: route, 
+      ponote: ponote 
+    }
 
 
     const makeChange = (e, simpleItem) => {
@@ -53,7 +59,7 @@ export const AddProdOverlayBody = () => {
      
       }
     }
-
+    
   return (
     
         <BasicContainer>

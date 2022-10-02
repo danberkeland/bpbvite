@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
@@ -133,9 +133,12 @@ const CustList = () => {
 };
 
 export const Ordering = () => {
+
+  const op = useRef(null);
+
   return (
     <React.Fragment>
-      {/*<AddProdMod />*/}
+      <AddProdMod op={op} />
       <BasicContainer>
         <CustList />
         <Cal />
