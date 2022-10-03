@@ -34,6 +34,7 @@ import {
 import Loader from "./Loader";
 import { useSettingsStore } from "./Contexts/SettingsZustand";
 import { grabDetailedProductList } from "./restAPIs";
+import { sortAtoZDataByIndex } from "./utils";
 
 Amplify.configure(awsmobile);
 
@@ -126,6 +127,7 @@ export function App() {
   useEffect(() => {
     setIsLoading(true);
     grabDetailedProductList().then((result) => {
+      result = sortAtoZDataByIndex(result, "prodName")
       setProdList(result);
       setIsLoading(false);
     });

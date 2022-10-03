@@ -12,6 +12,7 @@ import { Fulfill } from "./OrderingParts/FullfillOptions";
 import styled from "styled-components";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { grabDetailedLocationList } from "../../restAPIs";
+import { sortAtoZDataByIndex } from "../../utils";
 
 const BasicContainer = styled.div`
   display: flex;
@@ -102,6 +103,7 @@ const CustList = () => {
   useEffect(() => {
     setIsLoading(true);
     grabDetailedLocationList().then((result) => {
+      result = sortAtoZDataByIndex(result, "locName")
       setLocList(result);
       setIsLoading(false);
     });

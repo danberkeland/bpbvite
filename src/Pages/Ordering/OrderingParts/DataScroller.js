@@ -11,6 +11,7 @@ import styled from "styled-components";
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 import { useEffect } from "react";
 import { getOrder } from "../../../restAPIs";
+import { sortAtoZDataByIndex } from "../../../utils";
 
 const ProductTitle = styled.h2`
   font-family: "Montserrat", sans-serif;
@@ -78,6 +79,7 @@ export const DataScroll = ({ checked }) => {
     };
     setIsLoading(true);
     getOrder(event).then((result) => {
+      result = sortAtoZDataByIndex(result, "prod")
       setCurrentOrder(result);
       setIsLoading(false);
     });

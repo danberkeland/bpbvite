@@ -6,6 +6,7 @@ import { grabDetailedLocationList } from "../../restAPIs";
 import LocationList from "./LocationList";
 import LocationDetails from "./LocationDetails";
 import { motion } from "framer-motion";
+import { sortAtoZDataByIndex } from "../../utils";
 
 function Locations() {
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
@@ -16,7 +17,7 @@ function Locations() {
   useEffect(() => {
     setIsLoading(true);
     grabDetailedLocationList().then((result) => {
-    
+      result = sortAtoZDataByIndex(result, "locName")
       setLocationData(result);
       setIsLoading(false);
     });
