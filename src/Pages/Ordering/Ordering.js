@@ -143,8 +143,8 @@ export const Ordering = () => {
         <Cal />
         <Fulfill />
         <PONote />
-        <DataScroll />
       </BasicContainer>
+      <DataScroll />
     </React.Fragment>
   );
 };

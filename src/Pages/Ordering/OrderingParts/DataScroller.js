@@ -1,14 +1,16 @@
 import React from "react";
+import moment from "moment";
 
 import { InputNumber } from "primereact/inputnumber";
 import { DataScroller } from "primereact/datascroller";
 import { Button } from "primereact/button";
 import { confirmPopup } from "primereact/confirmpopup";
 
-
 import styled from "styled-components";
 
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
+import { useEffect } from "react";
+import { getOrder } from "../../../restAPIs";
 
 const ProductTitle = styled.h2`
   font-family: "Montserrat", sans-serif;
@@ -25,6 +27,10 @@ const ProductTotal = styled.h3`
   margin 0;
   color: rgb(36, 31, 31);
 `;
+
+const BigBottom = styled.div`
+  height: 200px;
+`
 
 const BasicContainer = styled.div`
   display: flex;
@@ -57,8 +63,26 @@ export const DataScroll = ({ checked }) => {
   const chosen = useSettingsStore((state) => state.chosen);
   const delivDate = useSettingsStore((state) => state.delivDate);
   const route = useSettingsStore((state) => state.route);
-  
-  
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
+
+  useEffect(() => {
+
+    
+    let finalDate = moment(delivDate).format('L')
+    let dayOfWeek = moment(delivDate).format('ddd')
+
+    let event = {
+      "locNick": chosen ? chosen.locNick : "",
+      "delivDate": finalDate,
+      "dayOfWeek": dayOfWeek
+    };
+    setIsLoading(true);
+    getOrder(event).then((result) => {
+      setCurrentOrder(result);
+      setIsLoading(false);
+    });
+  }, [setIsLoading, setCurrentOrder, chosen, delivDate]);
+
   let curr = {
     curr: currentOrder,
     chosen: chosen,
@@ -90,7 +114,7 @@ export const DataScroll = ({ checked }) => {
     }
   };
 
-  const addOrder = (curr, simpleItem, e) => {}
+  const addOrder = (curr, simpleItem, e) => {};
 
   const makeLateChange = (e, simpleItem) => {
     setIsModified(true);
@@ -98,7 +122,7 @@ export const DataScroll = ({ checked }) => {
     setCurrentOrder(newOrder);
   };
 
-  const addLateOrder = (curr, simpleItem, e) => {}
+  const addLateOrder = (curr, simpleItem, e) => {};
 
   const Quantity = (item) => {
     let simpleItem = item.prodName;
@@ -166,7 +190,7 @@ export const DataScroll = ({ checked }) => {
         <BasicContainer>
           <TwoColumn>
             <div style={{ textAlign: "left" }}>
-              <ProductTitle>{item.prodName}</ProductTitle>
+              <ProductTitle>{item.prod}</ProductTitle>
               <Rate {...item} />
             </div>
             <TrashCan {...item} />
@@ -193,11 +217,16 @@ export const DataScroll = ({ checked }) => {
   };
 
   return (
+    <div>
+      
     <DataScroller
-      value={currentOrder && currentOrder.filter((curr) => curr.qty !== 0)}
+      value={!currentOrder.errors && currentOrder.filter((curr) => curr.qty !== 0)}
       itemTemplate={(item) => itemTemplate(item)}
-      rows={10}
+      rows={currentOrder.length}
       inline
     ></DataScroller>
+    <BigBottom />
+  
+    </div>
   );
 };

@@ -200,3 +200,16 @@ export const updateLocation = async (event) => {
   return loc.data.body;
 };
 
+
+export const getOrder = async (event) => {
+  console.log("event", event);
+  let loc;
+  try {
+    loc = await axios.post(API_bpbrouterAuth + "/orders/getOrder", event);
+  } catch (err) {
+    console.log("Error getOrder", err);
+  }
+  console.log("getOrder Response:", loc);
+  return loc.data.body;
+};
+
