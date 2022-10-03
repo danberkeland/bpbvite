@@ -127,6 +127,7 @@ export function App() {
   useEffect(() => {
     setIsLoading(true);
     grabDetailedProductList().then((result) => {
+
       result = sortAtoZDataByIndex(result, "prodName")
       setProdList(result);
       setIsLoading(false);

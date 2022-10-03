@@ -52,7 +52,7 @@ function ProductList({
             metaKeySelection={false}
             selection={selectedProduct}
             onSelectionChange={(e) => setSelectedProduct(e.value)}
-            sortField="prodNick"
+            sortField="prodName"
             sortOrder={1}
             responsiveLayout="scroll"
             filterDisplay="row"
