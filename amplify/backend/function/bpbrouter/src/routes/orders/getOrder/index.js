@@ -54,23 +54,25 @@ const graborder = async (event) => {
   let resp =   await response.body.body.getLocation;
   console.log("orders",orders)
   orders = await resp.orders.items.map((ord) => ({
-    prod: ord.product.prodName,
+    prodName: ord.product.prodName,
+    prodNick: ord.product.prodNick,
     qty: ord.qty,
     type: "C",
     rate: ord.product.wholePrice,
   }));
   standing = await resp.standing.items.map((stand) => ({
-    prod: stand.product.prodName,
+    prodName: stand.product.prodName,
+    prodNick: stand.product.prodNick,
     qty: stand.qty,
     type: "S",
     rate: stand.product.wholePrice,
   }));
   prods = [...orders, ...standing];
   console.log(prods);
-  names = Array.from(new Set(prods.map((pro) => pro.prod)));
+  names = Array.from(new Set(prods.map((pro) => pro.prodNick)));
 
   for (let name of names) {
-    let first = prods.find((obj) => obj.prod === name);
+    let first = prods.find((obj) => obj.prodNick === name);
     final.push(first);
   }
 } catch (error) {

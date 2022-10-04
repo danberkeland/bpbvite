@@ -79,7 +79,7 @@ export const DataScroll = ({ checked }) => {
     };
     setIsLoading(true);
     getOrder(event).then((result) => {
-      result = sortAtoZDataByIndex(result, "prod")
+      result = sortAtoZDataByIndex(result, "prodName")
       setCurrentOrder(result);
       setIsLoading(false);
     });
@@ -112,11 +112,15 @@ export const DataScroll = ({ checked }) => {
     } else {
       setIsModified(true);
       let newOrder = addOrder(curr, simpleItem, e);
-      setCurrentOrder(newOrder);
+      //setCurrentOrder(newOrder);
     }
   };
 
-  const addOrder = (curr, simpleItem, e) => {};
+  const addOrder = (curr, simpleItem, e) => {
+    console.log('curr', curr)
+    console.log('simpleItem', simpleItem)
+    console.log('e', e)
+  };
 
   const makeLateChange = (e, simpleItem) => {
     setIsModified(true);
@@ -127,7 +131,7 @@ export const DataScroll = ({ checked }) => {
   const addLateOrder = (curr, simpleItem, e) => {};
 
   const Quantity = (item) => {
-    let simpleItem = item.prodName;
+    let simpleItem = item.prodNick;
 
     return (
       <InputNumber
@@ -142,7 +146,7 @@ export const DataScroll = ({ checked }) => {
   };
 
   const LateQuantity = (item) => {
-    let simpleItem = item.prodName;
+    let simpleItem = item.prodNick;
 
     return (
       <React.Fragment>
@@ -173,7 +177,7 @@ export const DataScroll = ({ checked }) => {
   };
 
   const TrashCan = (item) => {
-    let simpleItem = item.prodName;
+    let simpleItem = item.prodNick;
 
     return (
       <AlignRight>
@@ -192,7 +196,7 @@ export const DataScroll = ({ checked }) => {
         <BasicContainer>
           <TwoColumn>
             <div style={{ textAlign: "left" }}>
-              <ProductTitle>{item.prod}</ProductTitle>
+              <ProductTitle>{item.prodName}</ProductTitle>
               <Rate {...item} />
             </div>
             <TrashCan {...item} />
@@ -220,13 +224,15 @@ export const DataScroll = ({ checked }) => {
 
   return (
     <div>
-      
-    <DataScroller
-      value={!currentOrder.errors && currentOrder.filter((curr) => curr.qty !== 0)}
-      itemTemplate={(item) => itemTemplate(item)}
-      rows={currentOrder.length}
-      inline
-    ></DataScroller>
+      {currentOrder && (
+        <DataScroller
+        value={currentOrder.filter((curr) => curr.qty !== 0)}
+        itemTemplate={(item) => itemTemplate(item)}
+        rows={currentOrder.length}
+        inline
+      ></DataScroller>
+      )}
+    
     <BigBottom />
   
     </div>

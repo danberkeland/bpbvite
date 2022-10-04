@@ -97,8 +97,7 @@ export function App() {
     setIsLoading(true);
     user &&
       fetchUserDetails(user.username).then((info) => {
-        console.log("userDetails", info);
-        console.log("defaultLoc", info.defaultLoc);
+
         info.defaultLoc && setChosen(info.defaultLoc);
         setUserDetails({
           ...userDetails,
