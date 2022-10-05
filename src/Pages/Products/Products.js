@@ -1,17 +1,11 @@
 import React, { useState } from "react";
 
-import { useSettingsStore } from "../../Contexts/SettingsZustand";
-
 import ProductList from "./ProductList";
 import ProductDetails from "./ProductDetails";
 import { motion } from "framer-motion";
 
 function Products() {
-  
-  const prodList = useSettingsStore((state) => state.prodList)
-  
   const [selectedProduct, setSelectedProduct] = useState("");
-
 
   const handleProdClick = () => {
     setSelectedProduct("");
@@ -19,11 +13,10 @@ function Products() {
 
   return (
     <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
-    
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
       {selectedProduct !== "" ? (
         <React.Fragment>
           <button onClick={handleProdClick}>PRODUCT LIST</button>
@@ -41,8 +34,6 @@ function Products() {
           <ProductList
             selectedProduct={selectedProduct}
             setSelectedProduct={setSelectedProduct}
-            productData={prodList}
-            setProductData={prodList}
           />
         </motion.div>
       ) : (

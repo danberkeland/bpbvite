@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
@@ -11,8 +11,8 @@ import { Fulfill } from "./OrderingParts/FullfillOptions";
 
 import styled from "styled-components";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
-import { grabDetailedLocationList } from "../../restAPIs";
-import { sortAtoZDataByIndex } from "../../utils";
+
+import { useLocationList, useSimpleLocationList } from "../../hooks";
 
 const BasicContainer = styled.div`
   display: flex;
@@ -95,36 +95,21 @@ const Submit = () => {
 const CustList = () => {
   const chosen = useSettingsStore((state) => state.chosen);
   const setChosen = useSettingsStore((state) => state.setChosen);
-  const locList = useSettingsStore((state) => state.locList);
-  const setLocList = useSettingsStore((state) => state.setLocList);
   const setIsModified = useSettingsStore((state) => state.setIsModified);
-  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
-  useEffect(() => {
-    setIsLoading(true);
-    grabDetailedLocationList().then((result) => {
-      result = sortAtoZDataByIndex(result, "locName")
-      setLocList(result);
-      setIsLoading(false);
-    });
-  }, [setIsLoading, setLocList]);
-
-  const locs = locList.map((loc) => ({
-    label: loc.locName,
-    value: loc.locNick,
-  }));
+  const { locationList } = useLocationList();
+  const { simpleLocationList } = useSimpleLocationList();
 
   const handleChosen = (e) => {
-    console.log(e);
-    let ind = locList.findIndex((loc) => loc.locNick === e.value);
-    setChosen(locList[ind]);
+    let ind = locationList.data.findIndex((loc) => loc.locNick === e.value);
+    setChosen(locationList.data[ind]);
   };
 
   return (
     <Dropdown
       value={chosen.locNick}
       name="custDropDown"
-      options={locs}
+      options={simpleLocationList.data}
       onChange={(e) => {
         setIsModified(false);
         handleChosen(e);

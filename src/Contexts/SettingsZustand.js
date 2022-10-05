@@ -51,16 +51,12 @@ const store = (set) => ({
   setPonote: (ponote) => set(() => ({ ponote: ponote })),
   isModified: false,
   setIsModified: (isModified) => set(() => ({ isModified: isModified })),
-  locList: [],
-  setLocList: (locList) => set(() => ({ locList: locList })),
   delivDate: today,
   setDelivDate: (delivDate) => set(() => ({ delivDate: delivDate })),
   route: 'deliv',
   setRoute: (route) => set(() => ({ route: route })),
   items: [],
   setItems: (items) => set (() => ({ items: items })),
-  prodList: [],
-  setProdList: (prodList) => set (() => ({ prodList: prodList })),
   currentOrder: [],
   setCurrentOrder: (currentOrder) => set (() => ({ currentOrder: currentOrder }))
   

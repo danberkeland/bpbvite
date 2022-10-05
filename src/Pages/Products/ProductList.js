@@ -8,6 +8,8 @@ import { Button } from "primereact/button";
 
 import CreateProduct from "./CreateProduct";
 import { motion } from "framer-motion";
+import { useProductList } from "../../hooks";
+import Loader from "../../Loader";
 
 const submitButtonStyle = {
   width: "100px",
@@ -18,14 +20,14 @@ const submitButtonStyle = {
 
 function ProductList({
   selectedProduct,
-  setSelectedProduct,
-  productData,
-  setProductData,
+  setSelectedProduct
+  
 }) {
-  const [filter, setFilter] = useState({
+  const [filter] = useState({
     prodName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
   const [isCreate, setIsCreate] = useState(false);
+  const { productList } = useProductList();
 
   const handleClick = () => {
     setIsCreate(!isCreate);
@@ -44,10 +46,12 @@ function ProductList({
           exit={{ opacity: 0 }}
         >
           <button onClick={handleClick}>+ CREATE PRODUCT</button>
-
+          {productList.isLoading && <Loader />}
+          {productList.isError && <div>Table Failed to load</div>}
+          {productList.data && (
           <DataTable
             className="dataTable"
-            value={productData}
+            value={productList.data}
             selectionMode="single"
             metaKeySelection={false}
             selection={selectedProduct}
@@ -63,7 +67,7 @@ function ProductList({
               filterPlaceholder="Search Products"
               filter
             />
-          </DataTable>
+          </DataTable>)}
           <div className="bottomSpace"></div>
         </motion.div>
       ) : (
