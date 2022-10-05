@@ -60,6 +60,7 @@ export const CustomFloatInput = ({ label, ...props }) => {
                 console.log("value", values.value);
                 props.converter.setFieldValue("wholePrice", Number(values.value))}}
           mode="decimal"
+          minFractionDigits={0}
           maxFractionDigits={2}
           className={meta.touched && meta.error ? "p-error" : ""}
         />
