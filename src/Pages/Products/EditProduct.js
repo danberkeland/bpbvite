@@ -11,20 +11,16 @@ import {
 } from "../../FormComponents/CustomIDInput";
 import { validationSchema } from "./ValidationSchema";
 
-function CreateProduct() {
+function EditProduct({ initialState, create }) {
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      initial={{ opacity: 1, x: "100%" }}
+      animate={{ opacity: 1, x: "0%" }}
+      transition={{duration: .3, ease: "easeInOut"}}
+      exit={{ opacity: 0, x: "100%" }}
     >
       <Formik
-        initialValues={{
-          prodNick: "",
-          prodName: "",
-          wholePrice: null,
-          packSize: 1,
-        }}
+        initialValues={initialState}
         validationSchema={validationSchema}
       >
         {(props) => (
@@ -33,6 +29,7 @@ function CreateProduct() {
               label="Product ID"
               name="prodNick"
               type="text"
+              disabled={!create}
               placeholder="Enter product ID"
             />
             <CustomInput
@@ -60,4 +57,4 @@ function CreateProduct() {
   );
 }
 
-export default CreateProduct;
+export default EditProduct;

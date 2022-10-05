@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Button } from "primereact/button";
 
 import { motion } from "framer-motion";
-import UpdateProductForm from "./UpdateProductForm";
+import CreateProduct from "./EditProduct";
 
 function ProductDetails({ selectedProduct }) {
   const [edit, setEdit] = useState(false);
@@ -25,9 +25,10 @@ function ProductDetails({ selectedProduct }) {
 
       {!edit ? (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          initial={{ opacity: 1, x: "100%", y: "0" }}
+          animate={{ opacity: 1, x: "0%" }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          exit={{ opacity: 0, x: "100%" }}
         >
           <div className="productDetails">
             <h1>{selectedProduct.prodName}</h1>
@@ -43,7 +44,7 @@ function ProductDetails({ selectedProduct }) {
           </div>
         </motion.div>
       ) : (
-        <UpdateProductForm selectedProduct={selectedProduct} />
+        <CreateProduct initialState={selectedProduct} />
       )}
 
       <div className="bottomSpace"></div>

@@ -6,7 +6,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 
-import CreateProduct2 from "./CreateProduct2";
+import CreateProduct2 from "./EditProduct";
 import { motion } from "framer-motion";
 import { useProductList } from "../../hooks";
 import Loader from "../../Loader";
@@ -17,6 +17,13 @@ const submitButtonStyle = {
   fontSize: "1.2em",
   backgroundColor: "red",
 };
+
+const initialState = {
+  prodNick: "",
+  prodName: "",
+  wholePrice: null,
+  packSize: 1,
+}
 
 function ProductList({
   selectedProduct,
@@ -81,7 +88,7 @@ function ProductList({
             />
           </div>
           <button onClick={handleClick}>+ PRODUCT LIST</button>
-          <CreateProduct2 />
+          <CreateProduct2 initialState={initialState} create={true}/>
         </React.Fragment>
       )}
     </React.Fragment>
