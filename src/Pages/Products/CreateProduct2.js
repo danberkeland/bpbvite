@@ -45,14 +45,7 @@ function CreateProduct() {
               label="Wholesale Price"
               name="wholePrice"
               type="tel"
-              value={Number(props.values.wholePrice)}
-              onChange={(values) => {
-                console.log("value", values.value);
-                props.setFieldValue("wholePrice", Number(values.value));
-              }}
-              mode="decimal"
-              minFractionDigits={2}
-              maxFractionDigits={2}
+              converter={props}
             />
             <CustomIntInput label="Pack Size" name="packSize" type="number" />
           </Form>
