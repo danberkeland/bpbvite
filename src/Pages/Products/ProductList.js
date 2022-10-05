@@ -6,7 +6,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 
-import CreateProduct from "./CreateProduct";
+import CreateProduct2 from "./CreateProduct2";
 import { motion } from "framer-motion";
 import { useProductList } from "../../hooks";
 import Loader from "../../Loader";
@@ -81,7 +81,7 @@ function ProductList({
             />
           </div>
           <button onClick={handleClick}>+ PRODUCT LIST</button>
-          <CreateProduct />
+          <CreateProduct2 />
         </React.Fragment>
       )}
     </React.Fragment>
