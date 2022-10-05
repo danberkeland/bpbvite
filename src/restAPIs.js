@@ -213,3 +213,5 @@ export const getOrder = async (event) => {
   return loc.data.body;
 };
 
+export const fetcher = (url) => axios.post(API_bpbrouterAuth + url)
+

@@ -1,7 +1,37 @@
 import React from "react";
+import Loader from "../../Loader";
+
+// State Management
+import { useLocationList } from "./hooks";
+
+// Components
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 
 function Logistics() {
-  return <React.Fragment>Logistics</React.Fragment>;
+  const { locationList } = useLocationList();
+  
+
+  // Render
+  
+  return (
+    <React.Fragment>
+      {locationList.isLoading && <Loader />}
+      {locationList.isError && <div>Table Failed to load</div>}
+      {locationList.data && (
+        <DataTable
+          value={locationList.data.data.body.items}
+          selectionMode="single"
+          metaKeySelection={false}
+          responsiveLayout="scroll"
+          size="small"
+          showGridlines
+        >
+          <Column field="locName" header="Locations" />
+        </DataTable>
+      )}
+    </React.Fragment>
+  );
 }
 
 export default Logistics;
