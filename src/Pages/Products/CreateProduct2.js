@@ -47,7 +47,12 @@ function CreateProduct() {
               type="tel"
               converter={props}
             />
-            <CustomIntInput label="Pack Size" name="packSize" type="number" />
+            <CustomIntInput
+              label="Pack Size"
+              name="packSize"
+              type="tel"
+              converter={props}
+            />
           </Form>
         )}
       </Formik>

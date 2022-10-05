@@ -55,7 +55,7 @@ export const CustomFloatInput = ({ label, ...props }) => {
         <InputNumber
           {...field}
           {...props}
-          value={Number(props.converter.values.wholePrice)}
+          value={Number(props.converter.values[props.name])}
               onChange={(values) => {
                 console.log("value", values.value);
                 props.converter.setFieldValue("wholePrice", Number(values.value))}}
@@ -77,9 +77,14 @@ export const CustomIntInput = ({ label, ...props }) => {
     <div>
       <div className="field">
         <label>{label}</label>
-        <input
+        <InputNumber
           {...field}
           {...props}
+          value={Number(props.converter.values[props.name])}
+              onChange={(values) => {
+                console.log("value", values.value);
+                props.converter.setFieldValue("packSize", Number(values.value))}}
+          
           className={meta.touched && meta.error ? "p-error" : ""}
         />
       </div>
