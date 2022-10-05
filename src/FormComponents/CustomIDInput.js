@@ -13,6 +13,9 @@ export const CustomIDInput = ({ label, ...props }) => {
         <InputText
           {...field}
           {...props}
+          autoCapitalize="none"
+          secureTextEntry={true}
+          keyboardType={"visible-password"}
           className={meta.touched && meta.error ? "p-error" : ""}
         />
       </div>
