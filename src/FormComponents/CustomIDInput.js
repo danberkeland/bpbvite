@@ -55,12 +55,17 @@ export const CustomFloatInput = ({ label, ...props }) => {
         <InputNumber
           {...field}
           {...props}
-          value={Number(props.converter.values[props.name])}
-              onChange={(values) => {
-                console.log("value", values.value);
-                props.converter.setFieldValue("wholePrice", Number(values.value))}}
+          value={
+            Number(props.converter.values[props.name]) === 0
+              ? null
+              : Number(props.converter.values[props.name])
+          }
+          onChange={(values) => {
+            console.log("value", values.value);
+            props.converter.setFieldValue("wholePrice", Number(values.value));
+          }}
           mode="decimal"
-          minFractionDigits={0}
+          minFractionDigits={2}
           maxFractionDigits={2}
           className={meta.touched && meta.error ? "p-error" : ""}
         />
@@ -82,10 +87,10 @@ export const CustomIntInput = ({ label, ...props }) => {
           {...field}
           {...props}
           value={Number(props.converter.values[props.name])}
-              onChange={(values) => {
-                console.log("value", values.value);
-                props.converter.setFieldValue("packSize", Number(values.value))}}
-          
+          onChange={(values) => {
+            console.log("value", values.value);
+            props.converter.setFieldValue("packSize", Number(values.value));
+          }}
           className={meta.touched && meta.error ? "p-error" : ""}
         />
       </div>

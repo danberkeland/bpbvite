@@ -22,7 +22,7 @@ function CreateProduct() {
         initialValues={{
           prodNick: "",
           prodName: "",
-          wholePrice: 0,
+          wholePrice: null,
           packSize: 1,
         }}
         validationSchema={validationSchema}
