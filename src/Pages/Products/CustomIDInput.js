@@ -1,6 +1,6 @@
 import { useField } from "formik";
 
-const CustomTextInput = ({ label, ...props }) => {
+const CustomIDInput = ({ label, ...props }) => {
   const [field, meta, helpers] = useField(props);
   console.log("field", field);
   console.log("meta", meta);
@@ -21,4 +21,4 @@ const CustomTextInput = ({ label, ...props }) => {
   );
 };
 
-export default CustomTextInput;
+export default CustomIDInput;
