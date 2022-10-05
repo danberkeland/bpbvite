@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Loader from "../../Loader";
 
 // State Management
@@ -10,6 +10,10 @@ import { Column } from "primereact/column";
 
 function Logistics() {
   const { locationList } = useLocationList();
+
+  useEffect(() => {
+    console.log('locationList', locationList)
+  })
   
 
   // Render
@@ -20,7 +24,7 @@ function Logistics() {
       {locationList.isError && <div>Table Failed to load</div>}
       {locationList.data && (
         <DataTable
-          value={locationList.data.data.body.items}
+          value={locationList.data}
           selectionMode="single"
           metaKeySelection={false}
           responsiveLayout="scroll"

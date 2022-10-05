@@ -1,5 +1,6 @@
 import axios from "axios";
 import useSWR from "swr";
+import { sortAtoZDataByIndex } from "../../utils";
 
 const API_bpbrouterAuth =
   "https://8gw70qn5eb.execute-api.us-east-2.amazonaws.com/auth";
@@ -25,7 +26,7 @@ export function useLocationList() {
 
   return {
     locationList: {
-      data: data,
+      data: data ? sortAtoZDataByIndex(data.data.body.items, "locName") : data,
       isLoading: !error && !data,
       isError: error,
       revalidate: () => mutate(),
