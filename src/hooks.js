@@ -1,6 +1,6 @@
 import axios from "axios";
 import useSWR from "swr";
-import { sortAtoZDataByIndex } from "../../utils";
+import { sortAtoZDataByIndex } from "./utils";
 
 const API_bpbrouterAuth =
   "https://8gw70qn5eb.execute-api.us-east-2.amazonaws.com/auth";

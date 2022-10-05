@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { fetcher } from "../../restAPIs";
 
 import { FilterMatchMode } from "primereact/api";
 
@@ -9,6 +8,8 @@ import { Button } from "primereact/button";
 
 import CreateLocation from "./CreateLocation";
 import { motion } from "framer-motion";
+import { useLocationList } from "../../hooks";
+import Loader from "../../Loader";
 
 const submitButtonStyle = {
   width: "100px",
@@ -17,16 +18,12 @@ const submitButtonStyle = {
   backgroundColor: "red",
 };
 
-function LocationList({
-  selectedLocation,
-  setSelectedLocation,
-  locationData,
-  setLocationData,
-}) {
-  const [filter, setFilter] = useState({
+function LocationList({ selectedLocation, setSelectedLocation }) {
+  const [filter] = useState({
     locName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
   const [isCreate, setIsCreate] = useState(false);
+  const { locationList } = useLocationList();
 
   const handleClick = () => {
     setIsCreate(!isCreate);
@@ -45,26 +42,29 @@ function LocationList({
           exit={{ opacity: 0 }}
         >
           <button onClick={handleClick}>+ CREATE LOCATION</button>
-
-          <DataTable
-            className="dataTable"
-            value={locationData}
-            selectionMode="single"
-            metaKeySelection={false}
-            selection={selectedLocation}
-            onSelectionChange={(e) => setSelectedLocation(e.value)}
-            sortField="locNick"
-            sortOrder={1}
-            responsiveLayout="scroll"
-            filterDisplay="row"
-            filters={filter}
-          >
-            <Column
-              field="locName"
-              filterPlaceholder="Search Locations"
-              filter
-            />
-          </DataTable>
+          {locationList.isLoading && <Loader />}
+          {locationList.isError && <div>Table Failed to load</div>}
+          {locationList.data && (
+            <DataTable
+              className="dataTable"
+              value={locationList.data}
+              selectionMode="single"
+              metaKeySelection={false}
+              selection={selectedLocation}
+              onSelectionChange={(e) => setSelectedLocation(e.value)}
+              sortField="locNick"
+              sortOrder={1}
+              responsiveLayout="scroll"
+              filterDisplay="row"
+              filters={filter}
+            >
+              <Column
+                field="locName"
+                filterPlaceholder="Search Locations"
+                filter
+              />
+            </DataTable>
+          )}
           <div className="bottomSpace"></div>
         </motion.div>
       ) : (

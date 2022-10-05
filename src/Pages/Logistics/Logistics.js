@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import Loader from "../../Loader";
 
 // State Management
-import { useLocationList } from "./hooks";
+import { useLocationList } from "../../hooks";
 
 // Components
 import { DataTable } from "primereact/datatable";
