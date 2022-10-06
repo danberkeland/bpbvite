@@ -1,18 +1,24 @@
 import React, { useState } from "react";
 
 import { Button } from "primereact/button";
+import { InputText } from "primereact/inputtext";
+import { SelectButton } from "primereact/selectbutton";
 
 import { motion } from "framer-motion";
 import CreateProduct from "./EditProduct";
 import styled from "styled-components";
 
-const InfoGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  margin: 2px;
-  padding: 10px 10px;
+const options = [
+  { label: "Yes", value: true },
+  { label: "No", value: false },
+];
+
+const YesNoBox = styled.div`
+  display: flex;
+  flex-direction: row;
   align-items: center;
-  justify-items: left;
+  justify-content: space-around;
+  padding: 5px;
 `;
 
 function ProductDetails({ selectedProduct }) {
@@ -24,6 +30,28 @@ function ProductDetails({ selectedProduct }) {
     fontSize: "1.2em",
     backgroundColor: "#006aff",
   };
+
+  function InfoBlock({ id, title }) {
+    return (
+      <div className="p-inputgroup">
+        <span className="p-inputgroup-addon">
+          <label htmlFor={id}> {title}</label>
+          <br />
+        </span>
+
+        <InputText id={id} value={selectedProduct[id]} disabled />
+      </div>
+    );
+  }
+
+  function YesNoBlock({ id, title }) {
+    return (
+      <YesNoBox>
+        <label htmlFor={id}>{title}</label>
+        <SelectButton value={selectedProduct[id]} id={id} options={options} />
+      </YesNoBox>
+    );
+  }
 
   const handleEdit = () => {
     setEdit(!edit);
@@ -48,42 +76,24 @@ function ProductDetails({ selectedProduct }) {
               style={editButtonStyle}
               onClick={handleEdit}
             />
-            <InfoGrid>
-              <label>Product ID:</label>
-              <h2>{selectedProduct.prodNick}</h2>
-              <label>Whole Price:</label>
-              <h3>{selectedProduct.wholePrice}</h3>
-              <label>Retail Price:</label>
-              <h3>{selectedProduct.retailPrice}</h3>
-              <label>Pack Size:</label>
-              <h3>{selectedProduct.packSize}</h3>
-              <label>Pack Group:</label>
-              <h3>{selectedProduct.packGroup}</h3>
-              <label>Pack Order:</label>
-              <h3>{selectedProduct.packGroupOrder}</h3>
-              <label>Thaw:</label>
-              <h3>{selectedProduct.freezerThaw ? "YES" : "NO"}</h3>
-              <label>Ready Time:</label>
-              <h3>{selectedProduct.readyTime}</h3>
-              <label>Dough:</label>
-              <h3>{selectedProduct.doughNick}</h3>
-              <label>Weight:</label>
-              <h3>{selectedProduct.weight}</h3>
-              <label>Lead Time:</label>
-              <h3>{selectedProduct.leadTime}</h3>
-              <label>Batch Size:</label>
-              <h3>{selectedProduct.batchSize}</h3>
-              <label>Bake Extra:</label>
-              <h3>{selectedProduct.backExtra}</h3>
-              <label>Baker Name:</label>
-              <h3>{selectedProduct.forBake}</h3>
-              <label>Square ID:</label>
-              <h3>{selectedProduct.squareID}</h3>
-              <label>QB ID:</label>
-              <h3>{selectedProduct.qbID}</h3>
-              <label>Default Include:</label>
-              <h3>{selectedProduct.defaultInclude ? "YES" : "NO"}</h3>
-            </InfoGrid>
+
+            <InfoBlock id="prodNick" title="Product ID" />
+            <InfoBlock id="wholePrice" title="Whole Price" />
+            <InfoBlock id="retailPrice" title="Retail Price" />
+            <InfoBlock id="packSize" title="Pack Size" />
+            <InfoBlock id="packGroup" title="Pack Group" />
+            <InfoBlock id="packGroupOrder" title="Pack Order" />
+            <InfoBlock id="readyTime" title="Ready Time" />
+            <InfoBlock id="doughNick" title="dough" />
+            <InfoBlock id="weight" title="Weight" />
+            <InfoBlock id="leadTime" title="Lead Time" />
+            <InfoBlock id="batchSize" title="Batch Size" />
+            <InfoBlock id="batchExtra" title="Batch Extra" />
+            <InfoBlock id="forBake" title="For Bake" />
+            <InfoBlock id="squareID" title="Square ID" />
+            <InfoBlock id="qbID" title="QB ID" />
+            <YesNoBlock id="freezerThaw" title="Freezer Thaw" />
+            <YesNoBlock id="defaultInclude" title="Default Include" />
           </div>
         </motion.div>
       ) : (
