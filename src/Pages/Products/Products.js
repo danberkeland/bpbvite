@@ -14,7 +14,7 @@ function Products() {
   return (
     <motion.div
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      animate={{ opacity: 1, y:0 }}
       exit={{ opacity: 0 }}
     >
       {selectedProduct !== "" ? (
@@ -28,7 +28,7 @@ function Products() {
       {selectedProduct === "" ? (
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          animate={{ opacity: 1, y:0 }}
           exit={{ opacity: 0 }}
         >
           <ProductList
