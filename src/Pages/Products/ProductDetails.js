@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
@@ -44,6 +44,10 @@ const InfoBox = styled.div`
 
 function ProductDetails({ selectedProduct }) {
   const [edit, setEdit] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0,0)
+  },[])
 
   const editButtonStyle = {
     width: "100px",
