@@ -77,7 +77,7 @@ function ProductDetails({ selectedProduct }) {
 
   return (
     <React.Fragment>
-      {/*<pre>Selected Product: {JSON.stringify(selectedProduct, null, 4)}</pre>*/}
+      
 
       {!edit ? (
         <motion.div
@@ -88,12 +88,7 @@ function ProductDetails({ selectedProduct }) {
         >
           <div className="productDetails">
             <h1>{selectedProduct.prodName}</h1>
-            <Button
-              label="Edit"
-              className="editButton p-button-raised p-button-rounded"
-              style={editButtonStyle}
-              onClick={handleEdit}
-            />
+            
             <GroupBox>
               <h2>
                 <i className="pi pi-user"></i> Product Description
@@ -134,6 +129,12 @@ function ProductDetails({ selectedProduct }) {
               <InfoBlock id="batchExtra" title="Batch Extra" />
               <InfoBlock id="weight" title="Weight" />
             </GroupBox>
+            <Button
+              label="Edit"
+              className="editButton p-button-raised p-button-rounded"
+              style={editButtonStyle}
+              onClick={handleEdit}
+            />
           </div>
         </motion.div>
       ) : (
