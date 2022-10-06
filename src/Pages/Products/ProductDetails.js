@@ -13,6 +13,8 @@ const options = [
   { label: "No", value: false },
 ];
 
+
+// Styles
 const YesNoBox = styled.div`
   display: flex;
   flex-direction: row;
