@@ -10,9 +10,9 @@ import { Dialog } from "primereact/dialog";
 import { classNames } from "primereact/utils";
 import "./Splash.css";
 
-import { CenteredContainer, Title } from "../CommonStyles";
+import { CenteredContainer, Title } from "../../CommonStyles";
 
-import { useSettingsStore } from "../Contexts/SettingsZustand";
+import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
 const validate = (data) => {
   let errors = {};

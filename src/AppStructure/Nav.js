@@ -3,7 +3,7 @@ import { PanelMenu } from "primereact/panelmenu";
 
 import React from "react";
 
-import { useSettingsStore } from "./Contexts/SettingsZustand";
+import { useSettingsStore } from "../Contexts/SettingsZustand";
 
 import { authSignOut } from "./Auth/AuthHelpers";
 import { motion } from "framer-motion";

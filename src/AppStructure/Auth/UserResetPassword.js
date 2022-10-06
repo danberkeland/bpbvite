@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Amplify, Auth } from "aws-amplify";
+import { Auth } from "aws-amplify";
 
 import { Form, Field } from "react-final-form";
 
@@ -11,8 +11,8 @@ import { Divider } from "primereact/divider";
 import { classNames } from "primereact/utils";
 import "./Splash.css";
 
-import { CenteredContainer, Title } from "../CommonStyles";
-import { useSettingsStore } from "../Contexts/SettingsZustand";
+import { CenteredContainer, Title } from "../../CommonStyles";
+import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
 export const UserResetPassword = () => {
   const [showMessage, setShowMessage] = useState(false);

@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import Loader from "../../Loader";
+import Loader from "../../AppStructure/Loader";
 
 // State Management
 import { useLocationList } from "../../hooks";

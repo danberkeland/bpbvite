@@ -1,6 +1,6 @@
 import React from "react";
 
-import { CenteredContainer, Title, Website } from "../CommonStyles";
+import { CenteredContainer, Title, Website } from "../../CommonStyles";
 
 
 export const UserApplyThanks = () => {

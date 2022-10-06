@@ -9,7 +9,7 @@ import { Button } from "primereact/button";
 import CreateLocation from "./CreateLocation";
 import { motion } from "framer-motion";
 import { useLocationList } from "../../hooks";
-import Loader from "../../Loader";
+import Loader from "../../AppStructure/Loader";
 
 const submitButtonStyle = {
   width: "100px",

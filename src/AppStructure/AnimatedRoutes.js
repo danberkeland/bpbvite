@@ -1,17 +1,17 @@
 import React from "react";
 
-import Ordering from "./Pages/Ordering/Ordering";
-import CustomerNews from "./Pages/CustomerNews/CustomerNews";
-import CustomerBilling from "./Pages/CustomerBilling/CustomerBilling";
-import CustomerSettings from "./Pages/CustomerSettings/CustomerSettings";
-import CustomerProducts from "./Pages/CustomerProducts/CustomerProducts";
-import Production from "./Pages/Production/Production";
-import Products from "./Pages/Products/Products";
-import Settings from "./Pages/Settings/Settings";
-import Billing from "./Pages/Billing/Billing";
-import EODCounts from "./Pages/EODCounts/EODCounts";
-import Logistics from "./Pages/Logistics/Logistics";
-import Locations from "./Pages/Locations/Locations";
+import Ordering from "../Pages/Ordering/Ordering";
+import CustomerNews from "../Pages/CustomerNews/CustomerNews";
+import CustomerBilling from "../Pages/CustomerBilling/CustomerBilling";
+import CustomerSettings from "../Pages/CustomerSettings/CustomerSettings";
+import CustomerProducts from "../Pages/CustomerProducts/CustomerProducts";
+import Production from "../Pages/Production/Production";
+import Products from "../Pages/Products/Products";
+import Settings from "../Pages/Settings/Settings";
+import Billing from "../Pages/Billing/Billing";
+import EODCounts from "../Pages/EODCounts/EODCounts";
+import Logistics from "../Pages/Logistics/Logistics";
+import Locations from "../Pages/Locations/Locations";
 import { NavSide } from "./Nav";
 
 import { AnimatePresence } from "framer-motion";

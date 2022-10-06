@@ -3,7 +3,7 @@ import React from "react";
 import { ProgressSpinner } from "primereact/progressspinner";
 
 import styled from "styled-components";
-import { useSettingsStore } from "./Contexts/SettingsZustand";
+import { useSettingsStore } from "../Contexts/SettingsZustand";
 
 const LoaderSetup = styled.div`
   width: 100%;

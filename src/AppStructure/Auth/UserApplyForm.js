@@ -9,13 +9,12 @@ import { classNames } from "primereact/utils";
 
 import "./Splash.css";
 
-import { CenteredContainer, Title } from "../CommonStyles";
-import { useSettingsStore } from "../Contexts/SettingsZustand";
+import { CenteredContainer, Title } from "../../CommonStyles";
+import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
 export const UserApplyForm = () => {
   const [showMessage, setShowMessage] = useState(false);
-  const [formData, setFormData] = useState({});
-
+  
   const setFormType = useSettingsStore((state) => state.setFormType)
 
   const validate = (data) => {

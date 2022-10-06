@@ -9,7 +9,9 @@ import { Button } from "primereact/button";
 import CreateProduct2 from "./EditProduct";
 import { motion } from "framer-motion";
 import { useProductList } from "../../hooks";
-import Loader from "../../Loader";
+import { useSettingsStore } from "../../Contexts/SettingsZustand";
+
+
 
 const submitButtonStyle = {
   width: "100px",
@@ -26,6 +28,7 @@ const initialState = {
 };
 
 function ProductList({ selectedProduct, setSelectedProduct }) {
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
   const [filter] = useState({
     prodName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
@@ -50,7 +53,8 @@ function ProductList({ selectedProduct, setSelectedProduct }) {
           exit={{ opacity: 0, x: "0" }}
         >
           <button onClick={handleClick}>+ CREATE PRODUCT</button>
-          {productList.isLoading && <Loader />}
+          {productList.isLoading ? setIsLoading(true) : setIsLoading(false)}
+       
           {productList.isError && <div>Table Failed to load</div>}
           {productList.data && (
             <DataTable

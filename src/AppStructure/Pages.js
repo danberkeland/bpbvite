@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 import AnimatedRoutes from "./AnimatedRoutes";
-import { useSettingsStore } from "./Contexts/SettingsZustand";
+import { useSettingsStore } from "../Contexts/SettingsZustand";
 
 const itemsAuth2 = [
   {
