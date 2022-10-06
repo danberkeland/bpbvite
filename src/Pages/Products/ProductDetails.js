@@ -21,6 +21,25 @@ const YesNoBox = styled.div`
   padding: 5px;
 `;
 
+const GroupBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-content: flex-start;
+  border: 1px solid lightgrey;
+  width: 95%;
+  margin: 5px 10px 20px 10px;
+  padding: 5px 5px 10px 5px;
+`;
+
+const InfoBox = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  flex-direction: column;
+  align-content: flex-start;
+
+  margin: 5px 15px;
+`;
+
 function ProductDetails({ selectedProduct }) {
   const [edit, setEdit] = useState(false);
 
@@ -33,14 +52,13 @@ function ProductDetails({ selectedProduct }) {
 
   function InfoBlock({ id, title }) {
     return (
-      <div className="p-inputgroup">
+      <InfoBox>
         <span className="p-inputgroup-addon">
-          <label htmlFor={id}> {title}</label>
-          <br />
+          <label htmlFor={id}>{title}</label>
         </span>
 
         <InputText id={id} value={selectedProduct[id]} disabled />
-      </div>
+      </InfoBox>
     );
   }
 
@@ -48,7 +66,7 @@ function ProductDetails({ selectedProduct }) {
     return (
       <YesNoBox>
         <label htmlFor={id}>{title}</label>
-        <SelectButton value={selectedProduct[id]} id={id} options={options} />
+        <SelectButton value={selectedProduct[id]} id={id} options={options} disabled/>
       </YesNoBox>
     );
   }
@@ -76,24 +94,46 @@ function ProductDetails({ selectedProduct }) {
               style={editButtonStyle}
               onClick={handleEdit}
             />
+            <GroupBox>
+              <h2>
+                <i className="pi pi-user"></i> Product Description
+              </h2>
+              <InfoBlock id="prodName" title="Product Name" />
+              <InfoBlock id="prodNick" title="Product ID" />
+              <InfoBlock id="squareID" title="Square ID" />
+              <InfoBlock id="qbID" title="QB ID" />
+            </GroupBox>
+            <GroupBox>
+              <h2>
+                <i className="pi pi-dollar"></i> Billing
+              </h2>
+              <InfoBlock id="wholePrice" title="Whole Price" />
+              <InfoBlock id="retailPrice" title="Retail Price" />
+              <YesNoBlock id="defaultInclude" title="Default Include" />
+            </GroupBox>
+            <GroupBox>
+              <h2>
+                <i className="pi pi-dollar"></i> Packing Info
+              </h2>
+              <InfoBlock id="packGroup" title="Pack Group" />
+              <InfoBlock id="packGroupOrder" title="Pack Order" />
+              <InfoBlock id="packSize" title="Pack Size" />
+              <YesNoBlock id="freezerThaw" title="Freezer Thaw" />
+            </GroupBox>
 
-            <InfoBlock id="prodNick" title="Product ID" />
-            <InfoBlock id="wholePrice" title="Whole Price" />
-            <InfoBlock id="retailPrice" title="Retail Price" />
-            <InfoBlock id="packSize" title="Pack Size" />
-            <InfoBlock id="packGroup" title="Pack Group" />
-            <InfoBlock id="packGroupOrder" title="Pack Order" />
-            <InfoBlock id="readyTime" title="Ready Time" />
-            <InfoBlock id="doughNick" title="dough" />
-            <InfoBlock id="weight" title="Weight" />
-            <InfoBlock id="leadTime" title="Lead Time" />
-            <InfoBlock id="batchSize" title="Batch Size" />
-            <InfoBlock id="batchExtra" title="Batch Extra" />
-            <InfoBlock id="forBake" title="For Bake" />
-            <InfoBlock id="squareID" title="Square ID" />
-            <InfoBlock id="qbID" title="QB ID" />
-            <YesNoBlock id="freezerThaw" title="Freezer Thaw" />
-            <YesNoBlock id="defaultInclude" title="Default Include" />
+            <GroupBox>
+              <h2>
+                <i className="pi pi-dollar"></i> Baking Info
+              </h2>
+
+              <InfoBlock id="doughNick" title="Dough Type" />
+              <InfoBlock id="leadTime" title="Lead Time" />
+              <InfoBlock id="forBake" title="For Bake" />
+              <InfoBlock id="readyTime" title="Ready Time" />
+              <InfoBlock id="batchSize" title="Batch Size" />
+              <InfoBlock id="batchExtra" title="Batch Extra" />
+              <InfoBlock id="weight" title="Weight" />
+            </GroupBox>
           </div>
         </motion.div>
       ) : (
