@@ -83,10 +83,10 @@ function ProductDetails({ selectedProduct }) {
 
       {!edit ? (
         <motion.div
-          initial={{ opacity: 1, x: "100%", y: "0" }}
+          initial={{ opacity: 0, x: "0", y: "0" }}
           animate={{ opacity: 1, x: "0" }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
-          exit={{ opacity: 0, x: "100%" }}
+          exit={{ opacity: 0, x: "0"}}
         >
           <div className="productDetails">
             <h1>{selectedProduct.prodName}</h1>

@@ -14,15 +14,12 @@ import { validationSchema } from "./ValidationSchema";
 function EditProduct({ initialState, create }) {
   return (
     <motion.div
-      initial={{ opacity: 1, x: "100%" }}
-      animate={{ opacity: 1, x: "0%" }}
-      transition={{duration: .3, ease: "easeInOut"}}
-      exit={{ opacity: 0, x: "100%" }}
+      initial={{ opacity: 0, x: "0", y: "0" }}
+      animate={{ opacity: 1, x: "0" }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+      exit={{ opacity: 0, x: "0" }}
     >
-      <Formik
-        initialValues={initialState}
-        validationSchema={validationSchema}
-      >
+      <Formik initialValues={initialState} validationSchema={validationSchema}>
         {(props) => (
           <Form>
             <CustomIDInput
