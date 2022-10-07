@@ -25,10 +25,15 @@ import fetch, {
    */
   const mainCall = async (query, event) => {
     console.log(`EVENT2: ${JSON.stringify(event)}`);
+
+    let user={}
+
+    try{
+      user = event.requestContext.authorizer.claims
+    }catch{}
   
-    const variables = event;
-    const nothing = 0
-  
+    const variables = event.body;
+    
     /** @type {import('node-fetch').RequestInit} */
     const options = {
       method: "POST",
@@ -42,6 +47,8 @@ import fetch, {
   
     let statusCode = 200;
     let body;
+
+
   
     let response;
   
@@ -66,8 +73,9 @@ import fetch, {
       errors: body.errors,
       body: {
         body: body.data,
-        event: event,
+        event: event.body,
         variables: variables,
+        user: user,
       },
     };
   };

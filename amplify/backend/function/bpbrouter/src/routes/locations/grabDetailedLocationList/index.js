@@ -1,12 +1,12 @@
-import mainCall from '/opt/mainCall/index.js';
+import mainCall from "/opt/mainCall/index.js";
 
 const query = /* GraphQL */ `
   query MyQuery {
     listLocations {
       items {
+        Type
         locName
         locNick
-        Type
         zoneNick
         addr1
         addr2
@@ -28,6 +28,11 @@ const query = /* GraphQL */ `
         delivOrder
         qbID
         currentBalance
+        subs {
+          items {
+            sub
+          }
+        }
       }
     }
   }
@@ -35,12 +40,21 @@ const query = /* GraphQL */ `
 
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
+ * 
+ * 
  */
+// Update
+
+const checkSubs = (item,user) => {
+  let subs = item.subs.items.map(sub => sub.sub)
+  return subs.includes(user.sub) ? true : false
+}
 
 const grabDetailedLocationList = async (event) => {
   let response = await mainCall(query, event);
-  response.body = response.body.body.listLocations
-  return response
+  response.user = response.body.user;
+  response.body = response.body.body.listLocations//.filter(item => checkSubs(item,response.user))
+  return response;
 };
 
 export default grabDetailedLocationList;

@@ -41,10 +41,12 @@ const query = /* GraphQL */ `
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
-
+  // Update
  const grabDetailedProductList = async (event) => {
   let response = await mainCall(query, event);
+  response.user = response.body.user
   response.body = response.body.body.listProducts
+  
   return response
 };
 

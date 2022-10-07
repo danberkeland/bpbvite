@@ -15,7 +15,7 @@ Amplify Params - DO NOT EDIT */
   "Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
 };
 
-
+// Working on Auth
 export const handler = async (event) => {
   console.log(`EVENT: ${JSON.stringify(event)}`);
   
@@ -24,7 +24,7 @@ export const handler = async (event) => {
     
     try {
         const { default: queryFunction } = await import(`./routes${event.path}/index.js`);
-        body = await queryFunction(event.body ? event.body : "");
+        body = await queryFunction(event ? event : "");
     } catch(error) {
         console.log(error)
         statusCode = 400;

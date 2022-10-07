@@ -19,6 +19,7 @@ const fetcher = async (path) => {
     },
   });
   console.log("done.");
+  console.log("res",res)
   return res;
 };
 
