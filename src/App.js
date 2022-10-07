@@ -108,28 +108,6 @@ export function App() {
       });
   }, [user]);
 
-  useEffect(() => {
-    try {
-      grabAuth(chosen.locNick, userDetails.sub)
-        .then((sub) => {
-          setAuthType(sub);
-        })
-        .catch((err) => {
-          setAuthType(0);
-        });
-    } catch (err) {
-      console.log(err);
-    }
-  }, [chosen]);
-
-  useEffect(() => {
-    setIsLoading(true);
-    grabDetailedProductList().then((result) => {
-      result = sortAtoZDataByIndex(result, "prodName");
-      setProdList(result);
-      setIsLoading(false);
-    });
-  }, []);
 
   return (
     <React.Fragment>
@@ -139,8 +117,6 @@ export function App() {
 
       <Router>
         {isLoading && <Loader />}
-
-        {/*<h4>AuthType: {authType}</h4>*/}
 
         {formType === "signedIn" && (
           <React.Fragment>

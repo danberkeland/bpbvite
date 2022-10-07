@@ -1,3 +1,4 @@
+import { Auth } from "aws-amplify";
 import axios from "axios";
 import useSWR from "swr";
 import { sortAtoZDataByIndex } from "./utils";
@@ -7,8 +8,16 @@ const API_bpbrouterAuth =
 
 const fetcher = async (path) => {
   console.log("fetching ", path);
+  const user = await Auth.currentAuthenticatedUser();
+  const token = user.signInUserSession.idToken.jwtToken;
+  console.log("token", token);
 
-  let res = await axios.post(API_bpbrouterAuth + path.url, path.args);
+  let res = await axios.post(API_bpbrouterAuth + path.url, {}, {
+    headers: {
+      'content-type': 'application/json',
+      'Authorization': token,
+    },
+  });
   console.log("done.");
   return res;
 };
@@ -34,7 +43,6 @@ export function useLocationList() {
   };
 }
 
-
 export function useSimpleLocationList() {
   const { data, error, mutate } = useSWR(
     { url: "/locations/grabDetailedLocationList", args: {} },
@@ -48,10 +56,12 @@ export function useSimpleLocationList() {
 
   return {
     simpleLocationList: {
-      data: data ? sortAtoZDataByIndex(data.data.body.items, "locName").map((loc) => ({
-        label: loc.locName,
-        value: loc.locNick,
-      })) : data,
+      data: data
+        ? sortAtoZDataByIndex(data.data.body.items, "locName").map((loc) => ({
+            label: loc.locName,
+            value: loc.locNick,
+          }))
+        : data,
       isLoading: !error && !data,
       isError: error,
       revalidate: () => mutate(),
@@ -59,12 +69,9 @@ export function useSimpleLocationList() {
   };
 }
 
-
-
-
 export function useProductList() {
   const { data, error, mutate } = useSWR(
-    { url: "/products/grabDetailedProductList", args: {} },
+    { url: "/products/grabDetailedProductList" },
     fetcher,
     {
       revalidateIfStale: false,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { FilterMatchMode } from "primereact/api";
 
@@ -34,6 +34,10 @@ function ProductList({ selectedProduct, setSelectedProduct }) {
   });
   const [isCreate, setIsCreate] = useState(false);
   const { productList } = useProductList();
+
+  useEffect(() => {
+    console.log("productist",productList)
+  },[productList])
 
   const handleClick = () => {
     setIsCreate(!isCreate);
