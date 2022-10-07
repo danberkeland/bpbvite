@@ -45,15 +45,26 @@ const query = /* GraphQL */ `
  */
 // Update
 
-const checkSubs = (item,user) => {
-  let subs = item.subs.items.map(sub => sub.sub)
-  return subs.includes(user.sub) ? true : false
-}
-
 const grabDetailedLocationList = async (event) => {
   let response = await mainCall(query, event);
+  
+  let newArray=[];
+  
+  for ( let item of response.body.body.listLocations.items){
+    console.log("item",item);
+    try{
+      for (let sub of item.subs.items){
+        if (sub.sub === response.body.user.sub){
+          newArray.push(item);
+        }
+      }
+    }catch{}
+  }
+  console.log("newArray",newArray);
+  
   response.user = response.body.user;
-  response.body = response.body.body.listLocations//.filter(item => checkSubs(item,response.user))
+  response.body.items = newArray;
+  
   return response;
 };
 
