@@ -11,8 +11,6 @@ import { motion } from "framer-motion";
 import { useProductList } from "../../hooks";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
-
-
 const submitButtonStyle = {
   width: "100px",
   margin: "20px",
@@ -36,8 +34,8 @@ function ProductList({ selectedProduct, setSelectedProduct }) {
   const { productList } = useProductList();
 
   useEffect(() => {
-    console.log("productist",productList)
-  },[productList])
+    console.log("productist", productList);
+  }, [productList]);
 
   const handleClick = () => {
     setIsCreate(!isCreate);
@@ -50,39 +48,41 @@ function ProductList({ selectedProduct, setSelectedProduct }) {
   return (
     <React.Fragment>
       {!isCreate ? (
-        <motion.div
-          initial={{ opacity: 0, x: "0", y: "0" }}
-          animate={{ opacity: 1, x: "0" }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
-          exit={{ opacity: 0, x: "0" }}
-        >
+        <React.Fragment>
           <button onClick={handleClick}>+ CREATE PRODUCT</button>
           {productList.isLoading ? setIsLoading(true) : setIsLoading(false)}
-       
+
           {productList.isError && <div>Table Failed to load</div>}
           {productList.data && (
-            <DataTable
-              className="dataTable"
-              value={productList.data}
-              selectionMode="single"
-              metaKeySelection={false}
-              selection={selectedProduct}
-              onSelectionChange={(e) => setSelectedProduct(e.value)}
-              sortField="prodName"
-              sortOrder={1}
-              responsiveLayout="scroll"
-              filterDisplay="row"
-              filters={filter}
+            <motion.div
+              initial={{ opacity: 0, x: "0", y: "0" }}
+              animate={{ opacity: 1, x: "0" }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              exit={{ opacity: 0, x: "0" }}
             >
-              <Column
-                field="prodName"
-                filterPlaceholder="Search Products"
-                filter
-              />
-            </DataTable>
+              <DataTable
+                className="dataTable"
+                value={productList.data}
+                selectionMode="single"
+                metaKeySelection={false}
+                selection={selectedProduct}
+                onSelectionChange={(e) => setSelectedProduct(e.value)}
+                sortField="prodName"
+                sortOrder={1}
+                responsiveLayout="scroll"
+                filterDisplay="row"
+                filters={filter}
+              >
+                <Column
+                  field="prodName"
+                  filterPlaceholder="Search Products"
+                  filter
+                />
+              </DataTable>
+            </motion.div>
           )}
           <div className="bottomSpace"></div>
-        </motion.div>
+        </React.Fragment>
       ) : (
         <React.Fragment>
           <div className="submitButton">

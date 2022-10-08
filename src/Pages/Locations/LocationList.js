@@ -37,37 +37,39 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
   return (
     <React.Fragment>
       {!isCreate ? (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
+        <React.Fragment>
           <button onClick={handleClick}>+ CREATE LOCATION</button>
           {locationList.isLoading ? setIsLoading(true) : setIsLoading(false)}
           {locationList.isError && <div>Table Failed to load</div>}
           {locationList.data && (
-            <DataTable
-              className="dataTable"
-              value={locationList.data}
-              selectionMode="single"
-              metaKeySelection={false}
-              selection={selectedLocation}
-              onSelectionChange={(e) => setSelectedLocation(e.value)}
-              sortField="locNick"
-              sortOrder={1}
-              responsiveLayout="scroll"
-              filterDisplay="row"
-              filters={filter}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
             >
-              <Column
-                field="locName"
-                filterPlaceholder="Search Locations"
-                filter
-              />
-            </DataTable>
+              <DataTable
+                className="dataTable"
+                value={locationList.data}
+                selectionMode="single"
+                metaKeySelection={false}
+                selection={selectedLocation}
+                onSelectionChange={(e) => setSelectedLocation(e.value)}
+                sortField="locNick"
+                sortOrder={1}
+                responsiveLayout="scroll"
+                filterDisplay="row"
+                filters={filter}
+              >
+                <Column
+                  field="locName"
+                  filterPlaceholder="Search Locations"
+                  filter
+                />
+              </DataTable>
+            </motion.div>
           )}
           <div className="bottomSpace"></div>
-        </motion.div>
+        </React.Fragment>
       ) : (
         <React.Fragment>
           <div className="submitButton">
