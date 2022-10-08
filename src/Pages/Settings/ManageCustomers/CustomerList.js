@@ -5,6 +5,7 @@ import { FilterMatchMode } from "primereact/api";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
+import { TabMenu } from "primereact/tabmenu";
 
 import CreateCustomer from "./EditCustomer";
 import { motion } from "framer-motion";
@@ -25,12 +26,15 @@ const initialState = {
   packSize: 1,
 };
 
+const menuItems = [{ label: "By Customer" }, { label: "By Location" }];
+
 function CustomerList({ selectedCustomer, setSelectedCustomer }) {
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
   const [filter] = useState({
     custName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
   const [isCreate, setIsCreate] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
   const { customerList } = useCustomerList();
 
   useEffect(() => {
@@ -45,11 +49,17 @@ function CustomerList({ selectedCustomer, setSelectedCustomer }) {
     setIsCreate(!isCreate);
   };
 
+
   return (
     <React.Fragment>
       {!isCreate ? (
         <React.Fragment>
           <button onClick={handleClick}>+ CREATE CUSTOMER</button>
+          <TabMenu
+            model={menuItems}
+            activeIndex={activeIndex}
+            onTabChange={(e) => setActiveIndex(e.index)}
+          />
           {customerList.isLoading ? setIsLoading(true) : setIsLoading(false)}
 
           {customerList.isError && <div>Table Failed to load</div>}
@@ -73,20 +83,24 @@ function CustomerList({ selectedCustomer, setSelectedCustomer }) {
                 filterDisplay="row"
                 filters={filter}
               >
-                <Column
-                  field="custName"
-                  header="Customer"
-                  filterPlaceholder="cust"
-                  filter
-                  sortable
-                />
-                <Column
-                  field="locNick"
-                  header="Location"
-                  filterPlaceholder="loc"
-                  filter
-                  sortable
-                />
+                {activeIndex === 0 && (
+                  <Column
+                    field="custName"
+                    header="Customer"
+                    filterPlaceholder="cust"
+                    filter
+                    sortable
+                  />
+                )}
+                {activeIndex === 1 && (
+                  <Column
+                    field="locNick"
+                    header="Location"
+                    filterPlaceholder="loc"
+                    filter
+                    sortable
+                  />
+                )}
               </DataTable>
             </motion.div>
           )}
