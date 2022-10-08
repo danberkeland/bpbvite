@@ -7,12 +7,12 @@ import { SelectButton } from "primereact/selectbutton";
 import { motion } from "framer-motion";
 import CreateCustomer from "./EditCustomer";
 import styled from "styled-components";
+import { useCustomerList } from "../../../hooks";
 
 const options = [
   { label: "Yes", value: true },
   { label: "No", value: false },
 ];
-
 
 // Styles
 const YesNoBox = styled.div`
@@ -42,12 +42,13 @@ const InfoBox = styled.div`
   margin: 5px 15px;
 `;
 
-function CustomerDetails({ selectedCustomer }) {
+function CustomerDetails({ selectedCustomer, activeIndex }) {
+  const { customerList } = useCustomerList();
   const [edit, setEdit] = useState(false);
 
   useEffect(() => {
-    window.scrollTo(0,0)
-  },[])
+    window.scrollTo(0, 0);
+  }, []);
 
   const editButtonStyle = {
     width: "100px",
@@ -72,7 +73,12 @@ function CustomerDetails({ selectedCustomer }) {
     return (
       <YesNoBox>
         <label htmlFor={id}>{title}</label>
-        <SelectButton value={selectedCustomer[id]} id={id} options={options} disabled/>
+        <SelectButton
+          value={selectedCustomer[id]}
+          id={id}
+          options={options}
+          disabled
+        />
       </YesNoBox>
     );
   }
@@ -83,29 +89,32 @@ function CustomerDetails({ selectedCustomer }) {
 
   return (
     <React.Fragment>
-      
-
       {!edit ? (
         <motion.div
           initial={{ opacity: 0, x: "0", y: "0" }}
-          animate={{ opacity: 1, x: "0", y:"0" }}
+          animate={{ opacity: 1, x: "0", y: "0" }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
-          exit={{ opacity: 0, x: "0"}}
+          exit={{ opacity: 0, x: "0" }}
         >
           <div className="productDetails">
-            <h1>{selectedCustomer.custName}</h1>
-            
-            <GroupBox>
-              <h2>
-                <i className="pi pi-user"></i> Product Description
-              </h2>
-              <InfoBlock id="custName" title="Customer Name" />
-              <InfoBlock id="locNick" title="Location" />
-              <InfoBlock id="authClass" title="Auth Class" />
-              <InfoBlock id="authType" title="Auth Type" />
-            </GroupBox>
-           
-           
+            <h1>{activeIndex===0 ? selectedCustomer.custName : selectedCustomer.locNick}</h1>
+            {activeIndex === 0 ? (
+              <GroupBox>
+                <h2>
+                  <i className="pi pi-user"></i> Customer Description
+                </h2>
+                <InfoBlock id="custName" title="Customer Name" /> 
+                <InfoBlock id="authClass" title="Auth Class" />
+               
+              </GroupBox>
+            ) : (
+              <GroupBox>
+                <h2>
+                  <i className="pi pi-user"></i> Location Description
+                </h2>
+                <InfoBlock id="locNick" title="Location" />
+              </GroupBox>
+            )}
 
             <Button
               label="Edit"

@@ -28,13 +28,17 @@ const initialState = {
 
 const menuItems = [{ label: "By Customer" }, { label: "By Location" }];
 
-function CustomerList({ selectedCustomer, setSelectedCustomer }) {
+function CustomerList({
+  selectedCustomer,
+  setSelectedCustomer,
+  activeIndex,
+  setActiveIndex,
+}) {
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
   const [filter] = useState({
     custName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
   const [isCreate, setIsCreate] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
   const { customerList } = useCustomerList();
 
   useEffect(() => {
@@ -50,20 +54,18 @@ function CustomerList({ selectedCustomer, setSelectedCustomer }) {
   };
 
   const decideList = (list) => {
-    console.log("activeIndex", activeIndex)
-    let newArray = []
-    let filtArray = []
-    let filtTab = activeIndex===0 ? "custName" : "locNick"
-    for (let li of list){
-      if (!filtArray.includes(li[filtTab])){
-        newArray.push(li)
-        filtArray.push(li[filtTab])
+    console.log("activeIndex", activeIndex);
+    let newArray = [];
+    let filtArray = [];
+    let filtTab = activeIndex === 0 ? "custName" : "locNick";
+    for (let li of list) {
+      if (!filtArray.includes(li[filtTab])) {
+        newArray.push(li);
+        filtArray.push(li[filtTab]);
       }
     }
-    return newArray
-
-    }
-
+    return newArray;
+  };
 
   return (
     <React.Fragment>
