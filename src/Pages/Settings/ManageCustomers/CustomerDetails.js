@@ -35,7 +35,7 @@ const GroupBox = styled.div`
 
 const InfoBox = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1.5fr 0.5fr;
+  grid-template-columns: 1fr 1fr .5fr;
   flex-direction: column;
   align-content: flex-start;
 
@@ -131,8 +131,8 @@ function CustomerDetails({ selectedCustomer, activeIndex }) {
                     aria-label="Edit"
                   />
                   </div>
-                <InfoBlock id="custName" title="Customer Name" />
-                <InfoBlock id="authClass" title="Auth Class" />
+                <InfoBlock id="custName" title="Name" />
+                <InfoBlock id="authClass" title="Class" />
                 {customerList.data
                   .filter((cust) => cust.custName === selectedCustomer.custName)
                   .map((item) => (
@@ -151,7 +151,7 @@ function CustomerDetails({ selectedCustomer, activeIndex }) {
                       
                       <ListItemBlock
                         key={item.locNick + "loc"}
-                        id="Location"
+                        id="Loc"
                         title={item.locNick}
                       />
                       <ListItemBlock
@@ -177,7 +177,7 @@ function CustomerDetails({ selectedCustomer, activeIndex }) {
                       </h2>
                       <ListItemBlock
                         key={item.custName + "cust"}
-                        id="Customer"
+                        id="Cust"
                         title={item.custName}
                       />
                       <ListItemBlock
