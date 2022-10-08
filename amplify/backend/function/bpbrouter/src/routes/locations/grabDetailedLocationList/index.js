@@ -1,69 +1,69 @@
 import mainCall from "/opt/mainCall/index.js";
 
 const query = /* GraphQL */ `
-  query MyQuery {
-    listLocations {
+query MyQuery($sub: String!) {
+    listLocationUsers(filter: {sub: {eq: $sub}}) {
       items {
-        Type
-        locName
+        sub
         locNick
-        zoneNick
-        addr1
-        addr2
-        city
-        zip
-        email
-        phone
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        subs {
-          items {
-            sub
-          }
+        location {
+          addr1
+          addr2
+          city
+          createdAt
+          currentBalance
+          delivOrder
+          email
+          gMap
+          invoicing
+          latestFinalDeliv
+          latestFirstDeliv
+          locName
+          locNick
+          phone
+          picURL
+          printDuplicate
+          qbID
+          specialInstructions
+          terms
+          toBeEmailed
+          toBePrinted
+          updatedAt
+          webpageURL
+          zip
+          zoneNick
         }
       }
     }
   }
+  
 `;
 
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
- * 
- * 
+ *
+ *
  */
 // Update
 
 const grabDetailedLocationList = async (event) => {
+    event = event ? event : {};
+    let user= {};
+
+  try {
+    user = event.requestContext.authorizer.claims;
+  } catch {console.log("no user")}
+  event.body= {"sub": user.sub};
   let response = await mainCall(query, event);
-  
-  let newArray=[];
-  
-  for ( let item of response.body.body.listLocations.items){
-    console.log("item",item);
-    try{
-      for (let sub of item.subs.items){
-        if (sub.sub === response.body.user.sub){
-          newArray.push(item);
-        }
-      }
-    }catch{}
+
+  let newArray = [];
+ 
+  for (let item of response.body.body.listLocationUsers.items) {
+    newArray.push(item.location);
   }
-  console.log("newArray",newArray);
-  
-  response.user = response.body.user;
-  response.body.items = newArray;
+
+  response.user = user;
+  response.body = {"items": newArray};
   
   return response;
 };

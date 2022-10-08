@@ -20,7 +20,7 @@
     }
   },
   "Resources": {
-    "LambdaLayerVersionad6ce4d5": {
+    "LambdaLayerVersion248972aa": {
       "Type": "AWS::Lambda::LayerVersion",
       "Properties": {
         "CompatibleRuntimes": {
@@ -51,13 +51,87 @@
       "DeletionPolicy": "Delete",
       "UpdateReplacePolicy": "Retain"
     },
-    "LambdaLayerPermissionPrivatead6ce4d5": {
+    "LambdaLayerPermissionPrivate248972aa": {
       "Type": "AWS::Lambda::LayerVersionPermission",
       "Properties": {
         "Action": "lambda:GetLayerVersion",
         "LayerVersionArn": {
-          "Ref": "LambdaLayerVersionad6ce4d5"
+          "Ref": "LambdaLayerVersion248972aa"
         },
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    },
+    "LambdaLayerVersion70ffa4de": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs14.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": "amplify-builds/bpbadmin2testFetchLayer-LambdaLayerVersion70ffa4de-build.zip"
+        },
+        "Description": "Updated layer version 2022-10-08T00:56:38.541Z",
+        "LayerName": {
+          "Fn::Sub": [
+            "bpbadmin2testFetchLayer-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivate70ffa4de": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": "arn:aws:lambda:us-east-2:191477602114:layer:bpbadmin2testFetchLayer-auththree:29",
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    },
+    "LambdaLayerVersionad6ce4d5": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs14.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": "amplify-builds/bpbadmin2testFetchLayer-LambdaLayerVersionad6ce4d5-build.zip"
+        },
+        "Description": "Updated layer version 2022-10-07T16:50:31.653Z",
+        "LayerName": {
+          "Fn::Sub": [
+            "bpbadmin2testFetchLayer-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivatead6ce4d5": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": "arn:aws:lambda:us-east-2:191477602114:layer:bpbadmin2testFetchLayer-auththree:28",
         "Principal": {
           "Ref": "AWS::AccountId"
         }
@@ -585,7 +659,7 @@
   "Outputs": {
     "Arn": {
       "Value": {
-        "Ref": "LambdaLayerVersionad6ce4d5"
+        "Ref": "LambdaLayerVersion248972aa"
       }
     }
   }

@@ -17,7 +17,11 @@ const fetcher = async (path) => {
       'content-type': 'application/json',
       'Authorization': token,
     },
-  });
+  }).catch(error => {
+    console.log("Axios error", error.response)
+  }
+  )
+  
   console.log("done.");
   console.log("res",res)
   return res;
@@ -25,7 +29,7 @@ const fetcher = async (path) => {
 
 export function useLocationList() {
   const { data, error, mutate } = useSWR(
-    { url: "/locations/grabDetailedLocationList", args: {} },
+    { url: "/locations/grabDetailedLocationList" },
     fetcher,
     {
       revalidateIfStale: false,
@@ -46,7 +50,7 @@ export function useLocationList() {
 
 export function useSimpleLocationList() {
   const { data, error, mutate } = useSWR(
-    { url: "/locations/grabDetailedLocationList", args: {} },
+    { url: "/locations/grabDetailedLocationList" },
     fetcher,
     {
       revalidateIfStale: false,

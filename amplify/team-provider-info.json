@@ -169,7 +169,7 @@
         },
         "bpbadmin2testFetchLayer": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
-          "s3Key": "amplify-builds/bpbadmin2testFetchLayer-LambdaLayerVersionad6ce4d5-build.zip"
+          "s3Key": "amplify-builds/bpbadmin2testFetchLayer-LambdaLayerVersion248972aa-build.zip"
         },
         "createProduct": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
@@ -197,7 +197,7 @@
         },
         "bpbrouter": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
-          "s3Key": "amplify-builds/bpbrouter-6138427876786d56386a-build.zip"
+          "s3Key": "amplify-builds/bpbrouter-396b36794d4d64762b50-build.zip"
         }
       },
       "auth": {
