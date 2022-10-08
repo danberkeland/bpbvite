@@ -35,7 +35,7 @@ const GroupBox = styled.div`
 
 const InfoBox = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1.5fr;
+  grid-template-columns: 1fr 1.5fr 0.5fr;
   flex-direction: column;
   align-content: flex-start;
 
@@ -65,6 +65,11 @@ function CustomerDetails({ selectedCustomer, activeIndex }) {
         </span>
 
         <InputText id={id} value={selectedCustomer[id]} disabled />
+        <Button
+          icon="pi pi-pencil"
+          className="p-button-rounded p-button-success p-button-text"
+          aria-label="Edit"
+        />
       </InfoBox>
     );
   }
@@ -116,18 +121,34 @@ function CustomerDetails({ selectedCustomer, activeIndex }) {
             </h1>
             {activeIndex === 0 ? (
               <GroupBox>
+                <div className="titleWTrash">
                 <h2>
-                  <i className="pi pi-user"></i> Customer Description
-                </h2>
+                  <i className="pi pi-user"></i> Customer Description{" "}
+                  
+                </h2><Button
+                    icon="pi pi-trash"
+                    className="p-button-rounded p-button-help p-button-outlined"
+                    aria-label="Edit"
+                  />
+                  </div>
                 <InfoBlock id="custName" title="Customer Name" />
                 <InfoBlock id="authClass" title="Auth Class" />
                 {customerList.data
                   .filter((cust) => cust.custName === selectedCustomer.custName)
                   .map((item) => (
                     <GroupBox>
+                      <div className="titleWTrash">
                       <h2>
-                  <i className="pi pi-user"></i> Location Info
-                </h2>
+                        <i className="pi pi-user"></i> Location Info{" "}
+                        
+                      </h2>
+                      <Button
+                          icon="pi pi-trash"
+                          className="p-button-rounded p-button-help p-button-outlined"
+                          aria-label="Edit"
+                        />
+                      </div>
+                      
                       <ListItemBlock
                         key={item.locNick + "loc"}
                         id="Location"
@@ -152,8 +173,8 @@ function CustomerDetails({ selectedCustomer, activeIndex }) {
                   .map((item) => (
                     <GroupBox>
                       <h2>
-                  <i className="pi pi-user"></i> Customer Info
-                </h2>
+                        <i className="pi pi-user"></i> Customer Info
+                      </h2>
                       <ListItemBlock
                         key={item.custName + "cust"}
                         id="Customer"
@@ -168,11 +189,11 @@ function CustomerDetails({ selectedCustomer, activeIndex }) {
                   ))}
               </GroupBox>
             )}
+            
 
             <Button
-              label="Edit"
-              className="editButton p-button-raised p-button-rounded"
-              style={editButtonStyle}
+              label="+ Add Location"
+              className="p-button-raised p-button-rounded"
               onClick={handleEdit}
             />
           </div>
