@@ -142,3 +142,8 @@ button:hover {
   width: 90%;
   align-items: center;
 }
+
+div .photoBox {
+  
+  padding: 30px;
+}
