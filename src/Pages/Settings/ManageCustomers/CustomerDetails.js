@@ -150,9 +150,21 @@ function CustomerDetails({ selectedCustomer, activeIndex }) {
                 {customerList.data
                   .filter((cust) => cust.locNick === selectedCustomer.locNick)
                   .map((item) => (
-                    <div key={item.custName}>
-                      {item.custName} {item.authType}
-                    </div>
+                    <GroupBox>
+                      <h2>
+                  <i className="pi pi-user"></i> Customer Info
+                </h2>
+                      <ListItemBlock
+                        key={item.custName + "cust"}
+                        id="Customer"
+                        title={item.custName}
+                      />
+                      <ListItemBlock
+                        key={item.locNick + "auth"}
+                        id="Auth"
+                        title={item.authType}
+                      />
+                    </GroupBox>
                   ))}
               </GroupBox>
             )}
