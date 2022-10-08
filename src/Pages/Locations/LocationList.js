@@ -9,7 +9,7 @@ import { Button } from "primereact/button";
 import CreateLocation from "./CreateLocation";
 import { motion } from "framer-motion";
 import { useLocationList } from "../../hooks";
-import Loader from "../../AppStructure/Loader";
+import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
 const submitButtonStyle = {
   width: "100px",
@@ -19,6 +19,7 @@ const submitButtonStyle = {
 };
 
 function LocationList({ selectedLocation, setSelectedLocation }) {
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
   const [filter] = useState({
     locName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
@@ -42,7 +43,7 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
           exit={{ opacity: 0 }}
         >
           <button onClick={handleClick}>+ CREATE LOCATION</button>
-          {locationList.isLoading && <Loader />}
+          {locationList.isLoading ? setIsLoading(true) : setIsLoading(false)}
           {locationList.isError && <div>Table Failed to load</div>}
           {locationList.data && (
             <DataTable
