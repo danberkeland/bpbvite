@@ -52,36 +52,22 @@ const itemsAuth1 = itemsAuth2.concat([
   {
     label: "Billing",
     icon: "pi pi-fw pi-dollar",
-    items: [
-      {
-        label: "Customer News",
-        icon: "pi pi-fw pi-home",
-        command: () => {
-          window.location = "/CustomerNews";
-        },
-      },
-      {
-        label: "Ordering",
-        icon: "pi pi-fw pi-shopping-cart",
-        command: () => {
-          window.location = "/Ordering";
-        },
-      },
-      {
-        label: "Products",
-        icon: "pi pi-fw pi-tags",
-        command: () => {
-          window.location = "/CustomerOrdering";
-        },
-      },
-    ],
+    command: () => {
+      window.location = "/Billing";
+    },
   },
   {
     label: "Settings",
     icon: "pi pi-fw pi-cog",
-    command: () => {
-      window.location = "/Settings";
-    },
+    items: [
+      {
+        label: "Manage Customers",
+        icon: "pi pi-fw pi-home",
+        command: () => {
+          window.location = "/Settings/ManageCustomers";
+        },
+      },
+    ],
   },
 ]);
 

@@ -94,3 +94,24 @@ export function useProductList() {
     },
   };
 }
+
+export function useCustomerList() {
+  const { data, error, mutate } = useSWR(
+    { url: "/customers/grabDetailedCustomerList" },
+    fetcher,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: true,
+    }
+  );
+
+  return {
+    customerList: {
+      data: data ? sortAtoZDataByIndex(data.data.body.items, "custName") : data,
+      isLoading: !error && !data,
+      isError: error,
+      revalidate: () => mutate(),
+    },
+  };
+}

@@ -12,6 +12,7 @@ import Billing from "../Pages/Billing/Billing";
 import EODCounts from "../Pages/EODCounts/EODCounts";
 import Logistics from "../Pages/Logistics/Logistics";
 import Locations from "../Pages/Locations/Locations";
+import ManageCustomers from "../Pages/Settings/ManageCustomers/ManageCustomers";
 import { NavSide } from "./Nav";
 
 import { AnimatePresence } from "framer-motion";
@@ -34,6 +35,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
         <Route path="/EODCounts" element={<EODCounts />} />
         <Route path="/Logistics" element={<Logistics />} />
         <Route path="/Locations" element={<Locations />} />
+        <Route path="/Settings/ManageCustomers" element={<ManageCustomers />} />
         <Route path="/" element={<NavSide />} />
       </Routes>
     </AnimatePresence>
