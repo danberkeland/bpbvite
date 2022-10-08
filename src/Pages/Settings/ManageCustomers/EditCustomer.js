@@ -24,7 +24,13 @@ function EditCustomer({ initialState, create }) {
               disabled={!create}
               placeholder="Enter customer name"
             />
-
+            <CustomInput
+              label="Auth Class"
+              name="authClass"
+              type="text"
+              disabled={!create}
+              placeholder="Enter auth class"
+            />
             <CustomInput
               label="Auth Type"
               name="authType"

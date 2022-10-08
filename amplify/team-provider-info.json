@@ -197,7 +197,7 @@
         },
         "bpbrouter": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
-          "s3Key": "amplify-builds/bpbrouter-51545a3230784477504b-build.zip"
+          "s3Key": "amplify-builds/bpbrouter-6634414f5336512f4f6e-build.zip"
         }
       },
       "auth": {

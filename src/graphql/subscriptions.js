@@ -490,6 +490,7 @@ export const onCreateUser = /* GraphQL */ `
       name
       email
       phone
+      authClass
       sub
       locNick
       defaultLoc {
@@ -569,6 +570,7 @@ export const onUpdateUser = /* GraphQL */ `
       name
       email
       phone
+      authClass
       sub
       locNick
       defaultLoc {
@@ -648,6 +650,7 @@ export const onDeleteUser = /* GraphQL */ `
       name
       email
       phone
+      authClass
       sub
       locNick
       defaultLoc {
@@ -4839,6 +4842,7 @@ export const onCreateEventLog = /* GraphQL */ `
         name
         email
         phone
+        authClass
         sub
         locNick
         defaultLoc {
@@ -4891,6 +4895,7 @@ export const onUpdateEventLog = /* GraphQL */ `
         name
         email
         phone
+        authClass
         sub
         locNick
         defaultLoc {
@@ -4943,6 +4948,7 @@ export const onDeleteEventLog = /* GraphQL */ `
         name
         email
         phone
+        authClass
         sub
         locNick
         defaultLoc {
@@ -6633,6 +6639,7 @@ export const onCreateLocationUser = /* GraphQL */ `
         name
         email
         phone
+        authClass
         sub
         locNick
         defaultLoc {
@@ -6742,6 +6749,7 @@ export const onUpdateLocationUser = /* GraphQL */ `
         name
         email
         phone
+        authClass
         sub
         locNick
         defaultLoc {
@@ -6851,6 +6859,7 @@ export const onDeleteLocationUser = /* GraphQL */ `
         name
         email
         phone
+        authClass
         sub
         locNick
         defaultLoc {

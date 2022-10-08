@@ -33,6 +33,7 @@ query MyQuery {
       for (let loc of cust.locs.items){
         let newItem = {
           "custName": cust.name,
+          "authClass": cust.authClass,
           "phone": cust.phone,
           "sub": cust.sub,
           "locNick": loc.locNick,

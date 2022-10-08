@@ -148,6 +148,7 @@ type User @model {
   name: String!
   email: String!
   phone: String
+  authClass: String
   sub: String! @primaryKey
   locNick: String
   defaultLoc: Location @hasOne(fields: ["locNick"])

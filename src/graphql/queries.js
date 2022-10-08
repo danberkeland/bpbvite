@@ -367,6 +367,7 @@ export const getUser = /* GraphQL */ `
       name
       email
       phone
+      authClass
       sub
       locNick
       defaultLoc {
@@ -459,6 +460,7 @@ export const listUsers = /* GraphQL */ `
         name
         email
         phone
+        authClass
         sub
         locNick
         defaultLoc {
@@ -2858,6 +2860,7 @@ export const getEventLog = /* GraphQL */ `
         name
         email
         phone
+        authClass
         sub
         locNick
         defaultLoc {
@@ -2915,6 +2918,7 @@ export const listEventLogs = /* GraphQL */ `
           name
           email
           phone
+          authClass
           sub
           locNick
           createdAt
@@ -3801,6 +3805,7 @@ export const getLocationUser = /* GraphQL */ `
         name
         email
         phone
+        authClass
         sub
         locNick
         defaultLoc {
@@ -3887,6 +3892,7 @@ export const listLocationUsers = /* GraphQL */ `
           name
           email
           phone
+          authClass
           sub
           locNick
           createdAt
@@ -4491,6 +4497,7 @@ export const locUsersByAuthType = /* GraphQL */ `
           name
           email
           phone
+          authClass
           sub
           locNick
           createdAt
