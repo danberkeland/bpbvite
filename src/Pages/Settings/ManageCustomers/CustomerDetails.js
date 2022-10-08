@@ -100,6 +100,7 @@ function CustomerDetails({ selectedCustomer }) {
                 <i className="pi pi-user"></i> Product Description
               </h2>
               <InfoBlock id="custName" title="Customer Name" />
+              <InfoBlock id="locNick" title="Location" />
               <InfoBlock id="authClass" title="Auth Class" />
               <InfoBlock id="authType" title="Auth Type" />
             </GroupBox>

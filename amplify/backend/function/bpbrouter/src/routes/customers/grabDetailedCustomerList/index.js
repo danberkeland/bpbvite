@@ -6,6 +6,7 @@ query MyQuery {
       items {
         name
         phone
+        authClass
         sub
         locs {
           items {
