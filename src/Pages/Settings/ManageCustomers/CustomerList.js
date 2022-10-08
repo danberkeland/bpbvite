@@ -49,6 +49,21 @@ function CustomerList({ selectedCustomer, setSelectedCustomer }) {
     setIsCreate(!isCreate);
   };
 
+  const decideList = (list) => {
+    console.log("activeIndex", activeIndex)
+    let newArray = []
+    let filtArray = []
+    let filtTab = activeIndex===0 ? "custName" : "locNick"
+    for (let li of list){
+      if (!filtArray.includes(li[filtTab])){
+        newArray.push(li)
+        filtArray.push(li[filtTab])
+      }
+    }
+    return newArray
+
+    }
+
 
   return (
     <React.Fragment>
@@ -72,7 +87,7 @@ function CustomerList({ selectedCustomer, setSelectedCustomer }) {
             >
               <DataTable
                 className="dataTable"
-                value={customerList.data}
+                value={decideList(customerList.data)}
                 selectionMode="single"
                 metaKeySelection={false}
                 selection={selectedCustomer}
