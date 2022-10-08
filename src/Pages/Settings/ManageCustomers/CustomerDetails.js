@@ -69,6 +69,18 @@ function CustomerDetails({ selectedCustomer, activeIndex }) {
     );
   }
 
+  function ListItemBlock({ id, title }) {
+    return (
+      <InfoBox>
+        <span className="p-inputgroup-addon">
+          <label htmlFor={id}>{id}</label>
+        </span>
+
+        <InputText id={id} value={title} disabled />
+      </InfoBox>
+    );
+  }
+
   function YesNoBlock({ id, title }) {
     return (
       <YesNoBox>
@@ -97,15 +109,37 @@ function CustomerDetails({ selectedCustomer, activeIndex }) {
           exit={{ opacity: 0, x: "0" }}
         >
           <div className="productDetails">
-            <h1>{activeIndex===0 ? selectedCustomer.custName : selectedCustomer.locNick}</h1>
+            <h1>
+              {activeIndex === 0
+                ? selectedCustomer.custName
+                : selectedCustomer.locNick}
+            </h1>
             {activeIndex === 0 ? (
               <GroupBox>
                 <h2>
                   <i className="pi pi-user"></i> Customer Description
                 </h2>
-                <InfoBlock id="custName" title="Customer Name" /> 
+                <InfoBlock id="custName" title="Customer Name" />
                 <InfoBlock id="authClass" title="Auth Class" />
-               
+                {customerList.data
+                  .filter((cust) => cust.custName === selectedCustomer.custName)
+                  .map((item) => (
+                    <GroupBox>
+                      <h2>
+                  <i className="pi pi-user"></i> Location Info
+                </h2>
+                      <ListItemBlock
+                        key={item.locNick + "loc"}
+                        id="Location"
+                        title={item.locNick}
+                      />
+                      <ListItemBlock
+                        key={item.locNick + "auth"}
+                        id="Auth"
+                        title={item.authType}
+                      />
+                    </GroupBox>
+                  ))}
               </GroupBox>
             ) : (
               <GroupBox>
@@ -113,6 +147,13 @@ function CustomerDetails({ selectedCustomer, activeIndex }) {
                   <i className="pi pi-user"></i> Location Description
                 </h2>
                 <InfoBlock id="locNick" title="Location" />
+                {customerList.data
+                  .filter((cust) => cust.locNick === selectedCustomer.locNick)
+                  .map((item) => (
+                    <div key={item.custName}>
+                      {item.custName} {item.authType}
+                    </div>
+                  ))}
               </GroupBox>
             )}
 
