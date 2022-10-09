@@ -7,6 +7,7 @@ import { SelectButton } from "primereact/selectbutton";
 
 import { motion } from "framer-motion";
 import styled from "styled-components";
+import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
 const options = [
   { label: "Yes", value: true },
@@ -42,7 +43,8 @@ const InfoBox = styled.div`
 `;
 
 function ProductDetails({ selectedProduct }) {
-  const [edit, setEdit] = useState(false);
+  const setIsEdit = useSettingsStore((state) => state.setIsEdit);
+  const isEdit = useSettingsStore((state) => state.isEdit);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -65,7 +67,7 @@ function ProductDetails({ selectedProduct }) {
         <InputText
           id={id}
           value={selectedProduct[id] ? selectedProduct[id] : ""}
-          disabled={!edit}
+          disabled={!isEdit}
         />
       </InfoBox>
     );
@@ -81,7 +83,7 @@ function ProductDetails({ selectedProduct }) {
         <InputNumber
           id={id}
           value={selectedProduct[id] ? selectedProduct[id] : 0}
-          disabled={!edit}
+          disabled={!isEdit}
         />
       </InfoBox>
     );
@@ -97,7 +99,7 @@ function ProductDetails({ selectedProduct }) {
         <InputNumber
           id={id}
           value={selectedProduct[id] ? selectedProduct[id] : 0}
-          disabled={!edit}
+          disabled={!isEdit}
         />
       </InfoBox>
     );
@@ -111,14 +113,14 @@ function ProductDetails({ selectedProduct }) {
           value={selectedProduct[id] ? selectedProduct[id] : ""}
           id={id}
           options={options}
-          disabled={!edit}
+          disabled={!isEdit}
         />
       </YesNoBox>
     );
   }
 
   const handleEdit = () => {
-    setEdit(!edit);
+    setIsEdit(!isEdit);
   };
 
   return (

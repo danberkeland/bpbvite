@@ -58,7 +58,9 @@ const store = (set) => ({
   items: [],
   setItems: (items) => set (() => ({ items: items })),
   currentOrder: [],
-  setCurrentOrder: (currentOrder) => set (() => ({ currentOrder: currentOrder }))
+  setCurrentOrder: (currentOrder) => set (() => ({ currentOrder: currentOrder })),
+  isEdit: false,
+  setIsEdit: (isEdit) => set (() => ({ isEdit: isEdit }))
   
 });
 
