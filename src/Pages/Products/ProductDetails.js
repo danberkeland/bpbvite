@@ -2,17 +2,16 @@ import React, { useEffect, useState } from "react";
 
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
+import { InputNumber } from "primereact/inputnumber";
 import { SelectButton } from "primereact/selectbutton";
 
 import { motion } from "framer-motion";
-import CreateProduct from "./EditProduct";
 import styled from "styled-components";
 
 const options = [
   { label: "Yes", value: true },
   { label: "No", value: false },
 ];
-
 
 // Styles
 const YesNoBox = styled.div`
@@ -46,8 +45,8 @@ function ProductDetails({ selectedProduct }) {
   const [edit, setEdit] = useState(false);
 
   useEffect(() => {
-    window.scrollTo(0,0)
-  },[])
+    window.scrollTo(0, 0);
+  }, []);
 
   const editButtonStyle = {
     width: "100px",
@@ -63,7 +62,43 @@ function ProductDetails({ selectedProduct }) {
           <label htmlFor={id}>{title}</label>
         </span>
 
-        <InputText id={id} value={selectedProduct[id]} disabled />
+        <InputText
+          id={id}
+          value={selectedProduct[id] ? selectedProduct[id] : ""}
+          disabled={!edit}
+        />
+      </InfoBox>
+    );
+  }
+
+  function IntBlock({ id, title }) {
+    return (
+      <InfoBox>
+        <span className="p-inputgroup-addon">
+          <label htmlFor={id}>{title}</label>
+        </span>
+
+        <InputNumber
+          id={id}
+          value={selectedProduct[id] ? selectedProduct[id] : 0}
+          disabled={!edit}
+        />
+      </InfoBox>
+    );
+  }
+
+  function FloatBlock({ id, title }) {
+    return (
+      <InfoBox>
+        <span className="p-inputgroup-addon">
+          <label htmlFor={id}>{title}</label>
+        </span>
+
+        <InputNumber
+          id={id}
+          value={selectedProduct[id] ? selectedProduct[id] : 0}
+          disabled={!edit}
+        />
       </InfoBox>
     );
   }
@@ -72,7 +107,12 @@ function ProductDetails({ selectedProduct }) {
     return (
       <YesNoBox>
         <label htmlFor={id}>{title}</label>
-        <SelectButton value={selectedProduct[id]} id={id} options={options} disabled/>
+        <SelectButton
+          value={selectedProduct[id] ? selectedProduct[id] : ""}
+          id={id}
+          options={options}
+          disabled={!edit}
+        />
       </YesNoBox>
     );
   }
@@ -83,69 +123,63 @@ function ProductDetails({ selectedProduct }) {
 
   return (
     <React.Fragment>
-      
+      <motion.div
+        initial={{ opacity: 0, x: "0", y: "0" }}
+        animate={{ opacity: 1, x: "0", y: "0" }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        exit={{ opacity: 0, x: "0" }}
+      >
+        <div className="productDetails">
+          <h1>{selectedProduct.prodName}</h1>
 
-      {!edit ? (
-        <motion.div
-          initial={{ opacity: 0, x: "0", y: "0" }}
-          animate={{ opacity: 1, x: "0", y:"0" }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
-          exit={{ opacity: 0, x: "0"}}
-        >
-          <div className="productDetails">
-            <h1>{selectedProduct.prodName}</h1>
-            
-            <GroupBox>
-              <h2>
-                <i className="pi pi-user"></i> Product Description
-              </h2>
-              <InfoBlock id="prodName" title="Product Name" />
-              <InfoBlock id="prodNick" title="Product ID" />
-              <InfoBlock id="squareID" title="Square ID" />
-              <InfoBlock id="qbID" title="QB ID" />
-            </GroupBox>
-            <GroupBox>
-              <h2>
-                <i className="pi pi-dollar"></i> Billing
-              </h2>
-              <InfoBlock id="wholePrice" title="Whole Price" />
-              <InfoBlock id="retailPrice" title="Retail Price" />
-              <YesNoBlock id="defaultInclude" title="Default Include" />
-            </GroupBox>
-            <GroupBox>
-              <h2>
-                <i className="pi pi-dollar"></i> Packing Info
-              </h2>
-              <InfoBlock id="packGroup" title="Pack Group" />
-              <InfoBlock id="packGroupOrder" title="Pack Order" />
-              <InfoBlock id="packSize" title="Pack Size" />
-              <YesNoBlock id="freezerThaw" title="Freezer Thaw" />
-            </GroupBox>
+          <GroupBox>
+            <h2>
+              <i className="pi pi-user"></i> Product Description
+            </h2>
+            <InfoBlock id="prodName" title="Product Name" />
+            <InfoBlock id="prodNick" title="Product ID" />
+            <InfoBlock id="squareID" title="Square ID" />
+            <InfoBlock id="qbID" title="QB ID" />
+          </GroupBox>
+          <GroupBox>
+            <h2>
+              <i className="pi pi-dollar"></i> Billing
+            </h2>
+            <FloatBlock id="wholePrice" title="Whole Price" />
+            <FloatBlock id="retailPrice" title="Retail Price" />
+            <YesNoBlock id="defaultInclude" title="Default Include" />
+          </GroupBox>
+          <GroupBox>
+            <h2>
+              <i className="pi pi-dollar"></i> Packing Info
+            </h2>
+            <InfoBlock id="packGroup" title="Pack Group" />
+            <IntBlock id="packGroupOrder" title="Pack Order" />
+            <IntBlock id="packSize" title="Pack Size" />
+            <YesNoBlock id="freezerThaw" title="Freezer Thaw" />
+          </GroupBox>
 
-            <GroupBox>
-              <h2>
-                <i className="pi pi-dollar"></i> Baking Info
-              </h2>
+          <GroupBox>
+            <h2>
+              <i className="pi pi-dollar"></i> Baking Info
+            </h2>
 
-              <InfoBlock id="doughNick" title="Dough Type" />
-              <InfoBlock id="leadTime" title="Lead Time" />
-              <InfoBlock id="forBake" title="For Bake" />
-              <InfoBlock id="readyTime" title="Ready Time" />
-              <InfoBlock id="batchSize" title="Batch Size" />
-              <InfoBlock id="batchExtra" title="Batch Extra" />
-              <InfoBlock id="weight" title="Weight" />
-            </GroupBox>
-            <Button
-              label="Edit"
-              className="editButton p-button-raised p-button-rounded"
-              style={editButtonStyle}
-              onClick={handleEdit}
-            />
-          </div>
-        </motion.div>
-      ) : (
-        <CreateProduct initialState={selectedProduct} />
-      )}
+            <InfoBlock id="doughNick" title="Dough Type" />
+            <IntBlock id="leadTime" title="Lead Time" />
+            <InfoBlock id="forBake" title="For Bake" />
+            <FloatBlock id="readyTime" title="Ready Time" />
+            <IntBlock id="batchSize" title="Batch Size" />
+            <IntBlock id="batchExtra" title="Batch Extra" />
+            <FloatBlock id="weight" title="Weight" />
+          </GroupBox>
+          <Button
+            label="Edit"
+            className="editButton p-button-raised p-button-rounded"
+            style={editButtonStyle}
+            onClick={handleEdit}
+          />
+        </div>
+      </motion.div>
 
       <div className="bottomSpace"></div>
     </React.Fragment>
