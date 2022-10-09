@@ -1,28 +1,19 @@
-import { useField, formik } from "formik";
+import { useField } from "formik";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { SelectButton } from "primereact/selectbutton";
 
 import { useSettingsStore } from "../Contexts/SettingsZustand";
-import styled from "styled-components";
 
 const options = [
   { label: "Yes", value: true },
   { label: "No", value: false },
 ];
 
-const YesNoBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
-  padding: 5px;
-`;
-
 export const CustomIDInput = ({ label, ...props }) => {
   const isEdit = useSettingsStore((state) => state.isEdit);
 
-  const [field, meta, helpers] = useField(props);
+  const [field, meta] = useField(props);
   console.log("field", field);
   console.log("meta", meta);
   return (
@@ -49,7 +40,7 @@ export const CustomIDInput = ({ label, ...props }) => {
 
 export const CustomInput = ({ label, ...props }) => {
   const isEdit = useSettingsStore((state) => state.isEdit);
-  const [field, meta, helpers] = useField(props);
+  const [field, meta] = useField(props);
   console.log("field", field);
   console.log("meta", meta);
   return (
@@ -70,7 +61,7 @@ export const CustomInput = ({ label, ...props }) => {
 
 export const CustomFloatInput = ({ label, ...props }) => {
   const isEdit = useSettingsStore((state) => state.isEdit);
-  const [field, meta, helpers] = useField(props);
+  const [field, meta] = useField(props);
   console.log("field", field);
   console.log("meta", meta);
   console.log("...props", props);
@@ -104,7 +95,7 @@ export const CustomFloatInput = ({ label, ...props }) => {
 
 export const CustomIntInput = ({ label, ...props }) => {
   const isEdit = useSettingsStore((state) => state.isEdit);
-  const [field, meta, helpers] = useField(props);
+  const [field, meta] = useField(props);
   console.log("field", field);
   console.log("meta", meta);
   return (
@@ -128,24 +119,29 @@ export const CustomIntInput = ({ label, ...props }) => {
   );
 };
 
-export const YesNoBlock = ({ label, ...props }) => {
+export const CustomYesNoInput = ({ label, ...props }) => {
   const isEdit = useSettingsStore((state) => state.isEdit);
-  const [field, meta, helpers] = useField(props);
+  const [field, meta] = useField(props);
   console.log("field", field);
   console.log("meta", meta);
   return (
-    <YesNoBox>
+    <div>
       <div className="field">
         <label>{label}</label>
         <SelectButton
           {...field}
           {...props}
           value={
-            props.converter.values[props.name]    
+            props.converter.values[props.name]
+              ? props.converter.values[props.name]
+              : false
           }
           onChange={(values) => {
             console.log("value", values.value);
-            props.converter.setFieldValue(props.name, !props.converter.values[props.name] );
+            props.converter.setFieldValue(
+              props.name,
+              !props.converter.values[props.name]
+            );
           }}
           options={options}
           className={meta.touched && meta.error ? "p-error" : ""}
@@ -153,6 +149,6 @@ export const YesNoBlock = ({ label, ...props }) => {
         />
       </div>
       {meta.touched && meta.error && <h4 className="p-error">{meta.error}</h4>}
-    </YesNoBox>
+    </div>
   );
 };
