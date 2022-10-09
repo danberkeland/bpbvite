@@ -20,7 +20,7 @@ function Products() {
       {selectedProduct !== "" ? (
         <React.Fragment>
           <button onClick={handleProdClick}>PRODUCT LIST</button>
-          <ProductDetails selectedProduct={selectedProduct} />
+          <ProductDetails initialState={selectedProduct} />
         </React.Fragment>
       ) : (
         <div></div>

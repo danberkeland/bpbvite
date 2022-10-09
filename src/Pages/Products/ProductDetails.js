@@ -1,18 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+
+import { Form, Formik } from "formik";
 
 import { Button } from "primereact/button";
-import { InputText } from "primereact/inputtext";
-import { InputNumber } from "primereact/inputnumber";
-import { SelectButton } from "primereact/selectbutton";
 
 import { motion } from "framer-motion";
+import {
+  CustomIDInput,
+  CustomInput,
+  CustomFloatInput,
+  CustomIntInput,
+  CustomYesNoInput,
+} from "../../FormComponents/CustomIDInput";
+import { validationSchema } from "./ValidationSchema";
+
 import styled from "styled-components";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
-
-const options = [
-  { label: "Yes", value: true },
-  { label: "No", value: false },
-];
 
 // Styles
 const YesNoBox = styled.div`
@@ -42,149 +45,152 @@ const InfoBox = styled.div`
   margin: 5px 15px;
 `;
 
-function ProductDetails({ selectedProduct }) {
-  const setIsEdit = useSettingsStore((state) => state.setIsEdit);
-  const isEdit = useSettingsStore((state) => state.isEdit);
+function ProductDetails({ initialState, create }) {
+  const setIsEdit = useSettingsStore((state) => state.setIsEdit)
+  const isEdit = useSettingsStore((state) => state.isEdit)
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+  }, [])
 
   const editButtonStyle = {
     width: "100px",
     margin: "20px",
     fontSize: "1.2em",
-    backgroundColor: "#006aff",
-  };
-
-  function InfoBlock({ id, title }) {
-    return (
-      <InfoBox>
-        <span className="p-inputgroup-addon">
-          <label htmlFor={id}>{title}</label>
-        </span>
-
-        <InputText
-          id={id}
-          value={selectedProduct[id] ? selectedProduct[id] : ""}
-          disabled={!isEdit}
-        />
-      </InfoBox>
-    );
-  }
-
-  function IntBlock({ id, title }) {
-    return (
-      <InfoBox>
-        <span className="p-inputgroup-addon">
-          <label htmlFor={id}>{title}</label>
-        </span>
-
-        <InputNumber
-          id={id}
-          value={selectedProduct[id] ? selectedProduct[id] : 0}
-          disabled={!isEdit}
-        />
-      </InfoBox>
-    );
-  }
-
-  function FloatBlock({ id, title }) {
-    return (
-      <InfoBox>
-        <span className="p-inputgroup-addon">
-          <label htmlFor={id}>{title}</label>
-        </span>
-
-        <InputNumber
-          id={id}
-          value={selectedProduct[id] ? selectedProduct[id] : 0}
-          disabled={!isEdit}
-        />
-      </InfoBox>
-    );
-  }
-
-  function YesNoBlock({ id, title }) {
-    return (
-      <YesNoBox>
-        <label htmlFor={id}>{title}</label>
-        <SelectButton
-          value={selectedProduct[id] ? selectedProduct[id] : ""}
-          id={id}
-          options={options}
-          disabled={!isEdit}
-        />
-      </YesNoBox>
-    );
+    backgroundColor: "#006aff"
   }
 
   const handleEdit = () => {
-    setIsEdit(!isEdit);
-  };
-
+    setIsEdit(!isEdit)
+  }
+  
   return (
-    <React.Fragment>
-      <motion.div
-        initial={{ opacity: 0, x: "0", y: "0" }}
-        animate={{ opacity: 1, x: "0", y: "0" }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-        exit={{ opacity: 0, x: "0" }}
-      >
-        <div className="productDetails">
-          <h1>{selectedProduct.prodName}</h1>
+    <motion.div
+      initial={{ opacity: 0, x: "0", y: "0" }}
+      animate={{ opacity: 1, x: "0", y: "0" }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+      exit={{ opacity: 0, x: "0" }}
+    >
+      <Formik initialValues={initialState} validationSchema={validationSchema}>
+        {(props) => (
+          <Form>
+            <GroupBox>
+              <h2>
+                <i className="pi pi-user"></i> Product Description
+              </h2>
+              <CustomIDInput
+                label="Product ID"
+                name="prodNick"
+                type="text"
+                placeholder="Enter product id"
+              />
+              <CustomInput
+                label="Product Name"
+                name="prodName"
+                type="text"
+                placeholder="Enter product name"
+              />
+              <CustomInput
+                label="Square ID"
+                name="squareID"
+                type="text"
+                placeholder="Enter square ID"
+              />
+              <CustomInput
+                label="QB ID"
+                name="qbID"
+                type="text"
+                placeholder="Enter QB ID"
+              />
+            </GroupBox>
+            <GroupBox>
+              <h2>
+                <i className="pi pi-dollar"></i> Billing
+              </h2>
+              <CustomFloatInput
+                label="Wholesale Price"
+                name="wholePrice"
+                type="tel"
+                placeholder="Enter Wholesale Price"
+                converter={props}
+              />
+              <CustomFloatInput
+                label="Retail Price"
+                name="retailPrice"
+                type="tel"
+                placeholder="Enter Retail Price"
+                converter={props}
+              />
+              <CustomYesNoInput
+                label="Default Include"
+                name="defaultInclude"
+                converter={props}
+              />
+            </GroupBox>
+            <GroupBox>
+              <h2>
+                <i className="pi pi-dollar"></i> Baking Info 
+              </h2>
+              <CustomInput
+                label="Dough Type"
+                name="doughNick"
+                type="text"
+                placeholder="Enter Dough Type"
+              />
+              <CustomIntInput
+                label="Lead Time"
+                name="leadTime"
+                type="tel"
+                placeholder="Enter Lead Time"
+                converter={props}
+              />
+              <CustomInput
+                label="For Bake"
+                name="forBake"
+                type="text"
+                placeholder="Enter Bake Name"
+              />
+              <CustomIntInput
+                label="Ready Time"
+                name="readyTime"
+                type="tel"
+                placeholder="Enter Ready Time"
+                converter={props}
+              />
+              <CustomIntInput
+                label="Batch Size"
+                name="batchSize"
+                type="tel"
+                placeholder="Enter Batch Size"
+                converter={props}
+              />
+              <CustomIntInput
+                label="Batch Extra"
+                name="batchExtra"
+                type="tel"
+                placeholder="Enter Batch Extra"
+                converter={props}
+              />
+              <CustomFloatInput
+                label="Weight"
+                name="weight"
+                type="tel"
+                placeholder="Enter Pocket Weight"
+                converter={props}
+              />
+            </GroupBox>
 
-          <GroupBox>
-            <h2>
-              <i className="pi pi-user"></i> Product Description
-            </h2>
-            <InfoBlock id="prodName" title="Product Name" />
-            <InfoBlock id="prodNick" title="Product ID" />
-            <InfoBlock id="squareID" title="Square ID" />
-            <InfoBlock id="qbID" title="QB ID" />
-          </GroupBox>
-          <GroupBox>
-            <h2>
-              <i className="pi pi-dollar"></i> Billing
-            </h2>
-            <FloatBlock id="wholePrice" title="Whole Price" />
-            <FloatBlock id="retailPrice" title="Retail Price" />
-            <YesNoBlock id="defaultInclude" title="Default Include" />
-          </GroupBox>
-          <GroupBox>
-            <h2>
-              <i className="pi pi-dollar"></i> Packing Info
-            </h2>
-            <InfoBlock id="packGroup" title="Pack Group" />
-            <IntBlock id="packGroupOrder" title="Pack Order" />
-            <IntBlock id="packSize" title="Pack Size" />
-            <YesNoBlock id="freezerThaw" title="Freezer Thaw" />
-          </GroupBox>
-
-          <GroupBox>
-            <h2>
-              <i className="pi pi-dollar"></i> Baking Info
-            </h2>
-
-            <InfoBlock id="doughNick" title="Dough Type" />
-            <IntBlock id="leadTime" title="Lead Time" />
-            <InfoBlock id="forBake" title="For Bake" />
-            <FloatBlock id="readyTime" title="Ready Time" />
-            <IntBlock id="batchSize" title="Batch Size" />
-            <IntBlock id="batchExtra" title="Batch Extra" />
-            <FloatBlock id="weight" title="Weight" />
-          </GroupBox>
-          <Button
-            label="Edit"
-            className="editButton p-button-raised p-button-rounded"
-            style={editButtonStyle}
-            onClick={handleEdit}
-          />
-        </div>
-      </motion.div>
-
+            <Button
+              label="Edit"
+              className="editButton p-button-raised p-button-rounded"
+              style={editButtonStyle}
+              onClick={handleEdit}
+            />
+          </Form>
+        )}
+      </Formik>
       <div className="bottomSpace"></div>
-    </React.Fragment>
+    </motion.div>
   );
 }
 

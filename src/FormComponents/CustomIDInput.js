@@ -19,13 +19,15 @@ export const CustomIDInput = ({ label, ...props }) => {
   return (
     <div>
       <div className="field">
-        <label>{label}</label>
+        
+          <label>{label}</label>
+       
         <InputText
           {...field}
           {...props}
           autoCapitalize="none"
-          secureTextEntry={true}
-          keyboardType={"visible-password"}
+          securetextentry="true"
+          keyboardtype="visible-password"
           className={meta.touched && meta.error ? "p-error" : ""}
           disabled={!isEdit}
         />
@@ -46,7 +48,9 @@ export const CustomInput = ({ label, ...props }) => {
   return (
     <div>
       <div className="field">
-        <label>{label}</label>
+       
+          <label>{label}</label>
+       
         <InputText
           {...field}
           {...props}
@@ -68,14 +72,15 @@ export const CustomFloatInput = ({ label, ...props }) => {
   return (
     <div>
       <div className="field">
-        <label>{label}</label>
+       
+          <label>{label}</label>
+       
         <InputNumber
+          
           {...field}
           {...props}
-          value={
-            Number(props.converter.values[props.name]) === 0
-              ? null
-              : Number(props.converter.values[props.name])
+          value={isNaN(props.converter.values[props.name]) ? 0 :
+            Number(props.converter.values[props.name])
           }
           onChange={(values) => {
             console.log("value", values.value);
@@ -101,11 +106,16 @@ export const CustomIntInput = ({ label, ...props }) => {
   return (
     <div>
       <div className="field">
-        <label>{label}</label>
+       
+          <label>{label}</label>
+       
         <InputNumber
+          
           {...field}
           {...props}
-          value={Number(props.converter.values[props.name])}
+          value={isNaN(props.converter.values[props.name]) ? 0 :
+            Number(props.converter.values[props.name])
+          }
           onChange={(values) => {
             console.log("value", values.value);
             props.converter.setFieldValue(props.name, Number(values.value));
@@ -127,7 +137,9 @@ export const CustomYesNoInput = ({ label, ...props }) => {
   return (
     <div>
       <div className="field">
-        <label>{label}</label>
+       
+          <label>{label}</label>
+        
         <SelectButton
           {...field}
           {...props}
