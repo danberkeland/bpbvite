@@ -12,6 +12,7 @@ function ManageCustomers() {
     setSelectedCustomer("");
   };
 
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
