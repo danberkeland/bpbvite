@@ -14,8 +14,7 @@ export const CustomIDInput = ({ label, ...props }) => {
   const isEdit = useSettingsStore((state) => state.isEdit);
 
   const [field, meta] = useField(props);
-  console.log("field", field);
-  console.log("meta", meta);
+ 
   return (
     <div>
       <div className="field">
@@ -43,8 +42,7 @@ export const CustomIDInput = ({ label, ...props }) => {
 export const CustomInput = ({ label, ...props }) => {
   const isEdit = useSettingsStore((state) => state.isEdit);
   const [field, meta] = useField(props);
-  console.log("field", field);
-  console.log("meta", meta);
+ 
   return (
     <div>
       <div className="field">
@@ -66,9 +64,7 @@ export const CustomInput = ({ label, ...props }) => {
 export const CustomFloatInput = ({ label, ...props }) => {
   const isEdit = useSettingsStore((state) => state.isEdit);
   const [field, meta] = useField(props);
-  console.log("field", field);
-  console.log("meta", meta);
-  console.log("...props", props);
+ 
   return (
     <div>
       <div className="field">
@@ -83,7 +79,7 @@ export const CustomFloatInput = ({ label, ...props }) => {
             Number(props.converter.values[props.name])
           }
           onChange={(values) => {
-            console.log("value", values.value);
+          
             props.converter.setFieldValue(props.name, Number(values.value));
           }}
           mode="decimal"
@@ -101,8 +97,7 @@ export const CustomFloatInput = ({ label, ...props }) => {
 export const CustomIntInput = ({ label, ...props }) => {
   const isEdit = useSettingsStore((state) => state.isEdit);
   const [field, meta] = useField(props);
-  console.log("field", field);
-  console.log("meta", meta);
+  
   return (
     <div>
       <div className="field">
@@ -117,7 +112,7 @@ export const CustomIntInput = ({ label, ...props }) => {
             Number(props.converter.values[props.name])
           }
           onChange={(values) => {
-            console.log("value", values.value);
+          
             props.converter.setFieldValue(props.name, Number(values.value));
           }}
           className={meta.touched && meta.error ? "p-error" : ""}
@@ -132,8 +127,7 @@ export const CustomIntInput = ({ label, ...props }) => {
 export const CustomYesNoInput = ({ label, ...props }) => {
   const isEdit = useSettingsStore((state) => state.isEdit);
   const [field, meta] = useField(props);
-  console.log("field", field);
-  console.log("meta", meta);
+ 
   return (
     <div>
       <div className="field">
@@ -149,7 +143,7 @@ export const CustomYesNoInput = ({ label, ...props }) => {
               : false
           }
           onChange={(values) => {
-            console.log("value", values.value);
+           
             props.converter.setFieldValue(
               props.name,
               !props.converter.values[props.name]

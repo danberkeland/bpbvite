@@ -153,3 +153,10 @@ div .photoBox {
   justify-content: space-between;
   align-items: center;
 }
+
+.floatButtonsTop {
+    position: fixed;
+    z-index: 100;
+    top: 0px;
+    right: 0px
+}

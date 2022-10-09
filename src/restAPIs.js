@@ -1,3 +1,4 @@
+import { Auth } from "aws-amplify";
 import axios from "axios";
 
 const API_testingGrQL =
@@ -81,7 +82,6 @@ export const grabProductById = async (prodNick) => {
 
 // Product
 
-
 export const grabDetailedProductList = async () => {
   let prodList;
   try {
@@ -93,7 +93,7 @@ export const grabDetailedProductList = async () => {
     console.log("Error grabbing prodList", err);
   }
   console.log("grabDetailedProductList Response:", prodList.status);
-  console.table(prodList.data.body.items,["prodName","prodNick"]);
+  console.table(prodList.data.body.items, ["prodName", "prodNick"]);
   return prodList.data.body.items;
 };
 
@@ -128,18 +128,29 @@ export const deleteProduct = async (event) => {
 };
 
 export const updateProduct = async (event) => {
+  const user = await Auth.currentAuthenticatedUser();
+  const token = user.signInUserSession.idToken.jwtToken;
+  console.log("token", token);
+
   console.log("event", event);
   let prod;
   try {
-    prod = await axios.post(API_bpbrouterAuth + "/products/updateProduct", event);
+    prod = await axios.post(
+      API_bpbrouterAuth + "/products/updateProduct",
+      event,
+      {
+        headers: {
+          "content-type": "application/json",
+          Authorization: token,
+        },
+      }
+    );
   } catch (err) {
     console.log("Error updating Product", err);
   }
   console.log("updateProduct Response:", prod);
   return prod.data.body;
 };
-
-
 
 // Location
 
@@ -154,7 +165,7 @@ export const grabDetailedLocationList = async () => {
     console.log("Error grabbing locList", err);
   }
   console.log("grabDetailedLocationList Response:", locList);
-  
+
   return locList.data.body.items;
 };
 
@@ -189,17 +200,29 @@ export const deleteLocation = async (event) => {
 };
 
 export const updateLocation = async (event) => {
+  const user = await Auth.currentAuthenticatedUser();
+  const token = user.signInUserSession.idToken.jwtToken;
+  console.log("token", token);
+
   console.log("event", event);
   let loc;
   try {
-    loc = await axios.post(API_bpbrouterAuth + "/locations/updateLocation", event);
+    loc = await axios.post(
+      API_bpbrouterAuth + "/locations/updateLocation",
+      event,
+      {
+        headers: {
+          "content-type": "application/json",
+          Authorization: token,
+        },
+      }
+    );
   } catch (err) {
     console.log("Error updating Location", err);
   }
   console.log("updateLocation Response:", loc);
   return loc.data.body;
 };
-
 
 export const getOrder = async (event) => {
   console.log("event", event);
@@ -213,5 +236,4 @@ export const getOrder = async (event) => {
   return loc.data.body;
 };
 
-export const fetcher = (url) => axios.post(API_bpbrouterAuth + url)
-
+export const fetcher = (url) => axios.post(API_bpbrouterAuth + url);
