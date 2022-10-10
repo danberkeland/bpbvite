@@ -3,6 +3,8 @@ import React, { useEffect } from "react";
 import { Form, Formik } from "formik";
 
 import { Button } from "primereact/button";
+import { ConfirmDialog } from "primereact/confirmdialog"; // To use <ConfirmDialog> tag
+import { confirmDialog } from "primereact/confirmdialog"; // To use confirmDialog method // To use confirmDialog method
 
 import { motion } from "framer-motion";
 import {
@@ -18,7 +20,7 @@ import { validationSchema } from "./ValidationSchema";
 
 import styled from "styled-components";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
-import { updateProduct } from "../../restAPIs";
+import { deleteProduct, updateProduct } from "../../restAPIs";
 import { createProduct } from "../../restAPIs";
 
 const GroupBox = styled.div`
@@ -54,39 +56,59 @@ function ProductDetails({ initialState, productList }) {
     setIsEdit(true);
   };
 
-  
-const packGroups = [
-  {label: 'Baked Pastries', value: 'baked pastries'},
-  {label: 'Frozen Pastries', value: 'frozen pastries'},
-  {label: 'Rustic Breads', value: 'rustic breads'},
-  {label: 'Brioche Products', value: 'brioche products'},
-  {label: 'Sandwich Breads', value: 'sandwich breads'},
-  {label: 'Rolls', value: 'rolls'},
-  {label: 'Focaccia', value: 'focaccia'},
-  {label: 'Retail', value: 'retail'},
-  {label: 'Cafe Menu', value: 'cafe menu'}
-];
+  const handleDelete = (e, props) => {
+    confirmDialog({
+      message: "Are you sure you want to delete this product?",
+      header: "Confirmation",
+      icon: "pi pi-exclamation-triangle",
+      accept: () => {
+        console.log("values", props);
+        window.scrollTo(0, 0);
+        setIsEdit(false);
+        setIsCreate(false);
+        deleteProduct(props).then(() => {
+          window.location = "/Products";
+        });
+      },
+      reject: () => {
+        return;
+      },
+    });
+  };
 
-const doughs = [
-  {label: 'French', value: 'french'},
-  {label: 'Baguette', value: 'baguette'},
-  {label: 'Brioche', value: 'brioche'},
-  {label: 'Croissant', value: 'croix'},
-  {label: 'Levain', value: 'lev'},
-  {label: 'Rustic Rye', value: 'rusticRye'},
-  {label: 'Multigrain', value: 'multi'},
-  {label: 'Ciabatta', value: 'cia'},
-  {label: 'Doobie', value: 'doobie'},
-  {label: 'Siciliano', value: 'siciliano'}
-]
+  const packGroups = [
+    { label: "Baked Pastries", value: "baked pastries" },
+    { label: "Frozen Pastries", value: "frozen pastries" },
+    { label: "Rustic Breads", value: "rustic breads" },
+    { label: "Brioche Products", value: "brioche products" },
+    { label: "Sandwich Breads", value: "sandwich breads" },
+    { label: "Rolls", value: "rolls" },
+    { label: "Focaccia", value: "focaccia" },
+    { label: "Retail", value: "retail" },
+    { label: "Cafe Menu", value: "cafe menu" },
+  ];
 
-const bakedWhere = [
-  {label: 'Prado', value: "prado"},
-  {label: 'Carlton', value: "carlton"}
-]
+  const doughs = [
+    { label: "French", value: "french" },
+    { label: "Baguette", value: "baguette" },
+    { label: "Brioche", value: "brioche" },
+    { label: "Croissant", value: "croix" },
+    { label: "Levain", value: "lev" },
+    { label: "Rustic Rye", value: "rusticRye" },
+    { label: "Multigrain", value: "multi" },
+    { label: "Ciabatta", value: "cia" },
+    { label: "Doobie", value: "doobie" },
+    { label: "Siciliano", value: "siciliano" },
+  ];
+
+  const bakedWhere = [
+    { label: "Prado", value: "prado" },
+    { label: "Carlton", value: "carlton" },
+  ];
 
   return (
     <div>
+      <ConfirmDialog />
       <Formik
         initialValues={initialState}
         validationSchema={validationSchema(productList)}
@@ -109,7 +131,7 @@ const bakedWhere = [
         {(props) => (
           <React.Fragment>
             <Form>
-              {(isEdit | isCreate) ? (
+              {isEdit | isCreate ? (
                 <div className="floatButtonsTop">
                   <Button
                     label="Submit"
@@ -118,7 +140,9 @@ const bakedWhere = [
                     style={editButtonStyle}
                   />
                 </div>
-              ): <div></div>}
+              ) : (
+                <div></div>
+              )}
               <motion.div
                 initial={{ opacity: 0, x: "0", y: "0" }}
                 animate={{ opacity: 1, x: "0" }}
@@ -276,7 +300,7 @@ const bakedWhere = [
                   />
                 </GroupBox>
 
-                {(!isEdit && !isCreate) && (
+                {!isEdit && !isCreate && (
                   <Button
                     label="Edit"
                     className="editButton p-button-raised p-button-rounded p-button-success"
@@ -286,6 +310,13 @@ const bakedWhere = [
                 )}
               </motion.div>
             </Form>
+            <Button
+              label="Delete"
+              type="delete"
+              className="editButton p-button-raised p-button-rounded p-button-success"
+              style={editButtonStyle}
+              onClick={(e) => handleDelete(e, props)}
+            />
           </React.Fragment>
         )}
       </Formik>

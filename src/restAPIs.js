@@ -123,12 +123,22 @@ export const createProduct = async (event) => {
 };
 
 export const deleteProduct = async (event) => {
-  console.log("event", event);
+  const user = await Auth.currentAuthenticatedUser();
+  const token = user.signInUserSession.idToken.jwtToken;
+  console.log("token", token);
+
+  console.log("event", event.values);
   let prod;
   try {
     prod = await axios.post(
       API_bpbrouterAuth + "/products/deleteProduct",
-      event
+      event.values,
+      {
+        headers: {
+          "content-type": "application/json",
+          Authorization: token,
+        },
+      }
     );
   } catch (err) {
     console.log("Error deleting Product", err);
