@@ -190,27 +190,47 @@ export const grabDetailedLocationList = async () => {
 };
 */
 export const createLocation = async (event) => {
+  const user = await Auth.currentAuthenticatedUser();
+  const token = user.signInUserSession.idToken.jwtToken;
+  console.log("token", token);
+
   console.log("event", event);
   let loc;
   try {
     loc = await axios.post(
       API_bpbrouterAuth + "/locations/createLocation",
-      event
+      event,
+      {
+        headers: {
+          "content-type": "application/json",
+          Authorization: token,
+        },
+      }
     );
   } catch (err) {
-    console.log("Error creating Location", err);
+    console.log("Error creating LOcation", err);
   }
   console.log("createLocation Response:", loc);
   return loc.data.body;
 };
 
 export const deleteLocation = async (event) => {
-  console.log("event", event);
+  const user = await Auth.currentAuthenticatedUser();
+  const token = user.signInUserSession.idToken.jwtToken;
+  console.log("token", token);
+
+  console.log("event", event.values);
   let loc;
   try {
     loc = await axios.post(
       API_bpbrouterAuth + "/locations/deleteLocation",
-      event
+      event.values,
+      {
+        headers: {
+          "content-type": "application/json",
+          Authorization: token,
+        },
+      }
     );
   } catch (err) {
     console.log("Error deleting Location", err);
@@ -243,6 +263,7 @@ export const updateLocation = async (event) => {
   console.log("updateLocation Response:", loc);
   return loc.data.body;
 };
+
 
 export const getOrder = async (event) => {
   console.log("event", event);

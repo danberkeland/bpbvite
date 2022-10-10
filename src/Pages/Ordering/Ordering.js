@@ -12,7 +12,7 @@ import { Fulfill } from "./OrderingParts/FullfillOptions";
 import styled from "styled-components";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
-import { useLocationList, useSimpleLocationList } from "../../hooks";
+import { useLocUserList, useSimpleLocationList } from "../../hooks";
 
 const BasicContainer = styled.div`
   display: flex;
@@ -97,7 +97,7 @@ const CustList = () => {
   const setChosen = useSettingsStore((state) => state.setChosen);
   const setIsModified = useSettingsStore((state) => state.setIsModified);
 
-  const { locationList } = useLocationList();
+  const { locationList } = useLocUserList();
   const { simpleLocationList } = useSimpleLocationList();
 
   const handleChosen = (e) => {

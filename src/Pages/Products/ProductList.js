@@ -4,19 +4,11 @@ import { FilterMatchMode } from "primereact/api";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Button } from "primereact/button";
 
 import ProductDetails from "./ProductDetails";
 import { motion } from "framer-motion";
 import { useProductList } from "../../hooks";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
-
-const submitButtonStyle = {
-  width: "100px",
-  margin: "20px",
-  fontSize: "1.2em",
-  backgroundColor: "red",
-};
 
 const initialState = {
     Type: "Product",

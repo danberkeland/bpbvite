@@ -2,14 +2,14 @@ import React, {useEffect} from "react";
 import Loader from "../../AppStructure/Loader";
 
 // State Management
-import { useLocationList } from "../../hooks";
+import { useLocUserList } from "../../hooks";
 
 // Components
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
 function Logistics() {
-  const { locationList } = useLocationList();
+  const { locationList } = useLocUserList();
 
   useEffect(() => {
     console.log('locationList', locationList)

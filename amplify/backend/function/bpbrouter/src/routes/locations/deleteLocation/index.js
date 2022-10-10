@@ -3,8 +3,8 @@ import mainCall from '/opt/mainCall/index.js';
 const query = /* GraphQL */ `
   mutation MyMutation($locNick: String!) {
     deleteLocation(input: { locNick: $locNick }) {
-      locName
       locNick
+      locName
     }
   }
 `;

@@ -14,26 +14,28 @@ function Locations() {
   return (
     <motion.div
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      animate={{ opacity: 1, y:0 }}
       exit={{ opacity: 0 }}
     >
       {selectedLocation !== "" ? (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
+        <React.Fragment>
           <button onClick={handleLocClick}>LOCATION LIST</button>
-          <LocationDetails selectedLocation={selectedLocation} />
-        </motion.div>
+          <LocationDetails initialState={selectedLocation} create={false}/>
+        </React.Fragment>
       ) : (
         <div></div>
       )}
       {selectedLocation === "" ? (
-        <LocationList
-          selectedLocation={selectedLocation}
-          setSelectedLocation={setSelectedLocation}
-        />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, y:0 }}
+          exit={{ opacity: 0 }}
+        >
+          <LocationList
+            selectedLocation={selectedLocation}
+            setSelectedLocation={setSelectedLocation}
+          />
+        </motion.div>
       ) : (
         <div></div>
       )}

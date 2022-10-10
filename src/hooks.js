@@ -27,9 +27,9 @@ const fetcher = async (path) => {
   return res;
 };
 
-export function useLocationList() {
+export function useLocUserList() {
   const { data, error, mutate } = useSWR(
-    { url: "/locations/grabDetailedLocationList" },
+    { url: "/locations/grabDetailedLocUserList" },
     fetcher,
     {
       revalidateIfStale: false,
@@ -115,3 +115,25 @@ export function useCustomerList() {
     },
   };
 }
+
+export function useLocationList() {
+  const { data, error, mutate } = useSWR(
+    { url: "/locations/grabDetailedLocationList" },
+    fetcher,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: true,
+    }
+  );
+
+  return {
+    locationList: {
+      data: data ? sortAtoZDataByIndex(data.data.body.items, "locName") : data,
+      isLoading: !error && !data,
+      isError: error,
+      revalidate: () => mutate(),
+    },
+  };
+}
+

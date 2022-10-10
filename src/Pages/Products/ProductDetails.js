@@ -270,7 +270,7 @@ function ProductDetails({ initialState, productList }) {
                     converter={props}
                   />
 
-                  <CustomIntInput
+                  <CustomFloatInput
                     label="Guaranteed Ready (0-24)"
                     name="readyTime"
                     type="tel"
