@@ -170,7 +170,6 @@ function LocationDetails({ initialState, locationList }) {
                   <CustomInput label="Address" name="addr2" converter={props} />
                   <CustomInput label="City" name="city" converter={props} />
                   <CustomInput label="Zip" name="zip" converter={props} />
-                  <CustomFloatInput label="Zip" name="zip" converter={props} />
                 </GroupBox>
 
                 <GroupBox>
