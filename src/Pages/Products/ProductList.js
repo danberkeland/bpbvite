@@ -19,18 +19,48 @@ const submitButtonStyle = {
 };
 
 const initialState = {
-  prodNick: "",
-  prodName: "",
-  wholePrice: 0,
-  packSize: 1,
+    Type: "Product",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    bakeDay: 1,
+    bakeExtra: 0,
+    bakeNick: "",
+    bakedWhere: ["Prado"],
+    batchSize: 1,
+    defaultInclude: false,
+    descrip: "",
+    doughNick: "French",
+    forBake: "",
+    freezerThaw: false,
+    guarantee: 6,
+    isWhole: true,
+    leadTime: 2,
+    packGroup: "",
+    packGroupOrder: 0,
+    packSize: 1,
+    picURL: "",
+    prodName: "",
+    prodNick: "",
+    qbID: "",
+    readyTime: 6,
+    retailPrice: 0,
+    shapeDay: 1,
+    shapeNick: "",
+    squareID: "xxx",
+    transferStage: "",
+    weight: 0,
+    wholePrice: 0
 };
 
 function ProductList({ selectedProduct, setSelectedProduct }) {
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
+  const setIsCreate = useSettingsStore((state) => state.setIsCreate);
+  const isCreate = useSettingsStore((state) => state.isCreate);
+  
   const [filter] = useState({
     prodName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
-  const [isCreate, setIsCreate] = useState(false);
+  
   const { productList } = useProductList();
 
   useEffect(() => {
@@ -85,16 +115,9 @@ function ProductList({ selectedProduct, setSelectedProduct }) {
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <div className="submitButton">
-            <Button
-              label="Submit"
-              className="p-button-raised p-button-rounded"
-              style={submitButtonStyle}
-              onClick={handleSubmit}
-            />
-          </div>
+          
           <button onClick={handleClick}>+ PRODUCT LIST</button>
-          <ProductDetails initialState={selectedProduct!== "" ? selectedProduct : initialState} create={true} />
+          <ProductDetails initialState={selectedProduct!== "" ? selectedProduct : initialState}  />
         </React.Fragment>
       )}
     </React.Fragment>

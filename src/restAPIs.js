@@ -81,7 +81,7 @@ export const grabProductById = async (prodNick) => {
 };
 
 // Product
-
+/*
 export const grabDetailedProductList = async () => {
   let prodList;
   try {
@@ -96,14 +96,24 @@ export const grabDetailedProductList = async () => {
   console.table(prodList.data.body.items, ["prodName", "prodNick"]);
   return prodList.data.body.items;
 };
-
+*/
 export const createProduct = async (event) => {
+  const user = await Auth.currentAuthenticatedUser();
+  const token = user.signInUserSession.idToken.jwtToken;
+  console.log("token", token);
+
   console.log("event", event);
   let prod;
   try {
     prod = await axios.post(
       API_bpbrouterAuth + "/products/createProduct",
-      event
+      event,
+      {
+        headers: {
+          "content-type": "application/json",
+          Authorization: token,
+        },
+      }
     );
   } catch (err) {
     console.log("Error creating Product", err);
@@ -153,7 +163,7 @@ export const updateProduct = async (event) => {
 };
 
 // Location
-
+/*
 export const grabDetailedLocationList = async () => {
   let locList;
   try {
@@ -168,7 +178,7 @@ export const grabDetailedLocationList = async () => {
 
   return locList.data.body.items;
 };
-
+*/
 export const createLocation = async (event) => {
   console.log("event", event);
   let loc;
@@ -235,5 +245,6 @@ export const getOrder = async (event) => {
   console.log("getOrder Response:", loc);
   return loc.data.body;
 };
-
+/*
 export const fetcher = (url) => axios.post(API_bpbrouterAuth + url);
+*/

@@ -17,6 +17,7 @@ import { validationSchema } from "./ValidationSchema";
 import styled from "styled-components";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { updateProduct } from "../../restAPIs";
+import { createProduct } from "../../restAPIs";
 
 const GroupBox = styled.div`
   display: flex;
@@ -31,10 +32,13 @@ const GroupBox = styled.div`
 function ProductDetails({ initialState, create }) {
   const setIsEdit = useSettingsStore((state) => state.setIsEdit);
   const isEdit = useSettingsStore((state) => state.isEdit);
+  const isCreate = useSettingsStore((state) => state.isCreate);
+  const setIsCreate = useSettingsStore((state) => state.setIsCreate);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+    setIsEdit(false);
+  }, [setIsEdit]);
 
   const editButtonStyle = {
     width: "100px",
@@ -45,39 +49,49 @@ function ProductDetails({ initialState, create }) {
   const handleEdit = (e, props) => {
     console.log("values", props.values);
     window.scrollTo(0, 0);
-    setIsEdit(!isEdit);
-  };
-
-  const handleSubmit = (e, props) => {
-    console.log("values", props.values);
-    window.scrollTo(0, 0);
-    updateProduct(props.values).then(() => {
-      window.location = "/Products";})
-    setIsEdit(!isEdit);
+    setIsEdit(true);
   };
 
   return (
     <div>
-      <Formik initialValues={initialState} validationSchema={validationSchema}>
+      <Formik
+        initialValues={initialState}
+        validationSchema={validationSchema}
+        onSubmit={(props) => {
+          console.log("values", props);
+          window.scrollTo(0, 0);
+          setIsEdit(false);
+          setIsCreate(false);
+          if (isCreate) {
+            createProduct(props).then(() => {
+              window.location = "/Products";
+            });
+          } else {
+            updateProduct(props).then(() => {
+              window.location = "/Products";
+            });
+          }
+        }}
+      >
         {(props) => (
           <React.Fragment>
-            {isEdit && (
-              <div className="floatButtonsTop">
-                <Button
-                  label="Submit"
-                  className="p-button-raised p-button-rounded p-button-danger"
-                  style={editButtonStyle}
-                  onClick={(e) => handleSubmit(e, props)}
-                />
-              </div>
-            )}
-            <motion.div
-              initial={{ opacity: 0, x: "0", y: "0" }}
-              animate={{ opacity: 1, x: "0" }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              exit={{ opacity: 0, x: "0" }}
-            >
-              <Form>
+            <Form>
+              {isEdit | isCreate && (
+                <div className="floatButtonsTop">
+                  <Button
+                    label="Submit"
+                    type="submit"
+                    className="p-button-raised p-button-rounded p-button-danger"
+                    style={editButtonStyle}
+                  />
+                </div>
+              )}
+              <motion.div
+                initial={{ opacity: 0, x: "0", y: "0" }}
+                animate={{ opacity: 1, x: "0" }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                exit={{ opacity: 0, x: "0" }}
+              >
                 <GroupBox>
                   <h2>
                     <i className="pi pi-user"></i> Product Description
@@ -87,6 +101,7 @@ function ProductDetails({ initialState, create }) {
                     name="prodNick"
                     type="text"
                     placeholder="Enter product id"
+                    converter={props}
                   />
                   <CustomInput
                     label="Product Name"
@@ -212,7 +227,7 @@ function ProductDetails({ initialState, create }) {
                   />
                 </GroupBox>
 
-                {!isEdit && (
+                {!isEdit && !isCreate && (
                   <Button
                     label="Edit"
                     className="editButton p-button-raised p-button-rounded p-button-success"
@@ -220,8 +235,8 @@ function ProductDetails({ initialState, create }) {
                     onClick={(e) => handleEdit(e, props)}
                   />
                 )}
-              </Form>
-            </motion.div>
+              </motion.div>
+            </Form>
           </React.Fragment>
         )}
       </Formik>

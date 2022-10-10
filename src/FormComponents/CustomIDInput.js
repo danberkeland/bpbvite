@@ -12,6 +12,9 @@ const options = [
 
 export const CustomIDInput = ({ label, ...props }) => {
   const isEdit = useSettingsStore((state) => state.isEdit);
+  const isCreate = useSettingsStore((state) => state.isCreate);
+  
+  
 
   const [field, meta] = useField(props);
  
@@ -28,7 +31,7 @@ export const CustomIDInput = ({ label, ...props }) => {
           securetextentry="true"
           keyboardtype="visible-password"
           className={meta.touched && meta.error ? "p-error" : ""}
-          disabled={!isEdit}
+          disabled={ isEdit ? true : isCreate ? false : true }
         />
       </div>
       {((meta.touched && meta.error) ||
@@ -41,6 +44,7 @@ export const CustomIDInput = ({ label, ...props }) => {
 
 export const CustomInput = ({ label, ...props }) => {
   const isEdit = useSettingsStore((state) => state.isEdit);
+  const isCreate = useSettingsStore((state) => state.isCreate);
   const [field, meta] = useField(props);
  
   return (
@@ -53,7 +57,7 @@ export const CustomInput = ({ label, ...props }) => {
           {...field}
           {...props}
           className={meta.touched && meta.error ? "p-error" : ""}
-          disabled={!isEdit}
+          disabled={ isEdit ? false : isCreate ? false : true }
         />
       </div>
       {meta.touched && meta.error && <h4 className="p-error">{meta.error}</h4>}
@@ -63,6 +67,7 @@ export const CustomInput = ({ label, ...props }) => {
 
 export const CustomFloatInput = ({ label, ...props }) => {
   const isEdit = useSettingsStore((state) => state.isEdit);
+  const isCreate = useSettingsStore((state) => state.isCreate);
   const [field, meta] = useField(props);
  
   return (
@@ -75,6 +80,7 @@ export const CustomFloatInput = ({ label, ...props }) => {
           
           {...field}
           {...props}
+          disabled={ isEdit ? false : isCreate ? false : true }
           value={isNaN(props.converter.values[props.name]) ? 0 :
             Number(props.converter.values[props.name])
           }
@@ -86,7 +92,7 @@ export const CustomFloatInput = ({ label, ...props }) => {
           minFractionDigits={2}
           maxFractionDigits={2}
           className={meta.touched && meta.error ? "p-error" : ""}
-          disabled={!isEdit}
+          
         />
       </div>
       {meta.touched && meta.error && <h4 className="p-error">{meta.error}</h4>}
@@ -96,6 +102,7 @@ export const CustomFloatInput = ({ label, ...props }) => {
 
 export const CustomIntInput = ({ label, ...props }) => {
   const isEdit = useSettingsStore((state) => state.isEdit);
+  const isCreate = useSettingsStore((state) => state.isCreate);
   const [field, meta] = useField(props);
   
   return (
@@ -108,6 +115,7 @@ export const CustomIntInput = ({ label, ...props }) => {
           
           {...field}
           {...props}
+          disabled={ isEdit ? false : isCreate ? false : true }
           value={isNaN(props.converter.values[props.name]) ? 0 :
             Number(props.converter.values[props.name])
           }
@@ -116,7 +124,7 @@ export const CustomIntInput = ({ label, ...props }) => {
             props.converter.setFieldValue(props.name, Number(values.value));
           }}
           className={meta.touched && meta.error ? "p-error" : ""}
-          disabled={!isEdit}
+          
         />
       </div>
       {meta.touched && meta.error && <h4 className="p-error">{meta.error}</h4>}
@@ -126,6 +134,7 @@ export const CustomIntInput = ({ label, ...props }) => {
 
 export const CustomYesNoInput = ({ label, ...props }) => {
   const isEdit = useSettingsStore((state) => state.isEdit);
+  const isCreate = useSettingsStore((state) => state.isCreate);
   const [field, meta] = useField(props);
  
   return (
@@ -137,6 +146,7 @@ export const CustomYesNoInput = ({ label, ...props }) => {
         <SelectButton
           {...field}
           {...props}
+          disabled={ isEdit ? false : isCreate ? false : true }
           value={
             props.converter.values[props.name]
               ? props.converter.values[props.name]
@@ -151,7 +161,7 @@ export const CustomYesNoInput = ({ label, ...props }) => {
           }}
           options={options}
           className={meta.touched && meta.error ? "p-error" : ""}
-          disabled={!isEdit}
+          
         />
       </div>
       {meta.touched && meta.error && <h4 className="p-error">{meta.error}</h4>}
