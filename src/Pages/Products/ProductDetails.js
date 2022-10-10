@@ -212,10 +212,10 @@ function ProductDetails({ initialState, create }) {
                     converter={props}
                   />
                   <CustomIntInput
-                    label="Batch Extra"
-                    name="batchExtra"
+                    label="Bake Extra"
+                    name="bakeExtra"
                     type="tel"
-                    placeholder="Enter Batch Extra"
+                    placeholder="Enter Bake Extra"
                     converter={props}
                   />
                   <CustomFloatInput
