@@ -76,7 +76,7 @@ function ProductDetails({ initialState, create }) {
         {(props) => (
           <React.Fragment>
             <Form>
-              {isEdit | isCreate && (
+              {(isEdit | isCreate) ? (
                 <div className="floatButtonsTop">
                   <Button
                     label="Submit"
@@ -85,7 +85,7 @@ function ProductDetails({ initialState, create }) {
                     style={editButtonStyle}
                   />
                 </div>
-              )}
+              ): <div></div>}
               <motion.div
                 initial={{ opacity: 0, x: "0", y: "0" }}
                 animate={{ opacity: 1, x: "0" }}
@@ -227,7 +227,7 @@ function ProductDetails({ initialState, create }) {
                   />
                 </GroupBox>
 
-                {!isEdit && !isCreate && (
+                {(!isEdit && !isCreate) && (
                   <Button
                     label="Edit"
                     className="editButton p-button-raised p-button-rounded p-button-success"
