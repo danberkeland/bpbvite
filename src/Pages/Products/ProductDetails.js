@@ -11,6 +11,7 @@ import {
   CustomFloatInput,
   CustomIntInput,
   CustomYesNoInput,
+  CustomDropdownInput,
 } from "../../FormComponents/CustomIDInput";
 import { validationSchema } from "./ValidationSchema";
 
@@ -29,7 +30,7 @@ const GroupBox = styled.div`
   padding: 5px 5px 10px 5px;
 `;
 
-function ProductDetails({ initialState, create }) {
+function ProductDetails({ initialState, productList }) {
   const setIsEdit = useSettingsStore((state) => state.setIsEdit);
   const isEdit = useSettingsStore((state) => state.isEdit);
   const isCreate = useSettingsStore((state) => state.isCreate);
@@ -56,7 +57,7 @@ function ProductDetails({ initialState, create }) {
     <div>
       <Formik
         initialValues={initialState}
-        validationSchema={validationSchema}
+        validationSchema={validationSchema(productList)}
         onSubmit={(props) => {
           console.log("values", props);
           window.scrollTo(0, 0);
@@ -141,24 +142,23 @@ function ProductDetails({ initialState, create }) {
                     converter={props}
                   />
                   <CustomYesNoInput
-                    label="Default Include"
+                    label="Available Wholesale?"
+                    name="isWhole"
+                    converter={props}
+                  />
+                  <CustomYesNoInput
+                    label="Default Include?"
                     name="defaultInclude"
                     converter={props}
                   />
                 </GroupBox>
 
                 <GroupBox>
-                  <CustomInput
+                  <CustomDropdownInput
                     label="Pack Group"
                     name="packGroup"
                     type="text"
                     placeholder="Enter Pack Group"
-                  />
-                  <CustomIntInput
-                    label="Pack Group Order"
-                    name="packGroupOrder"
-                    type="tel"
-                    placeholder="Enter Pack Group Order"
                     converter={props}
                   />
                   <CustomIntInput
@@ -169,8 +169,13 @@ function ProductDetails({ initialState, create }) {
                     converter={props}
                   />
                   <CustomYesNoInput
-                    label="Freezer Thaw"
+                    label="Freezer Thaw?"
                     name="freezerThaw"
+                    converter={props}
+                  />
+                  <CustomYesNoInput
+                    label="Count EOD?"
+                    name="isEOD"
                     converter={props}
                   />
                 </GroupBox>
@@ -195,10 +200,10 @@ function ProductDetails({ initialState, create }) {
                     label="For Bake"
                     name="forBake"
                     type="text"
-                    placeholder="Enter Bake Name"
+                    placeholder="Name for Bakers"
                   />
                   <CustomIntInput
-                    label="Ready Time"
+                    label="Guaranteed Ready (0-24)"
                     name="readyTime"
                     type="tel"
                     placeholder="Enter Ready Time"

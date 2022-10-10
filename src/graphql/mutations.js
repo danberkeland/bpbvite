@@ -1193,6 +1193,7 @@ export const createProduct = /* GraphQL */ `
       wholePrice
       retailPrice
       isWhole
+      isEOD
       weight
       descrip
       picURL
@@ -1311,6 +1312,7 @@ export const createProduct = /* GraphQL */ `
           wholePrice
           retailPrice
           isWhole
+          isEOD
           weight
           descrip
           picURL
@@ -1355,6 +1357,7 @@ export const createProduct = /* GraphQL */ `
           wholePrice
           retailPrice
           isWhole
+          isEOD
           weight
           descrip
           picURL
@@ -1421,6 +1424,7 @@ export const updateProduct = /* GraphQL */ `
       wholePrice
       retailPrice
       isWhole
+      isEOD
       weight
       descrip
       picURL
@@ -1539,6 +1543,7 @@ export const updateProduct = /* GraphQL */ `
           wholePrice
           retailPrice
           isWhole
+          isEOD
           weight
           descrip
           picURL
@@ -1583,6 +1588,7 @@ export const updateProduct = /* GraphQL */ `
           wholePrice
           retailPrice
           isWhole
+          isEOD
           weight
           descrip
           picURL
@@ -1649,6 +1655,7 @@ export const deleteProduct = /* GraphQL */ `
       wholePrice
       retailPrice
       isWhole
+      isEOD
       weight
       descrip
       picURL
@@ -1767,6 +1774,7 @@ export const deleteProduct = /* GraphQL */ `
           wholePrice
           retailPrice
           isWhole
+          isEOD
           weight
           descrip
           picURL
@@ -1811,6 +1819,7 @@ export const deleteProduct = /* GraphQL */ `
           wholePrice
           retailPrice
           isWhole
+          isEOD
           weight
           descrip
           picURL
@@ -1879,6 +1888,7 @@ export const createOrder = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -2040,6 +2050,7 @@ export const updateOrder = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -2201,6 +2212,7 @@ export const deleteOrder = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -2361,6 +2373,7 @@ export const createStanding = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -2521,6 +2534,7 @@ export const updateStanding = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -2681,6 +2695,7 @@ export const deleteStanding = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -3480,6 +3495,7 @@ export const createInventory = /* GraphQL */ `
           wholePrice
           retailPrice
           isWhole
+          isEOD
           weight
           descrip
           picURL
@@ -3565,6 +3581,7 @@ export const updateInventory = /* GraphQL */ `
           wholePrice
           retailPrice
           isWhole
+          isEOD
           weight
           descrip
           picURL
@@ -3650,6 +3667,7 @@ export const deleteInventory = /* GraphQL */ `
           wholePrice
           retailPrice
           isWhole
+          isEOD
           weight
           descrip
           picURL
@@ -3921,6 +3939,7 @@ export const createProductVendor = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -4030,6 +4049,7 @@ export const updateProductVendor = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -4139,6 +4159,7 @@ export const deleteProductVendor = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -4288,6 +4309,7 @@ export const createEODCount = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -4390,6 +4412,7 @@ export const updateEODCount = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -4492,6 +4515,7 @@ export const deleteEODCount = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -4594,6 +4618,7 @@ export const createActualSetOut = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -4694,6 +4719,7 @@ export const updateActualSetOut = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -4794,6 +4820,7 @@ export const deleteActualSetOut = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -5295,6 +5322,7 @@ export const createTemplateProd = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -5448,6 +5476,7 @@ export const updateTemplateProd = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -5601,6 +5630,7 @@ export const deleteTemplateProd = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -5754,6 +5784,7 @@ export const createProdsNotAllowed = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -5907,6 +5938,7 @@ export const updateProdsNotAllowed = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -6060,6 +6092,7 @@ export const deleteProdsNotAllowed = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -6158,6 +6191,7 @@ export const createProductDepend = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -6244,6 +6278,7 @@ export const createProductDepend = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -6342,6 +6377,7 @@ export const updateProductDepend = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -6428,6 +6464,7 @@ export const updateProductDepend = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -6526,6 +6563,7 @@ export const deleteProductDepend = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -6612,6 +6650,7 @@ export const deleteProductDepend = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -7222,6 +7261,7 @@ export const createAltPricing = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -7376,6 +7416,7 @@ export const updateAltPricing = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL
@@ -7530,6 +7571,7 @@ export const deleteAltPricing = /* GraphQL */ `
         wholePrice
         retailPrice
         isWhole
+        isEOD
         weight
         descrip
         picURL

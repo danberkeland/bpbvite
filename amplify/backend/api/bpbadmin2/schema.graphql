@@ -224,6 +224,7 @@ type Product @model {
   wholePrice: Float
   retailPrice: Float
   isWhole: Boolean
+  isEOD: Boolean
   weight: Float
   descrip: String
   picURL: String

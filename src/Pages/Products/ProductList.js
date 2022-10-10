@@ -71,9 +71,6 @@ function ProductList({ selectedProduct, setSelectedProduct }) {
     setIsCreate(!isCreate);
   };
 
-  const handleSubmit = () => {
-    setIsCreate(!isCreate);
-  };
 
   return (
     <React.Fragment>
@@ -117,7 +114,7 @@ function ProductList({ selectedProduct, setSelectedProduct }) {
         <React.Fragment>
           
           <button onClick={handleClick}>+ PRODUCT LIST</button>
-          <ProductDetails initialState={selectedProduct!== "" ? selectedProduct : initialState}  />
+          <ProductDetails initialState={selectedProduct!== "" ? selectedProduct : initialState}  productList={productList.data}/>
         </React.Fragment>
       )}
     </React.Fragment>
