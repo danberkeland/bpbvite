@@ -46,7 +46,7 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
   const isCreate = useSettingsStore((state) => state.isCreate);
 
   const [filter] = useState({
-    prodName: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    locName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
 
   const { locationList } = useLocationList();

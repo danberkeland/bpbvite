@@ -20,8 +20,15 @@ export const validationSchema = (locationList) => {
       .required("Required"),
 
     email: yup
-      .string()
-      .email("Please enter correct email"),
+      .array()
+      .transform(function(value,originalValue){
+        if (this.isType(value) && value !==null) {
+          return value;
+        }
+        return originalValue ? originalValue.split(/[\s,]+/) : [];
+      })
+      .of(yup.string().email(({ value }) => `${value} is not a valid email`)),
+      
 
     phone: yup
       .string()
