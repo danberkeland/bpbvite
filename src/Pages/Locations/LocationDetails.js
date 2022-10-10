@@ -125,7 +125,81 @@ function LocationDetails({ initialState, locationList }) {
               >
                 <GroupBox>
                   <h2>
-                    <i className="pi pi-user"></i> Location Description
+                    <i className="pi pi-user"></i> Location Name
+                  </h2>
+                  <CustomIDInput
+                    label="Location ID"
+                    name="locNick"
+                    type="text"
+                    placeholder="Enter location id"
+                    converter={props}
+                  />
+                  <CustomInput
+                    label="Location Name"
+                    name="locName"
+                    type="text"
+                    placeholder="Enter location name"
+                  />
+                </GroupBox>
+
+                <GroupBox>
+                  <h2>
+                    <i className="pi pi-map"></i> Location
+                  </h2>
+                  <CustomInput
+                    label="Zone"
+                    name="zoneNick"
+                    type="text"
+                    placeholder="Enter Zone"
+                  />
+                  <CustomInput
+                    label="Address"
+                    name="addr1"
+                    type="text"
+                    placeholder="Street Address"
+                  />
+                  <CustomInput
+                    label="Address"
+                    name="addr2"
+                    type="text"
+                    placeholder="Address"
+                  />
+                  <CustomInput
+                    label="City"
+                    name="city"
+                    type="text"
+                    placeholder="city"
+                  />
+                  <CustomInput
+                    label="Zip"
+                    name="zip"
+                    type="text"
+                    placeholder="Zip"
+                  />
+                </GroupBox>
+
+                <GroupBox>
+                  <h2>
+                    <i className="pi pi-phone"></i> Contact
+                  </h2>
+                  <CustomIDInput
+                    label="Location ID"
+                    name="locNick"
+                    type="text"
+                    placeholder="Enter location id"
+                    converter={props}
+                  />
+                  <CustomInput
+                    label="Location Name"
+                    name="locName"
+                    type="text"
+                    placeholder="Enter location name"
+                  />
+                </GroupBox>
+
+                <GroupBox>
+                  <h2>
+                    <i className="pi pi-dollar"></i> Billing
                   </h2>
                   <CustomIDInput
                     label="Location ID"
