@@ -25,7 +25,7 @@ const initialState = {
     bakeDay: 1,
     bakeExtra: 0,
     bakeNick: "",
-    bakedWhere: ["Prado"],
+    bakedWhere: ["prado"],
     batchSize: 1,
     defaultInclude: false,
     descrip: "",

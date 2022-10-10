@@ -29,6 +29,7 @@ const query = /* GraphQL */ `
         forBake
         bakeExtra
         batchSize
+        bakedWhere
         defaultInclude
         leadTime
         qbID

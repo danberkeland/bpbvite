@@ -1,8 +1,10 @@
+/* eslint-disable no-eval */
 import { useField } from "formik";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { SelectButton } from "primereact/selectbutton";
 import { Dropdown } from 'primereact/dropdown';
+import { MultiSelect } from 'primereact/multiselect';
 
 import { useSettingsStore } from "../Contexts/SettingsZustand";
 import { useEffect, useState } from "react";
@@ -12,17 +14,6 @@ const options = [
   { label: "No", value: false },
 ];
 
-const packGroups = [
-  {label: 'Baked Pastries', value: 'baked pastries'},
-  {label: 'Frozen Pastries', value: 'frozen pastries'},
-  {label: 'Rustic Breads', value: 'rustic breads'},
-  {label: 'Brioche Products', value: 'brioche products'},
-  {label: 'Sandwich Breads', value: 'sandwich breads'},
-  {label: 'Rolls', value: 'rolls'},
-  {label: 'Focaccia', value: 'focaccia'},
-  {label: 'Retail', value: 'retail'},
-  {label: 'Cafe Menu', value: 'cafe menu'}
-];
 
 export const CustomIDInput = ({ label, ...props }) => {
   const isEdit = useSettingsStore((state) => state.isEdit);
@@ -205,7 +196,36 @@ export const CustomDropdownInput = ({ label, ...props }) => {
               ? props.converter.values[props.name]
               : null
           }
-          options={packGroups}
+          className={meta.touched && meta.error ? "p-error" : ""}
+          
+        />
+      </div>
+      {meta.touched && meta.error && <h4 className="p-error">{meta.error}</h4>}
+    </div>
+  );
+};
+
+export const CustomMultiSelectInput = ({ label, ...props }) => {
+  const isEdit = useSettingsStore((state) => state.isEdit);
+  const isCreate = useSettingsStore((state) => state.isCreate);
+  const [field, meta] = useField(props);
+
+ 
+  return (
+    <div>
+      <div className="field">
+       
+          <label>{label}</label>
+        
+        <MultiSelect
+          {...field}
+          {...props}
+          disabled={ isEdit ? false : isCreate ? false : true }
+          value={
+            props.converter.values[props.name]
+              ? props.converter.values[props.name]
+              : null
+          }
           className={meta.touched && meta.error ? "p-error" : ""}
           
         />

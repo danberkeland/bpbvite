@@ -12,6 +12,7 @@ import {
   CustomIntInput,
   CustomYesNoInput,
   CustomDropdownInput,
+  CustomMultiSelectInput,
 } from "../../FormComponents/CustomIDInput";
 import { validationSchema } from "./ValidationSchema";
 
@@ -52,6 +53,37 @@ function ProductDetails({ initialState, productList }) {
     window.scrollTo(0, 0);
     setIsEdit(true);
   };
+
+  
+const packGroups = [
+  {label: 'Baked Pastries', value: 'baked pastries'},
+  {label: 'Frozen Pastries', value: 'frozen pastries'},
+  {label: 'Rustic Breads', value: 'rustic breads'},
+  {label: 'Brioche Products', value: 'brioche products'},
+  {label: 'Sandwich Breads', value: 'sandwich breads'},
+  {label: 'Rolls', value: 'rolls'},
+  {label: 'Focaccia', value: 'focaccia'},
+  {label: 'Retail', value: 'retail'},
+  {label: 'Cafe Menu', value: 'cafe menu'}
+];
+
+const doughs = [
+  {label: 'French', value: 'french'},
+  {label: 'Baguette', value: 'baguette'},
+  {label: 'Brioche', value: 'brioche'},
+  {label: 'Croissant', value: 'croix'},
+  {label: 'Levain', value: 'lev'},
+  {label: 'Rustic Rye', value: 'rusticRye'},
+  {label: 'Multigrain', value: 'multi'},
+  {label: 'Ciabatta', value: 'cia'},
+  {label: 'Doobie', value: 'doobie'},
+  {label: 'Siciliano', value: 'siciliano'}
+]
+
+const bakedWhere = [
+  {label: 'Prado', value: "prado"},
+  {label: 'Carlton', value: "carlton"}
+]
 
   return (
     <div>
@@ -157,6 +189,7 @@ function ProductDetails({ initialState, productList }) {
                   <CustomDropdownInput
                     label="Pack Group"
                     name="packGroup"
+                    options={packGroups}
                     type="text"
                     placeholder="Enter Pack Group"
                     converter={props}
@@ -183,11 +216,13 @@ function ProductDetails({ initialState, productList }) {
                   <h2>
                     <i className="pi pi-dollar"></i> Baking Info
                   </h2>
-                  <CustomInput
+                  <CustomDropdownInput
                     label="Dough Type"
                     name="doughNick"
+                    options={doughs}
                     type="text"
                     placeholder="Enter Dough Type"
+                    converter={props}
                   />
                   <CustomIntInput
                     label="Lead Time"
@@ -202,6 +237,15 @@ function ProductDetails({ initialState, productList }) {
                     type="text"
                     placeholder="Name for Bakers"
                   />
+                  <CustomMultiSelectInput
+                    label="Baked Where"
+                    name="bakedWhere"
+                    options={bakedWhere}
+                    type="text"
+                    placeholder="Baked Where?"
+                    converter={props}
+                  />
+
                   <CustomIntInput
                     label="Guaranteed Ready (0-24)"
                     name="readyTime"
