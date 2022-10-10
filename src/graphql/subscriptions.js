@@ -521,6 +521,8 @@ export const onCreateUser = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -601,6 +603,8 @@ export const onUpdateUser = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -681,6 +685,8 @@ export const onDeleteUser = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -795,6 +801,8 @@ export const onCreateLocation = /* GraphQL */ `
       zip
       email
       phone
+      firstName
+      lastName
       toBePrinted
       toBeEmailed
       printDuplicate
@@ -916,6 +924,8 @@ export const onUpdateLocation = /* GraphQL */ `
       zip
       email
       phone
+      firstName
+      lastName
       toBePrinted
       toBeEmailed
       printDuplicate
@@ -1037,6 +1047,8 @@ export const onDeleteLocation = /* GraphQL */ `
       zip
       email
       phone
+      firstName
+      lastName
       toBePrinted
       toBeEmailed
       printDuplicate
@@ -1893,6 +1905,8 @@ export const onCreateOrder = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -2052,6 +2066,8 @@ export const onUpdateOrder = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -2211,6 +2227,8 @@ export const onDeleteOrder = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -2369,6 +2387,8 @@ export const onCreateStanding = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -2527,6 +2547,8 @@ export const onUpdateStanding = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -2685,6 +2707,8 @@ export const onDeleteStanding = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -4883,6 +4907,8 @@ export const onCreateEventLog = /* GraphQL */ `
           zip
           email
           phone
+          firstName
+          lastName
           toBePrinted
           toBeEmailed
           printDuplicate
@@ -4936,6 +4962,8 @@ export const onUpdateEventLog = /* GraphQL */ `
           zip
           email
           phone
+          firstName
+          lastName
           toBePrinted
           toBeEmailed
           printDuplicate
@@ -4989,6 +5017,8 @@ export const onDeleteEventLog = /* GraphQL */ `
           zip
           email
           phone
+          firstName
+          lastName
           toBePrinted
           toBeEmailed
           printDuplicate
@@ -5053,6 +5083,8 @@ export const onCreateTemplateProd = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -5206,6 +5238,8 @@ export const onUpdateTemplateProd = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -5359,6 +5393,8 @@ export const onDeleteTemplateProd = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -5512,6 +5548,8 @@ export const onCreateProdsNotAllowed = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -5665,6 +5703,8 @@ export const onUpdateProdsNotAllowed = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -5818,6 +5858,8 @@ export const onDeleteProdsNotAllowed = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -6648,6 +6690,8 @@ export const onCreateLocationUser = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -6692,6 +6736,8 @@ export const onCreateLocationUser = /* GraphQL */ `
           zip
           email
           phone
+          firstName
+          lastName
           toBePrinted
           toBeEmailed
           printDuplicate
@@ -6758,6 +6804,8 @@ export const onUpdateLocationUser = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -6802,6 +6850,8 @@ export const onUpdateLocationUser = /* GraphQL */ `
           zip
           email
           phone
+          firstName
+          lastName
           toBePrinted
           toBeEmailed
           printDuplicate
@@ -6868,6 +6918,8 @@ export const onDeleteLocationUser = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -6912,6 +6964,8 @@ export const onDeleteLocationUser = /* GraphQL */ `
           zip
           email
           phone
+          firstName
+          lastName
           toBePrinted
           toBeEmailed
           printDuplicate
@@ -6976,6 +7030,8 @@ export const onCreateAltPricing = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -7130,6 +7186,8 @@ export const onUpdateAltPricing = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -7284,6 +7342,8 @@ export const onDeleteAltPricing = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate

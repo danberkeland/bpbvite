@@ -176,6 +176,8 @@ type Location @model {
   zip: String
   email: String
   phone: String
+  firstName: String
+  lastName: String
   toBePrinted: Boolean
   toBeEmailed: Boolean
   printDuplicate: Boolean

@@ -156,28 +156,19 @@ function ProductDetails({ initialState, productList }) {
                   <CustomIDInput
                     label="Product ID"
                     name="prodNick"
-                    type="text"
-                    placeholder="Enter product id"
                     converter={props}
                   />
                   <CustomInput
                     label="Product Name"
                     name="prodName"
-                    type="text"
-                    placeholder="Enter product name"
+                    converter={props}
                   />
                   <CustomInput
                     label="Square ID"
                     name="squareID"
-                    type="text"
-                    placeholder="Enter square ID"
+                    converter={props}
                   />
-                  <CustomInput
-                    label="QB ID"
-                    name="qbID"
-                    type="text"
-                    placeholder="Enter QB ID"
-                  />
+                  <CustomInput label="QB ID" name="qbID" converter={props} />
                 </GroupBox>
                 <GroupBox>
                   <h2>
@@ -186,15 +177,11 @@ function ProductDetails({ initialState, productList }) {
                   <CustomFloatInput
                     label="Wholesale Price"
                     name="wholePrice"
-                    type="tel"
-                    placeholder="Enter Wholesale Price"
                     converter={props}
                   />
                   <CustomFloatInput
                     label="Retail Price"
                     name="retailPrice"
-                    type="tel"
-                    placeholder="Enter Retail Price"
                     converter={props}
                   />
                   <CustomYesNoInput
@@ -214,15 +201,11 @@ function ProductDetails({ initialState, productList }) {
                     label="Pack Group"
                     name="packGroup"
                     options={packGroups}
-                    type="text"
-                    placeholder="Enter Pack Group"
                     converter={props}
                   />
                   <CustomIntInput
                     label="Pack Size"
                     name="packSize"
-                    type="tel"
-                    placeholder="Enter Pack Size"
                     converter={props}
                   />
                   <CustomYesNoInput
@@ -244,58 +227,43 @@ function ProductDetails({ initialState, productList }) {
                     label="Dough Type"
                     name="doughNick"
                     options={doughs}
-                    type="text"
-                    placeholder="Enter Dough Type"
                     converter={props}
                   />
                   <CustomIntInput
                     label="Lead Time"
                     name="leadTime"
-                    type="tel"
-                    placeholder="Enter Lead Time"
                     converter={props}
                   />
                   <CustomInput
                     label="For Bake"
                     name="forBake"
-                    type="text"
-                    placeholder="Name for Bakers"
+                    converter={props}
                   />
                   <CustomMultiSelectInput
                     label="Baked Where"
                     name="bakedWhere"
                     options={bakedWhere}
-                    type="text"
-                    placeholder="Baked Where?"
                     converter={props}
                   />
 
                   <CustomFloatInput
                     label="Guaranteed Ready (0-24)"
                     name="readyTime"
-                    type="tel"
-                    placeholder="Enter Ready Time"
                     converter={props}
                   />
                   <CustomIntInput
                     label="Batch Size"
                     name="batchSize"
-                    type="tel"
-                    placeholder="Enter Batch Size"
                     converter={props}
                   />
                   <CustomIntInput
                     label="Bake Extra"
                     name="bakeExtra"
-                    type="tel"
-                    placeholder="Enter Bake Extra"
                     converter={props}
                   />
                   <CustomFloatInput
                     label="Weight"
                     name="weight"
-                    type="tel"
-                    placeholder="Enter Pocket Weight"
                     converter={props}
                   />
                 </GroupBox>

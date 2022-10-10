@@ -12,6 +12,8 @@ const query = /* GraphQL */ `
         currentBalance
         delivOrder
         email
+        firstName
+        lastName
         gMap
         invoicing
         latestFinalDeliv

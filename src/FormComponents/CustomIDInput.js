@@ -32,6 +32,12 @@ export const CustomIDInput = ({ label, ...props }) => {
         <InputText
           {...field}
           {...props}
+          value={
+            props.converter.values[props.name]
+              ? props.converter.values[props.name]
+              : ""
+          }
+          type="string"
           autoCapitalize="none"
           securetextentry="true"
           keyboardtype="visible-password"
@@ -61,6 +67,12 @@ export const CustomInput = ({ label, ...props }) => {
         <InputText
           {...field}
           {...props}
+          type="string"
+          value={
+            props.converter.values[props.name]
+              ? props.converter.values[props.name]
+              : ""
+          }
           className={meta.touched && meta.error ? "p-error" : ""}
           disabled={ isEdit ? false : isCreate ? false : true }
         />
@@ -85,6 +97,7 @@ export const CustomFloatInput = ({ label, ...props }) => {
           
           {...field}
           {...props}
+          type="tel"
           disabled={ isEdit ? false : isCreate ? false : true }
           value={isNaN(props.converter.values[props.name]) ? 0 :
             Number(props.converter.values[props.name])
@@ -120,6 +133,7 @@ export const CustomIntInput = ({ label, ...props }) => {
           
           {...field}
           {...props}
+          type="tel"
           disabled={ isEdit ? false : isCreate ? false : true }
           value={isNaN(props.converter.values[props.name]) ? 0 :
             Number(props.converter.values[props.name])
@@ -191,6 +205,7 @@ export const CustomDropdownInput = ({ label, ...props }) => {
           {...field}
           {...props}
           disabled={ isEdit ? false : isCreate ? false : true }
+          type="string"
           value={
             props.converter.values[props.name]
               ? props.converter.values[props.name]

@@ -21,6 +21,7 @@ import { validationSchema } from "./ValidationSchema";
 import styled from "styled-components";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { deleteLocation, updateLocation, createLocation } from "../../restAPIs";
+import { useSimpleZoneList } from "../../hooks";
 
 const GroupBox = styled.div`
   display: flex;
@@ -38,10 +39,16 @@ function LocationDetails({ initialState, locationList }) {
   const isCreate = useSettingsStore((state) => state.isCreate);
   const setIsCreate = useSettingsStore((state) => state.setIsCreate);
 
+  const { simpleZoneList } = useSimpleZoneList();
+
   useEffect(() => {
     window.scrollTo(0, 0);
     setIsEdit(false);
   }, [setIsEdit]);
+
+  useEffect(() => {
+    console.log("simpleZoneList", simpleZoneList)
+  },[simpleZoneList])
 
   const editButtonStyle = {
     width: "100px",
@@ -75,10 +82,20 @@ function LocationDetails({ initialState, locationList }) {
     });
   };
 
-  const bakedWhere = [
-    { label: "Prado", value: "prado" },
-    { label: "Carlton", value: "carlton" },
+  const terms = [
+    { label: "0", value: "0" },
+    { label: "15", value: "15" },
+    { label: "30", value: "30" },
   ];
+
+  const invoicing = [
+    { label: "daily", value: "daily" },
+    { label: "weekly", value: "weekly" },
+  ];
+
+  const zones = simpleZoneList
+    ? simpleZoneList.data
+    : [];
 
   return (
     <div>
@@ -130,15 +147,12 @@ function LocationDetails({ initialState, locationList }) {
                   <CustomIDInput
                     label="Location ID"
                     name="locNick"
-                    type="text"
-                    placeholder="Enter location id"
                     converter={props}
                   />
                   <CustomInput
                     label="Location Name"
                     name="locName"
-                    type="text"
-                    placeholder="Enter location name"
+                    converter={props}
                   />
                 </GroupBox>
 
@@ -146,73 +160,67 @@ function LocationDetails({ initialState, locationList }) {
                   <h2>
                     <i className="pi pi-map"></i> Location
                   </h2>
-                  <CustomInput
+                  <CustomDropdownInput
                     label="Zone"
                     name="zoneNick"
-                    type="text"
-                    placeholder="Enter Zone"
+                    options={zones}
+                    converter={props}
                   />
-                  <CustomInput
-                    label="Address"
-                    name="addr1"
-                    type="text"
-                    placeholder="Street Address"
-                  />
-                  <CustomInput
-                    label="Address"
-                    name="addr2"
-                    type="text"
-                    placeholder="Address"
-                  />
-                  <CustomInput
-                    label="City"
-                    name="city"
-                    type="text"
-                    placeholder="city"
-                  />
-                  <CustomInput
-                    label="Zip"
-                    name="zip"
-                    type="text"
-                    placeholder="Zip"
-                  />
+                  <CustomInput label="Address" name="addr1" converter={props} />
+                  <CustomInput label="Address" name="addr2" converter={props} />
+                  <CustomInput label="City" name="city" converter={props} />
+                  <CustomInput label="Zip" name="zip" converter={props} />
+                  <CustomFloatInput label="Zip" name="zip" converter={props} />
                 </GroupBox>
 
                 <GroupBox>
                   <h2>
                     <i className="pi pi-phone"></i> Contact
                   </h2>
-                  <CustomIDInput
-                    label="Location ID"
-                    name="locNick"
-                    type="text"
-                    placeholder="Enter location id"
+                  <CustomInput
+                    label="First Name"
+                    name="firstName"
                     converter={props}
                   />
                   <CustomInput
-                    label="Location Name"
-                    name="locName"
-                    type="text"
-                    placeholder="Enter location name"
+                    label="Last Name"
+                    name="lastName"
+                    converter={props}
                   />
+                  <CustomInput label="Email" name="email" converter={props} />
+                  <CustomInput label="Phone" name="phone" converter={props} />
                 </GroupBox>
 
                 <GroupBox>
                   <h2>
                     <i className="pi pi-dollar"></i> Billing
                   </h2>
-                  <CustomIDInput
-                    label="Location ID"
-                    name="locNick"
-                    type="text"
-                    placeholder="Enter location id"
+                  <CustomYesNoInput
+                    label="Paper Invoice"
+                    name="toBePrinted"
                     converter={props}
                   />
-                  <CustomInput
-                    label="Location Name"
-                    name="locName"
-                    type="text"
-                    placeholder="Enter location name"
+                  <CustomYesNoInput
+                    label="Email Invoice"
+                    name="toBeEmailed"
+                    converter={props}
+                  />
+                  <CustomYesNoInput
+                    label="Print Duplicate"
+                    name="printDuplicate"
+                    converter={props}
+                  />
+                  <CustomDropdownInput
+                    label="Terms"
+                    name="terms"
+                    options={terms}
+                    converter={props}
+                  />
+                  <CustomDropdownInput
+                    label="Invoicing"
+                    name="invoicing"
+                    options={invoicing}
+                    converter={props}
                   />
                 </GroupBox>
 

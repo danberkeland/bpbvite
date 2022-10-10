@@ -10,6 +10,8 @@ const query = /* GraphQL */ `
     $delivOrder: Int
     $email: String
     $gMap: String
+    $firstName: String
+    $lastName: String
     $invoicing: String
     $latestFinalDeliv: Float
     $latestFirstDeliv: Float
@@ -33,6 +35,8 @@ const query = /* GraphQL */ `
         addr1: $addr1
         addr2: $addr2
         city: $city
+        firstName: $firstName
+        lastName: $lastName
         currentBalance: $currentBalance
         delivOrder: $delivOrder
         email: $email
@@ -59,6 +63,8 @@ const query = /* GraphQL */ `
       addr1
       addr2
       city
+      firstName
+      lastName
       createdAt
       currentBalance
       delivOrder

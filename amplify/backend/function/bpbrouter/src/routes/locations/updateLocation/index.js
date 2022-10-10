@@ -6,6 +6,8 @@ mutation MyMutation(
   $addr1: String
   $addr2: String
   $city: String
+  $firstName: String
+  $lastName: String
   $currentBalance: String
   $delivOrder: Int
   $email: String
@@ -33,6 +35,8 @@ mutation MyMutation(
       addr1: $addr1
       addr2: $addr2
       city: $city
+      firstName: $firstName
+      lastName: $lastName
       currentBalance: $currentBalance
       delivOrder: $delivOrder
       email: $email
@@ -63,6 +67,8 @@ mutation MyMutation(
     currentBalance
     delivOrder
     email
+    firstName
+    lastName
     gMap
     invoicing
     latestFinalDeliv

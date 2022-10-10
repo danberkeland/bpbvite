@@ -398,6 +398,8 @@ export const getUser = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -474,6 +476,8 @@ export const listUsers = /* GraphQL */ `
           zip
           email
           phone
+          firstName
+          lastName
           toBePrinted
           toBeEmailed
           printDuplicate
@@ -572,6 +576,8 @@ export const getLocation = /* GraphQL */ `
       zip
       email
       phone
+      firstName
+      lastName
       toBePrinted
       toBeEmailed
       printDuplicate
@@ -665,6 +671,8 @@ export const listLocations = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -1150,6 +1158,8 @@ export const getOrder = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -1246,6 +1256,8 @@ export const listOrders = /* GraphQL */ `
           zip
           email
           phone
+          firstName
+          lastName
           toBePrinted
           toBeEmailed
           printDuplicate
@@ -1397,6 +1409,8 @@ export const getStanding = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -1492,6 +1506,8 @@ export const listStandings = /* GraphQL */ `
           zip
           email
           phone
+          firstName
+          lastName
           toBePrinted
           toBeEmailed
           printDuplicate
@@ -2889,6 +2905,8 @@ export const getEventLog = /* GraphQL */ `
           zip
           email
           phone
+          firstName
+          lastName
           toBePrinted
           toBeEmailed
           printDuplicate
@@ -2980,6 +2998,8 @@ export const getTemplateProd = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -3119,6 +3139,8 @@ export const listTemplateProds = /* GraphQL */ `
           zip
           email
           phone
+          firstName
+          lastName
           toBePrinted
           toBeEmailed
           printDuplicate
@@ -3212,6 +3234,8 @@ export const getProdsNotAllowed = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -3355,6 +3379,8 @@ export const listProdsNotAlloweds = /* GraphQL */ `
           zip
           email
           phone
+          firstName
+          lastName
           toBePrinted
           toBeEmailed
           printDuplicate
@@ -3798,6 +3824,8 @@ export const getLocationUser = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -3842,6 +3870,8 @@ export const getLocationUser = /* GraphQL */ `
           zip
           email
           phone
+          firstName
+          lastName
           toBePrinted
           toBeEmailed
           printDuplicate
@@ -3894,6 +3924,8 @@ export const listLocationUsers = /* GraphQL */ `
           zip
           email
           phone
+          firstName
+          lastName
           toBePrinted
           toBeEmailed
           printDuplicate
@@ -3962,6 +3994,8 @@ export const getAltPricing = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -4102,6 +4136,8 @@ export const listAltPricings = /* GraphQL */ `
           zip
           email
           phone
+          firstName
+          lastName
           toBePrinted
           toBeEmailed
           printDuplicate
@@ -4207,6 +4243,8 @@ export const locSortAZ = /* GraphQL */ `
         zip
         email
         phone
+        firstName
+        lastName
         toBePrinted
         toBeEmailed
         printDuplicate
@@ -4413,6 +4451,8 @@ export const orderByCreatedAt = /* GraphQL */ `
           zip
           email
           phone
+          firstName
+          lastName
           toBePrinted
           toBeEmailed
           printDuplicate
@@ -4503,6 +4543,8 @@ export const locUsersByAuthType = /* GraphQL */ `
           zip
           email
           phone
+          firstName
+          lastName
           toBePrinted
           toBeEmailed
           printDuplicate

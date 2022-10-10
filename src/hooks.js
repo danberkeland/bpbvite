@@ -137,3 +137,29 @@ export function useLocationList() {
   };
 }
 
+export function useSimpleZoneList() {
+  const { data, error, mutate } = useSWR(
+    { url: "/zones/grabDetailedZoneList" },
+    fetcher,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: true,
+    }
+  );
+
+  return {
+    simpleZoneList: {
+      data: data
+        ? sortAtoZDataByIndex(data.data.body.items, "zoneName").map((zone) => ({
+            label: zone.zoneName,
+            value: zone.zoneNick,
+          }))
+        : data,
+      isLoading: !error && !data,
+      isError: error,
+      revalidate: () => mutate(),
+    },
+  };
+}
+

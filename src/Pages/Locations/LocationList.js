@@ -20,6 +20,8 @@ const initialState = {
   addr2: "",
   city: "",
   zip: "",
+  firstName: "",
+  lastName: "",
   email: "",
   phone: "",
   toBePrinted: true,
@@ -78,7 +80,7 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
                 selectionMode="single"
                 metaKeySelection={false}
                 selection={selectedLocation}
-                onSelectionChange={(e) => setSelectedLocation(e.value)}
+                onSelectionChange={(e) => setSelectedLocation({...initialState,...e.value})}
                 sortField="locName"
                 sortOrder={1}
                 responsiveLayout="scroll"
