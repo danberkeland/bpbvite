@@ -4,7 +4,19 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { SelectButton } from "primereact/selectbutton";
 
+import { ConfirmDialog } from "primereact/confirmdialog"; // To use <ConfirmDialog> tag
+import { confirmDialog } from "primereact/confirmdialog"; // To use confirmDialog method // To use confirmDialog method
+
 import { motion } from "framer-motion";
+import {
+  CustomIDInput,
+  CustomInput,
+  CustomFloatInput,
+  CustomIntInput,
+  CustomYesNoInput,
+  CustomDropdownInput,
+  CustomMultiSelectInput,
+} from "../../../FormComponents/CustomIDInput";
 import CreateCustomer from "./EditCustomer";
 import styled from "styled-components";
 import { useCustomerList } from "../../../hooks";
