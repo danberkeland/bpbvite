@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 import ProductList from "./ProductList";
 import ProductDetails from "./ProductDetails";
-import { motion } from "framer-motion";
 import { withFadeIn } from "../../utils";
 
 function Products() {

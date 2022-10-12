@@ -173,3 +173,12 @@ export const GroupBox = styled.div`
   margin: 5px 10px 20px 10px;
   padding: 5px 5px 10px 5px;
 `;
+
+
+export const compose = (...fns) =>
+  fns.reduceRight(
+    (prevFn, nextFn) =>
+      (...args) =>
+        nextFn(prevFn(...args)),
+    (value) => value
+  );

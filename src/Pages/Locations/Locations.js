@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 import LocationList from "./LocationList";
 import LocationDetails from "./LocationDetails";
-import { motion } from "framer-motion";
 import { withFadeIn } from "../../utils";
 
 function Locations() {

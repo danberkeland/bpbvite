@@ -40,7 +40,7 @@ const withCustomWrap = (Component) => (props) => {
   );
 };
 
-export const CustomIDInputBase = ({ label, ...props }) => {
+const CustomIDInputBase = ({ label, ...props }) => {
   return (
     <InputText
       {...props}
@@ -57,7 +57,7 @@ export const CustomIDInputBase = ({ label, ...props }) => {
   );
 };
 
-export const CustomTextInputBase = ({ label, ...props }) => {
+const CustomTextInputBase = ({ label, ...props }) => {
   return (
     <InputText
       {...props}
@@ -71,7 +71,7 @@ export const CustomTextInputBase = ({ label, ...props }) => {
   );
 };
 
-export const CustomFloatInputBase = ({ label, ...props }) => {
+const CustomFloatInputBase = ({ label, ...props }) => {
   return (
     <InputNumber
       {...props}
@@ -91,7 +91,7 @@ export const CustomFloatInputBase = ({ label, ...props }) => {
   );
 };
 
-export const CustomIntInputBase = ({ label, ...props }) => {
+const CustomIntInputBase = ({ label, ...props }) => {
   return (
     <InputNumber
       {...props}
@@ -108,7 +108,7 @@ export const CustomIntInputBase = ({ label, ...props }) => {
   );
 };
 
-export const CustomYesNoInputBase = ({ label, ...props }) => {
+const CustomYesNoInputBase = ({ label, ...props }) => {
   return (
     <SelectButton
       {...props}
@@ -128,7 +128,7 @@ export const CustomYesNoInputBase = ({ label, ...props }) => {
   );
 };
 
-export const CustomDropdownInputBase = ({ label, ...props }) => {
+const CustomDropdownInputBase = ({ label, ...props }) => {
   return (
     <Dropdown
       {...props}
@@ -142,7 +142,7 @@ export const CustomDropdownInputBase = ({ label, ...props }) => {
   );
 };
 
-export const CustomMultiSelectInputBase = ({ label, ...props }) => {
+const CustomMultiSelectInputBase = ({ label, ...props }) => {
   return (
     <MultiSelect
       {...props}
@@ -155,10 +155,14 @@ export const CustomMultiSelectInputBase = ({ label, ...props }) => {
   );
 };
 
-export const CustomTextInput = withCustomWrap(CustomTextInputBase);
-export const CustomIDInput = withCustomWrap(CustomIDInputBase);
-export const CustomFloatInput = withCustomWrap(CustomFloatInputBase);
-export const CustomIntInput = withCustomWrap(CustomIntInputBase);
-export const CustomYesNoInput = withCustomWrap(CustomYesNoInputBase);
-export const CustomDropdownInput = withCustomWrap(CustomDropdownInputBase);
-export const CustomMultiSelectInput = withCustomWrap(CustomMultiSelectInputBase);
+export class CustomInputs {
+  constructor(){
+    this.CustomTextInput = withCustomWrap(CustomTextInputBase);
+    this.CustomIDInput = withCustomWrap(CustomIDInputBase);
+    this.CustomFloatInput = withCustomWrap(CustomFloatInputBase);
+    this.CustomIntInput = withCustomWrap(CustomIntInputBase);
+    this.CustomYesNoInput = withCustomWrap(CustomYesNoInputBase);
+    this.CustomDropdownInput = withCustomWrap(CustomDropdownInputBase);
+    this.CustomMultiSelectInput = withCustomWrap(CustomMultiSelectInputBase);
+  }
+}
