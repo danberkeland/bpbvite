@@ -117,7 +117,7 @@ export const CustomYesNoInputBase = ({ label, ...props }) => {
           ? props.converter.values[props.name]
           : false
       }
-      onChange={(values) => {
+      onChange={() => {
         props.converter.setFieldValue(
           props.name,
           !props.converter.values[props.name]

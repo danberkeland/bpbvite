@@ -9,13 +9,10 @@ import { confirmDialog } from "primereact/confirmdialog"; // To use confirmDialo
 import { motion } from "framer-motion";
 import {
   CustomIDInput,
-  CustomInput,
-  CustomFloatInput,
-  CustomIntInput,
+  CustomTextInput,
   CustomYesNoInput,
   CustomDropdownInput,
-  CustomMultiSelectInput,
-} from "../../FormComponents/CustomIDInput";
+} from "../../FormComponents/CustomInputs";
 import { validationSchema } from "./ValidationSchema";
 
 import styled from "styled-components";
@@ -47,8 +44,8 @@ function LocationDetails({ initialState, locationList }) {
   }, [setIsEdit]);
 
   useEffect(() => {
-    console.log("simpleZoneList", simpleZoneList)
-  },[simpleZoneList])
+    console.log("simpleZoneList", simpleZoneList);
+  }, [simpleZoneList]);
 
   const editButtonStyle = {
     width: "100px",
@@ -93,9 +90,7 @@ function LocationDetails({ initialState, locationList }) {
     { label: "weekly", value: "weekly" },
   ];
 
-  const zones = simpleZoneList
-    ? simpleZoneList.data
-    : [];
+  const zones = simpleZoneList ? simpleZoneList.data : [];
 
   return (
     <div>
@@ -149,7 +144,7 @@ function LocationDetails({ initialState, locationList }) {
                     name="locNick"
                     converter={props}
                   />
-                  <CustomInput
+                  <CustomTextInput
                     label="Location Name"
                     name="locName"
                     converter={props}
@@ -166,28 +161,44 @@ function LocationDetails({ initialState, locationList }) {
                     options={zones}
                     converter={props}
                   />
-                  <CustomInput label="Address" name="addr1" converter={props} />
-                  <CustomInput label="Address" name="addr2" converter={props} />
-                  <CustomInput label="City" name="city" converter={props} />
-                  <CustomInput label="Zip" name="zip" converter={props} />
+                  <CustomTextInput
+                    label="Address"
+                    name="addr1"
+                    converter={props}
+                  />
+                  <CustomTextInput
+                    label="Address"
+                    name="addr2"
+                    converter={props}
+                  />
+                  <CustomTextInput label="City" name="city" converter={props} />
+                  <CustomTextInput label="Zip" name="zip" converter={props} />
                 </GroupBox>
 
                 <GroupBox>
                   <h2>
                     <i className="pi pi-phone"></i> Contact
                   </h2>
-                  <CustomInput
+                  <CustomTextInput
                     label="First Name"
                     name="firstName"
                     converter={props}
                   />
-                  <CustomInput
+                  <CustomTextInput
                     label="Last Name"
                     name="lastName"
                     converter={props}
                   />
-                  <CustomInput label="Email" name="email" converter={props} />
-                  <CustomInput label="Phone" name="phone" converter={props} />
+                  <CustomTextInput
+                    label="Email"
+                    name="email"
+                    converter={props}
+                  />
+                  <CustomTextInput
+                    label="Phone"
+                    name="phone"
+                    converter={props}
+                  />
                 </GroupBox>
 
                 <GroupBox>
