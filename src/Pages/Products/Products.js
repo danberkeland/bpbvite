@@ -22,15 +22,14 @@ function Products() {
 
   return (
     <React.Fragment>
-      {selectedProduct !== "" ? (
+      {selectedProduct === "" ? (
+        <FadeProductList />
+      ) : (
         <React.Fragment>
           <button onClick={handleProdClick}>PRODUCT LIST</button>
           <ProductDetails initialState={selectedProduct} create={false} />
         </React.Fragment>
-      ) : (
-        <div></div>
       )}
-      {selectedProduct === "" ? <FadeProductList /> : <div></div>}
     </React.Fragment>
   );
 }

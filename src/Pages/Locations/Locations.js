@@ -22,15 +22,14 @@ function Locations() {
 
   return (
     <React.Fragment>
-      {selectedLocation !== "" ? (
+      {selectedLocation === "" ? (
+        <FadeLocationList />
+      ) : (
         <React.Fragment>
           <button onClick={handleLocClick}>LOCATION LIST</button>
           <LocationDetails initialState={selectedLocation} create={false} />
         </React.Fragment>
-      ) : (
-        <div></div>
       )}
-      {selectedLocation === "" ? <FadeLocationList /> : <div></div>}
     </React.Fragment>
   );
 }

@@ -82,7 +82,17 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
 
   return (
     <React.Fragment>
-      {!isCreate ? (
+      {isCreate ? (
+        <React.Fragment>
+          <button onClick={handleClick}>+ LOCATION LIST</button>
+          <LocationDetails
+            initialState={
+              selectedLocation === "" ? initialState : selectedLocation
+            }
+            locationList={locationList.data}
+          />
+        </React.Fragment>
+      ) : (
         <React.Fragment>
           <button onClick={handleClick}>+ CREATE LOCATION</button>
           {locationList.isLoading ? setIsLoading(true) : setIsLoading(false)}
@@ -91,24 +101,9 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
           {locationList.data && <FadeLocationDataTable />}
           <div className="bottomSpace"></div>
         </React.Fragment>
-      ) : (
-        <React.Fragment>
-          <button onClick={handleClick}>+ LOCATION LIST</button>
-          <LocationDetails
-            initialState={
-              selectedLocation !== "" ? selectedLocation : initialState
-            }
-            locationList={locationList.data}
-          />
-        </React.Fragment>
       )}
     </React.Fragment>
   );
 }
 
 export default LocationList;
-
-
-
-
-

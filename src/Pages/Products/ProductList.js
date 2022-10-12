@@ -83,7 +83,17 @@ function ProductList({ selectedProduct, setSelectedProduct }) {
 
   return (
     <React.Fragment>
-      {!isCreate ? (
+      {isCreate ? (
+        <React.Fragment>
+          <button onClick={handleClick}>+ PRODUCT LIST</button>
+          <ProductDetails
+            initialState={
+              selectedProduct === "" ? initialState : selectedProduct
+            }
+            productList={productList.data}
+          />
+        </React.Fragment>
+      ) : (
         <React.Fragment>
           <button onClick={handleClick}>+ CREATE PRODUCT</button>
           {productList.isLoading ? setIsLoading(true) : setIsLoading(false)}
@@ -91,16 +101,6 @@ function ProductList({ selectedProduct, setSelectedProduct }) {
           {productList.isError && <div>Table Failed to load</div>}
           {productList.data && <FadeProductDataTable />}
           <div className="bottomSpace"></div>
-        </React.Fragment>
-      ) : (
-        <React.Fragment>
-          <button onClick={handleClick}>+ PRODUCT LIST</button>
-          <ProductDetails
-            initialState={
-              selectedProduct !== "" ? selectedProduct : initialState
-            }
-            productList={productList.data}
-          />
         </React.Fragment>
       )}
     </React.Fragment>
