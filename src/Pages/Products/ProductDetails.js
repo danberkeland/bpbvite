@@ -156,6 +156,7 @@ function ProductDetails({ initialState, productList }) {
                   <CustomIDInput
                     label="Product ID"
                     name="prodNick"
+                    dontEdit
                     converter={props}
                   />
                   <CustomTextInput

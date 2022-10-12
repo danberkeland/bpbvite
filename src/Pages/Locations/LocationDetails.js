@@ -142,6 +142,7 @@ function LocationDetails({ initialState, locationList }) {
                   <CustomIDInput
                     label="Location ID"
                     name="locNick"
+                    dontEdit
                     converter={props}
                   />
                   <CustomTextInput
