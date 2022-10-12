@@ -7,7 +7,7 @@ import { ConfirmDialog } from "primereact/confirmdialog"; // To use <ConfirmDial
 import { confirmDialog } from "primereact/confirmdialog"; // To use confirmDialog method // To use confirmDialog method
 
 import { motion } from "framer-motion";
-import { CustomInput } from "../../FormComponents/CustomInputs";
+import { CustomIDInput, CustomTextInput } from "../../FormComponents/CustomInputs";
 import { validationSchema } from "./ValidationSchema";
 
 import styled from "styled-components";
@@ -115,11 +115,18 @@ function ProductDetails({ initialState, productList }) {
                   <h2>
                     <i className="pi pi-user"></i> Product Description
                   </h2>
-
-                  <CustomInput
+                  <CustomIDInput
+                    label="Product ID"
+                    name="prodNick"
+                    dontEdit={true}
+                    converter={props}
+                   
+                  />
+                  <CustomTextInput
                     label="Product Name"
                     name="prodName"
                     converter={props}
+                  
                   />
                 </GroupBox>
 

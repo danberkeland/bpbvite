@@ -19,8 +19,6 @@ export const CustomIDInput = ({ label, ...props }) => {
   const isEdit = useSettingsStore((state) => state.isEdit);
   const isCreate = useSettingsStore((state) => state.isCreate);
   
-  
-
   const [field, meta] = useField(props);
  
   return (
