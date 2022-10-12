@@ -27,7 +27,7 @@ const withCustomWrap = (Component) => (props) => {
           <Component
             {...props}
             {...field}
-            disabled={isEdit ? props.dontEdit : isCreate ? false : true}
+            disabled={isEdit ? props.dontedit==="true" ? true : false : isCreate ? false : true}
             className={meta.touched && meta.error ? "p-error" : ""}
           />
         </div>

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import ProductList from "./ProductList";
 import ProductDetails from "./ProductDetails";
 import { motion } from "framer-motion";
+import { withFadeIn } from "../../utils";
 
 function Products() {
   const [selectedProduct, setSelectedProduct] = useState("");
@@ -11,35 +12,27 @@ function Products() {
     setSelectedProduct("");
   };
 
+  const FadeProductList = withFadeIn(() => {
+    return (
+      <ProductList
+        selectedProduct={selectedProduct}
+        setSelectedProduct={setSelectedProduct}
+      />
+    );
+  });
+
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1, y:0 }}
-      exit={{ opacity: 0 }}
-    >
+    <React.Fragment>
       {selectedProduct !== "" ? (
         <React.Fragment>
           <button onClick={handleProdClick}>PRODUCT LIST</button>
-          <ProductDetails initialState={selectedProduct} create={false}/>
+          <ProductDetails initialState={selectedProduct} create={false} />
         </React.Fragment>
       ) : (
         <div></div>
       )}
-      {selectedProduct === "" ? (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1, y:0 }}
-          exit={{ opacity: 0 }}
-        >
-          <ProductList
-            selectedProduct={selectedProduct}
-            setSelectedProduct={setSelectedProduct}
-          />
-        </motion.div>
-      ) : (
-        <div></div>
-      )}
-    </motion.div>
+      {selectedProduct === "" ? <FadeProductList /> : <div></div>}
+    </React.Fragment>
   );
 }
 

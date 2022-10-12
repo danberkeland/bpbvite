@@ -92,6 +92,7 @@ function LocationDetails({ initialState, locationList }) {
 
   const zones = simpleZoneList ? simpleZoneList.data : [];
 
+
   return (
     <div>
       <ConfirmDialog />
@@ -142,7 +143,7 @@ function LocationDetails({ initialState, locationList }) {
                   <CustomIDInput
                     label="Location ID"
                     name="locNick"
-                    dontEdit
+                    dontedit="true"
                     converter={props}
                   />
                   <CustomTextInput

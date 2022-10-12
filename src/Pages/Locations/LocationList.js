@@ -6,10 +6,9 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
 import LocationDetails from "./LocationDetails";
-import { motion } from "framer-motion";
 import { useLocationList } from "../../hooks";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
-
+import { withFadeIn } from "../../utils";
 
 const initialState = {
   Type: "Location",
@@ -59,6 +58,28 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
     setIsCreate(!isCreate);
   };
 
+  const FadeLocationDataTable = withFadeIn(() => {
+    return (
+      <DataTable
+        className="dataTable"
+        value={locationList.data}
+        selectionMode="single"
+        metaKeySelection={false}
+        selection={selectedLocation}
+        onSelectionChange={(e) =>
+          setSelectedLocation({ ...initialState, ...e.value })
+        }
+        sortField="locName"
+        sortOrder={1}
+        responsiveLayout="scroll"
+        filterDisplay="row"
+        filters={filter}
+      >
+        <Column field="locName" filterPlaceholder="Search Locations" filter />
+      </DataTable>
+    );
+  });
+
   return (
     <React.Fragment>
       {!isCreate ? (
@@ -67,34 +88,7 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
           {locationList.isLoading ? setIsLoading(true) : setIsLoading(false)}
 
           {locationList.isError && <div>Table Failed to load</div>}
-          {locationList.data && (
-            <motion.div
-              initial={{ opacity: 0, x: "0", y: "0" }}
-              animate={{ opacity: 1, x: "0" }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              exit={{ opacity: 0, x: "0" }}
-            >
-              <DataTable
-                className="dataTable"
-                value={locationList.data}
-                selectionMode="single"
-                metaKeySelection={false}
-                selection={selectedLocation}
-                onSelectionChange={(e) => setSelectedLocation({...initialState,...e.value})}
-                sortField="locName"
-                sortOrder={1}
-                responsiveLayout="scroll"
-                filterDisplay="row"
-                filters={filter}
-              >
-                <Column
-                  field="locName"
-                  filterPlaceholder="Search Locations"
-                  filter
-                />
-              </DataTable>
-            </motion.div>
-          )}
+          {locationList.data && <FadeLocationDataTable />}
           <div className="bottomSpace"></div>
         </React.Fragment>
       ) : (

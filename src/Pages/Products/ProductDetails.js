@@ -6,7 +6,6 @@ import { Button } from "primereact/button";
 import { ConfirmDialog } from "primereact/confirmdialog"; // To use <ConfirmDialog> tag
 import { confirmDialog } from "primereact/confirmdialog"; // To use confirmDialog method // To use confirmDialog method
 
-import { motion } from "framer-motion";
 import {
   CustomIDInput,
   CustomTextInput,
@@ -20,8 +19,8 @@ import { validationSchema } from "./ValidationSchema";
 
 import styled from "styled-components";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
-import { deleteProduct, updateProduct } from "../../restAPIs";
-import { createProduct } from "../../restAPIs";
+import { deleteProduct, updateProduct, createProduct } from "../../restAPIs";
+import { withFadeIn } from "../../utils";
 
 const GroupBox = styled.div`
   display: flex;
@@ -38,6 +37,18 @@ function ProductDetails({ initialState, productList }) {
   const isEdit = useSettingsStore((state) => state.isEdit);
   const isCreate = useSettingsStore((state) => state.isCreate);
   const setIsCreate = useSettingsStore((state) => state.setIsCreate);
+
+  let str = "product"
+  let source = str+"List"
+  let path = "/"+ str.charAt(0).toUpperCase()+str.slice(1)+"s"
+  let create = "create"+str.charAt(0).toUpperCase()+str.slice(1)
+  console.log("create", create)
+  
+
+  var sourceVar = window[source]
+  let createFunc = window[create]
+  console.log("type",typeof createFunc)
+  
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -57,8 +68,9 @@ function ProductDetails({ initialState, productList }) {
   };
 
   const handleDelete = (e, props) => {
+    
     confirmDialog({
-      message: "Are you sure you want to delete this product?",
+      message: `Are you sure you want to delete this ${str}?`,
       header: "Confirmation",
       icon: "pi pi-exclamation-triangle",
       accept: () => {
@@ -67,7 +79,7 @@ function ProductDetails({ initialState, productList }) {
         setIsEdit(false);
         setIsCreate(false);
         deleteProduct(props).then(() => {
-          window.location = "/Products";
+          window.location = path;
         });
       },
       reject: () => {
@@ -106,12 +118,118 @@ function ProductDetails({ initialState, productList }) {
     { label: "Carlton", value: "carlton" },
   ];
 
+  const FadeLocationList = withFadeIn((props) => {
+    return (
+      <React.Fragment>
+        <GroupBox>
+          <h2>
+            <i className="pi pi-user"></i> Product Description
+          </h2>
+          <CustomIDInput
+            label="Product ID"
+            name="prodNick"
+            dontedit="true"
+            converter={props}
+          />
+          <CustomTextInput
+            label="Product Name"
+            name="prodName"
+            converter={props}
+          />
+          <CustomTextInput
+            label="Square ID"
+            name="squareID"
+            converter={props}
+          />
+          <CustomTextInput label="QB ID" name="qbID" converter={props} />
+        </GroupBox>
+        <GroupBox>
+          <h2>
+            <i className="pi pi-dollar"></i> Billing
+          </h2>
+          <CustomFloatInput
+            label="Wholesale Price"
+            name="wholePrice"
+            converter={props}
+          />
+          <CustomFloatInput
+            label="Retail Price"
+            name="retailPrice"
+            converter={props}
+          />
+          <CustomYesNoInput
+            label="Available Wholesale?"
+            name="isWhole"
+            converter={props}
+          />
+          <CustomYesNoInput
+            label="Default Include?"
+            name="defaultInclude"
+            converter={props}
+          />
+        </GroupBox>
+
+        <GroupBox>
+          <CustomDropdownInput
+            label="Pack Group"
+            name="packGroup"
+            options={packGroups}
+            converter={props}
+          />
+          <CustomIntInput label="Pack Size" name="packSize" converter={props} />
+          <CustomYesNoInput
+            label="Freezer Thaw?"
+            name="freezerThaw"
+            converter={props}
+          />
+          <CustomYesNoInput label="Count EOD?" name="isEOD" converter={props} />
+        </GroupBox>
+        <GroupBox>
+          <h2>
+            <i className="pi pi-dollar"></i> Baking Info
+          </h2>
+          <CustomDropdownInput
+            label="Dough Type"
+            name="doughNick"
+            options={doughs}
+            converter={props}
+          />
+          <CustomIntInput label="Lead Time" name="leadTime" converter={props} />
+          <CustomTextInput label="For Bake" name="forBake" converter={props} />
+          <CustomMultiSelectInput
+            label="Baked Where"
+            name="bakedWhere"
+            options={bakedWhere}
+            converter={props}
+          />
+
+          <CustomFloatInput
+            label="Guaranteed Ready (0-24)"
+            name="readyTime"
+            converter={props}
+          />
+          <CustomIntInput
+            label="Batch Size"
+            name="batchSize"
+            converter={props}
+          />
+          <CustomIntInput
+            label="Bake Extra"
+            name="bakeExtra"
+            converter={props}
+          />
+          <CustomFloatInput label="Weight" name="weight" converter={props} />
+        </GroupBox>
+      </React.Fragment>
+    );
+  });
+
   return (
     <div>
       <ConfirmDialog />
       <Formik
         initialValues={initialState}
-        validationSchema={validationSchema(productList)}
+        validationSchema={validationSchema(sourceVar)}
         onSubmit={(props) => {
           console.log("values", props);
           window.scrollTo(0, 0);
@@ -119,11 +237,11 @@ function ProductDetails({ initialState, productList }) {
           setIsCreate(false);
           if (isCreate) {
             createProduct(props).then(() => {
-              window.location = "/Products";
+              window.location = path;
             });
           } else {
             updateProduct(props).then(() => {
-              window.location = "/Products";
+              window.location = path;
             });
           }
         }}
@@ -143,141 +261,16 @@ function ProductDetails({ initialState, productList }) {
               ) : (
                 <div></div>
               )}
-              <motion.div
-                initial={{ opacity: 0, x: "0", y: "0" }}
-                animate={{ opacity: 1, x: "0" }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
-                exit={{ opacity: 0, x: "0" }}
-              >
-                <GroupBox>
-                  <h2>
-                    <i className="pi pi-user"></i> Product Description
-                  </h2>
-                  <CustomIDInput
-                    label="Product ID"
-                    name="prodNick"
-                    dontEdit
-                    converter={props}
-                  />
-                  <CustomTextInput
-                    label="Product Name"
-                    name="prodName"
-                    converter={props}
-                  />
-                  <CustomTextInput
-                    label="Square ID"
-                    name="squareID"
-                    converter={props}
-                  />
-                  <CustomTextInput label="QB ID" name="qbID" converter={props} />
-                </GroupBox>
-                <GroupBox>
-                  <h2>
-                    <i className="pi pi-dollar"></i> Billing
-                  </h2>
-                  <CustomFloatInput
-                    label="Wholesale Price"
-                    name="wholePrice"
-                    converter={props}
-                  />
-                  <CustomFloatInput
-                    label="Retail Price"
-                    name="retailPrice"
-                    converter={props}
-                  />
-                  <CustomYesNoInput
-                    label="Available Wholesale?"
-                    name="isWhole"
-                    converter={props}
-                  />
-                  <CustomYesNoInput
-                    label="Default Include?"
-                    name="defaultInclude"
-                    converter={props}
-                  />
-                </GroupBox>
+              <FadeLocationList {...props} />
 
-                <GroupBox>
-                  <CustomDropdownInput
-                    label="Pack Group"
-                    name="packGroup"
-                    options={packGroups}
-                    converter={props}
-                  />
-                  <CustomIntInput
-                    label="Pack Size"
-                    name="packSize"
-                    converter={props}
-                  />
-                  <CustomYesNoInput
-                    label="Freezer Thaw?"
-                    name="freezerThaw"
-                    converter={props}
-                  />
-                  <CustomYesNoInput
-                    label="Count EOD?"
-                    name="isEOD"
-                    converter={props}
-                  />
-                </GroupBox>
-                <GroupBox>
-                  <h2>
-                    <i className="pi pi-dollar"></i> Baking Info
-                  </h2>
-                  <CustomDropdownInput
-                    label="Dough Type"
-                    name="doughNick"
-                    options={doughs}
-                    converter={props}
-                  />
-                  <CustomIntInput
-                    label="Lead Time"
-                    name="leadTime"
-                    converter={props}
-                  />
-                  <CustomTextInput
-                    label="For Bake"
-                    name="forBake"
-                    converter={props}
-                  />
-                  <CustomMultiSelectInput
-                    label="Baked Where"
-                    name="bakedWhere"
-                    options={bakedWhere}
-                    converter={props}
-                  />
-
-                  <CustomFloatInput
-                    label="Guaranteed Ready (0-24)"
-                    name="readyTime"
-                    converter={props}
-                  />
-                  <CustomIntInput
-                    label="Batch Size"
-                    name="batchSize"
-                    converter={props}
-                  />
-                  <CustomIntInput
-                    label="Bake Extra"
-                    name="bakeExtra"
-                    converter={props}
-                  />
-                  <CustomFloatInput
-                    label="Weight"
-                    name="weight"
-                    converter={props}
-                  />
-                </GroupBox>
-
-                {!isEdit && !isCreate && (
-                  <Button
-                    label="Edit"
-                    className="editButton p-button-raised p-button-rounded p-button-success"
-                    style={editButtonStyle}
-                    onClick={(e) => handleEdit(e, props)}
-                  />
-                )}
-              </motion.div>
+              {!isEdit && !isCreate && (
+                <Button
+                  label="Edit"
+                  className="editButton p-button-raised p-button-rounded p-button-success"
+                  style={editButtonStyle}
+                  onClick={(e) => handleEdit(e, props)}
+                />
+              )}
             </Form>
             <Button
               label="Delete"
