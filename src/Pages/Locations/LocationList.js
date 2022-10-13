@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import { FilterMatchMode } from "primereact/api";
 
@@ -50,10 +50,6 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
 
   const { locationList } = useLocationList();
 
-  useEffect(() => {
-    console.log("locationList", locationList);
-  }, [locationList]);
-
   const handleClick = () => {
     setIsCreate(!isCreate);
   };
@@ -86,9 +82,7 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
         <React.Fragment>
           <button onClick={handleClick}>+ LOCATION LIST</button>
           <LocationDetails
-            initialState={
-              selectedLocation === "" ? initialState : selectedLocation
-            }
+            initialState={initialState}
             locationList={locationList.data}
           />
         </React.Fragment>

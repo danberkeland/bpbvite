@@ -27,7 +27,7 @@ function Products() {
       ) : (
         <React.Fragment>
           <button onClick={handleProdClick}>PRODUCT LIST</button>
-          <ProductDetails initialState={selectedProduct} create={false} />
+          <ProductDetails initialState={selectedProduct} />
         </React.Fragment>
       )}
     </React.Fragment>

@@ -27,7 +27,7 @@ function Locations() {
       ) : (
         <React.Fragment>
           <button onClick={handleLocClick}>LOCATION LIST</button>
-          <LocationDetails initialState={selectedLocation} create={false} />
+          <LocationDetails initialState={selectedLocation} />
         </React.Fragment>
       )}
     </React.Fragment>

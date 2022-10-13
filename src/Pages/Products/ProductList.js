@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import { FilterMatchMode } from "primereact/api";
 
@@ -53,10 +53,6 @@ function ProductList({ selectedProduct, setSelectedProduct }) {
 
   const { productList } = useProductList();
 
-  useEffect(() => {
-    console.log("productist", productList);
-  }, [productList]);
-
   const handleClick = () => {
     setIsCreate(!isCreate);
   };
@@ -87,9 +83,7 @@ function ProductList({ selectedProduct, setSelectedProduct }) {
         <React.Fragment>
           <button onClick={handleClick}>+ PRODUCT LIST</button>
           <ProductDetails
-            initialState={
-              selectedProduct === "" ? initialState : selectedProduct
-            }
+            initialState={initialState}
             productList={productList.data}
           />
         </React.Fragment>
