@@ -126,9 +126,9 @@ function LocationDetails({ initialState }) {
       name="location"
       validationSchema={validationSchema}
       initialState={initialState}
-      createLocation={createLocation}
-      deleteLocation={deleteLocation}
-      updateLocation={updateLocation}
+      create={createLocation}
+      delete={deleteLocation}
+      update={updateLocation}
     />
   );
 }

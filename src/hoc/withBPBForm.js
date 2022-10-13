@@ -18,7 +18,7 @@ export const withBPBForm = (Component) => (props) => {
     let source = str+"List"
     let path = "/"+ str.charAt(0).toUpperCase()+str.slice(1)+"s"
     let create = "create"+str.charAt(0).toUpperCase()+str.slice(1)
-    console.log("create", create)
+   
     let fns = props
   
     var sourceVar = window[source]
@@ -54,7 +54,7 @@ export const withBPBForm = (Component) => (props) => {
           window.scrollTo(0, 0);
           setIsEdit(false);
           setIsCreate(false);
-          fns.deleteProduct(props).then(() => {
+          fns.delete(props).then(() => {
             window.location = path;
           });
         },
@@ -76,11 +76,11 @@ export const withBPBForm = (Component) => (props) => {
             setIsEdit(false);
             setIsCreate(false);
             if (isCreate) {
-              fns.createProduct(props).then(() => {
+              fns.create(props).then(() => {
                 window.location = path;
               });
             } else {
-              fns.updateProduct(props).then(() => {
+              fns.update(props).then(() => {
                 window.location = path;
               });
             }

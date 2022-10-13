@@ -176,9 +176,9 @@ function ProductDetails({ initialState }) {
       name="product"
       validationSchema={validationSchema}
       initialState={initialState}
-      createProduct={createProduct}
-      deleteProduct={deleteProduct}
-      updateProduct={updateProduct}
+      create={createProduct}
+      delete={deleteProduct}
+      update={updateProduct}
     />
   );
 }
