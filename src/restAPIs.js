@@ -80,33 +80,19 @@ export const grabProductById = async (prodNick) => {
   return prod.data.body;
 };
 
-// Product
-/*
-export const grabDetailedProductList = async () => {
-  let prodList;
-  try {
-    prodList = await axios.post(
-      API_bpbrouterAuth + "/products/grabDetailedProductList",
-      {}
-    );
-  } catch (err) {
-    console.log("Error grabbing prodList", err);
-  }
-  console.log("grabDetailedProductList Response:", prodList.status);
-  console.table(prodList.data.body.items, ["prodName", "prodNick"]);
-  return prodList.data.body.items;
-};
-*/
-export const createProduct = async (event) => {
+
+// Newest stuff
+
+export const fetcher = async (event, path) => {
   const user = await Auth.currentAuthenticatedUser();
   const token = user.signInUserSession.idToken.jwtToken;
   console.log("token", token);
 
   console.log("event", event);
-  let prod;
+  let obj;
   try {
-    prod = await axios.post(
-      API_bpbrouterAuth + "/products/createProduct",
+    obj = await axios.post(
+      API_bpbrouterAuth + path,
       event,
       {
         headers: {
@@ -116,166 +102,36 @@ export const createProduct = async (event) => {
       }
     );
   } catch (err) {
-    console.log("Error creating Product", err);
+    console.log(`Error creating ${path}`, err);
   }
-  console.log("createProduct Response:", prod);
-  return prod.data.body;
+  console.log(`${path} Response:`, obj);
+  return obj.data.body;
 };
 
-export const deleteProduct = async (event) => {
-  const user = await Auth.currentAuthenticatedUser();
-  const token = user.signInUserSession.idToken.jwtToken;
-  console.log("token", token);
+export const createProduct = (event) => {
+  return fetcher(event, "/products/createProduct")
+}
 
-  console.log("event", event.values);
-  let prod;
-  try {
-    prod = await axios.post(
-      API_bpbrouterAuth + "/products/deleteProduct",
-      event.values,
-      {
-        headers: {
-          "content-type": "application/json",
-          Authorization: token,
-        },
-      }
-    );
-  } catch (err) {
-    console.log("Error deleting Product", err);
-  }
-  console.log("deleteProduct Response:", prod);
-  return prod.data.body;
-};
+export const deleteProduct = (event) => {
+  return fetcher(event.values, "/products/deleteProduct")
+}
 
-export const updateProduct = async (event) => {
-  const user = await Auth.currentAuthenticatedUser();
-  const token = user.signInUserSession.idToken.jwtToken;
-  console.log("token", token);
+export const updateProduct = (event) => {
+  return fetcher(event, "/products/updateProduct")
+}
 
-  console.log("event", event);
-  let prod;
-  try {
-    prod = await axios.post(
-      API_bpbrouterAuth + "/products/updateProduct",
-      event,
-      {
-        headers: {
-          "content-type": "application/json",
-          Authorization: token,
-        },
-      }
-    );
-  } catch (err) {
-    console.log("Error updating Product", err);
-  }
-  console.log("updateProduct Response:", prod);
-  return prod.data.body;
-};
+export const createLocation = (event) => {
+  return fetcher(event, "/locations/createLocation")
+}
 
-// Location
-/*
-export const grabDetailedLocationList = async () => {
-  let locList;
-  try {
-    locList = await axios.post(
-      API_bpbrouterAuth + "/locations/grabDetailedLocationList",
-      {}
-    );
-  } catch (err) {
-    console.log("Error grabbing locList", err);
-  }
-  console.log("grabDetailedLocationList Response:", locList);
+export const deleteLocation = (event) => {
+  return fetcher(event.values, "/locations/deleteLocation")
+}
 
-  return locList.data.body.items;
-};
-*/
-export const createLocation = async (event) => {
-  const user = await Auth.currentAuthenticatedUser();
-  const token = user.signInUserSession.idToken.jwtToken;
-  console.log("token", token);
+export const updateLocation = (event) => {
+  return fetcher(event, "/locations/updateLocation")
+}
 
-  console.log("event", event);
-  let loc;
-  try {
-    loc = await axios.post(
-      API_bpbrouterAuth + "/locations/createLocation",
-      event,
-      {
-        headers: {
-          "content-type": "application/json",
-          Authorization: token,
-        },
-      }
-    );
-  } catch (err) {
-    console.log("Error creating LOcation", err);
-  }
-  console.log("createLocation Response:", loc);
-  return loc.data.body;
-};
-
-export const deleteLocation = async (event) => {
-  const user = await Auth.currentAuthenticatedUser();
-  const token = user.signInUserSession.idToken.jwtToken;
-  console.log("token", token);
-
-  console.log("event", event.values);
-  let loc;
-  try {
-    loc = await axios.post(
-      API_bpbrouterAuth + "/locations/deleteLocation",
-      event.values,
-      {
-        headers: {
-          "content-type": "application/json",
-          Authorization: token,
-        },
-      }
-    );
-  } catch (err) {
-    console.log("Error deleting Location", err);
-  }
-  console.log("deleteLocation Response:", loc);
-  return loc.data.body;
-};
-
-export const updateLocation = async (event) => {
-  const user = await Auth.currentAuthenticatedUser();
-  const token = user.signInUserSession.idToken.jwtToken;
-  console.log("token", token);
-
-  console.log("event", event);
-  let loc;
-  try {
-    loc = await axios.post(
-      API_bpbrouterAuth + "/locations/updateLocation",
-      event,
-      {
-        headers: {
-          "content-type": "application/json",
-          Authorization: token,
-        },
-      }
-    );
-  } catch (err) {
-    console.log("Error updating Location", err);
-  }
-  console.log("updateLocation Response:", loc);
-  return loc.data.body;
-};
-
-
-export const getOrder = async (event) => {
-  console.log("event", event);
-  let loc;
-  try {
-    loc = await axios.post(API_bpbrouterAuth + "/orders/getOrder", event);
-  } catch (err) {
-    console.log("Error getOrder", err);
-  }
-  console.log("getOrder Response:", loc);
-  return loc.data.body;
-};
-/*
-export const fetcher = (url) => axios.post(API_bpbrouterAuth + url);
-*/
+export const getOrder = (event) => {
+  return fetcher(event, "/orders/getOrder")
+}
