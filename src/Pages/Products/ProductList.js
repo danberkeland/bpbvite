@@ -6,9 +6,9 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
 import ProductDetails from "./ProductDetails";
-import { useProductList } from "../../hooks";
+import { useProductList } from "../../swr";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
-import { withFadeIn } from "../../utils";
+import { withFadeIn } from "../../hoc/withFadeIn";
 
 const initialState = {
   Type: "Product",

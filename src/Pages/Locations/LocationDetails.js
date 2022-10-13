@@ -4,10 +4,11 @@ import { CustomInputs } from "../../FormComponents/CustomInputs";
 import { validationSchema } from "./ValidationSchema";
 
 import { deleteLocation, updateLocation, createLocation } from "../../restAPIs";
-import { withFadeIn, withBPBForm } from "../../utils";
-import { GroupBox } from "../../utils";
+import { withFadeIn } from "../../hoc/withFadeIn";
+import { withBPBForm } from "../../hoc/withBPBForm";
+import { GroupBox } from "../../CommonStyles";
 import { compose } from "../../utils";
-import { useSimpleZoneList } from "../../hooks";
+import { useSimpleZoneList } from "../../swr";
 
 const BPB = new CustomInputs();
 

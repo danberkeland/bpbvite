@@ -6,9 +6,9 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
 import LocationDetails from "./LocationDetails";
-import { useLocationList } from "../../hooks";
+import { useLocationList } from "../../swr";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
-import { withFadeIn } from "../../utils";
+import { withFadeIn } from "../../hoc/withFadeIn";
 
 const initialState = {
   Type: "Location",

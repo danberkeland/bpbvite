@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import ProductList from "./ProductList";
 import ProductDetails from "./ProductDetails";
-import { withFadeIn } from "../../utils";
+import { withFadeIn } from "../../hoc/withFadeIn";
 
 function Products() {
   const [selectedProduct, setSelectedProduct] = useState("");

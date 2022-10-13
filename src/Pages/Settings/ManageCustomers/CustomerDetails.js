@@ -19,7 +19,7 @@ import {
 } from "../../../FormComponents/CustomIDInput";
 import CreateCustomer from "./EditCustomer";
 import styled from "styled-components";
-import { useCustomerList } from "../../../hooks";
+import { useCustomerList } from "../../../swr";
 
 const options = [
   { label: "Yes", value: true },

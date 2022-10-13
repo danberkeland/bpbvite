@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import LocationList from "./LocationList";
 import LocationDetails from "./LocationDetails";
-import { withFadeIn } from "../../utils";
+import { withFadeIn } from "../../hoc/withFadeIn";
 
 function Locations() {
   const [selectedLocation, setSelectedLocation] = useState("");

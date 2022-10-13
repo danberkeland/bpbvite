@@ -12,7 +12,7 @@ import { Fulfill } from "./OrderingParts/FullfillOptions";
 import styled from "styled-components";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
-import { useLocUserList, useSimpleLocationList } from "../../hooks";
+import { useLocUserList, useSimpleLocationList } from "../../swr";
 
 const BasicContainer = styled.div`
   display: flex;

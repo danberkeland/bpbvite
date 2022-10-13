@@ -4,8 +4,9 @@ import { CustomInputs } from "../../FormComponents/CustomInputs";
 import { validationSchema } from "./ValidationSchema";
 
 import { deleteProduct, updateProduct, createProduct } from "../../restAPIs";
-import { withFadeIn, withBPBForm } from "../../utils";
-import { GroupBox } from "../../utils";
+import { withFadeIn } from "../../hoc/withFadeIn";
+import { withBPBForm } from "../../hoc/withBPBForm";
+import { GroupBox } from "../../CommonStyles";
 import { compose } from "../../utils";
 
 const BPB = new CustomInputs();

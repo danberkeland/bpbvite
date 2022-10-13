@@ -9,7 +9,7 @@ import { TabMenu } from "primereact/tabmenu";
 
 import CreateCustomer from "./EditCustomer";
 import { motion } from "framer-motion";
-import { useCustomerList } from "../../../hooks";
+import { useCustomerList } from "../../../swr";
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 
 const submitButtonStyle = {

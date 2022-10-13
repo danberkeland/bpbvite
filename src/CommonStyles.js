@@ -52,3 +52,14 @@ export const Website = styled.h3`
   color: rgb(66, 97, 201);
 `;
 
+
+export const GroupBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-content: flex-start;
+  border: 1px solid lightgrey;
+  width: 95%;
+  margin: 5px 10px 20px 10px;
+  padding: 5px 5px 10px 5px;
+`;
+
