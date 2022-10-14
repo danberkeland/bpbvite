@@ -1,4 +1,3 @@
-
 import React from "react";
 
 import { InputText } from "primereact/inputtext";
@@ -9,18 +8,17 @@ import { MultiSelect } from "primereact/multiselect";
 
 import { withFormComponentWrap } from "../hoc/withFormComponentWrap";
 
-
 const options = [
   { label: "Yes", value: true },
   { label: "No", value: false },
 ];
 
-
 const CustomIDInputBase = ({ label, ...props }) => {
+  
   return (
     <InputText
       {...props}
-      value={
+      value={ 
         props.converter.values[props.name]
           ? props.converter.values[props.name]
           : ""
@@ -34,12 +32,12 @@ const CustomIDInputBase = ({ label, ...props }) => {
 };
 
 const CustomTextInputBase = ({ label, ...props }) => {
- 
+  console.log('customprops', props)
   return (
     <InputText
       {...props}
       type="string"
-      value={props.attr ? props.attr :
+      value={
         props.converter.values[props.name]
           ? props.converter.values[props.name]
           : ""
@@ -49,6 +47,7 @@ const CustomTextInputBase = ({ label, ...props }) => {
 };
 
 const CustomFloatInputBase = ({ label, ...props }) => {
+  
   return (
     <InputNumber
       {...props}
@@ -69,6 +68,7 @@ const CustomFloatInputBase = ({ label, ...props }) => {
 };
 
 const CustomIntInputBase = ({ label, ...props }) => {
+ 
   return (
     <InputNumber
       {...props}
@@ -86,6 +86,7 @@ const CustomIntInputBase = ({ label, ...props }) => {
 };
 
 const CustomYesNoInputBase = ({ label, ...props }) => {
+  
   return (
     <SelectButton
       {...props}
@@ -106,6 +107,7 @@ const CustomYesNoInputBase = ({ label, ...props }) => {
 };
 
 const CustomDropdownInputBase = ({ label, ...props }) => {
+  
   return (
     <Dropdown
       {...props}
@@ -120,6 +122,7 @@ const CustomDropdownInputBase = ({ label, ...props }) => {
 };
 
 const CustomMultiSelectInputBase = ({ label, ...props }) => {
+  
   return (
     <MultiSelect
       {...props}
@@ -133,13 +136,15 @@ const CustomMultiSelectInputBase = ({ label, ...props }) => {
 };
 
 export class CustomInputs {
-  constructor(){
+  constructor() {
     this.CustomTextInput = withFormComponentWrap(CustomTextInputBase);
     this.CustomIDInput = withFormComponentWrap(CustomIDInputBase);
     this.CustomFloatInput = withFormComponentWrap(CustomFloatInputBase);
     this.CustomIntInput = withFormComponentWrap(CustomIntInputBase);
     this.CustomYesNoInput = withFormComponentWrap(CustomYesNoInputBase);
     this.CustomDropdownInput = withFormComponentWrap(CustomDropdownInputBase);
-    this.CustomMultiSelectInput = withFormComponentWrap(CustomMultiSelectInputBase);
+    this.CustomMultiSelectInput = withFormComponentWrap(
+      CustomMultiSelectInputBase
+    );
   }
 }

@@ -1,19 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { FilterMatchMode } from "primereact/api";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { TabMenu } from "primereact/tabmenu";
-
-import CreateCustomer from "./EditCustomer";
 import { useCustomerList } from "../../../swr";
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 import { withFadeIn } from "../../../hoc/withFadeIn";
 
+import CustomerDetails from "./CustomerDetails";
 const initialState = {
   custName: "",
+  locNick: "",
   authType: "",
+  location0: "",
 };
 
 const menuItems = [{ label: "By Customer" }, { label: "By Location" }];
@@ -38,6 +39,26 @@ function CustomerList({
     setIsCreate(!isCreate);
   };
 
+  const handleSelectedCustomer = (e) => {
+    console.log("customerList", customerList);
+    console.log("initialState", initialState);
+    let addOns = {};
+    customerList.data
+      .filter((cust) => cust.custName === e.value.custName)
+      .forEach((item, ind) => {
+        addOns[`location${ind}`] = item.locNick;
+        addOns[`auth${ind}`] = item.authType;
+        addOns[`customer${ind}`] = item.custName;
+      });
+
+    console.log("addOns", addOns);
+    setSelectedCustomer({ ...initialState, ...e.value, ...addOns });
+  };
+
+  useEffect(() => {
+    console.log("selectedCustomer", selectedCustomer);
+  }, [selectedCustomer]);
+
   const decideList = (list) => {
     console.log("activeIndex", activeIndex);
     let newArray = [];
@@ -60,7 +81,7 @@ function CustomerList({
         selectionMode="single"
         metaKeySelection={false}
         selection={selectedCustomer}
-        onSelectionChange={(e) => setSelectedCustomer({ ...initialState, ...e.value })}
+        onSelectionChange={handleSelectedCustomer}
         sortField="custName"
         sortOrder={1}
         responsiveLayout="scroll"
@@ -93,9 +114,8 @@ function CustomerList({
     <React.Fragment>
       {isCreate ? (
         <React.Fragment>
-          
           <button onClick={handleClick}>+ CUSTOMER LIST</button>
-          <CreateCustomer initialState={initialState} />
+          <CustomerDetails initialState={initialState} />
         </React.Fragment>
       ) : (
         <React.Fragment>

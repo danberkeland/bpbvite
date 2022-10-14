@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { CustomInputs } from "../../../FormComponents/CustomInputs";
 
 import { validationSchema } from "./ValidationSchema";
@@ -12,7 +12,11 @@ import { useCustomerList } from "../../../swr";
 
 const BPB = new CustomInputs();
 
-function CustomerDetails({ initialState, selectedCustomer, activeIndex }) {
+function CustomerDetails({
+  initialState,
+  selectedCustomer = {initialState},
+  activeIndex = 0,
+}) {
   const { customerList } = useCustomerList();
 
   const BPBUserForm = compose(
@@ -56,14 +60,13 @@ function CustomerDetails({ initialState, selectedCustomer, activeIndex }) {
                       key={"location" + ind}
                       name={"location" + ind}
                       label="Location"
-                      attr={item.locNick}
-                      converter={props}
+                      dontedit="true"
+                      converter={{...props }}
                     />
                     <BPB.CustomTextInput
                       key={"auth" + ind}
                       name={"auth" + ind}
                       label="Auth Type"
-                      attr={item.authType}
                       converter={props}
                     />
                   </GroupBox>
@@ -86,14 +89,13 @@ function CustomerDetails({ initialState, selectedCustomer, activeIndex }) {
                       key={"customer" + ind}
                       name={"customer" + ind}
                       label="Customer"
-                      attr={item.custName}
+                      dontedit="true"
                       converter={props}
                     />
                     <BPB.CustomTextInput
                       key={"auth" + ind}
                       name={"auth" + ind}
                       label="Auth Type"
-                      attr={item.authType}
                       converter={props}
                     />
                   </GroupBox>

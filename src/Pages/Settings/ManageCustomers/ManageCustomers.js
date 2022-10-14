@@ -12,6 +12,7 @@ function ManageCustomers() {
     setSelectedCustomer("");
   };
 
+
   const FadeCustomerList = withFadeIn(() => {
     return (
       <CustomerList
