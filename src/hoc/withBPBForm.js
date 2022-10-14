@@ -67,7 +67,6 @@ export const withBPBForm = (Component) => (props) => {
         initialValues={props.initialState}
         validationSchema={props.validationSchema(sourceVar)}
         onSubmit={(props) => {
-          console.log("submitValues", props);
           window.scrollTo(0, 0);
           setIsEdit(false);
           setIsCreate(false);
@@ -102,22 +101,24 @@ export const withBPBForm = (Component) => (props) => {
               {!isEdit && !isCreate && (
                 <Button
                   label="Edit"
+                  type="button"
                   className="editButton p-button-raised p-button-rounded p-button-success"
                   style={editButtonStyle}
                   onClick={(e) => handleEdit(e, props)}
                 />
               )}
             </Form>
-            <Button
-              label="Delete"
-              type="delete"
-              className="editButton p-button-raised p-button-rounded p-button-success"
-              style={editButtonStyle}
-              onClick={(e) => handleDelete(e, props)}
-            />
+            
           </React.Fragment>
         )}
       </Formik>
+      <Button
+              label="Delete"
+              type="button"
+              className="p-button-raised p-button-rounded p-button-success"
+              style={editButtonStyle}
+              onClick={(e) => handleDelete(e, props)}
+            />
       <div className="bottomSpace"></div>
     </div>
   );

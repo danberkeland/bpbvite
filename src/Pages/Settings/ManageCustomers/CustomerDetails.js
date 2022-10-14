@@ -60,7 +60,7 @@ function CustomerDetails({
                     <h2>
                       <i className="pi pi-user"></i> Location Info{" "}
                     </h2>
-                    <Button label="delete" />
+                    <Button type="button" label="delete" />
 
                     <BPB.CustomTextInput
                       key={"location" + ind}
@@ -91,7 +91,7 @@ function CustomerDetails({
                     <h2>
                       <i className="pi pi-user"></i> Customer Info
                     </h2>
-                    <Button label="delete" />
+                    <Button type="button" label="delete" />
                     <BPB.CustomTextInput
                       key={"customer" + ind}
                       name={`customer[${ind}]`}
@@ -109,8 +109,10 @@ function CustomerDetails({
                 ))}
             </GroupBox>
           )}
+          <GroupBox>
+            <Button type="button" label="add" />
+          </GroupBox>
         </div>
-        <Button label="add" />
       </React.Fragment>
     );
   });
