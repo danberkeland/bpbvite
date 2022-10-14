@@ -15,14 +15,11 @@ const BPB = new CustomInputs();
 function CustomerDetails({ initialState, selectedCustomer, activeIndex }) {
   const { customerList } = useCustomerList();
 
-  useEffect(() => {
-    console.log('customerList', customerList)
-  },[customerList])
-
   const BPBUserForm = compose(
     withBPBForm,
     withFadeIn
   )((props) => {
+    console.log("props", props)
     return (
       <React.Fragment>
         <div className="productDetails">

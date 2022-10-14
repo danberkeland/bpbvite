@@ -31,6 +31,7 @@ function ManageCustomers() {
         <React.Fragment>
           <button onClick={handleCustClick}>CUSTOMER LIST</button>
           <CustomerDetails
+            initialState={selectedCustomer}
             activeIndex={activeIndex}
             selectedCustomer={selectedCustomer}
           />

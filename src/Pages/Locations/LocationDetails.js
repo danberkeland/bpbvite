@@ -32,6 +32,7 @@ function LocationDetails({ initialState }) {
     withBPBForm,
     withFadeIn
   )((props) => {
+    console.log("props", props)
     return (
       <React.Fragment>
         <GroupBox>
