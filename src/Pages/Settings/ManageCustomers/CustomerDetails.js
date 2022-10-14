@@ -3,21 +3,25 @@ import { CustomInputs } from "../../../FormComponents/CustomInputs";
 
 import { validationSchema } from "./ValidationSchema";
 
+import { Button } from "primereact/button";
+
 import { deleteUser, updateUser, createUser } from "../../../restAPIs";
 import { withFadeIn } from "../../../hoc/withFadeIn";
 import { withBPBForm } from "../../../hoc/withBPBForm";
 import { GroupBox } from "../../../CommonStyles";
 import { compose } from "../../../utils";
-import { useCustomerList } from "../../../swr";
+import { useCustomerList, useSimpleLocationList } from "../../../swr";
+import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 
 const BPB = new CustomInputs();
 
 function CustomerDetails({
   initialState,
-  selectedCustomer = {initialState},
+  selectedCustomer = { initialState },
   activeIndex = 0,
 }) {
   const { customerList } = useCustomerList();
+  const add = useSettingsStore((state) => state.add);
 
   const BPBUserForm = compose(
     withBPBForm,
@@ -40,6 +44,7 @@ function CustomerDetails({
               <BPB.CustomTextInput
                 label="Customer Name"
                 name="custName"
+                dontedit="true"
                 converter={props}
               />
               <BPB.CustomTextInput
@@ -55,13 +60,14 @@ function CustomerDetails({
                     <h2>
                       <i className="pi pi-user"></i> Location Info{" "}
                     </h2>
+                    <Button label="delete" />
 
                     <BPB.CustomTextInput
                       key={"location" + ind}
                       name={`location[${ind}]`}
                       label="Location"
                       dontedit="true"
-                      converter={{...props }}
+                      converter={{ ...props }}
                     />
                     <BPB.CustomTextInput
                       key={"auth" + ind}
@@ -85,6 +91,7 @@ function CustomerDetails({
                     <h2>
                       <i className="pi pi-user"></i> Customer Info
                     </h2>
+                    <Button label="delete" />
                     <BPB.CustomTextInput
                       key={"customer" + ind}
                       name={`customer[${ind}]`}
@@ -103,19 +110,22 @@ function CustomerDetails({
             </GroupBox>
           )}
         </div>
+        <Button label="add" />
       </React.Fragment>
     );
   });
 
   return (
-    <BPBUserForm
-      name="user"
-      validationSchema={validationSchema}
-      initialState={initialState}
-      create={createUser}
-      delete={deleteUser}
-      update={updateUser}
-    />
+    <React.Fragment>
+      <BPBUserForm
+        name="user"
+        validationSchema={validationSchema}
+        initialState={initialState}
+        create={createUser}
+        delete={deleteUser}
+        update={updateUser}
+      />
+    </React.Fragment>
   );
 }
 
