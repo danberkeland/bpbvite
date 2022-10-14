@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import CustomerList from "./CustomerList";
 import CustomerDetails from "./CustomerDetails";
-import { motion } from "framer-motion";
+import { withFadeIn } from "../../../hoc/withFadeIn";
 
 function ManageCustomers() {
   const [selectedCustomer, setSelectedCustomer] = useState("");
@@ -12,14 +12,22 @@ function ManageCustomers() {
     setSelectedCustomer("");
   };
 
+  const FadeCustomerList = withFadeIn(() => {
+    return (
+      <CustomerList
+        selectedCustomer={selectedCustomer}
+        setSelectedCustomer={setSelectedCustomer}
+        activeIndex={activeIndex}
+        setActiveIndex={setActiveIndex}
+      />
+    );
+  });
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0 }}
-    >
-      {selectedCustomer !== "" ? (
+    <React.Fragment>
+      {selectedCustomer === "" ? (
+        <FadeCustomerList />
+      ) : (
         <React.Fragment>
           <button onClick={handleCustClick}>CUSTOMER LIST</button>
           <CustomerDetails
@@ -27,26 +35,8 @@ function ManageCustomers() {
             selectedCustomer={selectedCustomer}
           />
         </React.Fragment>
-      ) : (
-        <div></div>
       )}
-      {selectedCustomer === "" ? (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0 }}
-        >
-          <CustomerList
-            activeIndex={activeIndex}
-            setActiveIndex={setActiveIndex}
-            selectedCustomer={selectedCustomer}
-            setSelectedCustomer={setSelectedCustomer}
-          />
-        </motion.div>
-      ) : (
-        <div></div>
-      )}
-    </motion.div>
+    </React.Fragment>
   );
 }
 

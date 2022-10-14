@@ -1,6 +1,88 @@
 import { Auth } from "aws-amplify";
 import axios from "axios";
 
+
+const API_bpbrouterAuth =
+  "https://8gw70qn5eb.execute-api.us-east-2.amazonaws.com/auth";
+
+// NEW STUFF
+
+export const fetcher = async (event, path) => {
+  const user = await Auth.currentAuthenticatedUser();
+  const token = user.signInUserSession.idToken.jwtToken;
+  console.log("token", token);
+
+  console.log("event", event);
+  let obj;
+  try {
+    obj = await axios.post(
+      API_bpbrouterAuth + path,
+      event,
+      {
+        headers: {
+          "content-type": "application/json",
+          Authorization: token,
+        },
+      }
+    );
+  } catch (err) {
+    console.log(`Error creating ${path}`, err);
+  }
+  console.log(`${path} Response:`, obj);
+  return obj.data.body;
+};
+
+export const createProduct = (event) => {
+  return fetcher(event, "/products/createProduct")
+}
+
+export const deleteProduct = (event) => {
+  return fetcher(event.values, "/products/deleteProduct")
+}
+
+export const updateProduct = (event) => {
+  return fetcher(event, "/products/updateProduct")
+}
+
+export const createLocation = (event) => {
+  return fetcher(event, "/locations/createLocation")
+}
+
+export const deleteLocation = (event) => {
+  return fetcher(event.values, "/locations/deleteLocation")
+}
+
+export const updateLocation = (event) => {
+  return fetcher(event, "/locations/updateLocation")
+}
+
+
+export const createUser = (event) => {
+  return fetcher(event, "/users/createUser")
+}
+
+export const deleteUser = (event) => {
+  return fetcher(event.values, "/users/deleteUser")
+}
+
+export const updateUser = (event) => {
+  return fetcher(event, "/users/updateUser")
+}
+
+export const getOrder = (event) => {
+  return fetcher(event, "/orders/getOrder")
+}
+
+
+
+
+
+
+
+
+
+// OLD STUFF
+
 const API_testingGrQL =
   "https://dltjjr5aja.execute-api.us-east-2.amazonaws.com/dev/testingGrQL";
 const API_grabLocList =
@@ -11,8 +93,6 @@ const API_grabStandOrder =
 const API_bpbadmin2 =
   "https://7el0c3e6wi.execute-api.us-east-2.amazonaws.com/auth/";
 
-const API_bpbrouterAuth =
-  "https://8gw70qn5eb.execute-api.us-east-2.amazonaws.com/auth";
 
 export const testingGrQL = async (locNick, delivDate) => {
   console.log("delivDate", delivDate);
@@ -80,58 +160,3 @@ export const grabProductById = async (prodNick) => {
   return prod.data.body;
 };
 
-
-// Newest stuff
-
-export const fetcher = async (event, path) => {
-  const user = await Auth.currentAuthenticatedUser();
-  const token = user.signInUserSession.idToken.jwtToken;
-  console.log("token", token);
-
-  console.log("event", event);
-  let obj;
-  try {
-    obj = await axios.post(
-      API_bpbrouterAuth + path,
-      event,
-      {
-        headers: {
-          "content-type": "application/json",
-          Authorization: token,
-        },
-      }
-    );
-  } catch (err) {
-    console.log(`Error creating ${path}`, err);
-  }
-  console.log(`${path} Response:`, obj);
-  return obj.data.body;
-};
-
-export const createProduct = (event) => {
-  return fetcher(event, "/products/createProduct")
-}
-
-export const deleteProduct = (event) => {
-  return fetcher(event.values, "/products/deleteProduct")
-}
-
-export const updateProduct = (event) => {
-  return fetcher(event, "/products/updateProduct")
-}
-
-export const createLocation = (event) => {
-  return fetcher(event, "/locations/createLocation")
-}
-
-export const deleteLocation = (event) => {
-  return fetcher(event.values, "/locations/deleteLocation")
-}
-
-export const updateLocation = (event) => {
-  return fetcher(event, "/locations/updateLocation")
-}
-
-export const getOrder = (event) => {
-  return fetcher(event, "/orders/getOrder")
-}
