@@ -19,7 +19,6 @@ function CustomerDetails({ initialState, selectedCustomer, activeIndex }) {
     withBPBForm,
     withFadeIn
   )((props) => {
-    console.log("props", props)
     return (
       <React.Fragment>
         <div className="productDetails">
@@ -56,13 +55,15 @@ function CustomerDetails({ initialState, selectedCustomer, activeIndex }) {
                     <BPB.CustomTextInput
                       key={"location" + ind}
                       name={"location" + ind}
-                      label={item.locNick}
+                      label="Location"
+                      attr={item.locNick}
                       converter={props}
                     />
                     <BPB.CustomTextInput
                       key={"auth" + ind}
                       name={"auth" + ind}
-                      label={item.authType}
+                      label="Auth Type"
+                      attr={item.authType}
                       converter={props}
                     />
                   </GroupBox>
@@ -84,13 +85,15 @@ function CustomerDetails({ initialState, selectedCustomer, activeIndex }) {
                     <BPB.CustomTextInput
                       key={"customer" + ind}
                       name={"customer" + ind}
-                      label={item.custNick}
+                      label="Customer"
+                      attr={item.custName}
                       converter={props}
                     />
                     <BPB.CustomTextInput
                       key={"auth" + ind}
                       name={"auth" + ind}
-                      label={item.authType}
+                      label="Auth Type"
+                      attr={item.authType}
                       converter={props}
                     />
                   </GroupBox>

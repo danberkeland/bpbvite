@@ -34,11 +34,12 @@ const CustomIDInputBase = ({ label, ...props }) => {
 };
 
 const CustomTextInputBase = ({ label, ...props }) => {
+ 
   return (
     <InputText
       {...props}
       type="string"
-      value={
+      value={props.attr ? props.attr :
         props.converter.values[props.name]
           ? props.converter.values[props.name]
           : ""
