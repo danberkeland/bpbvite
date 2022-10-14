@@ -14,7 +14,10 @@ const initialState = {
   custName: "",
   locNick: "",
   authType: "",
-  location0: "",
+  auth: [],
+  location: [],
+  customer: []
+
 };
 
 const menuItems = [{ label: "By Customer" }, { label: "By Location" }];
@@ -42,13 +45,13 @@ function CustomerList({
   const handleSelectedCustomer = (e) => {
     console.log("customerList", customerList);
     console.log("initialState", initialState);
-    let addOns = {};
+    let addOns = {location: [], auth: [], customer: []};
     customerList.data
       .filter((cust) => cust.custName === e.value.custName)
       .forEach((item, ind) => {
-        addOns[`location${ind}`] = item.locNick;
-        addOns[`auth${ind}`] = item.authType;
-        addOns[`customer${ind}`] = item.custName;
+        addOns[`location`][ind] = item.locNick;
+        addOns[`auth`][ind] = item.authType;
+        addOns[`customer`][ind] = item.custName;
       });
 
     console.log("addOns", addOns);

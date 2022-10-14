@@ -58,14 +58,14 @@ function CustomerDetails({
 
                     <BPB.CustomTextInput
                       key={"location" + ind}
-                      name={"location" + ind}
+                      name={`location[${ind}]`}
                       label="Location"
                       dontedit="true"
                       converter={{...props }}
                     />
                     <BPB.CustomTextInput
                       key={"auth" + ind}
-                      name={"auth" + ind}
+                      name={`auth[${ind}]`}
                       label="Auth Type"
                       converter={props}
                     />
@@ -87,14 +87,14 @@ function CustomerDetails({
                     </h2>
                     <BPB.CustomTextInput
                       key={"customer" + ind}
-                      name={"customer" + ind}
+                      name={`customer[${ind}]`}
                       label="Customer"
                       dontedit="true"
                       converter={props}
                     />
                     <BPB.CustomTextInput
                       key={"auth" + ind}
-                      name={"auth" + ind}
+                      name={`auth[${ind}]`}
                       label="Auth Type"
                       converter={props}
                     />

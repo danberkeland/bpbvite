@@ -13,6 +13,7 @@ export const fetcher = async (event, path) => {
   console.log("token", token);
 
   console.log("event", event);
+  console.log('event.auth', event.auth)
   let obj;
   try {
     obj = await axios.post(

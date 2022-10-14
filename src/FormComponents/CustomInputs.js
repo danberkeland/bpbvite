@@ -19,8 +19,8 @@ const CustomIDInputBase = ({ label, ...props }) => {
     <InputText
       {...props}
       value={ 
-        props.converter.values[props.name]
-          ? props.converter.values[props.name]
+        props.value
+          ? props.value
           : ""
       }
       type="string"
@@ -38,8 +38,8 @@ const CustomTextInputBase = ({ label, ...props }) => {
       {...props}
       type="string"
       value={
-        props.converter.values[props.name]
-          ? props.converter.values[props.name]
+        props.value
+          ? props.value
           : ""
       }
     />
@@ -53,9 +53,9 @@ const CustomFloatInputBase = ({ label, ...props }) => {
       {...props}
       type="tel"
       value={
-        isNaN(props.converter.values[props.name])
+        isNaN(props.value)
           ? 0
-          : Number(props.converter.values[props.name])
+          : Number(props.value)
       }
       onChange={(values) => {
         props.converter.setFieldValue(props.name, Number(values.value));
@@ -74,9 +74,9 @@ const CustomIntInputBase = ({ label, ...props }) => {
       {...props}
       type="tel"
       value={
-        isNaN(props.converter.values[props.name])
+        isNaN(props.value)
           ? 0
-          : Number(props.converter.values[props.name])
+          : Number(props.value)
       }
       onChange={(values) => {
         props.converter.setFieldValue(props.name, Number(values.value));
@@ -91,8 +91,8 @@ const CustomYesNoInputBase = ({ label, ...props }) => {
     <SelectButton
       {...props}
       value={
-        props.converter.values[props.name]
-          ? props.converter.values[props.name]
+        props.value
+          ? props.value
           : false
       }
       onChange={() => {
@@ -113,8 +113,8 @@ const CustomDropdownInputBase = ({ label, ...props }) => {
       {...props}
       type="string"
       value={
-        props.converter.values[props.name]
-          ? props.converter.values[props.name]
+        props.value
+          ? props.value
           : null
       }
     />
@@ -127,8 +127,8 @@ const CustomMultiSelectInputBase = ({ label, ...props }) => {
     <MultiSelect
       {...props}
       value={
-        props.converter.values[props.name]
-          ? props.converter.values[props.name]
+        props.value
+          ? props.value
           : null
       }
     />
