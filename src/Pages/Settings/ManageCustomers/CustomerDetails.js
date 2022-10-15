@@ -1,123 +1,21 @@
 import React, { useState } from "react";
 import { CustomInputs } from "../../../FormComponents/CustomInputs";
-import { Formik, Field, Form, useField } from "formik";
+
 import { validationSchema } from "./ValidationSchema";
 
 import { Button } from "primereact/button";
 import { Sidebar } from "primereact/sidebar";
-import { Dropdown } from "primereact/dropdown";
 
 import { deleteUser, updateUser, createUser } from "../../../restAPIs";
 import { withFadeIn } from "../../../hoc/withFadeIn";
 import { withBPBForm } from "../../../hoc/withBPBForm";
 import { GroupBox } from "../../../CommonStyles";
 import { compose } from "../../../utils";
-import { useCustomerList, useSimpleLocationList } from "../../../swr";
-import { InputText } from "primereact/inputtext";
+import { useCustomerList } from "../../../swr";
+
+import AddItem from "./AddItem";
 
 const BPB = new CustomInputs();
-
-function AddItem({ initialState, id }) {
-  const { simpleLocationList } = useSimpleLocationList();
-  console.log("simpleLocationList", simpleLocationList);
-
-  const MyLocationDropDown = ({ label, ...props }) => {
-    const [field, meta, helpers] = useField(props);
-
-    console.log("dropDownProps", props);
-    console.log("fields", field);
-    return (
-      <>
-        <label>{id}</label>
-        <Dropdown
-          {...field}
-          {...props}
-          type="string"
-          options={simpleLocationList.data}
-          label="Location Name"
-          name="locNick"
-        />
-        {meta.touched && meta.error ? (
-          <div className="error">{meta.error}</div>
-        ) : null}
-      </>
-    );
-  };
-
-  const MyCustomerDropDown = ({ label, ...props }) => {
-    const [field, meta, helpers] = useField(props);
-
-    console.log("dropDownProps", props);
-    console.log("fields", field);
-    console.log("meta", meta);
-
-    return (
-      <React.Fragment>
-        <label>{id}</label>
-        <Dropdown
-          {...field}
-          {...props}
-          type="string"
-          options={simpleLocationList.data}
-          label="Location Name"
-          name="locNick"
-        />
-        {meta.touched && meta.error ? (
-          <div className="error">{meta.error}</div>
-        ) : null}
-      </React.Fragment>
-    );
-  };
-
-  return (
-    <div>
-      <h1>Add an Item</h1>
-      <Formik
-        initialValues={{
-          locNick: "",
-          authType: "",
-        }}
-        onSubmit={(values) => {
-          console.log("values", values);
-        }}
-      >
-        <Form>
-          <GroupBox>
-            <h2>
-              <i className="pi pi-user"></i> Add {id}
-            </h2>
-
-            {id === "Location" ? (
-              <div className="field">
-                <MyLocationDropDown
-                  name="location"
-                  type="text"
-                  label="Location"
-                />
-              </div>
-            ) : (
-              <div className="field">
-                <MyCustomerDropDown
-                  name="customer"
-                  type="text"
-                  label="Customer"
-                />
-              </div>
-            )}
-            <div className="field">
-              <MyCustomerDropDown
-                  name="customer"
-                  type="text"
-                  label="Customer"
-                />
-            </div>
-          </GroupBox>
-          <Button type="submit" label="Submit" />
-        </Form>
-      </Formik>
-    </div>
-  );
-}
 
 function CustomerDetails({
   initialState,
