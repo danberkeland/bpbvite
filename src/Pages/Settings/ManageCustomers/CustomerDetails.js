@@ -1,27 +1,56 @@
-import React from "react";
+import React, { useState } from "react";
 import { CustomInputs } from "../../../FormComponents/CustomInputs";
-
+import { Formik, Field, Form } from "formik";
 import { validationSchema } from "./ValidationSchema";
 
 import { Button } from "primereact/button";
+import { Sidebar } from "primereact/sidebar";
 
 import { deleteUser, updateUser, createUser } from "../../../restAPIs";
 import { withFadeIn } from "../../../hoc/withFadeIn";
 import { withBPBForm } from "../../../hoc/withBPBForm";
 import { GroupBox } from "../../../CommonStyles";
 import { compose } from "../../../utils";
-import { useCustomerList, useSimpleLocationList } from "../../../swr";
-import { useSettingsStore } from "../../../Contexts/SettingsZustand";
+import { useCustomerList } from "../../../swr";
+import { InputText } from "primereact/inputtext";
 
 const BPB = new CustomInputs();
+
+function AddItem({ initialState }) {
+  const { customerList } = useCustomerList();
+
+  return (
+    <div>
+      <h1>Add an Item</h1>
+      <Formik
+        initialValues={{
+          locNick: "",
+          authType: "",
+        }}
+        onSubmit={(values) => {
+          console.log("values", values);
+        }}
+      >
+        <Form>
+          <GroupBox>
+          <label>Location</label>
+            <InputText type="string" label="Location Name" name="locNick" />
+            <label>Auth Type</label>
+            <InputText type="string" label="auth Type" name="authType" />
+          </GroupBox>
+        </Form>
+      </Formik>
+    </div>
+  );
+}
 
 function CustomerDetails({
   initialState,
   selectedCustomer = { initialState },
   activeIndex = 0,
 }) {
+  const [visible, setVisible] = useState(false);
   const { customerList } = useCustomerList();
-  const add = useSettingsStore((state) => state.add);
 
   const BPBUserForm = compose(
     withBPBForm,
@@ -109,10 +138,16 @@ function CustomerDetails({
                 ))}
             </GroupBox>
           )}
-          <GroupBox>
-            <Button type="button" label="add" />
-          </GroupBox>
         </div>
+        <Sidebar
+          visible={visible}
+          position="right"
+          className="p-sidebar-lg"
+          onHide={() => setVisible(false)}
+        >
+          <AddItem initialState={{ locNick: "", authType: "" }} />
+        </Sidebar>
+        <Button type="button" label="ADD" onClick={(e) => setVisible(true)} />
       </React.Fragment>
     );
   });

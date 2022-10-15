@@ -63,8 +63,7 @@ const store = (set) => ({
   setIsEdit: (isEdit) => set (() => ({ isEdit: isEdit })),
   isCreate: false,
   setIsCreate: (isCreate) => set (() => ({ isCreate: isCreate })),
-  add: false,
-  setAdd: (add) => set (() => ({ add: add }))
+  
   
   
 });
