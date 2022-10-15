@@ -13,7 +13,7 @@ import { GroupBox } from "../../../CommonStyles";
 import { compose } from "../../../utils";
 import { useCustomerList } from "../../../swr";
 
-import AddItem from "./AddItem";
+import { AddItem2 }from "./AddItem2";
 
 const BPB = new CustomInputs();
 
@@ -118,7 +118,7 @@ function CustomerDetails({
           className="p-sidebar-lg"
           onHide={() => setVisible(false)}
         >
-          <AddItem
+          <AddItem2
             initialState={{ locNick: "", authType: "" }}
             id={activeIndex === 0 ? "Location" : "Customer"}
           />
