@@ -4,15 +4,14 @@ import { useFormik } from "formik";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 
-import { useCustomerList, useSimpleCustomerList, useSimpleLocationList } from "../../../swr";
+import {
+  useSimpleCustomerList,
+  useSimpleLocationList,
+} from "../../../swr";
 
 export const AddItem2 = (props) => {
   const { simpleLocationList } = useSimpleLocationList();
-  const { simpleCustomerList } = useSimpleCustomerList()
-
-  //console.log("props", props);
-  //console.log('simpleLocationList.data', simpleLocationList.data)
-  //console.log('customerList', simpleCustomerList.data)
+  const { simpleCustomerList } = useSimpleCustomerList();
 
   const formik = useFormik({
     initialValues: {
@@ -47,39 +46,46 @@ export const AddItem2 = (props) => {
           <form onSubmit={formik.handleSubmit} className="p-fluid">
             {simpleLocationList.data && (
               <React.Fragment>
-                {props.id==="Location" && <div className="field">
-                  <span className="p-float-label">
-                    <Dropdown
-                      id="location"
-                      name="location"
-                      value={formik.values.location}
-                      onChange={formik.handleChange}
-                      options={simpleLocationList.data.filter(
-                        (data) =>
-                          !props.selectedCustomer.location.includes(data.value)
-                      )}
-                      optionLabel="label"
-                    />
-                    <label htmlFor="location">Location</label>
-                  </span>
-                </div>}
-                {props.id==="Customer" && <div className="field">
-                  <span className="p-float-label">
-                    <Dropdown
-                      id="customer"
-                      name="customer"
-                      value={formik.values.customer}
-                      onChange={formik.handleChange}
-                      options={simpleCustomerList.data.filter(
-                        (data) =>
-                         !props.selectedCustomer.customer.includes(data.value)
-                      )
-                    }
-                      optionLabel="label"
-                    />
-                    <label htmlFor="customer">Customer</label>
-                  </span>
-                </div>}
+                {props.id === "Location" && (
+                  <div className="field">
+                    <span className="p-float-label">
+                      <Dropdown
+                        id="location"
+                        name="location"
+                        value={formik.values.location}
+                        onChange={formik.handleChange}
+                        options={simpleLocationList.data.filter(
+                          (data) =>
+                            !props.selectedCustomer.location.includes(
+                              data.value
+                            )
+                        )}
+                        optionLabel="label"
+                      />
+                      <label htmlFor="location">Location</label>
+                    </span>
+                  </div>
+                )}
+                {props.id === "Customer" && (
+                  <div className="field">
+                    <span className="p-float-label">
+                      <Dropdown
+                        id="customer"
+                        name="customer"
+                        value={formik.values.customer}
+                        onChange={formik.handleChange}
+                        options={simpleCustomerList.data.filter(
+                          (data) =>
+                            !props.selectedCustomer.customer.includes(
+                              data.value
+                            )
+                        )}
+                        optionLabel="label"
+                      />
+                      <label htmlFor="customer">Customer</label>
+                    </span>
+                  </div>
+                )}
                 <div className="field">
                   <span className="p-float-label">
                     <Dropdown
@@ -95,8 +101,20 @@ export const AddItem2 = (props) => {
                 </div>
               </React.Fragment>
             )}
-
-            <Button type="submit" label="Submit" className="mt-2" />
+            {simpleLocationList.data &&
+            ((props.id === "Location" &&
+              simpleLocationList.data.filter(
+                (data) => !props.selectedCustomer.location.includes(data.value)
+              ).length > 0) ||
+              (props.id === "Customer" &&
+                simpleCustomerList.data.filter(
+                  (data) =>
+                    !props.selectedCustomer.customer.includes(data.value)
+                ).length > 0)) ? (
+              <Button type="submit" label="Submit" className="mt-2" />
+            ) : (
+              <div>There are no options to choose from.</div>
+            )}
           </form>
         </div>
       </div>

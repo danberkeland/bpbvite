@@ -64,7 +64,8 @@ export function useSimpleLocationList() {
       data: data
         ? sortAtoZDataByIndex(data.data.body.items, "locName").map((loc) => ({
             label: loc.locName,
-            value: loc.locNick,
+            value: loc.sub,
+           
           }))
         : data,
       isLoading: !error && !data,
