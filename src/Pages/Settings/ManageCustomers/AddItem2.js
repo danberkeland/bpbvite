@@ -4,26 +4,46 @@ import { useFormik } from "formik";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 
-import {
-  useSimpleCustomerList,
-  useSimpleLocationList,
-} from "../../../swr";
+import { useSimpleCustomerList, useSimpleLocationList } from "../../../swr";
 
 export const AddItem2 = (props) => {
   const { simpleLocationList } = useSimpleLocationList();
   const { simpleCustomerList } = useSimpleCustomerList();
 
+  console.log("addOnProps", props);
+  console.log("simpleLocationList", simpleLocationList);
+  console.log("simpleCustomerList", simpleCustomerList);
+
+  const checkForAddOns = () => {
+    if (
+      (props.id === "Location" &&
+        simpleLocationList.data.filter(
+          (data) => !props.selectedCustomer.location.includes(data.value)
+        ).length > 0) ||
+      (props.id === "Customer" &&
+        simpleCustomerList.data.filter(
+          (data) => !props.selectedCustomer.customer.includes(data.value)
+        ).length > 0)
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       location: "",
+      customer: "",
       authType: "",
     },
 
     onSubmit: (data) => {
+      console.log("data", data);
       const newLocUser = {
         authType: Number(data.authType),
         locNick: props.initialValues.locNick,
-        sub: props.initialValues.sub,
+        sub: props.id === "Location" ? props.initialValues.sub : data.customer,
         Type: "LocationUser",
       };
 
@@ -99,21 +119,12 @@ export const AddItem2 = (props) => {
                     <label htmlFor="authType">Auth Type</label>
                   </span>
                 </div>
+                {checkForAddOns() ? (
+                  <Button type="submit" label="Submit" className="mt-2" />
+                ) : (
+                  <div>There are no options to choose from.</div>
+                )}{" "}
               </React.Fragment>
-            )}
-            {simpleLocationList.data &&
-            ((props.id === "Location" &&
-              simpleLocationList.data.filter(
-                (data) => !props.selectedCustomer.location.includes(data.value)
-              ).length > 0) ||
-              (props.id === "Customer" &&
-                simpleCustomerList.data.filter(
-                  (data) =>
-                    !props.selectedCustomer.customer.includes(data.value)
-                ).length > 0)) ? (
-              <Button type="submit" label="Submit" className="mt-2" />
-            ) : (
-              <div>There are no options to choose from.</div>
             )}
           </form>
         </div>

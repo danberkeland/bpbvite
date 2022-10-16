@@ -5,6 +5,8 @@ import { validationSchema } from "./ValidationSchema";
 
 import { Button } from "primereact/button";
 import { Sidebar } from "primereact/sidebar";
+import { confirmDialog } from "primereact/confirmdialog";
+import { ConfirmDialog } from "primereact/confirmdialog";
 
 import { deleteUser, updateUser, createUser } from "../../../restAPIs";
 import { withFadeIn } from "../../../hoc/withFadeIn";
@@ -31,12 +33,29 @@ function CustomerDetails({
   const [visible, setVisible] = useState(false);
   const { customerList } = useCustomerList();
 
+
+  const handleDelete = (e, props) => {
+    confirmDialog({
+      message: `Are you sure you want to delete this item?`,
+      header: "Confirmation",
+      icon: "pi pi-exclamation-triangle",
+      accept: () => {
+        console.log("values", props);
+        
+      },
+      reject: () => {
+        return;
+      },
+    });
+  };
+
   const BPBUserForm = compose(
     withBPBForm,
     withFadeIn
   )((props) => {
     return (
       <React.Fragment>
+        <ConfirmDialog />
         <div className="productDetails">
           <h1>
             {activeIndex === 0
@@ -68,7 +87,7 @@ function CustomerDetails({
                     <h2>
                       <i className="pi pi-user"></i> Location Info{" "}
                     </h2>
-                    <Button type="button" label="delete" />
+                    <Button type="button" label="delete" onClick={e => handleDelete(e,item)}/>
 
                     <BPB.CustomTextInput
                       key={"location" + ind}
@@ -101,7 +120,7 @@ function CustomerDetails({
                     <h2>
                       <i className="pi pi-user"></i> Customer Info
                     </h2>
-                    <Button type="button" label="delete" />
+                    <Button type="button" label="delete" onClick={e => handleDelete(e,item)}/>
                     <BPB.CustomTextInput
                       key={"customer" + ind}
                       name={`customer[${ind}]`}
