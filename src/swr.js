@@ -116,6 +116,36 @@ export function useCustomerList() {
   };
 }
 
+
+export function useSimpleCustomerList() {
+  const { data, error, mutate } = useSWR(
+    { url: "/customers/grabSimpleCustomerList" },
+    fetcher,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: true,
+    }
+  );
+
+  console.log("data",data)
+
+  return {
+    simpleCustomerList: {
+      data: data
+        ? sortAtoZDataByIndex(data.data.body.items, "custName").map((cust) => ({
+            label: cust.name,
+            value: cust.name,
+          }))
+        : data,
+      isLoading: !error && !data,
+      isError: error,
+      revalidate: () => mutate(),
+    },
+  };
+}
+
+
 export function useLocationList() {
   const { data, error, mutate } = useSWR(
     { url: "/locations/grabDetailedLocationList" },

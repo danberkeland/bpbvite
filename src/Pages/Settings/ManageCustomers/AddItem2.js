@@ -4,13 +4,15 @@ import { useFormik } from "formik";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 
-import { useSimpleLocationList } from "../../../swr";
+import { useCustomerList, useSimpleCustomerList, useSimpleLocationList } from "../../../swr";
 
 export const AddItem2 = (props) => {
   const { simpleLocationList } = useSimpleLocationList();
+  const { simpleCustomerList } = useSimpleCustomerList()
 
-  console.log("props", props);
-  console.log('simpleLocationList.data', simpleLocationList.data)
+  //console.log("props", props);
+  //console.log('simpleLocationList.data', simpleLocationList.data)
+  //console.log('customerList', simpleCustomerList.data)
 
   const formik = useFormik({
     initialValues: {
@@ -21,7 +23,7 @@ export const AddItem2 = (props) => {
     onSubmit: (data) => {
       const newLocUser = {
         authType: Number(data.authType),
-        locNick: data.location,
+        locNick: props.initialValues.locNick,
         sub: props.initialValues.sub,
         Type: "LocationUser",
       };
@@ -45,7 +47,7 @@ export const AddItem2 = (props) => {
           <form onSubmit={formik.handleSubmit} className="p-fluid">
             {simpleLocationList.data && (
               <React.Fragment>
-                <div className="field">
+                {props.id==="Location" && <div className="field">
                   <span className="p-float-label">
                     <Dropdown
                       id="location"
@@ -60,7 +62,24 @@ export const AddItem2 = (props) => {
                     />
                     <label htmlFor="location">Location</label>
                   </span>
-                </div>
+                </div>}
+                {props.id==="Customer" && <div className="field">
+                  <span className="p-float-label">
+                    <Dropdown
+                      id="customer"
+                      name="customer"
+                      value={formik.values.customer}
+                      onChange={formik.handleChange}
+                      options={simpleCustomerList.data.filter(
+                        (data) =>
+                         !props.selectedCustomer.customer.includes(data.value)
+                      )
+                    }
+                      optionLabel="label"
+                    />
+                    <label htmlFor="customer">Customer</label>
+                  </span>
+                </div>}
                 <div className="field">
                   <span className="p-float-label">
                     <Dropdown
