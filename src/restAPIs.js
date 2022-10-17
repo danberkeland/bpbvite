@@ -74,6 +74,9 @@ export const getOrder = (event) => {
   return fetcher(event, "/orders/getOrder")
 }
 
+export const createLocationUser = (event) => {
+  return fetcher(event, "/locationUsers/createLocationUser")
+}
 
 
 

@@ -5,6 +5,7 @@ import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 
 import { useSimpleCustomerList, useSimpleLocationList } from "../../../swr";
+import { createLocationUser } from "../../../restAPIs";
 
 export const AddItem2 = (props) => {
   const { simpleLocationList } = useSimpleLocationList();
@@ -42,11 +43,14 @@ export const AddItem2 = (props) => {
       console.log("data", data);
       const newLocUser = {
         authType: Number(data.authType),
-        locNick: props.initialValues.locNick,
+        locNick:
+          props.id === "Location" ? data.location : props.initialValues.locNick,
         sub: props.id === "Location" ? props.initialValues.sub : data.customer,
         Type: "LocationUser",
       };
-
+      createLocationUser(newLocUser).then(() => {
+        window.location = "/Settings/ManageCustomers";
+      });
       console.log("newLocUser", newLocUser);
       formik.resetForm();
     },
