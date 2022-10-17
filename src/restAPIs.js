@@ -1,3 +1,4 @@
+import { createEvent } from "@testing-library/react";
 import { Auth } from "aws-amplify";
 import axios from "axios";
 
@@ -26,7 +27,7 @@ async function signUp(event) {
       phone: phone,
       locNick: locNick,
     };
-    return newEvent
+    return newEvent;
   } catch (error) {
     console.log("error signing up", error);
   }
@@ -80,8 +81,19 @@ export const updateLocation = (event) => {
 
 export const createUser = async (event) => {
   let newEvent = await signUp(event);
-  return fetcher(newEvent, "/users/createUser")
+  console.log("event", event);
+  console.log("createEvent", newEvent);
+  const newLocUser = {
+    authType: 3,
+    locNick: newEvent.locNick,
+    sub: newEvent.sub,
+    Type: "LocationUser",
+  };
+  return fetcher(newEvent, "/users/createUser").then((result) =>
+    fetcher(newLocUser, "/locationUsers/createLocationUser")
+  );
 };
+
 
 export const deleteUser = (event) => {
   return fetcher(event.values, "/users/deleteUser");
