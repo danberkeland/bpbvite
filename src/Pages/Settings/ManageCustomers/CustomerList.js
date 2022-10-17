@@ -13,6 +13,7 @@ import CustomerDetails from "./CustomerDetails";
 const initialState = {
   custName: "",
   locNick: "",
+  email: "",
   authType: "",
   auth: [],
   location: [],

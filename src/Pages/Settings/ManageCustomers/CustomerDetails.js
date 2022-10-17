@@ -13,9 +13,10 @@ import { withFadeIn } from "../../../hoc/withFadeIn";
 import { withBPBForm } from "../../../hoc/withBPBForm";
 import { GroupBox } from "../../../CommonStyles";
 import { compose } from "../../../utils";
-import { useCustomerList } from "../../../swr";
+import { useCustomerList, useSimpleLocationList } from "../../../swr";
 
 import { AddItem2 } from "./AddItem2";
+import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 
 const BPB = new CustomInputs();
 
@@ -25,14 +26,22 @@ const authTypes = [
   { label: "Read Only", value: 3 },
 ];
 
+const authClasses = [
+  { label: "BPB Admin", value: "bpbfull" },
+  { label: "BPB Mgr", value: "bpbmgr" },
+  { label: "BPB Crew", value: "bpbcrew" },
+  { label: "Customer", value: "customer" },
+];
+
 function CustomerDetails({
   initialState,
   selectedCustomer = { initialState },
   activeIndex = 0,
 }) {
+  const { simpleLocationList } = useSimpleLocationList();
+  const isCreate = useSettingsStore((state) => state.isCreate);
   const [visible, setVisible] = useState(false);
   const { customerList } = useCustomerList();
-
 
   const handleDelete = (e, props) => {
     confirmDialog({
@@ -41,7 +50,6 @@ function CustomerDetails({
       icon: "pi pi-exclamation-triangle",
       accept: () => {
         console.log("values", props);
-        
       },
       reject: () => {
         return;
@@ -71,14 +79,34 @@ function CustomerDetails({
               <BPB.CustomTextInput
                 label="Customer Name"
                 name="custName"
-                dontedit="true"
                 converter={props}
               />
               <BPB.CustomTextInput
-                label="Class"
-                name="authClass"
+                label="Email"
+                name="email"
+                dontedit="true"
                 converter={props}
               />
+
+              <BPB.CustomDropdownInput
+                label="Default Location"
+                name="locNick"
+                options={simpleLocationList.data}
+                converter={props}
+              />
+
+              <BPB.CustomDropdownInput
+                label="Class"
+                name="authClass"
+                options={authClasses}
+                converter={props}
+              />
+              {!isCreate && <BPB.CustomTextInput
+                label="Sub"
+                name="sub"
+                dontedit="true"
+                converter={props}
+              />}
 
               {customerList.data
                 .filter((cust) => cust.custName === selectedCustomer.custName)
@@ -87,7 +115,11 @@ function CustomerDetails({
                     <h2>
                       <i className="pi pi-user"></i> Location Info{" "}
                     </h2>
-                    <Button type="button" label="delete" onClick={e => handleDelete(e,item)}/>
+                    <Button
+                      type="button"
+                      label="delete"
+                      onClick={(e) => handleDelete(e, item)}
+                    />
 
                     <BPB.CustomTextInput
                       key={"location" + ind}
@@ -120,7 +152,11 @@ function CustomerDetails({
                     <h2>
                       <i className="pi pi-user"></i> Customer Info
                     </h2>
-                    <Button type="button" label="delete" onClick={e => handleDelete(e,item)}/>
+                    <Button
+                      type="button"
+                      label="delete"
+                      onClick={(e) => handleDelete(e, item)}
+                    />
                     <BPB.CustomTextInput
                       key={"customer" + ind}
                       name={`customer[${ind}]`}
@@ -164,7 +200,7 @@ function CustomerDetails({
   return (
     <React.Fragment>
       <BPBUserForm
-        name="user"
+        name="settings/ManageCustomer"
         validationSchema={validationSchema}
         initialState={initialState}
         create={createUser}

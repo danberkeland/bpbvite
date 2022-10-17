@@ -6,6 +6,7 @@ query MyQuery {
       items {
         name
         phone
+        email
         authClass
         sub
         locs {
@@ -35,6 +36,7 @@ query MyQuery {
         let newItem = {
           "custName": cust.name,
           "authClass": cust.authClass,
+          "email": cust.email,
           "phone": cust.phone,
           "sub": cust.sub,
           "locNick": loc.locNick,

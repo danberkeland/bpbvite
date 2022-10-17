@@ -15,13 +15,10 @@ export const withBPBForm = (Component) => (props) => {
   let str = props.name;
   let source = str + "List";
   let path = "/" + str.charAt(0).toUpperCase() + str.slice(1) + "s";
-  let create = "create" + str.charAt(0).toUpperCase() + str.slice(1);
 
   let fns = props;
 
   var sourceVar = window[source];
-  let createFunc = window[create];
-  console.log("type", typeof createFunc);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -67,13 +64,14 @@ export const withBPBForm = (Component) => (props) => {
         initialValues={props.initialState}
         validationSchema={props.validationSchema(sourceVar)}
         onSubmit={(props) => {
+          console.log("createProps", props);
           window.scrollTo(0, 0);
           setIsEdit(false);
-          setIsCreate(false);
           if (isCreate) {
-            fns.create(props).then(() => {
-              window.location = path;
-            });
+            console.log('IsCreate')
+            fns.create(props)//.then(() => {
+             // window.location = path;
+            //});
           } else {
             fns.update(props).then(() => {
               window.location = path;
@@ -108,17 +106,16 @@ export const withBPBForm = (Component) => (props) => {
                 />
               )}
             </Form>
-            
           </React.Fragment>
         )}
       </Formik>
       <Button
-              label="Delete"
-              type="button"
-              className="p-button-raised p-button-rounded p-button-success"
-              style={editButtonStyle}
-              onClick={(e) => handleDelete(e, props)}
-            />
+        label="Delete"
+        type="button"
+        className="p-button-raised p-button-rounded p-button-success"
+        style={editButtonStyle}
+        onClick={(e) => handleDelete(e, props)}
+      />
       <div className="bottomSpace"></div>
     </div>
   );
