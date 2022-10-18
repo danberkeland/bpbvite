@@ -115,11 +115,11 @@ function CustomerDetails({
                     <h2>
                       <i className="pi pi-user"></i> Location Info{" "}
                     </h2>
-                    <Button
+                    {selectedCustomer.defLoc !== item.locNick ? <Button
                       type="button"
                       label="delete"
                       onClick={(e) => handleDelete(e, item)}
-                    />
+                    /> : <div>* Default</div>}
 
                     <BPB.CustomTextInput
                       key={"location" + ind}
