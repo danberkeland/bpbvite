@@ -1,6 +1,6 @@
 /* eslint-disable no-eval */
 import { useField } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useSettingsStore } from "../Contexts/SettingsZustand";
 
@@ -9,7 +9,13 @@ import { useSettingsStore } from "../Contexts/SettingsZustand";
 export const withFormComponentWrap = (Component) => (props) => {
     const isEdit = useSettingsStore((state) => state.isEdit);
     const isCreate = useSettingsStore((state) => state.isCreate);
+    const setIsChange = useSettingsStore((state) => state.setIsChange);
+
     const [field, meta] = useField(props);
+    console.log('field', field)
+    console.log('meta', meta)
+
+    meta.initialValue !== meta.value && setIsChange(true)
   
     return (
       <React.Fragment>
@@ -19,6 +25,7 @@ export const withFormComponentWrap = (Component) => (props) => {
             <Component
               {...props}
               {...field}
+
               disabled={isEdit ? props.dontedit==="true" ? true : false : isCreate ? false : true}
               className={meta.touched && meta.error ? "p-error" : ""}
             />
