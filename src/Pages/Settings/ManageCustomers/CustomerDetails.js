@@ -11,7 +11,7 @@ import { ConfirmDialog } from "primereact/confirmdialog";
 import { deleteUser, updateUser, createUser } from "../../../restAPIs";
 import { withFadeIn } from "../../../hoc/withFadeIn";
 import { withBPBForm } from "../../../hoc/withBPBForm";
-import { GroupBox } from "../../../CommonStyles";
+import { GroupBox, DefLabel, FlexSpaceBetween } from "../../../CommonStyles";
 import { compose } from "../../../utils";
 import { useCustomerList, useSimpleLocationList } from "../../../swr";
 
@@ -101,25 +101,35 @@ function CustomerDetails({
                 options={authClasses}
                 converter={props}
               />
-              {!isCreate && <BPB.CustomTextInput
-                label="Sub"
-                name="sub"
-                dontedit="true"
-                converter={props}
-              />}
+              {!isCreate && (
+                <BPB.CustomTextInput
+                  label="Sub"
+                  name="sub"
+                  dontedit="true"
+                  converter={props}
+                />
+              )}
 
               {customerList.data
                 .filter((cust) => cust.custName === selectedCustomer.custName)
                 .map((item, ind) => (
                   <GroupBox key={"group" + ind}>
-                    <h2>
-                      <i className="pi pi-user"></i> Location Info{" "}
-                    </h2>
-                    {selectedCustomer.defLoc !== item.locNick ? <Button
-                      type="button"
-                      label="delete"
-                      onClick={(e) => handleDelete(e, item)}
-                    /> : <div>* Default</div>}
+                    <FlexSpaceBetween>
+                      <h2>
+                        <i className="pi pi-user"></i> Location Info{" "}
+                      </h2>
+                      {selectedCustomer.defLoc !== item.locNick ? (
+                        <Button
+                          icon="pi pi-trash"
+                          className="p-button-rounded p-button-help p-button-outlined"
+                          aria-label="Trash"
+                          type="button"
+                          onClick={(e) => handleDelete(e, item)}
+                        />
+                      ) : (
+                        <DefLabel>* Default</DefLabel>
+                      )}
+                    </FlexSpaceBetween>
 
                     <BPB.CustomTextInput
                       key={"location" + ind}
@@ -188,11 +198,16 @@ function CustomerDetails({
             {...props}
           />
         </Sidebar>
+        <FlexSpaceBetween>
         <Button
           type="button"
+          className="p-button-outlined p-button-primary"
           label={activeIndex === 0 ? "ADD LOCATION" : "ADD CUSTOMER"}
           onClick={(e) => setVisible(true)}
         />
+
+        </FlexSpaceBetween>
+        
       </React.Fragment>
     );
   });

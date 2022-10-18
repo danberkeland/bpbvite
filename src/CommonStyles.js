@@ -1,6 +1,5 @@
 import styled from "styled-components";
 
-
 export const CenteredContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -15,7 +14,6 @@ export const CenteredContainer = styled.div`
   transform: translateX(-50%) translateY(-50%);
 `;
 
-
 export const MainWrapper = styled.div`
   float: left;
   width: 100%;
@@ -25,7 +23,6 @@ export const MainWrapper = styled.div`
     grid-template-columns: 1fr 2.5fr;
   }
 `;
-
 
 export const InfoWrapper = styled.div`
   float: left;
@@ -44,14 +41,11 @@ export const SubInfo = styled.div`
   color: darkgray;
 `;
 
-
 export const Website = styled.h3`
-
   padding: 0;
   margin: auto;
   color: rgb(66, 97, 201);
 `;
-
 
 export const GroupBox = styled.div`
   display: flex;
@@ -63,3 +57,15 @@ export const GroupBox = styled.div`
   padding: 5px 5px 10px 5px;
 `;
 
+export const FlexSpaceBetween = styled.div`
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  width: 95%;
+  margin: 5px 10px 20px 10px;
+  padding: 5px 5px 10px 5px;
+`;
+
+export const DefLabel = styled.div`
+  color: red;
+`;

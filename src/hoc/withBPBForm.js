@@ -5,6 +5,7 @@ import { confirmDialog } from "primereact/confirmdialog";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { Formik, Form } from "formik";
 import { useSettingsStore } from "../Contexts/SettingsZustand";
+import { FlexSpaceBetween } from "../CommonStyles";
 
 export const withBPBForm = (Component) => (props) => {
   const setIsEdit = useSettingsStore((state) => state.setIsEdit);
