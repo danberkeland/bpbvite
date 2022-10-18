@@ -90,7 +90,7 @@ function CustomerDetails({
 
               <BPB.CustomDropdownInput
                 label="Default Location"
-                name="locNick"
+                name="defLoc"
                 options={simpleLocationList.data}
                 converter={props}
               />

@@ -7,6 +7,7 @@ query MyQuery {
         name
         phone
         email
+        locNick
         authClass
         sub
         locs {
@@ -39,6 +40,7 @@ query MyQuery {
           "email": cust.email,
           "phone": cust.phone,
           "sub": cust.sub,
+          "defLoc": cust.locNick,
           "locNick": loc.locNick,
           "authType": loc.authType
         };

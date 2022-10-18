@@ -15,6 +15,7 @@ const initialState = {
   locNick: "",
   email: "",
   authType: "",
+  defLoc: "",
   auth: [],
   location: [],
   customer: []
@@ -50,6 +51,8 @@ function CustomerList({
     customerList.data
       .filter((cust) => cust.custName === e.value.custName)
       .forEach((item, ind) => {
+        console.log('item', item)
+        addOns['defLoc'] = item.defLoc
         addOns[`location`][ind] = item.locNick;
         addOns[`auth`][ind] = item.authType;
         addOns[`customer`][ind] = item.custName;
@@ -60,7 +63,7 @@ function CustomerList({
   };
 
   useEffect(() => {
-    console.log("selectedCustomer", selectedCustomer);
+    console.log("customerList", customerList);
   }, [selectedCustomer]);
 
   const decideList = (list) => {

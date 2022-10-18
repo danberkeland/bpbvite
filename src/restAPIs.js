@@ -8,7 +8,7 @@ const API_bpbrouterAuth =
 // NEW STUFF
 
 async function signUp(event) {
-  const { email, custName, authClass, phone, locNick } = event;
+  const { email, custName, authClass, phone, defLoc } = event;
 
   try {
     const data = await Auth.signUp({
@@ -25,7 +25,7 @@ async function signUp(event) {
       authClass: authClass,
       email: email,
       phone: phone,
-      locNick: locNick,
+      locNick: defLoc,
     };
     return newEvent;
   } catch (error) {
@@ -85,7 +85,7 @@ export const createUser = async (event) => {
   console.log("createEvent", newEvent);
   const newLocUser = {
     authType: 3,
-    locNick: newEvent.locNick,
+    locNick: event.defLoc,
     sub: newEvent.sub,
     Type: "LocationUser",
   };
