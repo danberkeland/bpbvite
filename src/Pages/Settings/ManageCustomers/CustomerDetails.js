@@ -72,9 +72,19 @@ function CustomerDetails({
           </h1>
           {activeIndex === 0 ? (
             <GroupBox>
+              <FlexSpaceBetween>
               <h2>
                 <i className="pi pi-user"></i> Customer Description{" "}
               </h2>
+              <Button
+                          icon="pi pi-trash"
+                          className="p-button-rounded p-button-help p-button-outlined"
+                          aria-label="Trash"
+                          type="button"
+                          onClick={(e) => handleDelete(e)}
+                        />
+              </FlexSpaceBetween>
+             
 
               <BPB.CustomTextInput
                 label="Customer Name"
@@ -202,7 +212,7 @@ function CustomerDetails({
         <Button
           type="button"
           className="p-button-outlined p-button-primary"
-          label={activeIndex === 0 ? "ADD LOCATION" : "ADD CUSTOMER"}
+          label={activeIndex === 0 ? "+ ADD LOCATION" : "+ ADD CUSTOMER"}
           onClick={(e) => setVisible(true)}
         />
 
