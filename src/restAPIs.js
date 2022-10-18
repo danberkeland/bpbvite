@@ -111,6 +111,10 @@ export const createLocationUser = (event) => {
   return fetcher(event, "/locationUsers/createLocationUser");
 };
 
+export const deleteLocationUser = (event) => {
+  return fetcher(event, "/locationUsers/deleteLocationUser");
+};
+
 // OLD STUFF
 
 const API_testingGrQL =

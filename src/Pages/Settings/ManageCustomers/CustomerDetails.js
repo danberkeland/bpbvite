@@ -8,7 +8,7 @@ import { Sidebar } from "primereact/sidebar";
 import { confirmDialog } from "primereact/confirmdialog";
 import { ConfirmDialog } from "primereact/confirmdialog";
 
-import { deleteUser, updateUser, createUser } from "../../../restAPIs";
+import { deleteUser, updateUser, createUser, deleteLocationUser } from "../../../restAPIs";
 import { withFadeIn } from "../../../hoc/withFadeIn";
 import { withBPBForm } from "../../../hoc/withBPBForm";
 import { GroupBox, DefLabel, FlexSpaceBetween } from "../../../CommonStyles";
@@ -43,13 +43,45 @@ function CustomerDetails({
   const [visible, setVisible] = useState(false);
   const { customerList } = useCustomerList();
 
-  const handleDelete = (e, props) => {
+  const handleDeleteCustomer = (e, props) => {
     confirmDialog({
-      message: `Are you sure you want to delete this item?`,
+      message: `Are you sure you want to delete this customer?`,
       header: "Confirmation",
       icon: "pi pi-exclamation-triangle",
       accept: () => {
         console.log("values", props);
+      },
+      reject: () => {
+        return;
+      },
+    });
+  };
+
+  const handleDeleteLocation = (e, props) => {
+    confirmDialog({
+      message: `Are you sure you want to delete this location?`,
+      header: "Confirmation",
+      icon: "pi pi-exclamation-triangle",
+      accept: () => {
+        console.log("values", props);
+        deleteLocationUser(props).then(() => {
+          window.location = "/Settings/ManageCustomers";
+        });
+      },
+      reject: () => {
+        return;
+      },
+    });
+  };
+
+  const handleDeleteCustLoc = (e, props) => {
+    confirmDialog({
+      message: `Are you sure you want to delete this location?`,
+      header: "Confirmation",
+      icon: "pi pi-exclamation-triangle",
+      accept: () => {
+        console.log("values", props);
+        
       },
       reject: () => {
         return;
@@ -63,7 +95,6 @@ function CustomerDetails({
   )((props) => {
     return (
       <React.Fragment>
-        <ConfirmDialog />
         <div className="productDetails">
           <h1>
             {activeIndex === 0
@@ -73,18 +104,17 @@ function CustomerDetails({
           {activeIndex === 0 ? (
             <GroupBox>
               <FlexSpaceBetween>
-              <h2>
-                <i className="pi pi-user"></i> Customer Description{" "}
-              </h2>
-              <Button
-                          icon="pi pi-trash"
-                          className="p-button-rounded p-button-help p-button-outlined"
-                          aria-label="Trash"
-                          type="button"
-                          onClick={(e) => handleDelete(e)}
-                        />
+                <h2>
+                  <i className="pi pi-user"></i> Customer Description{" "}
+                </h2>
+                <Button
+                  icon="pi pi-trash"
+                  className="p-button-rounded p-button-help p-button-outlined"
+                  aria-label="Trash"
+                  type="button"
+                  onClick={(e) => handleDeleteCustomer(e, props)}
+                />
               </FlexSpaceBetween>
-             
 
               <BPB.CustomTextInput
                 label="Customer Name"
@@ -134,7 +164,7 @@ function CustomerDetails({
                           className="p-button-rounded p-button-help p-button-outlined"
                           aria-label="Trash"
                           type="button"
-                          onClick={(e) => handleDelete(e, item)}
+                          onClick={(e) => handleDeleteLocation(e, item)}
                         />
                       ) : (
                         <DefLabel>* Default</DefLabel>
@@ -175,7 +205,7 @@ function CustomerDetails({
                     <Button
                       type="button"
                       label="delete"
-                      onClick={(e) => handleDelete(e, item)}
+                      onClick={(e) => handleDeleteCustLoc(e, item)}
                     />
                     <BPB.CustomTextInput
                       key={"customer" + ind}
@@ -209,15 +239,13 @@ function CustomerDetails({
           />
         </Sidebar>
         <FlexSpaceBetween>
-        <Button
-          type="button"
-          className="p-button-outlined p-button-primary"
-          label={activeIndex === 0 ? "+ ADD LOCATION" : "+ ADD CUSTOMER"}
-          onClick={(e) => setVisible(true)}
-        />
-
+          <Button
+            type="button"
+            className="p-button-outlined p-button-primary"
+            label={activeIndex === 0 ? "+ ADD LOCATION" : "+ ADD CUSTOMER"}
+            onClick={(e) => setVisible(true)}
+          />
         </FlexSpaceBetween>
-        
       </React.Fragment>
     );
   });
