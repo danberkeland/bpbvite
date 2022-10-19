@@ -81,24 +81,22 @@ function CustomerDetails({
     });
   };
 
-  const handleDeleteCustLoc = (index) => {
+  const handleDeleteCustLoc = (arrayHelpers, index) => {
     confirmDialog({
       message: `Are you sure you want to delete this location?`,
       header: "Confirmation",
       icon: "pi pi-exclamation-triangle",
       accept: () => {
-        setIsLoading(true);
-
+      
+        arrayHelpers.remove(index)
         let props = {
           sub: selectedCustomer.sub,
           locNick: selectedCustomer.locations[index].locNick,
         };
 
         deleteLocationUser(props)
-          .then(() => setIsLoading(false))
-          .then(() => {
-            window.location = "/Settings/ManageCustomers";
-          });
+       
+          
       },
       reject: () => {
         return;
@@ -172,7 +170,7 @@ function CustomerDetails({
                 name="locations"
                 render={(arrayHelpers) => (
                   <div>
-                    {selectedCustomer.locations.map((location, index) => (
+                    {props.values.locations.map((location, index) => (
                       <GroupBox key={index}>
                         <FlexSpaceBetween>
                           <h2>
@@ -186,7 +184,7 @@ function CustomerDetails({
                               aria-label="trash"
                               type="button"
                               onClick={() => {
-                                handleDeleteCustLoc(index);
+                                handleDeleteCustLoc(arrayHelpers, index);
                               }}
                             />
                           ) : (
