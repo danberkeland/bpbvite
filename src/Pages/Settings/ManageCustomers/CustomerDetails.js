@@ -6,17 +6,22 @@ import { validationSchema } from "./ValidationSchema";
 import { Button } from "primereact/button";
 import { Sidebar } from "primereact/sidebar";
 import { confirmDialog } from "primereact/confirmdialog";
-import { ConfirmDialog } from "primereact/confirmdialog";
 
-import { deleteUser, updateUser, createUser, deleteLocationUser } from "../../../restAPIs";
+import {
+  deleteUser,
+  updateUser,
+  createUser,
+  deleteLocationUser,
+} from "../../../restAPIs";
 import { withFadeIn } from "../../../hoc/withFadeIn";
 import { withBPBForm } from "../../../hoc/withBPBForm";
 import { GroupBox, DefLabel, FlexSpaceBetween } from "../../../CommonStyles";
 import { compose } from "../../../utils";
 import { useCustomerList, useSimpleLocationList } from "../../../swr";
 
-import { AddItem2 } from "./AddItem2";
+import { AddItem } from "./AddItem";
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
+import { Field, FieldArray } from "formik";
 
 const BPB = new CustomInputs();
 
@@ -40,6 +45,7 @@ function CustomerDetails({
 }) {
   const { simpleLocationList } = useSimpleLocationList();
   const isCreate = useSettingsStore((state) => state.isCreate);
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
   const [visible, setVisible] = useState(false);
   const { customerList } = useCustomerList();
 
@@ -50,7 +56,7 @@ function CustomerDetails({
       icon: "pi pi-exclamation-triangle",
       accept: () => {
         console.log("values", props);
-        deleteUser({ "sub": props.values.sub})
+        deleteUser({ sub: props.values.sub });
       },
       reject: () => {
         return;
@@ -75,14 +81,22 @@ function CustomerDetails({
     });
   };
 
-  const handleDeleteCustLoc = (e, props) => {
+  const handleDeleteCustLoc = (arrayHelpers, index) => {
     confirmDialog({
       message: `Are you sure you want to delete this location?`,
       header: "Confirmation",
       icon: "pi pi-exclamation-triangle",
       accept: () => {
-        console.log("values", props);
-        
+        setIsLoading(true);
+        let props = {
+          sub: selectedCustomer.sub,
+          locNick: selectedCustomer.locations[index].locNick,
+        };
+
+        deleteLocationUser(props).then(() => {
+          setIsLoading(false);
+          arrayHelpers.remove(index);
+        });
       },
       reject: () => {
         return;
@@ -150,79 +164,116 @@ function CustomerDetails({
                   converter={props}
                 />
               )}
+              <FieldArray
+                name="locations"
+                render={(arrayHelpers) => (
+                  <div>
+                    {selectedCustomer.locations.map((location, index) => (
+                      <GroupBox key={index}>
+                        <FlexSpaceBetween>
+                          <h2>
+                            <i className="pi pi-user"></i> Location Info
+                          </h2>
 
-              {customerList.data
-                .filter((cust) => cust.custName === selectedCustomer.custName)
-                .map((item, ind) => (
-                  <GroupBox key={"group" + ind}>
-                    <FlexSpaceBetween>
-                      <h2>
-                        <i className="pi pi-user"></i> Location Info{" "}
-                      </h2>
-                      {selectedCustomer.defLoc !== item.locNick ? (
-                        <Button
-                          icon="pi pi-trash"
-                          className="p-button-rounded p-button-help p-button-outlined"
-                          aria-label="Trash"
-                          type="button"
-                          onClick={(e) => handleDeleteLocation(e, item)}
+                          {selectedCustomer.defLoc !== location.locNick ? (
+                            <Button
+                              icon="pi pi-trash"
+                              className="p-button-rounded p-button-help p-button-outlined"
+                              aria-label="trash"
+                              type="button"
+                              onClick={() =>
+                                handleDeleteCustLoc(arrayHelpers, index)
+                              }
+                            />
+                          ) : (
+                            <DefLabel>* Default</DefLabel>
+                          )}
+                        </FlexSpaceBetween>
+
+                        <BPB.CustomTextInput
+                          label="Location"
+                          name={`locations[${index}].locName`}
+                          dontedit="true"
+                          converter={props}
                         />
-                      ) : (
-                        <DefLabel>* Default</DefLabel>
-                      )}
-                    </FlexSpaceBetween>
+                        <BPB.CustomDropdownInput
+                          label="Auth Type"
+                          name={`locations[${index}].authType`}
+                          options={authTypes}
+                          converter={props}
+                        />
+                      </GroupBox>
+                    ))}
 
-                    <BPB.CustomTextInput
-                      key={"location" + ind}
-                      name={`location[${ind}]`}
-                      label="Location"
-                      dontedit="true"
-                      converter={{ ...props }}
-                    />
-
-                    <BPB.CustomDropdownInput
-                      label="Auth Type"
-                      key={"auth" + ind}
-                      name={`auth[${ind}]`}
-                      options={authTypes}
-                      converter={props}
-                    />
-                  </GroupBox>
-                ))}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        arrayHelpers.push({ locName: "", authType: "" })
+                      }
+                    >
+                      +
+                    </button>
+                  </div>
+                )}
+              />
             </GroupBox>
           ) : (
             <GroupBox>
               <h2>
-                <i className="pi pi-user"></i> Location Description
+                <i className="pi pi-user"></i> Customer Description
               </h2>
+              <FieldArray
+                name="customers"
+                render={(arrayHelpers) => (
+                  <div>
+                    {selectedCustomer.customers.map((customer, index) => (
+                      <GroupBox key={index}>
+                        <FlexSpaceBetween>
+                          <h2>
+                            <i className="pi pi-user"></i> Customer Info
+                          </h2>
 
-              {customerList.data
-                .filter((cust) => cust.locNick === selectedCustomer.locNick)
-                .map((item, ind) => (
-                  <GroupBox key={"group" + ind}>
-                    <h2>
-                      <i className="pi pi-user"></i> Customer Info
-                    </h2>
-                    <Button
+                          {selectedCustomer.custNick !== customer.custNick ? (
+                            <Button
+                              icon="pi pi-trash"
+                              className="p-button-rounded p-button-help p-button-outlined"
+                              aria-label="trash"
+                              type="button"
+                              onClick={() =>
+                                handleDeleteCustLoc(arrayHelpers, index)
+                              }
+                            />
+                          ) : (
+                            <DefLabel>* Default</DefLabel>
+                          )}
+                        </FlexSpaceBetween>
+
+                        <BPB.CustomTextInput
+                          label="Customer"
+                          name={`customers[${index}].sub`}
+                          dontedit="true"
+                          converter={props}
+                        />
+                        <BPB.CustomDropdownInput
+                          label="Auth Type"
+                          name={`customers[${index}].authType`}
+                          options={authTypes}
+                          converter={props}
+                        />
+                      </GroupBox>
+                    ))}
+                    ;
+                    <button
                       type="button"
-                      label="delete"
-                      onClick={(e) => handleDeleteCustLoc(e, item)}
-                    />
-                    <BPB.CustomTextInput
-                      key={"customer" + ind}
-                      name={`customer[${ind}]`}
-                      label="Customer"
-                      dontedit="true"
-                      converter={props}
-                    />
-                    <BPB.CustomTextInput
-                      key={"auth" + ind}
-                      name={`auth[${ind}]`}
-                      label="Auth Type"
-                      converter={props}
-                    />
-                  </GroupBox>
-                ))}
+                      onClick={() =>
+                        arrayHelpers.push({ custName: "", authType: "" })
+                      }
+                    >
+                      +
+                    </button>
+                  </div>
+                )}
+              />
             </GroupBox>
           )}
         </div>
@@ -232,7 +283,7 @@ function CustomerDetails({
           className="p-sidebar-lg"
           onHide={() => setVisible(false)}
         >
-          <AddItem2
+          <AddItem
             initialState={{ locNick: "", authType: "" }}
             selectedCustomer={selectedCustomer}
             id={activeIndex === 0 ? "Location" : "Customer"}

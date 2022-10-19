@@ -12,13 +12,15 @@ import { withFadeIn } from "../../../hoc/withFadeIn";
 import CustomerDetails from "./CustomerDetails";
 const initialState = {
   custName: "",
-  locNick: "",
-  email: "",
-  authType: "",
-  defLoc: "",
-  auth: [],
-  location: [],
-  customer: []
+        authClass: "",
+        email: "",
+        phone: "",
+        sub: "",
+        defLoc: "",
+        locName: "",
+        locNick: "",
+        locations: [],
+        customers: [],
 
 };
 
@@ -44,24 +46,6 @@ function CustomerList({
     setIsCreate(!isCreate);
   };
 
-  const handleSelectedCustomer = (e) => {
-    console.log("customerList", customerList);
-    console.log("initialState", initialState);
-    let addOns = {location: [], auth: [], customer: []};
-    customerList.data
-      .filter((cust) => cust.custName === e.value.custName)
-      .forEach((item, ind) => {
-        console.log('item', item)
-        addOns['defLoc'] = item.defLoc
-        addOns[`location`][ind] = item.locNick;
-        addOns[`auth`][ind] = item.authType;
-        addOns[`customer`][ind] = item.custName;
-      });
-
-    console.log("addOns", addOns);
-    setSelectedCustomer({ ...initialState, ...e.value, ...addOns });
-  };
-
   useEffect(() => {
     console.log("customerList", customerList);
   }, [selectedCustomer]);
@@ -70,7 +54,7 @@ function CustomerList({
     console.log("activeIndex", activeIndex);
     let newArray = [];
     let filtArray = [];
-    let filtTab = activeIndex === 0 ? "custName" : "locNick";
+    let filtTab = activeIndex === 0 ? "custName" : "locName";
     for (let li of list) {
       if (!filtArray.includes(li[filtTab])) {
         newArray.push(li);
@@ -88,7 +72,7 @@ function CustomerList({
         selectionMode="single"
         metaKeySelection={false}
         selection={selectedCustomer}
-        onSelectionChange={handleSelectedCustomer}
+        onSelectionChange={e => setSelectedCustomer(e.value)}
         sortField="custName"
         sortOrder={1}
         responsiveLayout="scroll"
@@ -106,7 +90,7 @@ function CustomerList({
         )}
         {activeIndex === 1 && (
           <Column
-            field="locNick"
+            field="locName"
             header="Location"
             filterPlaceholder="loc"
             filter

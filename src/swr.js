@@ -98,7 +98,7 @@ export function useProductList() {
 
 export function useCustomerList() {
   const { data, error, mutate } = useSWR(
-    { url: "/customers/grabDetailedCustomerList" },
+    { url: "/locationUsers/grabDetailedLocationUserList" },
     fetcher,
     {
       revalidateIfStale: false,
