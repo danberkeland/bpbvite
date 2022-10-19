@@ -5,6 +5,9 @@ import axios from "axios";
 const API_bpbrouterAuth =
   "https://8gw70qn5eb.execute-api.us-east-2.amazonaws.com/auth";
 
+const API_deletecognitoUser = 
+  "https://wj4mb7q3xi.execute-api.us-east-2.amazonaws.com/auth/deletecognitouser"
+
 // NEW STUFF
 
 async function signUp(event) {
@@ -96,7 +99,8 @@ export const createUser = async (event) => {
 
 
 export const deleteUser = (event) => {
-  return fetcher(event.values, "/users/deleteUser");
+  deleteCognitoUser(event)
+  return fetcher(event, "/users/deleteUser");
 };
 
 export const updateUser = (event) => {
@@ -113,6 +117,19 @@ export const createLocationUser = (event) => {
 
 export const deleteLocationUser = (event) => {
   return fetcher(event, "/locationUsers/deleteLocationUser");
+};
+
+const deleteCognitoUser = async (event) => {
+  let prod;
+  try {
+    prod = await axios.post(API_deletecognitoUser, {
+      sub: event.sub,
+    });
+  } catch (err) {
+    console.log("Error deleting User", err);
+  }
+  console.log("deleteCognitoUser:", prod.status);
+  return prod.data.body;
 };
 
 // OLD STUFF

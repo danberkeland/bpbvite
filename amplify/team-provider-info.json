@@ -197,7 +197,15 @@
         },
         "bpbrouter": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
-          "s3Key": "amplify-builds/bpbrouter-5642334e7a6256695952-build.zip"
+          "s3Key": "amplify-builds/bpbrouter-65586d346358466a6d67-build.zip"
+        },
+        "deleteCognitoUser": {
+          "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
+          "s3Key": "amplify-builds/deleteCognitoUser-704a4b444c5445644f4b-build.zip"
+        },
+        "bpbadmin2SDKLayer": {
+          "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
+          "s3Key": "amplify-builds/bpbadmin2SDKLayer-LambdaLayerVersion82da3bd0-build.zip"
         }
       },
       "auth": {

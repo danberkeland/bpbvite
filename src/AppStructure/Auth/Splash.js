@@ -41,10 +41,10 @@ const getFormErrorMessage = (meta) => {
 export const Splash = () => {
   const [showMessage, setShowMessage] = useState(false);
 
-  const formData = useSettingsStore((state) => state.formData)
-  const setFormType = useSettingsStore((state) => state.setFormType)
-  const setUser = useSettingsStore((state) => state.setUser)
-  const setIsLoading = useSettingsStore((state) => state.setIsLoading)
+  const formData = useSettingsStore((state) => state.formData);
+  const setFormType = useSettingsStore((state) => state.setFormType);
+  const setUser = useSettingsStore((state) => state.setUser);
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
   const dialogFooter = (
     <div className="flex justify-content-center">
@@ -74,15 +74,16 @@ export const Splash = () => {
 
   const onSubmit = async (data, form) => {
     console.log("data", data);
-    setIsLoading(true)
+    setIsLoading(true);
     await Auth.signIn(data.email, data.password)
       .then((use) => {
         if (use.challengeName === "NEW_PASSWORD_REQUIRED") {
-          console.log("user",use)
-          setUser(use)
+          console.log("user", use);
+          setUser(use);
           setFormType("resetPassword");
-        } 
-        setIsLoading(false)
+        }
+        setIsLoading(false);
+        setFormType("signedIn")
       })
       .catch((error) => {
         if (error) {
@@ -139,15 +140,7 @@ export const Splash = () => {
                     name="email"
                     render={({ input, meta }) => (
                       <div className="field">
-                        <span className="p-float-label p-input-icon-right">
-                          <i className="pi pi-envelope" />
-                          <InputText
-                            id="email"
-                            {...input}
-                            className={classNames({
-                              "p-invalid": isFormFieldValid(meta),
-                            })}
-                          />
+                        
                           <label
                             htmlFor="email"
                             className={classNames({
@@ -156,7 +149,15 @@ export const Splash = () => {
                           >
                             Email*
                           </label>
-                        </span>
+                         
+                          <InputText
+                            id="email"
+                            {...input}
+                            className={classNames({
+                              "p-invalid": isFormFieldValid(meta),
+                            })}
+                          />
+                       
                         {getFormErrorMessage(meta)}
                       </div>
                     )}
@@ -165,26 +166,25 @@ export const Splash = () => {
                     name="password"
                     render={({ input, meta }) => (
                       <div className="field">
-                        <span className="p-float-label">
-                          <Password
-                            id="password"
-                            {...input}
-                            toggleMask
-                            className={classNames({
-                              "p-invalid": isFormFieldValid(meta),
-                            })}
-                            header={passwordHeader}
-                            footer={passwordFooter}
-                          />
-                          <label
-                            htmlFor="password"
-                            className={classNames({
-                              "p-error": isFormFieldValid(meta),
-                            })}
-                          >
-                            Password*
-                          </label>
-                        </span>
+                        <label
+                          htmlFor="password"
+                          className={classNames({
+                            "p-error": isFormFieldValid(meta),
+                          })}
+                        >
+                          Password*
+                        </label>
+                        <Password
+                          id="password"
+                          {...input}
+                          toggleMask
+                          className={classNames({
+                            "p-invalid": isFormFieldValid(meta),
+                          })}
+                          header={passwordHeader}
+                          footer={passwordFooter}
+                        />
+
                         {getFormErrorMessage(meta)}
                       </div>
                     )}

@@ -93,6 +93,15 @@ export type AmplifyDependentResourcesAttributes = {
             "Arn": "string",
             "Region": "string",
             "LambdaExecutionRole": "string"
+        },
+        "deleteCognitoUser": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string",
+            "LambdaExecutionRole": "string"
+        },
+        "bpbadmin2SDKLayer": {
+            "Arn": "string"
         }
     },
     "auth": {

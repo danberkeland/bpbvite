@@ -50,6 +50,7 @@ function CustomerDetails({
       icon: "pi pi-exclamation-triangle",
       accept: () => {
         console.log("values", props);
+        deleteUser({ "sub": props.values.sub})
       },
       reject: () => {
         return;
