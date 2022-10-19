@@ -71,9 +71,9 @@ function CustomerDetails({
       icon: "pi pi-exclamation-triangle",
       accept: () => {
         console.log("values", props);
-        deleteLocationUser(props).then(() => {
-          window.location = "/Settings/ManageCustomers";
-        });
+        deleteLocationUser(props); //.then(() => {
+        //window.location = "/Settings/ManageCustomers";
+        //});
       },
       reject: () => {
         return;
@@ -81,21 +81,24 @@ function CustomerDetails({
     });
   };
 
-  const handleDeleteCustLoc = (arrayHelpers, index) => {
+  const handleDeleteCustLoc = (index) => {
     confirmDialog({
       message: `Are you sure you want to delete this location?`,
       header: "Confirmation",
       icon: "pi pi-exclamation-triangle",
       accept: () => {
         setIsLoading(true);
+
         let props = {
           sub: selectedCustomer.sub,
           locNick: selectedCustomer.locations[index].locNick,
         };
 
-        deleteLocationUser(props).then(() => setIsLoading(false)).then(() => {
-          window.location = "/Settings/ManageCustomers";
-        });
+        deleteLocationUser(props)
+          .then(() => setIsLoading(false))
+          .then(() => {
+            window.location = "/Settings/ManageCustomers";
+          });
       },
       reject: () => {
         return;
@@ -126,7 +129,9 @@ function CustomerDetails({
                   className="p-button-rounded p-button-help p-button-outlined"
                   aria-label="Trash"
                   type="button"
-                  onClick={(e) => handleDeleteCustomer(e, props)}
+                  onClick={(e) => {
+                    handleDeleteCustomer(e, props);
+                  }}
                 />
               </FlexSpaceBetween>
 
@@ -180,9 +185,9 @@ function CustomerDetails({
                               className="p-button-rounded p-button-help p-button-outlined"
                               aria-label="trash"
                               type="button"
-                              onClick={() =>
-                                handleDeleteCustLoc(arrayHelpers, index)
-                              }
+                              onClick={() => {
+                                handleDeleteCustLoc(index);
+                              }}
                             />
                           ) : (
                             <DefLabel>* Default</DefLabel>
