@@ -93,9 +93,8 @@ function CustomerDetails({
           locNick: selectedCustomer.locations[index].locNick,
         };
 
-        deleteLocationUser(props).then(() => {
-          setIsLoading(false);
-          arrayHelpers.remove(index);
+        deleteLocationUser(props).then(() => setIsLoading(false)).then(() => {
+          window.location = "/Settings/ManageCustomers";
         });
       },
       reject: () => {

@@ -73,19 +73,15 @@ export const AddItem = (props) => {
                 {props.id === "Location" && (
                   <div className="field">
                     <span className="p-float-label">
+                      
                       <Dropdown
                         id="location"
                         name="location"
                         value={formik.values.location}
                         onChange={formik.handleChange}
-                        options={simpleLocationList.data.filter(
-                          (data) =>
-                            !props.selectedCustomer.location.includes(
-                              data.value
-                            )
-                        )}
+                        options={simpleLocationList.data}
                         optionLabel="label"
-                      />
+                />
                       <label htmlFor="location">Location</label>
                     </span>
                   </div>
@@ -98,12 +94,7 @@ export const AddItem = (props) => {
                         name="customer"
                         value={formik.values.customer}
                         onChange={formik.handleChange}
-                        options={simpleCustomerList.data.filter(
-                          (data) =>
-                            !props.selectedCustomer.customer.includes(
-                              data.value
-                            )
-                        )}
+                        options={simpleCustomerList}
                         optionLabel="label"
                       />
                       <label htmlFor="customer">Customer</label>
@@ -123,11 +114,9 @@ export const AddItem = (props) => {
                     <label htmlFor="authType">Auth Type</label>
                   </span>
                 </div>
-                {checkForAddOns() ? (
+               
                   <Button type="submit" label="Submit" className="mt-2" />
-                ) : (
-                  <div>There are no options to choose from.</div>
-                )}{" "}
+               
               </React.Fragment>
             )}
           </form>
