@@ -5,8 +5,8 @@ import axios from "axios";
 const API_bpbrouterAuth =
   "https://8gw70qn5eb.execute-api.us-east-2.amazonaws.com/auth";
 
-const API_deletecognitoUser = 
-  "https://wj4mb7q3xi.execute-api.us-east-2.amazonaws.com/auth/deletecognitouser"
+const API_cognitoUser = 
+  "https://wj4mb7q3xi.execute-api.us-east-2.amazonaws.com/auth"
 
 // NEW STUFF
 
@@ -83,18 +83,31 @@ export const updateLocation = (event) => {
 };
 
 export const createUser = async (event) => {
-  let newEvent = await signUp(event);
+  let newEvent = await createCognitoUser(event);
   console.log("event", event);
   console.log("createEvent", newEvent);
+  let newerEvent = {
+    sub: newEvent.data.User.Username,
+    name: event.custName,
+    authClass: event.authClass,
+    email: event.email,
+    phone: event.phone,
+    locNick: event.defLoc,
+  };
+  
   const newLocUser = {
     authType: 3,
     locNick: event.defLoc,
-    sub: newEvent.sub,
+    sub: newEvent.data.User.Username,
     Type: "LocationUser",
   };
-  return fetcher(newEvent, "/users/createUser").then((result) =>
+
+  console.log('newLocUser', newLocUser)
+  
+  return fetcher(newerEvent, "/users/createUser").then((result) =>
     fetcher(newLocUser, "/locationUsers/createLocationUser")
   );
+  
 };
 
 
@@ -122,7 +135,7 @@ export const deleteLocationUser = (event) => {
 const deleteCognitoUser = async (event) => {
   let prod;
   try {
-    prod = await axios.post(API_deletecognitoUser, {
+    prod = await axios.post(API_cognitoUser+"/deletecognitouser", {
       sub: event.sub,
     });
   } catch (err) {
@@ -130,6 +143,17 @@ const deleteCognitoUser = async (event) => {
   }
   console.log("deleteCognitoUser:", prod.status);
   return prod.data.body;
+};
+
+const createCognitoUser = async (event) => {
+  let prod;
+  try {
+    prod = await axios.post(API_cognitoUser+"/createcognitouser", event);
+  } catch (err) {
+    console.log("Error creating User", err);
+  }
+  console.log("createCognitoUser:", prod.status);
+  return prod;
 };
 
 // OLD STUFF

@@ -197,15 +197,19 @@
         },
         "bpbrouter": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
-          "s3Key": "amplify-builds/bpbrouter-65586d346358466a6d67-build.zip"
+          "s3Key": "amplify-builds/bpbrouter-474b386859336e734156-build.zip"
         },
         "deleteCognitoUser": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
-          "s3Key": "amplify-builds/deleteCognitoUser-704a4b444c5445644f4b-build.zip"
+          "s3Key": "amplify-builds/deleteCognitoUser-362b4f654278592b4d59-build.zip"
         },
         "bpbadmin2SDKLayer": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
           "s3Key": "amplify-builds/bpbadmin2SDKLayer-LambdaLayerVersion82da3bd0-build.zip"
+        },
+        "createCognitoUser": {
+          "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
+          "s3Key": "amplify-builds/createCognitoUser-6632545842364f704e69-build.zip"
         }
       },
       "auth": {

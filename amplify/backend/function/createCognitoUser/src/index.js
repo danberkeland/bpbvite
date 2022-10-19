@@ -10,14 +10,26 @@ const cognito = new AWS.CognitoIdentityServiceProvider({ region: "us-east-2" });
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
 
-const deleteUser = async (sub) => {
+const createUser = async (event) => {
+  const { email, custName, authClass, phone, defLoc } = event;
   return await new Promise((resolve, reject) => {
     const params = {
       UserPoolId: "us-east-2_pOTWtTfNg",
-      Username: sub,
+      Username: email,
+      UserAttributes: [
+        {
+          Name: "custom:name",
+          Value: custName,
+        },
+        {
+          Name: "custom:authType",
+          Value: authClass,
+        },
+      ],
+      TemporaryPassword: "admin123!",
     };
 
-    cognito.adminDeleteUser(params, (err, data) => {
+    cognito.adminCreateUser(params, (err, data) => {
       if (err) {
         reject(err);
       } else {
@@ -30,5 +42,5 @@ const deleteUser = async (sub) => {
 exports.handler = async (event) => {
   console.log(`EVENT: ${JSON.stringify(event)}`);
 
-  return deleteUser(event.sub);
+  return createUser(event);
 };

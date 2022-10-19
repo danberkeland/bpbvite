@@ -102,6 +102,12 @@ export type AmplifyDependentResourcesAttributes = {
         },
         "bpbadmin2SDKLayer": {
             "Arn": "string"
+        },
+        "createCognitoUser": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string",
+            "LambdaExecutionRole": "string"
         }
     },
     "auth": {

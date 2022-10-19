@@ -72,9 +72,9 @@ export const withBPBForm = (Component) => (props) => {
           setIsEdit(false);
           if (isCreate) {
             console.log("IsCreate");
-            fns.create(props); //.then(() => {
-            // window.location = path;
-            //});
+            fns.create(props).then(() => {
+              window.location = path;
+            });
           } else {
             fns.update(props).then(() => {
               window.location = path;
@@ -87,12 +87,14 @@ export const withBPBForm = (Component) => (props) => {
             <Form>
               {isEdit | isCreate ? (
                 <div className="floatButtonsTop">
-                  {isChange && <Button
-                    label="Submit"
-                    type="submit"
-                    className="p-button-raised p-button-rounded p-button-danger"
-                    style={editButtonStyle}
-                  />}
+                  {isChange && (
+                    <Button
+                      label="Submit"
+                      type="submit"
+                      className="p-button-raised p-button-rounded p-button-danger"
+                      style={editButtonStyle}
+                    />
+                  )}
                 </div>
               ) : (
                 <div></div>
@@ -106,7 +108,7 @@ export const withBPBForm = (Component) => (props) => {
                     icon="pi pi-pencil"
                     className="p-button-outlined p-button-help"
                     label="Edit"
-                    onClick={e => handleEdit(e, props)}
+                    onClick={(e) => handleEdit(e, props)}
                   />
                 </FlexSpaceBetween>
               )}
