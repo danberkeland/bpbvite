@@ -5,7 +5,6 @@ import { validationSchema } from "./ValidationSchema";
 
 import { Button } from "primereact/button";
 import { confirmDialog } from "primereact/confirmdialog";
-import { Dialog } from "primereact/dialog";
 import { OverlayPanel } from "primereact/overlaypanel";
 
 import {
@@ -50,6 +49,20 @@ function CustomerDetails({
   const isCreate = useSettingsStore((state) => state.isCreate);
   const op = useRef(null);
 
+  useEffect(() => {
+    console.log(
+      "simpleLocationList.data",
+      simpleLocationList.data.filter((simp) =>
+        selectedCustomer.locations
+          .map((loc) => loc.locNick)
+          .includes(simp.value)
+      )
+    );
+    console.log(
+      "selectedCustomer",
+      selectedCustomer.locations.map((loc) => loc.locNick)
+    );
+  }, [simpleLocationList, selectedCustomer]);
 
   const handleDeleteCustomer = (e, props) => {
     confirmDialog({
@@ -164,7 +177,14 @@ function CustomerDetails({
               <BPB.CustomDropdownInput
                 label="Default Location"
                 name="defLoc"
-                options={simpleLocationList.data}
+                options={
+                  simpleLocationList &&
+                  simpleLocationList.data.filter((simp) =>
+                    selectedCustomer.locations
+                      .map((loc) => loc.locNick)
+                      .includes(simp.value)
+                  )
+                }
                 converter={props}
               />
 
@@ -211,7 +231,11 @@ function CustomerDetails({
                               aria-label="trash"
                               type="button"
                               onClick={() => {
-                                handleDeleteCustLoc(props.values, arrayHelpers, index);
+                                handleDeleteCustLoc(
+                                  props.values,
+                                  arrayHelpers,
+                                  index
+                                );
                               }}
                             />
                           ) : (
