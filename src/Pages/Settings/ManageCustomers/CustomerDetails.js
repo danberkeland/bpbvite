@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { CustomInputs } from "../../../FormComponents/CustomInputs";
 
 import { validationSchema } from "./ValidationSchema";
 
 import { Button } from "primereact/button";
-import { Sidebar } from "primereact/sidebar";
 import { confirmDialog } from "primereact/confirmdialog";
 
 import {
@@ -19,9 +18,10 @@ import { GroupBox, DefLabel, FlexSpaceBetween } from "../../../CommonStyles";
 import { compose } from "../../../utils";
 import { useCustomerList, useSimpleLocationList } from "../../../swr";
 
-import { AddItem } from "./AddItem";
+
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
-import { Field, FieldArray } from "formik";
+import { FieldArray } from "formik";
+
 
 const BPB = new CustomInputs();
 
@@ -45,8 +45,7 @@ function CustomerDetails({
 }) {
   const { simpleLocationList } = useSimpleLocationList();
   const isCreate = useSettingsStore((state) => state.isCreate);
-  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
-  const [visible, setVisible] = useState(false);
+ 
   const { customerList } = useCustomerList();
 
   const handleDeleteCustomer = (e, props) => {
@@ -87,16 +86,13 @@ function CustomerDetails({
       header: "Confirmation",
       icon: "pi pi-exclamation-triangle",
       accept: () => {
-      
-        arrayHelpers.remove(index)
+        arrayHelpers.remove(index);
         let props = {
           sub: selectedCustomer.sub,
           locNick: selectedCustomer.locations[index].locNick,
         };
 
-        deleteLocationUser(props)
-       
-          
+        deleteLocationUser(props);
       },
       reject: () => {
         return;
@@ -206,15 +202,16 @@ function CustomerDetails({
                         />
                       </GroupBox>
                     ))}
-
-                    <button
+                    <Button
                       type="button"
-                      onClick={() =>
-                        arrayHelpers.push({ locName: "", authType: "" })
+                      className="p-button-outlined p-button-primary"
+                      label={
+                        activeIndex === 0 ? "+ ADD LOCATION" : "+ ADD CUSTOMER"
                       }
-                    >
-                      +
-                    </button>
+                      onClick={() => {
+                        arrayHelpers.push({ location: "", authType: "" });
+                      }}
+                    />
                   </div>
                 )}
               />
@@ -265,41 +262,12 @@ function CustomerDetails({
                       </GroupBox>
                     ))}
                     ;
-                    <button
-                      type="button"
-                      onClick={() =>
-                        arrayHelpers.push({ custName: "", authType: "" })
-                      }
-                    >
-                      +
-                    </button>
                   </div>
                 )}
               />
             </GroupBox>
           )}
         </div>
-        <Sidebar
-          visible={visible}
-          position="right"
-          className="p-sidebar-lg"
-          onHide={() => setVisible(false)}
-        >
-          <AddItem
-            initialState={{ locNick: "", authType: "" }}
-            selectedCustomer={selectedCustomer}
-            id={activeIndex === 0 ? "Location" : "Customer"}
-            {...props}
-          />
-        </Sidebar>
-        <FlexSpaceBetween>
-          <Button
-            type="button"
-            className="p-button-outlined p-button-primary"
-            label={activeIndex === 0 ? "+ ADD LOCATION" : "+ ADD CUSTOMER"}
-            onClick={(e) => setVisible(true)}
-          />
-        </FlexSpaceBetween>
       </React.Fragment>
     );
   });
