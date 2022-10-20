@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 
 import { Button } from "primereact/button";
-import { confirmDialog } from "primereact/confirmdialog";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { Formik, Form } from "formik";
 import { useSettingsStore } from "../Contexts/SettingsZustand";
@@ -13,7 +12,6 @@ export const withBPBForm = (Component) => (props) => {
   const isCreate = useSettingsStore((state) => state.isCreate);
   const isChange = useSettingsStore((state) => state.isChange);
 
-  const setIsCreate = useSettingsStore((state) => state.setIsCreate);
 
   let str = props.name;
   let source = str + "List";
@@ -22,12 +20,12 @@ export const withBPBForm = (Component) => (props) => {
   let fns = props;
 
   var sourceVar = window[source];
-
+  /*
   useEffect(() => {
     window.scrollTo(0, 0);
     setIsEdit(false);
   }, [setIsEdit]);
-
+  */
   const editButtonStyle = {
     width: "100px",
     margin: "20px",
@@ -35,29 +33,8 @@ export const withBPBForm = (Component) => (props) => {
   };
 
   const handleEdit = (e, props) => {
-    console.log("values", props.values);
     window.scrollTo(0, 0);
     setIsEdit(true);
-  };
-
-  const handleDelete = (e, props) => {
-    confirmDialog({
-      message: `Are you sure you want to delete this ${str}?`,
-      header: "Confirmation",
-      icon: "pi pi-exclamation-triangle",
-      accept: () => {
-        console.log("values", props);
-        window.scrollTo(0, 0);
-        setIsEdit(false);
-        setIsCreate(false);
-        fns.delete(props).then(() => {
-          window.location = path;
-        });
-      },
-      reject: () => {
-        return;
-      },
-    });
   };
 
   return (
@@ -67,18 +44,17 @@ export const withBPBForm = (Component) => (props) => {
         initialValues={props.initialState}
         validationSchema={props.validationSchema(sourceVar)}
         onSubmit={(props) => {
-          console.log("createProps", props);
           window.scrollTo(0, 0);
           setIsEdit(false);
           if (isCreate) {
-            console.log("IsCreate");
             fns.create(props).then(() => {
               window.location = path;
             });
           } else {
-            fns.update(props).then(() => {
-              window.location = path;
-            });
+            console.log('updateProps', props)
+            //fns.update(props).then(() => {
+            //  window.location = path;
+            //});
           }
         }}
       >

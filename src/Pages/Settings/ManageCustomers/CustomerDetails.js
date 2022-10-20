@@ -69,22 +69,6 @@ function CustomerDetails({
     });
   };
 
-  const handleDeleteLocation = (e, props) => {
-    confirmDialog({
-      message: `Are you sure you want to delete this location?`,
-      header: "Confirmation",
-      icon: "pi pi-exclamation-triangle",
-      accept: () => {
-        console.log("values", props);
-        deleteLocationUser(props); //.then(() => {
-        //window.location = "/Settings/ManageCustomers";
-        //});
-      },
-      reject: () => {
-        return;
-      },
-    });
-  };
 
   const handleDeleteCustLoc = (values, arrayHelpers, index) => {
     confirmDialog({
@@ -123,9 +107,6 @@ function CustomerDetails({
     createLocationUser(newLocUser);
   };
 
-  const handleDefaultLocs = (values) => {
-    return simpleLocationList.data;
-  };
 
   const BPBUserForm = compose(
     withBPBForm,
@@ -220,7 +201,7 @@ function CustomerDetails({
                             <i className="pi pi-user"></i> Location Info
                           </h2>
 
-                          {selectedCustomer.defLoc !== location.locNick ? (
+                          {props.values.defLoc !== location.locNick ? (
                             <Button
                               icon="pi pi-trash"
                               className="p-button-rounded p-button-help p-button-outlined"
