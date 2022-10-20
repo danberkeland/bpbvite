@@ -41,6 +41,7 @@ function CustomerList({
 
   const { customerList } = useCustomerList();
 
+  console.log('rendering CustomerList')
   const handleClick = () => {
     setIsCreate(!isCreate);
   };
