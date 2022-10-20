@@ -50,15 +50,7 @@ function CustomerDetails({
   const isCreate = useSettingsStore((state) => state.isCreate);
   const op = useRef(null);
 
-  let checkList = selectedCustomer.locations.map((sel) => sel.locNick);
-
-  let defaultList = simpleLocationList.data
-    ? simpleLocationList.data.filter((sim) => checkList.includes(sim.value))
-    : [];
-
-  let leftOuttList = simpleLocationList.data
-    ? simpleLocationList.data.filter((sim) => !checkList.includes(sim.value))
-    : [];
+  
 
   const handleDeleteCustomer = (e, props) => {
     confirmDialog({
@@ -67,7 +59,9 @@ function CustomerDetails({
       icon: "pi pi-exclamation-triangle",
       accept: () => {
         console.log("values", props);
-        deleteUser({ sub: props.values.sub });
+        deleteUser({ sub: props.values.sub }).then(() => {
+          window.location = "/Settings/ManageCustomers";
+          });
       },
       reject: () => {
         return;
@@ -137,6 +131,15 @@ function CustomerDetails({
     withBPBForm,
     withFadeIn
   )((props) => {
+    let checkList = isCreate ? [] : props.values.locations.map((sel) => sel.locNick);
+
+  let defaultList = isCreate ? simpleLocationList.data : simpleLocationList.data
+    ? simpleLocationList.data.filter((sim) => checkList.includes(sim.value))
+    : [];
+
+  let leftOuttList = simpleLocationList.data
+    ? simpleLocationList.data.filter((sim) => !checkList.includes(sim.value))
+    : [];
     return (
       <React.Fragment>
         <div className="productDetails">
@@ -250,14 +253,14 @@ function CustomerDetails({
                         />
                       </GroupBox>
                     ))}
-                    <Button
+                    {!isCreate && <Button
                       type="button"
                       className="p-button-outlined p-button-primary"
                       label={
                         activeIndex === 0 ? "+ ADD LOCATION" : "+ ADD CUSTOMER"
                       }
                       onClick={(e) => op.current.toggle(e)}
-                    />
+                    />}
                   </div>
                 )}
               />

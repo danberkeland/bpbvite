@@ -101,7 +101,7 @@ function CustomerList({
     <React.Fragment>
       {isCreate ? (
         <React.Fragment>
-          <button onClick={() => handleClick}>+ CUSTOMER LIST</button>
+          <button onClick={handleClick}>+ CUSTOMER LIST</button>
           <CustomerDetails initialState={initialState} />
         </React.Fragment>
       ) : (
