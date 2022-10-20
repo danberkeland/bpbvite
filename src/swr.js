@@ -55,7 +55,7 @@ export function useSimpleLocationList() {
     {
       revalidateIfStale: false,
       revalidateOnFocus: false,
-      revalidateOnReconnect: true,
+      revalidateOnReconnect: false,
     }
   );
 

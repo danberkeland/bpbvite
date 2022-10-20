@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { CustomInputs } from "../../../FormComponents/CustomInputs";
 
 import { validationSchema } from "./ValidationSchema";
@@ -18,7 +18,7 @@ import { withFadeIn } from "../../../hoc/withFadeIn";
 import { withBPBForm } from "../../../hoc/withBPBForm";
 import { GroupBox, DefLabel, FlexSpaceBetween } from "../../../CommonStyles";
 import { compose } from "../../../utils";
-import { useCustomerList, useSimpleLocationList } from "../../../swr";
+import { useSimpleLocationList } from "../../../swr";
 
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 import { FieldArray } from "formik";
@@ -46,23 +46,19 @@ function CustomerDetails({
 }) {
   const { simpleLocationList } = useSimpleLocationList();
   const [chosenLoc, setChosenLoc] = useState();
+
   const isCreate = useSettingsStore((state) => state.isCreate);
   const op = useRef(null);
 
-  useEffect(() => {
-    console.log(
-      "simpleLocationList.data",
-      simpleLocationList.data.filter((simp) =>
-        selectedCustomer.locations
-          .map((loc) => loc.locNick)
-          .includes(simp.value)
-      )
-    );
-    console.log(
-      "selectedCustomer",
-      selectedCustomer.locations.map((loc) => loc.locNick)
-    );
-  }, [simpleLocationList, selectedCustomer]);
+  let checkList = selectedCustomer.locations.map((sel) => sel.locNick);
+
+  let defaultList = simpleLocationList.data
+    ? simpleLocationList.data.filter((sim) => checkList.includes(sim.value))
+    : [];
+
+  let leftOuttList = simpleLocationList.data
+    ? simpleLocationList.data.filter((sim) => !checkList.includes(sim.value))
+    : [];
 
   const handleDeleteCustomer = (e, props) => {
     confirmDialog({
@@ -133,6 +129,10 @@ function CustomerDetails({
     createLocationUser(newLocUser);
   };
 
+  const handleDefaultLocs = (values) => {
+    return simpleLocationList.data;
+  };
+
   const BPBUserForm = compose(
     withBPBForm,
     withFadeIn
@@ -177,14 +177,7 @@ function CustomerDetails({
               <BPB.CustomDropdownInput
                 label="Default Location"
                 name="defLoc"
-                options={
-                  simpleLocationList &&
-                  simpleLocationList.data.filter((simp) =>
-                    selectedCustomer.locations
-                      .map((loc) => loc.locNick)
-                      .includes(simp.value)
-                  )
-                }
+                options={defaultList}
                 converter={props}
               />
 
@@ -210,7 +203,7 @@ function CustomerDetails({
                       <Dropdown
                         optionLabel="label"
                         value={chosenLoc}
-                        options={simpleLocationList.data}
+                        options={leftOuttList}
                         onChange={(e) => {
                           handleLocChoice(e, arrayHelpers);
                         }}
