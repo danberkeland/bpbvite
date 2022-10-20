@@ -12,9 +12,7 @@ export const withFormComponentWrap = (Component) => (props) => {
     const setIsChange = useSettingsStore((state) => state.setIsChange);
 
     const [field, meta] = useField(props);
-    console.log('field', field)
-    console.log('meta', meta)
-
+   
     meta.initialValue !== meta.value && setIsChange(true)
   
     return (

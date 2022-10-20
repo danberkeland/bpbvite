@@ -12,16 +12,15 @@ import { withFadeIn } from "../../../hoc/withFadeIn";
 import CustomerDetails from "./CustomerDetails";
 const initialState = {
   custName: "",
-        authClass: "",
-        email: "",
-        phone: "",
-        sub: "",
-        defLoc: "",
-        locName: "",
-        locNick: "",
-        locations: [],
-        customers: [],
-
+  authClass: "",
+  email: "",
+  phone: "",
+  sub: "",
+  defLoc: "",
+  locName: "",
+  locNick: "",
+  locations: [],
+  customers: [],
 };
 
 const menuItems = [{ label: "By Customer" }, { label: "By Location" }];
@@ -46,9 +45,6 @@ function CustomerList({
     setIsCreate(!isCreate);
   };
 
-  useEffect(() => {
-    console.log("customerList", customerList);
-  }, [selectedCustomer]);
 
   const decideList = (list) => {
     console.log("activeIndex", activeIndex);
@@ -72,7 +68,7 @@ function CustomerList({
         selectionMode="single"
         metaKeySelection={false}
         selection={selectedCustomer}
-        onSelectionChange={e => setSelectedCustomer(e.value)}
+        onSelectionChange={(e) => setSelectedCustomer(e.value)}
         sortField="custName"
         sortOrder={1}
         responsiveLayout="scroll"
@@ -105,7 +101,7 @@ function CustomerList({
     <React.Fragment>
       {isCreate ? (
         <React.Fragment>
-          <button onClick={handleClick}>+ CUSTOMER LIST</button>
+          <button onClick={() => handleClick}>+ CUSTOMER LIST</button>
           <CustomerDetails initialState={initialState} />
         </React.Fragment>
       ) : (

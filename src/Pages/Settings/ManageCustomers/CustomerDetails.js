@@ -13,6 +13,7 @@ import {
   updateUser,
   createUser,
   deleteLocationUser,
+  createLocationUser,
 } from "../../../restAPIs";
 import { withFadeIn } from "../../../hoc/withFadeIn";
 import { withBPBForm } from "../../../hoc/withBPBForm";
@@ -49,9 +50,6 @@ function CustomerDetails({
   const isCreate = useSettingsStore((state) => state.isCreate);
   const op = useRef(null);
 
-  useEffect(() => {
-    console.log("simpleLocationList", simpleLocationList);
-  }, [simpleLocationList]);
 
   const handleDeleteCustomer = (e, props) => {
     confirmDialog({
@@ -85,7 +83,7 @@ function CustomerDetails({
     });
   };
 
-  const handleDeleteCustLoc = (arrayHelpers, index) => {
+  const handleDeleteCustLoc = (values, arrayHelpers, index) => {
     confirmDialog({
       message: `Are you sure you want to delete this location?`,
       header: "Confirmation",
@@ -93,8 +91,8 @@ function CustomerDetails({
       accept: () => {
         arrayHelpers.remove(index);
         let props = {
-          sub: selectedCustomer.sub,
-          locNick: selectedCustomer.locations[index].locNick,
+          sub: values.sub,
+          locNick: values.locations[index].locNick,
         };
 
         deleteLocationUser(props);
@@ -106,12 +104,21 @@ function CustomerDetails({
   };
 
   const handleLocChoice = (e, arrayHelpers) => {
-    
     op.current.toggle(e);
-    let ind = simpleLocationList.data.findIndex(simp => simp.value===e.value)
-    let name = simpleLocationList.data[ind].label
+    let ind = simpleLocationList.data.findIndex(
+      (simp) => simp.value === e.value
+    );
+    let name = simpleLocationList.data[ind].label;
     arrayHelpers.push({ locName: name, locNick: e.value, authType: 1 });
-  }
+    const newLocUser = {
+      authType: 1,
+      locNick: e.value,
+      sub: selectedCustomer.sub,
+      locName: name,
+      Type: "LocationUser",
+    };
+    createLocationUser(newLocUser);
+  };
 
   const BPBUserForm = compose(
     withBPBForm,
@@ -184,9 +191,9 @@ function CustomerDetails({
                         optionLabel="label"
                         value={chosenLoc}
                         options={simpleLocationList.data}
-                        onChange={(e) => {handleLocChoice(e, arrayHelpers)}}
-                  
-                      
+                        onChange={(e) => {
+                          handleLocChoice(e, arrayHelpers);
+                        }}
                         placeholder="Select a Location"
                       />
                     </OverlayPanel>
@@ -204,7 +211,7 @@ function CustomerDetails({
                               aria-label="trash"
                               type="button"
                               onClick={() => {
-                                handleDeleteCustLoc(arrayHelpers, index);
+                                handleDeleteCustLoc(props.values, arrayHelpers, index);
                               }}
                             />
                           ) : (

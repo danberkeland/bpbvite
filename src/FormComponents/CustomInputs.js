@@ -32,7 +32,7 @@ const CustomIDInputBase = ({ label, ...props }) => {
 };
 
 const CustomTextInputBase = ({ label, ...props }) => {
-  console.log('customprops', props)
+  
   return (
     <InputText
       {...props}
