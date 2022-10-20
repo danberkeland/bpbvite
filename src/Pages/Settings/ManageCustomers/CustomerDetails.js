@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { CustomInputs } from "../../../FormComponents/CustomInputs";
 
 import { validationSchema } from "./ValidationSchema";
 
 import { Button } from "primereact/button";
 import { confirmDialog } from "primereact/confirmdialog";
+import { Dialog } from "primereact/dialog";
+import { OverlayPanel } from "primereact/overlaypanel";
 
 import {
   deleteUser,
@@ -18,10 +20,9 @@ import { GroupBox, DefLabel, FlexSpaceBetween } from "../../../CommonStyles";
 import { compose } from "../../../utils";
 import { useCustomerList, useSimpleLocationList } from "../../../swr";
 
-
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 import { FieldArray } from "formik";
-
+import { Dropdown } from "primereact/dropdown";
 
 const BPB = new CustomInputs();
 
@@ -44,9 +45,13 @@ function CustomerDetails({
   activeIndex = 0,
 }) {
   const { simpleLocationList } = useSimpleLocationList();
+  const [chosenLoc, setChosenLoc] = useState();
   const isCreate = useSettingsStore((state) => state.isCreate);
- 
-  const { customerList } = useCustomerList();
+  const op = useRef(null);
+
+  useEffect(() => {
+    console.log("simpleLocationList", simpleLocationList);
+  }, [simpleLocationList]);
 
   const handleDeleteCustomer = (e, props) => {
     confirmDialog({
@@ -99,6 +104,14 @@ function CustomerDetails({
       },
     });
   };
+
+  const handleLocChoice = (e, arrayHelpers) => {
+    
+    op.current.toggle(e);
+    let ind = simpleLocationList.data.findIndex(simp => simp.value===e.value)
+    let name = simpleLocationList.data[ind].label
+    arrayHelpers.push({ locName: name, locNick: e.value, authType: 1 });
+  }
 
   const BPBUserForm = compose(
     withBPBForm,
@@ -166,6 +179,17 @@ function CustomerDetails({
                 name="locations"
                 render={(arrayHelpers) => (
                   <div>
+                    <OverlayPanel ref={op}>
+                      <Dropdown
+                        optionLabel="label"
+                        value={chosenLoc}
+                        options={simpleLocationList.data}
+                        onChange={(e) => {handleLocChoice(e, arrayHelpers)}}
+                  
+                      
+                        placeholder="Select a Location"
+                      />
+                    </OverlayPanel>
                     {props.values.locations.map((location, index) => (
                       <GroupBox key={index}>
                         <FlexSpaceBetween>
@@ -208,9 +232,7 @@ function CustomerDetails({
                       label={
                         activeIndex === 0 ? "+ ADD LOCATION" : "+ ADD CUSTOMER"
                       }
-                      onClick={() => {
-                        arrayHelpers.push({ location: "", authType: "" });
-                      }}
+                      onClick={(e) => op.current.toggle(e)}
                     />
                   </div>
                 )}
@@ -238,9 +260,7 @@ function CustomerDetails({
                               className="p-button-rounded p-button-help p-button-outlined"
                               aria-label="trash"
                               type="button"
-                              onClick={() =>
-                                handleDeleteCustLoc(arrayHelpers, index)
-                              }
+                              onClick={(e) => op.current.toggle(e)}
                             />
                           ) : (
                             <DefLabel>* Default</DefLabel>
