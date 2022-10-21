@@ -48,6 +48,7 @@ function CustomerDetails({
   const [chosenLoc, setChosenLoc] = useState();
 
   const isCreate = useSettingsStore((state) => state.isCreate);
+  const isEdit = useSettingsStore((state) => state.isEdit);
   const op = useRef(null);
 
   
@@ -80,6 +81,7 @@ function CustomerDetails({
         let props = {
           sub: values.sub,
           locNick: values.locations[index].locNick,
+          id: values.locations[index].id
         };
 
         deleteLocationUser(props);
@@ -112,6 +114,7 @@ function CustomerDetails({
     withBPBForm,
     withFadeIn
   )((props) => {
+    console.log('props.values', props.values)
     let checkList = isCreate ? [] : props.values.locations.map((sel) => sel.locNick);
 
   let defaultList = isCreate ? simpleLocationList.data : simpleLocationList.data
@@ -135,7 +138,7 @@ function CustomerDetails({
                 <h2>
                   <i className="pi pi-user"></i> Customer Description{" "}
                 </h2>
-                <Button
+                {!isEdit &&<Button
                   icon="pi pi-trash"
                   className="p-button-rounded p-button-help p-button-outlined"
                   aria-label="Trash"
@@ -143,7 +146,7 @@ function CustomerDetails({
                   onClick={(e) => {
                     handleDeleteCustomer(e, props);
                   }}
-                />
+                />}
               </FlexSpaceBetween>
 
               <BPB.CustomTextInput
@@ -201,12 +204,13 @@ function CustomerDetails({
                             <i className="pi pi-user"></i> Location Info
                           </h2>
 
-                          {props.values.defLoc !== location.locNick ? (
-                            <Button
+                          {props.values.defLoc !== location.locNick && !isEdit ? (
+                            !isEdit && <Button
                               icon="pi pi-trash"
                               className="p-button-rounded p-button-help p-button-outlined"
                               aria-label="trash"
                               type="button"
+                              visible={false}
                               onClick={() => {
                                 handleDeleteCustLoc(
                                   props.values,
@@ -216,7 +220,7 @@ function CustomerDetails({
                               }}
                             />
                           ) : (
-                            <DefLabel>* Default</DefLabel>
+                            !isEdit && <DefLabel>* Default</DefLabel>
                           )}
                         </FlexSpaceBetween>
 
@@ -268,6 +272,7 @@ function CustomerDetails({
                               className="p-button-rounded p-button-help p-button-outlined"
                               aria-label="trash"
                               type="button"
+                              visible={false}
                               onClick={(e) => op.current.toggle(e)}
                             />
                           ) : (

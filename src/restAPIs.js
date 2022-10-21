@@ -90,9 +90,10 @@ export const deleteUser = (event) => {
 
 export const updateUser = async (event) => {
   let newEvent = await updateCognitoUser(event);
+  console.log('Userevent', event)
 
   let newerEvent = {
-    sub: newEvent.data.User.Username,
+    sub: event.sub,
     name: event.custName,
     authClass: event.authClass,
     email: event.email,
@@ -103,12 +104,15 @@ export const updateUser = async (event) => {
     const newLocUser = {
       authType: loc.authType,
       locNick: loc.locNick,
-      sub: loc.sub,
+      locName: loc.locName,
+      sub: event.sub,
+      id: loc.id,
       Type: "LocationUser",
     };
+    console.log('newLocUser', newLocUser)
     await fetcher(newLocUser, "/locationUsers/updateLocationUser");
   }
-
+  console.log('newerEvent', newerEvent)
   return fetcher(newerEvent, "/users/updateUser");
 };
 
@@ -121,7 +125,8 @@ export const createLocationUser = (event) => {
 };
 
 export const deleteLocationUser = (event) => {
-  return fetcher(event, "/locationUsers/deleteLocationUser");
+  console.log("deleteLocUser event", event)
+  //return fetcher(event, "/locationUsers/deleteLocationUser");
 };
 
 const deleteCognitoUser = async (event) => {

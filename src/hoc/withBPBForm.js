@@ -52,7 +52,7 @@ export const withBPBForm = (Component) => (props) => {
             });
           } else {
             console.log('updateProps', props)
-            //fns.update(props).then(() => {
+            fns.update(props)//.then(() => {
             //  window.location = path;
             //});
           }

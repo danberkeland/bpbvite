@@ -13,6 +13,7 @@ query MyQuery {
               location {
                 locName
               }
+              id
             }
           }
           authClass
@@ -30,6 +31,7 @@ query MyQuery {
               user {
                 name
               }
+              id
             }
           }
           locNick
@@ -67,6 +69,7 @@ const grabDetailedCustomerList = async (event) => {
           locNick: loc.locNick,
           locName: loc.location.locName,
           authType: loc.authType,
+          id: loc.id
         };
         locations.push(newLoc);
       }
@@ -75,6 +78,7 @@ const grabDetailedCustomerList = async (event) => {
           sub: sub.sub,
           custName: sub.user.name,
           authType: sub.authType,
+          id: sub.id
         };
         customers.push(newSub);
       }

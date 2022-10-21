@@ -11,11 +11,11 @@ const cognito = new AWS.CognitoIdentityServiceProvider({ region: "us-east-2" });
  */
 
 const updateUser = async (event) => {
-  const { email, custName, authClass, phone, defLoc } = event;
+  const { email, custName, authClass, phone, defLoc, sub } = event;
   return await new Promise((resolve, reject) => {
     const params = {
       UserPoolId: "us-east-2_pOTWtTfNg",
-      Username: email,
+      Username: sub,
       UserAttributes: [
         {
           Name: "custom:name",
