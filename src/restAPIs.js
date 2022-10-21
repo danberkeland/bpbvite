@@ -100,13 +100,13 @@ export const updateUser = async (event) => {
     phone: event.phone,
     locNick: event.defLoc,
   };
-  for (let loc of event.locations) {
+  for (let cust of event.customers) {
     const newLocUser = {
-      authType: loc.authType,
-      locNick: loc.locNick,
-      locName: loc.locName,
-      sub: event.sub,
-      id: loc.id,
+      authType: cust.authType,
+      locNick: event.locNick,
+      locName: event.locName,
+      sub: cust.sub,
+      id: cust.id,
       Type: "LocationUser",
     };
     console.log('newLocUser', newLocUser)

@@ -134,8 +134,9 @@ export function useSimpleCustomerList() {
   return {
     simpleCustomerList: {
       data: data
-        ? sortAtoZDataByIndex(data.data.body.items, "custName").map((cust) => ({
+        ? sortAtoZDataByIndex(data.data.body.items, "name").map((cust) => ({
             label: cust.name,
+            sub: cust.sub,
             value: cust.name,
           }))
         : data,
@@ -145,6 +146,7 @@ export function useSimpleCustomerList() {
     },
   };
 }
+
 
 
 export function useLocationList() {

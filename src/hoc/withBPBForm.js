@@ -19,12 +19,7 @@ export const withBPBForm = (Component) => (props) => {
   let fns = props;
 
   var sourceVar = window[source];
-  /*
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    setIsEdit(false);
-  }, [setIsEdit]);
-  */
+
   const editButtonStyle = {
     width: "100px",
     margin: "20px",

@@ -3,12 +3,15 @@ import React, { useState } from "react";
 import CustomerList from "./CustomerList";
 import CustomerDetails from "./CustomerDetails";
 import { withFadeIn } from "../../../hoc/withFadeIn";
+import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 
 function ManageCustomers() {
   const [selectedCustomer, setSelectedCustomer] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
+  const setIsEdit = useSettingsStore((state) => state.setIsEdit);
 
   const handleCustClick = () => {
+    setIsEdit(false)
     setSelectedCustomer("");
   };
 
