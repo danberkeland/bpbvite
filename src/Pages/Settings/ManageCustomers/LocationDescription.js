@@ -11,7 +11,7 @@ import { GroupBox, FlexSpaceBetween } from "../../../CommonStyles";
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 import { FieldArray } from "formik";
 import { Dropdown } from "primereact/dropdown";
-import { useSimpleCustomerList, useSimpleLocationList } from "../../../swr";
+import { useSimpleCustomerList } from "../../../swr";
 
 const BPB = new CustomInputs();
 
