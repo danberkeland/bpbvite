@@ -12,7 +12,6 @@ export const withBPBForm = (Component) => (props) => {
   const isCreate = useSettingsStore((state) => state.isCreate);
   const isChange = useSettingsStore((state) => state.isChange);
 
-
   let str = props.name;
   let source = str + "List";
   let path = "/" + str.charAt(0).toUpperCase() + str.slice(1) + "s";
@@ -51,10 +50,10 @@ export const withBPBForm = (Component) => (props) => {
               window.location = path;
             });
           } else {
-            console.log('updateProps', props)
-            fns.update(props)//.then(() => {
-            //  window.location = path;
-            //});
+            console.log("updateProps", props);
+            fns.update(props).then(() => {
+              window.location = path;
+            });
           }
         }}
       >

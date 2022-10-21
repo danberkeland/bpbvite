@@ -138,7 +138,7 @@ function CustomerDetails({
                 <h2>
                   <i className="pi pi-user"></i> Customer Description{" "}
                 </h2>
-                {!isEdit &&<Button
+                <Button
                   icon="pi pi-trash"
                   className="p-button-rounded p-button-help p-button-outlined"
                   aria-label="Trash"
@@ -146,7 +146,7 @@ function CustomerDetails({
                   onClick={(e) => {
                     handleDeleteCustomer(e, props);
                   }}
-                />}
+                />
               </FlexSpaceBetween>
 
               <BPB.CustomTextInput
@@ -204,8 +204,8 @@ function CustomerDetails({
                             <i className="pi pi-user"></i> Location Info
                           </h2>
 
-                          {props.values.defLoc !== location.locNick && !isEdit ? (
-                            !isEdit && <Button
+                          {props.values.defLoc !== location.locNick ? (
+                            <Button
                               icon="pi pi-trash"
                               className="p-button-rounded p-button-help p-button-outlined"
                               aria-label="trash"
@@ -220,7 +220,7 @@ function CustomerDetails({
                               }}
                             />
                           ) : (
-                            !isEdit && <DefLabel>* Default</DefLabel>
+                            <DefLabel>* Default</DefLabel>
                           )}
                         </FlexSpaceBetween>
 

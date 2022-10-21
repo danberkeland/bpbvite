@@ -126,7 +126,7 @@ export const createLocationUser = (event) => {
 
 export const deleteLocationUser = (event) => {
   console.log("deleteLocUser event", event)
-  //return fetcher(event, "/locationUsers/deleteLocationUser");
+  return fetcher(event, "/locationUsers/deleteLocationUser");
 };
 
 const deleteCognitoUser = async (event) => {
