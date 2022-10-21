@@ -210,6 +210,10 @@
         "createCognitoUser": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
           "s3Key": "amplify-builds/createCognitoUser-6632545842364f704e69-build.zip"
+        },
+        "updateCognitoUser": {
+          "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
+          "s3Key": "amplify-builds/updateCognitoUser-4967456a6953386d596e-build.zip"
         }
       },
       "auth": {
