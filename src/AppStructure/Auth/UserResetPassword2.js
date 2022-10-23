@@ -6,7 +6,7 @@ import { validationSchema } from "./ValidationSchema";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 
-import { submitAuth } from "../../restAPIs";
+import { setNewPassword } from "../../restAPIs";
 import { withFadeIn } from "../../hoc/withFadeIn";
 import { withBPBForm } from "../../hoc/withBPBForm";
 import { GroupBox } from "../../CommonStyles";
@@ -27,7 +27,10 @@ export const  UserResetPassword = () => {
   const setFormType = useSettingsStore((state) => state.setFormType);
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
   const setIsEdit = useSettingsStore((state) => state.setIsEdit);
+  const userObject = useSettingsStore((state) => state.userObject);
   const [showMessage, setShowMessage] = useState(false);
+
+  
 
   const dialogFooter = (
     <div className="flex justify-content-center">
@@ -68,11 +71,7 @@ export const  UserResetPassword = () => {
                 </Button>
               </div>
               <BPB.CustomTextInput label="Email" name="email" converter={props} />
-              <BPB.CustomPasswordInput
-                label="Old Password"
-                name="passwordOld"
-                converter={props}
-              />
+              
                <BPB.CustomPasswordInput
                 label="New Password"
                 name="passwordNew"
@@ -110,10 +109,10 @@ export const  UserResetPassword = () => {
       name="auth"
       validationSchema={validationSchema}
       initialState={initialState}
-      update={submitAuth}
-      setShowMessage={setShowMessage}
+      update={setNewPassword}
       setIsLoading={setIsLoading}
       setFormType={setFormType}
+      userObject={userObject}
     />
   );
 }

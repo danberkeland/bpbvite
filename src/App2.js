@@ -36,14 +36,16 @@ export function App() {
   const setAuthClass = useSettingsStore((state) => state.setAuthClass);
   const setAccess = useSettingsStore((state) => state.setAccess);
   const setUser = useSettingsStore((state) => state.setUser);
+  const setUserObject = useSettingsStore((state) => state.setUserObject);
 
   const formType = useSettingsStore((state) => state.formType);
   const isLoading = useSettingsStore((state) => state.isLoading);
+  const user = useSettingsStore((state) => state.user);
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
   useEffect(() => {
-    setAuthListener(setFormType, setAccess, setUser, setAuthClass);
-  }, [setFormType, setAccess, setUser, setAuthClass]);
+    setAuthListener(setFormType, setAccess, setUser, setAuthClass, setUserObject);
+  }, [setFormType, setAccess, setUser, setAuthClass, setUserObject]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -51,6 +53,7 @@ export function App() {
       use && setAccess(use.signInUserSession.accessToken.jwtToken);
       use && setUser(use.attributes["custom:name"]);
       use && setAuthClass(use.attributes["custom:authType"]);
+      use && setUserObject(use)
       setFormType(use ? "signedIn" : "onNoUser");
       setIsLoading(false);
     });
@@ -61,7 +64,7 @@ export function App() {
       {isLoading && <Loader />}
 
       <h1>Back Porch Bakery</h1>
-
+      {user && <h4>Welcome {user}</h4>}
       <Router>
         {formType === "signedIn" && (
           <React.Fragment>

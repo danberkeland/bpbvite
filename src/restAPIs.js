@@ -1,6 +1,7 @@
 
 import { Auth } from "aws-amplify";
 import axios from "axios";
+import { setSourceMapRange } from "typescript";
 import { checkUser } from "./AppStructure/Auth/AuthHelpers";
 
 const API_bpbrouterAuth =
@@ -166,12 +167,13 @@ const updateCognitoUser = async (event) => {
 };
 
 export const submitAuth = async (props) => {
+  const {email, password, setIsLoading, setFormType, setShowMessage, setUserObject, userObject} = props
   console.log("submitProps", props);
-  const {email, password, setIsLoading, setFormType, setShowMessage} = props
   
     setIsLoading(true);
     await Auth.signIn(email, password)
       .then((use) => {
+        setUserObject(use)
         console.log("user", use);
         console.log('use.challengeName', use.challengeName)
         if (use.challengeName === "NEW_PASSWORD_REQUIRED") {
@@ -216,7 +218,19 @@ export const submitAuth = async (props) => {
       return prod
     })
   };
+
+
+  export const setNewPassword = async (props) => {
+    const {setIsLoading, setFormType, passwordNew, userObject} = props
+    console.log("newPasswordProps", props)
     
+    setIsLoading(true)
+    await Auth.completeNewPassword(userObject, passwordNew).then((use) => {
+      setFormType("onNoUser");
+      setIsLoading(false)
+    });
+    
+  };
 
 // OLD STUFF
 

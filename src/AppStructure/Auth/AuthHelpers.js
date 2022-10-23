@@ -30,13 +30,15 @@ export const setAuthListener = (
   setFormType,
   setAccess,
   setUser,
-  setAuthClass
+  setAuthClass,
+  setUserObject
 ) => {
   Hub.listen("auth", (data) => {
     switch (data.payload.event) {
       case "signIn":
         console.log("New User Signed in");
         checkUser().then((use) => {
+          setUserObject(use);
           setAccess(use.signInUserSession.accessToken.jwtToken);
           setUser(use.attributes["custom:name"]);
           setAuthClass(use.attributes["custom:authType"]);
@@ -48,6 +50,7 @@ export const setAuthListener = (
         console.log("User Signed Out");
         
           setAccess("");
+          setUserObject({});
           setUser("");
           setAuthClass("");
           setFormType("onNoUser");

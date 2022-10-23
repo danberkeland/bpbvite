@@ -9,6 +9,8 @@ let today = DateTime.now()
   .split("T")[0];
 
 const store = (set) => ({
+  userObject: {},
+  setUserObject: (userObject) => set(() => ({ userObject: userObject })),
   user: "",
   setUser: (user) => set(() => ({ user: user })),
   access: "",
