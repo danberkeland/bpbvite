@@ -12,7 +12,7 @@ import {
 
 import { Splash } from "./AppStructure/Auth/Splash2";
 import { UserApplyForm } from "./AppStructure/Auth/UserApplyForm";
-import { UserResetPassword } from "./AppStructure/Auth/UserResetPassword";
+import { UserResetPassword } from "./AppStructure/Auth/UserResetPassword2";
 import { UserApplyThanks } from "./AppStructure/Auth/UserApplyThanks";
 import { VerifyEmail } from "./AppStructure/Auth/VerifyEmail";
 
@@ -33,7 +33,7 @@ Amplify.configure(awsmobile);
 
 export function App() {
   const setFormType = useSettingsStore((state) => state.setFormType);
-  const setAuthType = useSettingsStore((state) => state.setAuthType);
+  const setAuthClass = useSettingsStore((state) => state.setAuthClass);
   const setAccess = useSettingsStore((state) => state.setAccess);
   const setUser = useSettingsStore((state) => state.setUser);
 
@@ -41,15 +41,16 @@ export function App() {
   const isLoading = useSettingsStore((state) => state.isLoading);
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
- 
   useEffect(() => {
-    setAuthListener(setFormType, setAccess, setUser, setAuthType )
-  },[setFormType, setAccess, setUser, setAuthType])
-
+    setAuthListener(setFormType, setAccess, setUser, setAuthClass);
+  }, [setFormType, setAccess, setUser, setAuthClass]);
 
   useEffect(() => {
     setIsLoading(true);
     checkUser().then((use) => {
+      use && setAccess(use.signInUserSession.accessToken.jwtToken);
+      use && setUser(use.attributes["custom:name"]);
+      use && setAuthClass(use.attributes["custom:authType"]);
       setFormType(use ? "signedIn" : "onNoUser");
       setIsLoading(false);
     });
