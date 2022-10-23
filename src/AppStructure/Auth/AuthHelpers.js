@@ -26,13 +26,15 @@ export const fetchUserDetails = async (sub) => {
 };
 
 // creates listener for Auth events
-export const setAuthListener = (setFormType, setUser, setUserDetails) => {
+export const setAuthListener = (setFormType, setAccess, setUser, setAuthType) => {
   Hub.listen("auth", (data) => {
     switch (data.payload.event) {
       case "signIn":
         console.log("New User Signed in");
         checkUser().then(use => {
-          setUser(use.signInUserSession.accessToken.jwtToken)
+          setAccess(use.signInUserSession.accessToken.jwtToken)
+          setUser(use.attributes["custom:name"])
+          setAuthType(use.attributes["custom:authType"])
         })
         setFormType("signedIn");
         

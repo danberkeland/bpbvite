@@ -33,16 +33,18 @@ Amplify.configure(awsmobile);
 
 export function App() {
   const setFormType = useSettingsStore((state) => state.setFormType);
-  const setUserDetails = useSettingsStore((state) => state.setUserDetails);
+  const setAuthType = useSettingsStore((state) => state.setAuthType);
+  const setAccess = useSettingsStore((state) => state.setAccess);
   const setUser = useSettingsStore((state) => state.setUser);
+
   const formType = useSettingsStore((state) => state.formType);
   const isLoading = useSettingsStore((state) => state.isLoading);
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
  
   useEffect(() => {
-    setAuthListener(setFormType, setUser, setUserDetails )
-  },[setFormType, setUser, setUserDetails])
+    setAuthListener(setFormType, setAccess, setUser, setAuthType )
+  },[setFormType, setAccess, setUser, setAuthType])
 
 
   useEffect(() => {
