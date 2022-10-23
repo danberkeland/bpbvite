@@ -25,10 +25,7 @@ const initialState = {
 
 export const  Splash = () => {
   const setFormType = useSettingsStore((state) => state.setFormType);
-  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
   const setIsEdit = useSettingsStore((state) => state.setIsEdit);
-  const setUserObject = useSettingsStore((state) => state.setUserObject);
-  const userObject = useSettingsStore((state) => state.userObject);
   const [showMessage, setShowMessage] = useState(false);
 
   const dialogFooter = (
@@ -107,13 +104,7 @@ export const  Splash = () => {
       name="auth"
       validationSchema={validationSchema}
       initialState={initialState}
-      update={submitAuth}
-      setShowMessage={setShowMessage}
-      setIsLoading={setIsLoading}
-      setFormType={setFormType}
-      setUserObject={setUserObject}
-      userObject={userObject}
-      
+      update={submitAuth}   
     />
   );
 }

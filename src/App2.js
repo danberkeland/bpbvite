@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import { Amplify } from "aws-amplify";
+import { Amplify, Hub } from "aws-amplify";
 import awsmobile from "./aws-exports";
 
 import {
@@ -25,7 +25,7 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "./index.css";
 
-import { checkUser, setAuthListener } from "./AppStructure/Auth/AuthHelpers";
+import { checkUser } from "./AppStructure/Auth/AuthHelpers";
 import Loader from "./AppStructure/Loader";
 import { useSettingsStore } from "./Contexts/SettingsZustand";
 
@@ -41,11 +41,38 @@ export function App() {
   const formType = useSettingsStore((state) => state.formType);
   const isLoading = useSettingsStore((state) => state.isLoading);
   const user = useSettingsStore((state) => state.user);
+  const authClass = useSettingsStore((state) => state.authClass);
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
-  useEffect(() => {
-    setAuthListener(setFormType, setAccess, setUser, setAuthClass, setUserObject);
-  }, [setFormType, setAccess, setUser, setAuthClass, setUserObject]);
+  Hub.listen("auth", (data) => {
+    switch (data.payload.event) {
+      case "signIn":
+        console.log("New User Signed in");
+        checkUser().then((use) => {
+          setUserObject(use);
+          setAccess(use.signInUserSession.accessToken.jwtToken);
+          setUser(use.attributes["custom:name"]);
+          setAuthClass(use.attributes["custom:authType"]);
+          setFormType("signedIn");
+        });
+
+        break;
+      case "signOut":
+        console.log("User Signed Out");
+        
+          setAccess("");
+          setUserObject({});
+          setUser("");
+          setAuthClass("");
+          setFormType("onNoUser");
+        ;
+        break;
+
+      default:
+        setFormType("onNoUser");
+        break;
+    }
+  });
 
   useEffect(() => {
     setIsLoading(true);
@@ -64,7 +91,7 @@ export function App() {
       {isLoading && <Loader />}
 
       <h1>Back Porch Bakery</h1>
-      {user && <h4>Welcome {user}</h4>}
+      {user && <h4>Welcome {user}.  Auth Class: {authClass} </h4>}
       <Router>
         {formType === "signedIn" && (
           <React.Fragment>

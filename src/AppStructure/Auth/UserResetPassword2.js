@@ -25,9 +25,7 @@ const initialState = {
 
 export const  UserResetPassword = () => {
   const setFormType = useSettingsStore((state) => state.setFormType);
-  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
   const setIsEdit = useSettingsStore((state) => state.setIsEdit);
-  const userObject = useSettingsStore((state) => state.userObject);
   const [showMessage, setShowMessage] = useState(false);
 
   
@@ -110,9 +108,6 @@ export const  UserResetPassword = () => {
       validationSchema={validationSchema}
       initialState={initialState}
       update={setNewPassword}
-      setIsLoading={setIsLoading}
-      setFormType={setFormType}
-      userObject={userObject}
     />
   );
 }
