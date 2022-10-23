@@ -1,6 +1,7 @@
 
 import { Auth } from "aws-amplify";
 import axios from "axios";
+import { checkUser } from "./AppStructure/Auth/AuthHelpers";
 
 const API_bpbrouterAuth =
   "https://8gw70qn5eb.execute-api.us-east-2.amazonaws.com/auth";
@@ -163,6 +164,59 @@ const updateCognitoUser = async (event) => {
   console.log("updateCognitoUser:", prod.status);
   return prod;
 };
+
+export const submitAuth = async (props) => {
+  console.log("submitProps", props);
+  const {email, password, setIsLoading, setFormType, setShowMessage} = props
+  
+    setIsLoading(true);
+    await Auth.signIn(email, password)
+      .then((use) => {
+        console.log("user", use);
+        console.log('use.challengeName', use.challengeName)
+        if (use.challengeName === "NEW_PASSWORD_REQUIRED") {
+          setIsLoading(false)
+          setFormType("resetPassword");
+          return
+        }
+        else if (use.attributes.email_verified === false) {
+          console.log("Yes it is!")
+          setIsLoading(false)
+          setFormType("verifyEmail");
+          return
+        } else {
+          setIsLoading(false)
+          setFormType("signedIn")
+        }
+        
+      })
+      .catch((error) => {
+        if (error) {
+          setShowMessage(true);
+          setIsLoading(false);
+        }
+      });
+  };
+
+  export const submitConfirm = async (props) => {
+    checkUser().then((user) => {
+
+      let event = {
+        token: user.signInUserSession.accessToken.jwtToken,
+        code: props.confirm,
+      };
+      console.log('event', event)
+      try {
+        axios.post(API_cognitoUser + "/confirmcognitoemail", event);
+      } catch (err) {
+        console.log("Error confirming code", err);
+      }
+    }).then((prod) => {
+      console.log("code confirm",prod)
+      return prod
+    })
+  };
+    
 
 // OLD STUFF
 

@@ -3,7 +3,6 @@ import { API, graphqlOperation } from "aws-amplify";
 
 import { getLocation, getUser, listLocationUsers } from "../../graphql/queries";
 
-
 //  Checks for and, if exists, returns full Cognito object for user
 export const checkUser = async () => {
   try {
@@ -30,18 +29,19 @@ export const fetchUserDetails = async (sub) => {
 export const setAuthListener = (setFormType, setUser, setUserDetails) => {
   Hub.listen("auth", (data) => {
     switch (data.payload.event) {
+      case "signIn":
+        console.log("New User Signed in");
+        checkUser().then(use => {
+          setUser(use.signInUserSession.accessToken.jwtToken)
+        })
+        setFormType("signedIn");
+        
+        break;
       case "signOut":
         console.log("User Signed Out");
         setFormType("onNoUser");
         break;
-      case "signIn":
-        console.log("New User Signed in");
-        setFormType("signedIn");
-        checkUser().then((use) => {
-          console.log("use",use)
-          setUser(use);
-        });
-        break;
+      
       default:
         break;
     }
@@ -65,7 +65,7 @@ export const grabAuth = async (loc, sub) => {
       },
     })
   );
-  console.log("authInfo",info)
+  console.log("authInfo", info);
   return info.data.listLocationUsers.items[0].authType;
 };
 
@@ -80,14 +80,13 @@ export const grabLocationUsers = async () => {
   return userList;
 };
 
-
 export const grabFullLocation = async (selected) => {
   console.log("getLocation");
 
-  console.log("selected",selected)
+  console.log("selected", selected);
   const locInfo = await API.graphql(
-    graphqlOperation(getLocation , { locNick: selected.locNick })
+    graphqlOperation(getLocation, { locNick: selected.locNick })
   );
-  let fullInfo = locInfo.data.getLocation
-  return fullInfo
-}
+  let fullInfo = locInfo.data.getLocation;
+  return fullInfo;
+};

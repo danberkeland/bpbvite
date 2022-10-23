@@ -5,6 +5,7 @@ import { InputNumber } from "primereact/inputnumber";
 import { SelectButton } from "primereact/selectbutton";
 import { Dropdown } from "primereact/dropdown";
 import { MultiSelect } from "primereact/multiselect";
+import { Password } from 'primereact/password';
 
 import { withFormComponentWrap } from "../hoc/withFormComponentWrap";
 
@@ -37,6 +38,22 @@ const CustomTextInputBase = ({ label, ...props }) => {
     <InputText
       {...props}
       type="string"
+      value={
+        props.value
+          ? props.value
+          : ""
+      }
+    />
+  );
+};
+
+const CustomPasswordInputBase = ({ label, ...props }) => {
+  
+  return (
+    <Password
+      {...props}
+      type="string"
+      toggleMask={true}
       value={
         props.value
           ? props.value
@@ -138,6 +155,7 @@ const CustomMultiSelectInputBase = ({ label, ...props }) => {
 export class CustomInputs {
   constructor() {
     this.CustomTextInput = withFormComponentWrap(CustomTextInputBase);
+    this.CustomPasswordInput = withFormComponentWrap(CustomPasswordInputBase);
     this.CustomIDInput = withFormComponentWrap(CustomIDInputBase);
     this.CustomFloatInput = withFormComponentWrap(CustomFloatInputBase);
     this.CustomIntInput = withFormComponentWrap(CustomIntInputBase);

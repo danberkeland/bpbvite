@@ -8,9 +8,8 @@ import { Divider } from "primereact/divider";
 import { Password } from "primereact/password";
 import { Dialog } from "primereact/dialog";
 import { classNames } from "primereact/utils";
-import "./Splash.css";
-
 import { CenteredContainer, Title } from "../../CommonStyles";
+import "./Splash.css";
 
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
@@ -77,13 +76,22 @@ export const Splash = () => {
     setIsLoading(true);
     await Auth.signIn(data.email, data.password)
       .then((use) => {
+        console.log("user", use);
+        console.log('use.challengeName', use.challengeName)
         if (use.challengeName === "NEW_PASSWORD_REQUIRED") {
-          console.log("user", use);
-          setUser(use);
+          setIsLoading(false)
           setFormType("resetPassword");
+          return
         }
-        setIsLoading(false);
-        setFormType("signedIn")
+        else if (use.attributes.email_verified === false) {
+          console.log("Yes it is!")
+          setIsLoading(false)
+          setFormType("verifyEmail");
+          return
+        } else {
+          setFormType("signedIn")
+        }
+        
       })
       .catch((error) => {
         if (error) {
@@ -126,7 +134,7 @@ export const Splash = () => {
             <Title>Sign In</Title>
             <div>
               Don't have an account?{" "}
-              <Button className="p-button-text" onClick={handleApply}>
+              <Button className="p-button-text" onClick={handleApply} type="button">
                 APPLY NOW
               </Button>
             </div>
@@ -189,7 +197,7 @@ export const Splash = () => {
                       </div>
                     )}
                   />
-                  <Button className="p-button-text">
+                  <Button className="p-button-text" type="button">
                     Forgot your password?
                   </Button>
                   <Button type="submit" label="Submit" className="mt-2" />

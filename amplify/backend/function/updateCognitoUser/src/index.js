@@ -25,6 +25,10 @@ const updateUser = async (event) => {
           Name: "custom:authType",
           Value: authClass,
         },
+        {
+          Name: "email",
+          Value: email,
+        },
       ]
      
     };

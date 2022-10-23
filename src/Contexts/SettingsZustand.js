@@ -9,7 +9,7 @@ let today = DateTime.now().setZone("America/Los_Angeles").toString().split("T")[
 
 
 const store = (set) => ({
-  user: "",
+  user: {username: ""},
   setUser: (user) => set(() => ({ user: user })),
   formType: "",
   setFormType: (formType) => set(() => ({ formType: formType })),

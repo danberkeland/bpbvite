@@ -43,6 +43,8 @@ export const UserResetPassword = () => {
   };
 
   const onSubmit = async (data, form) => {
+    console.log('user', user)
+    console.log('data.newPassword', data.newPassword)
     setIsLoading(true)
     await Auth.completeNewPassword(user, data.newPassword).then((use) => {
       setFormType("onNoUser");

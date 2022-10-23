@@ -10,10 +10,11 @@ import {
   useLocation,
 } from "react-router-dom";
 
-import { Splash } from "./AppStructure/Auth/Splash";
+import { Splash } from "./AppStructure/Auth/Splash2";
 import { UserApplyForm } from "./AppStructure/Auth/UserApplyForm";
 import { UserResetPassword } from "./AppStructure/Auth/UserResetPassword";
 import { UserApplyThanks } from "./AppStructure/Auth/UserApplyThanks";
+import { VerifyEmail } from "./AppStructure/Auth/VerifyEmail";
 
 import { NavBottom } from "./AppStructure/Nav";
 
@@ -24,7 +25,7 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "./index.css";
 
-import { checkUser } from "./AppStructure/Auth/AuthHelpers";
+import { checkUser, setAuthListener } from "./AppStructure/Auth/AuthHelpers";
 import Loader from "./AppStructure/Loader";
 import { useSettingsStore } from "./Contexts/SettingsZustand";
 
@@ -32,9 +33,17 @@ Amplify.configure(awsmobile);
 
 export function App() {
   const setFormType = useSettingsStore((state) => state.setFormType);
+  const setUserDetails = useSettingsStore((state) => state.setUserDetails);
+  const setUser = useSettingsStore((state) => state.setUser);
   const formType = useSettingsStore((state) => state.formType);
   const isLoading = useSettingsStore((state) => state.isLoading);
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
+
+ 
+  useEffect(() => {
+    setAuthListener(setFormType, setUser, setUserDetails )
+  },[setFormType, setUser, setUserDetails])
+
 
   useEffect(() => {
     setIsLoading(true);
@@ -58,6 +67,7 @@ export function App() {
           </React.Fragment>
         )}
         {formType === "onNoUser" && <Splash />}
+        {formType === "verifyEmail" && <VerifyEmail />}
         {formType === "Apply" && <UserApplyForm />}
         {formType === "resetPassword" && <UserResetPassword />}
         {formType === "Thankyou" && <UserApplyThanks />}
