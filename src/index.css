@@ -160,3 +160,7 @@ div .photoBox {
     top: 0px;
     right: 0px
 }
+
+.p-password input {
+  width: 100%;
+}

@@ -22,8 +22,7 @@ const initialState = {
   password: "",
 };
 
-
-export const  Splash = () => {
+export const Splash = () => {
   //const setFormType = useSettingsStore((state) => state.setFormType);
   const setIsEdit = useSettingsStore((state) => state.setIsEdit);
   const [showMessage, setShowMessage] = useState(false);
@@ -38,27 +37,26 @@ export const  Splash = () => {
       />
     </div>
   );
-    
+
   const handleApply = () => {
     //setFormType("Apply");
   };
 
- useEffect(()=> {
-  setIsEdit(true)
- })
+  useEffect(() => {
+    setIsEdit(true);
+  });
 
   const BPBLocationForm = compose(
     withBPBForm,
     withFadeIn
   )((props) => {
-  
     return (
       <React.Fragment>
         <GroupBox>
           <div className="flex justify-content-center">
             <div className="card">
               <Title>Sign In</Title>
-              <div>
+              {/*<div>
                 Don't have an account?{" "}
                 <Button
                   className="p-button-text"
@@ -67,8 +65,12 @@ export const  Splash = () => {
                 >
                   APPLY NOW
                 </Button>
-              </div>
-              <BPB.CustomTextInput label="Email" name="email" converter={props} />
+    </div>*/}
+              <BPB.CustomTextInput
+                label="Email"
+                name="email"
+                converter={props}
+              />
               <BPB.CustomPasswordInput
                 label="Password"
                 name="password"
@@ -106,8 +108,8 @@ export const  Splash = () => {
       name="auth"
       validationSchema={validationSchema}
       initialState={initialState}
-      update={submitAuth}   
+      update={submitAuth}
       setShowMessage={setShowMessage}
     />
   );
-}
+};

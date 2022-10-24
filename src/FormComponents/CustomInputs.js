@@ -54,6 +54,7 @@ const CustomPasswordInputBase = ({ label, ...props }) => {
       {...props}
       type="string"
       toggleMask={true}
+  
       value={
         props.value
           ? props.value
