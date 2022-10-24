@@ -79,10 +79,13 @@ function CustomerDescription(props) {
 
   const handleLocChoice = (e, arrayHelpers) => {
     op.current.toggle(e);
+    console.log("e",e)
     let ind = simpleLocationList.data.findIndex(
       (simp) => simp.value === e.value
     );
-    let name = simpleLocationList.data[ind].sub;
+    console.log('ind', ind)
+    let name = simpleLocationList.data[ind].label;
+    console.log('simpleLocationList.data[ind]', simpleLocationList.data[ind])
     arrayHelpers.push({ locName: name, locNick: e.value, authType: 1 });
     const newLocUser = {
       authType: 1,
@@ -91,6 +94,7 @@ function CustomerDescription(props) {
       locName: name,
       Type: "LocationUser",
     };
+    console.log("newLocUser",newLocUser)
     createLocationUser(newLocUser);
   };
 
@@ -131,7 +135,6 @@ function CustomerDescription(props) {
       <BPB.CustomTextInput
         label="Email"
         name="email"
-        dontedit="true"
         converter={props}
       />
 

@@ -22,6 +22,8 @@ export const withBPBForm = (Component) => (props) => {
   const user = useSettingsStore((state) => state.user);
   const authClass = useSettingsStore((state) => state.authClass);
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
+  const userObject = useSettingsStore((state)=>state.userObject)
+
 
   props = {
     ...props,
@@ -39,16 +41,17 @@ export const withBPBForm = (Component) => (props) => {
     isLoading,
     user,
     authClass,
-    setIsLoading
+    setIsLoading,
+    userObject
 
   };
-  console.log("Formprops", props);
-
+  
+  
   let str = props.name;
   let source = str + "List";
   let path = "/" + str.charAt(0).toUpperCase() + str.slice(1) + "s";
 
-  let fns = props;
+  let fns = props
 
   var sourceVar = window[source];
 
@@ -70,14 +73,18 @@ export const withBPBForm = (Component) => (props) => {
         initialValues={props.initialState}
         validationSchema={props.validationSchema(sourceVar)}
         onSubmit={(props) => {
+          console.log("Formprops", props);
+          console.log("fns",fns)
           window.scrollTo(0, 0);
           setIsEdit(false);
           if (isCreate) {
-            fns.create(props).then(() => {
+            fns.create(props, fns).then(() => {
               window.location = path;
             });
           } else {
+            
             fns.update({ ...props, ...fns }).then(() => {
+              console.log("Formprops", props);
               formType === "signedIn" ? (window.location = path) : <div></div>;
             });
           }

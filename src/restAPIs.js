@@ -1,7 +1,6 @@
 
 import { Auth } from "aws-amplify";
 import axios from "axios";
-import { setSourceMapRange } from "typescript";
 import { checkUser } from "./AppStructure/Auth/AuthHelpers";
 
 const API_bpbrouterAuth =
@@ -221,11 +220,11 @@ export const submitAuth = async (props) => {
 
 
   export const setNewPassword = async (props) => {
-    const {setIsLoading, setFormType, passwordNew, userObject} = props
+    const {setIsLoading, setFormType, passwordConfirm, userObject} = props
     console.log("newPasswordProps", props)
     
     setIsLoading(true)
-    await Auth.completeNewPassword(userObject, passwordNew).then((use) => {
+    await Auth.completeNewPassword(userObject, passwordConfirm).then((use) => {
       setFormType("onNoUser");
       setIsLoading(false)
     });

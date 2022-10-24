@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { CustomInputs } from "../../FormComponents/CustomInputs";
 
-import { validationSchema } from "./ValidationSchema";
+import { validationSchemaConfirm } from "./ValidationSchemaConfirm";
 
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
@@ -75,6 +75,11 @@ export const  UserResetPassword = () => {
                 name="passwordNew"
                 converter={props}
               />
+              <BPB.CustomPasswordInput
+                label="Confirm New Password"
+                name="passwordConfirm"
+                converter={props}
+              />
             </div>
           </div>
         </GroupBox>
@@ -105,7 +110,7 @@ export const  UserResetPassword = () => {
   return (
     <BPBLocationForm
       name="auth"
-      validationSchema={validationSchema}
+      validationSchema={validationSchemaConfirm}
       initialState={initialState}
       update={setNewPassword}
     />

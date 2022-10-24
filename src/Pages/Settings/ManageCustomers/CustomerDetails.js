@@ -20,8 +20,7 @@ function CustomerDetails({
     withBPBForm,
     withFadeIn
   )((props) => {
-    console.log("props.values", props.values);
-
+  
     return (
       <React.Fragment>
         <div className="productDetails">

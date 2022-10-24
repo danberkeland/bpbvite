@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CustomInputs } from "../../FormComponents/CustomInputs";
 
 import { validationSchema } from "./ValidationSchema";
@@ -24,7 +24,7 @@ const initialState = {
 
 
 export const  Splash = () => {
-  const setFormType = useSettingsStore((state) => state.setFormType);
+  //const setFormType = useSettingsStore((state) => state.setFormType);
   const setIsEdit = useSettingsStore((state) => state.setIsEdit);
   const [showMessage, setShowMessage] = useState(false);
 
@@ -38,12 +38,14 @@ export const  Splash = () => {
       />
     </div>
   );
-
+    
   const handleApply = () => {
-    setFormType("Apply");
+    //setFormType("Apply");
   };
 
+ useEffect(()=> {
   setIsEdit(true)
+ })
 
   const BPBLocationForm = compose(
     withBPBForm,
@@ -105,6 +107,7 @@ export const  Splash = () => {
       validationSchema={validationSchema}
       initialState={initialState}
       update={submitAuth}   
+      setShowMessage={setShowMessage}
     />
   );
 }
