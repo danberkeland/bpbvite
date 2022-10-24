@@ -4,6 +4,17 @@ import AnimatedRoutes from "./AnimatedRoutes";
 import { useSettingsStore } from "../Contexts/SettingsZustand";
 
 const itemsAuth2 = [
+  
+  {
+    label: "Ordering",
+    icon: "pi pi-fw pi-shopping-cart",
+    command: () => {
+      window.location = "/Ordering";
+    },
+  }
+];
+
+const itemsAuth1 = itemsAuth2.concat([
   {
     label: "Production",
     icon: "pi pi-fw pi-chart-bar",
@@ -25,13 +36,7 @@ const itemsAuth2 = [
       window.location = "/EODCounts";
     },
   },
-  {
-    label: "Ordering",
-    icon: "pi pi-fw pi-shopping-cart",
-    command: () => {
-      window.location = "/Ordering";
-    },
-  },
+  
   {
     label: "Locations",
     icon: "pi pi-fw pi-map-marker",
@@ -46,9 +51,6 @@ const itemsAuth2 = [
       window.location = "/Products";
     },
   },
-];
-
-const itemsAuth1 = itemsAuth2.concat([
   {
     label: "Billing",
     icon: "pi pi-fw pi-dollar",
@@ -73,10 +75,15 @@ const itemsAuth1 = itemsAuth2.concat([
 
 function Pages(props) {
   const setItems = useSettingsStore((state) => state.setItems);
-
+  const authClass = useSettingsStore((state) => state.authClass);
   useEffect(() => {
-    setItems(itemsAuth1);
-  }, []);
+    if (authClass === "customer"){
+      setItems(itemsAuth2);
+    } else {
+      setItems(itemsAuth1)
+    }
+   
+  }, [authClass]);
 
   return (
     <AnimatedRoutes

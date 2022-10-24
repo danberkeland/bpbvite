@@ -16,8 +16,10 @@ import ManageCustomers from "../Pages/Settings/ManageCustomers/ManageCustomers";
 import { NavSide } from "./Nav";
 
 import { AnimatePresence } from "framer-motion";
+import { useSettingsStore } from "../Contexts/SettingsZustand";
 
 function AnimatedRoutes({ Routes, Route, useLocation }) {
+  const authClass = useSettingsStore((state) => state.authClass);
   const location = useLocation();
 
   return (
@@ -28,14 +30,22 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
         <Route path="/CustomerBilling" element={<CustomerBilling />} />
         <Route path="/CustomerSettings" element={<CustomerSettings />} />
         <Route path="/CustomerProducts" element={<CustomerProducts />} />
-        <Route path="/Production" element={<Production />} />
-        <Route path="/Products" element={<Products />} />
-        <Route path="/Settings" element={<Settings />} />
-        <Route path="/Billing" element={<Billing />} />
-        <Route path="/EODCounts" element={<EODCounts />} />
-        <Route path="/Logistics" element={<Logistics />} />
-        <Route path="/Locations" element={<Locations />} />
-        <Route path="/Settings/ManageCustomers" element={<ManageCustomers />} />
+        {authClass !== "customer" && (
+          <React.Fragment>
+            <Route path="/Production" element={<Production />} />
+            <Route path="/Products" element={<Products />} />
+            <Route path="/Settings" element={<Settings />} />
+            <Route path="/Billing" element={<Billing />} />
+            <Route path="/EODCounts" element={<EODCounts />} />
+            <Route path="/Logistics" element={<Logistics />} />
+            <Route path="/Locations" element={<Locations />} />
+            <Route
+              path="/Settings/ManageCustomers"
+              element={<ManageCustomers />}
+            />
+          </React.Fragment>
+        )}
+
         <Route path="/" element={<NavSide />} />
       </Routes>
     </AnimatePresence>

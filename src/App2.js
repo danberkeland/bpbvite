@@ -55,6 +55,8 @@ export function App() {
           setUser(use.attributes["custom:name"]);
           setAuthClass(use.attributes["custom:authType"]);
           setFormType("signedIn");
+          window.location = "/";
+
         });
 
         break;
