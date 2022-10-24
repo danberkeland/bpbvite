@@ -15,6 +15,7 @@ import { UserApplyForm } from "./AppStructure/Auth/UserApplyForm";
 import { UserResetPassword } from "./AppStructure/Auth/UserResetPassword2";
 import { UserApplyThanks } from "./AppStructure/Auth/UserApplyThanks";
 import { VerifyEmail } from "./AppStructure/Auth/VerifyEmail";
+import { ForgotPassword } from "./AppStructure/Auth/ForgotPassword";
 
 import { NavBottom } from "./AppStructure/Nav";
 
@@ -69,7 +70,7 @@ export function App() {
         break;
 
       default:
-        setFormType("onNoUser");
+        
         break;
     }
   });
@@ -103,6 +104,7 @@ export function App() {
         {formType === "verifyEmail" && <VerifyEmail />}
         {formType === "Apply" && <UserApplyForm />}
         {formType === "resetPassword" && <UserResetPassword />}
+        {formType === "forgotPassword" && <ForgotPassword />}
         {formType === "Thankyou" && <UserApplyThanks />}
       </Router>
     </React.Fragment>

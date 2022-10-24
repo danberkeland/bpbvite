@@ -231,6 +231,27 @@ export const submitAuth = async (props) => {
     
   };
 
+  export const sendForgottenPasswordEmail = async(email) => {
+    console.log('Forgotprops', email)
+    Auth.forgotPassword(email)
+    .then(data => console.log(data))
+    .catch(err => console.log(err));
+  }
+
+  export const resetPassword = async (props) => {
+    const {email, code, passwordNew, setFormType, setIsLoading} = props
+    console.log("newPasswordProps", props)
+    
+    Auth.forgotPasswordSubmit(email, code, passwordNew)
+    .then(data => console.log(data))
+    .catch(err => console.log(err)).then((use) => {
+      setFormType("onNoUser");
+      setIsLoading(false)
+      
+    });
+    
+  };
+
 // OLD STUFF
 
 const API_testingGrQL =

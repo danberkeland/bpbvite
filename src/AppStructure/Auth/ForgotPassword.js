@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { CustomInputs } from "../../FormComponents/CustomInputs";
 
-import { validationSchema } from "./ValidationSchema";
+import { validationSchemaConfirm } from "./ValidationSchemaConfirm";
 
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 
-import { submitAuth, sendForgottenPasswordEmail } from "../../restAPIs";
+import { resetPassword } from "../../restAPIs";
 import { withFadeIn } from "../../hoc/withFadeIn";
 import { withBPBForm } from "../../hoc/withBPBForm";
 import { GroupBox } from "../../CommonStyles";
@@ -18,14 +18,18 @@ import { useSettingsStore } from "../../Contexts/SettingsZustand";
 const BPB = new CustomInputs();
 
 const initialState = {
-  email: "",
-  password: "",
+  code: "",
+  passwordNew: "",
+  passwordConfirm: ""
 };
 
-export const Splash = () => {
+
+export const  ForgotPassword = () => {
   const setFormType = useSettingsStore((state) => state.setFormType);
   const setIsEdit = useSettingsStore((state) => state.setIsEdit);
   const [showMessage, setShowMessage] = useState(false);
+
+  
 
   const dialogFooter = (
     <div className="flex justify-content-center">
@@ -38,58 +42,44 @@ export const Splash = () => {
     </div>
   );
 
-  const handleApply = () => {
-    //setFormType("Apply");
-  };
 
-  const handleForgotPassword = async (props) => {
-    await sendForgottenPasswordEmail(props.values.email).then(() => setFormType("forgotPassword"))
-    
-  }
-
-  useEffect(() => {
-    setIsEdit(true);
-  });
+  setIsEdit(true)
 
   const BPBLocationForm = compose(
     withBPBForm,
     withFadeIn
   )((props) => {
+  
     return (
       <React.Fragment>
         <GroupBox>
           <div className="flex justify-content-center">
             <div className="card">
-              <Title>Sign In</Title>
-              {/*<div>
-                Don't have an account?{" "}
-                <Button
-                  className="p-button-text"
-                  onClick={handleApply}
-                  type="button"
-                >
-                  APPLY NOW
-                </Button>
-    </div>*/}
+              <Title>Confirm New Password</Title>
+              <div>
+                A confirmation code has been sent to your email.{" "}
+                
+              </div>
               <BPB.CustomTextInput
                 label="Email"
                 name="email"
                 converter={props}
               />
+              <BPB.CustomTextInput label="Confirmation Code" name="code" converter={props} />
+              
+               <BPB.CustomPasswordInput
+                label="New Password"
+                name="passwordNew"
+                converter={props}
+              />
               <BPB.CustomPasswordInput
-                label="Password"
-                name="password"
+                label="Confirm New Password"
+                name="passwordConfirm"
                 converter={props}
               />
             </div>
           </div>
         </GroupBox>
-        <Button
-          label="Forgot your password?"
-          type="button"
-          className="p-button-outlined p-button-primary"
-          onClick={e => handleForgotPassword(props)}
-        />
         <Dialog
           visible={showMessage}
           onHide={() => setShowMessage(false)}
@@ -117,10 +107,9 @@ export const Splash = () => {
   return (
     <BPBLocationForm
       name="auth"
-      validationSchema={validationSchema}
+      validationSchema={validationSchemaConfirm}
       initialState={initialState}
-      update={submitAuth}
-      setShowMessage={setShowMessage}
+      update={resetPassword}
     />
   );
-};
+}
