@@ -73,6 +73,7 @@ export const withBPBForm = (Component) => (props) => {
         initialValues={props.initialState}
         validationSchema={props.validationSchema(sourceVar)}
         onSubmit={(props) => {
+          setIsLoading(true)
           console.log("Formprops", props);
           console.log("fns",fns)
           window.scrollTo(0, 0);
