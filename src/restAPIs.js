@@ -161,8 +161,7 @@ export const submitAuth = async (props) => {
     setIsLoading,
     setFormType,
     setShowMessage,
-    setUserObject,
-    userObject,
+    setUserObject
   } = props;
   console.log("submitProps", props);
 
@@ -170,14 +169,12 @@ export const submitAuth = async (props) => {
   await Auth.signIn(email, password)
     .then((use) => {
       setUserObject(use);
-      console.log("user", use);
-      console.log("use.challengeName", use.challengeName);
+  
       if (use.challengeName === "NEW_PASSWORD_REQUIRED") {
         setIsLoading(false);
         setFormType("resetPassword");
         return;
       } else if (use.attributes.email_verified === false) {
-        console.log("Yes it is!");
         setIsLoading(false);
         setFormType("verifyEmail");
         return;
@@ -201,7 +198,6 @@ export const submitConfirm = async (props) => {
         token: user.signInUserSession.accessToken.jwtToken,
         code: props.confirm,
       };
-      console.log("event", event);
       try {
         axios.post(API_cognitoUser + "/confirmcognitoemail", event);
       } catch (err) {
@@ -216,8 +212,6 @@ export const submitConfirm = async (props) => {
 
 export const setNewPassword = async (props) => {
   const { setIsLoading, setFormType, passwordConfirm, userObject } = props;
-  console.log("newPasswordProps", props);
-
   setIsLoading(true);
   await Auth.completeNewPassword(userObject, passwordConfirm).then((use) => {
     setFormType("onNoUser");
@@ -226,7 +220,6 @@ export const setNewPassword = async (props) => {
 };
 
 export const sendForgottenPasswordEmail = async (email) => {
-  console.log("Forgotprops", email);
   Auth.forgotPassword(email)
     .then((data) => console.log(data))
     .catch((err) => console.log(err));
@@ -234,8 +227,6 @@ export const sendForgottenPasswordEmail = async (email) => {
 
 export const resetPassword = async (props) => {
   const { email, code, passwordNew, setFormType, setIsLoading } = props;
-  console.log("newPasswordProps", props);
-
   Auth.forgotPasswordSubmit(email, code, passwordNew)
     .then((data) => console.log(data))
     .catch((err) => console.log(err))
