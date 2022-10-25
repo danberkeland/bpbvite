@@ -3,9 +3,9 @@
     {
       "type": "ProjectLayer",
       "resourceName": "bpbadmin2SDKLayer",
-      "env": "auththree",
       "version": "Always choose latest version",
-      "isLatestVersionSelected": true
+      "isLatestVersionSelected": true,
+      "env": "auththree"
     }
   ]
 }

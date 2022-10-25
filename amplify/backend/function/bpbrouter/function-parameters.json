@@ -20,9 +20,9 @@
     {
       "type": "ProjectLayer",
       "resourceName": "bpbadmin2testFetchLayer",
-      "env": "auththree",
       "version": "Always choose latest version",
-      "isLatestVersionSelected": true
+      "isLatestVersionSelected": true,
+      "env": "auththree"
     }
   ]
 }
