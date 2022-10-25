@@ -29,9 +29,14 @@ const query = /* GraphQL */ `
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
-const updateLocationUser = async (event) => {
+const updateLocationUsers = async (event) => {
   console.log("locUserEvent", event);
-  let response = await mainCall(query, event);
+  let response
+  let myArray = JSON.parse(event.body)
+  for (let item of myArray){
+    console.log("item",item)
+  response = await mainCall(query, {body: item});
+  }
   return response;
 };
-export default updateLocationUser;
+export default updateLocationUsers;

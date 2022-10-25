@@ -33,7 +33,7 @@ export const fetcher = async (event, path, fetchType) => {
   let obj;
   try {
     obj = await axios.post(root + path, event, {
-      headers: headers,
+      headers: headers
     });
   } catch (err) {
     console.log(`Error creating ${path}`, err);
@@ -69,8 +69,9 @@ export const deleteLocation = (event) => {
 export const createUser = async (event) => {
   await createCognitoUser(event)
     .then((newEvent) => {
-      fetcher(newEvent.data.newerEvent, "/users/createUser", "route");
-      return newEvent.data.newLocUser;
+      console.log('newEvent', newEvent)
+      fetcher(newEvent.newerEvent, "/users/createUser", "route");
+      return newEvent.newLocUser;
     })
     .then((newLocUser) => {
       return createLocationUser(newLocUser);
@@ -78,12 +79,15 @@ export const createUser = async (event) => {
 };
 
 export const updateUser = async (event) => {
+  console.log('Entryevent', event)
   await updateCognitoUser(event)
     .then((newEvent) => {
-      fetcher(newEvent.data.newerEvent, "/users/updateUser", "route");
-      return newEvent.data.newLocUsers;
+      console.log('newEvent', newEvent)
+      fetcher(newEvent.newerEvent, "/users/updateUser", "route");
+      return newEvent.newLocUser;
     })
     .then((newLocUsers) => {
+      console.log('newLocUsers', newLocUsers)
       return updateLocationUsers(newLocUsers);
     });
 };

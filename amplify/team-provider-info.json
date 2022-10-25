@@ -197,7 +197,7 @@
         },
         "bpbrouter": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
-          "s3Key": "amplify-builds/bpbrouter-68372b77616d6d42555a-build.zip"
+          "s3Key": "amplify-builds/bpbrouter-47647737702b70494a38-build.zip"
         },
         "deleteCognitoUser": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
@@ -209,11 +209,11 @@
         },
         "createCognitoUser": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
-          "s3Key": "amplify-builds/createCognitoUser-4b74696a6f6549355635-build.zip"
+          "s3Key": "amplify-builds/createCognitoUser-6c336b57334652722f77-build.zip"
         },
         "updateCognitoUser": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
-          "s3Key": "amplify-builds/updateCognitoUser-667573503276314a7a30-build.zip"
+          "s3Key": "amplify-builds/updateCognitoUser-35696153346266385945-build.zip"
         },
         "confirmCognitoEmail": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",

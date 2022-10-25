@@ -22,10 +22,9 @@ export const withBPBForm = (Component) => (props) => {
   const user = useSettingsStore((state) => state.user);
   const authClass = useSettingsStore((state) => state.authClass);
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
-  const userObject = useSettingsStore((state)=>state.userObject)
-  const currentLoc = useSettingsStore((state)=>state.currentLoc)
-  const setCurrentLoc = useSettingsStore((state)=>state.setCurrentLoc)
-
+  const userObject = useSettingsStore((state) => state.userObject);
+  const currentLoc = useSettingsStore((state) => state.currentLoc);
+  const setCurrentLoc = useSettingsStore((state) => state.setCurrentLoc);
 
   props = {
     ...props,
@@ -46,16 +45,14 @@ export const withBPBForm = (Component) => (props) => {
     setIsLoading,
     userObject,
     currentLoc,
-    setCurrentLoc
-
+    setCurrentLoc,
   };
-  
-  
+
   let str = props.name;
   let source = str + "List";
   let path = "/" + str.charAt(0).toUpperCase() + str.slice(1) + "s";
 
-  let fns = props
+  let fns = props;
 
   var sourceVar = window[source];
 
@@ -77,9 +74,9 @@ export const withBPBForm = (Component) => (props) => {
         initialValues={props.initialState}
         validationSchema={props.validationSchema(sourceVar)}
         onSubmit={(props) => {
-          setIsLoading(true)
+          setIsLoading(true);
           console.log("Formprops", props);
-          console.log("fns",fns)
+          console.log("fns", fns);
           window.scrollTo(0, 0);
           setIsEdit(false);
           if (isCreate) {
@@ -87,8 +84,7 @@ export const withBPBForm = (Component) => (props) => {
               window.location = path;
             });
           } else {
-            
-            fns.update({ ...props, ...fns }).then(() => {
+            fns.update({ ...fns, ...props }).then(() => {
               console.log("Formprops", props);
               formType === "signedIn" ? (window.location = path) : <div></div>;
             });
@@ -111,6 +107,9 @@ export const withBPBForm = (Component) => (props) => {
                   )}
                 </div>
               ) : (
+                <div></div>
+              )}
+              {formType !== "signedIn" && (
                 <Button label="Submit" type="submit" style={editButtonStyle} />
               )}
 

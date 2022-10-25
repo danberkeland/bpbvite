@@ -48,8 +48,9 @@ const createUser = async (event) => {
 };
 
 exports.handler = async (event) => {
+  let resp
   console.log(`EVENT: ${JSON.stringify(event)}`);
-  await createUser(event).then((data) => {
+  let response = await createUser(event).then((data) => {
     console.log("returnData", data);
 
     let newerEvent = {
@@ -68,9 +69,15 @@ exports.handler = async (event) => {
       Type: "LocationUser",
     };
 
-    return {
+    console.log("newerEvent", newerEvent)
+    console.log("newLocUser", newLocUser)
+    
+    resp = {
+      body : {
       newerEvent: newerEvent,
       newLocUser: newLocUser,
-    };
+    }
+    }
   });
+  return resp
 };

@@ -56,6 +56,7 @@ function CustomerDetails({
         create={createUser}
         delete={deleteUser}
         update={updateUser}
+        tag={activeIndex}
       />
     </React.Fragment>
   );
