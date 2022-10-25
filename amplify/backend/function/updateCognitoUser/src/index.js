@@ -29,6 +29,10 @@ const updateUser = async (event) => {
           Name: "email",
           Value: email,
         },
+        {
+          Name: "custom:defLoc",
+          Value: defLoc,
+        },
       ]
      
     };

@@ -34,6 +34,8 @@ const store = (set) => ({
   setIsCreate: (isCreate) => set(() => ({ isCreate: isCreate })),
   isChange: false,
   setIsChange: (isChange) => set(() => ({ isChange: isChange })),
+  currentLoc: "",
+  setCurrentLoc: (currentLoc) => set(() => ({ currentLoc: currentLoc })),
 });
 
 export const useSettingsStore = create(devtools(store));

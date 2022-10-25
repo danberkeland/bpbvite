@@ -19,6 +19,7 @@ mutation MyMutation($Type: String!, $authType: Int, $locNick: String!, $sub: Str
  */
 const createLocationUser = async (event) => {
   console.log("locUserEvent", event)
+  
   let response = await mainCall(query, event);
   return response;
 };

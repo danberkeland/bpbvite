@@ -23,6 +23,8 @@ export const withBPBForm = (Component) => (props) => {
   const authClass = useSettingsStore((state) => state.authClass);
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
   const userObject = useSettingsStore((state)=>state.userObject)
+  const currentLoc = useSettingsStore((state)=>state.currentLoc)
+  const setCurrentLoc = useSettingsStore((state)=>state.setCurrentLoc)
 
 
   props = {
@@ -42,7 +44,9 @@ export const withBPBForm = (Component) => (props) => {
     user,
     authClass,
     setIsLoading,
-    userObject
+    userObject,
+    currentLoc,
+    setCurrentLoc
 
   };
   

@@ -1,4 +1,3 @@
-
 import { Auth } from "aws-amplify";
 import axios from "axios";
 import { checkUser } from "./AppStructure/Auth/AuthHelpers";
@@ -11,21 +10,30 @@ const API_cognitoUser =
 
 // NEW STUFF
 
-
-export const fetcher = async (event, path) => {
-  const user = await Auth.currentAuthenticatedUser();
-  const token = user.signInUserSession.idToken.jwtToken;
-  console.log("token", token);
-
-  console.log("event", event);
+export const fetcher = async (event, path, fetchType) => {
+  let root;
+  let user;
+  let token;
+  let headers;
+  if (fetchType === "route") {
+    root = API_bpbrouterAuth;
+    user = await Auth.currentAuthenticatedUser();
+    token = user.signInUserSession.idToken.jwtToken;
+    headers = {
+      "content-type": "application/json",
+      Authorization: token,
+    };
+  } else if (fetchType === "cognito") {
+    root = API_cognitoUser;
+    headers = {
+      "content-type": "application/json",
+    };
+  }
 
   let obj;
   try {
-    obj = await axios.post(API_bpbrouterAuth + path, event, {
-      headers: {
-        "content-type": "application/json",
-        Authorization: token,
-      },
+    obj = await axios.post(root + path, event, {
+      headers: headers,
     });
   } catch (err) {
     console.log(`Error creating ${path}`, err);
@@ -35,63 +43,55 @@ export const fetcher = async (event, path) => {
 };
 
 export const createProduct = (event) => {
-  return fetcher(event, "/products/createProduct");
-};
-
-export const deleteProduct = (event) => {
-  return fetcher(event.values, "/products/deleteProduct");
+  return fetcher(event, "/products/createProduct", "route");
 };
 
 export const updateProduct = (event) => {
-  return fetcher(event, "/products/updateProduct");
+  return fetcher(event, "/products/updateProduct", "route");
+};
+
+export const deleteProduct = (event) => {
+  return fetcher(event.values, "/products/deleteProduct", "route");
 };
 
 export const createLocation = (event) => {
-  return fetcher(event, "/locations/createLocation");
-};
-
-export const deleteLocation = (event) => {
-  return fetcher(event.values, "/locations/deleteLocation");
+  return fetcher(event, "/locations/createLocation", "route");
 };
 
 export const updateLocation = (event) => {
-  return fetcher(event, "/locations/updateLocation");
+  return fetcher(event, "/locations/updateLocation", "route");
+};
+
+export const deleteLocation = (event) => {
+  return fetcher(event.values, "/locations/deleteLocation", "route");
 };
 
 export const createUser = async (event) => {
-  let newEvent = await createCognitoUser(event);
-
-  let newerEvent = {
-    sub: newEvent.data.User.Username,
-    name: event.custName,
-    authClass: event.authClass,
-    email: event.email,
-    phone: event.phone,
-    locNick: event.defLoc,
-  };
-
-  const newLocUser = {
-    authType: 3,
-    locNick: event.defLoc,
-    sub: newEvent.data.User.Username,
-    Type: "LocationUser",
-  };
-
-  console.log("newLocUser", newLocUser);
-
-  return fetcher(newerEvent, "/users/createUser").then((result) =>
-    fetcher(newLocUser, "/locationUsers/createLocationUser")
-  );
-};
-
-export const deleteUser = (event) => {
-  deleteCognitoUser(event);
-  return fetcher(event, "/users/deleteUser");
+  await createCognitoUser(event)
+    .then((newEvent) => {
+      fetcher(newEvent.data.newerEvent, "/users/createUser", "route");
+      return newEvent.data.newLocUser;
+    })
+    .then((newLocUser) => {
+      return createLocationUser(newLocUser);
+    });
 };
 
 export const updateUser = async (event) => {
+  await updateCognitoUser(event)
+    .then((newEvent) => {
+      fetcher(newEvent.data.newerEvent, "/users/updateUser", "route");
+      return newEvent.data.newLocUsers;
+    })
+    .then((newLocUsers) => {
+      return updateLocationUsers(newLocUsers);
+    });
+};
+
+/*
+export const updateUser = async (event) => {
   let newEvent = await updateCognitoUser(event);
-  console.log('Userevent', event)
+  console.log("Userevent", event);
 
   let newerEvent = {
     sub: event.sub,
@@ -110,147 +110,140 @@ export const updateUser = async (event) => {
       id: cust.id,
       Type: "LocationUser",
     };
-    console.log('newLocUser', newLocUser)
-    await fetcher(newLocUser, "/locationUsers/updateLocationUser");
+    console.log("newLocUser", newLocUser);
+    await fetcher(newLocUser, "/locationUsers/updateLocationUser", "route");
   }
-  console.log('newerEvent', newerEvent)
-  return fetcher(newerEvent, "/users/updateUser");
+  console.log("newerEvent", newerEvent);
+  return fetcher(newerEvent, "/users/updateUser", "route");
 };
 
-export const getOrder = (event) => {
-  return fetcher(event, "/orders/getOrder");
+*/
+
+export const deleteUser = (event) => {
+  deleteCognitoUser(event);
+  return fetcher(event, "/users/deleteUser", "route");
 };
 
 export const createLocationUser = (event) => {
-  return fetcher(event, "/locationUsers/createLocationUser");
+  return fetcher(event, "/locationUsers/createLocationUser", "route");
+};
+
+export const updateLocationUsers = (event) => {
+  return fetcher(event, "/locationUsers/updateLocationUsers", "route");
 };
 
 export const deleteLocationUser = (event) => {
-  console.log("deleteLocUser event", event)
-  return fetcher(event, "/locationUsers/deleteLocationUser");
+  return fetcher(event, "/locationUsers/deleteLocationUser", "route");
 };
 
-const deleteCognitoUser = async (event) => {
-  let prod;
-  try {
-    prod = await axios.post(API_cognitoUser + "/deletecognitouser", {
-      sub: event.sub,
-    });
-  } catch (err) {
-    console.log("Error deleting User", err);
-  }
-  console.log("deleteCognitoUser:", prod.status);
-  return prod.data.body;
+export const createCognitoUser = (event) => {
+  return fetcher(event, "/createcognitouser", "cognito");
 };
 
-const createCognitoUser = async (event) => {
-  let prod;
-  try {
-    prod = await axios.post(API_cognitoUser + "/createcognitouser", event);
-  } catch (err) {
-    console.log("Error creating User", err);
-  }
-  console.log("createCognitoUser:", prod.status);
-  return prod;
+export const updateCognitoUser = (event) => {
+  return fetcher(event, "/updatecognitouser", "cognito");
 };
 
-const updateCognitoUser = async (event) => {
-  let prod;
-  try {
-    prod = await axios.post(API_cognitoUser + "/updatecognitouser", event);
-  } catch (err) {
-    console.log("Error updating User", err);
-  }
-  console.log("updateCognitoUser:", prod.status);
-  return prod;
+export const deleteCognitoUser = (event) => {
+  return fetcher(event, "/deletecognitouser", "cognito");
 };
+
+export const getOrder = (event) => {
+  return fetcher(event, "/orders/getOrder", "route");
+};
+
+// Auth calls
 
 export const submitAuth = async (props) => {
-  const {email, password, setIsLoading, setFormType, setShowMessage, setUserObject, userObject} = props
+  const {
+    email,
+    password,
+    setIsLoading,
+    setFormType,
+    setShowMessage,
+    setUserObject,
+    userObject,
+  } = props;
   console.log("submitProps", props);
-  
-    setIsLoading(true);
-    await Auth.signIn(email, password)
-      .then((use) => {
-        setUserObject(use)
-        console.log("user", use);
-        console.log('use.challengeName', use.challengeName)
-        if (use.challengeName === "NEW_PASSWORD_REQUIRED") {
-          setIsLoading(false)
-          setFormType("resetPassword");
-          return
-        }
-        else if (use.attributes.email_verified === false) {
-          console.log("Yes it is!")
-          setIsLoading(false)
-          setFormType("verifyEmail");
-          return
-        } else {
-          setIsLoading(false)
-          setFormType("signedIn")
-        }
-        
-      })
-      .catch((error) => {
-        if (error) {
-          setShowMessage(true);
-          setIsLoading(false);
-        }
-      });
-  };
 
-  export const submitConfirm = async (props) => {
-    checkUser().then((user) => {
+  setIsLoading(true);
+  await Auth.signIn(email, password)
+    .then((use) => {
+      setUserObject(use);
+      console.log("user", use);
+      console.log("use.challengeName", use.challengeName);
+      if (use.challengeName === "NEW_PASSWORD_REQUIRED") {
+        setIsLoading(false);
+        setFormType("resetPassword");
+        return;
+      } else if (use.attributes.email_verified === false) {
+        console.log("Yes it is!");
+        setIsLoading(false);
+        setFormType("verifyEmail");
+        return;
+      } else {
+        setIsLoading(false);
+        setFormType("signedIn");
+      }
+    })
+    .catch((error) => {
+      if (error) {
+        setShowMessage(true);
+        setIsLoading(false);
+      }
+    });
+};
 
+export const submitConfirm = async (props) => {
+  checkUser()
+    .then((user) => {
       let event = {
         token: user.signInUserSession.accessToken.jwtToken,
         code: props.confirm,
       };
-      console.log('event', event)
+      console.log("event", event);
       try {
         axios.post(API_cognitoUser + "/confirmcognitoemail", event);
       } catch (err) {
         console.log("Error confirming code", err);
       }
-    }).then((prod) => {
-      console.log("code confirm",prod)
-      return prod
     })
-  };
-
-
-  export const setNewPassword = async (props) => {
-    const {setIsLoading, setFormType, passwordConfirm, userObject} = props
-    console.log("newPasswordProps", props)
-    
-    setIsLoading(true)
-    await Auth.completeNewPassword(userObject, passwordConfirm).then((use) => {
-      setFormType("onNoUser");
-      setIsLoading(false)
+    .then((prod) => {
+      console.log("code confirm", prod);
+      return prod;
     });
-    
-  };
+};
 
-  export const sendForgottenPasswordEmail = async(email) => {
-    console.log('Forgotprops', email)
-    Auth.forgotPassword(email)
-    .then(data => console.log(data))
-    .catch(err => console.log(err));
-  }
+export const setNewPassword = async (props) => {
+  const { setIsLoading, setFormType, passwordConfirm, userObject } = props;
+  console.log("newPasswordProps", props);
 
-  export const resetPassword = async (props) => {
-    const {email, code, passwordNew, setFormType, setIsLoading} = props
-    console.log("newPasswordProps", props)
-    
-    Auth.forgotPasswordSubmit(email, code, passwordNew)
-    .then(data => console.log(data))
-    .catch(err => console.log(err)).then((use) => {
+  setIsLoading(true);
+  await Auth.completeNewPassword(userObject, passwordConfirm).then((use) => {
+    setFormType("onNoUser");
+    setIsLoading(false);
+  });
+};
+
+export const sendForgottenPasswordEmail = async (email) => {
+  console.log("Forgotprops", email);
+  Auth.forgotPassword(email)
+    .then((data) => console.log(data))
+    .catch((err) => console.log(err));
+};
+
+export const resetPassword = async (props) => {
+  const { email, code, passwordNew, setFormType, setIsLoading } = props;
+  console.log("newPasswordProps", props);
+
+  Auth.forgotPasswordSubmit(email, code, passwordNew)
+    .then((data) => console.log(data))
+    .catch((err) => console.log(err))
+    .then((use) => {
       setFormType("onNoUser");
-      setIsLoading(false)
-      
+      setIsLoading(false);
     });
-    
-  };
+};
 
 // OLD STUFF
 

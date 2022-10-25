@@ -97,7 +97,7 @@ export const Splash = () => {
           footer={dialogFooter}
           showHeader={false}
           breakpoints={{ "960px": "80vw" }}
-          style={{ width: "30vw" }}
+          
         >
           <div className="flex align-items-center flex-column pt-6 px-3">
             <i

@@ -38,11 +38,13 @@ export function App() {
   const setAccess = useSettingsStore((state) => state.setAccess);
   const setUser = useSettingsStore((state) => state.setUser);
   const setUserObject = useSettingsStore((state) => state.setUserObject);
+  const setCurrentLoc = useSettingsStore((state) => state.setCurrentLoc);
 
   const formType = useSettingsStore((state) => state.formType);
   const isLoading = useSettingsStore((state) => state.isLoading);
   const user = useSettingsStore((state) => state.user);
   const authClass = useSettingsStore((state) => state.authClass);
+  const currentLoc = useSettingsStore((state) => state.currentLoc);
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
   Hub.listen("auth", (data) => {
@@ -54,25 +56,24 @@ export function App() {
           setAccess(use.signInUserSession.accessToken.jwtToken);
           setUser(use.attributes["custom:name"]);
           setAuthClass(use.attributes["custom:authType"]);
+          setCurrentLoc(use.attributes["custom:defLoc"]);
           setFormType("signedIn");
           window.location = "/";
-
         });
 
         break;
       case "signOut":
         console.log("User Signed Out");
-        
-          setAccess("");
-          setUserObject({});
-          setUser("");
-          setAuthClass("");
-          setFormType("onNoUser");
-        ;
+
+        setAccess("");
+        setUserObject({});
+        setUser("");
+        setAuthClass("");
+        setFormType("onNoUser");
+        setCurrentLoc("");
         break;
 
       default:
-        
         break;
     }
   });
@@ -83,7 +84,8 @@ export function App() {
       use && setAccess(use.signInUserSession.accessToken.jwtToken);
       use && setUser(use.attributes["custom:name"]);
       use && setAuthClass(use.attributes["custom:authType"]);
-      use && setUserObject(use)
+      use && setCurrentLoc(use.attributes["custom:defLoc"]);
+      use && setUserObject(use);
       setFormType(use ? "signedIn" : "onNoUser");
       setIsLoading(false);
     });
@@ -94,7 +96,14 @@ export function App() {
       {isLoading && <Loader />}
 
       <h1>Back Porch Bakery</h1>
-      {user && <h4>Welcome {user}.  Auth Class: {authClass} </h4>}
+      {user && (
+        <React.Fragment>
+          <h4>
+            Welcome {user}. Auth Class: {authClass}{" "}
+          </h4>
+          <h4>Current Location: {currentLoc}</h4>
+        </React.Fragment>
+      )}
       <Router>
         {formType === "signedIn" && (
           <React.Fragment>
