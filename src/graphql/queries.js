@@ -759,6 +759,7 @@ export const getLocation = /* GraphQL */ `
       prodsNotAllowed {
         items {
           id
+          isAllowed
           locNick
           prodNick
           createdAt
@@ -1023,6 +1024,7 @@ export const getProduct = /* GraphQL */ `
       prodsNotAllowed {
         items {
           id
+          isAllowed
           locNick
           prodNick
           createdAt
@@ -3529,6 +3531,7 @@ export const getProdsNotAllowed = /* GraphQL */ `
   query GetProdsNotAllowed($id: ID!) {
     getProdsNotAllowed(id: $id) {
       id
+      isAllowed
       locNick
       prodNick
       location {
@@ -3729,6 +3732,7 @@ export const listProdsNotAlloweds = /* GraphQL */ `
     ) {
       items {
         id
+        isAllowed
         locNick
         prodNick
         location {

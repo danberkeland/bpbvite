@@ -1160,6 +1160,7 @@ export const createLocation = /* GraphQL */ `
       prodsNotAllowed {
         items {
           id
+          isAllowed
           locNick
           prodNick
           createdAt
@@ -1324,6 +1325,7 @@ export const updateLocation = /* GraphQL */ `
       prodsNotAllowed {
         items {
           id
+          isAllowed
           locNick
           prodNick
           createdAt
@@ -1488,6 +1490,7 @@ export const deleteLocation = /* GraphQL */ `
       prodsNotAllowed {
         items {
           id
+          isAllowed
           locNick
           prodNick
           createdAt
@@ -1642,6 +1645,7 @@ export const createProduct = /* GraphQL */ `
       prodsNotAllowed {
         items {
           id
+          isAllowed
           locNick
           prodNick
           createdAt
@@ -1873,6 +1877,7 @@ export const updateProduct = /* GraphQL */ `
       prodsNotAllowed {
         items {
           id
+          isAllowed
           locNick
           prodNick
           createdAt
@@ -2104,6 +2109,7 @@ export const deleteProduct = /* GraphQL */ `
       prodsNotAllowed {
         items {
           id
+          isAllowed
           locNick
           prodNick
           createdAt
@@ -6437,6 +6443,7 @@ export const createProdsNotAllowed = /* GraphQL */ `
   ) {
     createProdsNotAllowed(input: $input, condition: $condition) {
       id
+      isAllowed
       locNick
       prodNick
       location {
@@ -6631,6 +6638,7 @@ export const updateProdsNotAllowed = /* GraphQL */ `
   ) {
     updateProdsNotAllowed(input: $input, condition: $condition) {
       id
+      isAllowed
       locNick
       prodNick
       location {
@@ -6825,6 +6833,7 @@ export const deleteProdsNotAllowed = /* GraphQL */ `
   ) {
     deleteProdsNotAllowed(input: $input, condition: $condition) {
       id
+      isAllowed
       locNick
       prodNick
       location {

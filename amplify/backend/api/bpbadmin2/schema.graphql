@@ -512,6 +512,7 @@ type TemplateProd @model {
 
 type ProdsNotAllowed @model {
   id: ID!
+  isAllowed: Boolean!
   locNick: String! @index(name: "byLoc")
   prodNick: String! @index(name: "byProd")
   location: Location! @belongsTo(fields: ["locNick"])
