@@ -62,6 +62,10 @@ export const withBPBForm = (Component) => (props) => {
     fontSize: "1.2em",
   };
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  })
+
   const handleEdit = (e, props) => {
     window.scrollTo(0, 0);
     setIsEdit(true);
