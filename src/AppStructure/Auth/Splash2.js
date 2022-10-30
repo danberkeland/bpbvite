@@ -9,9 +9,8 @@ import { Dialog } from "primereact/dialog";
 import { submitAuth, sendForgottenPasswordEmail } from "../../restAPIs";
 import { withFadeIn } from "../../hoc/withFadeIn";
 import { withBPBForm } from "../../hoc/withBPBForm";
-import { GroupBox } from "../../CommonStyles";
+import { GroupBox, Title } from "../../CommonStyles";
 import { compose } from "../../utils";
-import { Title } from "../../CommonStyles";
 import "./Splash.css";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 

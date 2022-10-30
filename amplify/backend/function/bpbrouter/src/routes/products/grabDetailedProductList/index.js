@@ -1,4 +1,4 @@
-import mainCall from '/opt/mainCall/index.js';
+import mainCall from "/opt/mainCall/index.js";
 
 const query = /* GraphQL */ `
   query MyQuery {
@@ -33,6 +33,9 @@ const query = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        isRetail
+        retailName
+        retailDescrip
         inventoryProductId
       }
     }
@@ -42,13 +45,13 @@ const query = /* GraphQL */ `
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
-  // Update
- const grabDetailedProductList = async (event) => {
+// Update
+const grabDetailedProductList = async (event) => {
   let response = await mainCall(query, event);
-  response.user = response.body.user
-  response.body = response.body.body.listProducts
-  
-  return response
+  response.user = response.body.user;
+  response.body = response.body.body.listProducts;
+
+  return response;
 };
 
 export default grabDetailedProductList;

@@ -90,6 +90,11 @@ function ProductDetails({ initialState }) {
             converter={props}
           />
           <BPB.CustomYesNoInput
+            label="Available Retail?"
+            name="isRetail"
+            converter={props}
+          />
+          <BPB.CustomYesNoInput
             label="Default Include?"
             name="defaultInclude"
             converter={props}

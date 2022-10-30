@@ -943,6 +943,9 @@ export const getProduct = /* GraphQL */ `
       bakedWhere
       wholePrice
       retailPrice
+      isRetail
+      retailName
+      retailDescrip
       isWhole
       isEOD
       weight
@@ -955,6 +958,21 @@ export const getProduct = /* GraphQL */ `
       defaultInclude
       leadTime
       qbID
+      retailLoc {
+        items {
+          id
+          specialStart
+          specialEnd
+          dayOfWeek
+          timeOfDayStart
+          timeOfDayEnd
+          prodNick
+          locSquareId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       standing {
         items {
           id
@@ -1063,6 +1081,9 @@ export const getProduct = /* GraphQL */ `
           bakedWhere
           wholePrice
           retailPrice
+          isRetail
+          retailName
+          retailDescrip
           isWhole
           isEOD
           weight
@@ -1108,6 +1129,9 @@ export const getProduct = /* GraphQL */ `
           bakedWhere
           wholePrice
           retailPrice
+          isRetail
+          retailName
+          retailDescrip
           isWhole
           isEOD
           weight
@@ -1182,6 +1206,9 @@ export const listProducts = /* GraphQL */ `
         bakedWhere
         wholePrice
         retailPrice
+        isRetail
+        retailName
+        retailDescrip
         isWhole
         isEOD
         weight
@@ -1194,6 +1221,9 @@ export const listProducts = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        retailLoc {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -1241,6 +1271,239 @@ export const listProducts = /* GraphQL */ `
     }
   }
 `;
+export const getRetailLoc = /* GraphQL */ `
+  query GetRetailLoc($id: ID!) {
+    getRetailLoc(id: $id) {
+      squareId
+      location
+      retailProds {
+        items {
+          id
+          specialStart
+          specialEnd
+          dayOfWeek
+          timeOfDayStart
+          timeOfDayEnd
+          prodNick
+          locSquareId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listRetailLocs = /* GraphQL */ `
+  query ListRetailLocs(
+    $filter: ModelRetailLocFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRetailLocs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        squareId
+        location
+        retailProds {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getRetailProdLoc = /* GraphQL */ `
+  query GetRetailProdLoc($id: ID!) {
+    getRetailProdLoc(id: $id) {
+      id
+      specialStart
+      specialEnd
+      dayOfWeek
+      timeOfDayStart
+      timeOfDayEnd
+      prodNick
+      product {
+        Type
+        prodName
+        prodNick
+        packGroup
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
+        transferStage
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isRetail
+        retailName
+        retailDescrip
+        isWhole
+        isEOD
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        retailLoc {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+      }
+      locSquareId
+      loc {
+        squareId
+        location
+        retailProds {
+          nextToken
+        }
+        id
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listRetailProdLocs = /* GraphQL */ `
+  query ListRetailProdLocs(
+    $filter: ModelRetailProdLocFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRetailProdLocs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        specialStart
+        specialEnd
+        dayOfWeek
+        timeOfDayStart
+        timeOfDayEnd
+        prodNick
+        product {
+          Type
+          prodName
+          prodNick
+          packGroup
+          packSize
+          doughNick
+          freezerThaw
+          packGroupOrder
+          shapeDay
+          shapeNick
+          bakeDay
+          bakeNick
+          guarantee
+          transferStage
+          readyTime
+          bakedWhere
+          wholePrice
+          retailPrice
+          isRetail
+          retailName
+          retailDescrip
+          isWhole
+          isEOD
+          weight
+          descrip
+          picURL
+          squareID
+          forBake
+          bakeExtra
+          batchSize
+          defaultInclude
+          leadTime
+          qbID
+          createdAt
+          updatedAt
+          inventoryProductId
+        }
+        locSquareId
+        loc {
+          squareId
+          location
+          id
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getOrder = /* GraphQL */ `
   query GetOrder($id: ID!) {
     getOrder(id: $id) {
@@ -1279,6 +1542,9 @@ export const getOrder = /* GraphQL */ `
         bakedWhere
         wholePrice
         retailPrice
+        isRetail
+        retailName
+        retailDescrip
         isWhole
         isEOD
         weight
@@ -1291,6 +1557,9 @@ export const getOrder = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        retailLoc {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -1471,6 +1740,9 @@ export const listOrders = /* GraphQL */ `
           bakedWhere
           wholePrice
           retailPrice
+          isRetail
+          retailName
+          retailDescrip
           isWhole
           isEOD
           weight
@@ -1570,6 +1842,9 @@ export const getStanding = /* GraphQL */ `
         bakedWhere
         wholePrice
         retailPrice
+        isRetail
+        retailName
+        retailDescrip
         isWhole
         isEOD
         weight
@@ -1582,6 +1857,9 @@ export const getStanding = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        retailLoc {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -1761,6 +2039,9 @@ export const listStandings = /* GraphQL */ `
           bakedWhere
           wholePrice
           retailPrice
+          isRetail
+          retailName
+          retailDescrip
           isWhole
           isEOD
           weight
@@ -2278,6 +2559,9 @@ export const getInventory = /* GraphQL */ `
           bakedWhere
           wholePrice
           retailPrice
+          isRetail
+          retailName
+          retailDescrip
           isWhole
           isEOD
           weight
@@ -2560,6 +2844,9 @@ export const getProductVendor = /* GraphQL */ `
         bakedWhere
         wholePrice
         retailPrice
+        isRetail
+        retailName
+        retailDescrip
         isWhole
         isEOD
         weight
@@ -2572,6 +2859,9 @@ export const getProductVendor = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        retailLoc {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -2660,6 +2950,9 @@ export const listProductVendors = /* GraphQL */ `
           bakedWhere
           wholePrice
           retailPrice
+          isRetail
+          retailName
+          retailDescrip
           isWhole
           isEOD
           weight
@@ -2754,6 +3047,9 @@ export const getEODCount = /* GraphQL */ `
         bakedWhere
         wholePrice
         retailPrice
+        isRetail
+        retailName
+        retailDescrip
         isWhole
         isEOD
         weight
@@ -2766,6 +3062,9 @@ export const getEODCount = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        retailLoc {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -2855,6 +3154,9 @@ export const listEODCounts = /* GraphQL */ `
           bakedWhere
           wholePrice
           retailPrice
+          isRetail
+          retailName
+          retailDescrip
           isWhole
           isEOD
           weight
@@ -2918,6 +3220,9 @@ export const getActualSetOut = /* GraphQL */ `
         bakedWhere
         wholePrice
         retailPrice
+        isRetail
+        retailName
+        retailDescrip
         isWhole
         isEOD
         weight
@@ -2930,6 +3235,9 @@ export const getActualSetOut = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        retailLoc {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -3017,6 +3325,9 @@ export const listActualSetOuts = /* GraphQL */ `
           bakedWhere
           wholePrice
           retailPrice
+          isRetail
+          retailName
+          retailDescrip
           isWhole
           isEOD
           weight
@@ -3382,6 +3693,9 @@ export const getTemplateProd = /* GraphQL */ `
         bakedWhere
         wholePrice
         retailPrice
+        isRetail
+        retailName
+        retailDescrip
         isWhole
         isEOD
         weight
@@ -3394,6 +3708,9 @@ export const getTemplateProd = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        retailLoc {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -3504,6 +3821,9 @@ export const listTemplateProds = /* GraphQL */ `
           bakedWhere
           wholePrice
           retailPrice
+          isRetail
+          retailName
+          retailDescrip
           isWhole
           isEOD
           weight
@@ -3659,6 +3979,9 @@ export const getProdsNotAllowed = /* GraphQL */ `
         bakedWhere
         wholePrice
         retailPrice
+        isRetail
+        retailName
+        retailDescrip
         isWhole
         isEOD
         weight
@@ -3671,6 +3994,9 @@ export const getProdsNotAllowed = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        retailLoc {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -3786,6 +4112,9 @@ export const listProdsNotAlloweds = /* GraphQL */ `
           bakedWhere
           wholePrice
           retailPrice
+          isRetail
+          retailName
+          retailDescrip
           isWhole
           isEOD
           weight
@@ -3845,6 +4174,9 @@ export const getProductDepend = /* GraphQL */ `
         bakedWhere
         wholePrice
         retailPrice
+        isRetail
+        retailName
+        retailDescrip
         isWhole
         isEOD
         weight
@@ -3857,6 +4189,9 @@ export const getProductDepend = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        retailLoc {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -3932,6 +4267,9 @@ export const getProductDepend = /* GraphQL */ `
         bakedWhere
         wholePrice
         retailPrice
+        isRetail
+        retailName
+        retailDescrip
         isWhole
         isEOD
         weight
@@ -3944,6 +4282,9 @@ export const getProductDepend = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        retailLoc {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -4021,6 +4362,9 @@ export const listProductDepends = /* GraphQL */ `
           bakedWhere
           wholePrice
           retailPrice
+          isRetail
+          retailName
+          retailDescrip
           isWhole
           isEOD
           weight
@@ -4057,6 +4401,9 @@ export const listProductDepends = /* GraphQL */ `
           bakedWhere
           wholePrice
           retailPrice
+          isRetail
+          retailName
+          retailDescrip
           isWhole
           isEOD
           weight
@@ -4503,6 +4850,9 @@ export const getAltPricing = /* GraphQL */ `
         bakedWhere
         wholePrice
         retailPrice
+        isRetail
+        retailName
+        retailDescrip
         isWhole
         isEOD
         weight
@@ -4515,6 +4865,9 @@ export const getAltPricing = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        retailLoc {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -4626,6 +4979,9 @@ export const listAltPricings = /* GraphQL */ `
           bakedWhere
           wholePrice
           retailPrice
+          isRetail
+          retailName
+          retailDescrip
           isWhole
           isEOD
           weight
@@ -4812,6 +5168,9 @@ export const prodSortAZ = /* GraphQL */ `
         bakedWhere
         wholePrice
         retailPrice
+        isRetail
+        retailName
+        retailDescrip
         isWhole
         isEOD
         weight
@@ -4824,6 +5183,9 @@ export const prodSortAZ = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        retailLoc {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -4912,6 +5274,9 @@ export const orderByCreatedAt = /* GraphQL */ `
           bakedWhere
           wholePrice
           retailPrice
+          isRetail
+          retailName
+          retailDescrip
           isWhole
           isEOD
           weight

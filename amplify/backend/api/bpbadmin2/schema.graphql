@@ -262,6 +262,9 @@ type Product @model {
   bakedWhere: [String]
   wholePrice: Float
   retailPrice: Float
+  isRetail: Boolean
+  retailName: String
+  retailDescrip: String
   isWhole: Boolean
   isEOD: Boolean
   weight: Float
@@ -274,6 +277,7 @@ type Product @model {
   defaultInclude: Boolean
   leadTime: Int
   qbID: String
+  retailLoc: [RetailProdLoc] @hasMany(indexName: "byRetailProd", fields: ["prodNick"])
   standing: [Standing] @hasMany(indexName: "byProd", fields: ["prodNick"])
   orders: [Order] @hasMany(indexName: "byProd", fields: ["prodNick"])
   depends: [ProductDepend] @hasMany(indexName: "byProd2", fields: ["prodNick"])
@@ -287,6 +291,25 @@ type Product @model {
   EODCount: EODCount @hasOne(fields: ["prodNick"])
   ActualSetOut: ActualSetOut @hasOne(fields: ["prodNick"])
   
+}
+
+type RetailLoc @model {
+  squareId: ID!
+  location: String!
+  retailProds: [RetailProdLoc] @hasMany(indexName: "byRetailLoc", fields: ["squareId"])
+}
+
+type RetailProdLoc @model {
+  id: ID!
+  specialStart: String
+  specialEnd: String
+  dayOfWeek: [Int]
+  timeOfDayStart: Float
+  timeOfDayEnd: Float
+  prodNick: String! @index(name: "byRetailProd")
+  product: Product! @belongsTo(fields: ["prodNick"])
+  locSquareId: ID @index(name: "byRetailLoc")
+  loc: RetailLoc @belongsTo(fields: ["locSquareId"])
 }
 
 type Order @model (timestamps: { createdAt: "createdOn"})  {

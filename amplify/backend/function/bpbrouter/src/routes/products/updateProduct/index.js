@@ -24,6 +24,9 @@ const query = /* GraphQL */ `
     $prodName: String!
     $prodNick: String!
     $qbID: String
+    $isRetail: Boolean
+    $retailName: String
+    $retailDescrip: String
     $readyTime: Float
     $retailPrice: Float
     $shapeDay: Int
@@ -54,6 +57,9 @@ const query = /* GraphQL */ `
         packGroupOrder: $packGroupOrder
         packSize: $packSize
         picURL: $picURL
+        isRetail: $isRetail
+        retailName: $retailName
+        retailDescrip: $retailDescrip
         prodName: $prodName
         prodNick: $prodNick
         qbID: $qbID
@@ -90,6 +96,9 @@ const query = /* GraphQL */ `
       prodName
       prodNick
       qbID
+      isRetail
+      retailName
+      retailDescrip
       readyTime
       retailPrice
       shapeDay

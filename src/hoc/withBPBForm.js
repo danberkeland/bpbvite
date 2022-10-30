@@ -64,7 +64,7 @@ export const withBPBForm = (Component) => (props) => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  })
+  });
 
   const handleEdit = (e, props) => {
     window.scrollTo(0, 0);

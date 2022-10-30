@@ -15,6 +15,7 @@ mutation MyMutation(
   $freezerThaw: Boolean
   $guarantee: String
   $isWhole: Boolean
+  $isRetail: Boolean
   $leadTime: Int
   $packGroup: String
   $packGroupOrder: Int
@@ -23,6 +24,8 @@ mutation MyMutation(
   $prodName: String!
   $prodNick: String!
   $qbID: String
+  $retailName: String
+  $retailDescrip: String
   $readyTime: Float
   $retailPrice: Float
   $shapeDay: Int
@@ -52,6 +55,9 @@ mutation MyMutation(
       packGroupOrder: $packGroupOrder
       packSize: $packSize
       picURL: $picURL
+      isRetail: $isRetail
+      retailName: $retailName
+      retailDescrip: $retailDescrip
       prodName: $prodName
       prodNick: $prodNick
       qbID: $qbID
@@ -87,6 +93,9 @@ mutation MyMutation(
     prodName
     prodNick
     qbID
+    isRetail
+    retailName
+    retailDescrip
     readyTime
     retailPrice
     shapeDay
