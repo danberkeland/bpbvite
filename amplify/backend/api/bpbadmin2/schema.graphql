@@ -331,6 +331,7 @@ type Order @model (timestamps: { createdAt: "createdOn"})  {
   isWhole: Boolean
   delivDate: String
   rate: Float
+  route: String
   isLate: Int
   createdOn: AWSDateTime!
 }

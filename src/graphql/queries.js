@@ -679,6 +679,7 @@ export const getLocation = /* GraphQL */ `
           isWhole
           delivDate
           rate
+          route
           isLate
           createdOn
           updatedAt
@@ -1002,6 +1003,7 @@ export const getProduct = /* GraphQL */ `
           isWhole
           delivDate
           rate
+          route
           isLate
           createdOn
           updatedAt
@@ -1703,6 +1705,7 @@ export const getOrder = /* GraphQL */ `
       isWhole
       delivDate
       rate
+      route
       isLate
       createdOn
       updatedAt
@@ -1797,6 +1800,7 @@ export const listOrders = /* GraphQL */ `
         isWhole
         delivDate
         rate
+        route
         isLate
         createdOn
         updatedAt
@@ -5331,6 +5335,7 @@ export const orderByCreatedAt = /* GraphQL */ `
         isWhole
         delivDate
         rate
+        route
         isLate
         createdOn
         updatedAt

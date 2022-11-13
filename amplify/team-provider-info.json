@@ -222,6 +222,9 @@
       },
       "auth": {
         "bpbadmin2db0d25d4": {}
+      },
+      "api": {
+        "bpbadmin2": {}
       }
     }
   }

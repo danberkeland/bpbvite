@@ -1,6 +1,7 @@
 import React from "react";
 
 import Ordering from "../Pages/Ordering/Ordering";
+import Orders2 from "../Pages/Ordering/Orders2";
 import CustomerNews from "../Pages/CustomerNews/CustomerNews";
 import CustomerBilling from "../Pages/CustomerBilling/CustomerBilling";
 import CustomerSettings from "../Pages/CustomerSettings/CustomerSettings";
@@ -25,7 +26,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
   return (
     <AnimatePresence>
       <Routes location={location} key={location.pathname}>
-        <Route path="/Ordering" element={<Ordering />} />
+        <Route path="/Ordering" element={<Orders2 />} />
         <Route path="/CustomerNews" element={<CustomerNews />} />
         <Route path="/CustomerBilling" element={<CustomerBilling />} />
         <Route path="/CustomerSettings" element={<CustomerSettings />} />
