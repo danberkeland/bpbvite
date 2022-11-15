@@ -183,3 +183,199 @@ export const orders = [
     "ItemNote": ""
   }
 ]
+
+export const emptyOrder = {
+  "id": "",
+  "locNick": "",
+  "prodNick": "",
+  "qty": 0,
+  "rate": 0,
+  "isWhole": true,
+  "delivDate": "",
+  "route": "",
+  "SO": 0,
+  "ItemNote": ""
+}
+
+export const products = [
+  {
+    "wholePrice": 2.4,
+    "prodNick": "rfr",
+    "prodName": "French Stick (Retail)",
+    "leadTime": 2
+  },
+  {
+    "wholePrice": 1.03,
+    "prodNick": "dbag",
+    "prodName": "Demi Baguette",
+    "leadTime": 3
+  },
+  {
+    "wholePrice": 16.96,
+    "prodNick": "scrd",
+    "prodName": "Plain Scone Round (6-8)",
+    "leadTime": 2
+  },
+  {
+    "wholePrice": 4.51,
+    "prodNick": "frsl",
+    "prodName": "French Slider (12)",
+    "leadTime": 2
+  },
+  {
+    "wholePrice": 2.73,
+    "prodNick": "sf",
+    "prodName": "Spinach and Feta Croissant (Baked)",
+    "leadTime": 2
+  },
+  {
+    "wholePrice": 4.24,
+    "prodNick": "mcub",
+    "prodName": "French Torpedo (sm) (6)",
+    "leadTime": 2
+  },
+  {
+    "wholePrice": 16.96,
+    "prodNick": "bdrd",
+    "prodName": "Bacon Date Scone Round (6-8)",
+    "leadTime": 2
+  },
+  {
+    "wholePrice": 4.83,
+    "prodNick": "zcock",
+    "prodName": "Cocktail Sliders (12)",
+    "leadTime": 2
+  },
+  {
+    "wholePrice": 5.98,
+    "prodNick": "lgmt",
+    "prodName": "Multigrain Loaf (lg)",
+    "leadTime": 3
+  },
+  {
+    "wholePrice": 5.87,
+    "prodNick": "bz",
+    "prodName": "Brioche Burger Buns (8)",
+    "leadTime": 2
+  },
+  {
+    "wholePrice": 4.4,
+    "prodNick": "mbag",
+    "prodName": "Baguette Torpedo (6)",
+    "leadTime": 2
+  },
+  {
+    "wholePrice": 1.65,
+    "prodNick": "bb",
+    "prodName": "Blueberry Muffin",
+    "leadTime": 2
+  },
+  {
+    "wholePrice": 3.53,
+    "prodNick": "rmlti",
+    "prodName": "Multigrain (Retail)",
+    "leadTime": 2
+  },
+  {
+    "wholePrice": 1.65,
+    "prodNick": "mb",
+    "prodName": "Morning Bun (Baked)",
+    "leadTime": 2
+  },
+  {
+    "wholePrice": 5.58,
+    "prodNick": "epi",
+    "prodName": "Epi",
+    "leadTime": 2
+  },
+  {
+    "wholePrice": 5.87,
+    "prodNick": "bri",
+    "prodName": "Brioche Loaf",
+    "leadTime": 2
+  },
+  {
+    "wholePrice": 2.49,
+    "prodNick": "frpg",
+    "prodName": "Ham and Cheese Croissant (frozen, unproofed)",
+    "leadTime": 3
+  },
+  {
+    "wholePrice": 2.23,
+    "prodNick": "ptz",
+    "prodName": "Pretzel",
+    "leadTime": 3
+  },
+  {
+    "wholePrice": 1.63,
+    "prodNick": "ftmuff",
+    "prodName": "French Toast Muffin",
+    "leadTime": 2
+  },
+  {
+    "wholePrice": 4.1,
+    "prodNick": "rrye",
+    "prodName": "Country Rye (Retail)",
+    "leadTime": 3
+  },
+  {
+    "wholePrice": 0.9,
+    "prodNick": "fic",
+    "prodName": "Ficelle",
+    "leadTime": 2
+  },
+  {
+    "wholePrice": 0,
+    "prodNick": "oat",
+    "prodName": "Oatmeal Cookie",
+    "leadTime": 3
+  },
+  {
+    "wholePrice": 4.57,
+    "prodNick": "wwbz",
+    "prodName": "Whole Wheat Buns (lg) (6)",
+    "leadTime": 3
+  },
+  {
+    "wholePrice": 4.83,
+    "prodNick": "brsl",
+    "prodName": "Brioche Slider Buns (12)",
+    "leadTime": 2
+  },
+  {
+    "wholePrice": 0,
+    "prodNick": "chch",
+    "prodName": "Chocolate Chip Cookie",
+    "leadTime": 3
+  },
+  {
+    "wholePrice": 2.77,
+    "prodNick": "rdch",
+    "prodName": "Dutch Stick (Retail)",
+    "leadTime": 2
+  },
+  {
+    "wholePrice": 2.23,
+    "prodNick": "unpz",
+    "prodName": "Unsalted Pretzel",
+    "leadTime": 3
+  },
+  {
+    "wholePrice": 4.1,
+    "prodNick": "lev",
+    "prodName": "Country Batard",
+    "leadTime": 3
+  },
+  {
+    "wholePrice": 2.45,
+    "prodNick": "rbag",
+    "prodName": "Baguette (Retail)",
+    "leadTime": 2
+  },
+  {
+    "wholePrice": 4.92,
+    "prodNick": "hok",
+    "prodName": "Doobie Bunz",
+    "leadTime": 3
+  }
+]

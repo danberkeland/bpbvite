@@ -16,7 +16,7 @@
   padding: 0px 15px 15px 15px;
 }
 
-.editable-cells-table td.p-cell-editing {
-  padding-top: 0;
-  padding-bottom: 0;
+.card-body .editable-cells-table td.p-cell-editing {
+  padding-top: 0px;
+  padding-bottom: 0px;
 }

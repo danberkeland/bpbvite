@@ -15,6 +15,7 @@ import './orders.css'
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 import { InputNumber } from "primereact/inputnumber"
+import { Sidebar } from "primereact/sidebar"
 
 const Orders2 = () => {
 
@@ -28,10 +29,10 @@ const Orders2 = () => {
   }
   const locationList = [ ... new Set(mockData.users.map(item => item.locNick))]
     .map(item => ({label: item, value: item}))
+  const productList = mockData.products.map(item => ({label: item.prodName, value: item.prodNick}))
 
   const tabIndexFulfillmentTypes = ["deliv", "slopick", "atownpick"]
   const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-  const dollarUSLocale = Intl.NumberFormat('en-US')
   const dollarUS = Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD"
@@ -45,14 +46,9 @@ const Orders2 = () => {
   // order list area
   const [activeIndex, setActiveIndex] = useState(0)
   const [orderTable, setOrderTable] = useState()
-  
-  // Probably has bugs -- convert to Luxon later!
-  useEffect(() => {
-    let date = new Date()
-    date.setDate(date.getDate() + 2)
-    setSelectedDate(date)
-    setSelectedWeekday(weekdays[((date).getDay())])
-  }, []);
+
+  // Add product Sidebar
+  const [showSidebar, setShowSidebar] = useState(false)
   
   return (
       <div className="pageContainer">
@@ -63,42 +59,49 @@ const Orders2 = () => {
 
         <div className="card">
           <header className="card-header">
-            <h3>Selection</h3>
+            <h2>Selection</h2>
           </header>
           <div className="card-body">
-            {/* Location */}
-            <div style={{padding: "0px 0px 2px 0px"}}>
-              {userProps.locNick === "backporch" &&
-                <Dropdown
-                  placeholder="Location" 
-                  options ={locationList}
-                  value={selectedLocation}
-                  onChange={e => {setSelectedLocation(e.value)}}
+            <div style={{display: "grid", gridTemplateColumns: "50% 50%", gap: "2px"}}>
+
+              {/* Date */}
+              <div style={{gridColumnStart: "1"}} className="p-fluid">
+                <Calendar 
+                  readOnlyInput
+                  value={selectedDate}
+                  placeholder={"Select Date"}
+                  inline={false}
+                  touchUI={true}
+                  dateFormat="mm/dd/yy"
+                  showTime={false}
+                  onChange={e => {
+                    // calendar selection values are js Date objects
+                    setSelectedWeekday(weekdays[((e.value).getDay())])
+                    setSelectedDate(e.value)
+                  }}
                 />
-              }
-              {userProps.locNick !== "backporch" && <div>Your location: {selectedLocation}</div>}
+              </div>
+
+              {/* Location */}
+              <div style={{gridColumnStart: "2"}} className="p-fluid">
+                {userProps.locNick === "backporch" &&
+                  <Dropdown
+                    placeholder="Select Location" 
+                    options ={locationList}
+                    value={selectedLocation}
+                    onChange={e => {setSelectedLocation(e.value)}}
+                  />
+                }
+                {userProps.locNick !== "backporch" && `Your location: ${selectedLocation}`}
+              </div>
             </div>
-            {/* Date */}
-            <div style={{padding: "2px 0px 2px 0px"}}>
-              <Calendar 
-                readOnlyInput
-                value={selectedDate}
-                inline={false}
-                touchUI={true}
-                dateFormat="mm/dd/yy"
-                showTime={false}
-                onChange={e => {
-                  // calendar selection values are js Date objects
-                  setSelectedWeekday(weekdays[((e.value).getDay())])
-                  setSelectedDate(e.value)
-                }}
-                placeholder={"Select Date"}
-              />
-            </div>
+
+            {/* PO Note */}
             <div style={{padding: "2px 0px 2px 0px"}}>
               <InputTextarea 
                 autoResize
                 placeholder={"Add a PO note"}
+                style={{width: "100%"}}
               />
             </div>
 
@@ -124,7 +127,7 @@ const Orders2 = () => {
             <h2>Order List</h2>
           </header>
 
-
+          <div className="card-body">
             <TabMenu 
               model={[
                 {label: `Delivery${orderTable ? ' (' + orderTable.filter(item => item.route === 'deliv').length + ')' : ''}`, icon: 'pi pi-send'},
@@ -144,10 +147,19 @@ const Orders2 = () => {
                 <>
                   <div style={{display: "inline-block", width: "30%"}}>
                     <Button label="Add +" 
-                      className="inline"
-                      onClick={() => {
-                      
-                      }}
+                      onClick={() => setShowSidebar(true)}
+                      // onClick={() => {
+                      //   let newData = orderTable.slice()
+                      //   let newItem = {
+                      //     ...mockData.emptyOrder, 
+                      //     locNick: selectedLocation,
+                      //     delivDate: selectedDate,
+                      //     route: tabIndexFulfillmentTypes[activeIndex], 
+                      //     total: 0
+                      //   }
+                      //   newData.push(newItem)
+                      //   setOrderTable(newData)
+                      // }}
                     /> 
                   </div>
                   <div style={{display: "inline-block", width: "70%", height: "100%", textAlign: "center", verticalAlign: "middle"}}>
@@ -157,10 +169,9 @@ const Orders2 = () => {
                   </div>
                 </>
               }
-              // className="editable-cells-table"
             >
-              <Column field="prodNick" header="Product" />
-              <Column field="rate" header="Rate" />
+              <Column field="prodNick" header="Product" ></Column>
+              <Column field="rate" header="Rate" ></Column>
               <Column field="qty" 
                 header="Quantity"
                 style={{ width: '20%' }}
@@ -168,8 +179,9 @@ const Orders2 = () => {
                     <InputNumber 
                       className="p-fluid" 
                       value={options.value} 
-                      onValueChange={(e) => options.editorCallback(e.target.value)} 
-                    />
+                      onValueChange={(e) => options.editorCallback(e.value)} 
+                      style={{padding: "0px"}}
+                    ></InputNumber>
                 )}}
                 onCellEditComplete={e => {
                   let { rowData, newValue, field, originalEvent: event } = e
@@ -183,19 +195,25 @@ const Orders2 = () => {
                   } else
                     event.preventDefault()
                 }}
-              />
+              ></Column>
               <Column 
                 field="total" 
                 header="Total" 
                 body={rowData => dollarUS.format(rowData.total)}
-              />
+              ></Column>
               
             </DataTable>
+            </div>
+
+            <div className="card-footer" style={{backgroundColor:"lightGrey"}}></div>
           </div>
-          <div className="card-footer" style={{backgroundColor:"lightGrey"}}>
 
-
-        </div>
+          <Sidebar visible={showSidebar} position="bottom" onHide={() => setShowSidebar(false)} modal={false} dismissable blockScroll>
+            <h3>Bottom Sidebar</h3>
+            <Dropdown 
+              options={productList}
+            />
+          </Sidebar>
         
         {/* Variables */}
         <div className="card" hidden={false}>
@@ -209,11 +227,11 @@ const Orders2 = () => {
             <pre>selectedLocation: {JSON.stringify(selectedLocation, null, 2)}</pre>
             <pre>userProps: {JSON.stringify(userProps, null, 2)}</pre>
             <pre>activeIndex: {JSON.stringify(activeIndex, null, 2)}</pre>
+            <pre>orderTable: {JSON.stringify(orderTable, null, 2)}</pre>
           </div>
         </div>
         <div style={{height: "125px"}} />
       </div>
-
 
   )
 }
