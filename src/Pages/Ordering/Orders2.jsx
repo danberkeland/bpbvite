@@ -147,7 +147,9 @@ const Orders2 = () => {
                 <>
                   <div style={{display: "inline-block", width: "30%"}}>
                     <Button label="Add +" 
-                      onClick={() => setShowSidebar(true)}
+                      onClick={() => {
+                        setShowSidebar(true)
+                      }}
                       // onClick={() => {
                       //   let newData = orderTable.slice()
                       //   let newItem = {
@@ -208,11 +210,14 @@ const Orders2 = () => {
             <div className="card-footer" style={{backgroundColor:"lightGrey"}}></div>
           </div>
 
-          <Sidebar visible={showSidebar} position="bottom" onHide={() => setShowSidebar(false)} modal={false} dismissable blockScroll>
+          <Sidebar className="p-sidebar-lg" visible={showSidebar} position="bottom" onHide={() => setShowSidebar(false)} modal={false} dismissable blockScroll>
             <h3>Bottom Sidebar</h3>
-            <Dropdown 
-              options={productList}
+            <AddProductForm
+              currentOrders={orderTable}
+              currentRoute={tabIndexFulfillmentTypes[activeIndex]}
             />
+
+          
           </Sidebar>
         
         {/* Variables */}
@@ -237,3 +242,59 @@ const Orders2 = () => {
 }
 
 export default Orders2
+
+
+
+/*********
+ * TODOS *
+ *********/
+
+//  Add-Product Sidebar:
+//    Product Dropdown:
+//      - filter out products already listed in the current fulfillment tab
+
+//  Initital Product List:
+//    - calculate the first available delivery date for each item
+
+//  Order List:
+//    - Disable editing features for orders from today or before
+
+const AddProductForm = (currentOrders, currentRoute) => {
+
+  // fetch product list
+  const productList = mockData.products
+
+  const [selectedProduct, setSelectedProduct] = useState()
+  const [selectedQuantity, setSelectedQuantity] = useState()
+
+  return (
+    <div>
+      <Dropdown 
+      options={productList}
+      optionLabel="prodName"
+      value={selectedProduct}
+      placeholder="Select Product"
+      optionDisabled={item => {
+        return (item.value === "rfr")
+      }}
+      onChange={e => {
+        setSelectedProduct(e.value)
+        // additionally, load details for selected product
+      }}
+      />
+      <InputNumber 
+        value={selectedQuantity} 
+        onValueChange={e => {
+          setSelectedQuantity(e.value)
+        }} 
+        placeholder="Quantity"
+      />
+      <p>Selected product details</p>
+      <Button label="Add +" 
+        onClick={() => {
+          
+        }}
+      />
+    </div>
+  )
+}
