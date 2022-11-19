@@ -1,5 +1,6 @@
 {
   "AppSyncApiName": "bpbadmin2",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
-  "DynamoDBEnableServerSideEncryption": false
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthModeLastUpdated": "2022-11-18T19:28:45.454Z"
 }
