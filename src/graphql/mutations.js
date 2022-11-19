@@ -1080,6 +1080,7 @@ export const createLocation = /* GraphQL */ `
           isWhole
           delivDate
           rate
+          route
           isLate
           createdOn
           updatedAt
@@ -1245,6 +1246,7 @@ export const updateLocation = /* GraphQL */ `
           isWhole
           delivDate
           rate
+          route
           isLate
           createdOn
           updatedAt
@@ -1410,6 +1412,7 @@ export const deleteLocation = /* GraphQL */ `
           isWhole
           delivDate
           rate
+          route
           isLate
           createdOn
           updatedAt
@@ -1623,6 +1626,7 @@ export const createProduct = /* GraphQL */ `
           isWhole
           delivDate
           rate
+          route
           isLate
           createdOn
           updatedAt
@@ -1879,6 +1883,7 @@ export const updateProduct = /* GraphQL */ `
           isWhole
           delivDate
           rate
+          route
           isLate
           createdOn
           updatedAt
@@ -2135,6 +2140,7 @@ export const deleteProduct = /* GraphQL */ `
           isWhole
           delivDate
           rate
+          route
           isLate
           createdOn
           updatedAt
@@ -2945,6 +2951,7 @@ export const createOrder = /* GraphQL */ `
       isWhole
       delivDate
       rate
+      route
       isLate
       createdOn
       updatedAt
@@ -3153,6 +3160,7 @@ export const updateOrder = /* GraphQL */ `
       isWhole
       delivDate
       rate
+      route
       isLate
       createdOn
       updatedAt
@@ -3361,6 +3369,7 @@ export const deleteOrder = /* GraphQL */ `
       isWhole
       delivDate
       rate
+      route
       isLate
       createdOn
       updatedAt
