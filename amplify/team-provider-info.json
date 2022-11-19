@@ -197,7 +197,7 @@
         },
         "bpbrouter": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",
-          "s3Key": "amplify-builds/bpbrouter-796d536f384c7967634a-build.zip"
+          "s3Key": "amplify-builds/bpbrouter-4a6b67784a3477624e35-build.zip"
         },
         "deleteCognitoUser": {
           "deploymentBucketName": "amplify-bpbadmin2-auththree-34707-deployment",

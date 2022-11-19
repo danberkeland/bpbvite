@@ -27,11 +27,11 @@ const FulfillOptions = styled.div`
 export const Fulfill = () => {
   const route = useSettingsStore((state) => state.route);
   const setRoute = useSettingsStore((state) => state.setRoute);
-  const setIsModified = useSettingsStore((state) => state.setIsModified);
+  const setIsChange = useSettingsStore((state) => state.setIsChange);
 
   const handleChange = (val) => {
     if (val !== route) {
-      setIsModified(true);
+      setIsChange(true);
       setRoute(val);
     }
   };

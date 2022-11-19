@@ -4,7 +4,7 @@ import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 
 export const Cal = () => {
   const delivDate = useSettingsStore((state) => state.delivDate);
-  const setIsModified = useSettingsStore((state) => state.setIsModified);
+  const setIsChange = useSettingsStore((state) => state.setIsChange);
   const setDelivDate = useSettingsStore((state) => state.setDelivDate);
   
 
@@ -15,7 +15,7 @@ export const Cal = () => {
     var yyyy = today.getFullYear();
 
     let newToday = yyyy + "-" + mm + "-" + dd;
-    setIsModified(false)
+    setIsChange(false)
     setDelivDate(newToday)
   };
 

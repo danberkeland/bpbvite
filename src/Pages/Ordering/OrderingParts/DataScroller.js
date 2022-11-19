@@ -77,9 +77,11 @@ export const DataScroll = ({ checked }) => {
       "delivDate": finalDate,
       "dayOfWeek": dayOfWeek
     };
+    console.log('event', event)
     setIsLoading(true);
     getOrder(event).then((result) => {
       result = sortAtoZDataByIndex(result, "prodName")
+      console.log('result', result)
       setCurrentOrder(result);
       setIsLoading(false);
     });

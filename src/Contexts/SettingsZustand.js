@@ -36,6 +36,8 @@ const store = (set) => ({
   setIsChange: (isChange) => set(() => ({ isChange: isChange })),
   currentLoc: "",
   setCurrentLoc: (currentLoc) => set(() => ({ currentLoc: currentLoc })),
+  chosen: "",
+  setChosen: (chosen) => set(() => ({ chosen: chosen })),
 });
 
 export const useSettingsStore = create(devtools(store));

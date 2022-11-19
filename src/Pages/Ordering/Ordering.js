@@ -93,8 +93,9 @@ const Submit = () => {
 };
 
 const CustList = () => {
-  const currentLoc = useSettingsStore((state) => state.currentLoc);
-  const setCurrentLoc = useSettingsStore((state) => state.setCurrentLoc);
+  const chosen = useSettingsStore((state) => state.chosen);
+  const setChosen = useSettingsStore((state) => state.setChosen);
+  const currentLoc = useSettingsStore((state) => state.currentLoc)
  
 
   const { locationList } = useLocUserList();
@@ -102,12 +103,12 @@ const CustList = () => {
 
   const handleChosen = (e) => {
     let ind = locationList.data.findIndex((loc) => loc.locNick === e.value);
-    setCurrentLoc(locationList.data[ind]);
+    setChosen(locationList.data[ind]);
   };
 
   return (
     <Dropdown
-      value={currentLoc ? currentLoc.locNick : ""}
+      value={chosen ? chosen.locNick : ""}
       name="custDropDown"
       options={simpleLocationList.data}
       onChange={(e) => {

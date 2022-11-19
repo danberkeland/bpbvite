@@ -26,7 +26,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
   return (
     <AnimatePresence>
       <Routes location={location} key={location.pathname}>
-        <Route path="/Ordering" element={<Orders2 />} />
+        <Route path="/Ordering" element={<Ordering />} />
         <Route path="/CustomerNews" element={<CustomerNews />} />
         <Route path="/CustomerBilling" element={<CustomerBilling />} />
         <Route path="/CustomerSettings" element={<CustomerSettings />} />

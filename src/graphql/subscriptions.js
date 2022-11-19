@@ -122,10 +122,8 @@ export const onDeleteLocationBackup = /* GraphQL */ `
   }
 `;
 export const onCreateProductBackup = /* GraphQL */ `
-  subscription OnCreateProductBackup(
-    $filter: ModelSubscriptionProductBackupFilterInput
-  ) {
-    onCreateProductBackup(filter: $filter) {
+  subscription OnCreateProductBackup {
+    onCreateProductBackup {
       id
       prodName
       nickName
@@ -175,10 +173,8 @@ export const onCreateProductBackup = /* GraphQL */ `
   }
 `;
 export const onUpdateProductBackup = /* GraphQL */ `
-  subscription OnUpdateProductBackup(
-    $filter: ModelSubscriptionProductBackupFilterInput
-  ) {
-    onUpdateProductBackup(filter: $filter) {
+  subscription OnUpdateProductBackup {
+    onUpdateProductBackup {
       id
       prodName
       nickName
@@ -228,10 +224,8 @@ export const onUpdateProductBackup = /* GraphQL */ `
   }
 `;
 export const onDeleteProductBackup = /* GraphQL */ `
-  subscription OnDeleteProductBackup(
-    $filter: ModelSubscriptionProductBackupFilterInput
-  ) {
-    onDeleteProductBackup(filter: $filter) {
+  subscription OnDeleteProductBackup {
+    onDeleteProductBackup {
       id
       prodName
       nickName
@@ -281,10 +275,8 @@ export const onDeleteProductBackup = /* GraphQL */ `
   }
 `;
 export const onCreateOrderBackup = /* GraphQL */ `
-  subscription OnCreateOrderBackup(
-    $filter: ModelSubscriptionOrderBackupFilterInput
-  ) {
-    onCreateOrderBackup(filter: $filter) {
+  subscription OnCreateOrderBackup {
+    onCreateOrderBackup {
       id
       qty
       prodName
@@ -303,10 +295,8 @@ export const onCreateOrderBackup = /* GraphQL */ `
   }
 `;
 export const onUpdateOrderBackup = /* GraphQL */ `
-  subscription OnUpdateOrderBackup(
-    $filter: ModelSubscriptionOrderBackupFilterInput
-  ) {
-    onUpdateOrderBackup(filter: $filter) {
+  subscription OnUpdateOrderBackup {
+    onUpdateOrderBackup {
       id
       qty
       prodName
@@ -325,10 +315,8 @@ export const onUpdateOrderBackup = /* GraphQL */ `
   }
 `;
 export const onDeleteOrderBackup = /* GraphQL */ `
-  subscription OnDeleteOrderBackup(
-    $filter: ModelSubscriptionOrderBackupFilterInput
-  ) {
-    onDeleteOrderBackup(filter: $filter) {
+  subscription OnDeleteOrderBackup {
+    onDeleteOrderBackup {
       id
       qty
       prodName
@@ -347,10 +335,8 @@ export const onDeleteOrderBackup = /* GraphQL */ `
   }
 `;
 export const onCreateStandingBackup = /* GraphQL */ `
-  subscription OnCreateStandingBackup(
-    $filter: ModelSubscriptionStandingBackupFilterInput
-  ) {
-    onCreateStandingBackup(filter: $filter) {
+  subscription OnCreateStandingBackup {
+    onCreateStandingBackup {
       id
       timeStamp
       prodName
@@ -369,10 +355,8 @@ export const onCreateStandingBackup = /* GraphQL */ `
   }
 `;
 export const onUpdateStandingBackup = /* GraphQL */ `
-  subscription OnUpdateStandingBackup(
-    $filter: ModelSubscriptionStandingBackupFilterInput
-  ) {
-    onUpdateStandingBackup(filter: $filter) {
+  subscription OnUpdateStandingBackup {
+    onUpdateStandingBackup {
       id
       timeStamp
       prodName
@@ -391,10 +375,8 @@ export const onUpdateStandingBackup = /* GraphQL */ `
   }
 `;
 export const onDeleteStandingBackup = /* GraphQL */ `
-  subscription OnDeleteStandingBackup(
-    $filter: ModelSubscriptionStandingBackupFilterInput
-  ) {
-    onDeleteStandingBackup(filter: $filter) {
+  subscription OnDeleteStandingBackup {
+    onDeleteStandingBackup {
       id
       timeStamp
       prodName
@@ -413,10 +395,8 @@ export const onDeleteStandingBackup = /* GraphQL */ `
   }
 `;
 export const onCreateRouteBackup = /* GraphQL */ `
-  subscription OnCreateRouteBackup(
-    $filter: ModelSubscriptionRouteBackupFilterInput
-  ) {
-    onCreateRouteBackup(filter: $filter) {
+  subscription OnCreateRouteBackup {
+    onCreateRouteBackup {
       id
       routeName
       routeStart
@@ -433,10 +413,8 @@ export const onCreateRouteBackup = /* GraphQL */ `
   }
 `;
 export const onUpdateRouteBackup = /* GraphQL */ `
-  subscription OnUpdateRouteBackup(
-    $filter: ModelSubscriptionRouteBackupFilterInput
-  ) {
-    onUpdateRouteBackup(filter: $filter) {
+  subscription OnUpdateRouteBackup {
+    onUpdateRouteBackup {
       id
       routeName
       routeStart
@@ -453,10 +431,8 @@ export const onUpdateRouteBackup = /* GraphQL */ `
   }
 `;
 export const onDeleteRouteBackup = /* GraphQL */ `
-  subscription OnDeleteRouteBackup(
-    $filter: ModelSubscriptionRouteBackupFilterInput
-  ) {
-    onDeleteRouteBackup(filter: $filter) {
+  subscription OnDeleteRouteBackup {
+    onDeleteRouteBackup {
       id
       routeName
       routeStart
@@ -473,10 +449,8 @@ export const onDeleteRouteBackup = /* GraphQL */ `
   }
 `;
 export const onCreateZoneBackup = /* GraphQL */ `
-  subscription OnCreateZoneBackup(
-    $filter: ModelSubscriptionZoneBackupFilterInput
-  ) {
-    onCreateZoneBackup(filter: $filter) {
+  subscription OnCreateZoneBackup {
+    onCreateZoneBackup {
       id
       zoneNum
       zoneName
@@ -487,10 +461,8 @@ export const onCreateZoneBackup = /* GraphQL */ `
   }
 `;
 export const onUpdateZoneBackup = /* GraphQL */ `
-  subscription OnUpdateZoneBackup(
-    $filter: ModelSubscriptionZoneBackupFilterInput
-  ) {
-    onUpdateZoneBackup(filter: $filter) {
+  subscription OnUpdateZoneBackup {
+    onUpdateZoneBackup {
       id
       zoneNum
       zoneName
@@ -501,10 +473,8 @@ export const onUpdateZoneBackup = /* GraphQL */ `
   }
 `;
 export const onDeleteZoneBackup = /* GraphQL */ `
-  subscription OnDeleteZoneBackup(
-    $filter: ModelSubscriptionZoneBackupFilterInput
-  ) {
-    onDeleteZoneBackup(filter: $filter) {
+  subscription OnDeleteZoneBackup {
+    onDeleteZoneBackup {
       id
       zoneNum
       zoneName
