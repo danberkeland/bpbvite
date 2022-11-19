@@ -18,6 +18,7 @@ import { NavSide } from "./Nav";
 
 import { AnimatePresence } from "framer-motion";
 import { useSettingsStore } from "../Contexts/SettingsZustand";
+import Orders3 from "../Pages/Ordering/Orders3";
 
 function AnimatedRoutes({ Routes, Route, useLocation }) {
   const authClass = useSettingsStore((state) => state.authClass);
@@ -26,7 +27,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
   return (
     <AnimatePresence>
       <Routes location={location} key={location.pathname}>
-        <Route path="/Ordering" element={<Orders2 />} />
+        <Route path="/Ordering" element={<Orders3 />} />
         <Route path="/CustomerNews" element={<CustomerNews />} />
         <Route path="/CustomerBilling" element={<CustomerBilling />} />
         <Route path="/CustomerSettings" element={<CustomerSettings />} />
