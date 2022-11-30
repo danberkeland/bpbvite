@@ -95,7 +95,8 @@ const Submit = () => {
 const CustList = () => {
   const chosen = useSettingsStore((state) => state.chosen);
   const setChosen = useSettingsStore((state) => state.setChosen);
-  const setIsModified = useSettingsStore((state) => state.setIsModified);
+  const currentLoc = useSettingsStore((state) => state.currentLoc)
+ 
 
   const { locationList } = useLocUserList();
   const { simpleLocationList } = useSimpleLocationList();
@@ -107,11 +108,11 @@ const CustList = () => {
 
   return (
     <Dropdown
-      value={chosen.locNick}
+      value={chosen ? chosen.locNick : ""}
       name="custDropDown"
       options={simpleLocationList.data}
       onChange={(e) => {
-        setIsModified(false);
+       
         handleChosen(e);
       }}
       placeholder="Select a Customer"
