@@ -100,6 +100,8 @@ const Orders3 = () => {
   const [displayDate, setDisplayDate] = useState()
   const [orderListDisplay, setOrderListDisplay] = useState()
   const [showSidebar, setShowSidebar] = useState(false)
+
+  const [expandedRows, setExpandedRows] = useState(null);
   
   const { data: locList }  = useLocationList(userInfo)
   const { data: orderList } = useSWRimmutable(
@@ -108,19 +110,31 @@ const Orders3 = () => {
   )
   const { data: productSelectList } = useProductSelectionList()
 
+  // clean up incoming order data for presentation
   useEffect(() => {
-    let standing
-    let cart
+    let altPrices
+    let standing, cart
+    let zone, route
+
     if (orderList) {
+      zone = orderList.data.getLocation.zoneNick
+      route = (zone === 'atownpick' || zone === 'slopick') ? zone : 'deliv'
+
+      altPrices = orderList.data.getLocation.customProd.items
+      altPrices = altPrices.map(item => ([item.prodNick, item.wholePrice]))
+      altPrices = Object.fromEntries(altPrices)
+
       standing = orderList.data.getLocation.standing.items.map(item => ({
         id: item.id,
         prodName: item.product.prodName,
         prodNick: item.product.prodNick,
         originalQty: item.qty,
         newQty: item.qty,
-        type: "C",
-        route: "deliv",
-        rate: item.product.wholePrice,
+        type: "S",
+        route: route,
+        rate: item.product.prodNick in altPrices 
+          ? altPrices[item.product.prodNick] 
+          : item.product.wholePrice,
         total: Math.round(item.qty * item.product.wholePrice * 100) / 100
       }))
 
@@ -130,9 +144,15 @@ const Orders3 = () => {
         prodNick: item.product.prodNick,
         originalQty: item.qty,
         newQty: item.qty,
-        type: "S",
+        type: "C",
         route: item.route ? item.route : "deliv",
-        rate: item.product.wholePrice,
+        rate: 'rate' in item 
+          ? item.rate 
+          : (
+            item.product.prodNick in altPrices 
+              ? altPrices[item.product.prodNick] 
+              : item.product.wholePrice
+          ),
         total: Math.round(item.qty * item.product.wholePrice * 100) / 100
       }))
       let cartAndStanding = [...cart, ...standing]
@@ -140,8 +160,8 @@ const Orders3 = () => {
       
       let orders = []
       for (let name of names) {
-        let first = cartAndStanding.find((obj) => obj.prodNick === name);
-        orders.push(first);
+        let firstMatch = cartAndStanding.find((obj) => obj.prodNick === name);
+        orders.push(firstMatch);
       }
       setOrderListDisplay(orders)
     }
@@ -231,7 +251,7 @@ const Orders3 = () => {
             )
           }}
         >
-          <TabMenu 
+          {/* <TabMenu 
             model={[
               {label: `Delivery${orderListDisplay ? ' (' + orderListDisplay.filter(item => item.route === 'deliv').length + ')' : ''}`, icon: 'pi pi-send'},
               {label: `Pickup SLO${orderListDisplay ? ' (' + orderListDisplay.filter(item => item.route === 'slopick').length + ')' : ''}`, icon: 'pi pi-shopping-bag'},
@@ -239,15 +259,54 @@ const Orders3 = () => {
             ]} 
             activeIndex={activeIndex}
             onTabChange={e => setActiveIndex(e.index)}
-          />
+          /> */}
 
           <DataTable
             value={orderListDisplay && orderListDisplay.filter(item => (item.route === tabIndexFulfillmentTypes[activeIndex]))}
+            style={{width: "100%"}}
             responsiveLayout="scroll"
             className="editable-cells-table"
             editMode="cell"
+            dataKey="id" // dataKey prevents row from collapsing when editing quantity
+            expandedRows={expandedRows} 
+            onRowToggle={e => setExpandedRows(e.data)}
+            rowExpansionTemplate={data => {
+              return(
+                <div style={{ display: "grid", gridTemplateColumns: "3em 1fr 20%", columnGap: "20px"}}>
+                  <div style={{gridColumn: "1 / 2", alignSelf: "center"}}>
+                    <Button icon="pi pi-trash" 
+                      className="p-button-rounded p-button-warning" 
+                      onClick={() => {
+                        let _expandedRows = expandedRows
+                        delete _expandedRows[data.id]
+                        setExpandedRows(_expandedRows)
+                        let filteredOrders = orderListDisplay.filter(item => item.prodNick !== data.prodNick)
+                        setOrderListDisplay(filteredOrders)  
+                      }} 
+                    />
+                  </div>
+                  <div style={{gridColumn: "2 / 3", alignSelf: "center", textAlign: "right"}}>
+                    <p>{"Rate: "}</p>
+                    <p>{"Subtotal: "}</p>
+                  </div>
+                  <div style={{gridColumn: "3 / 4", alignSelf: "center"}}>
+                    <p>{data.rate.toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</p>
+                    <p>{(data.newQty * data.rate).toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</p>
+                  </div>
+                  {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
+                </div>
+              )
+            }}
           >
-            <Column field="prodName" header="Product" />
+            <Column expander style={{ width: '3em' }} />
+            <Column field="prodName" 
+              header="Product" 
+              body={rowData => {
+                return (
+                    <div>{rowData.originalQty === rowData.newQty ? rowData.prodName : <b>{rowData.prodName}</b>}</div>
+                )
+              }}
+            />
             <Column field="newQty" 
                 header="Quantity"
                 style={{ width: '20%' }}
@@ -255,31 +314,41 @@ const Orders3 = () => {
                     <InputNumber 
                       className="p-fluid" 
                       value={options.value} 
-                      onValueChange={(e) => options.editorCallback(e.value)} 
+                      onValueChange={(e) => {
+                        options.editorCallback(e.value)
+                      }} 
                       style={{padding: "0px"}}
                     ></InputNumber>
                 )}}
                 onCellEditComplete={e => {
                   let { rowData, newValue, field, originalEvent: event } = e
-                  if (newValue >= 0) {
+                  if (newValue > 0) {
                     let newTableData = orderListDisplay.slice()
                     newTableData.forEach( (item, idx) => {
                       if (item.id === rowData.id) {
                         newTableData[idx] = {...newTableData[idx], newQty: newValue, total: (rowData.rate * newValue)}
                       }})
                     setOrderListDisplay(newTableData)
+                  } else if (newValue === 0) {
+                    let newTableData = orderListDisplay.filter(item => item.prodNick !== rowData.prodNick)
+                    setOrderListDisplay(newTableData)
                   } else
                     event.preventDefault()
                 }}
-                body={rowData => (rowData.originalQty === rowData.newQty ? rowData.newQty : <b>{rowData.newQty}</b>)}
+                body={rowData => {
+                  return (
+                    <div>
+                      {(rowData.originalQty === rowData.newQty ? rowData.newQty : <b>{rowData.newQty}</b>)}
+                      <i className="pi pi-pencil" style={{fontSize: '0.75em', float: 'right', marginRight: '8px'}}></i>
+                    </div>
+                  )
+                }}
               ></Column>
-            <Column field="rate" header="Current Rate (subject to change)" />
-            <Column field="total" header="Total" 
-              body={rowData => rowData.total.toLocaleString('en-US', {style: 'currency', currency: 'USD'})}
-            />
           </DataTable>
           <Panel header="Raw Table Data" toggleable collapsed={true} style={{margin: "10px"}}>
-            <pre>Order List: {JSON.stringify(orderList, null, 2)}</pre>
+            {/* <pre>Order List: {JSON.stringify(orderList, null, 2)}</pre> */}
+            <pre>expandedRows: {JSON.stringify(expandedRows, null, 2)}</pre>
+
           </Panel>
         </Card>
       }
@@ -367,6 +436,15 @@ const listOrdersFromLocation = /* GraphQL */ `
     $delivDate: String
   ) {
     getLocation(locNick: $locNick) {
+      locNick
+      locName
+      zoneNick
+      customProd {
+        items {
+          prodNick
+          wholePrice
+        }
+      }
       orders(filter: {delivDate: {eq: $delivDate}}) {
         items {
           id
@@ -406,50 +484,6 @@ const listOrdersFromLocation = /* GraphQL */ `
         }
         nextToken
       }
-      locNick
-      locName
-    }
-  }
-`;
-
-
-const listOrdersFromLocation2 = /* GraphQL */ `
-  query customQuery(
-    $locNick: String,
-    $dayOfWeek: String,
-    $delivDate: String
-  ) {
-    getLocation(locNick: $locNick) {
-      standing (filter: {dayOfWeek: {eq: $dayOfWeek}}) {
-        items {
-          id
-          prodNick
-          qty
-          dayOfWeek
-          ItemNote
-          isWhole
-          isStand
-          startDate
-          endDate
-        }
-        nextToken
-      }
-      orders(filter: {delivDate: {eq: $delivDate}}) {
-        items {
-          id
-          prodNick
-          qty
-          delivDate
-          ItemNote
-          SO
-          isWhole
-          rate
-          isLate
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
     }
   }
 `;

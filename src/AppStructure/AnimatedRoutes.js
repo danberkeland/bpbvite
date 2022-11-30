@@ -19,6 +19,7 @@ import { NavSide } from "./Nav";
 import { AnimatePresence } from "framer-motion";
 import { useSettingsStore } from "../Contexts/SettingsZustand";
 import Orders3 from "../Pages/Ordering/Orders3";
+import Orders4 from "../Pages/Ordering/Orders4";
 
 function AnimatedRoutes({ Routes, Route, useLocation }) {
   const authClass = useSettingsStore((state) => state.authClass);
