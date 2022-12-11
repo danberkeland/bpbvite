@@ -124,3 +124,39 @@ export const listProducts = /* GraphQL */ `
   }
 `;
 
+export const listAltPricesforLocation = /* GraphQL */ `
+   query MyQuery(
+    $locNick: String!, 
+  ) {
+    getLocation(locNick: $locNick) {
+      customProd {
+        items {
+          prodNick
+          wholePrice
+        }
+      }
+    }
+  }
+`;
+
+export const listProductOverridesForLocation = /* GraphQL */ `
+  query MyQuery(
+    $locNick: String!, 
+  ) {
+    getLocation(locNick: $locNick) {
+      customProd {
+        items {
+          prodNick
+          wholePrice
+        }
+      }
+      prodsNotAllowed {
+        items {
+          id
+          isAllowed
+          prodNick
+        }
+      }
+    }
+  }
+`
