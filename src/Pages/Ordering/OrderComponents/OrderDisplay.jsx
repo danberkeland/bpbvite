@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React from "react"
 import { Button } from "primereact/button"
 import { Card } from "primereact/card"
 import { DataTable } from "primereact/datatable"
@@ -6,9 +6,21 @@ import { Column } from "primereact/column"
 import { InputNumber } from "primereact/inputnumber"
 import { RadioButton } from "primereact/radiobutton"
 import { InputTextarea } from "primereact/inputtextarea"
+import { useState } from "react"
 
 export const OrderDisplay = ({data, disableAddItem, setShowAddItem}) => {
   const {orderHeader, setOrderHeader, orderData, setOrderData} = data
+  const [expandedRows, setExpandedRows] = useState(null)
+
+  const rowExpansionTemplate = (rowData) => {
+    return (
+      <div>
+        <pre>{JSON.stringify(rowData, null, 2)}</pre>
+        <p>{"Rate: " + rowData.rate}</p>
+        <p>{"Subtotal: " + rowData.total}</p>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -16,37 +28,59 @@ export const OrderDisplay = ({data, disableAddItem, setShowAddItem}) => {
         style={{marginTop: "10px"}}
         title="Options"
       >
-        <div>
-          {orderHeader.zoneNick !== 'slopick' && orderHeader.zoneNick !== 'atownpick' &&
-          <span style={{margin: "5px"}}>
+        <div style={{marginBottom: "30px"}}>
+          {orderHeader.defaultRoute !== 'slopick' && orderHeader.defaultRoute !== 'atownpick' &&
+          <div style={{margin: "5px"}}>
             <RadioButton inputId="deliv" value="deliv" 
-              checked={orderHeader.route === 'deliv'}
-              onChange={e => setOrderHeader({...orderHeader, route: e.value})}
+              checked={orderHeader.newRoute === 'deliv'}
+              onChange={e => setOrderHeader({...orderHeader, newRoute: e.value})}
             />
-            <label htmlFor="deliv">Delivery</label>
-          </span>
+            <label 
+              htmlFor="deliv"
+              style={{fontWeight: orderHeader.newRoute === orderHeader.route ? "normal" : (orderHeader.newRoute === 'deliv' ? "bold" : "normal")}}
+            >
+              {orderHeader.defaultRoute === 'deliv' ? 'Delivery (default)' : 'Delivery'}
+            </label>
+          </div>
           }
-          <span style={{margin: "5px"}}>
+          <div style={{margin: "5px"}}>
             <RadioButton inputId="slopick" value="slopick" 
-              onChange={e => setOrderHeader({...orderHeader, route: e.value})} 
-              checked={orderHeader.route === 'slopick'}
+              onChange={e => setOrderHeader({...orderHeader, newRoute: e.value})} 
+              checked={orderHeader.newRoute === 'slopick'}
             />
-            <label htmlFor="slopick">Pick Up SLO</label>
-          </span>
-          <span style={{margin: "5px"}}>
+            <label 
+              htmlFor="slopick"
+              style={{fontWeight: orderHeader.newRoute === orderHeader.route ? "normal" : (orderHeader.newRoute === 'slopick' ? "bold" : "normal")}}
+            >
+              {orderHeader.defaultRoute === 'slopick' ? 'Pick Up SLO (defualt)' : "Pick Up SLO"}
+            </label>
+          </div>
+          <div style={{margin: "5px"}}>
             <RadioButton inputId="atownpick" value="atownpick" 
-              onChange={e => setOrderHeader({...orderHeader, route: e.value})} 
-              checked={orderHeader.route === 'atownpick'}
+              onChange={e => setOrderHeader({...orderHeader, newRoute: e.value})} 
+              checked={orderHeader.newRoute === 'atownpick'}
             />
-            <label htmlFor="atownpick">Pick Up Carlton</label>
-          </span>
+            <label 
+              htmlFor="atownpick"
+              style={{fontWeight: orderHeader.newRoute === orderHeader.route ? "normal" : (orderHeader.newRoute === 'atownpick' ? "bold" : "normal")}}
+            >
+              {orderHeader.defaultRoute === 'atownpick' ? "Pick Up Carlton (defualt)" : "Pick Up Carlton"}
+            </label>
+          </div>
         </div>
 
-        <InputTextarea placeholder="Add a Note" 
-          style={{margin: "5px", width: "100%"}}
-          onChange={e => setOrderHeader({...orderHeader, ItemNote: e.target.value})}
-        />
-          
+        <span className="p-float-label">
+          <InputTextarea
+            id="input-note"
+            style={{width: "100%"}}
+            onChange={e => setOrderHeader({...orderHeader, newItemNote: e.target.value})}
+          />
+          <label htmlFor="input-note"
+            style={{fontWeight: orderHeader.newItemNote !== orderHeader.ItemNote ? "bold" : "normal"}}
+          >
+            {"Add a Note" + (orderHeader.newItemNote !== orderHeader.ItemNote ? "*" : '')}
+          </label>
+        </span>
         {/* <pre>{JSON.stringify(orderHeader, null, 2)}</pre> */}
       </Card>
 
@@ -72,11 +106,29 @@ export const OrderDisplay = ({data, disableAddItem, setShowAddItem}) => {
           value={orderData}
           style={{width: "100%"}}
           responsiveLayout="scroll"
-          className="editable-cells-table"
-          editMode="cell"
+          rowExpansionTemplate={rowExpansionTemplate}
+          expandedRows={expandedRows} 
+          onRowToggle={(e) => setExpandedRows(e.data)}
+          dataKey="prodNick"
+          footer={() => {return(<div>{"Total: " + orderData.reduce( (acc, item) => { return (acc + (item.rate * item.newQty)) }, 0).toFixed(2)}</div>)}}
         >
+          <Column expander={true} style={{ width: '3em' }} />
           <Column header="Product" 
             field="prodName" 
+            body={rowData => {
+              const changeDetected = rowData.newQty !== rowData.originalQty
+              if (rowData.newQty === 0) return (
+                <div
+                  style={{color: "gray"}}
+                >
+                  <strike>{rowData.prodName}</strike>
+                </div>
+              )
+              if (changeDetected) return (
+                <b>{rowData.prodName + "*"}</b>
+              )
+              return rowData.prodName
+            }}
           />
           <Column header="Quantity" 
             field="newQty" 
@@ -85,7 +137,8 @@ export const OrderDisplay = ({data, disableAddItem, setShowAddItem}) => {
               return(
                 <div className="p-fluid">
                   <InputNumber 
-                    value={rowData.newQty} 
+                    value={rowData.newQty}
+                    min={0}
                     onChange={e => {
                       const _orderData = orderData.map(item => 
                         item.prodNick === rowData.prodNick ? 
@@ -93,6 +146,30 @@ export const OrderDisplay = ({data, disableAddItem, setShowAddItem}) => {
                           item
                       )
                       setOrderData(_orderData)
+                    }}
+                    onKeyDown={e => {
+                      console.log(e)
+                      if (e.key === "Enter") {
+                        if (e.target.value === '') {
+                          const _orderData = orderData.map(item =>
+                            item.prodNick === rowData.prodNick ?
+                              {...item, newQty: item.originalQty} :
+                              item  
+                          )
+                          setOrderData(_orderData)
+                          
+                        }
+                        e.target.blur()
+                      }
+                      if (e.key === "Escape") {
+                        const _orderData = orderData.map(item =>
+                          item.prodNick === rowData.prodNick ?
+                            {...item, newQty: item.originalQty} :
+                            item  
+                        )
+                        setOrderData(_orderData)
+                        e.target.blur()
+                      }
                     }}
                   />
                 </div>

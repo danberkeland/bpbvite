@@ -65,6 +65,11 @@ export const Orders6 = () => {
           // according to schema spec.
           // Also need to decide whether to create or edit
           // apply header values to each item
+          // Create if...
+          //    order type is S
+          //    newQty != originalQty
+          // Update if...
+          //    
           const orderSubmit = orderData.map(item => {
             return ({
               ...item, 
@@ -72,14 +77,17 @@ export const Orders6 = () => {
               ItemNote: orderHeader.ItemNote
             })
           })
+          
           alert(JSON.stringify(orderSubmit, null, 2))
+
+          
         }}
       />
       
       <pre>{"location: " + JSON.stringify(location, null, 2)}</pre>
       <pre>{"delivDate: " + JSON.stringify(delivDate, null, 2)}</pre>
       <pre>{"showSidebar: " + JSON.stringify(showAddItem, null, 2)}</pre>
-      {/* <pre>{JSON.stringify(orderData, null, 2)}</pre> */}
+      <pre>{JSON.stringify(orderHeader, null, 2)}</pre>
 
       <div style={{height: "150px"}}></div>
     </div>

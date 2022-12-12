@@ -5,10 +5,11 @@ import { Calendar } from "primereact/calendar"
 import { Dropdown } from "primereact/dropdown"
 
 import { useLocationList } from "../DataFetching/hooks"
+import dynamicSort from "../Functions/dynamicSort"
 
 
 export const OrderSelection = ({selection, canChooseLocation}) => {
-  const {location, setLocation, delivDate, setDelivDate} = selection
+  const { location, setLocation, delivDate, setDelivDate } = selection
   const { locationList, locationListErrors } = useLocationList(canChooseLocation)
 
   return(
@@ -20,7 +21,7 @@ export const OrderSelection = ({selection, canChooseLocation}) => {
           <span className="p-float-label p-fluid" style={{marginTop: "25px"}}>
             <Dropdown 
               id="locationDropdown"
-              options={locationList ? locationList : []}
+              options={locationList ? locationList.sort(dynamicSort("locName")) : []}
               optionLabel="locName"
               optionValue="locNick"
               value={location}

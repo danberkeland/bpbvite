@@ -1,5 +1,6 @@
 import { API } from "aws-amplify"
 import { dateToMmddyyyy, getWeekday } from "../Functions/dateAndTime"
+import dynamicSort from "../Functions/dynamicSort"
 import * as queries from './queries'
 
 export const gqlFetcher = async (query, variables) => {
@@ -106,10 +107,10 @@ function transformOrderData(data) {
   //  if constant, set all routes to that value (variable 'firstRoute');
   //
   //  With the note we will be less careful and just pull from the first cart entry;
-  let firstNote = ""
   let firstRoute = ""
+  let firstNote = ""
   if (cart.length) {
-    let firstRoute = cart[0].route
+    let firstRoute = cart[0].route 
     let firstNote = cart[0].ItemNote
     const testRoutes = cart.map(item => item.route === firstRoute)
 
@@ -117,16 +118,20 @@ function transformOrderData(data) {
       return({
         ...item,
         route: testRoutes.includes(false) ? route : firstRoute,
-        ItemNote: firstNote
+        ItemNote: firstNote,
       })
     })
   }
+  // orders = orders.sort(dynamicSort("prodName"))
 
   return({
     header: {
       zoneNick: zone,
+      defaultRoute: route,
       route: orders.length ? orders[0].route : route,
-      ItemNote: firstNote
+      newRoute: orders.length ? orders[0].route : route,
+      ItemNote: firstNote,
+      newItemNote: firstNote
     },
     items: orders
   })
@@ -137,6 +142,7 @@ export const fetchProductData = async () => {
     query: queries.listProducts,
     variables: {limit: 1000} 
   })).data.listProducts.items
+  response = response.sort(dynamicSort("prodName"))
   return response
 }
 
@@ -179,6 +185,8 @@ export const fetchProdsForLocation = async (location, setData) => {
       return item
     }
   }) 
+
+  prodsForLocation.sort(dynamicSort("prodName"))
 
   setData(prodsForLocation)
 }
