@@ -19,7 +19,7 @@ export const Orders6 = () => {
     location: globalState.userObject.attributes["custom:defLoc"]
   }
   const [location, setLocation] = useState(user.location === 'backporch' ? null : user.location)
-  const [delivDate, setDelivDate] = useState(null)
+  const [delivDate, setDelivDate] = useState(new Date(getOrderSubmitDate().plus({ days: 1}).toISO()))
   const selection = {location, setLocation, delivDate, setDelivDate}
 
   const [orderHeader, setOrderHeader] = useState()
@@ -28,6 +28,10 @@ export const Orders6 = () => {
 
   const [showAddItem, setShowAddItem] = useState(false)
   const sidebarProps = {showAddItem, setShowAddItem}
+
+  useEffect(() => {
+    console.log(globalState)
+  }, [])
 
   useEffect(() => {
     if (location && delivDate) {
