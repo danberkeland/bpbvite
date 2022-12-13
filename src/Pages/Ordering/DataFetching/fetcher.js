@@ -26,13 +26,12 @@ export const fetchOrderData = async (location, date, setHeader, setItems) => {
     variables: variables 
   })
 
-  console.log(response)
+  console.log("orderData for " + location + " " + dateToMmddyyyy(date) + ":\n", response)
   const orderData = transformOrderData(response)
 
   setHeader(orderData.header)
   setItems(orderData.items)
 }
-
 
 function transformOrderData(data) {
   // Put standing orders and cart orders together
@@ -122,7 +121,7 @@ function transformOrderData(data) {
       })
     })
   }
-  // orders = orders.sort(dynamicSort("prodName"))
+  orders.sort(dynamicSort("prodName"))
 
   return({
     header: {
@@ -137,16 +136,20 @@ function transformOrderData(data) {
   })
 }
 
-export const fetchProductData = async () => {
-  const response = (await API.graphql({
+// used in fetchProdsForLocation
+const fetchProductData = async () => {
+  let response = (await API.graphql({
     query: queries.listProducts,
     variables: {limit: 1000} 
   })).data.listProducts.items
-  response = response.sort(dynamicSort("prodName"))
+
+  response.sort(dynamicSort("prodName"))
+
   return response
 }
 
-export const fetchProductOverrides = async (location) => {
+// used in fetchProdsForLocation
+const fetchProductOverrides = async (location) => {
   const response = (await API.graphql({
     query: queries.listProductOverridesForLocation,
     variables: {locNick: location}
@@ -156,16 +159,18 @@ export const fetchProductOverrides = async (location) => {
     altPrices: response.data.getLocation.customProd.items,
     notAllowed: response.data.getLocation.prodsNotAllowed.items,
   }
+
   return productOverrides
 }
 
 export const fetchProdsForLocation = async (location, setData) => {
   const products = await fetchProductData()
-  
   const {altPrices, notAllowed} = await fetchProductOverrides(location)
+
   const altPriceMap = Object.fromEntries(altPrices?.map(item => [item.prodNick, item.wholePrice]))
   const notAllowedMap = Object.fromEntries(notAllowed?.map(item => [item.prodNick, item.isAllowed]))
   
+  // remove disallowed items
   let prodsForLocation = products.filter(item => item.prodNick in notAllowedMap ? 
     (
       notAllowedMap[item.prodNick] === true ?
@@ -175,18 +180,25 @@ export const fetchProdsForLocation = async (location, setData) => {
     item.defaultInclude
   )
   
+  // of the remaining items, apply any custom pricing
+  // current convention leaves wholePrice, the default unit price, in the object
+  // and also adds rate, which applies any custom pricing if it exists
   prodsForLocation = prodsForLocation.map(item => {
     if (item.prodNick in altPriceMap) {
       return ({
         ...item,
-        wholePrice: altPriceMap[item.prodNick]
+        rate: altPriceMap[item.prodNick]
       })
     } else {
-      return item
+      return ({
+        ...item,
+        rate: item.wholePrice
+      })
     }
   }) 
 
   prodsForLocation.sort(dynamicSort("prodName"))
 
   setData(prodsForLocation)
+
 }

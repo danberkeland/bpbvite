@@ -11,11 +11,11 @@ import { useState } from "react"
 export const OrderDisplay = ({data, disableAddItem, setShowAddItem}) => {
   const {orderHeader, setOrderHeader, orderData, setOrderData} = data
   const [expandedRows, setExpandedRows] = useState(null)
+  const [rollbackQty, setRollbackQty] = useState(null)
 
   const rowExpansionTemplate = (rowData) => {
     return (
       <div>
-        <pre>{JSON.stringify(rowData, null, 2)}</pre>
         <p>{"Rate: " + rowData.rate}</p>
         <p>{"Subtotal: " + rowData.total}</p>
       </div>
@@ -108,6 +108,7 @@ export const OrderDisplay = ({data, disableAddItem, setShowAddItem}) => {
           responsiveLayout="scroll"
           rowExpansionTemplate={rowExpansionTemplate}
           expandedRows={expandedRows} 
+          onRowExpand={e => console.log("Data for " + e.data.prodNick, JSON.stringify(e.data, null, 2))}
           onRowToggle={(e) => setExpandedRows(e.data)}
           dataKey="prodNick"
           footer={() => {return(<div>{"Total: " + orderData.reduce( (acc, item) => { return (acc + (item.rate * item.newQty)) }, 0).toFixed(2)}</div>)}}
@@ -137,6 +138,7 @@ export const OrderDisplay = ({data, disableAddItem, setShowAddItem}) => {
               return(
                 <div className="p-fluid">
                   <InputNumber 
+                    disabled={disableAddItem} // means ordering date >= deliv date; order list should be read-only
                     value={rowData.newQty}
                     min={0}
                     onChange={e => {
@@ -148,27 +150,41 @@ export const OrderDisplay = ({data, disableAddItem, setShowAddItem}) => {
                       setOrderData(_orderData)
                     }}
                     onKeyDown={e => {
-                      console.log(e)
+                      // console.log(e)
                       if (e.key === "Enter") {
-                        if (e.target.value === '') {
-                          const _orderData = orderData.map(item =>
-                            item.prodNick === rowData.prodNick ?
-                              {...item, newQty: item.originalQty} :
-                              item  
-                          )
-                          setOrderData(_orderData)
+                        // if (e.target.value === '') {
+                        //   const _orderData = orderData.map(item =>
+                        //     item.prodNick === rowData.prodNick ?
+                        //       {...item, newQty: item.originalQty} :
+                        //       item  
+                        //   )
+                        //   setOrderData(_orderData)
                           
-                        }
+                        // }
                         e.target.blur()
                       }
                       if (e.key === "Escape") {
+                        const _orderData = orderData.map(item =>
+                          item.prodNick === rowData.prodNick ?
+                            {...item, newQty: rollbackQty} :
+                            item  
+                        )
+                        setOrderData(_orderData)
+                        e.target.blur()
+                      }
+                    }}
+                    onFocus={e => {
+                      setRollbackQty(parseInt(e.target.value))
+                      e.target.select()
+                    }}
+                    onBlur={e => {
+                      if (e.target.value === '') {
                         const _orderData = orderData.map(item =>
                           item.prodNick === rowData.prodNick ?
                             {...item, newQty: item.originalQty} :
                             item  
                         )
                         setOrderData(_orderData)
-                        e.target.blur()
                       }
                     }}
                   />

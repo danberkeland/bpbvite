@@ -59,7 +59,9 @@ export const Orders6 = () => {
         />
       }
 
+      {/* TODO: Disable is no changes to DB are needed */}
       <Button label="Submit Order"
+        disabled={(!location) || (!delivDate)}
         onClick={() => {
           // Need to build up order Update/Create items
           // according to schema spec.

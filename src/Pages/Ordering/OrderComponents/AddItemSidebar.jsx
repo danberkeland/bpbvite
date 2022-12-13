@@ -12,7 +12,7 @@ import { DateTime } from "luxon"
 import { getOrderSubmitDate } from "../Functions/dateAndTime"
 
 export const AddItemSidebar = ({data, sidebarProps, location, delivDate}) => {
-  const {orderData, setOrderData} = data
+  const {orderHeader, setOrderHeader, orderData, setOrderData} = data
   const {showAddItem, setShowAddItem} = sidebarProps
 
   // depreciate SWR fetching; product list gets mutated on front end a lot
@@ -73,6 +73,7 @@ export const AddItemSidebar = ({data, sidebarProps, location, delivDate}) => {
                 setSelectedQty(orderData[i].newQty)
               }
             }
+            console.log("Selected Product:\n", JSON.stringify(selectedProduct, null, 2))
             
           }}
           itemTemplate={option => {
@@ -87,54 +88,56 @@ export const AddItemSidebar = ({data, sidebarProps, location, delivDate}) => {
         />
         <label htmlFor="productDropdown">{productData ? "Select Product" : "Loading..."}</label>
       </span>
+        
+      <div style={{display: "flex"}}>
+        <span className="p-float-label p-fluid" style={{flex: "65%", marginTop: "28px", paddingRight: "30%"}}>
+          <InputNumber id="product-qty"
+            value={selectedQty}
+            onChange={e => setSelectedQty(e.value)}
+            disabled={selectedProduct ? selectedProduct.isLate : false}
+          />
+          <label htmlFor="product-qty">Quantity</label>
+        </span>
       
-      <span className="p-float-label p-fluid" style={{marginTop: "25px"}}>
-        <InputNumber id="product-qty"
-          value={selectedQty}
-          onValueChange={e => setSelectedQty(e.value)}
-          disabled={selectedProduct ? selectedProduct.isLate : false}
-        />
-        <label htmlFor="product-qty">Quantity</label>
-      </span>
 
-      <Button label="Add Item"
-        disabled={!selectedProdNick || !selectedQty || selectedProduct.isLate}
-        style={{marginTop: "25px"}}
-        onClick={() => {
-          const _orderData = [
-            { 
-              ...selectedProduct,
-              originalQty: 0,
-              newQty: selectedQty,
-              route: 'TBD'
-            },
-            ...orderData,
-          ]
-          setOrderData(_orderData)
-          setShowAddItem(false)
-          setSelectedProdNick(null)
-          setSelectedProduct(null)
-          setSelectedQty(null)
-          console.log("added item")
-        }}
-      />
+        <Button label="Add Item"
+          disabled={!selectedProdNick || !selectedQty || selectedProduct.isLate || selectedProduct.inCart}
+          style={{flex: "35%", marginTop: "28px"}}
+          onClick={() => {
+            let _orderData = [
+              { 
+                orderID: null,
+                prodName: selectedProduct.prodName,
+                prodNick: selectedProduct.prodNick,
+                originalQty: 0,
+                newQty: selectedQty,
+                type: "C",
+                route: 'TBD',
+                ItemNote: "",
+                rate: selectedProduct.rate,
+                total: (selectedQty * selectedProduct.rate).toFixed(2)
+              },
+              ...orderData,
+            ]
+            setOrderData(_orderData)
+            setShowAddItem(false)
+            setSelectedProdNick(null)
+            setSelectedProduct(null)
+            setSelectedQty(null)
+            console.log("added item")
+          }}
+        />
+      </div>
 
       {selectedProduct &&
       <Card 
-        title={selectedProduct.prodName}
-        style={{marginTop: "25px"}}
+        style={{marginTop: "10px"}}
       >
         <p>{selectedProduct.isLate ? "earliest " + selectedProduct.availableDate : 'available'}</p>
         <p>{"rate: " + selectedProduct.wholePrice}</p>
-        <p>{"total: " + (selectedProduct.wholePrice * selectedQty).toFixed(2)}</p>
-        <p>{"<other product details here>"}</p>
-        
+        <p>{"total: " + (selectedProduct.wholePrice * selectedQty).toFixed(2)}</p>        
       </Card>
       }
-
-      <pre>{JSON.stringify(selectedProdNick, null, 2)}</pre>
-      <pre>{JSON.stringify(selectedProduct, null, 2)}</pre>
-      <pre>{JSON.stringify(productData, null, 2)}</pre>
 
     </Sidebar>
   )
