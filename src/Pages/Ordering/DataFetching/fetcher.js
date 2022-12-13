@@ -138,7 +138,7 @@ function transformOrderData(data) {
 }
 
 export const fetchProductData = async () => {
-  const response = (await API.graphql({
+  let response = (await API.graphql({
     query: queries.listProducts,
     variables: {limit: 1000} 
   })).data.listProducts.items
