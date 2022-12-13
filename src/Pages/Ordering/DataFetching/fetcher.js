@@ -106,11 +106,10 @@ function transformOrderData(data) {
   //  if constant, set all routes to that value (variable 'firstRoute');
   //
   //  With the note we will be less careful and just pull from the first cart entry;
-  let firstRoute = ""
   let firstNote = ""
   if (cart.length) {
     let firstRoute = cart[0].route 
-    let firstNote = cart[0].ItemNote
+    firstNote = cart[0].ItemNote ? cart[0].ItemNote : ''
     const testRoutes = cart.map(item => item.route === firstRoute)
 
     orders = orders.map(item => {
