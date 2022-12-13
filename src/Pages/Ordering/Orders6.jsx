@@ -84,7 +84,33 @@ export const Orders6 = () => {
             })
           })
           
-          alert(JSON.stringify(orderSubmit, null, 2))
+          const routeChanged = orderHeader.route !== orderHeader.newRoute
+          const noteChanged = orderHeader.ItemNote !== orderHeader.newItemNote
+
+          const headerSummary = {
+            routeChanged: routeChanged,
+            noteChanged: noteChanged,
+          }
+
+          const itemSummary = orderSubmit.map(item => {
+            const qtyChanged = item.originalQty !== item.newQty
+
+            return ({
+              originalType: item.type,
+              uuid: item.orderID,
+              qtyChanged: qtyChanged,
+              newQty: item.newQty,
+              action: (!item.orderID) && (item.newQty > 0) ? 'CREATE' : 
+                (item.type === 'S' && (qtyChanged || routeChanged || noteChanged) ? 'CREATE' :
+                  item.type === 'C' && (qtyChanged || routeChanged || noteChanged) ? 'UPDATE' : 'N/A'
+                )
+            })
+          })
+
+
+          const submitLog = [headerSummary, ...itemSummary]
+
+          console.log(JSON.stringify(submitLog, null, 2))
 
           
         }}
