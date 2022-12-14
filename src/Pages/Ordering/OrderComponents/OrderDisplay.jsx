@@ -7,6 +7,7 @@ import { InputNumber } from "primereact/inputnumber"
 import { RadioButton } from "primereact/radiobutton"
 import { InputTextarea } from "primereact/inputtextarea"
 import { useState } from "react"
+// import { packGroups } from "../DataFetching/mockdata"
 
 export const OrderDisplay = ({data, disableAddItem, setShowAddItem}) => {
   const {orderHeader, setOrderHeader, orderData, setOrderData} = data
@@ -152,15 +153,6 @@ export const OrderDisplay = ({data, disableAddItem, setShowAddItem}) => {
                     onKeyDown={e => {
                       // console.log(e)
                       if (e.key === "Enter") {
-                        // if (e.target.value === '') {
-                        //   const _orderData = orderData.map(item =>
-                        //     item.prodNick === rowData.prodNick ?
-                        //       {...item, newQty: item.originalQty} :
-                        //       item  
-                        //   )
-                        //   setOrderData(_orderData)
-                          
-                        // }
                         e.target.blur()
                       }
                       if (e.key === "Escape") {
@@ -194,6 +186,15 @@ export const OrderDisplay = ({data, disableAddItem, setShowAddItem}) => {
           />
         </DataTable>
       </Card>
+
+      {/* <DataTable
+        value={packGroups.data.listProductBackups.items}
+        style={{width: "100%"}}
+        responsiveLayout="scroll"
+      >
+        <Column header="name" field="nickName"></Column>
+        <Column header="packGroup" field="packGroup"></Column>
+      </DataTable> */}
     </div>
   )
 

@@ -12,7 +12,7 @@ import { DateTime } from "luxon"
 import { getOrderSubmitDate } from "../Functions/dateAndTime"
 
 export const AddItemSidebar = ({data, sidebarProps, location, delivDate}) => {
-  const {orderHeader, setOrderHeader, orderData, setOrderData} = data
+  const {orderData, setOrderData} = data
   const {showAddItem, setShowAddItem} = sidebarProps
 
   // depreciate SWR fetching; product list gets mutated on front end a lot
@@ -109,6 +109,7 @@ export const AddItemSidebar = ({data, sidebarProps, location, delivDate}) => {
                 orderID: null,
                 prodName: selectedProduct.prodName,
                 prodNick: selectedProduct.prodNick,
+                locNick: location,
                 originalQty: 0,
                 newQty: selectedQty,
                 type: "C",
