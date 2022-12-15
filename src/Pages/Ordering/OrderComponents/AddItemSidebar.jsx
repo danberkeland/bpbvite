@@ -104,20 +104,28 @@ export const AddItemSidebar = ({data, sidebarProps, location, delivDate}) => {
           disabled={!selectedProdNick || !selectedQty || selectedProduct.isLate || selectedProduct.inCart}
           style={{flex: "35%", marginTop: "28px"}}
           onClick={() => {
-            let _orderData = [
-              { 
-                orderID: null,
-                prodName: selectedProduct.prodName,
-                prodNick: selectedProduct.prodNick,
-                locNick: location,
-                originalQty: 0,
-                newQty: selectedQty,
-                type: "C",
-                route: orderHeader.newRoute,
-                ItemNote: orderHeader.newItemNote,
-                rate: selectedProduct.rate,
-                total: (selectedQty * selectedProduct.rate).toFixed(2)
-              },
+            let newItem = { 
+              orderID: null,
+              prodName: selectedProduct.prodName,
+              prodNick: selectedProduct.prodNick,
+              locNick: location,
+              originalQty: 0,
+              newQty: selectedQty,
+              type: "C",
+              route: orderHeader.newRoute,
+              ItemNote: orderHeader.newItemNote,
+              rate: selectedProduct.rate,
+              total: (selectedQty * selectedProduct.rate).toFixed(2)
+            }
+
+            let _orderData = [...orderData]
+            const oldItem = orderData.find(item => item.prodNick === selectedProdNick)
+            if (oldItem) {
+              newItem.orderID = oldItem.orderID
+              _orderData = _orderData.filter(item => item.prodNick !== selectedProdNick)
+            }
+            _orderData = [
+              newItem,
               ...orderData,
             ]
             setOrderData(_orderData)
