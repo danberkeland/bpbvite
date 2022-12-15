@@ -26,9 +26,11 @@ export const fetchOrderData = async (location, date, setHeader, setItems) => {
     variables: variables 
   })
 
-  console.log("orderData for " + location + " " + dateToMmddyyyy(date) + ":\n", response)
+  // console.log("orderData for " + location + " " + dateToMmddyyyy(date) + ":\n", response)
   const orderData = transformOrderData(response)
 
+  console.log("Order Header:",orderData.header)
+  console.log("Order Data:", orderData.items)
   setHeader(orderData.header)
   setItems(orderData.items)
 }
@@ -60,11 +62,12 @@ function transformOrderData(data) {
       rate: item.product.prodNick in altPrices ? 
         altPrices[item.product.prodNick] : 
         item.product.wholePrice,
-      total: Math.round(item.qty * item.product.wholePrice * 100) / 100
+      total: Math.round(item.qty * item.product.wholePrice * 100) / 100,
+      isLate: 0 // later, we should compare creation timestamp to delivDate
     }))
   }
 
-  if (data.data.getLocation.standing.items.length) {
+  if (data.data.getLocation.orders.items.length) {
     cart = data.data.getLocation.orders.items?.map(item => ({
       orderID: item.id,
       prodName: item.product.prodName,
@@ -81,7 +84,8 @@ function transformOrderData(data) {
             altPrices[item.product.prodNick] : 
             item.product.wholePrice
         ),
-      total: Math.round(item.qty * item.product.wholePrice * 100) / 100
+      total: Math.round(item.qty * item.product.wholePrice * 100) / 100,
+      isLate: item.isLate ? item.isLate : 0,
     }))
   }
 

@@ -104,7 +104,7 @@ export const OrderDisplay = ({data, disableAddItem, setShowAddItem}) => {
         }}
       >
         <DataTable
-          value={orderData}
+          value={orderData.filter(item => (!item.orderID || item.originalQty > 0 || item.newQty > 0))}
           style={{width: "100%"}}
           responsiveLayout="scroll"
           rowExpansionTemplate={rowExpansionTemplate}

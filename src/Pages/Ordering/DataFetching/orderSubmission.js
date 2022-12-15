@@ -1,67 +1,109 @@
 import { dateToMmddyyyy } from "../Functions/dateAndTime"
+import { gqlFetcher } from "./fetcher"
+import * as mutations from './mutations'
 
-export function handleOrderSubmit(orderHeader, orderData, delivDate) {
-
+export const handleOrderSubmit = async (location, delivDate, data) => {
+  const {orderHeader, orderData, setOrderData} = data
   const routeChanged = orderHeader.route !== orderHeader.newRoute
   const noteChanged = orderHeader.ItemNote !== orderHeader.newItemNote
 
-  const orderSubmit = orderData.map(item => {
-
+  let orderSubmit = orderData.map(item => {
     const qtyChanged = item.originalQty !== item.newQty
-    const action = (!item.orderID) && (item.newQty > 0) ? 'CREATE' : 
+    const action = (!item.orderID && item.newQty > 0) ? 'CREATE' : 
     (item.type === 'S' && (qtyChanged || routeChanged || noteChanged) ? 'CREATE' :
       item.type === 'C' && (qtyChanged || routeChanged || noteChanged) ? 'UPDATE' : 'NONE'
     )
 
-    // let mappedItem = {
-    //   qty: item.newQty,
-    //   prodNick: item.prodNick, // required
-    //   locNick: item.locNick, // required
-    //   ItemNote: orderHeader.newItemNote,
-    //   SO: item.newQty,
-    //   isWhole: true,
-    //   delivDate: delivDate, // TODO: change to mmddyyyy string
-    //   rate: item.rate,
-    //   route: orderHeader.route,
-    //   isLate: false,
-    //   action: action
-    // }
-
-    let mappedItem = {}
     switch(action) {
       case 'CREATE':
-        mappedItem = makeCreateItem(item, orderHeader, delivDate)
-        break
+        return makeCreateItem(item, orderHeader, location, delivDate)
 
       case 'UPDATE':
-        mappedItem = makeUpdateItem(item, orderHeader)
-        break
+        return makeUpdateItem(item, orderHeader)
       
-      default:
-        mappedItem = {
-          prodNick: item.prodNick,
-          action: 'NONE'
-        }
-
+      default: 
+        return ({ prodNick: item.prodNick, action: 'NONE' })
     }
-
-    return mappedItem
 
   })
 
-  console.log(JSON.stringify(orderSubmit, null, 2))
+  for (let item of orderSubmit) {
+    let action = item.action
+    delete item.action
+    console.log("Item to submit: ", item)
+
+    let response
+    let _orderData
+
+    switch(action) {
+      case 'CREATE':
+        console.log("Calling createOrder for... ", JSON.stringify(item, null, 2))
+
+        response = await gqlFetcher(mutations.createOrder, {input: item})
+        response = response.data.createOrder
+        console.log(response)
+        _orderData = orderData.map(oldItem => oldItem.prodNick === response.prodNick ? 
+          {
+            orderID: response.id,
+            type: 'C',
+            prodNick: response.prodNick,
+            prodName: oldItem.prodName,
+            originalQty: response.qty,
+            newQty: response.qty,
+            route: response.route,
+            rate: response.rate,
+            total: (response.rate * response.qty).toFixed(2),
+            isLate: response.isLate ? response.isLate : 0
+          } : 
+          oldItem
+        )
+        
+        setOrderData(_orderData)
+        break
+
+      case 'UPDATE':
+        console.log("Calling updateOrder for... ", JSON.stringify(item, null, 2))
+
+        response = await gqlFetcher(mutations.updateOrder, {input: item})
+        response = response.data.updateOrder
+        console.log(response)
+        _orderData = orderData.map(oldItem => oldItem.prodNick === response.prodNick ? 
+          {
+            orderID: response.id,
+            type: 'C',
+            prodNick: response.prodNick,
+            prodName: oldItem.prodName,
+            originalQty: response.qty,
+            newQty: response.qty,
+            route: response.route,
+            rate: response.rate,
+            total: (response.rate * response.qty).toFixed(2),
+            isLate: response.isLate,
+          } : 
+          oldItem
+        )
+        
+        setOrderData(_orderData)
+        break
+
+      default:
+        console.log("No action for... ", JSON.stringify(item, null, 2))
+        break
+    }
+
+  }
 }
 
-function makeCreateItem(item, orderHeader, delivDate) {
+function makeCreateItem(item, orderHeader, location, delivDate) {
 
   let createItem = {
     prodNick: item.prodNick,
-    locNick: item.locNick,
+    locNick: location,
     qty: item.newQty,
     SO: item.newQty,
     delivDate: dateToMmddyyyy(delivDate),
     isWhole: true, // for now ordering is only for wholesale
-    isLate: false, // for now we prevent late order entry so this is always true
+    isLate: item.isLate? item.isLate : 0, // for now we prevent late order entry so this is always true
     rate: item.rate,
     route: orderHeader.newRoute,
     action: 'CREATE'

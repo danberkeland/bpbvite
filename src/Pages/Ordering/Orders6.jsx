@@ -68,8 +68,9 @@ export const Orders6 = () => {
           // according to schema spec.
           // This includes applying header values to each item
           // Also need to decide whether to create or edit
-          handleOrderSubmit(orderHeader, orderData, delivDate)
-          
+          //console.log("OrderHeader in button: ", orderHeader)
+          handleOrderSubmit(location, delivDate, data)
+
         }}
       />
       

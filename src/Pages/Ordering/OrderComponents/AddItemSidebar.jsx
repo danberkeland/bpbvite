@@ -12,7 +12,7 @@ import { DateTime } from "luxon"
 import { getOrderSubmitDate } from "../Functions/dateAndTime"
 
 export const AddItemSidebar = ({data, sidebarProps, location, delivDate}) => {
-  const {orderData, setOrderData} = data
+  const {orderHeader, orderData, setOrderData} = data
   const {showAddItem, setShowAddItem} = sidebarProps
 
   // depreciate SWR fetching; product list gets mutated on front end a lot
@@ -113,8 +113,8 @@ export const AddItemSidebar = ({data, sidebarProps, location, delivDate}) => {
                 originalQty: 0,
                 newQty: selectedQty,
                 type: "C",
-                route: 'TBD',
-                ItemNote: "",
+                route: orderHeader.newRoute,
+                ItemNote: orderHeader.newItemNote,
                 rate: selectedProduct.rate,
                 total: (selectedQty * selectedProduct.rate).toFixed(2)
               },
@@ -146,7 +146,8 @@ export const AddItemSidebar = ({data, sidebarProps, location, delivDate}) => {
 
 
 function updateProductDisplay(delivDate, orderData, productData, setData) {
-  let itemsInCart = orderData.map(item => item.prodNick)
+  let itemsInCart = orderData.filter(item => item.originalQty > 0)
+  itemsInCart = itemsInCart.map(item => item.prodNick)
 
   const orderSubmitDate = getOrderSubmitDate()
   const selectedDelivDate = delivDate? DateTime.fromISO(delivDate.toISOString()) : null
