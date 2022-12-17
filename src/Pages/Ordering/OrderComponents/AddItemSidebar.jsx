@@ -12,7 +12,7 @@ import { DateTime } from "luxon"
 import { getOrderSubmitDate } from "../Functions/dateAndTime"
 
 export const AddItemSidebar = ({data, sidebarProps, location, delivDate}) => {
-  const {orderData, setOrderData} = data
+  const {orderHeader, orderData, setOrderData} = data
   const {showAddItem, setShowAddItem} = sidebarProps
 
   // depreciate SWR fetching; product list gets mutated on front end a lot
@@ -73,6 +73,7 @@ export const AddItemSidebar = ({data, sidebarProps, location, delivDate}) => {
                 setSelectedQty(orderData[i].newQty)
               }
             }
+            console.log("Selected Product:\n", JSON.stringify(selectedProduct, null, 2))
             
           }}
           itemTemplate={option => {
@@ -87,54 +88,65 @@ export const AddItemSidebar = ({data, sidebarProps, location, delivDate}) => {
         />
         <label htmlFor="productDropdown">{productData ? "Select Product" : "Loading..."}</label>
       </span>
+        
+      <div style={{display: "flex"}}>
+        <span className="p-float-label p-fluid" style={{flex: "65%", marginTop: "28px", paddingRight: "30%"}}>
+          <InputNumber id="product-qty"
+            value={selectedQty}
+            onChange={e => setSelectedQty(e.value)}
+            disabled={selectedProduct ? selectedProduct.isLate : false}
+          />
+          <label htmlFor="product-qty">Quantity</label>
+        </span>
       
-      <span className="p-float-label p-fluid" style={{marginTop: "25px"}}>
-        <InputNumber id="product-qty"
-          value={selectedQty}
-          onValueChange={e => setSelectedQty(e.value)}
-          disabled={selectedProduct ? selectedProduct.isLate : false}
-        />
-        <label htmlFor="product-qty">Quantity</label>
-      </span>
 
-      <Button label="Add Item"
-        disabled={!selectedProdNick || !selectedQty || selectedProduct.isLate}
-        style={{marginTop: "25px"}}
-        onClick={() => {
-          const _orderData = [
-            { 
-              ...selectedProduct,
+        <Button label="Add Item"
+          disabled={!selectedProdNick || !selectedQty || selectedProduct.isLate || selectedProduct.inCart}
+          style={{flex: "35%", marginTop: "28px"}}
+          onClick={() => {
+            let newItem = { 
+              orderID: null,
+              prodName: selectedProduct.prodName,
+              prodNick: selectedProduct.prodNick,
+              locNick: location,
               originalQty: 0,
               newQty: selectedQty,
-              route: 'TBD'
-            },
-            ...orderData,
-          ]
-          setOrderData(_orderData)
-          setShowAddItem(false)
-          setSelectedProdNick(null)
-          setSelectedProduct(null)
-          setSelectedQty(null)
-          console.log("added item")
-        }}
-      />
+              type: "C",
+              route: orderHeader.newRoute,
+              ItemNote: orderHeader.newItemNote,
+              rate: selectedProduct.rate,
+              total: (selectedQty * selectedProduct.rate).toFixed(2)
+            }
+
+            let _orderData = [...orderData]
+            const oldItem = orderData.find(item => item.prodNick === selectedProdNick)
+            if (oldItem) {
+              newItem.orderID = oldItem.orderID
+              _orderData = _orderData.filter(item => item.prodNick !== selectedProdNick)
+            }
+            _orderData = [
+              newItem,
+              ...orderData,
+            ]
+            setOrderData(_orderData)
+            setShowAddItem(false)
+            setSelectedProdNick(null)
+            setSelectedProduct(null)
+            setSelectedQty(null)
+            console.log("added item")
+          }}
+        />
+      </div>
 
       {selectedProduct &&
       <Card 
-        title={selectedProduct.prodName}
-        style={{marginTop: "25px"}}
+        style={{marginTop: "10px"}}
       >
         <p>{selectedProduct.isLate ? "earliest " + selectedProduct.availableDate : 'available'}</p>
         <p>{"rate: " + selectedProduct.wholePrice}</p>
-        <p>{"total: " + (selectedProduct.wholePrice * selectedQty).toFixed(2)}</p>
-        <p>{"<other product details here>"}</p>
-        
+        <p>{"total: " + (selectedProduct.wholePrice * selectedQty).toFixed(2)}</p>        
       </Card>
       }
-
-      <pre>{JSON.stringify(selectedProdNick, null, 2)}</pre>
-      <pre>{JSON.stringify(selectedProduct, null, 2)}</pre>
-      <pre>{JSON.stringify(productData, null, 2)}</pre>
 
     </Sidebar>
   )
@@ -142,7 +154,8 @@ export const AddItemSidebar = ({data, sidebarProps, location, delivDate}) => {
 
 
 function updateProductDisplay(delivDate, orderData, productData, setData) {
-  let itemsInCart = orderData.map(item => item.prodNick)
+  let itemsInCart = orderData.filter(item => item.originalQty > 0)
+  itemsInCart = itemsInCart.map(item => item.prodNick)
 
   const orderSubmitDate = getOrderSubmitDate()
   const selectedDelivDate = delivDate? DateTime.fromISO(delivDate.toISOString()) : null

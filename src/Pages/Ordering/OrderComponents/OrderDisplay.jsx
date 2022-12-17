@@ -7,10 +7,12 @@ import { InputNumber } from "primereact/inputnumber"
 import { RadioButton } from "primereact/radiobutton"
 import { InputTextarea } from "primereact/inputtextarea"
 import { useState } from "react"
+// import { packGroups } from "../DataFetching/mockdata"
 
 export const OrderDisplay = ({data, disableAddItem, setShowAddItem}) => {
   const {orderHeader, setOrderHeader, orderData, setOrderData} = data
   const [expandedRows, setExpandedRows] = useState(null)
+  const [rollbackQty, setRollbackQty] = useState(null)
 
   useEffect(()=> {
     console.log('orderData', orderData)
@@ -19,7 +21,6 @@ export const OrderDisplay = ({data, disableAddItem, setShowAddItem}) => {
   const rowExpansionTemplate = (rowData) => {
     return (
       <div>
-        <pre>{JSON.stringify(rowData, null, 2)}</pre>
         <p>{"Rate: " + rowData.rate}</p>
         <p>{"Subtotal: " + rowData.total}</p>
       </div>
@@ -107,11 +108,12 @@ export const OrderDisplay = ({data, disableAddItem, setShowAddItem}) => {
         }}
       >
         <DataTable
-          value={orderData}
+          value={orderData.filter(item => (!item.orderID || item.originalQty > 0 || item.newQty > 0))}
           style={{width: "100%"}}
           responsiveLayout="scroll"
           rowExpansionTemplate={rowExpansionTemplate}
           expandedRows={expandedRows} 
+          onRowExpand={e => console.log("Data for " + e.data.prodNick, JSON.stringify(e.data, null, 2))}
           onRowToggle={(e) => setExpandedRows(e.data)}
           dataKey="prodNick"
           footer={() => {return(<div>{"Total: " + orderData.reduce( (acc, item) => { return (acc + (item.rate * item.newQty)) }, 0).toFixed(2)}</div>)}}
@@ -141,6 +143,7 @@ export const OrderDisplay = ({data, disableAddItem, setShowAddItem}) => {
               return(
                 <div className="p-fluid">
                   <InputNumber 
+                    disabled={disableAddItem} // means ordering date >= deliv date; order list should be read-only
                     value={rowData.newQty}
                     min={0}
                     onChange={e => {
@@ -152,27 +155,32 @@ export const OrderDisplay = ({data, disableAddItem, setShowAddItem}) => {
                       setOrderData(_orderData)
                     }}
                     onKeyDown={e => {
-                      console.log(e)
+                      // console.log(e)
                       if (e.key === "Enter") {
-                        if (e.target.value === '') {
-                          const _orderData = orderData.map(item =>
-                            item.prodNick === rowData.prodNick ?
-                              {...item, newQty: item.originalQty} :
-                              item  
-                          )
-                          setOrderData(_orderData)
-                          
-                        }
                         e.target.blur()
                       }
                       if (e.key === "Escape") {
+                        const _orderData = orderData.map(item =>
+                          item.prodNick === rowData.prodNick ?
+                            {...item, newQty: rollbackQty} :
+                            item  
+                        )
+                        setOrderData(_orderData)
+                        e.target.blur()
+                      }
+                    }}
+                    onFocus={e => {
+                      setRollbackQty(parseInt(e.target.value))
+                      e.target.select()
+                    }}
+                    onBlur={e => {
+                      if (e.target.value === '') {
                         const _orderData = orderData.map(item =>
                           item.prodNick === rowData.prodNick ?
                             {...item, newQty: item.originalQty} :
                             item  
                         )
                         setOrderData(_orderData)
-                        e.target.blur()
                       }
                     }}
                   />
@@ -182,6 +190,15 @@ export const OrderDisplay = ({data, disableAddItem, setShowAddItem}) => {
           />
         </DataTable>
       </Card>
+
+      {/* <DataTable
+        value={packGroups.data.listProductBackups.items}
+        style={{width: "100%"}}
+        responsiveLayout="scroll"
+      >
+        <Column header="name" field="nickName"></Column>
+        <Column header="packGroup" field="packGroup"></Column>
+      </DataTable> */}
     </div>
   )
 

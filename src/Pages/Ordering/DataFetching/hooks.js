@@ -3,6 +3,7 @@ import { gqlFetcher } from "../DataFetching/fetcher"
 import * as queries from "../DataFetching/queries"
 import { DateTime } from "luxon"
 import { getOrderSubmitDate, dateToMmddyyyy, getWeekday } from "../Functions/dateAndTime"
+import dynamicSort from "../Functions/dynamicSort"
 
 /*********************************************
  * Location Selection Options for BPB admins *
@@ -12,7 +13,7 @@ export const useLocationList = (shouldFetch) => {
   const { data, errors } = useSWRimmutable(shouldFetch ? [queries.listLocationNames, {limit: 1000}] : null, gqlFetcher)
 
   return({
-    locationList: data ? data.data.listLocations.items : data,
+    locationList: data ? data.data.listLocations.items.sort(dynamicSort("locName")) : data,
     locationListErrors: errors
   })
 }

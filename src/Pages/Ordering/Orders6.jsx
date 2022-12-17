@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { fetchOrderData } from "./DataFetching/fetcher";
 import { getOrderSubmitDate } from './Functions/dateAndTime';
+import { handleOrderSubmit } from './DataFetching/orderSubmission';
 
 export const Orders6 = () => {
   const globalState = useSettingsStore()
@@ -19,7 +20,7 @@ export const Orders6 = () => {
     location: globalState.userObject.attributes["custom:defLoc"]
   }
   const [location, setLocation] = useState(user.location === 'backporch' ? null : user.location)
-  const [delivDate, setDelivDate] = useState(null)
+  const [delivDate, setDelivDate] = useState(new Date(getOrderSubmitDate().plus({ days: 1}).toISO())) // delivDate is stored in state as a JS Date object
   const selection = {location, setLocation, delivDate, setDelivDate}
 
   const [orderHeader, setOrderHeader] = useState()
@@ -59,28 +60,17 @@ export const Orders6 = () => {
         />
       }
 
+      {/* TODO: Disable is no changes to DB are needed */}
       <Button label="Submit Order"
+        disabled={(!location) || (!delivDate)}
         onClick={() => {
           // Need to build up order Update/Create items
           // according to schema spec.
+          // This includes applying header values to each item
           // Also need to decide whether to create or edit
-          // apply header values to each item
-          // Create if...
-          //    order type is S
-          //    newQty != originalQty
-          // Update if...
-          //    
-          const orderSubmit = orderData.map(item => {
-            return ({
-              ...item, 
-              route: orderHeader.route,
-              ItemNote: orderHeader.ItemNote
-            })
-          })
-          
-          alert(JSON.stringify(orderSubmit, null, 2))
+          //console.log("OrderHeader in button: ", orderHeader)
+          handleOrderSubmit(location, delivDate, data)
 
-          
         }}
       />
       
