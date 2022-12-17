@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { Button } from "primereact/button"
 import { Card } from "primereact/card"
 import { DataTable } from "primereact/datatable"
@@ -11,6 +11,10 @@ import { useState } from "react"
 export const OrderDisplay = ({data, disableAddItem, setShowAddItem}) => {
   const {orderHeader, setOrderHeader, orderData, setOrderData} = data
   const [expandedRows, setExpandedRows] = useState(null)
+
+  useEffect(()=> {
+    console.log('orderData', orderData)
+  },[orderData])
 
   const rowExpansionTemplate = (rowData) => {
     return (
