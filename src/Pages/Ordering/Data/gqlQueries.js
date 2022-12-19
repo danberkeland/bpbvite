@@ -21,16 +21,13 @@ export const listLocationNames = /* GraphQL */ `
         locNick
         locName
       }
-      nextToken
     }
   }
 `;
 
-export const listOrdersByLocationByDate = /* GraphQL */ `
-  query MyQuery(
+export const getLocationDetails = /* GraphQL */ `
+query MyQuery(
     $locNick: String!, 
-    $dayOfWeek: String, 
-    $delivDate: String
   ) {
     getLocation(locNick: $locNick) {
       locNick
@@ -42,7 +39,24 @@ export const listOrdersByLocationByDate = /* GraphQL */ `
           wholePrice
         }
       }
-      orders(filter: {delivDate: {eq: $delivDate}}) {
+      prodsNotAllowed {
+        items {
+          id
+          isAllowed
+          prodNick
+        }
+      }
+    }
+  }
+`
+
+export const listOrdersByLocationByDate = /* GraphQL */ `
+  query MyQuery(
+    $locNick: String!, 
+    $delivDate: String
+  ) {
+    getLocation(locNick: $locNick) {
+      ordersByDate(delivDate: {eq: $delivDate}) {
         items {
           id
           product {
@@ -60,9 +74,17 @@ export const listOrdersByLocationByDate = /* GraphQL */ `
           route
           isLate
         }
-        nextToken
       }
-      standing(filter: {dayOfWeek: {eq: $dayOfWeek}}) {
+    }
+  }
+`;
+
+export const listStandingByLocation = /* GraphQL */ `
+  query MyQuery(
+    $locNick: String!, 
+  ) {
+    getLocation(locNick: $locNick) {
+      standing {
         items {
           id
           product {
@@ -79,7 +101,6 @@ export const listOrdersByLocationByDate = /* GraphQL */ `
           startDate
           endDate
         }
-        nextToken
       }
     }
   }
@@ -127,43 +148,6 @@ export const listProducts = /* GraphQL */ `
     }
   }
 `;
-
-export const listAltPricesforLocation = /* GraphQL */ `
-   query MyQuery(
-    $locNick: String!, 
-  ) {
-    getLocation(locNick: $locNick) {
-      customProd {
-        items {
-          prodNick
-          wholePrice
-        }
-      }
-    }
-  }
-`;
-
-export const listProductOverridesForLocation = /* GraphQL */ `
-  query MyQuery(
-    $locNick: String!, 
-  ) {
-    getLocation(locNick: $locNick) {
-      customProd {
-        items {
-          prodNick
-          wholePrice
-        }
-      }
-      prodsNotAllowed {
-        items {
-          id
-          isAllowed
-          prodNick
-        }
-      }
-    }
-  }
-`
 
 /*************
  * MUTATIONS *

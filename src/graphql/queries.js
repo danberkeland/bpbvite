@@ -383,6 +383,9 @@ export const getUser = /* GraphQL */ `
         orders {
           nextToken
         }
+        ordersByDate {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -682,7 +685,26 @@ export const getLocation = /* GraphQL */ `
           route
           isLate
           createdOn
-          updatedAt
+          updatedOn
+        }
+        nextToken
+      }
+      ordersByDate {
+        items {
+          Type
+          id
+          qty
+          prodNick
+          locNick
+          ItemNote
+          SO
+          isWhole
+          delivDate
+          rate
+          route
+          isLate
+          createdOn
+          updatedOn
         }
         nextToken
       }
@@ -821,6 +843,9 @@ export const listLocations = /* GraphQL */ `
           nextToken
         }
         orders {
+          nextToken
+        }
+        ordersByDate {
           nextToken
         }
         zoneNick
@@ -1006,7 +1031,7 @@ export const getProduct = /* GraphQL */ `
           route
           isLate
           createdOn
-          updatedAt
+          updatedOn
         }
         nextToken
       }
@@ -1619,6 +1644,9 @@ export const getOrder = /* GraphQL */ `
         orders {
           nextToken
         }
+        ordersByDate {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -1708,7 +1736,7 @@ export const getOrder = /* GraphQL */ `
       route
       isLate
       createdOn
-      updatedAt
+      updatedOn
     }
   }
 `;
@@ -1803,7 +1831,7 @@ export const listOrders = /* GraphQL */ `
         route
         isLate
         createdOn
-        updatedAt
+        updatedOn
       }
       nextToken
     }
@@ -1919,6 +1947,9 @@ export const getStanding = /* GraphQL */ `
           nextToken
         }
         orders {
+          nextToken
+        }
+        ordersByDate {
           nextToken
         }
         zoneNick
@@ -3585,6 +3616,9 @@ export const getTemplateProd = /* GraphQL */ `
         orders {
           nextToken
         }
+        ordersByDate {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -3869,6 +3903,9 @@ export const getProdsNotAllowed = /* GraphQL */ `
           nextToken
         }
         orders {
+          nextToken
+        }
+        ordersByDate {
           nextToken
         }
         zoneNick
@@ -4529,6 +4566,9 @@ export const getLocationUser = /* GraphQL */ `
         orders {
           nextToken
         }
+        ordersByDate {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -4739,6 +4779,9 @@ export const getAltPricing = /* GraphQL */ `
           nextToken
         }
         orders {
+          nextToken
+        }
+        ordersByDate {
           nextToken
         }
         zoneNick
@@ -5037,6 +5080,9 @@ export const locSortAZ = /* GraphQL */ `
           nextToken
         }
         orders {
+          nextToken
+        }
+        ordersByDate {
           nextToken
         }
         zoneNick
@@ -5338,7 +5384,221 @@ export const orderByCreatedAt = /* GraphQL */ `
         route
         isLate
         createdOn
-        updatedAt
+        updatedOn
+      }
+      nextToken
+    }
+  }
+`;
+export const orderByUpdatedAt = /* GraphQL */ `
+  query OrderByUpdatedAt(
+    $Type: String!
+    $updatedOn: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelOrderFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    orderByUpdatedAt(
+      Type: $Type
+      updatedOn: $updatedOn
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        Type
+        id
+        qty
+        prodNick
+        product {
+          Type
+          prodName
+          prodNick
+          packGroup
+          packSize
+          doughNick
+          freezerThaw
+          packGroupOrder
+          shapeDay
+          shapeNick
+          bakeDay
+          bakeNick
+          guarantee
+          transferStage
+          readyTime
+          bakedWhere
+          wholePrice
+          retailPrice
+          isRetail
+          retailName
+          retailDescrip
+          isWhole
+          isEOD
+          weight
+          descrip
+          picURL
+          squareID
+          forBake
+          bakeExtra
+          batchSize
+          defaultInclude
+          leadTime
+          qbID
+          createdAt
+          updatedAt
+          inventoryProductId
+        }
+        locNick
+        location {
+          Type
+          locNick
+          locName
+          zoneNick
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          firstName
+          lastName
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          isActive
+          createdAt
+          updatedAt
+          locationCreditAppId
+        }
+        ItemNote
+        SO
+        isWhole
+        delivDate
+        rate
+        route
+        isLate
+        createdOn
+        updatedOn
+      }
+      nextToken
+    }
+  }
+`;
+export const orderByDelivDate = /* GraphQL */ `
+  query OrderByDelivDate(
+    $Type: String!
+    $delivDate: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelOrderFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    orderByDelivDate(
+      Type: $Type
+      delivDate: $delivDate
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        Type
+        id
+        qty
+        prodNick
+        product {
+          Type
+          prodName
+          prodNick
+          packGroup
+          packSize
+          doughNick
+          freezerThaw
+          packGroupOrder
+          shapeDay
+          shapeNick
+          bakeDay
+          bakeNick
+          guarantee
+          transferStage
+          readyTime
+          bakedWhere
+          wholePrice
+          retailPrice
+          isRetail
+          retailName
+          retailDescrip
+          isWhole
+          isEOD
+          weight
+          descrip
+          picURL
+          squareID
+          forBake
+          bakeExtra
+          batchSize
+          defaultInclude
+          leadTime
+          qbID
+          createdAt
+          updatedAt
+          inventoryProductId
+        }
+        locNick
+        location {
+          Type
+          locNick
+          locName
+          zoneNick
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          firstName
+          lastName
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          isActive
+          createdAt
+          updatedAt
+          locationCreditAppId
+        }
+        ItemNote
+        SO
+        isWhole
+        delivDate
+        rate
+        route
+        isLate
+        createdOn
+        updatedOn
       }
       nextToken
     }
