@@ -40,18 +40,17 @@ const graborder = async (event) => {
   let names = [];
   let final = [];
 
-  console.log("event3", event)
+
   const variables = {
-    locNick: JSON.parse(event.body).locNick,
-    delivDate: JSON.parse(event.body).delivDate,
-    dayOfWeek: JSON.parse(event.body).dayOfWeek,
+    locNick: event.locNick,
+    delivDate: event.finalDate,
+    dayOfWeek: event.dayOfWeek,
   };
-  console.log("variables", variables)
   try{
-  let response = await mainCall(query, variables);
+  response = await mainCall(query, variables);
   
-  console.log("response",response)
-  /*
+  //console.log("response",response.body.body.getLocation)
+  
   let resp =   await response.body.body.getLocation;
   console.log("orders",orders)
   orders = await resp.orders.items.map((ord) => ({
@@ -75,7 +74,7 @@ const graborder = async (event) => {
   for (let name of names) {
     let first = prods.find((obj) => obj.prodNick === name);
     final.push(first);
-  }*/
+  }
 } catch (error) {
   statusCode = 400;
   final = {

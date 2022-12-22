@@ -203,6 +203,7 @@ type Location @model {
   subs: [LocationUser] @hasMany(indexName: "byLoc", fields: ["locNick"])
   standing: [Standing] @hasMany(indexName: "byLoc", fields: ["locNick"])
   orders: [Order] @hasMany(indexName: "byLoc", fields: ["locNick"])
+  ordersByDate: [Order] @hasMany(indexName: "byLocationByDelivDate", fields: ["locNick"])
   zoneNick: String
   zone: Zone @hasOne(fields: ["zoneNick"])
   creditApp: CreditApp @hasOne
@@ -312,7 +313,7 @@ type RetailProdLoc @model {
   loc: RetailLoc @belongsTo(fields: ["locSquareId"])
 }
 
-type Order @model (timestamps: { createdAt: "createdOn"})  {
+type Order @model (timestamps: { createdAt: "createdOn", updatedAt: "updatedOn"}) {
   Type: String
     @default(value: "Orders")
     @index(
@@ -320,11 +321,21 @@ type Order @model (timestamps: { createdAt: "createdOn"})  {
       queryField: "orderByCreatedAt"
       sortKeyFields: ["createdOn"]
     )
+    @index(
+      name: "orderByUpdatedAt"
+      queryField: "orderByUpdatedAt"
+      sortKeyFields: ["updatedOn"]
+    )
+    @index(
+      name: "orderByDelivDate"
+      queryField: "orderByDelivDate"
+      sortKeyFields: ["delivDate"]
+    )
   id: ID!
   qty: Int
   prodNick: String! @index(name: "byProd")
   product: Product! @hasOne(fields: ["prodNick"])
-  locNick: String! @index(name: "byLoc")
+  locNick: String! @index(name: "byLoc") @index(name: "byLocationByDelivDate", sortKeyFields: ["delivDate"])
   location: Location! @hasOne(fields: ["locNick"])
   ItemNote: String
   SO: Int
@@ -334,6 +345,7 @@ type Order @model (timestamps: { createdAt: "createdOn"})  {
   route: String
   isLate: Int
   createdOn: AWSDateTime!
+  updatedOn: AWSDateTime!
 }
 
 

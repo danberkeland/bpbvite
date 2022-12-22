@@ -557,6 +557,9 @@ export const createUser = /* GraphQL */ `
         orders {
           nextToken
         }
+        ordersByDate {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -680,6 +683,9 @@ export const updateUser = /* GraphQL */ `
         orders {
           nextToken
         }
+        ordersByDate {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -801,6 +807,9 @@ export const deleteUser = /* GraphQL */ `
           nextToken
         }
         orders {
+          nextToken
+        }
+        ordersByDate {
           nextToken
         }
         zoneNick
@@ -1083,7 +1092,26 @@ export const createLocation = /* GraphQL */ `
           route
           isLate
           createdOn
-          updatedAt
+          updatedOn
+        }
+        nextToken
+      }
+      ordersByDate {
+        items {
+          Type
+          id
+          qty
+          prodNick
+          locNick
+          ItemNote
+          SO
+          isWhole
+          delivDate
+          rate
+          route
+          isLate
+          createdOn
+          updatedOn
         }
         nextToken
       }
@@ -1249,7 +1277,26 @@ export const updateLocation = /* GraphQL */ `
           route
           isLate
           createdOn
-          updatedAt
+          updatedOn
+        }
+        nextToken
+      }
+      ordersByDate {
+        items {
+          Type
+          id
+          qty
+          prodNick
+          locNick
+          ItemNote
+          SO
+          isWhole
+          delivDate
+          rate
+          route
+          isLate
+          createdOn
+          updatedOn
         }
         nextToken
       }
@@ -1415,7 +1462,26 @@ export const deleteLocation = /* GraphQL */ `
           route
           isLate
           createdOn
-          updatedAt
+          updatedOn
+        }
+        nextToken
+      }
+      ordersByDate {
+        items {
+          Type
+          id
+          qty
+          prodNick
+          locNick
+          ItemNote
+          SO
+          isWhole
+          delivDate
+          rate
+          route
+          isLate
+          createdOn
+          updatedOn
         }
         nextToken
       }
@@ -1629,7 +1695,7 @@ export const createProduct = /* GraphQL */ `
           route
           isLate
           createdOn
-          updatedAt
+          updatedOn
         }
         nextToken
       }
@@ -1886,7 +1952,7 @@ export const updateProduct = /* GraphQL */ `
           route
           isLate
           createdOn
-          updatedAt
+          updatedOn
         }
         nextToken
       }
@@ -2143,7 +2209,7 @@ export const deleteProduct = /* GraphQL */ `
           route
           isLate
           createdOn
-          updatedAt
+          updatedOn
         }
         nextToken
       }
@@ -2865,6 +2931,9 @@ export const createOrder = /* GraphQL */ `
         orders {
           nextToken
         }
+        ordersByDate {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -2954,7 +3023,7 @@ export const createOrder = /* GraphQL */ `
       route
       isLate
       createdOn
-      updatedAt
+      updatedOn
     }
   }
 `;
@@ -3074,6 +3143,9 @@ export const updateOrder = /* GraphQL */ `
         orders {
           nextToken
         }
+        ordersByDate {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -3163,7 +3235,7 @@ export const updateOrder = /* GraphQL */ `
       route
       isLate
       createdOn
-      updatedAt
+      updatedOn
     }
   }
 `;
@@ -3283,6 +3355,9 @@ export const deleteOrder = /* GraphQL */ `
         orders {
           nextToken
         }
+        ordersByDate {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -3372,7 +3447,7 @@ export const deleteOrder = /* GraphQL */ `
       route
       isLate
       createdOn
-      updatedAt
+      updatedOn
     }
   }
 `;
@@ -3489,6 +3564,9 @@ export const createStanding = /* GraphQL */ `
           nextToken
         }
         orders {
+          nextToken
+        }
+        ordersByDate {
           nextToken
         }
         zoneNick
@@ -3698,6 +3776,9 @@ export const updateStanding = /* GraphQL */ `
         orders {
           nextToken
         }
+        ordersByDate {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -3903,6 +3984,9 @@ export const deleteStanding = /* GraphQL */ `
           nextToken
         }
         orders {
+          nextToken
+        }
+        ordersByDate {
           nextToken
         }
         zoneNick
@@ -6506,6 +6590,9 @@ export const createTemplateProd = /* GraphQL */ `
         orders {
           nextToken
         }
+        ordersByDate {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -6706,6 +6793,9 @@ export const updateTemplateProd = /* GraphQL */ `
         orders {
           nextToken
         }
+        ordersByDate {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -6904,6 +6994,9 @@ export const deleteTemplateProd = /* GraphQL */ `
           nextToken
         }
         orders {
+          nextToken
+        }
+        ordersByDate {
           nextToken
         }
         zoneNick
@@ -7107,6 +7200,9 @@ export const createProdsNotAllowed = /* GraphQL */ `
         orders {
           nextToken
         }
+        ordersByDate {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -7308,6 +7404,9 @@ export const updateProdsNotAllowed = /* GraphQL */ `
         orders {
           nextToken
         }
+        ordersByDate {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -7507,6 +7606,9 @@ export const deleteProdsNotAllowed = /* GraphQL */ `
           nextToken
         }
         orders {
+          nextToken
+        }
+        ordersByDate {
           nextToken
         }
         zoneNick
@@ -8428,6 +8530,9 @@ export const createLocationUser = /* GraphQL */ `
         orders {
           nextToken
         }
+        ordersByDate {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -8581,6 +8686,9 @@ export const updateLocationUser = /* GraphQL */ `
           nextToken
         }
         orders {
+          nextToken
+        }
+        ordersByDate {
           nextToken
         }
         zoneNick
@@ -8738,6 +8846,9 @@ export const deleteLocationUser = /* GraphQL */ `
         orders {
           nextToken
         }
+        ordersByDate {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -8889,6 +9000,9 @@ export const createAltPricing = /* GraphQL */ `
           nextToken
         }
         orders {
+          nextToken
+        }
+        ordersByDate {
           nextToken
         }
         zoneNick
@@ -9092,6 +9206,9 @@ export const updateAltPricing = /* GraphQL */ `
         orders {
           nextToken
         }
+        ordersByDate {
+          nextToken
+        }
         zoneNick
         zone {
           zoneNick
@@ -9291,6 +9408,9 @@ export const deleteAltPricing = /* GraphQL */ `
           nextToken
         }
         orders {
+          nextToken
+        }
+        ordersByDate {
           nextToken
         }
         zoneNick

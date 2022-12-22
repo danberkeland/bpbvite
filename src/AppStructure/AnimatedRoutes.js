@@ -1,6 +1,6 @@
 import React from "react";
 
-import Ordering from "../Pages/Ordering/Ordering";
+// import Ordering from "../Pages/Ordering/Ordering";
 import Ordering2 from "../Pages/Ordering/Ordering2";
 import CustomerNews from "../Pages/CustomerNews/CustomerNews";
 import CustomerBilling from "../Pages/CustomerBilling/CustomerBilling";

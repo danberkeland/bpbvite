@@ -1,3 +1,4 @@
+<<<<<<< HEAD:src/Pages/Ordering/OrderComponents/OrderDisplay.jsx
 import React, { useEffect } from "react"
 import { Button } from "primereact/button"
 import { Card } from "primereact/card"
@@ -26,183 +27,262 @@ export const OrderDisplay = ({data, disableAddItem, setShowAddItem}) => {
       </div>
     )
   }
+=======
+import React, { useState } from "react"
+import { Button } from "primereact/button"
+
+import { OptionsCard } from "./OrderDisplayComponents/OptionsCard"
+import { ItemsCard } from "./OrderDisplayComponents/ItemsCard"
+import { AddItemSidebar } from "./AddItemSidebar"
+
+export const OrderDisplay = ({orderState, locationDetails, selection}) => {
+  const { orderHeader, setOrderHeader, orderItems, setOrderItems } = orderState
+
+  const [showAddItem, setShowAddItem] = useState(false)
+  const sidebarProps = {showAddItem, setShowAddItem}
+>>>>>>> 67a71ae7464f9d93ea5d0cffb46e3d1b492dd70c:src/Pages/Ordering/Components/OrderDisplay.jsx
 
   return (
     <div>
-      <Card 
-        style={{marginTop: "10px"}}
-        title="Options"
-      >
-        <div style={{marginBottom: "30px"}}>
-          {orderHeader.defaultRoute !== 'slopick' && orderHeader.defaultRoute !== 'atownpick' &&
-          <div style={{margin: "5px"}}>
-            <RadioButton inputId="deliv" value="deliv" 
-              checked={orderHeader.newRoute === 'deliv'}
-              onChange={e => setOrderHeader({...orderHeader, newRoute: e.value})}
-            />
-            <label 
-              htmlFor="deliv"
-              style={{fontWeight: orderHeader.newRoute === orderHeader.route ? "normal" : (orderHeader.newRoute === 'deliv' ? "bold" : "normal")}}
-            >
-              {orderHeader.defaultRoute === 'deliv' ? 'Delivery (default)' : 'Delivery'}
-            </label>
-          </div>
-          }
-          <div style={{margin: "5px"}}>
-            <RadioButton inputId="slopick" value="slopick" 
-              onChange={e => setOrderHeader({...orderHeader, newRoute: e.value})} 
-              checked={orderHeader.newRoute === 'slopick'}
-            />
-            <label 
-              htmlFor="slopick"
-              style={{fontWeight: orderHeader.newRoute === orderHeader.route ? "normal" : (orderHeader.newRoute === 'slopick' ? "bold" : "normal")}}
-            >
-              {orderHeader.defaultRoute === 'slopick' ? 'Pick Up SLO (defualt)' : "Pick Up SLO"}
-            </label>
-          </div>
-          <div style={{margin: "5px"}}>
-            <RadioButton inputId="atownpick" value="atownpick" 
-              onChange={e => setOrderHeader({...orderHeader, newRoute: e.value})} 
-              checked={orderHeader.newRoute === 'atownpick'}
-            />
-            <label 
-              htmlFor="atownpick"
-              style={{fontWeight: orderHeader.newRoute === orderHeader.route ? "normal" : (orderHeader.newRoute === 'atownpick' ? "bold" : "normal")}}
-            >
-              {orderHeader.defaultRoute === 'atownpick' ? "Pick Up Carlton (defualt)" : "Pick Up Carlton"}
-            </label>
-          </div>
-        </div>
+      <OptionsCard
+        orderHeader={orderHeader}
+        setOrderHeader={setOrderHeader}
+      />
 
-        <span className="p-float-label">
-          <InputTextarea
-            id="input-note"
-            style={{width: "100%"}}
-            onChange={e => setOrderHeader({...orderHeader, newItemNote: e.target.value})}
-          />
-          <label htmlFor="input-note"
-            style={{fontWeight: orderHeader.newItemNote !== orderHeader.ItemNote ? "bold" : "normal"}}
-          >
-            {"Add a Note" + (orderHeader.newItemNote !== orderHeader.ItemNote ? "*" : '')}
-          </label>
-        </span>
-        {/* <pre>{JSON.stringify(orderHeader, null, 2)}</pre> */}
-      </Card>
+      <ItemsCard
+        orderItems={orderItems}
+        setOrderItems={setOrderItems}
+        setShowAddItem={setShowAddItem}
+      />
 
-      <Card 
-        style={{marginTop: "10px"}}
-        title={() => {
-          return (
-            <div style={{display: "flex", }}>
-              <div style={{flex: "65%"}}>
-                Items
-              </div>
-              <div style={{flex: "35%"}}>
-                <Button label="+ Add Item" 
-                  disabled={disableAddItem}
-                  onClick={() => setShowAddItem(true)}
-                />
-              </div>
-            </div>
-          )
-        }}
-      >
-        <DataTable
-          value={orderData.filter(item => (!item.orderID || item.originalQty > 0 || item.newQty > 0))}
-          style={{width: "100%"}}
-          responsiveLayout="scroll"
-          rowExpansionTemplate={rowExpansionTemplate}
-          expandedRows={expandedRows} 
-          onRowExpand={e => console.log("Data for " + e.data.prodNick, JSON.stringify(e.data, null, 2))}
-          onRowToggle={(e) => setExpandedRows(e.data)}
-          dataKey="prodNick"
-          footer={() => {return(<div>{"Total: " + orderData.reduce( (acc, item) => { return (acc + (item.rate * item.newQty)) }, 0).toFixed(2)}</div>)}}
-        >
-          <Column expander={true} style={{ width: '3em' }} />
-          <Column header="Product" 
-            field="prodName" 
-            body={rowData => {
-              const changeDetected = rowData.newQty !== rowData.originalQty
-              if (rowData.newQty === 0) return (
-                <div
-                  style={{color: "gray"}}
-                >
-                  <strike>{rowData.prodName}</strike>
-                </div>
-              )
-              if (changeDetected) return (
-                <b>{rowData.prodName + "*"}</b>
-              )
-              return rowData.prodName
-            }}
-          />
-          <Column header="Quantity" 
-            field="newQty" 
-            style={{width: "75px"}}
-            body={rowData => {
-              return(
-                <div className="p-fluid">
-                  <InputNumber 
-                    disabled={disableAddItem} // means ordering date >= deliv date; order list should be read-only
-                    value={rowData.newQty}
-                    min={0}
-                    onChange={e => {
-                      const _orderData = orderData.map(item => 
-                        item.prodNick === rowData.prodNick ? 
-                          {...item, newQty: e.value} : 
-                          item
-                      )
-                      setOrderData(_orderData)
-                    }}
-                    onKeyDown={e => {
-                      // console.log(e)
-                      if (e.key === "Enter") {
-                        e.target.blur()
-                      }
-                      if (e.key === "Escape") {
-                        const _orderData = orderData.map(item =>
-                          item.prodNick === rowData.prodNick ?
-                            {...item, newQty: rollbackQty} :
-                            item  
-                        )
-                        setOrderData(_orderData)
-                        e.target.blur()
-                      }
-                    }}
-                    onFocus={e => {
-                      setRollbackQty(parseInt(e.target.value))
-                      e.target.select()
-                    }}
-                    onBlur={e => {
-                      if (e.target.value === '') {
-                        const _orderData = orderData.map(item =>
-                          item.prodNick === rowData.prodNick ?
-                            {...item, newQty: item.originalQty} :
-                            item  
-                        )
-                        setOrderData(_orderData)
-                      }
-                    }}
-                  />
-                </div>
-              )
-            }}
-          />
-        </DataTable>
-      </Card>
+      <Button label="Submit" 
+        disabled={false}
+        onClick={() => {
+          console.log("Submitting...")
+          console.log("Order Header: ", JSON.stringify(orderHeader, null, 2))
+          console.log("Order Items: ", JSON.stringify(orderItems, null, 2))}}
+      />
 
-      {/* <DataTable
-        value={packGroups.data.listProductBackups.items}
-        style={{width: "100%"}}
-        responsiveLayout="scroll"
-      >
-        <Column header="name" field="nickName"></Column>
-        <Column header="packGroup" field="packGroup"></Column>
-      </DataTable> */}
+      <AddItemSidebar 
+        orderState={orderState}
+        locationDetails={locationDetails}
+        selection={selection}
+        sidebarProps={sidebarProps}
+      />
+
     </div>
   )
 
 }
+
+
+
+
+// DEPRECIATED: for temporary reference only. to be deleted after rewrite
+
+// export const OrderDisplay2 = ({data, disableAddItem, setShowAddItem}) => {
+//   const {orderDisplayData, setOrderDisplayData} = data
+//   const { header:orderHeader, items:orderData} = orderDisplayData
+//   const [expandedRows, setExpandedRows] = useState(null)
+//   const [rollbackQty, setRollbackQty] = useState(null)
+
+//   const rowExpansionTemplate = (rowData) => {
+//     return (
+//       <div>
+//         <p>{"Rate: " + rowData.rate}</p>
+//         <p>{"Subtotal: " + rowData.total}</p>
+//       </div>
+//     )
+//   }
+
+//   return (
+//     <div>
+//       <Card 
+//         style={{marginTop: "10px"}}
+//         title="Options"
+//       >
+//         <div style={{marginBottom: "30px"}}>
+//           {orderHeader.defaultRoute !== 'slopick' && orderHeader.defaultRoute !== 'atownpick' &&
+//           <div style={{margin: "5px"}}>
+//             <RadioButton inputId="deliv" value="deliv" 
+//               checked={orderHeader.newRoute === 'deliv'}
+//               onChange={e => setOrderDisplayData({
+//                 header: {...orderHeader, _route: e.value},
+//                 items: [...orderData]
+//               })}
+//             />
+//             <label 
+//               htmlFor="deliv"
+//               style={{fontWeight: orderHeader.newRoute === orderHeader.route ? "normal" : (orderHeader.newRoute === 'deliv' ? "bold" : "normal")}}
+//             >
+//               {orderHeader.defaultRoute === 'deliv' ? 'Delivery (default)' : 'Delivery'}
+//             </label>
+//           </div>
+//           }
+//           <div style={{margin: "5px"}}>
+//             <RadioButton inputId="slopick" value="slopick" 
+//               onChange={e => setOrderDisplayData({
+//                 header: {...orderHeader, _route: e.value},
+//                 items: [...orderData]
+//               })}
+//               checked={orderHeader._route === 'slopick'}
+//             />
+//             <label 
+//               htmlFor="slopick"
+//               style={{fontWeight: orderHeader._route === orderHeader.route ? "normal" : (orderHeader.newRoute === 'slopick' ? "bold" : "normal")}}
+//             >
+//               {orderHeader.defaultRoute === 'slopick' ? 'Pick Up SLO (defualt)' : "Pick Up SLO"}
+//             </label>
+//           </div>
+//           <div style={{margin: "5px"}}>
+//             <RadioButton inputId="atownpick" value="atownpick" 
+//               onChange={e => setOrderDisplayData({
+//                 header: {...orderHeader, _route: e.value},
+//                 items: [...orderData]
+//               })}
+//               checked={orderHeader._route === 'atownpick'}
+//             />
+//             <label 
+//               htmlFor="atownpick"
+//               style={{fontWeight: orderHeader.newRoute === orderHeader.route ? "normal" : (orderHeader.newRoute === 'atownpick' ? "bold" : "normal")}}
+//             >
+//               {orderHeader.defaultRoute === 'atownpick' ? "Pick Up Carlton (defualt)" : "Pick Up Carlton"}
+//             </label>
+//           </div>
+//         </div>
+
+//         <span className="p-float-label">
+//           <InputTextarea
+//             id="input-note"
+//             style={{width: "100%"}}
+//             onChange={e => setOrderDisplayData({
+//               header: {...orderHeader, _ItemNote: e.value},
+//               items: [...orderData]
+//             })}
+//           />
+//           <label htmlFor="input-note"
+//             style={{fontWeight: orderHeader.newItemNote !== orderHeader.ItemNote ? "bold" : "normal"}}
+//           >
+//             {"Add a Note" + (orderHeader.newItemNote !== orderHeader.ItemNote ? "*" : '')}
+//           </label>
+//         </span>
+//         {/* <pre>{JSON.stringify(orderHeader, null, 2)}</pre> */}
+//       </Card>
+
+//       <Card 
+//         style={{marginTop: "10px"}}
+//         title={() => {
+//           return (
+//             <div style={{display: "flex", }}>
+//               <div style={{flex: "65%"}}>
+//                 Items
+//               </div>
+//               <div style={{flex: "35%"}}>
+//                 <Button label="+ Add Item" 
+//                   disabled={disableAddItem}
+//                   onClick={() => setShowAddItem(true)}
+//                 />
+//               </div>
+//             </div>
+//           )
+//         }}
+//       >
+//         <DataTable
+//           value={orderData.filter(item => (!item.orderID || item.originalQty > 0 || item.newQty > 0))}
+//           style={{width: "100%"}}
+//           responsiveLayout="scroll"
+//           rowExpansionTemplate={rowExpansionTemplate}
+//           expandedRows={expandedRows} 
+//           onRowExpand={e => console.log("Data for " + e.data.prodNick, JSON.stringify(e.data, null, 2))}
+//           onRowToggle={(e) => setExpandedRows(e.data)}
+//           dataKey="prodNick"
+//           footer={() => {return(<div>{"Total: " + orderData.reduce( (acc, item) => { return (acc + (item.rate * item.newQty)) }, 0).toFixed(2)}</div>)}}
+//         >
+//           <Column expander={true} style={{ width: '3em' }} />
+//           <Column header="Product" 
+//             field="prodName" 
+//             body={rowData => {
+//               const changeDetected = rowData.newQty !== rowData.originalQty
+//               if (rowData.newQty === 0) return (
+//                 <div
+//                   style={{color: "gray"}}
+//                 >
+//                   <strike>{rowData.prodName}</strike>
+//                 </div>
+//               )
+//               if (changeDetected) return (
+//                 <b>{rowData.prodName + "*"}</b>
+//               )
+//               return rowData.prodName
+//             }}
+//           />
+//           <Column header="Quantity" 
+//             field="newQty" 
+//             style={{width: "75px"}}
+//             body={rowData => {
+//               return(
+//                 <div className="p-fluid">
+//                   <InputNumber 
+//                     disabled={disableAddItem} // means ordering date >= deliv date; order list should be read-only
+//                     value={rowData.newQty}
+//                     min={0}
+//                     onChange={e => {
+//                       const _orderData = orderData.map(item => 
+//                         item.prodNick === rowData.prodNick ? 
+//                           {...item, newQty: e.value} : 
+//                           item
+//                       )
+//                       //setOrderData(_orderData)
+//                     }}
+//                     onKeyDown={e => {
+//                       // console.log(e)
+//                       if (e.key === "Enter") {
+//                         e.target.blur()
+//                       }
+//                       if (e.key === "Escape") {
+//                         const _orderData = orderData.map(item =>
+//                           item.prodNick === rowData.prodNick ?
+//                             {...item, newQty: rollbackQty} :
+//                             item  
+//                         )
+//                         //setOrderData(_orderData)
+//                         e.target.blur()
+//                       }
+//                     }}
+//                     onFocus={e => {
+//                       setRollbackQty(parseInt(e.target.value))
+//                       e.target.select()
+//                     }}
+//                     onBlur={e => {
+//                       if (e.target.value === '') {
+//                         const _orderData = orderData.map(item =>
+//                           item.prodNick === rowData.prodNick ?
+//                             {...item, newQty: item.originalQty} :
+//                             item  
+//                         )
+//                         //setOrderData(_orderData)
+//                       }
+//                     }}
+//                   />
+//                 </div>
+//               )
+//             }}
+//           />
+//         </DataTable>
+//       </Card>
+
+//       {/* <DataTable
+//         value={packGroups.data.listProductBackups.items}
+//         style={{width: "100%"}}
+//         responsiveLayout="scroll"
+//       >
+//         <Column header="name" field="nickName"></Column>
+//         <Column header="packGroup" field="packGroup"></Column>
+//       </DataTable> */}
+//     </div>
+//   )
+
+// }
 
 // // export const OrderDisplay = ({ location, date, debug }) => {
 // //   const { orderDisplay, orderDisplayErrors } = useOrderDisplay(location, date)

@@ -6,12 +6,12 @@ import {
   listStandingBackups,
   listStandings,
   locSortAZ
-} from "../../graphql/queries";
+} from "../../../graphql/queries";
 import {
   updateOrder,
   createOrder,
   createStanding,
-} from "../../graphql/mutations";
+} from "../../../graphql/mutations";
 
 // Alternative to API Gateway + Lambda
 export const grabLocNames = async () => {
