@@ -1,6 +1,6 @@
-/***********
- * QUERIES *
- ***********/
+// ***********
+// * QUERIES *
+// ***********
 
 export const listLocationNames = /* GraphQL */ `
   query ListLocations(
@@ -73,6 +73,7 @@ export const listOrdersByLocationByDate = /* GraphQL */ `
           rate
           route
           isLate
+          createdOn
         }
       }
     }
@@ -149,9 +150,9 @@ export const listProducts = /* GraphQL */ `
   }
 `;
 
-/*************
- * MUTATIONS *
- *************/
+// *************
+// * MUTATIONS *
+// *************
 
 export const createOrder = /* GraphQL */ `
   mutation CreateOrder(

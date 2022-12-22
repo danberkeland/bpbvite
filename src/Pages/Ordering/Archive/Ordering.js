@@ -4,15 +4,15 @@ import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 
-import { DataScroll } from "./OrderingParts/DataScroller";
-import { Cal } from "./OrderingParts/Calendar";
-import { AddProduct } from "./OrderingParts/AddProduct";
-import { Fulfill } from "./OrderingParts/FullfillOptions";
+import { DataScroll } from "../OrderingParts/DataScroller";
+import { Cal } from "../OrderingParts/Calendar";
+import { AddProduct } from "../OrderingParts/AddProduct";
+import { Fulfill } from "../OrderingParts/FullfillOptions";
 
 import styled from "styled-components";
-import { useSettingsStore } from "../../Contexts/SettingsZustand";
+import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 
-import { useLocUserList, useSimpleLocationList } from "../../swr";
+import { useLocUserList, useSimpleLocationList } from "../../../swr";
 
 const BasicContainer = styled.div`
   display: flex;

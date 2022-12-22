@@ -1,6 +1,9 @@
 // source:
 // https://stackoverflow.com/questions/1129216/sort-array-of-objects-by-string-property-value
 
+/**
+ * For sorting an array of objects along some common property.
+ */
 function dynamicSort(property) {
   var sortOrder = 1;
   if(property[0] === "-") {

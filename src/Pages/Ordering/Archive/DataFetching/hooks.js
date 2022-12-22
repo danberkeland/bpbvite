@@ -1,9 +1,9 @@
 import useSWRimmutable from "swr/immutable"
-import { gqlFetcher } from "../DataFetching/fetcher"
-import * as queries from "../DataFetching/queries"
+import { gqlFetcher } from "./fetcher"
+import * as queries from "./queries"
 import { DateTime } from "luxon"
-import { getOrderSubmitDate, dateToMmddyyyy, getWeekday } from "../Functions/dateAndTime"
-import dynamicSort from "../Functions/dynamicSort"
+import { getOrderSubmitDate, dateToMmddyyyy, getWeekday } from "../../Functions/dateAndTime"
+import dynamicSort from "../../Functions/dynamicSort"
 
 /*********************************************
  * Location Selection Options for BPB admins *

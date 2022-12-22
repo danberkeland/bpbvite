@@ -2,12 +2,14 @@ import React from "react"
 // import Orders5 from './Orders5'
 // import { Orders6 } from "./Orders6"
 import Orders7 from "./Orders7"
+import Orders8 from "./Orders8"
 
 const Ordering2 = () => {
 
   return(
     // <Orders6 />
-    <Orders7 />
+    //<Orders7 />
+    <Orders8 />
   )
 }
 

@@ -1,72 +1,63 @@
-// OrderData.js
-//
-// fetch cart orders by location & delivery date
-// fetch all standing orders by location
-
-
-import { API } from "aws-amplify"
 import useSWR from "swr"
 import { dateToMmddyyyy } from "../Functions/dateAndTime"
+import { getNestedObject } from "../Functions/getNestedObject"
+import { gqlFetcher } from "./fetchers"
 import * as queries from "./gqlQueries"
-
-const gqlFetcher = async (query, variables) => {
-  return (
-    await API.graphql({
-      query: query,
-      variables: variables 
-    })
-  )
-}
 
 const usualOptions = {
   revalidateIfStale: false,
   revalidateOnFocus: false,
-  revalidateOnReconnect: true
+  revalidateOnReconnect: true,
 }
 
-/**************
- * SWR Caches *
- **************/
+
 
 export const useOrdersByLocationByDate = (location, delivDate) => {
-  const shouldFetch = !!location && !!delivDate; console.log("Fetch cart orders? ", shouldFetch)
+  const shouldFetch = !!location && !!delivDate
   const variables = shouldFetch ? {
     locNick: location,
     delivDate: dateToMmddyyyy(delivDate)
   } : null
-  console.log("Variables: ", variables)
+  // if (shouldFetch) console.log("Fetching cart data...")
   const { data, errors } = useSWR(
     shouldFetch ? [queries.listOrdersByLocationByDate, variables] : null, 
     gqlFetcher, 
     usualOptions
   )
 
-  if (data) console.log("Order list: ", data.data)
-  if (errors) console.log("Order list errors", errors)
+  // if (data) console.log("Cart Data response: ", data)
+  // if (errors) console.log("Cart Data errors", errors)
+  const _data = getNestedObject(data, ['data', 'getLocation', 'ordersByDate', 'items'])
 
   return({
-    data: data?.data.getLocation.ordersByDate.items,
-    errors: errors
+    data: _data,
+    errors: errors,
   })
 }
 
+
+
+/** Fetches ALL standing items for location, but fetch is suppressed until delivDate is specified */
 export const useStandingByLocation = (location, delivDate) => {
-  const shouldFetch = !!location && !!delivDate; console.log("Fetch Standing? ", shouldFetch)
+  const shouldFetch = !!location && !!delivDate
   const variables = shouldFetch ? {
     locNick: location
   } : null
-
+  // if (shouldFetch) console.log("Fetching standing data...")
   const { data, errors } = useSWR(
     shouldFetch ? [queries.listStandingByLocation, variables] : null,
     gqlFetcher, 
     usualOptions
   )
 
-  if (data) console.log("Standing list: ", data.data)
-  if (errors) console.log("Standing list errors", errors)
+  // if (data) console.log("Standing list: ", data.data)
+  // if (errors) console.log("Standing list errors", errors)
+  const _data = getNestedObject (data, ['data', 'getLocation', 'standing', 'items'])
 
   return({
-    data: data?.data.getLocation.standing.items,
+    data: _data,
     errors: errors
   })
 }
+
+

@@ -1,25 +1,3 @@
-export const users: [
-    {
-      'email': '',
-      'location': '',
-      'locationAuth': '',
-    },
-
-  ]
-}
-
-export const cartOrders = [
-
-
-]
-
-export const standingOrders = [
-
-
-]
-
-
-
 const mockUsers = [
   {
     "name": "Dwyne",
