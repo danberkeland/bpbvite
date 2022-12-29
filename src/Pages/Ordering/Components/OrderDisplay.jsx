@@ -1,33 +1,3 @@
-<<<<<<< HEAD:src/Pages/Ordering/OrderComponents/OrderDisplay.jsx
-import React, { useEffect } from "react"
-import { Button } from "primereact/button"
-import { Card } from "primereact/card"
-import { DataTable } from "primereact/datatable"
-import { Column } from "primereact/column"
-import { InputNumber } from "primereact/inputnumber"
-import { RadioButton } from "primereact/radiobutton"
-import { InputTextarea } from "primereact/inputtextarea"
-import { useState } from "react"
-// import { packGroups } from "../DataFetching/mockdata"
-
-export const OrderDisplay = ({data, disableAddItem, setShowAddItem}) => {
-  const {orderHeader, setOrderHeader, orderData, setOrderData} = data
-  const [expandedRows, setExpandedRows] = useState(null)
-  const [rollbackQty, setRollbackQty] = useState(null)
-
-  useEffect(()=> {
-    console.log('orderData', orderData)
-  },[orderData])
-
-  const rowExpansionTemplate = (rowData) => {
-    return (
-      <div>
-        <p>{"Rate: " + rowData.rate}</p>
-        <p>{"Subtotal: " + rowData.total}</p>
-      </div>
-    )
-  }
-=======
 import React, { useState } from "react"
 import { Button } from "primereact/button"
 
@@ -47,7 +17,6 @@ import { mutate } from "swr"
 export const OrderDisplay = ({ location, delivDate, userName }) => {
   const [showAddItem, setShowAddItem] = useState(false)
   const sidebarProps = {showAddItem, setShowAddItem}
->>>>>>> 67a71ae7464f9d93ea5d0cffb46e3d1b492dd70c:src/Pages/Ordering/Components/OrderDisplay.jsx
 
   const [orderHeader, setOrderHeader] = useState()
   const [orderHeaderChanges, setOrderHeaderChanges] = useState()
