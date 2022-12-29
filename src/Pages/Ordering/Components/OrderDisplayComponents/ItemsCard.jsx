@@ -5,31 +5,38 @@ import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 import { Button } from "primereact/button"
 import { InputNumber } from "primereact/inputnumber"
+import { Tooltip } from "primereact/tooltip"
+import { confirmPopup } from "primereact/confirmpopup"
+import { OverlayPanel } from "primereact/overlaypanel"
 import { useRef } from "react"
 import TimeAgo from "timeago-react"
-import * as timeago from "timeago.js"
-import en_US from 'timeago.js/lib/lang/en_US'
-import { DateTime } from "luxon"
+import { getOrderSubmitDate } from "../../Functions/dateAndTime"
+import { useProductData } from "../../Data/productData"
 
 
 
 /**For display/control of individual cart item info*/
-export const ItemsCard = ({ orderItemsState, setShowAddItem }) => {
+export const ItemsCard = ({ orderItemsState, setShowAddItem, delivDate, readOnly }) => {
   const { orderItems, orderItemChanges, setOrderItemChanges } = orderItemsState
   const [expandedRows, setExpandedRows] = useState(null)
   const [rollbackQty, setRollbackQty] = useState(null)
   const current = useRef()
   const rollback = useRef()
 
+  const inProductionOverlay = useRef(null)
+  const orderLockedOverlay = useRef(null)
+
+  const { data:productData } = useProductData()
+
   const cardTitleTemplate = () => {
     return (
       <div style={{display: "flex", }}>
         <div style={{flex: "65%"}}>
-          Items
+          {readOnly ? "Items (Read Only)" : "Items"}
         </div>
         <div style={{flex: "35%"}}>
           <Button label="+ Add Item" 
-            disabled={false}
+            disabled={readOnly}
             onClick={() => setShowAddItem(true)}
           />
         </div>
@@ -38,7 +45,7 @@ export const ItemsCard = ({ orderItemsState, setShowAddItem }) => {
   }
 
   const rowExpansionTemplate = (rowData) => {
-    let updateTime = timeago.format(rowData.updatedOn)
+    
     return (
       <div>
         <p>{"Rate: " + rowData.rate}</p>
@@ -62,18 +69,24 @@ export const ItemsCard = ({ orderItemsState, setShowAddItem }) => {
   }
 
   const qtyInputTemplate = (rowData) => {
+    const orderSubmitDate = getOrderSubmitDate()
+    const productDetails = productData?.find(item => item.prodNick === rowData.prodNick)
+    const leadTime = productDetails?.leadTime
+    const isLate = delivDate < orderSubmitDate.plus({ days: leadTime })
+
     return(
       <div className="p-fluid">
         <InputNumber 
-          disabled={false} // means ordering date >= deliv date; order list should be read-only
+          disabled={readOnly}
           value={rowData.qty}
           min={0}
+          max={isLate ? orderItems[rowData.prodNick].qty : undefined}
           onFocus={e => {
             current.current = parseInt(e.target.value)
             rollback.current = parseInt(e.target.value)
             e.target.select()
           }}
-          onChange={e => {
+          onValueChange={e => {
             current.current = e.value
           }}
           onKeyDown={e => {
@@ -128,23 +141,64 @@ export const ItemsCard = ({ orderItemsState, setShowAddItem }) => {
         <Column header="Product" 
           field="prodName" 
           body={rowData => {
+            const orderSubmitDate = getOrderSubmitDate()
+            const productDetails = productData?.find(item => item.prodNick === rowData.prodNick)
+            const leadTime = productDetails?.leadTime
+            const isLate = delivDate < orderSubmitDate.plus({ days: leadTime })
             const changeDetected = rowData.prodNick in orderItems ? rowData.qty !== orderItems[rowData.prodNick].qty : true
             const style = {
-              color: rowData.qty === 0 ? "gray" : "black",
+              color: (rowData.qty === 0 || readOnly)? "gray" : "black",
               textDecoration: rowData.qty === 0 ? "line-through" : "",
               fontWeight: changeDetected ? "bold" : "normal"
             }
 
             return (
-              <div style={style}>
-                {rowData.prodName + (changeDetected ? "*" : "")}
+              <div>
+                <div style={style} 
+                  className="productNameDisplay"
+                  onClick={(e) => {
+                    console.log(e)
+             
+                    if (readOnly) orderLockedOverlay.current.toggle(e)
+                    else if (isLate) inProductionOverlay.current.toggle(e)
+                  }} 
+                  aria-haspopup 
+                  aria-controls="overlay_panel"
+                >
+                  {rowData.prodName + (changeDetected ? "*" : "")}
+                  {isLate && 
+                    <i id="order-table-info-icon" className="pi pi-info-circle" style={{'fontSize': '1em', marginLeft: "10px"}}></i>
+                  }
+                </div>
+                <OverlayPanel 
+                  ref={inProductionOverlay}
+                  style={{maxWidth: "400px", margin: "10px"}}
+                  id="in-production-overlay"
+                >
+                  <h2>In Production</h2>
+                  <p>Only reductions and cancellations are supported in this time window.</p>
+                  <p><b>Submitted changes cannot be reversed!</b></p>
+                  <p>Order will be locked from all edits at 6:00pm the day before delivery.</p>
+
+                </OverlayPanel>
+
+                <OverlayPanel 
+                  ref={orderLockedOverlay}
+                  style={{maxWidth: "400px", margin: "10px"}}
+                  id="locked-overlay"
+                >
+                  <h2>Delivery Date Reached</h2>
+                  <p>Final production day is complete. Order is locked from changes.</p>
+
+                </OverlayPanel>
+
               </div>
             )
           }}
         />
         <Column header="Qty" 
           field="_qty"
-          style={{width: "75px"}}
+          style={{width: "80px"}}
           body={qtyInputTemplate}
         />
       </DataTable>

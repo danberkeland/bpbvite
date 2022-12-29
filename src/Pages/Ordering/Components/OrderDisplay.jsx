@@ -5,14 +5,13 @@ import { OptionsCard } from "./OrderDisplayComponents/OptionsCard"
 import { ItemsCard } from "./OrderDisplayComponents/ItemsCard"
 import { AddItemSidebar } from "./AddItemSidebar"
 import { useEffect } from "react"
-import { makeOrderHeader, makeOrderItems, makeOrderObject, validateCart } from "../Data/dataTransformations"
+import { makeOrderHeader, makeOrderItems, validateCart } from "../Data/dataTransformations"
 import { useLocationDetails } from "../Data/locationData"
 import { useOrdersByLocationByDate, useStandingByLocation } from "../Data/orderData"
-import { dateToMmddyyyy } from "../Functions/dateAndTime"
+import { dateToMmddyyyy, getOrderSubmitDate } from "../Functions/dateAndTime"
 
 import { gqlFetcher } from "../Data/fetchers"
 import { createOrder, updateOrder } from "../Data/gqlQueries"
-import { mutate } from "swr"
 
 export const OrderDisplay = ({ location, delivDate, userName }) => {
   const [showAddItem, setShowAddItem] = useState(false)
@@ -128,23 +127,28 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 
       <OptionsCard
         orderHeaderState={orderHeaderState}
+        readOnly={getOrderSubmitDate() >= delivDate}
       />
 
       {orderItems &&
       <ItemsCard
         orderItemsState={orderItemsState}
         setShowAddItem={setShowAddItem}
+        delivDate={delivDate}
+        readOnly={getOrderSubmitDate() >= delivDate}
       />
       }
 
+      {(getOrderSubmitDate() < delivDate) &&
       <Button label="Submit" 
-        disabled={!orderItemChanges || orderItemChanges?.length === 0 || revalidating} // disable when no changes detected
         onClick={() => {
           setRevalidating(true)
           handleSubmit()
           
         }}
+        disabled={!orderItemChanges || orderItemChanges?.length === 0 || revalidating} // disable when no changes detected
       />
+      }
 
       <AddItemSidebar 
         orderItemsState={orderItemsState}

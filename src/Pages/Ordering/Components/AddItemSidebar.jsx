@@ -96,7 +96,6 @@ export const AddItemSidebar = ({ orderItemsState, sidebarProps, location, delivD
     // check for old item
 
     let _orderItemChanges = [...orderItemChanges]
-
     let oldItem = _orderItemChanges.find(item => item.prodNick === selectedProduct.prodNick)
 
     if (oldItem) {
@@ -112,21 +111,6 @@ export const AddItemSidebar = ({ orderItemsState, sidebarProps, location, delivD
       setOrderItemChanges(_orderItemChanges)
 
     }
-
-
-    // let _orderItemChanges = []
-    // if (orderItemChanges) {
-    //   _orderItemChanges = [...orderItemChanges]
-    //   const oldItem = orderItemChanges.find(item => item.prodNick === selectedProduct.prodNick)
-    //   if (oldItem) {
-    //     newItem.orderID = oldItem.orderID
-    //     _orderItemChanges = _orderItemChanges.filter(item => item.prodNick !== selectedProduct.prodNick)
-    //   }
-    // }
-    // _orderItemChanges = [
-    //   newItem,
-    //   ..._orderItemChanges,
-    // ].sort(dynamicSort("prodName"))
 
     setOrderItemChanges(_orderItemChanges)
     setShowAddItem(false)
@@ -152,12 +136,15 @@ export const AddItemSidebar = ({ orderItemsState, sidebarProps, location, delivD
       <span className="p-float-label p-fluid" style={{marginTop: "25px"}}>
         <Dropdown 
           id="productDropdown"
+          value={selectedProdNick}
           options={productDisplay}
+          onChange={handleDropdownSelection}
           optionLabel="prodName"
           optionValue="prodNick"
-          value={selectedProdNick}
+          filter 
+          showClear 
+          filterBy="prodName" 
           itemTemplate={dropdownItemTemplate}
-          onChange={handleDropdownSelection}
         />
         <label htmlFor="productDropdown">{productData ? "Select Product" : "Loading..."}</label>
       </span>
@@ -174,14 +161,15 @@ export const AddItemSidebar = ({ orderItemsState, sidebarProps, location, delivD
           />
           <label htmlFor="product-qty">Quantity</label>
         </span>
-      
-
+    
         <Button label="Add Item"
           disabled={!selectedProdNick || !selectedQty || selectedProduct.isLate || selectedProduct.inCart}
           style={{flex: "35%", marginTop: "28px"}}
           onClick={handleAddItem}
         />
       </div>
+
+      
 
     </Sidebar>
   )

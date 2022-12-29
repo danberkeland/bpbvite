@@ -5,27 +5,30 @@ import { RadioButton } from "primereact/radiobutton"
 import { InputTextarea } from "primereact/inputtextarea"
 
 /**For display/control of header-type order info*/
-export const OptionsCard = ({ orderHeaderState }) => {
+export const OptionsCard = ({ orderHeaderState, readOnly }) => {
   const { orderHeader, orderHeaderChanges, setOrderHeaderChanges} = orderHeaderState
 
   return (
     <Card 
       style={{marginTop: "10px"}}
-      title="Options"
+      title={readOnly ? "Items (Read Only)" : "Items"}
     >
       {orderHeaderChanges &&
         <div style={{marginBottom: "30px"}}>
           <CustomRadioButton label='Delivery' value='deliv'
             orderHeaderState={orderHeaderState}
             hidden={orderHeader.defaultRoute !== 'deliv'}
+            disabled={readOnly}
           />
 
           <CustomRadioButton label='Pick up SLO' value='slopick'
             orderHeaderState={orderHeaderState}
+            disabled={readOnly}
           />
 
           <CustomRadioButton label='Pick up Carlton' value='atownPick'
             orderHeaderState={orderHeaderState}
+            disabled={readOnly}
           />
         </div>
       }
@@ -36,6 +39,7 @@ export const OptionsCard = ({ orderHeaderState }) => {
             id="input-note"
             style={{width: "100%"}}
             onChange={e => setOrderHeaderChanges({ ...orderHeader, ItemNote: e.target.value })}
+            disabled={readOnly}
           />
           <label htmlFor="input-note"
             style={{fontWeight: orderHeader.ItemNote !== orderHeaderChanges.ItemNote ? "bold" : "normal"}}
@@ -51,7 +55,7 @@ export const OptionsCard = ({ orderHeaderState }) => {
 
 
 
-const CustomRadioButton = ({value, label, orderHeaderState, hidden}) => {
+const CustomRadioButton = ({value, label, orderHeaderState, hidden, disabled}) => {
   const { orderHeader, orderHeaderChanges, setOrderHeaderChanges } = orderHeaderState
 
   const isDefaultOption = value === orderHeader.defaultRoute
@@ -66,6 +70,7 @@ const CustomRadioButton = ({value, label, orderHeaderState, hidden}) => {
         checked={checked}
         onChange={e => setOrderHeaderChanges({...orderHeaderChanges, route: e.value})}
         hidden={hidden || false}
+        disabled={disabled}
       />
       <label 
         htmlFor={value} 
