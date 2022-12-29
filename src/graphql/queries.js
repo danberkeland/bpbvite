@@ -686,6 +686,7 @@ export const getLocation = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -705,6 +706,7 @@ export const getLocation = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1032,6 +1034,7 @@ export const getProduct = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1737,6 +1740,7 @@ export const getOrder = /* GraphQL */ `
       isLate
       createdOn
       updatedOn
+      updatedBy
     }
   }
 `;
@@ -1832,6 +1836,7 @@ export const listOrders = /* GraphQL */ `
         isLate
         createdOn
         updatedOn
+        updatedBy
       }
       nextToken
     }
@@ -5385,6 +5390,7 @@ export const orderByCreatedAt = /* GraphQL */ `
         isLate
         createdOn
         updatedOn
+        updatedBy
       }
       nextToken
     }
@@ -5492,6 +5498,7 @@ export const orderByUpdatedAt = /* GraphQL */ `
         isLate
         createdOn
         updatedOn
+        updatedBy
       }
       nextToken
     }
@@ -5599,6 +5606,7 @@ export const orderByDelivDate = /* GraphQL */ `
         isLate
         createdOn
         updatedOn
+        updatedBy
       }
       nextToken
     }

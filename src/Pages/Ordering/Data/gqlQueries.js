@@ -74,6 +74,8 @@ export const listOrdersByLocationByDate = /* GraphQL */ `
           route
           isLate
           createdOn
+          updatedOn
+          updatedBy
         }
       }
     }
@@ -161,17 +163,21 @@ export const createOrder = /* GraphQL */ `
   ) {
     createOrder(input: $input, condition: $condition) {
       id
-      locNick
-      prodNick
-      qty
-      SO
-      isWhole
-      delivDate
-      rate
-      route
-      isLate
-      ItemNote
-      createdOn
+      # product {
+      #   prodNick
+      #   prodName
+      #   wholePrice
+      #   retailPrice
+      # } 
+      # qty
+      # delivDate
+      # ItemNote
+      # isWhole
+      # SO
+      # rate
+      # route
+      # isLate
+      # createdOn
     }
   }
 `;
@@ -183,17 +189,33 @@ export const updateOrder = /* GraphQL */ `
   ) {
     updateOrder(input: $input, condition: $condition) {
       id
-      locNick
+      # product {
+      #   prodNick
+      #   prodName
+      #   wholePrice
+      #   retailPrice
+      # } 
+      # qty
+      # delivDate
+      # ItemNote
+      # isWhole
+      # SO
+      # rate
+      # route
+      # isLate
+      # createdOn
+    }
+  }
+`;
+
+export const deleteOrder = /* GraphQL */ `
+  mutation DeleteOrder(
+    $input: DeleteOrderInput!
+    $condition: ModelOrderConditionInput
+  ) {
+    deleteOrder(input: $input, condition: $condition) {
+      id
       prodNick
-      qty
-      SO
-      isWhole
-      delivDate
-      rate
-      route
-      isLate
-      ItemNote
-      createdOn
     }
   }
 `;

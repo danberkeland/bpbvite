@@ -1060,6 +1060,7 @@ export const onCreateLocation = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1079,6 +1080,7 @@ export const onCreateLocation = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1242,6 +1244,7 @@ export const onUpdateLocation = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1261,6 +1264,7 @@ export const onUpdateLocation = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1424,6 +1428,7 @@ export const onDeleteLocation = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1443,6 +1448,7 @@ export const onDeleteLocation = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1654,6 +1660,7 @@ export const onCreateProduct = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1908,6 +1915,7 @@ export const onUpdateProduct = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -2162,6 +2170,7 @@ export const onDeleteProduct = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -2967,6 +2976,7 @@ export const onCreateOrder = /* GraphQL */ `
       isLate
       createdOn
       updatedOn
+      updatedBy
     }
   }
 `;
@@ -3176,6 +3186,7 @@ export const onUpdateOrder = /* GraphQL */ `
       isLate
       createdOn
       updatedOn
+      updatedBy
     }
   }
 `;
@@ -3385,6 +3396,7 @@ export const onDeleteOrder = /* GraphQL */ `
       isLate
       createdOn
       updatedOn
+      updatedBy
     }
   }
 `;

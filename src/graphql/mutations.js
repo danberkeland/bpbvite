@@ -1093,6 +1093,7 @@ export const createLocation = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1112,6 +1113,7 @@ export const createLocation = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1278,6 +1280,7 @@ export const updateLocation = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1297,6 +1300,7 @@ export const updateLocation = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1463,6 +1467,7 @@ export const deleteLocation = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1482,6 +1487,7 @@ export const deleteLocation = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1696,6 +1702,7 @@ export const createProduct = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1953,6 +1960,7 @@ export const updateProduct = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -2210,6 +2218,7 @@ export const deleteProduct = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -3024,6 +3033,7 @@ export const createOrder = /* GraphQL */ `
       isLate
       createdOn
       updatedOn
+      updatedBy
     }
   }
 `;
@@ -3236,6 +3246,7 @@ export const updateOrder = /* GraphQL */ `
       isLate
       createdOn
       updatedOn
+      updatedBy
     }
   }
 `;
@@ -3448,6 +3459,7 @@ export const deleteOrder = /* GraphQL */ `
       isLate
       createdOn
       updatedOn
+      updatedBy
     }
   }
 `;

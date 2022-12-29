@@ -4,38 +4,152 @@ import { Button } from "primereact/button"
 import { OptionsCard } from "./OrderDisplayComponents/OptionsCard"
 import { ItemsCard } from "./OrderDisplayComponents/ItemsCard"
 import { AddItemSidebar } from "./AddItemSidebar"
+import { useEffect } from "react"
+import { makeOrderHeader, makeOrderItems, makeOrderObject, validateCart } from "../Data/dataTransformations"
+import { useLocationDetails } from "../Data/locationData"
+import { useOrdersByLocationByDate, useStandingByLocation } from "../Data/orderData"
+import { dateToMmddyyyy } from "../Functions/dateAndTime"
 
-export const OrderDisplay = ({orderState, locationDetails, selection}) => {
-  const { orderHeader, setOrderHeader, orderItems, setOrderItems } = orderState
+import { gqlFetcher } from "../Data/fetchers"
+import { createOrder, updateOrder } from "../Data/gqlQueries"
+import { mutate } from "swr"
 
+export const OrderDisplay = ({ location, delivDate, userName }) => {
   const [showAddItem, setShowAddItem] = useState(false)
   const sidebarProps = {showAddItem, setShowAddItem}
 
+  const [orderHeader, setOrderHeader] = useState()
+  const [orderHeaderChanges, setOrderHeaderChanges] = useState()
+
+  const [orderItems, setOrderItems] = useState()
+  const [orderItemChanges, setOrderItemChanges] = useState()
+
+  const [revalidating, setRevalidating] = useState(false)
+
+  const orderHeaderState = { orderHeader, orderHeaderChanges, setOrderHeaderChanges }
+  const orderItemsState = { orderItems, orderItemChanges, setOrderItemChanges }
+
+  // const { locationDetails, standingData, cartData } = useOrderData
+  const { data:locationDetails, prodsNotAllowed, altPrices } = useLocationDetails(location)
+  const { data:standingData } = useStandingByLocation(location, delivDate)
+  const { data:cartData, mutate:mutateCart } = useOrdersByLocationByDate(location, delivDate)
+
+  //const OrderItemList = makeOrderObject(locationDetails, cartData, standingData, delivDate)
+
+  useEffect(() => {
+    console.log("(L,S,C):", locationDetails?1:0, standingData?1:0, cartData?1:0)
+    if (!!locationDetails && !!standingData && !!cartData) {
+      const _header = makeOrderHeader(locationDetails, cartData, standingData, delivDate)
+      const _items = makeOrderItems(locationDetails, cartData, standingData, delivDate)
+      const _itemsObj = Object.fromEntries(_items.map(item => [item.prodNick, item]))
+      setOrderHeader(_header)
+      setOrderItems(_itemsObj) // keyed on prodNick for easy reference
+      setOrderHeaderChanges(_header)
+      setOrderItemChanges(_items)
+      console.log("changed items:", _itemsObj)
+
+      validateCart(cartData, mutateCart)
+      setRevalidating(false)
+    }
+  }, [locationDetails, standingData, cartData, delivDate])
+
+  const handleSubmit = async () => {
+    // combine header data with items
+    // combination & submission logic will be designed 
+    // to focus on one item at a time.
+    
+    // We build the submission item, then decide what, if anything,
+    // to do with it.
+    // For now we will build uniform submission items without
+    // worrying about submitting non-changes over the wire.
+    console.log("Submitting...")
+    for (let ordItm of orderItemChanges) {
+      // build submit item
+      let subItem = {
+        isWhole: true,
+        delivDate: dateToMmddyyyy(delivDate), // should start converting to ISO
+        route: orderHeaderChanges.route,
+        ItemNote: orderHeaderChanges.ItemNote,
+        locNick: location,
+        prodNick: ordItm.prodNick,
+        qty: ordItm.qty,
+        rate: ordItm.rate,
+        isLate: 0,
+        updatedBy: userName,
+      }
+      // can conditionally add other attributes in the future
+      if (!!ordItm.id && ordItm.type === "C") subItem.id = ordItm.id
+
+      // Decide Action
+      let action = "NONE"
+      if (subItem.hasOwnProperty("id")) {
+        // check changes for route, ItemNote, qty, rate
+        if (orderHeader.route !== orderHeaderChanges.route) action = "UPDATE"
+        if (orderHeader.ItemNote !== orderHeaderChanges.ItemNote) action = "UPDATE"
+        if (ordItm.rate !== orderItems[ordItm.prodNick]?.rate) action = "UPDATE"
+        if (ordItm.qty !== orderItems[ordItm.prodNick]?.qty) action = "UPDATE"
+      } else {
+        if (ordItm.qty > 0) action = "CREATE"
+        if (orderHeader.route !== orderHeaderChanges.route) action = "CREATE" // convert all items to cart when header values change
+        if (orderHeader.ItemNote !== orderHeaderChanges.ItemNote) action = "CREATE" // ditto here
+      }
+
+      // make API calls and revalidate cartData cache after.
+      // less dynamic/efficient, but simple.  Can be enhanced later.
+      // because of the final revalidation, response items serve no function.
+      console.log(action+": ", JSON.stringify(subItem, null, 2))
+
+      let response
+      if (action === "CREATE") {
+        response = await gqlFetcher(createOrder, {input: subItem})
+        response = response.data.createOrder
+        console.log(response)
+
+      }
+      if (action === "UPDATE") {
+        response = await gqlFetcher(updateOrder, {input: subItem})
+        response = response.data.updateOrder
+        console.log(response)
+
+      }
+
+      mutateCart()
+      
+    }
+
+  }
+
+
   return (
     <div>
+      {/* <pre>{"HEADER: " + JSON.stringify(orderHeader, null, 2)}</pre> */}
+      {/* <pre>{"ITEMS: " + JSON.stringify(orderItems, null, 2)}</pre> */}
+      {/* <pre>{"ITEM CHANGES: " + JSON.stringify(orderItemChanges, null, 2)}</pre> */}
+
       <OptionsCard
-        orderHeader={orderHeader}
-        setOrderHeader={setOrderHeader}
+        orderHeaderState={orderHeaderState}
       />
 
+      {orderItems &&
       <ItemsCard
-        orderItems={orderItems}
-        setOrderItems={setOrderItems}
+        orderItemsState={orderItemsState}
         setShowAddItem={setShowAddItem}
       />
+      }
 
       <Button label="Submit" 
-        disabled={false}
+        disabled={!orderItemChanges || orderItemChanges?.length === 0 || revalidating} // disable when no changes detected
         onClick={() => {
-          console.log("Submitting...")
-          console.log("Order Header: ", JSON.stringify(orderHeader, null, 2))
-          console.log("Order Items: ", JSON.stringify(orderItems, null, 2))}}
+          setRevalidating(true)
+          handleSubmit()
+          
+        }}
       />
 
       <AddItemSidebar 
-        orderState={orderState}
-        locationDetails={locationDetails}
-        selection={selection}
+        orderItemsState={orderItemsState}
+        location={location}
+        delivDate={delivDate}
         sidebarProps={sidebarProps}
       />
 
