@@ -6,12 +6,9 @@ import { Sidebar } from "primereact/sidebar"
 import { Dropdown } from "primereact/dropdown"
 import { InputNumber } from "primereact/inputnumber"
 import { Button } from "primereact/button"
-import { Card } from "primereact/card"
-
-import { fetchProdsForLocation } from "../Archive/DataFetching/fetcher" // to be deleted
 
 import { DateTime } from "luxon"
-import { getOrderSubmitDate } from "../Functions/dateAndTime"
+import { getOrderSubmitDate, getWorkingDate } from "../Functions/dateAndTime"
 import { useLocationDetails } from "../Data/locationData"
 import dynamicSort from "../Functions/dynamicSort"
 
@@ -22,6 +19,18 @@ export const AddItemSidebar = ({ orderItemsState, sidebarProps, location, delivD
   
   const [selectedProdNick, setSelectedProdNick] = useState(null)
   const [selectedProduct, setSelectedProduct] = useState(null)
+  const selectedProductInProduction = selectedProduct ? delivDate < getOrderSubmitDate().plus({ days: selectedProduct.leadTime }) : null
+  const selectedProductInOrderItems = orderItems && selectedProduct ? orderItems.hasOwnProperty(selectedProduct.prodNick) : null
+  const selectedProductQtyUpdatedToday = selectedProductInOrderItems ? getWorkingDate('NOW') === getWorkingDate(orderItems[selectedProduct.prodNick].qtyUpdatedOn) : null
+  const selectedProductMaxQty = selectedProductInProduction ? ( 
+    selectedProductInOrderItems ? ( 
+      selectedProductQtyUpdatedToday ? 
+        orderItems[selectedProduct.prodNick].sameDayMaxQty :
+        orderItems[selectedProduct.prodNick].qty 
+      ) : 
+      0
+    ) :
+    undefined
 
   const [selectedQty, setSelectedQty] = useState(null)
   
@@ -53,16 +62,18 @@ export const AddItemSidebar = ({ orderItemsState, sidebarProps, location, delivD
   const dropdownItemTemplate = (option) => {
     // moved derived state out of data objects and into templates
     const orderSubmitDate = getOrderSubmitDate()
-    const isLate = delivDate < orderSubmitDate.plus({ days: option.leadTime })
+    const inProduction = delivDate < orderSubmitDate.plus({ days: option.leadTime })
     const availableDate = orderSubmitDate.plus({ days: option.leadTime }).toLocaleString()
-
+    
     const orderMatch = orderItemChanges.find(i => i.prodNick === option.prodNick)
-    const inCart = orderMatch ? orderMatch.qty > 0 : false
+    const inCart = orderMatch && (orderMatch.qty > 0 || orderMatch.action === 'CREATE')
+    const recentlyDeleted = orderMatch && getWorkingDate('NOW') === getWorkingDate(orderMatch.qtyUpdatedOn) && orderMatch.qty === 0
 
     return(
-      <div>
+      <div style={{fontWeight: (recentlyDeleted && inProduction) ? "bold" : "normal"}}>
         <div>{option.prodName}</div>
-        <div>{inCart ? "In cart" : (option.leadTime + " day lead; " + (isLate ? "earliest " + availableDate : 'available'))}</div>
+        {(recentlyDeleted && inProduction) && <div>Recently Deleted</div>}
+        {!(recentlyDeleted && inProduction) && <div>{inCart ? "In cart" : (option.leadTime + " day lead; " + (inProduction ? "earliest " + availableDate : 'available'))}</div>}
       </div>
     )
   }
@@ -74,41 +85,38 @@ export const AddItemSidebar = ({ orderItemsState, sidebarProps, location, delivD
     setSelectedProduct(_selectedProduct)
 
     const matchedOrderItem = orderItemChanges.find(item => item.prodNick === e.value)
-    const qty = matchedOrderItem ? matchedOrderItem.qty : null
-    setSelectedQty(qty)
+    setSelectedQty(matchedOrderItem ? matchedOrderItem.qty : 0)
 
     console.log("Selected Product:\n", JSON.stringify(_selectedProduct, null, 2))
     
   }
 
   const handleAddItem = () => {
-    // define new item
-    let newItem = { 
-      id: null,
-      prodNick: selectedProduct.prodNick,
-      prodName: selectedProduct.prodName,
-      qty: selectedQty,
-      type: "C",
-      rate: selectedProduct.rate ? selectedProduct.rate : selectedProduct.wholePrice,
-
-    }
-
-    // check for old item
 
     let _orderItemChanges = [...orderItemChanges]
     let oldItem = _orderItemChanges.find(item => item.prodNick === selectedProduct.prodNick)
 
-    if (oldItem) {
-      newItem.id = oldItem.type === "C" ? oldItem.id : null // just to be extra sure it's a cart item
+    let newItem
+    if (oldItem && oldItem.type === "C") {
+      newItem = {
+        ...oldItem,
+        qty: selectedQty
+      }
       _orderItemChanges = _orderItemChanges
         .map(item => item.prodNick === selectedProduct.prodNick ? newItem : item)
         .sort(dynamicSort("prodName"))
-      
-      setOrderItemChanges(_orderItemChanges)
 
     } else {
+      let newItem = { 
+        id: null,
+        prodNick: selectedProduct.prodNick,
+        prodName: selectedProduct.prodName,
+        qty: selectedQty,
+        type: "C",
+        rate: selectedProduct.rate ? selectedProduct.rate : selectedProduct.wholePrice,
+        action: "CREATE"
+      }
       _orderItemChanges = [ ..._orderItemChanges, newItem].sort(dynamicSort("prodName"))
-      setOrderItemChanges(_orderItemChanges)
 
     }
 
@@ -153,23 +161,34 @@ export const AddItemSidebar = ({ orderItemsState, sidebarProps, location, delivD
         <span className="p-float-label p-fluid" style={{flex: "65%", marginTop: "28px", paddingRight: "30%"}}>
           <InputNumber id="product-qty"
             value={selectedQty}
+            min={0}
+            max={selectedProductMaxQty}
             onChange={e => setSelectedQty(e.value)}
-            disabled={selectedProduct ? 
-              delivDate < getOrderSubmitDate().plus({ days: selectedProduct.leadTime }) : 
-              false
+            disabled={
+              !selectedProdNick || 
+              selectedProductMaxQty === 0
+              // (selectedProduct && delivDate < getOrderSubmitDate().plus({ days: selectedProduct.leadTime }) && getWorkingDate('NOW') === getWorkingDate(orderItems[selectedProduct.prodNick].qtyUpdatedOn) && orderItems[selectedProduct.prodNick].sameDayMaxQty === 0) ||
+              // (selectedProduct && delivDate < getOrderSubmitDate().plus({ days: selectedProduct.leadTime }) && getWorkingDate('NOW') !== getWorkingDate(orderItems[selectedProduct.prodNick].qtyUpdatedOn) && orderItems[selectedProduct.prodNick].qty === 0)
             }
           />
           <label htmlFor="product-qty">Quantity</label>
         </span>
     
         <Button label="Add Item"
-          disabled={!selectedProdNick || !selectedQty || selectedProduct.isLate || selectedProduct.inCart}
+          disabled={
+            !selectedProdNick || 
+            !selectedQty || 
+            selectedProductMaxQty === 0
+            // (selectedProduct && delivDate < getOrderSubmitDate().plus({ days: selectedProduct.leadTime }) && getWorkingDate('NOW') === getWorkingDate(orderItems[selectedProduct.prodNick].qtyUpdatedOn) && orderItems[selectedProduct.prodNick].sameDayMaxQty === 0) ||
+            // (selectedProduct && delivDate < getOrderSubmitDate().plus({ days: selectedProduct.leadTime }) && getWorkingDate('NOW') !== getWorkingDate(orderItems[selectedProduct.prodNick].qtyUpdatedOn) && orderItems[selectedProduct.prodNick].qty === 0)
+          }
           style={{flex: "35%", marginTop: "28px"}}
           onClick={handleAddItem}
         />
+        
       </div>
+      {/* <pre>{JSON.stringify(selectedProductMaxQty)}</pre> */}
 
-      
 
     </Sidebar>
   )

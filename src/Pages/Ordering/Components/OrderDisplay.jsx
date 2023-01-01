@@ -8,7 +8,7 @@ import { useEffect } from "react"
 import { makeOrderHeader, makeOrderItems, validateCart } from "../Data/dataTransformations"
 import { useLocationDetails } from "../Data/locationData"
 import { useOrdersByLocationByDate, useStandingByLocation } from "../Data/orderData"
-import { dateToMmddyyyy, getOrderSubmitDate } from "../Functions/dateAndTime"
+import { dateToMmddyyyy, getOrderSubmitDate, getWorkingDate } from "../Functions/dateAndTime"
 
 import { gqlFetcher } from "../Data/fetchers"
 import { createOrder, updateOrder } from "../Data/gqlQueries"
@@ -48,7 +48,6 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
       console.log("changed items:", _itemsObj)
 
       validateCart(cartData, mutateCart)
-      setRevalidating(false)
     }
   }, [locationDetails, standingData, cartData, delivDate])
 
@@ -83,14 +82,26 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
       let action = "NONE"
       if (subItem.hasOwnProperty("id")) {
         // check changes for route, ItemNote, qty, rate
+        if (ordItm.qty !== orderItems[ordItm.prodNick]?.qty) action = "UPDATE"
+        if (ordItm.rate !== orderItems[ordItm.prodNick]?.rate) action = "UPDATE"
         if (orderHeader.route !== orderHeaderChanges.route) action = "UPDATE"
         if (orderHeader.ItemNote !== orderHeaderChanges.ItemNote) action = "UPDATE"
-        if (ordItm.rate !== orderItems[ordItm.prodNick]?.rate) action = "UPDATE"
-        if (ordItm.qty !== orderItems[ordItm.prodNick]?.qty) action = "UPDATE"
       } else {
         if (ordItm.qty > 0) action = "CREATE"
         if (orderHeader.route !== orderHeaderChanges.route) action = "CREATE" // convert all items to cart when header values change
         if (orderHeader.ItemNote !== orderHeaderChanges.ItemNote) action = "CREATE" // ditto here
+      }
+
+      if (action === "CREATE") {
+        subItem.sameDayMaxQty = ordItm.qty
+        subItem.qtyUpdatedOn = new Date().toISOString()
+      }
+
+      if (action === "UPDATE") {
+        if (getWorkingDate('NOW') !== getWorkingDate(ordItm.updatedOn)) {
+          subItem.sameDayMaxQty = orderItems[ordItm.prodNick].qty
+        }
+        if (ordItm.qty !== orderItems[ordItm.prodNick].qty) subItem.qtyUpdatedOn = new Date().toISOString()
       }
 
       // make API calls and revalidate cartData cache after.
@@ -113,7 +124,6 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
       }
 
       mutateCart()
-      
     }
 
   }
@@ -124,6 +134,9 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
       {/* <pre>{"HEADER: " + JSON.stringify(orderHeader, null, 2)}</pre> */}
       {/* <pre>{"ITEMS: " + JSON.stringify(orderItems, null, 2)}</pre> */}
       {/* <pre>{"ITEM CHANGES: " + JSON.stringify(orderItemChanges, null, 2)}</pre> */}
+
+      {/* <pre>{"Current working day: " + JSON.stringify(getWorkingDate('NOW'), null, 2)}</pre> */}
+      {/* <pre>{"Item updatedOn dates: " + JSON.stringify(getOrderSubmitDate(), null, 2)}</pre>    */}
 
       <OptionsCard
         orderHeaderState={orderHeaderState}
@@ -144,7 +157,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
         onClick={() => {
           setRevalidating(true)
           handleSubmit()
-          
+          setRevalidating(false)
         }}
         disabled={!orderItemChanges || orderItemChanges?.length === 0 || revalidating} // disable when no changes detected
       />

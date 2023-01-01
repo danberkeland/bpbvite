@@ -38,7 +38,8 @@ export const OptionsCard = ({ orderHeaderState, readOnly }) => {
           <InputTextarea
             id="input-note"
             style={{width: "100%"}}
-            onChange={e => setOrderHeaderChanges({ ...orderHeader, ItemNote: e.target.value })}
+            value={orderHeader.ItemNote ? orderHeader.itemNote : undefined}
+            onChange={e => setOrderHeaderChanges({ ...orderHeader, ItemNote: e.target.value ? e.target.value : null })}
             disabled={readOnly}
           />
           <label htmlFor="input-note"

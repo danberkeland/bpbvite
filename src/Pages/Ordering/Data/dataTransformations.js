@@ -92,6 +92,8 @@ export function makeOrderItems(locationDetails, cartData, standingData, delivDat
       prodNick: item.product.prodNick,
       prodName: item.product.prodName,
       qty: item.qty,
+      qtyUpdatedOn: item.qtyUpdatedOn,
+      sameDayMaxQty: item.sameDayMaxQty,
       defaultRate: item.product.wholePrice, // For future, consider the case of retail items
       locationRate: locationRate,
       rate: item.rate !== null ? item.rate : locationRate,
@@ -130,8 +132,8 @@ export function makeOrderItems(locationDetails, cartData, standingData, delivDat
         rate: altPriceItem.length ?
           altPriceItem[0].wholePrice : 
           item.product.wholePrice,
-        createdOn: item.createdOn ? item.updatedOn : null,
-        updatedOn: item.updatedOn ? item.createcOn : null,
+        createdOn: item.createdOn ? item.createdOn : null,
+        updatedOn: item.updatedOn ? item.updatedOn : null,
         type: "S",
     })
   })

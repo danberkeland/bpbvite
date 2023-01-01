@@ -10,7 +10,7 @@ import { confirmPopup } from "primereact/confirmpopup"
 import { OverlayPanel } from "primereact/overlaypanel"
 import { useRef } from "react"
 import TimeAgo from "timeago-react"
-import { getOrderSubmitDate } from "../../Functions/dateAndTime"
+import { getOrderSubmitDate, getWorkingDate } from "../../Functions/dateAndTime"
 import { useProductData } from "../../Data/productData"
 
 
@@ -50,7 +50,7 @@ export const ItemsCard = ({ orderItemsState, setShowAddItem, delivDate, readOnly
       <div>
         <p>{"Rate: " + rowData.rate}</p>
         <p>{"Subtotal: " + ( (rowData.rate * rowData.qty).toFixed(2) )}</p>
-        {rowData.updatedOn && <p>Last update submitted <TimeAgo datetime={rowData.updatedOn} /></p>}
+        {rowData.qtyUpdatedOn && <p>Item edited <TimeAgo datetime={rowData.qtyUpdatedOn} /></p>}
         {rowData.updatedBy && <p>{"by " + rowData.updatedBy}</p>}
       </div>
     )
@@ -80,38 +80,51 @@ export const ItemsCard = ({ orderItemsState, setShowAddItem, delivDate, readOnly
           disabled={readOnly}
           value={rowData.qty}
           min={0}
-          max={isLate ? orderItems[rowData.prodNick].qty : undefined}
+          max={isLate ?
+            (
+              getWorkingDate('NOW') === getWorkingDate(rowData.qtyUpdatedOn) ?
+                rowData.sameDayMaxQty :
+                orderItems[rowData.prodNick].qty                
+            ) :
+            undefined}
           onFocus={e => {
             current.current = parseInt(e.target.value)
             rollback.current = parseInt(e.target.value)
             e.target.select()
           }}
           onValueChange={e => {
-            current.current = e.value
+            const _orderItemChanges = orderItemChanges.map(item =>
+              item.prodNick === rowData.prodNick ?
+                {...item, qty: e.value ? parseInt(e.value) : 0} :
+                item  
+            )
+
+            setOrderItemChanges(_orderItemChanges)
           }}
+
           onKeyDown={e => {
-            // console.log(e)
             if (e.key === "Enter") {
               e.target.blur()
             }
-            if (e.key === "Escape") {
-              const _orderItemChanges = orderItemChanges.map(item =>
-                item.prodNick === rowData.prodNick ?
-                  {...item, qty: rollback.current} :
-                  item  
-              )
-              setOrderItemChanges(_orderItemChanges)
-              e.target.blur()
-            }
+            // if (e.key === "Escape") {
+            //   const _orderItemChanges = orderItemChanges.map(item =>
+            //     item.prodNick === rowData.prodNick ?
+            //       {...item, qty: rollback.current} :
+            //       item  
+            //   )
+            //   current.current = rollback.current
+            //   setOrderItemChanges(_orderItemChanges)
+            //   e.target.blur()
+            // }
           }}
-          onBlur={e => {
-            const _orderItemChanges = orderItemChanges.map(item =>
-              item.prodNick === rowData.prodNick ?
-                {...item, qty: e.target.value === '' ? rollback.current : current.current} :
-                item  
-            )
-            setOrderItemChanges(_orderItemChanges)
-          }}
+          // onBlur={e => {
+          //   const _orderItemChanges = orderItemChanges.map(item =>
+          //     item.prodNick === rowData.prodNick ?
+          //       {...item, qty: e.target.value ? parseInt(e.target.value) : 0} :
+          //       item  
+          //   )
+          //   setOrderItemChanges(_orderItemChanges)
+          // }}
         />
       </div>
     )
@@ -121,7 +134,7 @@ export const ItemsCard = ({ orderItemsState, setShowAddItem, delivDate, readOnly
     <Card 
       style={{marginTop: "10px"}}
       title={cardTitleTemplate}
-    >
+    >   
       <DataTable
         value={orderItemChanges.filter(item => (
           item.action === 'CREATE' 
@@ -157,8 +170,7 @@ export const ItemsCard = ({ orderItemsState, setShowAddItem, delivDate, readOnly
                 <div style={style} 
                   className="productNameDisplay"
                   onClick={(e) => {
-                    console.log(e)
-             
+                    // console.log(e)
                     if (readOnly) orderLockedOverlay.current.toggle(e)
                     else if (isLate) inProductionOverlay.current.toggle(e)
                   }} 
@@ -176,9 +188,8 @@ export const ItemsCard = ({ orderItemsState, setShowAddItem, delivDate, readOnly
                   id="in-production-overlay"
                 >
                   <h2>In Production</h2>
-                  <p>Only reductions and cancellations are supported in this time window.</p>
-                  <p><b>Submitted changes cannot be reversed!</b></p>
-                  <p>Order will be locked from all edits at 6:00pm the day before delivery.</p>
+                  <p>Order adjustments are capped at the amount recorded at daily 6:00pm changeovers.</p>
+                  <p><b>Reductions and cancellations will not be reversible after the next 6:00pm changeover.</b></p>
 
                 </OverlayPanel>
 
@@ -188,7 +199,7 @@ export const ItemsCard = ({ orderItemsState, setShowAddItem, delivDate, readOnly
                   id="locked-overlay"
                 >
                   <h2>Delivery Date Reached</h2>
-                  <p>Final production day is complete. Order is locked from changes.</p>
+                  <p>Final production day is complete. Order is no longer editable.</p>
 
                 </OverlayPanel>
 

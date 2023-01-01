@@ -66,6 +66,8 @@ export const listOrdersByLocationByDate = /* GraphQL */ `
             retailPrice
           } 
           qty
+          qtyUpdatedOn
+          sameDayMaxQty
           delivDate
           ItemNote
           isWhole

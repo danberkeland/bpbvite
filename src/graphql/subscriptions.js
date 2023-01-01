@@ -1049,6 +1049,8 @@ export const onCreateLocation = /* GraphQL */ `
           Type
           id
           qty
+          qtyUpdatedOn
+          sameDayMaxQty
           prodNick
           locNick
           ItemNote
@@ -1069,6 +1071,8 @@ export const onCreateLocation = /* GraphQL */ `
           Type
           id
           qty
+          qtyUpdatedOn
+          sameDayMaxQty
           prodNick
           locNick
           ItemNote
@@ -1233,6 +1237,8 @@ export const onUpdateLocation = /* GraphQL */ `
           Type
           id
           qty
+          qtyUpdatedOn
+          sameDayMaxQty
           prodNick
           locNick
           ItemNote
@@ -1253,6 +1259,8 @@ export const onUpdateLocation = /* GraphQL */ `
           Type
           id
           qty
+          qtyUpdatedOn
+          sameDayMaxQty
           prodNick
           locNick
           ItemNote
@@ -1417,6 +1425,8 @@ export const onDeleteLocation = /* GraphQL */ `
           Type
           id
           qty
+          qtyUpdatedOn
+          sameDayMaxQty
           prodNick
           locNick
           ItemNote
@@ -1437,6 +1447,8 @@ export const onDeleteLocation = /* GraphQL */ `
           Type
           id
           qty
+          qtyUpdatedOn
+          sameDayMaxQty
           prodNick
           locNick
           ItemNote
@@ -1649,6 +1661,8 @@ export const onCreateProduct = /* GraphQL */ `
           Type
           id
           qty
+          qtyUpdatedOn
+          sameDayMaxQty
           prodNick
           locNick
           ItemNote
@@ -1904,6 +1918,8 @@ export const onUpdateProduct = /* GraphQL */ `
           Type
           id
           qty
+          qtyUpdatedOn
+          sameDayMaxQty
           prodNick
           locNick
           ItemNote
@@ -2159,6 +2175,8 @@ export const onDeleteProduct = /* GraphQL */ `
           Type
           id
           qty
+          qtyUpdatedOn
+          sameDayMaxQty
           prodNick
           locNick
           ItemNote
@@ -2776,6 +2794,8 @@ export const onCreateOrder = /* GraphQL */ `
       Type
       id
       qty
+      qtyUpdatedOn
+      sameDayMaxQty
       prodNick
       product {
         Type
@@ -2986,6 +3006,8 @@ export const onUpdateOrder = /* GraphQL */ `
       Type
       id
       qty
+      qtyUpdatedOn
+      sameDayMaxQty
       prodNick
       product {
         Type
@@ -3196,6 +3218,8 @@ export const onDeleteOrder = /* GraphQL */ `
       Type
       id
       qty
+      qtyUpdatedOn
+      sameDayMaxQty
       prodNick
       product {
         Type
