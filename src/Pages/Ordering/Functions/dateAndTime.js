@@ -19,6 +19,27 @@ export const getOrderSubmitDate = () => {
   return orderSubmitDate
 }
 
+/**
+ * Apply BPB locale and 6pm cutoff rules to the given iso 
+ * datetime to determine the equivalent working date.
+ * 
+ * Returns an ISO date string (yyyy-mm-dd).
+ * 
+ * Also accepts the input 'NOW' to return the current working date.
+ */
+export const getWorkingDate = (isoDateTimeString) => {
+
+  const bpbTime = isoDateTimeString === 'NOW' ?
+    DateTime.now().setZone('America/Los_Angeles') :
+    DateTime.fromISO(isoDateTimeString).setZone('America/Los_Angeles')
+
+  const bpbHour = bpbTime.hour
+  const workingDate = bpbHour >= 18 ? 
+    bpbTime.startOf('day').plus({ days: 1 }).toISODate() : 
+    bpbTime.startOf('day').toISODate()
+
+  return workingDate
+}
 
 export function dateToMmddyyyy(date) {
   //if (!date) return null

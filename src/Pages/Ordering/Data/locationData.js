@@ -37,19 +37,26 @@ export const useLocationDetails = (location) => {
   const shouldFetch = !!location
   const variables = shouldFetch ? { locNick: location } : null
 
-  const { data, errors } = useSWR(
+  const { data } = useSWR(
     shouldFetch ? [getLocationDetails, variables] : null, 
     gqlFetcher, 
     usualOptions
   )
   
   const _data = getNestedObject(data, ['data', 'getLocation'])
+  const _prodsNotAllowed = getNestedObject(data, ['data', 'getLocation', 'prodsNotAllowed'])
+  const _altPrices = getNestedObject(data, ['data', 'getLocation', 'customProd'])
 
-  return({
+  // return({
+  //   data: _data,
+  //   errors: errors
+  // })
+
+  return({ 
     data: _data,
-    errors: errors
+    prodsNotAllowed: _prodsNotAllowed,
+    altPrices: _altPrices
   })
-
 }
 
 

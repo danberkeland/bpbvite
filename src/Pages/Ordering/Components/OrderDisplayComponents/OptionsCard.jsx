@@ -4,10 +4,64 @@ import { Card } from "primereact/card"
 import { RadioButton } from "primereact/radiobutton"
 import { InputTextarea } from "primereact/inputtextarea"
 
-const CustomRadioButton = ({value, label, orderHeader, setOrderHeader, hidden}) => {
+/**For display/control of header-type order info*/
+export const OptionsCard = ({ orderHeaderState, readOnly }) => {
+  const { orderHeader, orderHeaderChanges, setOrderHeaderChanges} = orderHeaderState
+
+  return (
+    <Card 
+      style={{marginTop: "10px"}}
+      title={readOnly ? "Items (Read Only)" : "Items"}
+    >
+      {orderHeaderChanges &&
+        <div style={{marginBottom: "30px"}}>
+          <CustomRadioButton label='Delivery' value='deliv'
+            orderHeaderState={orderHeaderState}
+            hidden={orderHeader.defaultRoute !== 'deliv'}
+            disabled={readOnly}
+          />
+
+          <CustomRadioButton label='Pick up SLO' value='slopick'
+            orderHeaderState={orderHeaderState}
+            disabled={readOnly}
+          />
+
+          <CustomRadioButton label='Pick up Carlton' value='atownPick'
+            orderHeaderState={orderHeaderState}
+            disabled={readOnly}
+          />
+        </div>
+      }
+
+      {orderHeaderChanges &&
+        <span className="p-float-label">
+          <InputTextarea
+            id="input-note"
+            style={{width: "100%"}}
+            value={orderHeader.ItemNote ? orderHeader.itemNote : undefined}
+            onChange={e => setOrderHeaderChanges({ ...orderHeader, ItemNote: e.target.value ? e.target.value : null })}
+            disabled={readOnly}
+          />
+          <label htmlFor="input-note"
+            style={{fontWeight: orderHeader.ItemNote !== orderHeaderChanges.ItemNote ? "bold" : "normal"}}
+          >
+            {"Add a Note" + (orderHeader.ItemNote !== orderHeaderChanges.ItemNote ? "*" : '')}
+          </label>
+        </span>
+      }
+
+    </Card>
+  )
+}
+
+
+
+const CustomRadioButton = ({value, label, orderHeaderState, hidden, disabled}) => {
+  const { orderHeader, orderHeaderChanges, setOrderHeaderChanges } = orderHeaderState
+
   const isDefaultOption = value === orderHeader.defaultRoute
-  const checked = value === orderHeader._route
-  const valueUpdated = orderHeader.route !== orderHeader._route
+  const checked = value === orderHeaderChanges.route
+  const valueUpdated = orderHeader.route !== orderHeaderChanges.route
 
   return (
     <div style={{margin: "5px"}}>
@@ -15,8 +69,9 @@ const CustomRadioButton = ({value, label, orderHeader, setOrderHeader, hidden}) 
         inputId={value} 
         value={value} 
         checked={checked}
-        onChange={e => setOrderHeader({...orderHeader, _route: e.value})}
+        onChange={e => setOrderHeaderChanges({...orderHeaderChanges, route: e.value})}
         hidden={hidden || false}
+        disabled={disabled}
       />
       <label 
         htmlFor={value} 
@@ -25,44 +80,5 @@ const CustomRadioButton = ({value, label, orderHeader, setOrderHeader, hidden}) 
         {isDefaultOption ? label + " (default)" : label}
       </label>
     </div>
-  )
-}
-
-/**For display/control of header-type order info*/
-export const OptionsCard = ({orderHeader, setOrderHeader}) => {
-  
-  return (
-    <Card 
-      style={{marginTop: "10px"}}
-      title="Options"
-    >
-      <div style={{marginBottom: "30px"}}>
-        <CustomRadioButton label='Delivery' value='deliv'
-          orderHeader={orderHeader} setOrderHeader={setOrderHeader}
-          hidden={orderHeader.defaultRoute !== 'deliv'}
-        />
-
-        <CustomRadioButton label='Pick up SLO' value='slopick'
-          orderHeader={orderHeader} setOrderHeader={setOrderHeader}
-        />
-
-        <CustomRadioButton label='Pick up Carlton' value='atownPick'
-          orderHeader={orderHeader} setOrderHeader={setOrderHeader}
-        />
-      </div>
-
-      <span className="p-float-label">
-        <InputTextarea
-          id="input-note"
-          style={{width: "100%"}}
-          onChange={e => setOrderHeader({ ...orderHeader, _ItemNote: e.target.value })}
-        />
-        <label htmlFor="input-note"
-          style={{fontWeight: orderHeader._ItemNote !== orderHeader.ItemNote ? "bold" : "normal"}}
-        >
-          {"Add a Note" + (orderHeader._ItemNote !== orderHeader.ItemNote ? "*" : '')}
-        </label>
-      </span>
-    </Card>
   )
 }

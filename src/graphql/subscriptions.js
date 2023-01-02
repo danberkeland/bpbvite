@@ -1049,6 +1049,8 @@ export const onCreateLocation = /* GraphQL */ `
           Type
           id
           qty
+          qtyUpdatedOn
+          sameDayMaxQty
           prodNick
           locNick
           ItemNote
@@ -1060,6 +1062,7 @@ export const onCreateLocation = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1068,6 +1071,8 @@ export const onCreateLocation = /* GraphQL */ `
           Type
           id
           qty
+          qtyUpdatedOn
+          sameDayMaxQty
           prodNick
           locNick
           ItemNote
@@ -1079,6 +1084,7 @@ export const onCreateLocation = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1231,6 +1237,8 @@ export const onUpdateLocation = /* GraphQL */ `
           Type
           id
           qty
+          qtyUpdatedOn
+          sameDayMaxQty
           prodNick
           locNick
           ItemNote
@@ -1242,6 +1250,7 @@ export const onUpdateLocation = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1250,6 +1259,8 @@ export const onUpdateLocation = /* GraphQL */ `
           Type
           id
           qty
+          qtyUpdatedOn
+          sameDayMaxQty
           prodNick
           locNick
           ItemNote
@@ -1261,6 +1272,7 @@ export const onUpdateLocation = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1413,6 +1425,8 @@ export const onDeleteLocation = /* GraphQL */ `
           Type
           id
           qty
+          qtyUpdatedOn
+          sameDayMaxQty
           prodNick
           locNick
           ItemNote
@@ -1424,6 +1438,7 @@ export const onDeleteLocation = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1432,6 +1447,8 @@ export const onDeleteLocation = /* GraphQL */ `
           Type
           id
           qty
+          qtyUpdatedOn
+          sameDayMaxQty
           prodNick
           locNick
           ItemNote
@@ -1443,6 +1460,7 @@ export const onDeleteLocation = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1643,6 +1661,8 @@ export const onCreateProduct = /* GraphQL */ `
           Type
           id
           qty
+          qtyUpdatedOn
+          sameDayMaxQty
           prodNick
           locNick
           ItemNote
@@ -1654,6 +1674,7 @@ export const onCreateProduct = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -1897,6 +1918,8 @@ export const onUpdateProduct = /* GraphQL */ `
           Type
           id
           qty
+          qtyUpdatedOn
+          sameDayMaxQty
           prodNick
           locNick
           ItemNote
@@ -1908,6 +1931,7 @@ export const onUpdateProduct = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -2151,6 +2175,8 @@ export const onDeleteProduct = /* GraphQL */ `
           Type
           id
           qty
+          qtyUpdatedOn
+          sameDayMaxQty
           prodNick
           locNick
           ItemNote
@@ -2162,6 +2188,7 @@ export const onDeleteProduct = /* GraphQL */ `
           isLate
           createdOn
           updatedOn
+          updatedBy
         }
         nextToken
       }
@@ -2767,6 +2794,8 @@ export const onCreateOrder = /* GraphQL */ `
       Type
       id
       qty
+      qtyUpdatedOn
+      sameDayMaxQty
       prodNick
       product {
         Type
@@ -2967,6 +2996,7 @@ export const onCreateOrder = /* GraphQL */ `
       isLate
       createdOn
       updatedOn
+      updatedBy
     }
   }
 `;
@@ -2976,6 +3006,8 @@ export const onUpdateOrder = /* GraphQL */ `
       Type
       id
       qty
+      qtyUpdatedOn
+      sameDayMaxQty
       prodNick
       product {
         Type
@@ -3176,6 +3208,7 @@ export const onUpdateOrder = /* GraphQL */ `
       isLate
       createdOn
       updatedOn
+      updatedBy
     }
   }
 `;
@@ -3185,6 +3218,8 @@ export const onDeleteOrder = /* GraphQL */ `
       Type
       id
       qty
+      qtyUpdatedOn
+      sameDayMaxQty
       prodNick
       product {
         Type
@@ -3385,6 +3420,7 @@ export const onDeleteOrder = /* GraphQL */ `
       isLate
       createdOn
       updatedOn
+      updatedBy
     }
   }
 `;

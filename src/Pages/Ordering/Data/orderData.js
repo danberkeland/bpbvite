@@ -19,7 +19,7 @@ export const useOrdersByLocationByDate = (location, delivDate) => {
     delivDate: dateToMmddyyyy(delivDate)
   } : null
   // if (shouldFetch) console.log("Fetching cart data...")
-  const { data, errors } = useSWR(
+  const { data, mutate } = useSWR(
     shouldFetch ? [queries.listOrdersByLocationByDate, variables] : null, 
     gqlFetcher, 
     usualOptions
@@ -27,11 +27,17 @@ export const useOrdersByLocationByDate = (location, delivDate) => {
 
   // if (data) console.log("Cart Data response: ", data)
   // if (errors) console.log("Cart Data errors", errors)
+  
   const _data = getNestedObject(data, ['data', 'getLocation', 'ordersByDate', 'items'])
 
-  return({
+  // return({
+  //   data: _data,
+  //   errors: errors,
+  // })
+
+  return ({
     data: _data,
-    errors: errors,
+    mutate: mutate
   })
 }
 
@@ -44,7 +50,7 @@ export const useStandingByLocation = (location, delivDate) => {
     locNick: location
   } : null
   // if (shouldFetch) console.log("Fetching standing data...")
-  const { data, errors } = useSWR(
+  const { data } = useSWR(
     shouldFetch ? [queries.listStandingByLocation, variables] : null,
     gqlFetcher, 
     usualOptions
@@ -52,12 +58,15 @@ export const useStandingByLocation = (location, delivDate) => {
 
   // if (data) console.log("Standing list: ", data.data)
   // if (errors) console.log("Standing list errors", errors)
+  
   const _data = getNestedObject (data, ['data', 'getLocation', 'standing', 'items'])
 
-  return({
-    data: _data,
-    errors: errors
-  })
+  // return({
+  //   data: _data,
+  //   errors: errors
+  // })
+
+  return ({data: _data})
 }
 
 

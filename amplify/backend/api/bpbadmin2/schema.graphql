@@ -333,6 +333,8 @@ type Order @model (timestamps: { createdAt: "createdOn", updatedAt: "updatedOn"}
     )
   id: ID!
   qty: Int
+  qtyUpdatedOn: AWSDateTime
+  sameDayMaxQty: Int
   prodNick: String! @index(name: "byProd")
   product: Product! @hasOne(fields: ["prodNick"])
   locNick: String! @index(name: "byLoc") @index(name: "byLocationByDelivDate", sortKeyFields: ["delivDate"])
@@ -346,8 +348,8 @@ type Order @model (timestamps: { createdAt: "createdOn", updatedAt: "updatedOn"}
   isLate: Int
   createdOn: AWSDateTime!
   updatedOn: AWSDateTime!
+  updatedBy: String
 }
-
 
 type Standing @model {
   id: ID!

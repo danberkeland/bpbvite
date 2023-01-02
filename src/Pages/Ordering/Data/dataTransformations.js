@@ -26,8 +26,13 @@
 //
 
 import { dateToMmddyyyy, getWeekday } from "../Functions/dateAndTime"
+import dynamicSort from "../Functions/dynamicSort"
+import { gqlFetcher } from "./fetchers"
+import { deleteOrder } from "./gqlQueries"
 
 export function makeOrderHeader(locationDetails, cartData, standingData, delivDate) {
+  if (!locationDetails || !cartData || !standingData || !delivDate) return undefined
+
   const defaultRoute = ['atownpick', 'slopick'].includes(locationDetails.zoneNick) ?
     locationDetails.zoneNick :
     'deliv'
@@ -55,20 +60,21 @@ export function makeOrderHeader(locationDetails, cartData, standingData, delivDa
     if (isWholeIsConstant) {headerIsWhole = cartData[0].isWhole} else {console.log("Variation in isWhole detected")}
   }
 
-  return ({
+  const orderHeader = {
     locNick: locationDetails.locNick,
     isWhole: headerIsWhole,
     delivDate: delivDate,
     defaultRoute: defaultRoute,
     route: headerRoute,
-    _route: headerRoute,
     ItemNote: headerNote,
-    _ItemNote: headerNote,
-  })
+  }
+  // console.log("ORDER HEADER: ", orderHeader)
+  return orderHeader
  
 }
 
 export function makeOrderItems(locationDetails, cartData, standingData, delivDate) {
+  if (!locationDetails || !cartData || !standingData || !delivDate) return undefined
   // order list state data for PRESENTATION.
   // Header-type data are removed from items.
   // May contain extra properties to assist with 
@@ -76,24 +82,29 @@ export function makeOrderItems(locationDetails, cartData, standingData, delivDat
   let cartItems = cartData.map(item => { 
     let altPriceItem = locationDetails.customProd.items
       .filter(alt => alt.prodNick = item.prodNick)
+    
+    let locationRate = altPriceItem.length ?
+      altPriceItem[0].wholePrice : 
+      item.product.wholePrice
 
     return({
       id: item.id,
       prodNick: item.product.prodNick,
       prodName: item.product.prodName,
       qty: item.qty,
-      _qty: item.qty,
+      qtyUpdatedOn: item.qtyUpdatedOn,
+      sameDayMaxQty: item.sameDayMaxQty,
       defaultRate: item.product.wholePrice, // For future, consider the case of retail items
-      locationRate: altPriceItem.length ?
-        altPriceItem[0].wholePrice : 
-        item.product.wholePrice,
-      rate: item.rate,
-      _rate: item.rate, // to be editable by bpbadmins
+      locationRate: locationRate,
+      rate: item.rate !== null ? item.rate : locationRate,
       isLate: item.isLate,
-      createdOn : item.createdOn ? item.createdOn : null,
-      updatedOn : item.updatedOn ? item.updatedON : null,
+      createdOn: item.createdOn ? item.createdOn : null,
+      updatedOn: item.updatedOn ? item.updatedOn : null,
+      updatedBy: item.updatedBy,
       type: "C",
-      action: "READ",
+      isWhole: item.isWhole, // keep original value to validate/correct later
+      route: item.route, // keep original value to validate/correct later
+      ItemNote: item.ItemNote, // keep original value to validate/correct later
     })
   })
 
@@ -118,22 +129,96 @@ export function makeOrderItems(locationDetails, cartData, standingData, delivDat
         prodNick: item.product.prodNick,
         prodName: item.product.prodName,
         qty: item.qty,
-        _qty: item.qty,
         rate: altPriceItem.length ?
           altPriceItem[0].wholePrice : 
           item.product.wholePrice,
-        _rate: altPriceItem.length ?
-          altPriceItem[0].wholePrice : 
-          item.product.wholePrice,
-        startDate: item.startDate,
-        endDate: item.endDate,
-        isStand: item.isStand,
-        createdOn: item.createdOn ? item.updatedOn : null,
-        updatedOn: item.updatedOn ? item.createcOn : null,
+        createdOn: item.createdOn ? item.createdOn : null,
+        updatedOn: item.updatedOn ? item.updatedOn : null,
         type: "S",
-       action: "READ",
     })
   })
 
-  return [...cartItems, ...standingItems]
+  return [...cartItems, ...standingItems].sort(dynamicSort("prodName"))
+}
+
+
+// export function makeOrderObject(locationDetails, cartData, standingData, delivDate) {
+//   const defaultRoute = ['atownpick', 'slopick'].includes(locationDetails.zoneNick) ?
+//     locationDetails.zoneNick :
+//     'deliv'
+
+//   const header = {
+//     locNick: locationDetails.locNick,
+//     delivDate: delivDate,
+//     route: cartData.length ? cartData[0].route : defaultRoute,
+//     _route: cartData.length ? cartData[0].route : defaultRoute,
+//     ItemNote: cartData.length ? cartData[0].ItemNote : null,
+//     _ItemNote: cartData.length ? cartData[0].ItemNote : null,
+//     isWhole: true,
+//   }
+
+//   const cartItems = cartData.map( item => {
+//     const cItem = {
+//       id: item.id,
+//       prodNick: item.prodNick,
+//       qty: item.qty,
+//       _qty: item.qty,
+//       rate: item.rate,
+//       _rate: item.rate,
+//       isLate: item.isLate,
+//       route: item.route,
+//       isWhole: item.isWhole,
+//       ItemNote: item.ItemNote,
+//       createdOn: item.createdOn
+//       //updatedOn: item.updatedOn
+//     }
+//   })
+
+//   const standingItems = cartData.map( item => {
+//     const cItem = {
+//       id: item.id,
+//       prodNick: item.prodNick,
+//       qty: item.qty,
+//       _qty: item.qty,
+//       rate: item.rate,
+//       _rate: item.rate,
+//       isLate: item.isLate,
+//       route: item.route,
+//       isWhole: item.isWhole,
+//       createdOn: item.createdOn,
+//       //updatedOn: item.updatedOn
+//       ItemNote: item.ItemNote,
+//     }
+
+//     return item
+
+//   })
+
+// }
+
+export async function validateCart(cartData, mutateCart) {
+    console.log("validating cartData")
+    // Validation: detect duplicate products
+    // delete duplicates. Choose to save item with oldest created date
+
+    let mutateFlag = false
+    
+    for (let item of cartData) {
+      let instancesOfProduct = cartData.filter(i => i.product.prodNick === item.product.prodNick)
+      if (instancesOfProduct.length > 1) {
+        console.log("Warning: duplicates found for " + item.product.prodNick, instancesOfProduct)
+
+        // delete all but the first created instance
+        const instancesToDelete = instancesOfProduct.sort(dynamicSort("createdOn")).slice(1)
+
+        const input = {id: item.id}
+        let response = await gqlFetcher(deleteOrder, {input: input})
+        console.log("deleted item: ", response)
+        
+        mutateFlag = true
+      }
+
+    }
+
+    if (mutateFlag) mutateCart() // mutate cartData to relaod with fixed data.
 }
