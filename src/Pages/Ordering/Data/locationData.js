@@ -44,8 +44,9 @@ export const useLocationDetails = (location) => {
   )
   
   const _data = getNestedObject(data, ['data', 'getLocation'])
-  const _prodsNotAllowed = getNestedObject(data, ['data', 'getLocation', 'prodsNotAllowed'])
-  const _altPrices = getNestedObject(data, ['data', 'getLocation', 'customProd'])
+  const _prodsNotAllowed = getNestedObject(data, ['data', 'getLocation', 'prodsNotAllowed', 'items'])
+  const _altPrices = getNestedObject(data, ['data', 'getLocation', 'customProd', 'items'])
+  const _altLeadTimes = getNestedObject(data, ['data', 'getLocation', 'altLeadTimeByProduct', 'items'])
 
   // return({
   //   data: _data,
@@ -55,7 +56,8 @@ export const useLocationDetails = (location) => {
   return({ 
     data: _data,
     prodsNotAllowed: _prodsNotAllowed,
-    altPrices: _altPrices
+    altPrices: _altPrices,
+    altLeadTimes: _altLeadTimes
   })
 }
 

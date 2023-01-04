@@ -46,6 +46,14 @@ query MyQuery(
           prodNick
         }
       }
+      altLeadTimeByProduct {
+        items {
+          id
+          leadTime
+          locNick
+          prodNick
+        }
+      }
     }
   }
 `

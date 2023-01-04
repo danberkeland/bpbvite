@@ -29,7 +29,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
   const orderItemsState = { orderItems, orderItemChanges, setOrderItemChanges }
 
   // const { locationDetails, standingData, cartData } = useOrderData
-  const { data:locationDetails, prodsNotAllowed, altPrices } = useLocationDetails(location)
+  const { data:locationDetails } = useLocationDetails(location)
   const { data:standingData } = useStandingByLocation(location, delivDate)
   const { data:cartData, mutate:mutateCart } = useOrdersByLocationByDate(location, delivDate)
 
@@ -147,6 +147,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
       <ItemsCard
         orderItemsState={orderItemsState}
         setShowAddItem={setShowAddItem}
+        location={location}
         delivDate={delivDate}
         readOnly={getOrderSubmitDate() >= delivDate}
       />

@@ -30,7 +30,7 @@ export const AddItemSidebar = ({ orderItemsState, sidebarProps, location, delivD
       ) : 
       0
     ) :
-    undefined
+    999
 
   const [selectedQty, setSelectedQty] = useState(null)
   
@@ -204,6 +204,7 @@ export const AddItemSidebar = ({ orderItemsState, sidebarProps, location, delivD
 function applyLocationOverridesToProducts(locationDetails, productData) {
   const prodsNotAllowed = locationDetails.prodsNotAllowed.items
   const altPrices = locationDetails.customProd.items
+  const altLeadTimes = locationDetails.altLeadTimeByProduct.items
 
   let _products = productData.filter(item => {
     let override = prodsNotAllowed.find(i => i.prodNick === item.prodNick)
@@ -216,6 +217,13 @@ function applyLocationOverridesToProducts(locationDetails, productData) {
     let override = altPrices.find(i => i.prodNick === item.prodNick)
     return override ?
       { ...item, wholePrice: override.wholePrice } : 
+      { ...item }
+  })
+
+  _products = _products.map(item => {
+    let override = altLeadTimes.find(i => i.prodNick === item.prodNick)
+    return override ?
+      { ...item, leadTime: override.leadTime } : 
       { ...item }
   })
 
