@@ -235,6 +235,7 @@ type Location @model {
   customProd: [AltPricing] @hasMany(indexName: "byLoc", fields: ["locNick"])
   templateProd: [TemplateProd]
     @hasMany(indexName: "byTemp", fields: ["locNick"])
+  altLeadTimeByProduct: [AltLeadTime] @hasMany(indexName: "byLocByProd", fields: ["locNick"])
 }
 
 type Product @model {
@@ -291,7 +292,7 @@ type Product @model {
     @hasMany(indexName: "byProd", fields: ["prodNick"])
   EODCount: EODCount @hasOne(fields: ["prodNick"])
   ActualSetOut: ActualSetOut @hasOne(fields: ["prodNick"])
-  
+  altLeadTimeByLocation: [AltLeadTime] @hasMany(indexName: "byProdByLoc", fields: ["prodNick"])
 }
 
 type RetailLoc @model {
@@ -596,5 +597,14 @@ type AltPricing @model {
   loc: Location! @belongsTo(fields: ["locNick"])
   prodNick: String @index(name: "byProd", sortKeyFields: ["wholePrice"])
   product: Product @belongsTo(fields: ["prodNick"])
+}
+
+type AltLeadTime @model {
+  id: ID!
+  leadTime: Int!
+  locNick: String! @index(name: "byLocByProd", sortKeyFields: ["prodNick"])
+  loc: Location! @belongsTo(fields: ["locNick"])
+  prodNick: String! @index(name: "byProdByLoc", sortKeyFields: ["locNick"])
+  product: Product! @belongsTo(fields: ["prodNick"])
 }
 

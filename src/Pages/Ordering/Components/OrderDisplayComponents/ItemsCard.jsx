@@ -6,27 +6,27 @@ import { Column } from "primereact/column"
 import { Button } from "primereact/button"
 import { InputNumber } from "primereact/inputnumber"
 import { Tooltip } from "primereact/tooltip"
-import { confirmPopup } from "primereact/confirmpopup"
 import { OverlayPanel } from "primereact/overlaypanel"
 import { useRef } from "react"
 import TimeAgo from "timeago-react"
 import { getOrderSubmitDate, getWorkingDate } from "../../Functions/dateAndTime"
 import { useProductData } from "../../Data/productData"
+import { useLocationDetails } from "../../Data/locationData"
 
 
 
 /**For display/control of individual cart item info*/
-export const ItemsCard = ({ orderItemsState, setShowAddItem, delivDate, readOnly }) => {
+export const ItemsCard = ({ orderItemsState, setShowAddItem, location, delivDate, readOnly }) => {
   const { orderItems, orderItemChanges, setOrderItemChanges } = orderItemsState
   const [expandedRows, setExpandedRows] = useState(null)
+
   const [rollbackQty, setRollbackQty] = useState(null)
-  const current = useRef()
-  const rollback = useRef()
 
   const inProductionOverlay = useRef(null)
   const orderLockedOverlay = useRef(null)
 
   const { data:productData } = useProductData()
+  const { data:locationDetails, altLeadTimes } = useLocationDetails(location)
 
   const cardTitleTemplate = () => {
     return (
@@ -72,59 +72,57 @@ export const ItemsCard = ({ orderItemsState, setShowAddItem, delivDate, readOnly
     const orderSubmitDate = getOrderSubmitDate()
     const productDetails = productData?.find(item => item.prodNick === rowData.prodNick)
     const leadTime = productDetails?.leadTime
-    const isLate = delivDate < orderSubmitDate.plus({ days: leadTime })
+    const altLeadTime = altLeadTimes?.find(item => item.prodNick === rowData.prodNick)
+    const inProduction = delivDate < orderSubmitDate.plus({ days: altLeadTime ? altLeadTime.altLeadTime : leadTime })
+
+    const updateProductQty = (prodNick, newQty) => {
+      const _orderItemChanges = orderItemChanges.map(item =>
+        item.prodNick === prodNick ?
+          {...item, qty: newQty} :
+          item  
+      )
+      setOrderItemChanges(_orderItemChanges)
+    }
 
     return(
       <div className="p-fluid">
+
         <InputNumber 
+          className="order-list-number-input"
           disabled={readOnly}
           value={rowData.qty}
           min={0}
-          max={isLate ?
+          max={inProduction ?
             (
               getWorkingDate('NOW') === getWorkingDate(rowData.qtyUpdatedOn) ?
                 rowData.sameDayMaxQty :
                 orderItems[rowData.prodNick].qty                
             ) :
             undefined}
+
           onFocus={e => {
-            current.current = parseInt(e.target.value)
-            rollback.current = parseInt(e.target.value)
+            setRollbackQty(parseInt(e.target.value))
             e.target.select()
           }}
-          onValueChange={e => {
-            const _orderItemChanges = orderItemChanges.map(item =>
-              item.prodNick === rowData.prodNick ?
-                {...item, qty: e.value ? parseInt(e.value) : 0} :
-                item  
-            )
 
-            setOrderItemChanges(_orderItemChanges)
-          }}
+          onChange={e => updateProductQty(rowData.prodNick, e.value)}
 
           onKeyDown={e => {
             if (e.key === "Enter") {
+              if (e.target.value === "") updateProductQty(rowData.prodNick, 0)
               e.target.blur()
             }
-            // if (e.key === "Escape") {
-            //   const _orderItemChanges = orderItemChanges.map(item =>
-            //     item.prodNick === rowData.prodNick ?
-            //       {...item, qty: rollback.current} :
-            //       item  
-            //   )
-            //   current.current = rollback.current
-            //   setOrderItemChanges(_orderItemChanges)
-            //   e.target.blur()
-            // }
+
+            if (e.key === "Escape") {
+              if (e.target.value === "") {
+                let resetQty = orderItems[rowData.prodNick].qty
+                updateProductQty(rowData.prodNick, resetQty)
+              } else {
+                updateProductQty(rowData.prodNick, rollbackQty)
+              }
+              e.target.blur()
+            }
           }}
-          // onBlur={e => {
-          //   const _orderItemChanges = orderItemChanges.map(item =>
-          //     item.prodNick === rowData.prodNick ?
-          //       {...item, qty: e.target.value ? parseInt(e.target.value) : 0} :
-          //       item  
-          //   )
-          //   setOrderItemChanges(_orderItemChanges)
-          // }}
         />
       </div>
     )
@@ -133,22 +131,24 @@ export const ItemsCard = ({ orderItemsState, setShowAddItem, delivDate, readOnly
   return (
     <Card 
       style={{marginTop: "10px"}}
-      title={cardTitleTemplate}
+      title={cardTitleTemplate} // Contains Add Item Button
     >   
+      <pre>{"rollback: " + rollbackQty + ", " + typeof(rollbackQty)}</pre>
       <DataTable
         value={orderItemChanges.filter(item => (
-          item.action === 'CREATE' 
+            item.id === null // means item was just created & has no DB record
             || item.qty > 0 
-            || orderItems[item.prodNick].qty > 0
+            || orderItems[item.prodNick].qty > 0 // database record still shows > 0
+            || getWorkingDate('NOW') === getWorkingDate(orderItems[item.prodNick].qtyUpdatedOn) 
         ))}
         style={{width: "100%"}}
         responsiveLayout="scroll"
-        rowExpansionTemplate={rowExpansionTemplate}
+        rowExpansionTemplate={rowExpansionTemplate} 
         expandedRows={expandedRows} 
         onRowExpand={e => console.log("Data for " + e.data.prodNick, JSON.stringify(e.data, null, 2))}
         onRowToggle={(e) => setExpandedRows(e.data)}
         dataKey="prodNick"
-        footer={tableFooterTemplate}
+        footer={tableFooterTemplate} // displays grand total
       >
         <Column expander={true} style={{ width: '3em' }} />
         <Column header="Product" 
@@ -157,7 +157,8 @@ export const ItemsCard = ({ orderItemsState, setShowAddItem, delivDate, readOnly
             const orderSubmitDate = getOrderSubmitDate()
             const productDetails = productData?.find(item => item.prodNick === rowData.prodNick)
             const leadTime = productDetails?.leadTime
-            const isLate = delivDate < orderSubmitDate.plus({ days: leadTime })
+            const altLeadTime = altLeadTimes?.find(item => item.prodNick === rowData.prodNick)
+            const inProduction = delivDate < orderSubmitDate.plus({ days: altLeadTime ? altLeadTime.altLeadTime : leadTime })
             const changeDetected = rowData.prodNick in orderItems ? rowData.qty !== orderItems[rowData.prodNick].qty : true
             const style = {
               color: (rowData.qty === 0 || readOnly)? "gray" : "black",
@@ -172,13 +173,13 @@ export const ItemsCard = ({ orderItemsState, setShowAddItem, delivDate, readOnly
                   onClick={(e) => {
                     // console.log(e)
                     if (readOnly) orderLockedOverlay.current.toggle(e)
-                    else if (isLate) inProductionOverlay.current.toggle(e)
+                    else if (inProduction) inProductionOverlay.current.toggle(e)
                   }} 
                   aria-haspopup 
                   aria-controls="overlay_panel"
                 >
                   {rowData.prodName + (changeDetected ? "*" : "")}
-                  {isLate && 
+                  {inProduction && 
                     <i id="order-table-info-icon" className="pi pi-info-circle" style={{'fontSize': '1em', marginLeft: "10px"}}></i>
                   }
                 </div>

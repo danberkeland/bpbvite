@@ -463,6 +463,9 @@ export const getUser = /* GraphQL */ `
         templateProd {
           nextToken
         }
+        altLeadTimeByProduct {
+          nextToken
+        }
         createdAt
         updatedAt
         locationCreditAppId
@@ -817,6 +820,17 @@ export const getLocation = /* GraphQL */ `
         }
         nextToken
       }
+      altLeadTimeByProduct {
+        items {
+          id
+          leadTime
+          locNick
+          prodNick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       locationCreditAppId
@@ -929,6 +943,9 @@ export const listLocations = /* GraphQL */ `
           nextToken
         }
         templateProd {
+          nextToken
+        }
+        altLeadTimeByProduct {
           nextToken
         }
         createdAt
@@ -1190,6 +1207,17 @@ export const getProduct = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      altLeadTimeByLocation {
+        items {
+          id
+          leadTime
+          locNick
+          prodNick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       inventoryProductId
@@ -1298,6 +1326,9 @@ export const listProducts = /* GraphQL */ `
           whoSetOut
           createdAt
           updatedAt
+        }
+        altLeadTimeByLocation {
+          nextToken
         }
         createdAt
         updatedAt
@@ -1451,6 +1482,9 @@ export const getRetailProdLoc = /* GraphQL */ `
           whoSetOut
           createdAt
           updatedAt
+        }
+        altLeadTimeByLocation {
+          nextToken
         }
         createdAt
         updatedAt
@@ -1637,6 +1671,9 @@ export const getOrder = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        altLeadTimeByLocation {
+          nextToken
+        }
         createdAt
         updatedAt
         inventoryProductId
@@ -1733,6 +1770,9 @@ export const getOrder = /* GraphQL */ `
           nextToken
         }
         templateProd {
+          nextToken
+        }
+        altLeadTimeByProduct {
           nextToken
         }
         createdAt
@@ -1946,6 +1986,9 @@ export const getStanding = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        altLeadTimeByLocation {
+          nextToken
+        }
         createdAt
         updatedAt
         inventoryProductId
@@ -2042,6 +2085,9 @@ export const getStanding = /* GraphQL */ `
           nextToken
         }
         templateProd {
+          nextToken
+        }
+        altLeadTimeByProduct {
           nextToken
         }
         createdAt
@@ -2951,6 +2997,9 @@ export const getProductVendor = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        altLeadTimeByLocation {
+          nextToken
+        }
         createdAt
         updatedAt
         inventoryProductId
@@ -3154,6 +3203,9 @@ export const getEODCount = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        altLeadTimeByLocation {
+          nextToken
+        }
         createdAt
         updatedAt
         inventoryProductId
@@ -3326,6 +3378,9 @@ export const getActualSetOut = /* GraphQL */ `
           whoSetOut
           createdAt
           updatedAt
+        }
+        altLeadTimeByLocation {
+          nextToken
         }
         createdAt
         updatedAt
@@ -3711,6 +3766,9 @@ export const getTemplateProd = /* GraphQL */ `
         templateProd {
           nextToken
         }
+        altLeadTimeByProduct {
+          nextToken
+        }
         createdAt
         updatedAt
         locationCreditAppId
@@ -3802,6 +3860,9 @@ export const getTemplateProd = /* GraphQL */ `
           whoSetOut
           createdAt
           updatedAt
+        }
+        altLeadTimeByLocation {
+          nextToken
         }
         createdAt
         updatedAt
@@ -4000,6 +4061,9 @@ export const getProdsNotAllowed = /* GraphQL */ `
         templateProd {
           nextToken
         }
+        altLeadTimeByProduct {
+          nextToken
+        }
         createdAt
         updatedAt
         locationCreditAppId
@@ -4091,6 +4155,9 @@ export const getProdsNotAllowed = /* GraphQL */ `
           whoSetOut
           createdAt
           updatedAt
+        }
+        altLeadTimeByLocation {
+          nextToken
         }
         createdAt
         updatedAt
@@ -4287,6 +4354,9 @@ export const getProductDepend = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        altLeadTimeByLocation {
+          nextToken
+        }
         createdAt
         updatedAt
         inventoryProductId
@@ -4379,6 +4449,9 @@ export const getProductDepend = /* GraphQL */ `
           whoSetOut
           createdAt
           updatedAt
+        }
+        altLeadTimeByLocation {
+          nextToken
         }
         createdAt
         updatedAt
@@ -4661,6 +4734,9 @@ export const getLocationUser = /* GraphQL */ `
         templateProd {
           nextToken
         }
+        altLeadTimeByProduct {
+          nextToken
+        }
         createdAt
         updatedAt
         locationCreditAppId
@@ -4876,6 +4952,9 @@ export const getAltPricing = /* GraphQL */ `
         templateProd {
           nextToken
         }
+        altLeadTimeByProduct {
+          nextToken
+        }
         createdAt
         updatedAt
         locationCreditAppId
@@ -4969,6 +5048,9 @@ export const getAltPricing = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        altLeadTimeByLocation {
+          nextToken
+        }
         createdAt
         updatedAt
         inventoryProductId
@@ -4988,6 +5070,302 @@ export const listAltPricings = /* GraphQL */ `
       items {
         id
         wholePrice
+        locNick
+        loc {
+          Type
+          locNick
+          locName
+          zoneNick
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          firstName
+          lastName
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          isActive
+          createdAt
+          updatedAt
+          locationCreditAppId
+        }
+        prodNick
+        product {
+          Type
+          prodName
+          prodNick
+          packGroup
+          packSize
+          doughNick
+          freezerThaw
+          packGroupOrder
+          shapeDay
+          shapeNick
+          bakeDay
+          bakeNick
+          guarantee
+          transferStage
+          readyTime
+          bakedWhere
+          wholePrice
+          retailPrice
+          isRetail
+          retailName
+          retailDescrip
+          isWhole
+          isEOD
+          weight
+          descrip
+          picURL
+          squareID
+          forBake
+          bakeExtra
+          batchSize
+          defaultInclude
+          leadTime
+          qbID
+          createdAt
+          updatedAt
+          inventoryProductId
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getAltLeadTime = /* GraphQL */ `
+  query GetAltLeadTime($id: ID!) {
+    getAltLeadTime(id: $id) {
+      id
+      leadTime
+      locNick
+      loc {
+        Type
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
+        ordersByDate {
+          nextToken
+        }
+        zoneNick
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        creditApp {
+          id
+          firstName
+          lastName
+          companyName
+          phone
+          email
+          addr1
+          addr2
+          city
+          state
+          zip
+          locAddr1
+          locAddr2
+          locCity
+          locState
+          locZip
+          startDate
+          businessType
+          bankName
+          bankPhone
+          refName
+          refAddr1
+          refAddr2
+          refCity
+          refZip
+          refPhone
+          refEmail
+          refDescrip
+          signture
+          sigDate
+          sigName
+          sigTitle
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        firstName
+        lastName
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        isActive
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        altLeadTimeByProduct {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        locationCreditAppId
+      }
+      prodNick
+      product {
+        Type
+        prodName
+        prodNick
+        packGroup
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
+        transferStage
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isRetail
+        retailName
+        retailDescrip
+        isWhole
+        isEOD
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        retailLoc {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+        }
+        altLeadTimeByLocation {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listAltLeadTimes = /* GraphQL */ `
+  query ListAltLeadTimes(
+    $filter: ModelAltLeadTimeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAltLeadTimes(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        leadTime
         locNick
         loc {
           Type
@@ -5177,6 +5555,9 @@ export const locSortAZ = /* GraphQL */ `
         templateProd {
           nextToken
         }
+        altLeadTimeByProduct {
+          nextToken
+        }
         createdAt
         updatedAt
         locationCreditAppId
@@ -5289,6 +5670,9 @@ export const prodSortAZ = /* GraphQL */ `
           whoSetOut
           createdAt
           updatedAt
+        }
+        altLeadTimeByLocation {
+          nextToken
         }
         createdAt
         updatedAt
