@@ -21,6 +21,8 @@ const initialState = {
   password: "",
 };
 
+const testPush = null
+
 export const Splash = () => {
   const setFormType = useSettingsStore((state) => state.setFormType);
   const setIsEdit = useSettingsStore((state) => state.setIsEdit);
