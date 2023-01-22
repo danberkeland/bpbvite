@@ -34,7 +34,7 @@ export const AddItemSidebar = ({ orderItemsState, sidebarProps, location, delivD
 
   const [selectedQty, setSelectedQty] = useState(null)
   
-  const { data:locationDetails } = useLocationDetails(location)
+  const { data:locationDetails } = useLocationDetails(location, !!location)
   const { data:productData } = useProductData()
   const [productDisplay, setProductDisplay] = useState()
 
@@ -46,8 +46,7 @@ export const AddItemSidebar = ({ orderItemsState, sidebarProps, location, delivD
       // requires both objects to be loaded. Can work around it but we need 
       // a defensive clause everywhere we use it (might not be that many places).
       let _products = applyLocationOverridesToProducts(locationDetails, productData)
-      // _products = applyDateLogicToProducts(delivDate, _products)
-      // _products = applyOrderLogicToProducts(orderItemChanges, _products)
+
       setProductDisplay(_products)
       console.log("PRODUCT DATA: ", productData)
       console.log("PRODUCT DISPLAY: ", _products)
@@ -202,6 +201,7 @@ export const AddItemSidebar = ({ orderItemsState, sidebarProps, location, delivD
  * Apply alternate wholePrice according to overrides.
  */
 function applyLocationOverridesToProducts(locationDetails, productData) {
+  const templateProds = locationDetails.templateProd.items.map(i => i.prodNick)
   const prodsNotAllowed = locationDetails.prodsNotAllowed.items
   const altPrices = locationDetails.customProd.items
   const altLeadTimes = locationDetails.altLeadTimeByProduct.items
@@ -225,6 +225,15 @@ function applyLocationOverridesToProducts(locationDetails, productData) {
     return override ?
       { ...item, leadTime: override.leadTime } : 
       { ...item }
+  })
+
+  _products.sort(dynamicSort("prodName"))
+  
+  _products.sort( (a, b) => {
+    let _a = templateProds.indexOf(a.prodNick) > -1 ? 0 : 1
+    let _b = templateProds.indexOf(b.prodNick) > -1 ? 0 : 1
+
+    return _a - _b
   })
 
   return _products

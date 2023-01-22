@@ -29,8 +29,8 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
   const orderItemsState = { orderItems, orderItemChanges, setOrderItemChanges }
 
   // const { locationDetails, standingData, cartData } = useOrderData
-  const { data:locationDetails } = useLocationDetails(location)
-  const { data:standingData } = useStandingByLocation(location, delivDate)
+  const { data:locationDetails } = useLocationDetails(location, !!location)
+  const { data:standingData } = useStandingByLocation(location, (!!location && !!delivDate))
   const { data:cartData, mutate:mutateCart } = useOrdersByLocationByDate(location, delivDate)
 
   //const OrderItemList = makeOrderObject(locationDetails, cartData, standingData, delivDate)

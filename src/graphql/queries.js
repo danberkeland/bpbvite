@@ -659,17 +659,19 @@ export const getLocation = /* GraphQL */ `
       standing {
         items {
           id
-          qty
-          prodNick
           locNick
-          ItemNote
           isWhole
           isStand
           dayOfWeek
+          route
+          prodNick
+          qty
+          ItemNote
           startDate
           endDate
           createdAt
           updatedAt
+          updatedBy
         }
         nextToken
       }
@@ -1025,17 +1027,19 @@ export const getProduct = /* GraphQL */ `
       standing {
         items {
           id
-          qty
-          prodNick
           locNick
-          ItemNote
           isWhole
           isStand
           dayOfWeek
+          route
+          prodNick
+          qty
+          ItemNote
           startDate
           endDate
           createdAt
           updatedAt
+          updatedBy
         }
         nextToken
       }
@@ -1896,103 +1900,6 @@ export const getStanding = /* GraphQL */ `
   query GetStanding($id: ID!) {
     getStanding(id: $id) {
       id
-      qty
-      prodNick
-      product {
-        Type
-        prodName
-        prodNick
-        packGroup
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        shapeDay
-        shapeNick
-        bakeDay
-        bakeNick
-        guarantee
-        transferStage
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isRetail
-        retailName
-        retailDescrip
-        isWhole
-        isEOD
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        retailLoc {
-          nextToken
-        }
-        standing {
-          nextToken
-        }
-        orders {
-          nextToken
-        }
-        depends {
-          nextToken
-        }
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        productVendor {
-          nextToken
-        }
-        EODCount {
-          prodNick
-          shelfOrFreezer
-          startOrFinish
-          location
-          qty
-          whoCounted
-          createdAt
-          updatedAt
-        }
-        ActualSetOut {
-          prodNick
-          qty
-          location
-          whoSetOut
-          createdAt
-          updatedAt
-        }
-        altLeadTimeByLocation {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        inventoryProductId
-      }
       locNick
       location {
         Type
@@ -2094,14 +2001,113 @@ export const getStanding = /* GraphQL */ `
         updatedAt
         locationCreditAppId
       }
-      ItemNote
       isWhole
       isStand
       dayOfWeek
+      route
+      prodNick
+      product {
+        Type
+        prodName
+        prodNick
+        packGroup
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
+        transferStage
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isRetail
+        retailName
+        retailDescrip
+        isWhole
+        isEOD
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        retailLoc {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+        }
+        altLeadTimeByLocation {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+      }
+      qty
+      ItemNote
       startDate
       endDate
       createdAt
       updatedAt
+      updatedBy
     }
   }
 `;
@@ -2114,7 +2120,43 @@ export const listStandings = /* GraphQL */ `
     listStandings(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        qty
+        locNick
+        location {
+          Type
+          locNick
+          locName
+          zoneNick
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          firstName
+          lastName
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          isActive
+          createdAt
+          updatedAt
+          locationCreditAppId
+        }
+        isWhole
+        isStand
+        dayOfWeek
+        route
         prodNick
         product {
           Type
@@ -2154,47 +2196,13 @@ export const listStandings = /* GraphQL */ `
           updatedAt
           inventoryProductId
         }
-        locNick
-        location {
-          Type
-          locNick
-          locName
-          zoneNick
-          addr1
-          addr2
-          city
-          zip
-          email
-          phone
-          firstName
-          lastName
-          toBePrinted
-          toBeEmailed
-          printDuplicate
-          terms
-          invoicing
-          latestFirstDeliv
-          latestFinalDeliv
-          webpageURL
-          picURL
-          gMap
-          specialInstructions
-          delivOrder
-          qbID
-          currentBalance
-          isActive
-          createdAt
-          updatedAt
-          locationCreditAppId
-        }
+        qty
         ItemNote
-        isWhole
-        isStand
-        dayOfWeek
         startDate
         endDate
         createdAt
         updatedAt
+        updatedBy
       }
       nextToken
     }
@@ -6006,6 +6014,220 @@ export const orderByDelivDate = /* GraphQL */ `
         isLate
         createdOn
         updatedOn
+        updatedBy
+      }
+      nextToken
+    }
+  }
+`;
+export const standingByLocByStartDate = /* GraphQL */ `
+  query StandingByLocByStartDate(
+    $locNick: String!
+    $startDate: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelStandingFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    standingByLocByStartDate(
+      locNick: $locNick
+      startDate: $startDate
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        locNick
+        location {
+          Type
+          locNick
+          locName
+          zoneNick
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          firstName
+          lastName
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          isActive
+          createdAt
+          updatedAt
+          locationCreditAppId
+        }
+        isWhole
+        isStand
+        dayOfWeek
+        route
+        prodNick
+        product {
+          Type
+          prodName
+          prodNick
+          packGroup
+          packSize
+          doughNick
+          freezerThaw
+          packGroupOrder
+          shapeDay
+          shapeNick
+          bakeDay
+          bakeNick
+          guarantee
+          transferStage
+          readyTime
+          bakedWhere
+          wholePrice
+          retailPrice
+          isRetail
+          retailName
+          retailDescrip
+          isWhole
+          isEOD
+          weight
+          descrip
+          picURL
+          squareID
+          forBake
+          bakeExtra
+          batchSize
+          defaultInclude
+          leadTime
+          qbID
+          createdAt
+          updatedAt
+          inventoryProductId
+        }
+        qty
+        ItemNote
+        startDate
+        endDate
+        createdAt
+        updatedAt
+        updatedBy
+      }
+      nextToken
+    }
+  }
+`;
+export const standingByLocByEndDate = /* GraphQL */ `
+  query StandingByLocByEndDate(
+    $locNick: String!
+    $endDate: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelStandingFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    standingByLocByEndDate(
+      locNick: $locNick
+      endDate: $endDate
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        locNick
+        location {
+          Type
+          locNick
+          locName
+          zoneNick
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          firstName
+          lastName
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          isActive
+          createdAt
+          updatedAt
+          locationCreditAppId
+        }
+        isWhole
+        isStand
+        dayOfWeek
+        route
+        prodNick
+        product {
+          Type
+          prodName
+          prodNick
+          packGroup
+          packSize
+          doughNick
+          freezerThaw
+          packGroupOrder
+          shapeDay
+          shapeNick
+          bakeDay
+          bakeNick
+          guarantee
+          transferStage
+          readyTime
+          bakedWhere
+          wholePrice
+          retailPrice
+          isRetail
+          retailName
+          retailDescrip
+          isWhole
+          isEOD
+          weight
+          descrip
+          picURL
+          squareID
+          forBake
+          bakeExtra
+          batchSize
+          defaultInclude
+          leadTime
+          qbID
+          createdAt
+          updatedAt
+          inventoryProductId
+        }
+        qty
+        ItemNote
+        startDate
+        endDate
+        createdAt
+        updatedAt
         updatedBy
       }
       nextToken

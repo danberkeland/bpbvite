@@ -1072,17 +1072,19 @@ export const createLocation = /* GraphQL */ `
       standing {
         items {
           id
-          qty
-          prodNick
           locNick
-          ItemNote
           isWhole
           isStand
           dayOfWeek
+          route
+          prodNick
+          qty
+          ItemNote
           startDate
           endDate
           createdAt
           updatedAt
+          updatedBy
         }
         nextToken
       }
@@ -1274,17 +1276,19 @@ export const updateLocation = /* GraphQL */ `
       standing {
         items {
           id
-          qty
-          prodNick
           locNick
-          ItemNote
           isWhole
           isStand
           dayOfWeek
+          route
+          prodNick
+          qty
+          ItemNote
           startDate
           endDate
           createdAt
           updatedAt
+          updatedBy
         }
         nextToken
       }
@@ -1476,17 +1480,19 @@ export const deleteLocation = /* GraphQL */ `
       standing {
         items {
           id
-          qty
-          prodNick
           locNick
-          ItemNote
           isWhole
           isStand
           dayOfWeek
+          route
+          prodNick
+          qty
+          ItemNote
           startDate
           endDate
           createdAt
           updatedAt
+          updatedBy
         }
         nextToken
       }
@@ -1726,17 +1732,19 @@ export const createProduct = /* GraphQL */ `
       standing {
         items {
           id
-          qty
-          prodNick
           locNick
-          ItemNote
           isWhole
           isStand
           dayOfWeek
+          route
+          prodNick
+          qty
+          ItemNote
           startDate
           endDate
           createdAt
           updatedAt
+          updatedBy
         }
         nextToken
       }
@@ -1997,17 +2005,19 @@ export const updateProduct = /* GraphQL */ `
       standing {
         items {
           id
-          qty
-          prodNick
           locNick
-          ItemNote
           isWhole
           isStand
           dayOfWeek
+          route
+          prodNick
+          qty
+          ItemNote
           startDate
           endDate
           createdAt
           updatedAt
+          updatedBy
         }
         nextToken
       }
@@ -2268,17 +2278,19 @@ export const deleteProduct = /* GraphQL */ `
       standing {
         items {
           id
-          qty
-          prodNick
           locNick
-          ItemNote
           isWhole
           isStand
           dayOfWeek
+          route
+          prodNick
+          qty
+          ItemNote
           startDate
           endDate
           createdAt
           updatedAt
+          updatedBy
         }
         nextToken
       }
@@ -3596,103 +3608,6 @@ export const createStanding = /* GraphQL */ `
   ) {
     createStanding(input: $input, condition: $condition) {
       id
-      qty
-      prodNick
-      product {
-        Type
-        prodName
-        prodNick
-        packGroup
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        shapeDay
-        shapeNick
-        bakeDay
-        bakeNick
-        guarantee
-        transferStage
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isRetail
-        retailName
-        retailDescrip
-        isWhole
-        isEOD
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        retailLoc {
-          nextToken
-        }
-        standing {
-          nextToken
-        }
-        orders {
-          nextToken
-        }
-        depends {
-          nextToken
-        }
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        productVendor {
-          nextToken
-        }
-        EODCount {
-          prodNick
-          shelfOrFreezer
-          startOrFinish
-          location
-          qty
-          whoCounted
-          createdAt
-          updatedAt
-        }
-        ActualSetOut {
-          prodNick
-          qty
-          location
-          whoSetOut
-          createdAt
-          updatedAt
-        }
-        altLeadTimeByLocation {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        inventoryProductId
-      }
       locNick
       location {
         Type
@@ -3794,14 +3709,113 @@ export const createStanding = /* GraphQL */ `
         updatedAt
         locationCreditAppId
       }
-      ItemNote
       isWhole
       isStand
       dayOfWeek
+      route
+      prodNick
+      product {
+        Type
+        prodName
+        prodNick
+        packGroup
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
+        transferStage
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isRetail
+        retailName
+        retailDescrip
+        isWhole
+        isEOD
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        retailLoc {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+        }
+        altLeadTimeByLocation {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+      }
+      qty
+      ItemNote
       startDate
       endDate
       createdAt
       updatedAt
+      updatedBy
     }
   }
 `;
@@ -3812,103 +3826,6 @@ export const updateStanding = /* GraphQL */ `
   ) {
     updateStanding(input: $input, condition: $condition) {
       id
-      qty
-      prodNick
-      product {
-        Type
-        prodName
-        prodNick
-        packGroup
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        shapeDay
-        shapeNick
-        bakeDay
-        bakeNick
-        guarantee
-        transferStage
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isRetail
-        retailName
-        retailDescrip
-        isWhole
-        isEOD
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        retailLoc {
-          nextToken
-        }
-        standing {
-          nextToken
-        }
-        orders {
-          nextToken
-        }
-        depends {
-          nextToken
-        }
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        productVendor {
-          nextToken
-        }
-        EODCount {
-          prodNick
-          shelfOrFreezer
-          startOrFinish
-          location
-          qty
-          whoCounted
-          createdAt
-          updatedAt
-        }
-        ActualSetOut {
-          prodNick
-          qty
-          location
-          whoSetOut
-          createdAt
-          updatedAt
-        }
-        altLeadTimeByLocation {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        inventoryProductId
-      }
       locNick
       location {
         Type
@@ -4010,14 +3927,113 @@ export const updateStanding = /* GraphQL */ `
         updatedAt
         locationCreditAppId
       }
-      ItemNote
       isWhole
       isStand
       dayOfWeek
+      route
+      prodNick
+      product {
+        Type
+        prodName
+        prodNick
+        packGroup
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
+        transferStage
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isRetail
+        retailName
+        retailDescrip
+        isWhole
+        isEOD
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        retailLoc {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+        }
+        altLeadTimeByLocation {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+      }
+      qty
+      ItemNote
       startDate
       endDate
       createdAt
       updatedAt
+      updatedBy
     }
   }
 `;
@@ -4028,103 +4044,6 @@ export const deleteStanding = /* GraphQL */ `
   ) {
     deleteStanding(input: $input, condition: $condition) {
       id
-      qty
-      prodNick
-      product {
-        Type
-        prodName
-        prodNick
-        packGroup
-        packSize
-        doughNick
-        doughType {
-          doughNick
-          doughName
-          hydration
-          batchSize
-          mixedWhere
-          isBakeReady
-          buffer
-          saltInDry
-          createdAt
-          updatedAt
-        }
-        freezerThaw
-        packGroupOrder
-        shapeDay
-        shapeNick
-        bakeDay
-        bakeNick
-        guarantee
-        transferStage
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isRetail
-        retailName
-        retailDescrip
-        isWhole
-        isEOD
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        qbID
-        retailLoc {
-          nextToken
-        }
-        standing {
-          nextToken
-        }
-        orders {
-          nextToken
-        }
-        depends {
-          nextToken
-        }
-        altPricing {
-          nextToken
-        }
-        templateProd {
-          nextToken
-        }
-        prodsNotAllowed {
-          nextToken
-        }
-        productVendor {
-          nextToken
-        }
-        EODCount {
-          prodNick
-          shelfOrFreezer
-          startOrFinish
-          location
-          qty
-          whoCounted
-          createdAt
-          updatedAt
-        }
-        ActualSetOut {
-          prodNick
-          qty
-          location
-          whoSetOut
-          createdAt
-          updatedAt
-        }
-        altLeadTimeByLocation {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        inventoryProductId
-      }
       locNick
       location {
         Type
@@ -4226,14 +4145,113 @@ export const deleteStanding = /* GraphQL */ `
         updatedAt
         locationCreditAppId
       }
-      ItemNote
       isWhole
       isStand
       dayOfWeek
+      route
+      prodNick
+      product {
+        Type
+        prodName
+        prodNick
+        packGroup
+        packSize
+        doughNick
+        doughType {
+          doughNick
+          doughName
+          hydration
+          batchSize
+          mixedWhere
+          isBakeReady
+          buffer
+          saltInDry
+          createdAt
+          updatedAt
+        }
+        freezerThaw
+        packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
+        transferStage
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isRetail
+        retailName
+        retailDescrip
+        isWhole
+        isEOD
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        retailLoc {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
+        depends {
+          nextToken
+        }
+        altPricing {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        prodsNotAllowed {
+          nextToken
+        }
+        productVendor {
+          nextToken
+        }
+        EODCount {
+          prodNick
+          shelfOrFreezer
+          startOrFinish
+          location
+          qty
+          whoCounted
+          createdAt
+          updatedAt
+        }
+        ActualSetOut {
+          prodNick
+          qty
+          location
+          whoSetOut
+          createdAt
+          updatedAt
+        }
+        altLeadTimeByLocation {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        inventoryProductId
+      }
+      qty
+      ItemNote
       startDate
       endDate
       createdAt
       updatedAt
+      updatedBy
     }
   }
 `;

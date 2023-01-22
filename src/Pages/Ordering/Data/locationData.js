@@ -33,8 +33,7 @@ export const useLocationList = (shouldFetch) => {
 
 
 
-export const useLocationDetails = (location) => {
-  const shouldFetch = !!location
+export const useLocationDetails = (location, shouldFetch) => {
   const variables = shouldFetch ? { locNick: location } : null
 
   const { data } = useSWR(
@@ -44,17 +43,14 @@ export const useLocationDetails = (location) => {
   )
   
   const _data = getNestedObject(data, ['data', 'getLocation'])
+  const _templateProds = getNestedObject(data, ['data', 'getLocation', 'templateProd', 'items'])
   const _prodsNotAllowed = getNestedObject(data, ['data', 'getLocation', 'prodsNotAllowed', 'items'])
   const _altPrices = getNestedObject(data, ['data', 'getLocation', 'customProd', 'items'])
   const _altLeadTimes = getNestedObject(data, ['data', 'getLocation', 'altLeadTimeByProduct', 'items'])
 
-  // return({
-  //   data: _data,
-  //   errors: errors
-  // })
-
   return({ 
     data: _data,
+    templateProds: _templateProds,
     prodsNotAllowed: _prodsNotAllowed,
     altPrices: _altPrices,
     altLeadTimes: _altLeadTimes
