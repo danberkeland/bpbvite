@@ -1,427 +1,765 @@
 {
   "api": {
     "bpbadmin2": {
-      "service": "AppSync",
-      "providerPlugin": "awscloudformation",
       "dependsOn": [],
       "output": {
         "authConfig": {
+          "additionalAuthenticationProviders": [],
           "defaultAuthentication": {
-            "authenticationType": "API_KEY",
             "apiKeyConfig": {
-              "apiKeyExpirationDays": 365,
               "apiKeyExpirationDate": "2023-11-18T19:28:35.849Z",
+              "apiKeyExpirationDays": 365,
               "description": ""
-            }
-          },
-          "additionalAuthenticationProviders": []
+            },
+            "authenticationType": "API_KEY"
+          }
         }
-      }
-    }
-  },
-  "function": {
-    "testingGrQL": {
-      "build": true,
+      },
       "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "bpbadmin2testFetchLayer",
-          "attributes": [
-            "Arn"
-          ]
-        },
-        {
-          "category": "api",
-          "resourceName": "bpbadmin2",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        }
-      ]
-    },
-    "grabLocList": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "bpbadmin2",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        }
-      ]
-    },
-    "grabStandOrder": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "bpbadmin2fetchLayer",
-          "attributes": [
-            "Arn"
-          ]
-        },
-        {
-          "category": "api",
-          "resourceName": "bpbadmin2",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        }
-      ]
-    },
-    "bpbadmin2fetchLayer": {
-      "providerPlugin": "awscloudformation",
-      "service": "LambdaLayer",
-      "build": true
-    },
-    "grabOrder": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "bpbadmin2fetchLayer",
-          "attributes": [
-            "Arn"
-          ]
-        },
-        {
-          "category": "api",
-          "resourceName": "bpbadmin2",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        }
-      ]
-    },
-    "grabDetailedProductList": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "bpbadmin2testFetchLayer",
-          "attributes": [
-            "Arn"
-          ]
-        },
-        {
-          "category": "api",
-          "resourceName": "bpbadmin2",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        }
-      ]
-    },
-    "grabSimpleProductList": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "bpbadmin2testFetchLayer",
-          "attributes": [
-            "Arn"
-          ]
-        },
-        {
-          "category": "api",
-          "resourceName": "bpbadmin2",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        }
-      ]
-    },
-    "grabProductById": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "bpbadmin2testFetchLayer",
-          "attributes": [
-            "Arn"
-          ]
-        },
-        {
-          "category": "api",
-          "resourceName": "bpbadmin2",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        }
-      ]
-    },
-    "bpbadmin2testFetchLayer": {
-      "providerPlugin": "awscloudformation",
-      "service": "LambdaLayer",
-      "build": true
-    },
-    "createProduct": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "bpbadmin2",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "bpbadmin2testFetchLayer",
-          "attributes": [
-            "Arn"
-          ]
-        }
-      ]
-    },
-    "deleteProduct": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "bpbadmin2",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "bpbadmin2testFetchLayer",
-          "attributes": [
-            "Arn"
-          ]
-        }
-      ]
-    },
-    "updateProduct": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "bpbadmin2",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "bpbadmin2testFetchLayer",
-          "attributes": [
-            "Arn"
-          ]
-        }
-      ]
-    },
-    "bpbadmin2anotherTest": {
-      "providerPlugin": "awscloudformation",
-      "service": "LambdaLayer",
-      "build": true
-    },
-    "grabDetailedLocationList": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "bpbadmin2",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "bpbadmin2testFetchLayer",
-          "attributes": [
-            "Arn"
-          ]
-        }
-      ]
-    },
-    "grabSimpleLocationList": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "bpbadmin2",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        },
-        {
-          "category": "auth",
-          "resourceName": "bpbadmin2db0d25d4",
-          "attributes": [
-            "UserPoolId"
-          ]
-        }
-      ]
-    },
-    "bpbrouter": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "bpbadmin2",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        },
-        {
-          "category": "auth",
-          "resourceName": "bpbadmin2db0d25d4",
-          "attributes": [
-            "UserPoolId"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "bpbadmin2testFetchLayer",
-          "attributes": [
-            "Arn"
-          ]
-        }
-      ]
-    },
-    "deleteCognitoUser": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "bpbadmin2SDKLayer",
-          "attributes": [
-            "Arn"
-          ]
-        }
-      ]
-    },
-    "bpbadmin2SDKLayer": {
-      "providerPlugin": "awscloudformation",
-      "service": "LambdaLayer",
-      "build": true
-    },
-    "createCognitoUser": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "bpbadmin2SDKLayer",
-          "attributes": [
-            "Arn"
-          ]
-        }
-      ]
-    },
-    "updateCognitoUser": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "bpbadmin2SDKLayer",
-          "attributes": [
-            "Arn"
-          ]
-        }
-      ]
-    },
-    "confirmCognitoEmail": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "bpbadmin2SDKLayer",
-          "attributes": [
-            "Arn"
-          ]
-        }
-      ]
+      "service": "AppSync"
     }
   },
   "auth": {
     "bpbadmin2db0d25d4": {
-      "service": "Cognito",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [],
       "customAuth": false,
+      "dependsOn": [],
       "frontendAuthConfig": {
-        "socialProviders": [],
-        "usernameAttributes": [
-          "EMAIL"
-        ],
-        "signupAttributes": [
-          "EMAIL"
-        ],
-        "passwordProtectionSettings": {
-          "passwordPolicyMinLength": 8,
-          "passwordPolicyCharacters": []
-        },
         "mfaConfiguration": "OFF",
         "mfaTypes": [
           "SMS"
         ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [
+          "EMAIL"
+        ],
         "verificationMechanisms": [
           "EMAIL"
         ]
-      }
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito"
+    }
+  },
+  "function": {
+    "bpbadmin2SDKLayer": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer"
+    },
+    "bpbadmin2anotherTest": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer"
+    },
+    "bpbadmin2fetchLayer": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer"
+    },
+    "bpbadmin2testFetchLayer": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer"
+    },
+    "bpbrouter": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        },
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "bpbadmin2db0d25d4"
+        },
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "confirmCognitoEmail": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2SDKLayer"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "createCognitoUser": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2SDKLayer"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "createProduct": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        },
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "deleteCognitoUser": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2SDKLayer"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "deleteProduct": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        },
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "grabDetailedLocationList": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        },
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "grabDetailedProductList": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer"
+        },
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "grabLocList": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "grabOrder": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2fetchLayer"
+        },
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "grabProductById": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer"
+        },
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "grabSimpleLocationList": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        },
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "bpbadmin2db0d25d4"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "grabSimpleProductList": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer"
+        },
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "grabStandOrder": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2fetchLayer"
+        },
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "testingGrQL": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer"
+        },
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "updateCognitoUser": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2SDKLayer"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "updateProduct": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        },
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_bpbadmin2SDKLayer_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "bpbadmin2SDKLayer"
+        }
+      ]
+    },
+    "AMPLIFY_function_bpbadmin2SDKLayer_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "bpbadmin2SDKLayer"
+        }
+      ]
+    },
+    "AMPLIFY_function_bpbadmin2anotherTest_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "bpbadmin2anotherTest"
+        }
+      ]
+    },
+    "AMPLIFY_function_bpbadmin2anotherTest_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "bpbadmin2anotherTest"
+        }
+      ]
+    },
+    "AMPLIFY_function_bpbadmin2fetchLayer_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "bpbadmin2fetchLayer"
+        }
+      ]
+    },
+    "AMPLIFY_function_bpbadmin2fetchLayer_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "bpbadmin2fetchLayer"
+        }
+      ]
+    },
+    "AMPLIFY_function_bpbadmin2testFetchLayer_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer"
+        }
+      ]
+    },
+    "AMPLIFY_function_bpbadmin2testFetchLayer_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer"
+        }
+      ]
+    },
+    "AMPLIFY_function_bpbrouter_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "bpbrouter"
+        }
+      ]
+    },
+    "AMPLIFY_function_bpbrouter_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "bpbrouter"
+        }
+      ]
+    },
+    "AMPLIFY_function_confirmCognitoEmail_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "confirmCognitoEmail"
+        }
+      ]
+    },
+    "AMPLIFY_function_confirmCognitoEmail_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "confirmCognitoEmail"
+        }
+      ]
+    },
+    "AMPLIFY_function_createCognitoUser_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createCognitoUser"
+        }
+      ]
+    },
+    "AMPLIFY_function_createCognitoUser_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createCognitoUser"
+        }
+      ]
+    },
+    "AMPLIFY_function_createProduct_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createProduct"
+        }
+      ]
+    },
+    "AMPLIFY_function_createProduct_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createProduct"
+        }
+      ]
+    },
+    "AMPLIFY_function_deleteCognitoUser_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "deleteCognitoUser"
+        }
+      ]
+    },
+    "AMPLIFY_function_deleteCognitoUser_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "deleteCognitoUser"
+        }
+      ]
+    },
+    "AMPLIFY_function_deleteProduct_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "deleteProduct"
+        }
+      ]
+    },
+    "AMPLIFY_function_deleteProduct_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "deleteProduct"
+        }
+      ]
+    },
+    "AMPLIFY_function_grabDetailedLocationList_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "grabDetailedLocationList"
+        }
+      ]
+    },
+    "AMPLIFY_function_grabDetailedLocationList_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "grabDetailedLocationList"
+        }
+      ]
+    },
+    "AMPLIFY_function_grabDetailedProductList_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "grabDetailedProductList"
+        }
+      ]
+    },
+    "AMPLIFY_function_grabDetailedProductList_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "grabDetailedProductList"
+        }
+      ]
+    },
+    "AMPLIFY_function_grabLocList_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "grabLocList"
+        }
+      ]
+    },
+    "AMPLIFY_function_grabLocList_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "grabLocList"
+        }
+      ]
+    },
+    "AMPLIFY_function_grabOrder_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "grabOrder"
+        }
+      ]
+    },
+    "AMPLIFY_function_grabOrder_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "grabOrder"
+        }
+      ]
+    },
+    "AMPLIFY_function_grabProductById_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "grabProductById"
+        }
+      ]
+    },
+    "AMPLIFY_function_grabProductById_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "grabProductById"
+        }
+      ]
+    },
+    "AMPLIFY_function_grabSimpleLocationList_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "grabSimpleLocationList"
+        }
+      ]
+    },
+    "AMPLIFY_function_grabSimpleLocationList_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "grabSimpleLocationList"
+        }
+      ]
+    },
+    "AMPLIFY_function_grabSimpleProductList_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "grabSimpleProductList"
+        }
+      ]
+    },
+    "AMPLIFY_function_grabSimpleProductList_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "grabSimpleProductList"
+        }
+      ]
+    },
+    "AMPLIFY_function_grabStandOrder_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "grabStandOrder"
+        }
+      ]
+    },
+    "AMPLIFY_function_grabStandOrder_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "grabStandOrder"
+        }
+      ]
+    },
+    "AMPLIFY_function_testingGrQL_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "testingGrQL"
+        }
+      ]
+    },
+    "AMPLIFY_function_testingGrQL_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "testingGrQL"
+        }
+      ]
+    },
+    "AMPLIFY_function_updateCognitoUser_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "updateCognitoUser"
+        }
+      ]
+    },
+    "AMPLIFY_function_updateCognitoUser_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "updateCognitoUser"
+        }
+      ]
+    },
+    "AMPLIFY_function_updateProduct_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "updateProduct"
+        }
+      ]
+    },
+    "AMPLIFY_function_updateProduct_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "updateProduct"
+        }
+      ]
     }
   }
 }
