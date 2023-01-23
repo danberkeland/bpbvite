@@ -26,7 +26,7 @@ export const ItemsCard = ({ orderItemsState, setShowAddItem, location, delivDate
   const orderLockedOverlay = useRef(null)
 
   const { data:productData } = useProductData()
-  const { data:locationDetails, altLeadTimes } = useLocationDetails(location)
+  const { data:locationDetails, altLeadTimes, prodsNotAllowed } = useLocationDetails(location)
 
   const cardTitleTemplate = () => {
     return (
@@ -133,7 +133,8 @@ export const ItemsCard = ({ orderItemsState, setShowAddItem, location, delivDate
       style={{marginTop: "10px"}}
       title={cardTitleTemplate} // Contains Add Item Button
     >   
-      <pre>{"rollback: " + rollbackQty + ", " + typeof(rollbackQty)}</pre>
+      {/* <pre>{"rollback: " + rollbackQty + ", " + typeof(rollbackQty)}</pre> */}
+      <pre>{JSON.stringify(locationDetails, null, 2)}</pre>
       <DataTable
         value={orderItemChanges.filter(item => (
             item.id === null // means item was just created & has no DB record

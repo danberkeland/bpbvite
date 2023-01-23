@@ -28,6 +28,8 @@ import { getOrderSubmitDate } from "./Functions/dateAndTime"
 
 import { OrderDisplay } from "./Components/OrderDisplay"
 import { OrderSelection } from "./Components/OrderSelection"
+import { RadioButton } from "primereact/radiobutton"
+import { StandingDisplay } from "./Components/StandingDisplay"
 
 const Orders9 = () => {
   const globalState = useSettingsStore()
@@ -41,22 +43,47 @@ const Orders9 = () => {
   const [delivDate, setDelivDate] = useState(new Date(getOrderSubmitDate().plus({ days: 1}).toISO()))
   const selection = { 
     location, setLocation, 
-    delivDate, setDelivDate 
+    delivDate, setDelivDate,
   }
+
+  const [orderingType, setOrderingType] = useState('cart')
 
   return (
     <div> 
       <h2>Orders9</h2>
-      <OrderSelection 
-        selection={selection}
-        canChooseLocation={user.location === 'backporch'}
-      />
 
-      <OrderDisplay
-        location={location}
-        delivDate={delivDate}
-        userName={user.name}
-      />
+      <div>
+        <div className="field-radiobutton">
+            <RadioButton inputId="cart" name="cart" value="cart" onChange={(e) => setOrderingType(e.value)} checked={orderingType === 'cart'} />
+            <label htmlFor="cart">Cart Orders</label>
+        </div>
+        <div className="field-radiobutton">
+            <RadioButton inputId="standing" name="standing" value="standing" onChange={(e) => setOrderingType(e.value)} checked={orderingType === 'standing'} />
+            <label htmlFor="standing">Standing Orders</label>
+        </div>
+      </div>
+
+      {orderingType === 'cart' && <>
+        <OrderSelection 
+          selection={selection}
+          canChooseLocation={user.location === 'backporch'}
+        />
+
+        <OrderDisplay
+          location={location}
+          delivDate={delivDate}
+          userName={user.name}
+        />
+      </>}
+
+      {orderingType === 'standing' && <>
+        <StandingDisplay
+          location={location}
+          setLocation={setLocation}
+          userName={user.name}
+          user={user}
+        />
+      </>}
  
       {/* <pre>{"LOCATION DETAILS: " + JSON.stringify(locationDetails, null, 2)}</pre> */}
       {/* <pre>{"CART DATA (first 3): " + JSON.stringify(cartData?.slice(0, 3), null, 2)}</pre> */}

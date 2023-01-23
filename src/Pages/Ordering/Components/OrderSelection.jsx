@@ -22,6 +22,7 @@ export const OrderSelection = ({selection, canChooseLocation}) => {
               options={locationList || null}
               optionLabel="locName"
               optionValue="locNick"
+              filter
               value={location}
               onChange={e => setLocation(e.value)}
             />

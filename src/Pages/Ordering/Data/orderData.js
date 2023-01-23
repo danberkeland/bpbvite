@@ -44,8 +44,7 @@ export const useOrdersByLocationByDate = (location, delivDate) => {
 
 
 /** Fetches ALL standing items for location, but fetch is suppressed until delivDate is specified */
-export const useStandingByLocation = (location, delivDate) => {
-  const shouldFetch = !!location && !!delivDate
+export const useStandingByLocation = (location, shouldFetch) => {
   const variables = shouldFetch ? {
     locNick: location
   } : null

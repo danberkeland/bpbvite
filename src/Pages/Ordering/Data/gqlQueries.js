@@ -50,7 +50,12 @@ query MyQuery(
         items {
           id
           leadTime
-          locNick
+          prodNick
+        }
+      }
+      templateProd {
+        items {
+          id
           prodNick
         }
       }
@@ -108,6 +113,7 @@ export const listStandingByLocation = /* GraphQL */ `
           } 
           qty
           dayOfWeek
+          route
           ItemNote
           isWhole
           isStand
