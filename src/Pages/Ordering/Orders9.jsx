@@ -30,6 +30,7 @@ import { OrderDisplay } from "./Components/OrderDisplay"
 import { OrderSelection } from "./Components/OrderSelection"
 import { RadioButton } from "primereact/radiobutton"
 import { StandingDisplay } from "./Components/StandingDisplay"
+import { AdminControls } from "./Components/AdminControls"
 
 const Orders9 = () => {
   const globalState = useSettingsStore()
@@ -39,12 +40,21 @@ const Orders9 = () => {
     location: globalState.currentLoc
   }
 
+  // Admin Settings
   const [location, setLocation] = useState(user.location !== 'backporch' ? user.location : null)
+  const [isWhole, setIsWhole] = useState(true)
+  const [isStand, setIsStand] = useState(true)
+  const adminSettings = { location, setLocation, isWhole, setIsWhole, isStand, setIsStand }
+  
+  // Public Settings
   const [delivDate, setDelivDate] = useState(new Date(getOrderSubmitDate().plus({ days: 1}).toISO()))
   const selection = { 
     location, setLocation, 
     delivDate, setDelivDate,
   }
+
+  const cartSettings= { location, delivDate }
+  const standingSettings = {location, isWhole, isStand }
 
   const [orderingType, setOrderingType] = useState('cart')
 
@@ -63,10 +73,17 @@ const Orders9 = () => {
         </div>
       </div>
 
+      {user.location === 'backporch' &&
+        <AdminControls
+          adminSettings={adminSettings}
+          orderingType={orderingType}
+        />
+      
+      }
+
       {orderingType === 'cart' && <>
         <OrderSelection 
           selection={selection}
-          canChooseLocation={user.location === 'backporch'}
         />
 
         <OrderDisplay
@@ -78,9 +95,7 @@ const Orders9 = () => {
 
       {orderingType === 'standing' && <>
         <StandingDisplay
-          location={location}
-          setLocation={setLocation}
-          userName={user.name}
+          standingSettings={standingSettings}
           user={user}
         />
       </>}

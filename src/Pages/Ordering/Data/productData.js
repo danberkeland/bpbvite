@@ -15,8 +15,13 @@ const usualOptions = {
   revalidateOnReconnect: true,
 }
 
+
+/**
+ * Heavy duty query. Lists all products; includes most attributes.
+ * Consider switching to a more lightweight query if you can get away with it.
+ */
 export const useProductData = () => {
-  const { data, errors } = useSWR([queries.listProducts, {limit: 1000}], gqlFetcher, usualOptions)
+  const { data, errors } = useSWR([queries.listProductDetails, {limit: 1000}], gqlFetcher, usualOptions)
 
   const _data = getNestedObject(data, ['data', 'listProducts', 'items'])
   _data?.sort(dynamicSort("prodName"))
@@ -81,4 +86,21 @@ export const useOrderState = (location, delivDate, setOrderHeader, setOrderItems
     orderItems: _orderItems
   })
   
+}
+
+/**
+ * Lightweight list of products, typically used for Dropdown menus
+ */
+export const useProductList = (shouldFetch) => {
+  const { data, errors } = useSWR(shouldFetch ? [queries.listProducts, {limit: 1000}] : null, gqlFetcher, usualOptions)
+
+  const _data = getNestedObject(data, ['data', 'listProducts', 'items'])
+  _data?.sort(dynamicSort("prodName"))
+
+  //if (_data) console.log(_data.slice(0,6))
+
+  return({
+    data: _data,
+    errors: errors
+  })
 }

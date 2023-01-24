@@ -125,7 +125,7 @@ export const listStandingByLocation = /* GraphQL */ `
   }
 `;
 
-export const listProducts = /* GraphQL */ `
+export const listProductDetails = /* GraphQL */ `
   query ListProducts(
     $prodNick: String
     $filter: ModelProductFilterInput
@@ -162,6 +162,30 @@ export const listProducts = /* GraphQL */ `
         leadTime
         createdAt
         updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listProducts = /* GraphQL */ `
+  query ListProducts(
+    $prodNick: String
+    $filter: ModelProductFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listProducts(
+      prodNick: $prodNick
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        prodName
+        prodNick
       }
       nextToken
     }

@@ -11,7 +11,7 @@ import { Checkbox } from "primereact/checkbox"
 import { Button } from "primereact/button"
 
 import { useLocationDetails, useLocationList } from "../Data/locationData"
-import { useProductData } from "../Data/productData"
+import { useProductData, useProductList } from "../Data/productData"
 import { useStandingByLocation } from "../Data/orderData"
 
 import { getWorkingDate } from "../Functions/dateAndTime"
@@ -23,25 +23,23 @@ import { Card } from "primereact/card"
 import { InputNumber } from "primereact/inputnumber"
 
 
-export const StandingDisplay = ({location, setLocation, userName, user}) => {
+export const StandingDisplay = ({ standingSettings, user }) => {
+  const  { location, isWhole, isStand } = standingSettings
   const currentWorkingDate = getWorkingDate('NOW')
 
-  // Admin Options for standing orders
-  const [isWhole, setIsWhole] = useState(true)
-  const [isStand, setIsStand] = useState(true)
-  const filters = { isWhole, isStand }
-  
   // Display Controls
   const [viewMode, setViewMode] = useState(null) // 'DAY' or 'PRODUCT'. for future, perhaps a 'FULL' view which is a DAY view but with all 7 day columns.
-  const [dayOfWeek, setDayOfWeek] = useState(null) // view by day X all products
-  const [selectedProdNick, setSelectedProdNick] = useState(null) // view by product X all days
+  const [dayOfWeek, setDayOfWeek] = useState(null) // select day in viewMode 'DAY'
+  const [selectedProdNick, setSelectedProdNick] = useState(null) // select product in viewMode 'PRODUCT'
+  const [selectedProduct, setSelectedProduct] = useState(null)
+  const viewSettings = { viewMode, setViewMode, dayOfWeek, setDayOfWeek, selectedProduct, setSelectedProduct } 
   
-  const { data:locationList, errors:locationListErrors } = useLocationList(user.location === 'backporch')
-  const { data:locationDetails } = useLocationDetails(location, !!location) // maybe use elsewhere
-  const { data:productData } = useProductData()
+  // const { data:locationDetails } = useLocationDetails(location, !!location) // maybe use when adding route management features?
+  // const { data:productData } = useProductData()
   
   const { data:standingData } = useStandingByLocation(location, !!location)
   const [standingBase, setStandingBase] = useState()
+
   const [standingChanges, setStandingChanges] = useState()
 
   useEffect(() => {
@@ -52,14 +50,8 @@ export const StandingDisplay = ({location, setLocation, userName, user}) => {
     }
   }, [standingData])
 
-  const standingView = makeStandingView(standingChanges, filters, viewMode, dayOfWeek, selectedProdNick)
+  const standingView = makeStandingView(standingChanges, isWhole, isStand, viewMode, dayOfWeek, selectedProduct)
 
-  // State for tracking edits
-  const [dropdownProdNick, setDropdownProdNick] = useState(null)
-  //const [newProducts, setNewProducts] = useState([]) // array of objects with prodNick, prodName attributes
-  
-  //const standingDataFiltered = standingData ? standingData.filter(item => item.isStand === isStand && item.isWhole === isWhole) : []
-  //const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
   const products = standingChanges ? Object.values(standingChanges)
     .filter(item => item.isStand === isStand && item.isWhole === isWhole)
     .reduce((acc, curr) => {
@@ -69,127 +61,26 @@ export const StandingDisplay = ({location, setLocation, userName, user}) => {
       return acc
       
     }, [])
-    //.concat(newProducts)
     .sort(dynamicSort('prodName'))
     : []
 
-  // const standingByDay = makeDayView(standingDataFiltered, weekdays, products)
-  // const standingByProduct = makeProductView(standingDataFiltered, weekdays, products)
-  // const labelColumn = viewMode === 'DAY' ? 'product.prodName' : 'dayOfWeek'
-  // const valueColumn = viewMode === 'DAY' ? dayOfWeek : selectedProdNick
-
   return(
     <div>
-      {user.location === 'backporch' &&
-      <Card title="Admin Controls" style={{margin: "10px"}}>
-          <div className="p-float-label p-fluid" style={{margin: "25px"}}>
-            <Dropdown 
-              id="locationDropdown"
-              options={locationList || null}
-              optionLabel="locName"
-              optionValue="locNick"
-              value={location}
-              filter
-              onChange={e => setLocation(e.value)}
-            />
-            <label htmlFor="locationDropdown">{locationList ? "Location" : (locationListErrors ? "Error" : "Loading...")}</label>
+      <StandingViewControls
+        viewSettings={viewSettings}
+        products={products}
+      />
 
-          </div>
-
-          <div className="field-checkbox" style={{marginLeft: "25px"}}>
-            <Checkbox
-              inputId="iswhole"
-              onChange={e => setIsWhole(e.checked)}
-              checked={isWhole}
-              style={{marginRight: "0.5em"}}
-            />
-            <label htmlFor="iswhole" className="p-checkbox-label">isWhole</label>
-          </div>
-
-          <div className="field-checkbox" style={{marginLeft: "25px", marginTop: "5px"}}>
-            <Checkbox
-              inputId="isstand"
-              onChange={e => setIsStand(e.checked)}
-              checked={isStand}
-              style={{marginRight: "0.5em"}}
-            />
-            <label htmlFor="isstand" className="p-checkbox-label">isStand</label>
-          </div>
-        </Card>
-      }
-
-      <Card title="Display" style={{margin: "10px"}}>
-      <div style={{display: "flex"}}>
-        <Button label="by Day" 
-          onClick={e => {
-            setViewMode('DAY')
-            if (!dayOfWeek) setDayOfWeek('Sun')
-          }} 
-          className={viewMode === 'DAY' ? '' : "p-button-outlined p-button-secondary"}
-          style={{flex: "50%", marginRight: "25px"}}
-        />
-        <Button label="by Product" 
-          onClick={e => {
-            setViewMode('PRODUCT')
-            if (!selectedProdNick && !!products.length) setSelectedProdNick(products[0].prodNick)
-          }} 
-          className={viewMode === 'PRODUCT' ? '' : "p-button-outlined p-button-secondary"}
-          style={{flex: "50%"}}
-        />
-      </div>
-
-
-      {viewMode === 'DAY' && 
-      <div className="p-float-label" style={{marginTop: "30px"}}>
-        <Dropdown
-          id="weekday-dropdown"
-          value={dayOfWeek}
-          options={
-            [
-              {label: "Sunday", value: "Sun"},
-              {label: "Monday", value: "Mon"},
-              {label: "Tuesday", value: "Tue"},
-              {label: "Wednesday", value: "Wed"},
-              {label: "Thursday", value: "Thu"},
-              {label: "Friday", value: "Fri"},
-              {label: "Saturday", value: "Sat"},
-            ]
-          }
-          onChange={e => setDayOfWeek(e.value)}
-        />
-        <label htmlFor="weekday-dropdown">Day</label>
-      </div>
-      }
-
-      {viewMode === 'PRODUCT' && 
-      <div className="p-float-label" style={{marginTop: "30px"}}>
-        <Dropdown
-          style={{width: "100%"}}
-          id="product-dropdown"
-          value={selectedProdNick}
-          options={products.map(item => {
-            return({
-              label: item.prodName, 
-              value: item.prodNick})
-          })}
-          onChange={e => setSelectedProdNick(e.value)}
-        />
-        <label htmlFor="product-dropdown">Product</label>
-      </div>
-      }
-      </Card>
-
-
+      <div style={{margin: "10px"}}>
       <DataTable 
         value={standingView}
-        style={{width: "100%", margin: "10px"}}
         responsiveLayout="scroll"
       >        
         <Column field='label'
           header={viewMode === 'DAY' ? 'Product' : 'Weekday'}
           body={rowData => {
             const dataKey = `${rowData.prodNick}_${rowData.dayOfWeek}_${isWhole ? '1' : '0'}_${isStand ? '1' : '0'}`
-            const originalItem = standingBase[dataKey]
+            const originalItem = standingBase ? standingBase[dataKey] : null
             const changedItem = standingChanges[dataKey]
 
             const shouldCreate = !originalItem && (!!changedItem && changedItem.qty) > 0
@@ -203,7 +94,7 @@ export const StandingDisplay = ({location, setLocation, userName, user}) => {
           }}
         />
         <Column field='dataKey'
-          header="Quantity"
+          header="Qty"
           style={{width:"80px"}}
           body={rowData => {
             const standingItem = standingChanges[rowData.dataKey]
@@ -254,42 +145,19 @@ export const StandingDisplay = ({location, setLocation, userName, user}) => {
           }}
         />
       </DataTable>
+      </div>
 
-      <Dropdown 
-        id="product-list-dropdown"
-        options={productData}
-        optionLabel="prodName"
-        optionValue="prodNick"
-        value={dropdownProdNick}
-        filter
-        onChange={e => setDropdownProdNick(e.value)}
-      />
-      
-      <Button label="Add Product" 
-        onClick={e => {
-          let match = productData.find(item => item.prodNick === dropdownProdNick)
-          if (!!match) {
-            let dataKey = match.prodNick + '_placeholder_' + (isWhole ? '1' : '0') + '_' + (isStand ? '1' : '0')
-            let placeholderItem = {
-              dayOfWeek: 'placeholder',
-              product: {
-                prodNick: match.prodNick,
-                prodName: match.prodName
-              },
-              isStand: isStand,
-              isWhole: isWhole,
-            }
-
-            setStandingChanges({ ...standingChanges, [dataKey]: placeholderItem })
-
-          } else {
-            let dataKey
-
-          }
-
-        }}
+      <AddProductInterface
+        standingChanges={standingChanges}
+        setStandingChanges={setStandingChanges}
+        isWhole={isWhole}
+        isStand={isStand}
       />
 
+      <Button label="Submit Changes" 
+        onClick={() => handleStandingSubmit(standingBase, standingChanges)}
+      />
+        
       {/* <pre>{viewMode === 'DAY' ? JSON.stringify(standingByDay, null, 2) : JSON.stringify(standingByProduct, null, 2)}</pre> */}
       {/* <pre>{JSON.stringify(standingDisplay, null, 2)}</pre> */}
       {/* <pre>{productData && JSON.stringify(productData.slice(5), null, 2)}</pre> */}
@@ -302,82 +170,6 @@ export const StandingDisplay = ({location, setLocation, userName, user}) => {
 
 }
 
-
-
-const makeDayView = (standingData, weekdays, products) => {
-  // want rows with first column showing product names
-  // want quantities corresponding to each weekday in subsequent 7 columns
-  // we can limit the view as needed to a particular day
-  if (!standingData.length) return []
-
-  // build out empty grid
-  let dayView = []
-  for (let p of products) {
-    let emptyRow = {
-      prodNick: p.prodNick,
-      product: p
-    }
-
-    for (let day of weekdays) {
-      emptyRow[day] = {
-        id: null,
-        qty: 0,
-      }
-    
-    }
-
-    dayView.push(emptyRow)
-
-  }
-
-  // put standing items in spots matching prodNick and dayOfWeek
-
-  for (let item of standingData) {
-    let idx = dayView.findIndex(dvItem => dvItem.product.prodNick === item.product.prodNick)
-    if (idx > -1) dayView[idx][item.dayOfWeek] = item
-  }
-
-  dayView.sort(dynamicSort('prodNick'))
-  
-  return dayView
-
-}
-
-const makeProductView = (standingData, weekdays, products) => {
-  // want rows with first column showing days of the week
-  // want quantities correspopnding to each product in subsequent N columns (depends on # of products)
-  // can limit the view to a single product
-  if (!standingData.length) return []
-
-  // build out empty grid
-  let productView = []
-  for (let day of weekdays) {
-    let emptyRow = {
-      dayOfWeek: day,
-    }
-
-    for (let p of products) {
-      emptyRow[p.prodNick] = {
-        id: null,
-        qty: 0,
-      }
-    
-    }
-
-    productView.push(emptyRow)
-
-  }
-
-  for (let item of standingData) {
-    let idx = productView.findIndex(viewItem => viewItem.dayOfWeek === item.dayOfWeek)
-    if (idx > -1) productView[idx][item.product.prodNick] = item
-  }
-
-  return productView
-
-}
-
-
 const makeStandingBase = (standingData) => {
 
   const _standingData = standingData.map(item => {
@@ -388,12 +180,10 @@ const makeStandingBase = (standingData) => {
   return Object.fromEntries(_standingData)
 }
 
-const makeStandingView = (standingChanges, filters, viewMode, dayOfWeek, selectedProdNick) => {
-  const { isStand, isWhole } = filters
-
+const makeStandingView = (standingChanges, isWhole, isStand, viewMode, dayOfWeek, selectedProduct) => {
   if (!standingChanges) return []
   if (viewMode === 'DAY' && !dayOfWeek) return []
-  if (viewMode === 'PRODUCT' && !selectedProdNick) return []
+  if (viewMode === 'PRODUCT' && !selectedProduct) return []
 
   // Filter down to 'grid type'
   let viewItems = Object.entries(standingChanges).map(([k, v]) => {return { ...v, dataKey: k}}) // convert back to array of objects
@@ -435,15 +225,15 @@ const makeStandingView = (standingChanges, filters, viewMode, dayOfWeek, selecte
   }
 
   if (viewMode === 'PRODUCT') {
-    viewItems = viewItems.filter(item => item.product.prodNick === selectedProdNick)
+    viewItems = viewItems.filter(item => item.product.prodNick === selectedProduct.prodNick)
 
     for (let day of weekdays) {
       let matchItem = viewItems.find(item => item.dayOfWeek === day)
 
       standingView.push({
         label: day,
-        prodNick: selectedProdNick,
-        prodName: (products.find(item => item.prodNick === selectedProdNick)).prodName,
+        prodNick: selectedProduct.prodNick,
+        prodName: selectedProduct.prodName,
         dayOfWeek: day,
         dataKey: matchItem ? matchItem.dataKey : null
       })
@@ -452,5 +242,142 @@ const makeStandingView = (standingChanges, filters, viewMode, dayOfWeek, selecte
   }
 
   return standingView
+
+}
+
+
+const StandingViewControls = ({ viewSettings, products }) => {
+  const { viewMode, setViewMode, dayOfWeek, setDayOfWeek, selectedProduct, setSelectedProduct } = viewSettings
+
+  return (
+    <Card title="Display..." style={{margin: "10px"}}>
+        <div style={{display: "flex"}}>
+          <Button label="by Day" 
+            onClick={e => {
+              setViewMode('DAY')
+              if (!dayOfWeek) setDayOfWeek('Sun')
+            }} 
+            className={viewMode === 'DAY' ? '' : "p-button-outlined p-button-secondary"}
+            style={{flex: "50%", marginRight: "25px"}}
+          />
+          <Button label="by Product" 
+            onClick={e => {
+              setViewMode('PRODUCT')
+              if (!selectedProduct && !!products.length) setSelectedProduct(products[0])
+            }} 
+            className={viewMode === 'PRODUCT' ? '' : "p-button-outlined p-button-secondary"}
+            style={{flex: "50%"}}
+          />
+        </div>
+        {viewMode === 'DAY' && 
+        <div className="p-float-label" style={{marginTop: "30px"}}>
+          <Dropdown
+            id="weekday-dropdown"
+            value={dayOfWeek}
+            options={
+              [
+                {label: "Sunday", value: "Sun"},
+                {label: "Monday", value: "Mon"},
+                {label: "Tuesday", value: "Tue"},
+                {label: "Wednesday", value: "Wed"},
+                {label: "Thursday", value: "Thu"},
+                {label: "Friday", value: "Fri"},
+                {label: "Saturday", value: "Sat"},
+              ]
+            }
+            onChange={e => setDayOfWeek(e.value)}
+          />
+          <label htmlFor="weekday-dropdown">Day</label>
+        </div>
+        }
+
+        {viewMode === 'PRODUCT' && 
+        <div className="p-float-label" style={{marginTop: "30px"}}>
+          <Dropdown
+            style={{width: "100%"}}
+            id="product-dropdown"
+            value={selectedProduct?.prodNick}
+            options={products}
+            optionLabel="prodName"
+            optionValue="prodNick"
+            onChange={e => setSelectedProduct(products.find(item => item.prodNick === e.value))}
+          />
+          <label htmlFor="product-dropdown">Product</label>
+        </div>
+        }
+      </Card>
+  )
+
+}
+
+
+const AddProductInterface = ({ standingChanges, setStandingChanges, isWhole, isStand }) => {
+  const { data: productList } = useProductList(true)
+  const [selectedProduct, setSelectedProduct] = useState(null)
+
+  const handleAddProduct = () => {
+    let dataKey = selectedProduct.prodNick + '_placeholder_' + (isWhole ? '1' : '0') + '_' + (isStand ? '1' : '0')
+    let placeholderItem = {
+      dayOfWeek: 'placeholder',
+      product: {
+        prodNick: selectedProduct.prodNick,
+        prodName: selectedProduct.prodName
+      },
+      isStand: isStand,
+      isWhole: isWhole,
+    }
+
+    setStandingChanges({ ...standingChanges, [dataKey]: placeholderItem })
+    
+  }
+
+  return (
+    <div style={{margin: "10px"}}>
+      <Dropdown 
+        id="product-list-dropdown"
+        options={productList}
+        optionLabel="prodName"
+        optionValue="prodNick"
+        value={selectedProduct?.prodNick}
+        filter
+        onChange={e => setSelectedProduct(productList.find(item => item.prodNick === e.value))}
+        style={{width: "100%", marginBottom: "10px"}}
+      />
+
+      <Button label="Add Product" 
+        onClick={e => {
+          handleAddProduct()
+          setSelectedProduct(null)
+        }}
+        disabled={!productList || !selectedProduct}
+      />
+    </div>
+  )
+}
+
+const handleStandingSubmit = (standingBase, standingChanges) => {
+
+  for (let dataKey of Object.keys(standingChanges)) {
+    if (standingChanges[dataKey].dayOfWeek === 'placeholder') continue
+    let changeQty = standingChanges[dataKey].qty
+
+    if (dataKey in standingBase) {
+      let baseQty = standingBase[dataKey].qty
+      if (changeQty !== baseQty) {
+        if (changeQty > 0) console.log("UPDATE", dataKey)
+        else console.log("DELETE", dataKey)
+
+      }
+
+    } else {
+      if (changeQty > 0) {
+        console.log("CREATE", dataKey)
+      }
+
+    }
+
+
+  }
+
 
 }
