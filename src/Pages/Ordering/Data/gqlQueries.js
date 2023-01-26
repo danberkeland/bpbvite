@@ -97,6 +97,36 @@ export const listOrdersByLocationByDate = /* GraphQL */ `
   }
 `;
 
+export const transitionOrdersByLocByDelivDate = /* GraphQL */ `
+  query OrderByLocByDelivDate(
+    $locNick: String!
+    $delivDate: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelOrderFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    orderByLocByDelivDate(
+      locNick: $locNick
+      delivDate: $delivDate
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        prodNick
+        isWhole
+        delivDate
+        # updatedOn
+        # updatedBy
+      }
+      nextToken
+    }
+  }
+`;
+
 export const listStandingByLocation = /* GraphQL */ `
   query MyQuery(
     $locNick: String!, 
@@ -229,21 +259,6 @@ export const updateOrder = /* GraphQL */ `
   ) {
     updateOrder(input: $input, condition: $condition) {
       id
-      # product {
-      #   prodNick
-      #   prodName
-      #   wholePrice
-      #   retailPrice
-      # } 
-      # qty
-      # delivDate
-      # ItemNote
-      # isWhole
-      # SO
-      # rate
-      # route
-      # isLate
-      # createdOn
     }
   }
 `;
@@ -256,6 +271,52 @@ export const deleteOrder = /* GraphQL */ `
     deleteOrder(input: $input, condition: $condition) {
       id
       prodNick
+    }
+  }
+`;
+
+export const createStanding = /* GraphQL */ `
+  mutation CreateStanding(
+    $input: CreateStandingInput!
+    $condition: ModelStandingConditionInput
+  ) {
+    createStanding(input: $input, condition: $condition) {
+      id
+      # isWhole
+      # isStand
+      # dayOfWeek
+      # route
+      # product {
+      #   prodName
+      #   prodNick
+      # }
+      # qty
+      # ItemNote
+      # startDate
+      # endDate
+      # createdAt
+      # updatedAt
+      # updatedBy
+    }
+  }
+`;
+export const updateStanding = /* GraphQL */ `
+  mutation UpdateStanding(
+    $input: UpdateStandingInput!
+    $condition: ModelStandingConditionInput
+  ) {
+    updateStanding(input: $input, condition: $condition) {
+      id
+    }
+  }
+`;
+export const deleteStanding = /* GraphQL */ `
+  mutation DeleteStanding(
+    $input: DeleteStandingInput!
+    $condition: ModelStandingConditionInput
+  ) {
+    deleteStanding(input: $input, condition: $condition) {
+      id
     }
   }
 `;

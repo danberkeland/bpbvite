@@ -317,28 +317,15 @@ type RetailProdLoc @model {
 type Order @model (timestamps: { createdAt: "createdOn", updatedAt: "updatedOn"}) {
   Type: String
     @default(value: "Orders")
-    @index(
-      name: "orderByCreatedAt"
-      queryField: "orderByCreatedAt"
-      sortKeyFields: ["createdOn"]
-    )
-    @index(
-      name: "orderByUpdatedAt"
-      queryField: "orderByUpdatedAt"
-      sortKeyFields: ["updatedOn"]
-    )
-    @index(
-      name: "orderByDelivDate"
-      queryField: "orderByDelivDate"
-      sortKeyFields: ["delivDate"]
-    )
   id: ID!
   qty: Int
   qtyUpdatedOn: AWSDateTime
   sameDayMaxQty: Int
   prodNick: String! @index(name: "byProd")
   product: Product! @hasOne(fields: ["prodNick"])
-  locNick: String! @index(name: "byLoc") @index(name: "byLocationByDelivDate", sortKeyFields: ["delivDate"])
+  locNick: String! 
+    @index(name: "byLoc") 
+    @index(name: "byLocationByDelivDate", sortKeyFields: ["delivDate"], queryField: "orderByLocByDelivDate")
   location: Location! @hasOne(fields: ["locNick"])
   ItemNote: String
   SO: Int

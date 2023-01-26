@@ -11,7 +11,7 @@ import { useLocationDetails, useLocationList } from "../Data/locationData";
 
 export const AdminControls = ({ adminSettings, orderingType }) => {
   const { location, setLocation, isWhole, setIsWhole, isStand, setIsStand } = adminSettings
-  const { data:locationDetails } = useLocationDetails(location, !!location)
+  const { data:locationDetails } = useLocationDetails(location, !!location) // load on selection; for use elsewhere
 
   return(
     <Card title="AdminControls">

@@ -7,40 +7,38 @@
 import React, { useState } from "react"
 
 import { Dropdown } from "primereact/dropdown"
-import { Checkbox } from "primereact/checkbox"
 import { Button } from "primereact/button"
 
-import { useLocationDetails, useLocationList } from "../Data/locationData"
-import { useProductData, useProductList } from "../Data/productData"
-import { useStandingByLocation } from "../Data/orderData"
+import { useProductList } from "../Data/productData"
+import { fetchTransitionOrders, useStandingByLocation } from "../Data/orderData"
 
-import { getWorkingDate } from "../Functions/dateAndTime"
 import { useEffect } from "react"
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 import dynamicSort from "../Functions/dynamicSort"
 import { Card } from "primereact/card"
 import { InputNumber } from "primereact/inputnumber"
+import { getTransitionDates, getWeekday, getWorkingDateTime } from "../Functions/dateAndTime"
+
+import { gqlFetcher } from "../Data/fetchers"
+import * as queries from '../Data/gqlQueries'
 
 
 export const StandingDisplay = ({ standingSettings, user }) => {
   const  { location, isWhole, isStand } = standingSettings
-  const currentWorkingDate = getWorkingDate('NOW')
 
   // Display Controls
   const [viewMode, setViewMode] = useState(null) // 'DAY' or 'PRODUCT'. for future, perhaps a 'FULL' view which is a DAY view but with all 7 day columns.
   const [dayOfWeek, setDayOfWeek] = useState(null) // select day in viewMode 'DAY'
-  const [selectedProdNick, setSelectedProdNick] = useState(null) // select product in viewMode 'PRODUCT'
   const [selectedProduct, setSelectedProduct] = useState(null)
   const viewSettings = { viewMode, setViewMode, dayOfWeek, setDayOfWeek, selectedProduct, setSelectedProduct } 
   
   // const { data:locationDetails } = useLocationDetails(location, !!location) // maybe use when adding route management features?
-  // const { data:productData } = useProductData()
   
-  const { data:standingData } = useStandingByLocation(location, !!location)
-  const [standingBase, setStandingBase] = useState()
-
-  const [standingChanges, setStandingChanges] = useState()
+  const { data:standingData, mutate:mutateStanding } = useStandingByLocation(location, !!location)
+  const [standingBase, setStandingBase] = useState({})
+  const [standingChanges, setStandingChanges] = useState({})
+  const changeDetected = detectChange(standingBase, standingChanges)
 
   useEffect(() => {
     if (!!standingData) {
@@ -66,7 +64,7 @@ export const StandingDisplay = ({ standingSettings, user }) => {
 
   return(
     <div>
-      <StandingViewControls
+      <StandingDisplayOptions
         viewSettings={viewSettings}
         products={products}
       />
@@ -79,7 +77,7 @@ export const StandingDisplay = ({ standingSettings, user }) => {
         <Column field='label'
           header={viewMode === 'DAY' ? 'Product' : 'Weekday'}
           body={rowData => {
-            const dataKey = `${rowData.prodNick}_${rowData.dayOfWeek}_${isWhole ? '1' : '0'}_${isStand ? '1' : '0'}`
+            const dataKey = [rowData.prodNick, rowData.dayOfWeek, (isWhole ? '1' : '0'), (isStand ? '1' : '0')].join('_')
             const originalItem = standingBase ? standingBase[dataKey] : null
             const changedItem = standingChanges[dataKey]
 
@@ -104,6 +102,7 @@ export const StandingDisplay = ({ standingSettings, user }) => {
                 <InputNumber 
                   value={standingItem ? standingItem.qty : 0}
                   onValueChange={e => {
+                    // console.log('rowData', rowData)
                     if (standingItem) {
                       let _update = { 
                         ...standingChanges, 
@@ -115,7 +114,7 @@ export const StandingDisplay = ({ standingSettings, user }) => {
                       console.log(_update)
                       setStandingChanges(_update)
                     } else {
-                      let dataKey = rowData.prodNick + '_' + rowData.dayOfWeek + '_' + (isWhole ? '1' : '0') + '_' + (isStand ? '1' : '0') 
+                      let dataKey = [rowData.prodNick, rowData.dayOfWeek, (isWhole ? '1' : '0'), (isStand ? '1' : '0')].join('_')
                       let newItem = {
                         locNick: location,
                         isStand: isStand,
@@ -135,7 +134,7 @@ export const StandingDisplay = ({ standingSettings, user }) => {
                         ...standingChanges,
                         [dataKey]: newItem
                       }
-                      console.log(_update)
+                      console.log("Updated standing changes:", _update)
                       setStandingChanges(_update)
                     }
                   }}
@@ -152,11 +151,16 @@ export const StandingDisplay = ({ standingSettings, user }) => {
         setStandingChanges={setStandingChanges}
         isWhole={isWhole}
         isStand={isStand}
+        viewMode={viewMode}
+        setSelectedProduct={setSelectedProduct}
       />
 
-      <Button label="Submit Changes" 
-        onClick={() => handleStandingSubmit(standingBase, standingChanges)}
+      <Button label="Submit Changes"
+        onClick={() => handleStandingSubmit(location, isWhole, standingBase, standingChanges, mutateStanding, user.name)}
+        disabled={!changeDetected}
       />
+
+      <p>{`Changes will take effect ${getWorkingDateTime('NOW').plus({ days: 4 }).toLocaleString({ weekday: 'long', month: 'short', day: '2-digit' })}.`}</p>
         
       {/* <pre>{viewMode === 'DAY' ? JSON.stringify(standingByDay, null, 2) : JSON.stringify(standingByProduct, null, 2)}</pre> */}
       {/* <pre>{JSON.stringify(standingDisplay, null, 2)}</pre> */}
@@ -170,16 +174,22 @@ export const StandingDisplay = ({ standingSettings, user }) => {
 
 }
 
+/**
+ * Converts AppSync array-of-objects to a nested object with prodNick/dayOfWeek/isWhole/isStand compound keys 
+ */
 const makeStandingBase = (standingData) => {
 
   const _standingData = standingData.map(item => {
-    let dataKey = item.product.prodNick + '_' + item.dayOfWeek + '_' + (item.isWhole ? '1' : '0') + '_' + (item.isStand ? '1' : '0') 
+    let dataKey = [item.product.prodNick, item.dayOfWeek, (item.isWhole ? '1' : '0'), (item.isStand ? '1' : '0')].join('_')
     return ([dataKey, item])
   })
 
   return Object.fromEntries(_standingData)
 }
 
+/**
+ * Data transform on standingChanges. Filter and change to array of objects structured for different DataTable displays.
+ */
 const makeStandingView = (standingChanges, isWhole, isStand, viewMode, dayOfWeek, selectedProduct) => {
   if (!standingChanges) return []
   if (viewMode === 'DAY' && !dayOfWeek) return []
@@ -245,8 +255,181 @@ const makeStandingView = (standingChanges, isWhole, isStand, viewMode, dayOfWeek
 
 }
 
+const detectChange = (standingBase, standingChanges) => {
+  let changeDetected = false
+  for (let dataKey of Object.keys(standingChanges)) {
+    let changeItem = standingChanges[dataKey]
+    if (changeItem.dayOfWeek === 'placeholder') continue
 
-const StandingViewControls = ({ viewSettings, products }) => {
+    let baseItem = standingBase[dataKey]
+    if ((!baseItem) || (baseItem.qty !== changeItem.qty)) {
+      changeDetected = true
+      break
+    }
+  }
+
+  return changeDetected
+}
+
+
+/**
+ * Decides which standing order items have been changed, and submit the appropriate mutation to the DB.
+ * 
+ * Preserves orders up to 3 days out by converting any items generated by the current standing order to
+ * cart order items.
+ */
+const handleStandingSubmit = async (location, isWhole, standingBase, standingChanges, mutateStanding,  userName) => {
+  const cartOrders = await fetchTransitionOrders(location)
+
+  let _cartOrders = cartOrders.filter(item => item.isWhole === isWhole)
+  let _standingBase = Object.values(standingBase).filter(item => (item.isWhole === isWhole && item.isStand === true))
+  let _standingChanges = Object.values(standingChanges).filter(item => (item.isWhole === isWhole && item.isStand === true))
+
+  const transitionDates = getTransitionDates('UTCString')
+  for (let utcDate of transitionDates) {
+    let delivDateISO = utcDate.split('T')[0]
+    let dayOfWeek = getWeekday(new Date(utcDate))
+    const cartItems = _cartOrders.filter(item => item.delivDate === delivDateISO)
+    const standingBaseItems = _standingBase.filter(item => item.dayOfWeek === dayOfWeek)
+    const standingChangeItems = _standingChanges.filter(item => item.dayOfWeek === dayOfWeek)
+
+    for (let changeItem of standingChangeItems) {
+      let baseItem = standingBaseItems.find(item => item.product.prodNick === changeItem.product.prodNick)
+
+      if (cartItems.findIndex(item => item.prodNick === changeItem.product.prodNick) !== -1) {
+        if ((!baseItem && changeItem.qty > 0) || (baseItem && (baseItem.qty !== changeItem.qty))) {
+          console.log(delivDateISO, dayOfWeek, changeItem.product.prodNick, `: cart item exists; take no action`)
+        }
+      } else {
+        
+        if (!baseItem && changeItem.qty > 0) {
+          console.log(`${delivDateISO} ${changeItem.product.prodNick}_${dayOfWeek}_${changeItem.isWhole ? '1' : '0'}_1: Standing created & no cart; create cart item with 0 qty.`)
+          let cartCreateItem = {
+            locNick: location,
+            isWhole: changeItem.isWhole,
+            route: changeItem.route,
+            delivDate: delivDateISO,
+            prodNick: changeItem.product.prodNick,
+            qty: 0,
+            qtyUpdatedOn: new Date().toISOString(),
+            sameDayMaxQty: 0,
+            rate: null,
+            ItemNote: changeItem.ItemNote,
+            isLate: 0,
+            updatedBy: userName
+          }
+
+          let query = queries.createOrder
+          let variables = { input: cartCreateItem }
+
+          const response = await gqlFetcher(query, variables)
+          console.log("Created cart order:", JSON.stringify(response.data.createOrder))
+
+
+        }
+
+        if (baseItem && (baseItem.qty !== changeItem.qty)) {
+          console.log(`${delivDateISO} ${changeItem.product.prodNick}_${dayOfWeek}_${changeItem.isWhole ? '1' : '0'}_1: Standing changed & no cart; create cart item. with ${baseItem.qty} qty.`)
+          // console.log(cartCreateItem)
+          let cartCreateItem = {
+            locNick: location,
+            isWhole: baseItem.isWhole,
+            route: baseItem.route,
+            delivDate: delivDateISO,
+            prodNick: baseItem.product.prodNick,
+            qty: baseItem.qty,
+            qtyUpdatedOn: new Date().toISOString(),
+            sameDayMaxQty: baseItem.qty,
+            rate: null,
+            ItemNote: baseItem.ItemNote,
+            isLate: 0,
+            updatedBy: userName
+          }
+
+          let query = queries.createOrder
+          let variables = { input: cartCreateItem }
+
+          const response = await gqlFetcher(query, variables)
+          console.log("Created cart order:", JSON.stringify(response.data.createOrder))
+
+        }
+      }
+
+    }
+
+  }
+
+  for (let dataKey of Object.keys(standingChanges)) {
+    if (standingChanges[dataKey].dayOfWeek === 'placeholder') continue
+
+    let changeItem = standingChanges[dataKey]
+
+    if (dataKey in standingBase) {
+      let baseItem = standingBase[dataKey]
+      if (changeItem.qty !== baseItem.qty) {
+        if (changeItem.qty > 0) {
+          console.log("UPDATE", dataKey)
+
+          // graphql updateStanding mutation
+          let query = queries.updateStanding
+          let variables = {
+            input: {
+              id: baseItem.id,
+              qty: changeItem.qty
+            }
+          }
+          const response = await gqlFetcher(query, variables)
+          console.log("Updated standing order:", JSON.stringify(response.data.createStanding))
+        }
+        
+        else {
+          console.log("DELETE", dataKey)
+
+          //graphql deleteStanding mutation
+          let query = queries.deleteStanding
+          let variables = {
+            input: {
+              id: baseItem.id
+            }
+          }
+          const response = await gqlFetcher(query, variables)
+          console.log("Deleted standing order:", JSON.stringify(response.data.deleteStanding))
+        }
+        
+      }
+
+    } else {
+      if (changeItem.qty > 0) {
+        console.log("CREATE", dataKey)
+
+        // graphql createStanding mutation
+        let query = queries.createStanding
+        let variables = {
+          input: {
+            locNick: location,
+            isWhole: changeItem.isWhole,
+            isStand: changeItem.isStand,
+            dayOfWeek: changeItem.dayOfWeek,
+            route: changeItem.route,
+            prodNick: changeItem.prodNick,
+            qty: changeItem.qty,
+            startDate: getWorkingDateTime('NOW').plus({ days: 4}).toISODate(),
+            updatedBy: userName
+          }
+        }
+        const response = await gqlFetcher(query, variables)
+        console.log("Created standing order:", JSON.stringify(response.data.createStanding))
+
+      }
+
+    }
+  }
+
+  mutateStanding()
+
+}
+
+const StandingDisplayOptions = ({ viewSettings, products }) => {
   const { viewMode, setViewMode, dayOfWeek, setDayOfWeek, selectedProduct, setSelectedProduct } = viewSettings
 
   return (
@@ -311,24 +494,24 @@ const StandingViewControls = ({ viewSettings, products }) => {
 }
 
 
-const AddProductInterface = ({ standingChanges, setStandingChanges, isWhole, isStand }) => {
+const AddProductInterface = ({ standingChanges, setStandingChanges, isWhole, isStand, viewMode, setSelectedProduct }) => {
   const { data: productList } = useProductList(true)
-  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [productToAdd, setProductToAdd] = useState(null)
 
   const handleAddProduct = () => {
-    let dataKey = selectedProduct.prodNick + '_placeholder_' + (isWhole ? '1' : '0') + '_' + (isStand ? '1' : '0')
+    let dataKey = [productToAdd.prodNick, 'placeholder', (isWhole ? '1' : '0'), (isStand ? '1' : '0')].join('_')
     let placeholderItem = {
       dayOfWeek: 'placeholder',
       product: {
-        prodNick: selectedProduct.prodNick,
-        prodName: selectedProduct.prodName
+        prodNick: productToAdd.prodNick,
+        prodName: productToAdd.prodName
       },
       isStand: isStand,
       isWhole: isWhole,
     }
 
     setStandingChanges({ ...standingChanges, [dataKey]: placeholderItem })
-    
+    if (viewMode === 'PRODUCT') setProductToAdd(null)
   }
 
   return (
@@ -338,46 +521,20 @@ const AddProductInterface = ({ standingChanges, setStandingChanges, isWhole, isS
         options={productList}
         optionLabel="prodName"
         optionValue="prodNick"
-        value={selectedProduct?.prodNick}
+        value={productToAdd?.prodNick}
         filter
-        onChange={e => setSelectedProduct(productList.find(item => item.prodNick === e.value))}
+        onChange={e => setProductToAdd(productList.find(item => item.prodNick === e.value))}
         style={{width: "100%", marginBottom: "10px"}}
       />
 
       <Button label="Add Product" 
         onClick={e => {
           handleAddProduct()
-          setSelectedProduct(null)
+          setSelectedProduct({prodNick: productToAdd.prodNick, prodName: productToAdd.prodName})
         }}
-        disabled={!productList || !selectedProduct}
+        disabled={!productToAdd}
       />
     </div>
   )
 }
 
-const handleStandingSubmit = (standingBase, standingChanges) => {
-
-  for (let dataKey of Object.keys(standingChanges)) {
-    if (standingChanges[dataKey].dayOfWeek === 'placeholder') continue
-    let changeQty = standingChanges[dataKey].qty
-
-    if (dataKey in standingBase) {
-      let baseQty = standingBase[dataKey].qty
-      if (changeQty !== baseQty) {
-        if (changeQty > 0) console.log("UPDATE", dataKey)
-        else console.log("DELETE", dataKey)
-
-      }
-
-    } else {
-      if (changeQty > 0) {
-        console.log("CREATE", dataKey)
-      }
-
-    }
-
-
-  }
-
-
-}
