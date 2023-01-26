@@ -47,13 +47,13 @@ const Orders9 = () => {
   const adminSettings = { location, setLocation, isWhole, setIsWhole, isStand, setIsStand }
   
   // Public Settings
-  const [delivDate, setDelivDate] = useState(new Date(getOrderSubmitDate().plus({ days: 1}).toISO()))
+  const [delivDate, setDelivDate] = useState(new Date(getOrderSubmitDate().plus({ days: 1}).toISODate()))
   const selection = { 
     location, setLocation, 
     delivDate, setDelivDate,
   }
 
-  const cartSettings= { location, delivDate }
+  //const cartSettings = { location, delivDate }
   const standingSettings = {location, isWhole, isStand }
 
   const [orderingType, setOrderingType] = useState('cart')

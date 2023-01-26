@@ -8,7 +8,7 @@ import { useEffect } from "react"
 import { makeOrderHeader, makeOrderItems, validateCart } from "../Data/dataTransformations"
 import { useLocationDetails } from "../Data/locationData"
 import { useOrdersByLocationByDate, useStandingByLocation } from "../Data/orderData"
-import { dateToMmddyyyy, getOrderSubmitDate, getWorkingDate } from "../Functions/dateAndTime"
+import { dateToYyyymmdd, getOrderSubmitDate, getWorkingDate } from "../Functions/dateAndTime"
 
 import { gqlFetcher } from "../Data/fetchers"
 import { createOrder, updateOrder } from "../Data/gqlQueries"
@@ -49,7 +49,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 
       validateCart(cartData, mutateCart)
     }
-  }, [locationDetails, standingData, cartData, delivDate])
+  }, [locationDetails, standingData, cartData, mutateCart, delivDate])
 
   const handleSubmit = async () => {
     // combine header data with items
@@ -65,7 +65,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
       // build submit item
       let subItem = {
         isWhole: true,
-        delivDate: dateToMmddyyyy(delivDate), // should start converting to ISO
+        delivDate: dateToYyyymmdd(delivDate),
         route: orderHeaderChanges.route,
         ItemNote: orderHeaderChanges.ItemNote,
         locNick: location,
