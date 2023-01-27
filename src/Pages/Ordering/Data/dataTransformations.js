@@ -205,11 +205,13 @@ export async function validateCart(cartData, mutateCart) {
 
     let _cartData = cartData.sort(dynamicSort("createdOn"))
     let prodInstances = {} // keys: prodNicks, values: [cart item Id's]
-    for (let item of _cartData) {
-      if (item.prodNick in prodInstances) prodInstances[item.prodNick] = (prodInstances[item.prodNick]).concat([item.id])
-      else prodInstances[item.prodNick] = [item.id]
-    }
 
+    for (let item of _cartData) {
+      let prodNick = item.product.prodNick
+      if (prodNick in prodInstances) prodInstances[prodNick] = (prodInstances[prodNick]).concat([item.id])
+      else prodInstances[prodNick] = [item.id]
+    }
+    
     for (let key of Object.keys(prodInstances)) {
       let instancesOfProduct = prodInstances[key]
       if (instancesOfProduct.length > 1) {
