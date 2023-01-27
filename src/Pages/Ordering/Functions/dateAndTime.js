@@ -92,3 +92,17 @@ export function getWeekday(date) {
   const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
   return (weekdays[date.getDay()])
 }
+
+
+/**
+ * Takes a js Date object and returns a ttl unix timestamp in seconds.
+ * Calculates ttl as the end of the work date after the given deliv date.
+ * 
+ * Ex: delivDate = 2023-01-28
+ * 
+ * Then we want the ttl to represent 2023-01-29 at 6:00pm in our locale ('America/Los_Angeles').
+ * 
+ */
+export function getTtl(delivDate) {
+  return getWorkingDateTime(delivDate.toISOString()).plus({ days: 1}).plus({ hours: 18}).toSeconds()
+}

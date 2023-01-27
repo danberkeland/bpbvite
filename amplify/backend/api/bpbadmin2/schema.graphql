@@ -337,6 +337,7 @@ type Order @model (timestamps: { createdAt: "createdOn", updatedAt: "updatedOn"}
   createdOn: AWSDateTime!
   updatedOn: AWSDateTime!
   updatedBy: String!
+  ttl: Int
 }
 
 type Standing @model {

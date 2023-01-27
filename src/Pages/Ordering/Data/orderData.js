@@ -12,8 +12,7 @@ const usualOptions = {
 
 
 
-export const useOrdersByLocationByDate = (location, delivDate) => {
-  const shouldFetch = !!location && !!delivDate
+export const useOrdersByLocationByDate = (location, delivDate, shouldFetch) => {
   const variables = shouldFetch ? {
     locNick: location,
     delivDate: dateToYyyymmdd(delivDate)
@@ -40,7 +39,6 @@ export const useOrdersByLocationByDate = (location, delivDate) => {
     mutate: mutate
   })
 }
-
 
 
 /** Fetches ALL standing items for location */

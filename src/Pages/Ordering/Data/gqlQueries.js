@@ -91,6 +91,7 @@ export const listOrdersByLocationByDate = /* GraphQL */ `
           createdOn
           updatedOn
           updatedBy
+          ttl
         }
       }
     }

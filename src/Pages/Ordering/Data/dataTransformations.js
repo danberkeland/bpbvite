@@ -25,7 +25,7 @@
 //      fetching (or not) and changing the data it produces accordingly.
 //
 
-import { dateToMmddyyyy, getWeekday } from "../Functions/dateAndTime"
+import { getWeekday } from "../Functions/dateAndTime"
 import dynamicSort from "../Functions/dynamicSort"
 import { gqlFetcher } from "./fetchers"
 import { deleteOrder } from "./gqlQueries"
@@ -105,6 +105,7 @@ export function makeOrderItems(locationDetails, cartData, standingData, delivDat
       isWhole: item.isWhole, // keep original value to validate/correct later
       route: item.route, // keep original value to validate/correct later
       ItemNote: item.ItemNote, // keep original value to validate/correct later
+      ttl: item.ttl
     })
   })
 
@@ -198,22 +199,28 @@ export function makeOrderItems(locationDetails, cartData, standingData, delivDat
 
 export async function validateCart(cartData, mutateCart) {
     console.log("validating cartData")
-    // Validation: detect duplicate products
-    // delete duplicates. Choose to save item with oldest created date
+    // Validation: detect duplicate products; keep only most recent
 
     let mutateFlag = false
-    
-    for (let item of cartData) {
-      let instancesOfProduct = cartData.filter(i => i.product.prodNick === item.product.prodNick)
+
+    let _cartData = cartData.sort(dynamicSort("createdOn"))
+    let prodInstances = {} // keys: prodNicks, values: [cart item Id's]
+    for (let item of _cartData) {
+      if (item.prodNick in prodInstances) prodInstances[item.prodNick] = (prodInstances[item.prodNick]).concat([item.id])
+      else prodInstances[item.prodNick] = [item.id]
+    }
+
+    for (let key of Object.keys(prodInstances)) {
+      let instancesOfProduct = prodInstances[key]
       if (instancesOfProduct.length > 1) {
-        console.log("Warning: duplicates found for " + item.product.prodNick, instancesOfProduct)
+        console.log("Warning: duplicates found for " + key, instancesOfProduct)
 
-        // delete all but the first created instance
-        const instancesToDelete = instancesOfProduct.sort(dynamicSort("createdOn")).slice(1)
-
-        const input = {id: item.id}
-        let response = await gqlFetcher(deleteOrder, {input: input})
-        console.log("deleted item: ", response)
+        let instancesToDelete = instancesOfProduct.slice(0, -1) // all but last instance of product
+        for (let instanceId of instancesToDelete) {
+          const input = {id: instanceId}
+          let response = await gqlFetcher(deleteOrder, {input: input})
+          console.log("deleted item: ", response)
+        }
         
         mutateFlag = true
       }

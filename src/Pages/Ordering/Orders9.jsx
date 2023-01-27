@@ -15,8 +15,8 @@
 // transformations inside the useEffect. 
 //
 ///The only 'safe' manipulation I've tested so far is returning a 
-// nested part of the original data. This makes sense because the
-// nested property key just points to the address in memory. Since we
+// nested part of the original data. This makes sense because a
+// nested property key just points to the address in memory. Since
 // swr returns the same object when nothing changes, the nested key
 // should also point to the same address, so useEffects should also
 // not detect changes.
@@ -24,11 +24,13 @@
 import React, { useState } from "react"
 import { useSettingsStore } from "../../Contexts/SettingsZustand"
 
-import { getOrderSubmitDate } from "./Functions/dateAndTime"
+import { getWorkingDateTime } from "./Functions/dateAndTime"
 
 import { OrderDisplay } from "./Components/OrderDisplay"
 import { OrderSelection } from "./Components/OrderSelection"
 import { RadioButton } from "primereact/radiobutton"
+import { TabMenu } from "primereact/tabmenu"
+
 import { StandingDisplay } from "./Components/StandingDisplay"
 import { AdminControls } from "./Components/AdminControls"
 
@@ -47,31 +49,32 @@ const Orders9 = () => {
   const adminSettings = { location, setLocation, isWhole, setIsWhole, isStand, setIsStand }
   
   // Public Settings
-  const [delivDate, setDelivDate] = useState(new Date(getOrderSubmitDate().plus({ days: 1}).toISODate()))
+  const [delivDate, setDelivDate] = useState(new Date(getWorkingDateTime('NOW').plus({ days: 1}).toISO()))
   const selection = { 
     location, setLocation, 
     delivDate, setDelivDate,
   }
 
   //const cartSettings = { location, delivDate }
-  const standingSettings = {location, isWhole, isStand }
+  const standingSettings = { location, isWhole, isStand, delivDate }
 
+  const [activeIndex, setActiveIndex] = useState(0)
   const [orderingType, setOrderingType] = useState('cart')
 
   return (
     <div> 
-      <h2>Orders9</h2>
-
-      <div>
-        <div className="field-radiobutton">
-            <RadioButton inputId="cart" name="cart" value="cart" onChange={(e) => setOrderingType(e.value)} checked={orderingType === 'cart'} />
-            <label htmlFor="cart">Cart Orders</label>
-        </div>
-        <div className="field-radiobutton">
-            <RadioButton inputId="standing" name="standing" value="standing" onChange={(e) => setOrderingType(e.value)} checked={orderingType === 'standing'} />
-            <label htmlFor="standing">Standing Orders</label>
-        </div>
-      </div>
+      <TabMenu 
+        style={{width: '60%'}}
+        model={[
+          {label: 'Cart', value: 'cart', icon: 'pi pi-fw pi-shopping-cart'},
+          {label: 'Standing', value: 'standing', icon: 'pi pi-fw pi-calendar'}
+        ]}
+        activeIndex={activeIndex}
+        onTabChange={e => {
+          setActiveIndex(e.index)
+          setOrderingType(e.value.value)
+        }}
+      />
 
       {user.location === 'backporch' &&
         <AdminControls
@@ -80,6 +83,8 @@ const Orders9 = () => {
         />
       
       }
+
+
 
       {orderingType === 'cart' && <>
         <OrderSelection 
