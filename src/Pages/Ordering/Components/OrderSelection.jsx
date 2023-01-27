@@ -23,7 +23,6 @@ export const OrderSelection = ({selection}) => {
           />
           <label htmlFor="calendar">{"Delivery Date"}</label>
         </span>
-
       </div> 
     </Card>
     

@@ -1107,6 +1107,7 @@ export const createLocation = /* GraphQL */ `
           createdOn
           updatedOn
           updatedBy
+          ttl
         }
         nextToken
       }
@@ -1129,6 +1130,7 @@ export const createLocation = /* GraphQL */ `
           createdOn
           updatedOn
           updatedBy
+          ttl
         }
         nextToken
       }
@@ -1311,6 +1313,7 @@ export const updateLocation = /* GraphQL */ `
           createdOn
           updatedOn
           updatedBy
+          ttl
         }
         nextToken
       }
@@ -1333,6 +1336,7 @@ export const updateLocation = /* GraphQL */ `
           createdOn
           updatedOn
           updatedBy
+          ttl
         }
         nextToken
       }
@@ -1515,6 +1519,7 @@ export const deleteLocation = /* GraphQL */ `
           createdOn
           updatedOn
           updatedBy
+          ttl
         }
         nextToken
       }
@@ -1537,6 +1542,7 @@ export const deleteLocation = /* GraphQL */ `
           createdOn
           updatedOn
           updatedBy
+          ttl
         }
         nextToken
       }
@@ -1767,6 +1773,7 @@ export const createProduct = /* GraphQL */ `
           createdOn
           updatedOn
           updatedBy
+          ttl
         }
         nextToken
       }
@@ -2040,6 +2047,7 @@ export const updateProduct = /* GraphQL */ `
           createdOn
           updatedOn
           updatedBy
+          ttl
         }
         nextToken
       }
@@ -2313,6 +2321,7 @@ export const deleteProduct = /* GraphQL */ `
           createdOn
           updatedOn
           updatedBy
+          ttl
         }
         nextToken
       }
@@ -3156,6 +3165,7 @@ export const createOrder = /* GraphQL */ `
       createdOn
       updatedOn
       updatedBy
+      ttl
     }
   }
 `;
@@ -3377,6 +3387,7 @@ export const updateOrder = /* GraphQL */ `
       createdOn
       updatedOn
       updatedBy
+      ttl
     }
   }
 `;
@@ -3598,6 +3609,7 @@ export const deleteOrder = /* GraphQL */ `
       createdOn
       updatedOn
       updatedBy
+      ttl
     }
   }
 `;

@@ -1074,6 +1074,7 @@ export const onCreateLocation = /* GraphQL */ `
           createdOn
           updatedOn
           updatedBy
+          ttl
         }
         nextToken
       }
@@ -1096,6 +1097,7 @@ export const onCreateLocation = /* GraphQL */ `
           createdOn
           updatedOn
           updatedBy
+          ttl
         }
         nextToken
       }
@@ -1275,6 +1277,7 @@ export const onUpdateLocation = /* GraphQL */ `
           createdOn
           updatedOn
           updatedBy
+          ttl
         }
         nextToken
       }
@@ -1297,6 +1300,7 @@ export const onUpdateLocation = /* GraphQL */ `
           createdOn
           updatedOn
           updatedBy
+          ttl
         }
         nextToken
       }
@@ -1476,6 +1480,7 @@ export const onDeleteLocation = /* GraphQL */ `
           createdOn
           updatedOn
           updatedBy
+          ttl
         }
         nextToken
       }
@@ -1498,6 +1503,7 @@ export const onDeleteLocation = /* GraphQL */ `
           createdOn
           updatedOn
           updatedBy
+          ttl
         }
         nextToken
       }
@@ -1725,6 +1731,7 @@ export const onCreateProduct = /* GraphQL */ `
           createdOn
           updatedOn
           updatedBy
+          ttl
         }
         nextToken
       }
@@ -1995,6 +2002,7 @@ export const onUpdateProduct = /* GraphQL */ `
           createdOn
           updatedOn
           updatedBy
+          ttl
         }
         nextToken
       }
@@ -2265,6 +2273,7 @@ export const onDeleteProduct = /* GraphQL */ `
           createdOn
           updatedOn
           updatedBy
+          ttl
         }
         nextToken
       }
@@ -3099,6 +3108,7 @@ export const onCreateOrder = /* GraphQL */ `
       createdOn
       updatedOn
       updatedBy
+      ttl
     }
   }
 `;
@@ -3317,6 +3327,7 @@ export const onUpdateOrder = /* GraphQL */ `
       createdOn
       updatedOn
       updatedBy
+      ttl
     }
   }
 `;
@@ -3535,6 +3546,7 @@ export const onDeleteOrder = /* GraphQL */ `
       createdOn
       updatedOn
       updatedBy
+      ttl
     }
   }
 `;

@@ -7,8 +7,9 @@ import { AddItemSidebar } from "./AddItemSidebar"
 import { useEffect } from "react"
 import { makeOrderHeader, makeOrderItems, validateCart } from "../Data/dataTransformations"
 import { useLocationDetails } from "../Data/locationData"
+import { dateToYyyymmdd, getOrderSubmitDate, getTtl, getWorkingDate } from "../Functions/dateAndTime"
+
 import { useOrdersByLocationByDate, useStandingByLocation } from "../Data/orderData"
-import { dateToYyyymmdd, getOrderSubmitDate, getWorkingDate } from "../Functions/dateAndTime"
 
 import { gqlFetcher } from "../Data/fetchers"
 import { createOrder, updateOrder } from "../Data/gqlQueries"
@@ -31,7 +32,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
   // const { locationDetails, standingData, cartData } = useOrderData
   const { data:locationDetails } = useLocationDetails(location, !!location)
   const { data:standingData } = useStandingByLocation(location, (!!location && !!delivDate))
-  const { data:cartData, mutate:mutateCart } = useOrdersByLocationByDate(location, delivDate)
+  const { data:cartData, mutate:mutateCart } = useOrdersByLocationByDate(location, delivDate, (!!location && !!delivDate))
 
   //const OrderItemList = makeOrderObject(locationDetails, cartData, standingData, delivDate)
 
@@ -74,6 +75,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
         rate: ordItm.rate,
         isLate: 0,
         updatedBy: userName,
+        ttl: getTtl(delivDate)
       }
       // can conditionally add other attributes in the future
       if (!!ordItm.id && ordItm.type === "C") subItem.id = ordItm.id
@@ -124,6 +126,15 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
       }
 
       mutateCart()
+      
+      // Testing mutate with generic SWR mutate below
+
+      // let variables = {
+      //   locNick: location,
+      //   delivDate: dateToYyyymmdd(delivDate)
+      // }
+      // let key = [listOrdersByLocationByDate, variables]
+      // mutate(key)
     }
 
   }
