@@ -49,6 +49,7 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
   });
 
   const { locationList } = useLocationList();
+  console.log('locationList', locationList)
 
   const handleClick = () => {
     setIsCreate(!isCreate);

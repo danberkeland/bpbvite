@@ -11,11 +11,11 @@ import {
   createLocationUser,
 } from "../../../restAPIs";
 import { GroupBox, DefLabel, FlexSpaceBetween } from "../../../CommonStyles";
-import { useSimpleLocationList } from "../../../swr";
 
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 import { FieldArray } from "formik";
 import { Dropdown } from "primereact/dropdown";
+import { useLocationList } from "../../Ordering/Data/locationData";
 
 const BPB = new CustomInputs();
 
@@ -71,21 +71,23 @@ const handleDeleteCustLoc = (values, arrayHelpers, index) => {
 };
 
 function CustomerDescription(props) {
-  const { simpleLocationList } = useSimpleLocationList();
+  const { data:locationList, errors:locationListErrors } = useLocationList(true)
+  
   const [chosenLoc, setChosenLoc] = useState();
 
   const isCreate = useSettingsStore((state) => state.isCreate);
   const op = useRef(null);
 
   const handleLocChoice = (e, arrayHelpers) => {
+    
     op.current.toggle(e);
     console.log("e",e)
-    let ind = simpleLocationList.data.findIndex(
-      (simp) => simp.value === e.value
+    let ind = locationList.findIndex(
+      (simp) => simp.locNick === e.value
     );
     console.log('ind', ind)
-    let name = simpleLocationList.data[ind].label;
-    console.log('simpleLocationList.data[ind]', simpleLocationList.data[ind])
+    let name = locationList[ind].locName;
+    console.log('locationList[ind]', locationList[ind])
     arrayHelpers.push({ locName: name, locNick: e.value, authType: 1 });
     const newLocUser = {
       authType: 1,
@@ -101,14 +103,25 @@ function CustomerDescription(props) {
   let checkList = isCreate
     ? []
     : props.values.locations.map((sel) => sel.locNick);
-  let defaultList = isCreate
-    ? simpleLocationList.data
-    : simpleLocationList.data
-    ? simpleLocationList.data.filter((sim) => checkList.includes(sim.value))
-    : [];
+  let defaultList = locationList
+    ? isCreate ? locationList
+    : locationList.map(item => ({
+      value: item.locNick,
+      label: item.locName
+    }))
+    ? locationList.filter((sim) => checkList.includes(sim.locNick)).map(item => ({
+      value: item.locNick,
+      label: item.locName
+    }))
+    : []: [];
 
-  let leftOuttList = simpleLocationList.data
-    ? simpleLocationList.data.filter((sim) => !checkList.includes(sim.value))
+  let leftOuttList = locationList
+    ? locationList.filter((sim) => !checkList.includes(sim.locNick)).map(item => ({
+      value: item.locNick,
+      label: item.locName
+    })
+      
+    )
     : [];
   return (
     <GroupBox>
@@ -216,7 +229,10 @@ function CustomerDescription(props) {
                 type="button"
                 className="p-button-outlined p-button-primary"
                 label={"+ ADD LOCATION"}
-                onClick={(e) => op.current.toggle(e)}
+                onClick={(e) => {
+                  console.log('locationList', locationList)
+                  op.current.toggle(e)
+                }}
               />
             )}
           </div>
