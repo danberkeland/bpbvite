@@ -49,6 +49,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
       console.log("changed items:", _itemsObj)
 
       validateCart(cartData, mutateCart)
+      console.log('locationDetails', locationDetails)
     }
   }, [locationDetails, standingData, cartData, mutateCart, delivDate])
 

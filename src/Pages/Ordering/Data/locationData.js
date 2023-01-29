@@ -43,6 +43,13 @@ export const useLocationDetails = (location, shouldFetch) => {
   )
   
   const _data = getNestedObject(data, ['data', 'getLocation'])
+  console.log('_data', _data && _data.zone.zoneNick)
+  
+  
+  if (_data){
+    _data.zoneNick = _data.zone.zoneNick
+  }
+  
   const _templateProds = getNestedObject(data, ['data', 'getLocation', 'templateProd', 'items'])
   const _prodsNotAllowed = getNestedObject(data, ['data', 'getLocation', 'prodsNotAllowed', 'items'])
   const _altPrices = getNestedObject(data, ['data', 'getLocation', 'customProd', 'items'])

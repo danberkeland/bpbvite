@@ -32,7 +32,33 @@ query MyQuery(
     getLocation(locNick: $locNick) {
       locNick
       locName
-      zoneNick
+      addr1
+      addr2
+      city
+      zip
+      email
+      phone
+      firstName
+      lastName
+      toBePrinted
+      toBeEmailed
+      printDuplicate
+      terms
+      invoicing
+      latestFirstDeliv
+      latestFinalDeliv
+      webpageURL
+      picURL
+      gMap
+      specialInstructions
+      delivOrder
+      qbID
+      currentBalance
+      isActive
+      zone {
+        zoneNick
+        zoneName
+      }
       customProd {
         items {
           prodNick
