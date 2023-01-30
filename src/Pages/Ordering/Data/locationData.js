@@ -15,7 +15,7 @@ const usualOptions = {
 
 
 export const useLocationList = (shouldFetch) => {
-  const { data, error } = useSWR(
+  const { data, errors } = useSWR(
     shouldFetch ? [listLocationNames, {limit: 1000}] : null, 
     gqlFetcher, 
     usualOptions
@@ -26,7 +26,7 @@ export const useLocationList = (shouldFetch) => {
 
   return({
     data: _data,
-    error: error
+    errors: errors
   })
 
 }
