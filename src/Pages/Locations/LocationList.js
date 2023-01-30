@@ -6,9 +6,10 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
 import LocationDetails from "./LocationDetails";
-import { useLocationList } from "../../swr";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { withFadeIn } from "../../hoc/withFadeIn";
+import { useLocationDetailedList } from "../Ordering/Data/locationData";
+import { useEffect } from "react";
 
 const initialState = {
   Type: "Location",
@@ -48,8 +49,12 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
     locName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
 
-  const { locationList } = useLocationList();
-  console.log('locationList', locationList)
+  const locationList = useLocationDetailedList(true)
+  
+  useEffect(() => {
+    console.log('Check One')
+    locationList && console.log('locationList', locationList)
+  },[locationList])
 
   const handleClick = () => {
     setIsCreate(!isCreate);

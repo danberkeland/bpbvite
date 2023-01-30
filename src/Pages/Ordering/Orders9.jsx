@@ -33,6 +33,8 @@ import { TabMenu } from "primereact/tabmenu"
 
 import { StandingDisplay } from "./Components/StandingDisplay"
 import { AdminControls } from "./Components/AdminControls"
+import { useLocationDetailedList, useLocationList } from "./Data/locationData"
+import { useEffect } from "react"
 
 const Orders9 = () => {
   const globalState = useSettingsStore()

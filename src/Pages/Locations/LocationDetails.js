@@ -58,7 +58,7 @@ function LocationDetails({ initialState }) {
           </h2>
           <BPB.CustomDropdownInput
             label="Zone"
-            name="zoneNick"
+            name="zone.zoneNick"
             options={zones}
             converter={props}
           />

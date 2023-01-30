@@ -25,6 +25,40 @@ export const listLocationNames = /* GraphQL */ `
   }
 `;
 
+export const listLocationDetails = /* GraphQL */ `
+  query ListLocations(
+    $locNick: String
+    $filter: ModelLocationFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listLocations(
+      locNick: $locNick
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        locNick
+        locName
+        zone {
+          zoneNick
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        firstName
+        lastName
+      }
+    }
+  }
+`;
+
 export const getLocationDetails = /* GraphQL */ `
 query MyQuery(
     $locNick: String!, 
