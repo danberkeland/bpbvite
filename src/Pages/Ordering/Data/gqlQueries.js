@@ -43,9 +43,7 @@ export const listLocationDetails = /* GraphQL */ `
       items {
         locNick
         locName
-        zone {
-          zoneNick
-        }
+        zoneNick
         addr1
         addr2
         city
@@ -54,6 +52,22 @@ export const listLocationDetails = /* GraphQL */ `
         phone
         firstName
         lastName
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        isActive
+
       }
     }
   }
