@@ -3,12 +3,16 @@ import React, { useState } from "react";
 import LocationList from "./LocationList";
 import LocationDetails from "./LocationDetails";
 import { withFadeIn } from "../../hoc/withFadeIn";
+import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
 function Locations() {
   const [selectedLocation, setSelectedLocation] = useState("");
+  const setIsEdit = useSettingsStore((state) => state.setIsEdit);
 
   const handleLocClick = () => {
     setSelectedLocation("");
+    setIsEdit(false);
+    
   };
 
   const FadeLocationList = withFadeIn(() => {

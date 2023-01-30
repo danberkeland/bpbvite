@@ -9,7 +9,6 @@ import LocationDetails from "./LocationDetails";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { withFadeIn } from "../../hoc/withFadeIn";
 import { useLocationDetailedList } from "../Ordering/Data/locationData";
-import { useEffect } from "react";
 
 const initialState = {
   Type: "Location",
@@ -49,12 +48,7 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
     locName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
 
-  const locationList = useLocationDetailedList(true)
-  
-  useEffect(() => {
-    console.log('Check One')
-    locationList && console.log('locationList', locationList)
-  },[locationList])
+  const locationList = useLocationDetailedList(true);
 
   const handleClick = () => {
     setIsCreate(!isCreate);

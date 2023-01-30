@@ -73,7 +73,7 @@ export const withBPBForm = (Component) => (props) => {
 
   return (
     <div>
-      <ConfirmDialog />
+      {/*<ConfirmDialog />*/}
       <Formik
         initialValues={props.initialState}
         validationSchema={props.validationSchema(sourceVar)}
