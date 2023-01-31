@@ -104,16 +104,10 @@ function CustomerDescription(props) {
     ? []
     : props.values.locations.map((sel) => sel.locNick);
   let defaultList = locationList
-    ? isCreate ? locationList
-    : locationList.map(item => ({
+    ? locationList.map(item => ({
       value: item.locNick,
       label: item.locName
-    }))
-    ? locationList.filter((sim) => checkList.includes(sim.locNick)).map(item => ({
-      value: item.locNick,
-      label: item.locName
-    }))
-    : []: [];
+    })) : []
 
   let leftOuttList = locationList
     ? locationList.filter((sim) => !checkList.includes(sim.locNick)).map(item => ({

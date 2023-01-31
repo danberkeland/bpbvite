@@ -11,7 +11,23 @@ const itemsAuth2 = [
     command: () => {
       window.location = "/Ordering";
     },
-  }
+    
+  },
+  {
+    label: "Products",
+    icon: "pi pi-fw pi-tags",
+    
+  },
+  {
+    label: "Billing",
+    icon: "pi pi-fw pi-dollar",
+    
+  },
+  {
+    label: "Settings",
+    icon: "pi pi-fw pi-cog",
+   
+  },
 ];
 
 const itemsAuth1 = itemsAuth2.concat([

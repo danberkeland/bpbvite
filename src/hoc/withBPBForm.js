@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 import { Button } from "primereact/button";
-import { ConfirmDialog } from "primereact/confirmdialog";
+
 import { Formik, Form } from "formik";
 import { useSettingsStore } from "../Contexts/SettingsZustand";
 import { FlexSpaceBetween } from "../CommonStyles";
@@ -64,16 +64,16 @@ export const withBPBForm = (Component) => (props) => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  });
+  },[]);
 
-  const handleEdit = (e, props) => {
+  const handleEdit = () => {
     window.scrollTo(0, 0);
     setIsEdit(true);
   };
 
   return (
     <div>
-      {/*<ConfirmDialog />*/}
+      
       <Formik
         initialValues={props.initialState}
         validationSchema={props.validationSchema(sourceVar)}
