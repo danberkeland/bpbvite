@@ -1,68 +1,107 @@
-import React, { useState } from "react"
-import { Button } from "primereact/button"
+import React, { useState } from "react";
+import { Button } from "primereact/button";
 
-import { OptionsCard } from "./OrderDisplayComponents/OptionsCard"
-import { ItemsCard } from "./OrderDisplayComponents/ItemsCard"
-import { AddItemSidebar } from "./AddItemSidebar"
-import { useEffect } from "react"
-import { makeOrderHeader, makeOrderItems, validateCart } from "../Data/dataTransformations"
-import { useLocationDetails } from "../Data/locationData"
-import { dateToYyyymmdd, getOrderSubmitDate, getTtl, getWorkingDate } from "../Functions/dateAndTime"
+import { OptionsCard } from "./OrderDisplayComponents/OptionsCard";
+import { ItemsCard } from "./OrderDisplayComponents/ItemsCard";
+import { AddItemSidebar } from "./AddItemSidebar";
+import { useEffect } from "react";
+import {
+  makeOrderHeader,
+  makeOrderItems,
+  validateCart,
+} from "../Data/dataTransformations";
+import { useLocationDetails } from "../Data/locationData";
+import {
+  dateToYyyymmdd,
+  getOrderSubmitDate,
+  getTtl,
+  getWorkingDate,
+} from "../Functions/dateAndTime";
 
-import { useOrdersByLocationByDate, useStandingByLocation } from "../Data/orderData"
+import {
+  useOrdersByLocationByDate,
+  useStandingByLocation,
+} from "../Data/orderData";
 
-import { gqlFetcher } from "../Data/fetchers"
-import { createOrder, updateOrder } from "../Data/gqlQueries"
+import { gqlFetcher } from "../Data/fetchers";
+import { createOrder, updateOrder } from "../Data/gqlQueries";
 
 export const OrderDisplay = ({ location, delivDate, userName }) => {
-  const [showAddItem, setShowAddItem] = useState(false)
-  const sidebarProps = {showAddItem, setShowAddItem}
+  const [showAddItem, setShowAddItem] = useState(false);
+  const sidebarProps = { showAddItem, setShowAddItem };
 
-  const [orderHeader, setOrderHeader] = useState()
-  const [orderHeaderChanges, setOrderHeaderChanges] = useState()
+  const [orderHeader, setOrderHeader] = useState();
+  const [orderHeaderChanges, setOrderHeaderChanges] = useState();
 
-  const [orderItems, setOrderItems] = useState()
-  const [orderItemChanges, setOrderItemChanges] = useState()
+  const [orderItems, setOrderItems] = useState();
+  const [orderItemChanges, setOrderItemChanges] = useState();
 
-  const [revalidating, setRevalidating] = useState(false)
+  const [revalidating, setRevalidating] = useState(false);
 
-  const orderHeaderState = { orderHeader, orderHeaderChanges, setOrderHeaderChanges }
-  const orderItemsState = { orderItems, orderItemChanges, setOrderItemChanges }
+  const orderHeaderState = {
+    orderHeader,
+    orderHeaderChanges,
+    setOrderHeaderChanges,
+  };
+  const orderItemsState = { orderItems, orderItemChanges, setOrderItemChanges };
 
   // const { locationDetails, standingData, cartData } = useOrderData
-  const { data:locationDetails } = useLocationDetails(location, !!location)
-  const { data:standingData } = useStandingByLocation(location, (!!location && !!delivDate))
-  const { data:cartData, mutate:mutateCart } = useOrdersByLocationByDate(location, delivDate, (!!location && !!delivDate))
+  const { data: locationDetails } = useLocationDetails(location, !!location);
+  const { data: standingData } = useStandingByLocation(
+    location,
+    !!location && !!delivDate
+  );
+  const { data: cartData, mutate: mutateCart } = useOrdersByLocationByDate(
+    location,
+    delivDate,
+    !!location && !!delivDate
+  );
 
   //const OrderItemList = makeOrderObject(locationDetails, cartData, standingData, delivDate)
 
   useEffect(() => {
-    console.log("(L,S,C):", locationDetails?1:0, standingData?1:0, cartData?1:0)
+    console.log(
+      "(L,S,C):",
+      locationDetails ? 1 : 0,
+      standingData ? 1 : 0,
+      cartData ? 1 : 0
+    );
     if (!!locationDetails && !!standingData && !!cartData) {
-      const _header = makeOrderHeader(locationDetails, cartData, standingData, delivDate)
-      const _items = makeOrderItems(locationDetails, cartData, standingData, delivDate)
-      const _itemsObj = Object.fromEntries(_items.map(item => [item.prodNick, item]))
-      setOrderHeader(_header)
-      setOrderItems(_itemsObj) // keyed on prodNick for easy reference
-      setOrderHeaderChanges(_header)
-      setOrderItemChanges(_items)
-      console.log("changed items:", _itemsObj)
+      const _header = makeOrderHeader(
+        locationDetails,
+        cartData,
+        standingData,
+        delivDate
+      );
+      const _items = makeOrderItems(
+        locationDetails,
+        cartData,
+        standingData,
+        delivDate
+      );
+      const _itemsObj = Object.fromEntries(
+        _items.map((item) => [item.prodNick, item])
+      );
+      setOrderHeader(_header);
+      setOrderItems(_itemsObj); // keyed on prodNick for easy reference
+      setOrderHeaderChanges(_header);
+      setOrderItemChanges(_items);
+      console.log("changed items:", _itemsObj);
 
-      validateCart(cartData, mutateCart)
-      
+      validateCart(cartData, mutateCart);
     }
-  }, [locationDetails, standingData, cartData, mutateCart, delivDate])
+  }, [locationDetails, standingData, cartData, mutateCart, delivDate]);
 
   const handleSubmit = async () => {
     // combine header data with items
-    // combination & submission logic will be designed 
+    // combination & submission logic will be designed
     // to focus on one item at a time.
-    
+
     // We build the submission item, then decide what, if anything,
     // to do with it.
     // For now we will build uniform submission items without
     // worrying about submitting non-changes over the wire.
-    console.log("Submitting...")
+    console.log("Submitting...");
     for (let ordItm of orderItemChanges) {
       // build submit item
       let subItem = {
@@ -76,58 +115,60 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
         rate: ordItm.rate,
         isLate: 0,
         updatedBy: userName,
-        ttl: getTtl(delivDate)
-      }
+        ttl: getTtl(delivDate),
+      };
       // can conditionally add other attributes in the future
-      if (!!ordItm.id && ordItm.type === "C") subItem.id = ordItm.id
+      if (!!ordItm.id && ordItm.type === "C") subItem.id = ordItm.id;
 
       // Decide Action
-      let action = "NONE"
+      let action = "NONE";
       if (subItem.hasOwnProperty("id")) {
         // check changes for route, ItemNote, qty, rate
-        if (ordItm.qty !== orderItems[ordItm.prodNick]?.qty) action = "UPDATE"
-        if (ordItm.rate !== orderItems[ordItm.prodNick]?.rate) action = "UPDATE"
-        if (orderHeader.route !== orderHeaderChanges.route) action = "UPDATE"
-        if (orderHeader.ItemNote !== orderHeaderChanges.ItemNote) action = "UPDATE"
+        if (ordItm.qty !== orderItems[ordItm.prodNick]?.qty) action = "UPDATE";
+        if (ordItm.rate !== orderItems[ordItm.prodNick]?.rate)
+          action = "UPDATE";
+        if (orderHeader.route !== orderHeaderChanges.route) action = "UPDATE";
+        if (orderHeader.ItemNote !== orderHeaderChanges.ItemNote)
+          action = "UPDATE";
       } else {
-        if (ordItm.qty > 0) action = "CREATE"
-        if (orderHeader.route !== orderHeaderChanges.route) action = "CREATE" // convert all items to cart when header values change
-        if (orderHeader.ItemNote !== orderHeaderChanges.ItemNote) action = "CREATE" // ditto here
+        if (ordItm.qty > 0) action = "CREATE";
+        if (orderHeader.route !== orderHeaderChanges.route) action = "CREATE"; // convert all items to cart when header values change
+        if (orderHeader.ItemNote !== orderHeaderChanges.ItemNote)
+          action = "CREATE"; // ditto here
       }
 
       if (action === "CREATE") {
-        subItem.sameDayMaxQty = ordItm.qty
-        subItem.qtyUpdatedOn = new Date().toISOString()
+        subItem.sameDayMaxQty = ordItm.qty;
+        subItem.qtyUpdatedOn = new Date().toISOString();
       }
 
       if (action === "UPDATE") {
-        if (getWorkingDate('NOW') !== getWorkingDate(ordItm.updatedOn)) {
-          subItem.sameDayMaxQty = orderItems[ordItm.prodNick].qty
+        if (getWorkingDate("NOW") !== getWorkingDate(ordItm.updatedOn)) {
+          subItem.sameDayMaxQty = orderItems[ordItm.prodNick].qty;
         }
-        if (ordItm.qty !== orderItems[ordItm.prodNick].qty) subItem.qtyUpdatedOn = new Date().toISOString()
+        if (ordItm.qty !== orderItems[ordItm.prodNick].qty)
+          subItem.qtyUpdatedOn = new Date().toISOString();
       }
 
       // make API calls and revalidate cartData cache after.
       // less dynamic/efficient, but simple.  Can be enhanced later.
       // because of the final revalidation, response items serve no function.
-      console.log(action+": ", JSON.stringify(subItem, null, 2))
+      console.log(action + ": ", JSON.stringify(subItem, null, 2));
 
-      let response
+      let response;
       if (action === "CREATE") {
-        response = await gqlFetcher(createOrder, {input: subItem})
-        response = response.data.createOrder
-        console.log(response)
-
+        response = await gqlFetcher(createOrder, { input: subItem });
+        response = response.data.createOrder;
+        console.log(response);
       }
       if (action === "UPDATE") {
-        response = await gqlFetcher(updateOrder, {input: subItem})
-        response = response.data.updateOrder
-        console.log(response)
-
+        response = await gqlFetcher(updateOrder, { input: subItem });
+        response = response.data.updateOrder;
+        console.log(response);
       }
 
-      mutateCart()
-      
+      mutateCart();
+
       // Testing mutate with generic SWR mutate below
 
       // let variables = {
@@ -137,9 +178,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
       // let key = [listOrdersByLocationByDate, variables]
       // mutate(key)
     }
-
-  }
-
+  };
 
   return (
     <div>
@@ -150,46 +189,44 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
       {/* <pre>{"Current working day: " + JSON.stringify(getWorkingDate('NOW'), null, 2)}</pre> */}
       {/* <pre>{"Item updatedOn dates: " + JSON.stringify(getOrderSubmitDate(), null, 2)}</pre>    */}
 
+      {orderItems && (
+        <ItemsCard
+          orderItemsState={orderItemsState}
+          setShowAddItem={setShowAddItem}
+          location={location}
+          delivDate={delivDate}
+          readOnly={getOrderSubmitDate() >= delivDate}
+        />
+      )}
+
       <OptionsCard
         orderHeaderState={orderHeaderState}
         readOnly={getOrderSubmitDate() >= delivDate}
       />
 
-      {orderItems &&
-      <ItemsCard
-        orderItemsState={orderItemsState}
-        setShowAddItem={setShowAddItem}
-        location={location}
-        delivDate={delivDate}
-        readOnly={getOrderSubmitDate() >= delivDate}
-      />
-      }
+      {getOrderSubmitDate() < delivDate && (
+        <Button
+          label="Submit"
+          onClick={() => {
+            setRevalidating(true);
+            handleSubmit();
+            setRevalidating(false);
+          }}
+          disabled={
+            !orderItemChanges || orderItemChanges?.length === 0 || revalidating
+          } // disable when no changes detected
+        />
+      )}
 
-      {(getOrderSubmitDate() < delivDate) &&
-      <Button label="Submit" 
-        onClick={() => {
-          setRevalidating(true)
-          handleSubmit()
-          setRevalidating(false)
-        }}
-        disabled={!orderItemChanges || orderItemChanges?.length === 0 || revalidating} // disable when no changes detected
-      />
-      }
-
-      <AddItemSidebar 
+      <AddItemSidebar
         orderItemsState={orderItemsState}
         location={location}
         delivDate={delivDate}
         sidebarProps={sidebarProps}
       />
-
     </div>
-  )
-
-}
-
-
-
+  );
+};
 
 // DEPRECIATED: for temporary reference only. to be deleted after rewrite
 
@@ -210,21 +247,21 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 
 //   return (
 //     <div>
-//       <Card 
+//       <Card
 //         style={{marginTop: "10px"}}
 //         title="Options"
 //       >
 //         <div style={{marginBottom: "30px"}}>
 //           {orderHeader.defaultRoute !== 'slopick' && orderHeader.defaultRoute !== 'atownpick' &&
 //           <div style={{margin: "5px"}}>
-//             <RadioButton inputId="deliv" value="deliv" 
+//             <RadioButton inputId="deliv" value="deliv"
 //               checked={orderHeader.newRoute === 'deliv'}
 //               onChange={e => setOrderDisplayData({
 //                 header: {...orderHeader, _route: e.value},
 //                 items: [...orderData]
 //               })}
 //             />
-//             <label 
+//             <label
 //               htmlFor="deliv"
 //               style={{fontWeight: orderHeader.newRoute === orderHeader.route ? "normal" : (orderHeader.newRoute === 'deliv' ? "bold" : "normal")}}
 //             >
@@ -233,14 +270,14 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 //           </div>
 //           }
 //           <div style={{margin: "5px"}}>
-//             <RadioButton inputId="slopick" value="slopick" 
+//             <RadioButton inputId="slopick" value="slopick"
 //               onChange={e => setOrderDisplayData({
 //                 header: {...orderHeader, _route: e.value},
 //                 items: [...orderData]
 //               })}
 //               checked={orderHeader._route === 'slopick'}
 //             />
-//             <label 
+//             <label
 //               htmlFor="slopick"
 //               style={{fontWeight: orderHeader._route === orderHeader.route ? "normal" : (orderHeader.newRoute === 'slopick' ? "bold" : "normal")}}
 //             >
@@ -248,14 +285,14 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 //             </label>
 //           </div>
 //           <div style={{margin: "5px"}}>
-//             <RadioButton inputId="atownpick" value="atownpick" 
+//             <RadioButton inputId="atownpick" value="atownpick"
 //               onChange={e => setOrderDisplayData({
 //                 header: {...orderHeader, _route: e.value},
 //                 items: [...orderData]
 //               })}
 //               checked={orderHeader._route === 'atownpick'}
 //             />
-//             <label 
+//             <label
 //               htmlFor="atownpick"
 //               style={{fontWeight: orderHeader.newRoute === orderHeader.route ? "normal" : (orderHeader.newRoute === 'atownpick' ? "bold" : "normal")}}
 //             >
@@ -282,7 +319,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 //         {/* <pre>{JSON.stringify(orderHeader, null, 2)}</pre> */}
 //       </Card>
 
-//       <Card 
+//       <Card
 //         style={{marginTop: "10px"}}
 //         title={() => {
 //           return (
@@ -291,7 +328,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 //                 Items
 //               </div>
 //               <div style={{flex: "35%"}}>
-//                 <Button label="+ Add Item" 
+//                 <Button label="+ Add Item"
 //                   disabled={disableAddItem}
 //                   onClick={() => setShowAddItem(true)}
 //                 />
@@ -305,15 +342,15 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 //           style={{width: "100%"}}
 //           responsiveLayout="scroll"
 //           rowExpansionTemplate={rowExpansionTemplate}
-//           expandedRows={expandedRows} 
+//           expandedRows={expandedRows}
 //           onRowExpand={e => console.log("Data for " + e.data.prodNick, JSON.stringify(e.data, null, 2))}
 //           onRowToggle={(e) => setExpandedRows(e.data)}
 //           dataKey="prodNick"
 //           footer={() => {return(<div>{"Total: " + orderData.reduce( (acc, item) => { return (acc + (item.rate * item.newQty)) }, 0).toFixed(2)}</div>)}}
 //         >
 //           <Column expander={true} style={{ width: '3em' }} />
-//           <Column header="Product" 
-//             field="prodName" 
+//           <Column header="Product"
+//             field="prodName"
 //             body={rowData => {
 //               const changeDetected = rowData.newQty !== rowData.originalQty
 //               if (rowData.newQty === 0) return (
@@ -329,20 +366,20 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 //               return rowData.prodName
 //             }}
 //           />
-//           <Column header="Quantity" 
-//             field="newQty" 
+//           <Column header="Quantity"
+//             field="newQty"
 //             style={{width: "75px"}}
 //             body={rowData => {
 //               return(
 //                 <div className="p-fluid">
-//                   <InputNumber 
+//                   <InputNumber
 //                     disabled={disableAddItem} // means ordering date >= deliv date; order list should be read-only
 //                     value={rowData.newQty}
 //                     min={0}
 //                     onChange={e => {
-//                       const _orderData = orderData.map(item => 
-//                         item.prodNick === rowData.prodNick ? 
-//                           {...item, newQty: e.value} : 
+//                       const _orderData = orderData.map(item =>
+//                         item.prodNick === rowData.prodNick ?
+//                           {...item, newQty: e.value} :
 //                           item
 //                       )
 //                       //setOrderData(_orderData)
@@ -356,7 +393,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 //                         const _orderData = orderData.map(item =>
 //                           item.prodNick === rowData.prodNick ?
 //                             {...item, newQty: rollbackQty} :
-//                             item  
+//                             item
 //                         )
 //                         //setOrderData(_orderData)
 //                         e.target.blur()
@@ -371,7 +408,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 //                         const _orderData = orderData.map(item =>
 //                           item.prodNick === rowData.prodNick ?
 //                             {...item, newQty: item.originalQty} :
-//                             item  
+//                             item
 //                         )
 //                         //setOrderData(_orderData)
 //                       }
@@ -419,15 +456,13 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 // //         debug={debug}
 // //       />
 // //       <OrderOptions optionsState={optionsState} debug={debug} />
-// //       <Button 
-// //         style={{width: "90%", margin: "10px"}} 
+// //       <Button
+// //         style={{width: "90%", margin: "10px"}}
 // //         label="Submit"
 // //         onClick={() => {
-// //           // 
+// //           //
 // //         }}
 // //       />
-
-
 
 // //     </div>
 // //   )
@@ -445,7 +480,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 // //       title="Options"
 // //       style={{margin: "10px"}}
 // //     >
-      
+
 // //       <div style={{display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gridTemplateRows:"1fr 2fr"}}>
 // //         <div className="field-radiobutton" style={{gridArea:"1 / 1 / 2 / 2"}}>
 // //           <RadioButton style={{float: "left"}} inputId="delivery" name="route" value="deliv" onChange={(e) => setRoute(e.value)} checked={route === 'deliv'} />
@@ -463,12 +498,12 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 // //         </div>
 
 // //         <div style={{margin:"2px", gridArea: "2 / 1 / 3 / 4"}}>
-// //           <InputTextarea 
-// //             style={{width: "100%", marginTop: "5px"}} 
-// //             rows={3} 
-// //             inputid="note" 
-// //             placeholder="Delivery Note (max 120 characters)" 
-// //             onChange={e => setNote(e.target.value)} 
+// //           <InputTextarea
+// //             style={{width: "100%", marginTop: "5px"}}
+// //             rows={3}
+// //             inputid="note"
+// //             placeholder="Delivery Note (max 120 characters)"
+// //             onChange={e => setNote(e.target.value)}
 // //             maxLength={120}
 // //           />
 // //         </div>
@@ -487,7 +522,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 // //         <div style={{display: "flex", margin:"10px"}}>
 // //           <div style={{flex: "35%"}}>
 // //             <Button label="+ Add Item" />
-// //           </div> 
+// //           </div>
 // //           <div style={{flex: "65%", alignSelf: "center", textAlign: "right"}}>
 // //             {"Grand Total: " + orderDisplayData.reduce( (acc, curr) => acc + curr.newQty * curr.rate, 0).toLocaleString('en-US', {style: 'currency', currency: 'USD'})}
 // //           </div>
@@ -496,18 +531,18 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 // //         <Accordion>
 // //         {orderDisplayData.map (item => {
 // //           return (
-// //             <AccordionTab key={item.orderID} 
-// //               toggleable icons={<i icons="pi pi-trash" />} 
-// //               collapsed={true} 
+// //             <AccordionTab key={item.orderID}
+// //               toggleable icons={<i icons="pi pi-trash" />}
+// //               collapsed={true}
 // //               header={
 // //                   <div className="p-fluid" style={{width: "100%", display: "grid", gridTemplateColumns: "200px 50px", columnGap: "20px"}}>
 // //                     <div style={{alignSelf: "center"}}>{item.prodName}</div>
-                    
+
 // //                     <InputNumber value={item.newQty} />
-                    
-// //                   </div> 
+
+// //                   </div>
 // //               }
-// //               style={{marginRight:"10px"}}  
+// //               style={{marginRight:"10px"}}
 // //             >
 // //               <div className="orderCard-body p-fluid"
 // //                 style={{
@@ -548,7 +583,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 // // function OrderDisplayTableFC({ orderDisplayData, debug }) {
 
 // //   return (
-// //     <Card 
+// //     <Card
 // //       title="Order Display"
 // //       style={{margin: "10px"}}
 // //     >
@@ -560,8 +595,8 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 // //         editMode="cell"
 // //       >
 // //             <Column field="prodName" header="Product" />
-// //             <Column header="Quantity" 
-// //               field="newQty" 
+// //             <Column header="Quantity"
+// //               field="newQty"
 // //               style={{width: "75px"}}
 // //               body={rowData => {
 // //                 return(
@@ -573,7 +608,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 // //             />
 // //       </DataTable>
 
-// //       {debug && 
+// //       {debug &&
 // //         <Panel header="OrderDisplay Variables" toggleable collapsed={true} style={{margin: "10px"}}>
 // //           <pre>{"data: " + JSON.stringify(orderDisplayData, null, 2)}</pre>
 // //         </Panel>
@@ -582,16 +617,13 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 // //   )
 // // }
 
-
-
-
 // // export const OrderDisplay2 = ({data, user, selection}) => {
 // //   const [showSidebar, setShowSidebar] = useState(false)
-  
+
 // //   if (!data) return <pre>Loading...</pre>
 // //   return (
 // //     <>
-// //       <Card 
+// //       <Card
 // //         title={() => {
 // //           return (
 // //             <div style={{display: "flex", }}>
@@ -599,7 +631,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 // //                 Items
 // //               </div>
 // //               <div style={{flex: "35%"}}>
-// //                 <Button label="+ Add Item" 
+// //                 <Button label="+ Add Item"
 // //                   onClick={() => setShowSidebar(true)}
 // //                   disabled={!selection.date || !selection.location}
 // //                 />
@@ -609,7 +641,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 // //         }}
 // //         style={{margin: "10px"}}
 // //       >
-        
+
 // //         <DataTable
 // //           value={data}
 // //           style={{width: "100%"}}
@@ -618,8 +650,8 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 // //           editMode="cell"
 // //         >
 // //               <Column field="prodName" header="Product" />
-// //               <Column header="Quantity" 
-// //                 field="newQty" 
+// //               <Column header="Quantity"
+// //                 field="newQty"
 // //                 style={{width: "75px"}}
 // //                 body={rowData => {
 // //                   return(
@@ -632,10 +664,10 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 // //         </DataTable>
 // //       </Card>
 
-// //       <AddItemSidebar 
-// //         showSidebar={showSidebar} 
-// //         setShowSidebar={setShowSidebar} 
-// //         location={selection.location} 
+// //       <AddItemSidebar
+// //         showSidebar={showSidebar}
+// //         setShowSidebar={setShowSidebar}
+// //         location={selection.location}
 // //         date={selection.date}
 // //       />
 // //     </>
@@ -647,7 +679,6 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 // //   // fetch product data
 // //   // maybe give hook location data about user pricing
 
-
 // //   const { productData, productDataErrors } = useProductData(location, date)
 
 // //   const [selection, setSelection] = useState({
@@ -656,7 +687,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 // //   })
 // //   if (!productData) return <pre>Loading...</pre>
 // //   return(
-// //     <Sidebar 
+// //     <Sidebar
 // //       className="p-sidebar-lg"
 // //       visible={showSidebar}
 // //       position="bottom"
@@ -664,7 +695,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 // //       onHide={() => setShowSidebar(false)}
 // //     >
 // //       <span className="p-float-label p-fluid" style={{marginTop: "25px"}}>
-// //         <Dropdown 
+// //         <Dropdown
 // //           id="productDropdown"
 // //           options={productData ? productData : []}
 // //           optionLabel="prodName"
@@ -685,7 +716,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
 // //         />
 // //         <label htmlFor="productDropdown">{productData ? "Select Product" : "Loading..."}</label>
 // //       </span>
-      
+
 // //       <span className="p-float-label p-fluid" style={{marginTop: "25px"}}>
 // //         <InputNumber />
 // //         <label htmlFor="productDropdown">

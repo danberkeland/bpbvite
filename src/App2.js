@@ -96,14 +96,14 @@ export function App() {
       {isLoading && <Loader />}
 
       <h1>Back Porch Bakery</h1>
-      {user && (
+      {/*{user && (
         <React.Fragment>
           <h4>
             Welcome {user}. Auth Class: {authClass}{" "}
           </h4>
           <h4>Current Location: {currentLoc}</h4>
         </React.Fragment>
-      )}
+      )}*/}
       <Router>
         {formType === "signedIn" && (
           <React.Fragment>
