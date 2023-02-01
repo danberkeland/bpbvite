@@ -77,7 +77,7 @@ export function App() {
         break;
     }
   });
-
+  /*
   useEffect(() => {
     setIsLoading(true);
     checkUser().then((use) => {
@@ -90,6 +90,13 @@ export function App() {
       setIsLoading(false);
     });
   }, []);
+*/
+  // Delete this useEffect once auth is back
+
+  useEffect(() => {
+    setFormType("signedIn")
+  },[])
+
 
   return (
     <React.Fragment>

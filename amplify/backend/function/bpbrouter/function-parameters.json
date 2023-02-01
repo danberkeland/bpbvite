@@ -22,7 +22,7 @@
       "resourceName": "bpbadmin2testFetchLayer",
       "version": "Always choose latest version",
       "isLatestVersionSelected": true,
-      "env": "auththree"
+      "env": "devtwo"
     }
   ]
 }

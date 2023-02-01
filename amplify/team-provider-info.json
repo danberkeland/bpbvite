@@ -18,22 +18,91 @@
       "function": {
         "testingGrQL": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
-          "s3Key": "amplify-builds/testingGrQL-3643594c633169376d31-build.zip"
+          "s3Key": "amplify-builds/testingGrQL-784b53312b716d686967-build.zip"
         },
         "grabLocList": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
-          "s3Key": "amplify-builds/grabLocList-35687837793763375567-build.zip"
+          "s3Key": "amplify-builds/grabLocList-4d596b7745687864614d-build.zip"
         },
-        "grabStandOrder": {},
-        "grabOrder": {},
-        "grabDetailedProductList": {},
-        "grabSimpleProductList": {},
-        "grabProductById": {},
-        "createProduct": {},
-        "deleteProduct": {},
-        "updateProduct": {},
-        "grabDetailedLocationList": {},
-        "grabSimpleLocationList": {}
+        "grabStandOrder": {
+          "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+          "s3Key": "amplify-builds/grabStandOrder-6e35664533794676546b-build.zip"
+        },
+        "grabOrder": {
+          "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+          "s3Key": "amplify-builds/grabOrder-67346e743968495a756a-build.zip"
+        },
+        "grabDetailedProductList": {
+          "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+          "s3Key": "amplify-builds/grabDetailedProductList-2f6461525a336a4b5952-build.zip"
+        },
+        "grabSimpleProductList": {
+          "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+          "s3Key": "amplify-builds/grabSimpleProductList-432b30506a6f34764941-build.zip"
+        },
+        "grabProductById": {
+          "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+          "s3Key": "amplify-builds/grabProductById-78394d36503334345a46-build.zip"
+        },
+        "createProduct": {
+          "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+          "s3Key": "amplify-builds/createProduct-6b68434f79676d363072-build.zip"
+        },
+        "deleteProduct": {
+          "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+          "s3Key": "amplify-builds/deleteProduct-70386f69304f49685831-build.zip"
+        },
+        "updateProduct": {
+          "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+          "s3Key": "amplify-builds/updateProduct-6162365a547545613259-build.zip"
+        },
+        "grabDetailedLocationList": {
+          "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+          "s3Key": "amplify-builds/grabDetailedLocationList-6e66663537537a496e48-build.zip"
+        },
+        "grabSimpleLocationList": {
+          "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+          "s3Key": "amplify-builds/grabSimpleLocationList-44644c48684134637745-build.zip"
+        },
+        "bpbadmin2SDKLayer": {
+          "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+          "s3Key": "amplify-builds/bpbadmin2SDKLayer-LambdaLayerVersion4faaa502-build.zip"
+        },
+        "bpbadmin2anotherTest": {
+          "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+          "s3Key": "amplify-builds/bpbadmin2anotherTest-LambdaLayerVersion1d5d1738-build.zip"
+        },
+        "bpbadmin2fetchLayer": {
+          "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+          "s3Key": "amplify-builds/bpbadmin2fetchLayer-LambdaLayerVersiond8a774d4-build.zip"
+        },
+        "bpbadmin2testFetchLayer": {
+          "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+          "s3Key": "amplify-builds/bpbadmin2testFetchLayer-LambdaLayerVersionf9bd7a95-build.zip"
+        },
+        "bpbrouter": {
+          "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+          "s3Key": "amplify-builds/bpbrouter-576641334f704e57326c-build.zip"
+        },
+        "confirmCognitoEmail": {
+          "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+          "s3Key": "amplify-builds/confirmCognitoEmail-6169594e6e3456666e6b-build.zip"
+        },
+        "createCognitoUser": {
+          "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+          "s3Key": "amplify-builds/createCognitoUser-3847337559336466536a-build.zip"
+        },
+        "deleteCognitoUser": {
+          "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+          "s3Key": "amplify-builds/deleteCognitoUser-347350674964746c6d6b-build.zip"
+        },
+        "updateCognitoUser": {
+          "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+          "s3Key": "amplify-builds/updateCognitoUser-576c33564764726b584d-build.zip"
+        }
+      },
+      "api": {
+        "bpbadmin2": {}
       }
     }
   },
@@ -117,7 +186,8 @@
     },
     "categories": {
       "auth": {
-        "bpbadmin26ba422de": {}
+        "bpbadmin26ba422de": {},
+        "bpbadmin2db0d25d4": {}
       }
     }
   },
