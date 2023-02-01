@@ -69,10 +69,10 @@ export function NavBottom() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <div className="greyBar"></div>
+      {/* <div className="greyBar"></div> */}
       <div className="tabContainer">
         <TabMenu className="tabMenu" model={itemsAuth4min} />
-        <button onClick={signOut}>Sign Out</button>
+        <button className="signOutButton" onClick={signOut}>Sign Out</button>
       </div>
     </motion.div>
   );

@@ -8,8 +8,7 @@ export const OrderSelection = ({ selection }) => {
 
   return (
     <React.Fragment>
-      <span className="p-float-label p-fluid" style={{ marginTop: "30px" }}>
-       
+      <span className="p-float-label p-fluid" style={{ marginTop: "0px" }}>
         <Calendar
           id="calendar"
           touchUI={true}
@@ -19,7 +18,7 @@ export const OrderSelection = ({ selection }) => {
             setDelivDate(e.value);
           }}
         />
-         <label htmlFor="calendar">{"Delivery Date"}</label>
+        {/* <label htmlFor="calendar">{"Delivery Date"}</label> */}
       </span>
     </React.Fragment>
   );

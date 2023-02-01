@@ -94,8 +94,15 @@ export function App() {
   return (
     <React.Fragment>
       {isLoading && <Loader />}
-
-      <h1>Back Porch Bakery</h1>
+      <div className="headerBlock">
+      </div>
+      <div className="currentCustomer">
+        <div className="cust">High St. Deli&nbsp;&nbsp;</div><i className="pi pi-angle-double-down" style={{'color': '#e1b163'}}></i>
+      </div>
+      <div className="cartStanding">
+        <div className="cartStand">Edit Standing Order</div>
+      </div>
+      
       {/*{user && (
         <React.Fragment>
           <h4>
