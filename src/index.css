@@ -80,8 +80,7 @@ button:hover {
 }
 
 
-.panelMenu .mypanel .p-menuitem-text {
-  
+.panelMenu .mypanel .p-menuitem-text { 
   color: #282a3a;
 }
 
@@ -91,9 +90,14 @@ button:hover {
 }
 
 .panelMenu .mypanel .p-panelmenu-header .p-panelmenu-header-link {
-  background-color:#eebd70;
-  margin: 8px;
-  height: 40px;
+  background-color:#f4cc8b;
+  margin: 15px;
+  height: 80px;
+}
+
+.panelMenu .mypanel .p-panelmenu-header:not(.p-highlight):not(.p-disabled) > a:hover {
+  background: #f1b451;
+  border-color: #dee2e6;
 }
 
 
