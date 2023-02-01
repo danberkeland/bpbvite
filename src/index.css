@@ -80,6 +80,22 @@ button:hover {
 }
 
 
+.panelMenu .mypanel .p-menuitem-text {
+  
+  color: #282a3a;
+}
+
+.panelMenu .mypanel .p-menuitem-icon {
+ 
+  color: #282a3a;
+}
+
+.panelMenu .mypanel .p-panelmenu-header .p-panelmenu-header-link {
+  background-color:#eebd70;
+  margin: 8px;
+  height: 40px;
+}
+
 
 .tabContainer .tabMenu .p-tabmenu-nav {
   display: flex;

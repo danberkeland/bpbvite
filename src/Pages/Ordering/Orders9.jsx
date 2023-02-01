@@ -76,7 +76,13 @@ const Orders9 = () => {
   const [orderingType, setOrderingType] = useState("cart");
 
   return (
-    <div>
+    <React.Fragment>
+      <div className="currentCustomer">
+        <div className="cust">High St. Deli&nbsp;&nbsp;</div><i className="pi pi-angle-double-down" style={{'color': '#e1b163'}}></i>
+      </div>
+      <div className="cartStanding">
+        <div className="cartStand">Edit Standing Order</div>
+      </div>
       {" "}
       {/*}
       <TabMenu 
@@ -120,7 +126,7 @@ const Orders9 = () => {
       {/* <pre>{"ORDER HEADER: " + JSON.stringify(orderHeader, null, 2)}</pre> */}
       {/* <pre>{"ORDER LIST: " + JSON.stringify(orderItems, null, 2)}</pre> */}
       <div style={{ height: "200px" }} />
-    </div>
+    </React.Fragment>
   );
 };
 

@@ -46,6 +46,12 @@ export function NavSide() {
       exit={{ opacity: 0 }}
     >
       <div className="panelMenu">
+      <div className="currentCustomer">
+        <div className="cust">Feb. 1, 2022</div>
+      </div>
+      <div className="cartStanding">
+        <div className="cartStand">Welcome, Doobie!</div>
+      </div>
         <PanelMenu
           className="mypanel"
           model={items}
@@ -72,7 +78,9 @@ export function NavBottom() {
       {/* <div className="greyBar"></div> */}
       <div className="tabContainer">
         <TabMenu className="tabMenu" model={itemsAuth4min} />
-        <button className="signOutButton" onClick={signOut}>Sign Out</button>
+        <button className="signOutButton" onClick={signOut}>
+          Sign Out
+        </button>
       </div>
     </motion.div>
   );
