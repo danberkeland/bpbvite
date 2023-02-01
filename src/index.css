@@ -81,24 +81,40 @@ button:hover {
 
 
 .panelMenu .mypanel .p-menuitem-text { 
+  font-size: 1.2em;
   color: #282a3a;
 }
 
+.panelMenu .mypanel .p-menuitem-text:hover { 
+  font-size: 1.2em;
+  color: white;
+}
+
 .panelMenu .mypanel .p-menuitem-icon {
- 
+  font-size: 1.2em;
   color: #282a3a;
 }
 
 .panelMenu .mypanel .p-panelmenu-header .p-panelmenu-header-link {
   background-color:#f4cc8b;
+  border-color: #735f32;
   margin: 15px;
   height: 80px;
 }
 
 .panelMenu .mypanel .p-panelmenu-header:not(.p-highlight):not(.p-disabled) > a:hover {
   background: #f1b451;
-  border-color: #dee2e6;
+  border-color: #735f32;
 }
+
+.panelMenu .mypanel .p-panelmenu-header .p-panelmenu-header-link:hover .p-menuitem-text {
+  color: white;
+}
+
+.panelMenu .mypanel .p-panelmenu-header .p-panelmenu-header-link:hover .p-menuitem-icon {
+  color: white;
+}
+
 
 
 .tabContainer .tabMenu .p-tabmenu-nav {
@@ -126,6 +142,7 @@ button:hover {
   bottom: 0;
 }
 
+/*
 .panelMenu .mypanel .p-panelmenu-header-link {
   border: 0;
   font-size: 1.2em;
@@ -138,7 +155,7 @@ button:hover {
 }
 
 
-/*
+
 .panelMenu .mypanel .p-menuitem-text::after {
   font-size: 1.2em;
   content: ">";
