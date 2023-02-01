@@ -30,7 +30,19 @@ const itemsAuth2 = [
   },
 ];
 
-const itemsAuth1 = itemsAuth2.concat([
+const itemsAuth2b = [
+  
+  {
+    label: "Ordering",
+    icon: "pi pi-fw pi-shopping-cart",
+    command: () => {
+      window.location = "/Ordering";
+    },
+    
+  }
+];
+
+const itemsAuth1 = itemsAuth2b.concat([
   {
     label: "Production",
     icon: "pi pi-fw pi-chart-bar",

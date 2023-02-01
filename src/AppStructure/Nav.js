@@ -2,11 +2,13 @@ import { TabMenu } from "primereact/tabmenu";
 import { PanelMenu } from "primereact/panelmenu";
 
 import React from "react";
+import { DateTime } from "luxon";
 
 import { useSettingsStore } from "../Contexts/SettingsZustand";
 
 import { authSignOut } from "./Auth/AuthHelpers";
 import { motion } from "framer-motion";
+import { dateToMmddyyyy, getBpbTime, getWorkingDateTime } from "../Pages/Ordering/Functions/dateAndTime";
 
 const itemsAuth4min = [
   {
@@ -38,6 +40,7 @@ const itemsAuth4min = [
 
 export function NavSide() {
   const items = useSettingsStore((state) => state.items);
+  const user = useSettingsStore((state) => state.user);
 
   return (
     <motion.div
@@ -47,10 +50,10 @@ export function NavSide() {
     >
       <div className="panelMenu">
       <div className="currentCustomer">
-        <div className="cust">Feb. 1, 2022</div>
+        <div className="cust">{DateTime.now().setZone('America/Los_Angeles').toLocaleString(DateTime.DATE_MED)}</div>
       </div>
       <div className="cartStanding">
-        <div className="cartStand">Welcome, Doobie!</div>
+        <div className="cartStand">Welcome, {user}!</div>
       </div>
         <PanelMenu
           className="mypanel"
@@ -65,6 +68,7 @@ export function NavSide() {
 
 export function NavBottom() {
   const setFormType = useSettingsStore((state) => state.setFormType);
+ 
 
   const signOut = () => {
     authSignOut(setFormType);
