@@ -35,7 +35,7 @@ const remapProduct = () => {
 function EODCounts() {
   return <React.Fragment>
     <button onClick={remapProduct} >REMAP Products</button>
-    <button>REMAP Locations</button>
+    <button onClick={remapLocations}>REMAP Locations</button>
     <button>REMAP Orders</button>
     <button>REMAP Standing</button>
     <button>REMAP Routes</button>
