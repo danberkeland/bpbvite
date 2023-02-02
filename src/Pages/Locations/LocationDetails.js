@@ -3,17 +3,20 @@ import { CustomInputs } from "../../FormComponents/CustomInputs";
 
 import { validationSchema } from "./ValidationSchema";
 
-import { deleteLocation, updateLocation, createLocation } from "../../restAPIs";
+import { deleteLocation, updateLocation } from "../../restAPIs";
+import { createLocation } from "../../data/locationData";
 import { withFadeIn } from "../../hoc/withFadeIn";
 import { withBPBForm } from "../../hoc/withBPBForm";
 import { GroupBox } from "../../CommonStyles";
 import { compose } from "../../utils";
-import { useSimpleZoneList } from "../../swr";
+import { useZoneListFull } from "../../data/zoneData";
+// import { useSimpleZoneList } from "../../swr";
 
 const BPB = new CustomInputs();
 
 function LocationDetails({ initialState }) {
-  const { simpleZoneList } = useSimpleZoneList();
+  //const { simpleZoneList } = useSimpleZoneList();
+  const { data:simpleZoneList } = useZoneListFull(true)
 
   const terms = [
     { label: "0", value: "0" },
@@ -26,7 +29,7 @@ function LocationDetails({ initialState }) {
     { label: "weekly", value: "weekly" },
   ];
 
-  const zones = simpleZoneList ? simpleZoneList.data : [];
+  const zones = simpleZoneList ? simpleZoneList : [];
 
   const BPBLocationForm = compose(
     withBPBForm,
@@ -60,6 +63,8 @@ function LocationDetails({ initialState }) {
             label="Zone"
             name="zoneNick"
             options={zones}
+            optionLabel="zoneName"
+            optionValue="zoneNick"
             converter={props}
           />
           <BPB.CustomTextInput label="Address" name="addr1" converter={props} />

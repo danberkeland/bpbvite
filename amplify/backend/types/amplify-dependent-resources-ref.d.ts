@@ -1,22 +1,4 @@
 export type AmplifyDependentResourcesAttributes = {
-  "api": {
-    "bpbadmin2": {
-      "GraphQLAPIEndpointOutput": "string",
-      "GraphQLAPIIdOutput": "string",
-      "GraphQLAPIKeyOutput": "string"
-    }
-  },
-  "auth": {
-    "bpbadmin2db0d25d4": {
-      "AppClientID": "string",
-      "AppClientIDWeb": "string",
-      "IdentityPoolId": "string",
-      "IdentityPoolName": "string",
-      "UserPoolArn": "string",
-      "UserPoolId": "string",
-      "UserPoolName": "string"
-    }
-  },
   "function": {
     "bpbadmin2SDKLayer": {
       "Arn": "string"
