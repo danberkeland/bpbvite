@@ -7,8 +7,10 @@ import { Column } from "primereact/column";
 
 import ProductDetails from "./ProductDetails";
 import { useProductList } from "../../swr";
+import { useProductData } from "../Ordering/Data/productData";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { withFadeIn } from "../../hoc/withFadeIn";
+import { useEffect } from "react";
 
 const initialState = {
   Type: "Product",
@@ -54,7 +56,12 @@ function ProductList({ selectedProduct, setSelectedProduct }) {
     prodName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
 
-  const { productList } = useProductList();
+  const productList = useProductData();
+
+  useEffect(() => {
+    console.log('productList', productList)
+  },[productList])
+  
 
   const handleClick = () => {
     setIsCreate(!isCreate);
@@ -95,7 +102,7 @@ function ProductList({ selectedProduct, setSelectedProduct }) {
           <button onClick={handleClick}>+ CREATE PRODUCT</button>
           {productList.isLoading ? setIsLoading(true) : setIsLoading(false)}
 
-          {productList.isError && <div>Table Failed to load</div>}
+          {productList.errors && <div>Table Failed to load</div>}
           {productList.data && <FadeProductDataTable />}
           <div className="bottomSpace"></div>
         </React.Fragment>

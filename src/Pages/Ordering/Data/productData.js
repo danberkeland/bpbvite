@@ -8,6 +8,7 @@ import { useLocationDetails } from "./locationData"
 import { useOrdersByLocationByDate, useStandingByLocation } from "./orderData"
 import { makeOrderHeader, makeOrderItems } from "./dataTransformations"
 import { useEffect } from "react"
+import { listProducts } from "../../../graphql/queries"
 
 const usualOptions = {
   revalidateIfStale: false,
@@ -21,8 +22,7 @@ const usualOptions = {
  * Consider switching to a more lightweight query if you can get away with it.
  */
 export const useProductData = () => {
-  const { data, errors } = useSWR([queries.listProductDetails, {limit: 1000}], gqlFetcher, usualOptions)
-
+  const { data, error, isLoading } = useSWR([queries.listProductDetails, {limit: 1000}], gqlFetcher, usualOptions)
   const _data = getNestedObject(data, ['data', 'listProducts', 'items'])
   _data?.sort(dynamicSort("prodName"))
 
@@ -30,7 +30,8 @@ export const useProductData = () => {
 
   return({
     data: _data,
-    errors: errors
+    errors: error,
+    isLoading: isLoading
   })
 }
 
