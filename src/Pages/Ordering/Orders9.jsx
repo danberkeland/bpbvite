@@ -75,6 +75,10 @@ const Orders9 = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [orderingType, setOrderingType] = useState("cart");
 
+  const handleCartStand = () => {
+    setActiveIndex(Math.abs(activeIndex-1))
+  }
+
   return (
     <React.Fragment>
       
@@ -101,9 +105,9 @@ const Orders9 = () => {
         />
       )}
        <div className="cartStanding">
-        <div className="cartStand">Edit Standing Order</div>
+        <button className="cartStandButton" onClick={handleCartStand}>{activeIndex===1 ? "RETURN TO CART" : "EDIT STANDING ORDER"}</button>
       </div>
-      {orderingType === "cart" && (
+      {activeIndex===0 && (
         <>
           <OrderSelection selection={selection} />
 
@@ -114,7 +118,7 @@ const Orders9 = () => {
           />
         </>
       )}
-      {orderingType === "standing" && (
+      {activeIndex===1 && (
         <>
           <StandingDisplay standingSettings={standingSettings} user={user} />
         </>
