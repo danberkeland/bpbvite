@@ -17,7 +17,19 @@ import {
 } from "./LocationHelpers";
 
 
-const remapProduct = () => {
+
+import {
+  grabOldOrders,
+  checkExistsNewOrder,
+  updateNewOrder,
+  createNewOrder,
+} from "./OrderHelpers";
+
+import { useProductList } from "../Ordering/Data/productData";
+import { useLocationList } from "../Ordering/Data/locationData";
+
+
+const remapProduct = (custList, prodList) => {
 
   grabOldProd()
     .then((oldProd) => {
@@ -27,9 +39,9 @@ const remapProduct = () => {
         checkExistsNewProd(old.nickName).then((exists) => {
           console.log("exists",exists)
           if (exists) {
-            updateNewProd(old);
+            updateNewProd(old, custList);
           } else {
-            createNewProd(old);
+            createNewProd(old, prodList);
           }
         });
       }
@@ -61,12 +73,47 @@ const remapLocation = () => {
     });
 };
 
+const remapOrders = (custList, prodList) => {
+ 
+  grabOldOrders()
+    .then((oldOrders) => {
+      console.log('oldOrders', oldOrders)
+      for (let old of oldOrders) {
+        checkExistsNewOrder(old.id).then((exists) => {
+          console.log("exists",exists)
+          if (exists) {
+            updateNewOrder(old, custList, prodList);
+          } else {
+            createNewOrder(old, custList, prodList);
+          }
+        });
+      }
+    })
+    .then((e) => {
+      
+      console.log("Location DB updated");
+    });
+};
+
+
+
 
 function EODCounts() {
+
+  let custList = useLocationList(true)
+  let prodList = useProductList(true)
+
+  const handleRemapOrders = () => {
+    console.log('custList', custList.data)
+    console.log('prodList', prodList.data)
+    remapOrders(custList.data, prodList.data)
+  }
+
+
   return <React.Fragment>
     <button onClick={remapProduct} >REMAP Products</button>
     <button onClick={remapLocation}>REMAP Locations</button>
-    <button>REMAP Orders</button>
+    <button onClick={handleRemapOrders}>REMAP Orders</button>
     <button>REMAP Standing</button>
     <button>REMAP Routes</button>
   </React.Fragment>;

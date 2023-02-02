@@ -296,7 +296,7 @@ div .photoBox {
 .cartStanding button {
   width: 100%;
   margin: auto;
-  padding: 5px;
+  padding: 5mitpx;
   color: #e1b163;
   background-color: #735f32;
   font-size: 1em;
