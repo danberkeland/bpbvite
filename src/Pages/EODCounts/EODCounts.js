@@ -31,6 +31,28 @@ const remapProduct = () => {
     });
 };
 
+const remapLocation = () => {
+ 
+  grabOldLoc()
+    .then((oldLoc) => {
+      console.log("oldLoc",oldLoc)
+      for (let old of oldLoc) {
+        checkExistsNewLoc(old.nickName).then((exists) => {
+          console.log("exists",exists)
+          if (exists) {
+            updateNewLoc(old);
+          } else {
+            createNewLoc(old);
+          }
+        });
+      }
+    })
+    .then((e) => {
+      
+      console.log("Location DB updated");
+    });
+};
+
 
 function EODCounts() {
   return <React.Fragment>
