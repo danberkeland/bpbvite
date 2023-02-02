@@ -261,3 +261,33 @@ div .photoBox {
   font-size: 1em;
   text-transform: uppercase;
 }
+
+.custDrop {
+  display: flex;
+  background-color: #282a3a;
+  justify-content: center;
+}
+
+.custDrop .p-dropdown {
+  background-color: #282a3a;
+  border: none;
+  color: #e1b163;
+  font-size: 1.2em;
+  text-transform: uppercase;
+}
+
+.custDrop .p-dropdown .p-inputtext {
+  color: #e1b163;
+  display: flex;
+  justify-content: center;
+  font-size: 1em;
+  text-transform: uppercase;
+}
+
+.custDrop .p-dropdown .p-dropdown-trigger {
+  background: transparent;
+  color: #e1b163;
+  width: 2.357rem;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
