@@ -9,6 +9,14 @@ import {
 } from "./ProductHelpers";
 
 
+import {
+  grabOldLoc,
+  checkExistsNewLoc,
+  updateNewLoc,
+  createNewLoc,
+} from "./LocationHelpers";
+
+
 const remapProduct = () => {
 
   grabOldProd()
@@ -57,7 +65,7 @@ const remapLocation = () => {
 function EODCounts() {
   return <React.Fragment>
     <button onClick={remapProduct} >REMAP Products</button>
-    <button onClick={remapLocations}>REMAP Locations</button>
+    <button onClick={remapLocation}>REMAP Locations</button>
     <button>REMAP Orders</button>
     <button>REMAP Standing</button>
     <button>REMAP Routes</button>
