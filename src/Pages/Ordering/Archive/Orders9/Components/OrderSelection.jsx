@@ -1,6 +1,5 @@
 import React from "react";
 
-import { Card } from "primereact/card";
 import { Calendar } from "primereact/calendar";
 
 export const OrderSelection = ({ selection }) => {

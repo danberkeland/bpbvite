@@ -20,6 +20,58 @@ export const listLocationsSimple = /* GraphQL */ `
     }
   }
 `;
+
+export const listLocationsFull = /* GraphQL */ `
+  query ListLocations(
+    $locNick: String
+    $filter: ModelLocationFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listLocations(
+      locNick: $locNick
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        Type
+        locNick
+        locName
+        zoneNick
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        firstName
+        lastName
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        isActive
+        createdAt
+        updatedAt
+        locationCreditAppId
+      }
+      nextToken
+    }
+  }
+`;
 export const getLocationDetails = /* GraphQL */ `
   query GetLocation($locNick: String!) {
     getLocation(locNick: $locNick) {

@@ -58,6 +58,48 @@ export const revalidateLocationListSimple = () => {
   )
 }
 
+
+/**
+ * Produces a full list of locNicks/locNames.
+ * @param {boolean} shouldFetch Fetches data only when true.
+ * @returns {{ data: Array<Object>, errors: Object }}
+ */
+export const useLocationListFull = (shouldFetch) => {
+  const { data, errors } = useSWR(
+    shouldFetch ? [queries.listLocationsFull, { limit: 1000 }] : null, 
+    gqlFetcher, 
+    defaultSwrOptions
+  )
+
+  const transformData = () => {
+    if (!data) return undefined
+    return getNestedObject(data, ['data', 'listLocations', 'items']).sort(dynamicSort("locName"))
+  }
+  const _data = useMemo(transformData, [data])
+
+  // const _data = getNestedObject(data, ['data', 'listLocations', 'items'])
+  // _data?.sort(dynamicSort("locName"))
+
+  return({
+    data: _data,
+    errors: errors
+  })
+
+}
+
+/** 
+ * Can be called whenever locationListSimple data is affected by a mutation.
+ * Revalidation can be called anywhere, even when useLocationListSimple is not present.
+ */
+export const revalidateLocationListFull = () => {
+  mutate(
+    [queries.listLocationsFull, { limit: 1000 }], 
+    null, 
+    { revalidate: true}
+  )
+}
+
+
 /**
  * Produces a more extensive list of attributes for a single location.
  * Includes product customization info which can be accessed individually,
@@ -200,45 +242,45 @@ const createLocationSchema = yup.object().shape({
   isActive: yup.bool(),
 })
 
-const updateLocationSchema = yup.object().shape({
-  Type: yup.string(),
-  locNick: yup.string().required(),
-  locName: yup.string(),
-    // .notOneOf(locNames, "this name is not available.")
-  zoneNick: yup.string(),
-  addr1: yup.string(),
-  addr2: yup.string(),
-  city: yup.string(),
-  zip: yup.string(),
-  email: yup.array()
-    .transform(function(value,originalValue){
-      if (this.isType(value) && value !==null) {
-        return value;
-      }
-      return originalValue ? originalValue.split(/[\s,]+/) : [];
-    })
-    .of(yup.string().email(({ value }) => `${value} is not a valid email`)),
-  phone: yup.string()
-    .matches(/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/, "Phone number format xxx-xxx-xxxx"),
-  firstName: yup.string(),
-  lastName: yup.string(),
-  toBePrinted: yup.bool(),
-  toBeEmailed: yup.bool(),
-  printDuplicate: yup.bool(),
-  terms: yup.string(),
-  invoicing: yup.string(),
-  latestFirstDeliv: yup.number(),
-  latestFinalDeliv: yup.number(),
-  webpageURL: yup.string(),
-  picURL: yup.string(),
-  gMap: yup.string(),
-  specialInstructions: yup.string(),
-  delivOrder: yup.number().integer(),
-  qbID: yup.string(),
-  currentBalance: yup.string(),
-  isActive: yup.bool(),
-})
+// const updateLocationSchema = yup.object().shape({
+//   Type: yup.string(),
+//   locNick: yup.string().required(),
+//   locName: yup.string(),
+//     // .notOneOf(locNames, "this name is not available.")
+//   zoneNick: yup.string(),
+//   addr1: yup.string(),
+//   addr2: yup.string(),
+//   city: yup.string(),
+//   zip: yup.string(),
+//   email: yup.array()
+//     .transform(function(value,originalValue){
+//       if (this.isType(value) && value !==null) {
+//         return value;
+//       }
+//       return originalValue ? originalValue.split(/[\s,]+/) : [];
+//     })
+//     .of(yup.string().email(({ value }) => `${value} is not a valid email`)),
+//   phone: yup.string()
+//     .matches(/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/, "Phone number format xxx-xxx-xxxx"),
+//   firstName: yup.string(),
+//   lastName: yup.string(),
+//   toBePrinted: yup.bool(),
+//   toBeEmailed: yup.bool(),
+//   printDuplicate: yup.bool(),
+//   terms: yup.string(),
+//   invoicing: yup.string(),
+//   latestFirstDeliv: yup.number(),
+//   latestFinalDeliv: yup.number(),
+//   webpageURL: yup.string(),
+//   picURL: yup.string(),
+//   gMap: yup.string(),
+//   specialInstructions: yup.string(),
+//   delivOrder: yup.number().integer(),
+//   qbID: yup.string(),
+//   currentBalance: yup.string(),
+//   isActive: yup.bool(),
+// })
 
-const deleteLocationSchema = yup.object().shape({
-  locNick: yup.string().required()
-})
+// const deleteLocationSchema = yup.object().shape({
+//   locNick: yup.string().required()
+// })

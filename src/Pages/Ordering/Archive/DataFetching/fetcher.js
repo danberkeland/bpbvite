@@ -1,6 +1,6 @@
 import { API } from "aws-amplify"
-import { dateToMmddyyyy, getWeekday } from "../../Functions/dateAndTime"
-import dynamicSort from "../../Functions/dynamicSort"
+import { dateToMmddyyyy, getWeekday } from "../Orders9/Functions/dateAndTime"
+import dynamicSort from "../Orders9/Functions/dynamicSort"
 import * as queries from './queries'
 
 export const gqlFetcher = async (query, variables) => {

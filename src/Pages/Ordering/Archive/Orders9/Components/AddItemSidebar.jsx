@@ -7,7 +7,7 @@ import { Dropdown } from "primereact/dropdown"
 import { InputNumber } from "primereact/inputnumber"
 import { Button } from "primereact/button"
 
-import { DateTime } from "luxon"
+// import { DateTime } from "luxon"
 import { getOrderSubmitDate, getWorkingDate } from "../Functions/dateAndTime"
 import { useLocationDetails } from "../Data/locationData"
 import dynamicSort from "../Functions/dynamicSort"
@@ -244,68 +244,68 @@ function applyLocationOverridesToProducts(locationDetails, productData) {
  * 
  * Add availableDate string derived from order submission date and leadTime.
  */
-function applyDateLogicToProducts(delivDate, productData) {
-    // Apply lead-time rules to delivDate for each product
-    const _products = productData.map(item => {
-      const orderSubmitDate = getOrderSubmitDate()
-      const selectedDelivDate = delivDate? DateTime.fromISO(delivDate.toISOString()) : null
+// function applyDateLogicToProducts(delivDate, productData) {
+//     // Apply lead-time rules to delivDate for each product
+//     const _products = productData.map(item => {
+//       const orderSubmitDate = getOrderSubmitDate()
+//       const selectedDelivDate = delivDate? DateTime.fromISO(delivDate.toISOString()) : null
   
-      const isLate = selectedDelivDate < orderSubmitDate.plus({ days: item.leadTime })
-      const availableDate = orderSubmitDate.plus({ days: item.leadTime }).toLocaleString()
+//       const isLate = selectedDelivDate < orderSubmitDate.plus({ days: item.leadTime })
+//       const availableDate = orderSubmitDate.plus({ days: item.leadTime }).toLocaleString()
   
-      return({
-        ...item,
-        isLate: isLate,
-        availableDate: availableDate,
-      })
-    })
+//       return({
+//         ...item,
+//         isLate: isLate,
+//         availableDate: availableDate,
+//       })
+//     })
 
-    return _products
-}
+//     return _products
+// }
 
 /**
  * Add inCart property to product data, detecting if the product is already part of the order.
  */
-function applyOrderLogicToProducts(orderItemChanges, productData) {
-  // which order items count as in the cart?
-  // Any time we can see the item in the cart, we should have inCart = true.
-  // This includes times when we render 0 qty with gray text and strikethrough.
-  //
-  // So, on which occasions do we have a product in our item list that should be hidden?
-  //  - For a 'deleted' product: original qty 0, current qty 0, has a uuid (not just created)
+// function applyOrderLogicToProducts(orderItemChanges, productData) {
+//   // which order items count as in the cart?
+//   // Any time we can see the item in the cart, we should have inCart = true.
+//   // This includes times when we render 0 qty with gray text and strikethrough.
+//   //
+//   // So, on which occasions do we have a product in our item list that should be hidden?
+//   //  - For a 'deleted' product: original qty 0, current qty 0, has a uuid (not just created)
 
-  const _products = productData.map(item => {
-    const matchItem = orderItemChanges.find(orderItem => orderItem.prodNick === item.prodNick)
-
-
-    return ({
-      ...item,
-      inCart: matchItem ? matchItem.qty > 0 : false
-    })
-  })
-
-  return _products
-}
+//   const _products = productData.map(item => {
+//     const matchItem = orderItemChanges.find(orderItem => orderItem.prodNick === item.prodNick)
 
 
-function updateProductDisplay(delivDate, orderData, productData, setData) {
-  let itemsInCart = orderData.filter(item => item.originalQty > 0)
-  itemsInCart = itemsInCart.map(item => item.prodNick)
+//     return ({
+//       ...item,
+//       inCart: matchItem ? matchItem.qty > 0 : false
+//     })
+//   })
 
-  const orderSubmitDate = getOrderSubmitDate()
-  const selectedDelivDate = delivDate? DateTime.fromISO(delivDate.toISOString()) : null
+//   return _products
+// }
+
+
+// function updateProductDisplay(delivDate, orderData, productData, setData) {
+//   let itemsInCart = orderData.filter(item => item.originalQty > 0)
+//   itemsInCart = itemsInCart.map(item => item.prodNick)
+
+//   const orderSubmitDate = getOrderSubmitDate()
+//   const selectedDelivDate = delivDate? DateTime.fromISO(delivDate.toISOString()) : null
   
-  let prodDisplay = productData.map(item => {
-    return({
-      ...item,
-      inCart: itemsInCart.includes(item.prodNick),
-      isLate: selectedDelivDate < orderSubmitDate.plus({ days: item.leadTime }),
-      availableDate: orderSubmitDate.plus({ days: item.leadTime }).toLocaleString(),
-    })
-  })
+//   let prodDisplay = productData.map(item => {
+//     return({
+//       ...item,
+//       inCart: itemsInCart.includes(item.prodNick),
+//       isLate: selectedDelivDate < orderSubmitDate.plus({ days: item.leadTime }),
+//       availableDate: orderSubmitDate.plus({ days: item.leadTime }).toLocaleString(),
+//     })
+//   })
 
-  setData(prodDisplay)
-}
+//   setData(prodDisplay)
+// }
 
 
 

@@ -7,9 +7,9 @@ import { Button } from 'primereact/button'
 import React from "react";
 import { useState, useEffect } from "react";
 
-import { useSettingsStore } from "../../Contexts/SettingsZustand";
+import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 import { fetchOrderData } from "./DataFetching/fetcher";
-import { getOrderSubmitDate } from './Functions/dateAndTime';
+import { getOrderSubmitDate } from './Orders9/Functions/dateAndTime';
 import { handleOrderSubmit } from './DataFetching/orderSubmission';
 
 export const Orders6 = () => {

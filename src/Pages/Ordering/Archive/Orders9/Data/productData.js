@@ -4,11 +4,11 @@ import { dateToMmddyyyy } from "../Functions/dateAndTime"
 import { getNestedObject } from "../Functions/getNestedObject"
 import { gqlFetcher } from "./fetchers"
 import * as queries from "./gqlQueries"
-import { useLocationDetails } from "./locationData"
-import { useOrdersByLocationByDate, useStandingByLocation } from "./orderData"
+// import { useLocationDetails } from "./locationData"
+// import { useOrdersByLocationByDate, useStandingByLocation } from "./orderData"
 import { makeOrderHeader, makeOrderItems } from "./dataTransformations"
-import { useEffect } from "react"
-import { listProducts } from "../../../graphql/queries"
+// import { useEffect } from "react"
+// import { listProducts } from "./gqlQueries"
 
 const usualOptions = {
   revalidateIfStale: false,
@@ -36,11 +36,11 @@ export const useProductData = () => {
 }
 
 
-export const useProductDisplay = (location, delivDate) => {
-  const { data: productData } = useProductData()
-  const { data: locationDetails } = useLocationDetails(location)
+// export const useProductDisplay = (location, delivDate) => {
+//   const { data: productData } = useProductData()
+//   const { data: locationDetails } = useLocationDetails(location)
 
-}
+// }
 
 
 export const useOrderState = (location, delivDate, setOrderHeader, setOrderItems) => {

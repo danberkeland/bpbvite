@@ -6,8 +6,8 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
 import ProductDetails from "./ProductDetails";
-import { useProductList } from "../../swr";
-import { useProductData } from "../Ordering/Data/productData";
+// import { useProductList } from "../../swr";
+import { useProductListSimple } from "../../data/productData"
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { withFadeIn } from "../../hoc/withFadeIn";
 import { useEffect } from "react";
@@ -56,7 +56,7 @@ function ProductList({ selectedProduct, setSelectedProduct }) {
     prodName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
 
-  const productList = useProductData();
+  const productList = useProductListSimple();
 
   useEffect(() => {
     console.log('productList', productList)

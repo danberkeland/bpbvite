@@ -32,11 +32,11 @@ export const checkExistsNewStanding = async (old) => {
   }
 };
 
-const convertDelivDate = (d) => {
-  let brokenDate = d.split("/");
-  let delivDate = brokenDate[2] + "-" + brokenDate[0] + "-" + brokenDate[1];
-  return delivDate;
-};
+// const convertDelivDate = (d) => {
+//   let brokenDate = d.split("/");
+//   let delivDate = brokenDate[2] + "-" + brokenDate[0] + "-" + brokenDate[1];
+//   return delivDate;
+// };
 
 const convertCust = (custName, custList) => {
   console.log("custListConvert", custList);
@@ -98,7 +98,7 @@ export const updateNewStanding = async (old, custList, prodList) => {
 };
 
 export const createNewStanding = async (old, custList, prodList) => {
-  let daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  // let daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   for (let i = 0; i < 7; i++) {
     let newOld = createNewOld(i, old, custList, prodList);

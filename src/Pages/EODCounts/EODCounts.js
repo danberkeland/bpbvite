@@ -33,9 +33,8 @@ import {
   createNewStanding,
 } from "./StandingHelpers";
 
-import { useProductList } from "../Ordering/Data/productData";
-import { useLocationList } from "../Ordering/Data/locationData";
-
+import { useProductListSimple } from "../../data/productData"
+import { useLocationListSimple } from "../../data/locationData";
 
 const remapProduct = (custList, prodList) => {
 
@@ -130,8 +129,8 @@ const remapStanding = (custList, prodList) => {
 
 function EODCounts() {
 
-  let custList = useLocationList(true)
-  let prodList = useProductList(true)
+  let custList = useLocationListSimple(true)
+  let prodList = useProductListSimple(true)
 
   const handleRemapOrders = () => {
     console.log('custList', custList.data)

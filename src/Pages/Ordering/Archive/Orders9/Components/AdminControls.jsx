@@ -1,15 +1,15 @@
 import React from "react";
 
-import { Card } from "primereact/card";
+// import { Card } from "primereact/card";
 import { Dropdown } from "primereact/dropdown";
 import { Checkbox } from "primereact/checkbox";
 
-import { useLocationDetails, useLocationList } from "../Data/locationData";
+import { useLocationList } from "../Data/locationData";
 
 export const AdminControls = ({ adminSettings, orderingType }) => {
   const { location, setLocation, isWhole, setIsWhole, isStand, setIsStand } =
     adminSettings;
-  const { data: locationDetails } = useLocationDetails(location, !!location); // load on selection; for use elsewhere
+  // const { data: locationDetails } = useLocationDetails(location, !!location); // load on selection; for use elsewhere
 
   return (
     <React.Fragment>
@@ -53,7 +53,7 @@ export const AdminControls = ({ adminSettings, orderingType }) => {
 };
 
 const LocationDropdown = ({ location, setLocation }) => {
-  const { data: locationList, errors: locationListErrors } =
+  const { data: locationList } =
     useLocationList(true);
 
   return (

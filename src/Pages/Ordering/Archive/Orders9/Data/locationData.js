@@ -2,7 +2,7 @@ import useSWR from "swr"
 import dynamicSort from "../Functions/dynamicSort"
 import { getNestedObject } from "../Functions/getNestedObject"
 import { gqlFetcher } from "./fetchers"
-import { getLocationDetails, listLocationDetails, listLocationNames, listLocations } from "./gqlQueries"
+import { getLocationDetails, listLocationDetails, listLocationNames } from "./gqlQueries"
 
 
 

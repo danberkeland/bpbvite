@@ -8,7 +8,7 @@ import { Column } from "primereact/column";
 import LocationDetails from "./LocationDetails";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { withFadeIn } from "../../hoc/withFadeIn";
-import { useLocationDetailedList } from "../Ordering/Data/locationData";
+import { useLocationListFull } from "../../data/locationData";
 
 const initialState = {
   Type: "Location",
@@ -48,7 +48,7 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
     locName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
 
-  const locationList = useLocationDetailedList(true);
+  const locationList = useLocationListFull(true);
 
   const handleClick = () => {
     setIsCreate(!isCreate);

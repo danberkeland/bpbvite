@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Card } from "primereact/card";
+// import { Card } from "primereact/card";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
@@ -36,7 +36,7 @@ export const ItemsCard = ({
   const {
     data: locationDetails,
     altLeadTimes,
-    prodsNotAllowed,
+    //prodsNotAllowed,
   } = useLocationDetails(location);
 
   const CardTitleTemplate = () => {

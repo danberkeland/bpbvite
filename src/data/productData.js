@@ -11,7 +11,7 @@ import gqlFetcher from "./fetchers"
 import * as queries from "../customGraphQL/queries/productQueries"
 import * as mutations from "../customGraphQL/mutations/productMutations"
 
-import * as yup from "yup"
+// import * as yup from "yup"
 
 
 /******************
@@ -50,6 +50,38 @@ export const useProductListSimple = (shouldFetch) => {
 export const revalidateProductListSimple = () => {
   mutate(
     [queries.listProductsSimple, { limit: 1000 }], 
+    null, 
+    { revalidate: true}
+  )
+}
+
+export const useProductListForOrders = (shouldFetch) => {
+  const { data, errors } = useSWR(
+    shouldFetch ? [queries.listProductsForOrders, { limit: 1000 }] : null, 
+    gqlFetcher, 
+    defaultSwrOptions
+  )
+
+  const transformData = () => {
+    if (!data) return undefined
+    return getNestedObject(data, ['data', 'listProducts', 'items']).sort(dynamicSort("locName"))
+  }
+  const _data = useMemo(transformData, [data])
+
+  return({
+    data: _data,
+    errors: errors
+  })
+
+}
+
+/** 
+ * Can be called whenever associated cache is affected by a mutation.
+ * Revalidation can be called anywhere, even when the associated SWR hook is not present.
+ */
+export const revalidateProductListForOrders = () => {
+  mutate(
+    [queries.listProductsForOrders, { limit: 1000 }], 
     null, 
     { revalidate: true}
   )
@@ -139,14 +171,14 @@ export const deleteProduct = async (deleteProductInput) => {
  * SCHEMAS *
  ***********/
 
-const createProductSchema = yup.object().shape({
+// const createProductSchema = yup.object().shape({
   
-})
+// })
 
-const updateProductSchema = yup.object().shape({
+// const updateProductSchema = yup.object().shape({
 
-})
+// })
 
-const deleteProductSchema = yup.object().shape({
-  prodNick: yup.string().required()
-})
+// const deleteProductSchema = yup.object().shape({
+//   prodNick: yup.string().required()
+// })
