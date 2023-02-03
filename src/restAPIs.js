@@ -158,15 +158,13 @@ export const getOrder = (event) => {
 
 // Auth calls
 
-export const submitAuth = async (props) => {
-  const {
-    email,
-    password,
-    setIsLoading,
-    setFormType,
-    setShowMessage,
-    setUserObject
-  } = props;
+// export const submitAuth = async (props) => {
+// const {email, password, setIsLoading, setFormType, setShowMessage, setUserObject} = props;
+export const submitAuth = async (props, fns) => {
+  
+  const { email, password } = props
+  const { setIsLoading, setFormType, setShowMessage, setUserObject } = fns
+
   console.log("submitProps", props);
 
   setIsLoading(true);
