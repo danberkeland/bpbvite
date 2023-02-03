@@ -46,10 +46,10 @@ h3, h4 {
 button {
   width: 100%;
   margin: auto;
-  padding: 10px;
-  color:#005ad9;
-  background-color: #f0f1f2;
-  font-size: 1.3em;
+  padding: 5mitpx;
+  color: #e1b163;
+  background-color: #735f32;
+  font-size: 1em;
   border: none;
 }
 
@@ -113,6 +113,22 @@ button:hover {
 
 .panelMenu .mypanel .p-panelmenu-header .p-panelmenu-header-link:hover .p-menuitem-icon {
   color: white;
+}
+
+.panelMenu .p-panelmenu .p-panelmenu-header > a:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 0.2rem #735f32;
+}
+
+.panelMenu .p-panelmenu .p-panelmenu-header > a {
+  padding: 1rem;
+  border: 1px solid #735f32;
+  color: #495057;
+  background: #f1b451;
+  font-weight: 600;
+  border-radius: 3px;
+  transition: box-shadow 0.2s;
 }
 
 
@@ -292,13 +308,62 @@ div .photoBox {
   border-bottom-right-radius: 3px;
 }
 
+.bpbSimpleForm .field .p-disabled, .p-component:disabled {
+  opacity: .8;
+}
 
-.cartStanding button {
-  width: 100%;
-  margin: auto;
-  padding: 5mitpx;
-  color: #e1b163;
-  background-color: #735f32;
-  font-size: 1em;
-  border: none;
+.p-datatable .p-datatable-tbody > tr {
+  background: #c69749;
+  color: #495057;
+  transition: box-shadow 0.2s;
+}
+
+.bpbDataTable .p-datatable .p-datatable-thead > tr > th {
+  text-align: left;
+  padding: 1rem 1rem;
+  border: 1px solid #c69749;
+  border-width: 0 0 1px 0;
+  font-weight: 600;
+  color:white;
+  background: #c69749;
+  transition: box-shadow 0.2s;
+}
+
+
+.bpbDataTable .p-datatable .p-datatable-tbody > tr {
+  background-color: #f4cc8b;
+  color: #495057;
+  transition: box-shadow 0.2s;
+}
+
+.bpbDataTable .p-datatable .p-datatable-tbody > tr > td {
+  text-align: left;
+  font-size: 1em;;
+  text-transform: uppercase;
+  border: 1px solid #c69749;
+  border-width: 0 10px 10px 10px;
+  padding: 1rem 1rem;
+}
+
+.bpbDataTable .p-inputtext {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 1rem;
+  color: #495057;
+  background: #eeeeee;
+  padding: 0.5rem 0.5rem;
+  border: 1px solid #495057;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+  border-radius: 3px;
+}
+
+.bpbDataTable .p-inputtext:enabled:hover {
+  border-color: #495057;
+}
+
+.bpbDataTable .p-inputtext:enabled:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 0.2rem #eeeeee;
+  border-color: #c69749;
 }

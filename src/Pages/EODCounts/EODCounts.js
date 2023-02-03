@@ -25,6 +25,14 @@ import {
   createNewOrder,
 } from "./OrderHelpers";
 
+
+import {
+  grabOldStanding,
+  checkExistsNewStanding,
+  updateNewStanding,
+  createNewStanding,
+} from "./StandingHelpers";
+
 import { useProductList } from "../Ordering/Data/productData";
 import { useLocationList } from "../Ordering/Data/locationData";
 
@@ -97,6 +105,28 @@ const remapOrders = (custList, prodList) => {
 
 
 
+const remapStanding = (custList, prodList) => {
+ 
+  grabOldStanding()
+    .then((oldStanding) => {
+      console.log('oldStanding', oldStanding)
+      for (let old of oldStanding) {
+        checkExistsNewStanding(old.id).then((exists) => {
+          console.log("exists",exists)
+          if (exists) {
+            updateNewStanding(old, custList, prodList);
+          } else {
+            createNewStanding(old, custList, prodList);
+          }
+        });
+      }
+    })
+    .then((e) => {
+      
+      console.log("Standing DB updated");
+    });
+};
+
 
 function EODCounts() {
 
@@ -109,12 +139,18 @@ function EODCounts() {
     remapOrders(custList.data, prodList.data)
   }
 
+  const handleRemapStanding = () => {
+    console.log('custList', custList.data)
+    console.log('prodList', prodList.data)
+    remapStanding(custList.data, prodList.data)
+  }
+
 
   return <React.Fragment>
     <button onClick={remapProduct} >REMAP Products</button>
     <button onClick={remapLocation}>REMAP Locations</button>
     <button onClick={handleRemapOrders}>REMAP Orders</button>
-    <button>REMAP Standing</button>
+    <button onClick={handleRemapStanding}>REMAP Standing</button>
     <button>REMAP Routes</button>
   </React.Fragment>;
 }

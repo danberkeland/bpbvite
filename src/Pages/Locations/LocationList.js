@@ -56,8 +56,9 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
 
   const FadeLocationDataTable = withFadeIn(() => {
     return (
-      <DataTable
-        className="dataTable"
+      <div className="bpbDataTable">
+        <DataTable
+        className="datatable"
         value={locationList.data}
         selectionMode="single"
         metaKeySelection={false}
@@ -73,6 +74,8 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
       >
         <Column field="locName" filterPlaceholder="Search Locations" filter />
       </DataTable>
+      </div>
+      
     );
   });
 

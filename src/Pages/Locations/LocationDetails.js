@@ -38,6 +38,7 @@ function LocationDetails({ initialState }) {
     console.log("props", props)
     return (
       <React.Fragment>
+        <div className="bpbSimpleForm">
         <GroupBox>
           <h2>
             <i className="pi pi-user"></i> Location Name
@@ -123,6 +124,7 @@ function LocationDetails({ initialState }) {
             converter={props}
           />
         </GroupBox>
+        </div>
       </React.Fragment>
     );
   });
