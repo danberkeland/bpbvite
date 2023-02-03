@@ -85,12 +85,14 @@ export const withBPBForm = (Component) => (props) => {
           setIsEdit(false);
           if (isCreate) {
             // fns.create(props, fns).then(() => {
-            fns.create(props).then(() => {            // TESTING CHANGE
+            //fns.create(props).then(() => {            // TESTING CHANGE
+            fns.create(props, {...fns}).then(() => {
               window.location = path;
             });
           } else {
             // fns.update({ ...fns, ...props }).then(() => {
-            fns.update(props).then(() => {     // TESTING CHANGE
+            //fns.update(props).then(() => {     // TESTING CHANGE
+            fns.update(props, {...fns}).then(() => {
               console.log("Formprops", props);
               formType === "signedIn" ? (window.location = path) : <div></div>;
             });
