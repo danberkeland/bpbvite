@@ -1,35 +1,27 @@
-import useSWR, { mutate } from "swr"
+import useSWR from "swr"
 import { useMemo } from "react"
+import { defaultSwrOptions } from "./constants"
 
 import gqlFetcher from "./fetchers"
 
-import * as queries from "../customGraphQL/queries"
+import * as queries from "../customGraphQL/queries/zoneQueries"
+//import * as mutations from "../customGraphQL/mutations/zoneMutations"
+
+import dynamicSort from "../functions/dynamicSort"
 import getNestedObject from "../functions/getNestedObject"
-// import * as mutations from "../customGraphQL/mutations"
 
-// import dynamicSort from "../functions/dynamicSort"
-// import getNestedObject from "../functions/getNestedObject"
-
-// import * as yup from "yup"
-
-const usualOptions = {
-  revalidateIfStale: false,
-  revalidateOnFocus: false,
-  revalidateOnReconnect: true
-}
-
-// Parameters become part of the SWR key, so standarizing them will help prevent redundant caches.
-const DEFAULT_LIMIT = { limit: 1000 }
+//import * as yup from "yup"
 
 export const useZoneListFull = (shouldFetch) => {
   const { data, errors } = useSWR(
-    shouldFetch ? [queries.listZonesFull, DEFAULT_LIMIT] : null, 
+    shouldFetch ? [queries.listZonesFull, { limit: 1000 }] : null, 
     gqlFetcher, 
-    usualOptions)
+    defaultSwrOptions
+  )
   
   const transformData = () => {
     if (!data) return undefined
-    return getNestedObject(data, ['data', 'listZones', 'items'])
+    return getNestedObject(data, ['data', 'listZones', 'items']).sort(dynamicSort("zoneName"))
   }
   const _data = useMemo(transformData, [data])
 

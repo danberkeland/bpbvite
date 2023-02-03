@@ -1,24 +1,17 @@
 import useSWR, { mutate } from "swr"
+import { defaultSwrOptions } from "./constants"
+
 import { useMemo } from "react"
-
-import gqlFetcher from "./fetchers"
-
-import * as queries from "../customGraphQL/queries"
-import * as mutations from "../customGraphQL/mutations"
 
 import dynamicSort from "../functions/dynamicSort"
 import getNestedObject from "../functions/getNestedObject"
 
+import gqlFetcher from "./fetchers"
+
+import * as queries from "../customGraphQL/queries/locationQueries"
+import * as mutations from "../customGraphQL/mutations/locationMutations"
+
 import * as yup from "yup"
-
-const usualOptions = {
-  revalidateIfStale: false,
-  revalidateOnFocus: false,
-  revalidateOnReconnect: true
-}
-
-// Parameters become part of the SWR key, so standarizing them will help prevent redundant caches.
-const DEFAULT_LIMIT = { limit: 1000 }
 
 
 /******************
@@ -32,9 +25,9 @@ const DEFAULT_LIMIT = { limit: 1000 }
  */
 export const useLocationListSimple = (shouldFetch) => {
   const { data, errors } = useSWR(
-    shouldFetch ? [queries.listLocationsSimple, DEFAULT_LIMIT] : null, 
+    shouldFetch ? [queries.listLocationsSimple, { limit: 1000 }] : null, 
     gqlFetcher, 
-    usualOptions
+    defaultSwrOptions
   )
 
   const transformData = () => {
@@ -53,21 +46,32 @@ export const useLocationListSimple = (shouldFetch) => {
 
 }
 
+/** 
+ * Can be called whenever locationListSimple data is affected by a mutation.
+ * Revalidation can be called anywhere, even when useLocationListSimple is not present.
+ */
+export const revalidateLocationListSimple = () => {
+  mutate(
+    [queries.listLocationsSimple, { limit: 1000 }], 
+    null, 
+    { revalidate: true}
+  )
+}
+
 /**
  * Produces a more extensive list of attributes for a single location.
  * Includes product customization info which can be accessed individually,
  * or as part of the full 'data' return object
  * @param {string} locNick ID value for the desired location.
  * @param {boolean} shouldFetch Fetches data only when true.
- * @returns {{ data: object, templateProds: object, prodsNotAllowed: object, altPrices: object, altLeadTimes: object }}
-  } A single object representing the requested location.
+ * @returns {{ data: object, templateProds: object, prodsNotAllowed: object, altPrices: object, altLeadTimes: object }} A single object representing the requested location.
  */
 export const useLocationDetails = (locNick, shouldFetch) => {
 
-  const { data } = useSWR(
+  const { data, errors } = useSWR(
     shouldFetch ? [queries.getLocationDetails, { locNick: locNick }] : null, 
     gqlFetcher, 
-    usualOptions
+    defaultSwrOptions
   )
   
   const _data = getNestedObject(data, ['data', 'getLocation'])
@@ -81,48 +85,68 @@ export const useLocationDetails = (locNick, shouldFetch) => {
     templateProds: _templateProds,
     prodsNotAllowed: _prodsNotAllowed,
     altPrices: _altPrices,
-    altLeadTimes: _altLeadTimes
+    altLeadTimes: _altLeadTimes,
+    errors: errors
   })
 }
+
+/** 
+ * Can be called whenever locationDetails data is affected by a mutation.
+ * Revalidation can be called anywhere, even when useLocationDetails is not present.
+ */
+export const revalidateLocationDetails = (locNick) => {
+  mutate(
+    [queries.getLocationDetails, { locNick: locNick }],
+    null,
+    { revalidate: true }
+  )
+}
+
+// consider calling the revalidate functions above after 
+// performing one or a batch of mutations below.
 
 
 /*************
  * MUTATIONS *
  *************/
 
+const LOGGING = true
 
 export const createLocation = async (createLocationInput) => {
+  if (LOGGING) console.log("Create location input: ", createLocationInput)
 
   if (!createLocationSchema.isValid(createLocationInput)) {
-    console.log("validation failed for creatLocation")
+    console.log("createLocation validation failed")
     return
   }
 
-  const response = await gqlFetcher(mutations.createLocation, { input: createLocationInput })
-  console.log(response)
-
-  mutate(
-    [queries.listLocationsSimple, DEFAULT_LIMIT], 
-    null, 
-    { revalidate: true}
+  const response = await gqlFetcher(
+    mutations.createLocation, 
+    { input: createLocationInput }
   )
-
-  mutate(
-    [queries.getLocationDetails, { locNick: createLocationInput.locNick }],
-    null,
-    { revalidate: true }
-  )
+  if (LOGGING) console.log("Create location response: ", response)
 
 }
 
 
-
-export const updateLocation = (updateLocationInput) => {
+export const updateLocation = async (updateLocationInput) => {
+  if (LOGGING) console.log("Update location input: ", updateLocationInput)
+  const response = await gqlFetcher(
+    mutations.updateLocation, 
+    { input: updateLocationInput }
+  )
+  if (LOGGING) console.log("Update location response: ", response)
 
 }
 
 
-export const deleteLocation = (deleteLocationInput) => {
+export const deleteLocation = async (deleteLocationInput) => {
+  if (LOGGING) console.log("Delete location input: ", deleteLocationInput)
+  const response = await gqlFetcher(
+    mutations.deleteLocation,
+    { input: deleteLocationInput }
+  )
+  if (LOGGING) console.log("Delete location response: ", response)
 
 }
 
@@ -176,3 +200,45 @@ const createLocationSchema = yup.object().shape({
   isActive: yup.bool(),
 })
 
+const updateLocationSchema = yup.object().shape({
+  Type: yup.string(),
+  locNick: yup.string().required(),
+  locName: yup.string(),
+    // .notOneOf(locNames, "this name is not available.")
+  zoneNick: yup.string(),
+  addr1: yup.string(),
+  addr2: yup.string(),
+  city: yup.string(),
+  zip: yup.string(),
+  email: yup.array()
+    .transform(function(value,originalValue){
+      if (this.isType(value) && value !==null) {
+        return value;
+      }
+      return originalValue ? originalValue.split(/[\s,]+/) : [];
+    })
+    .of(yup.string().email(({ value }) => `${value} is not a valid email`)),
+  phone: yup.string()
+    .matches(/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/, "Phone number format xxx-xxx-xxxx"),
+  firstName: yup.string(),
+  lastName: yup.string(),
+  toBePrinted: yup.bool(),
+  toBeEmailed: yup.bool(),
+  printDuplicate: yup.bool(),
+  terms: yup.string(),
+  invoicing: yup.string(),
+  latestFirstDeliv: yup.number(),
+  latestFinalDeliv: yup.number(),
+  webpageURL: yup.string(),
+  picURL: yup.string(),
+  gMap: yup.string(),
+  specialInstructions: yup.string(),
+  delivOrder: yup.number().integer(),
+  qbID: yup.string(),
+  currentBalance: yup.string(),
+  isActive: yup.bool(),
+})
+
+const deleteLocationSchema = yup.object().shape({
+  locNick: yup.string().required()
+})

@@ -3,8 +3,8 @@ import { CustomInputs } from "../../FormComponents/CustomInputs";
 
 import { validationSchema } from "./ValidationSchema";
 
-import { deleteLocation, updateLocation } from "../../restAPIs";
-import { createLocation } from "../../data/locationData";
+// import { deleteLocation, updateLocation, createLocation } from "../../restAPIs";
+import { createLocation, updateLocation, deleteLocation } from "../../data/locationData";
 import { withFadeIn } from "../../hoc/withFadeIn";
 import { withBPBForm } from "../../hoc/withBPBForm";
 import { GroupBox } from "../../CommonStyles";

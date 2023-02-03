@@ -84,11 +84,13 @@ export const withBPBForm = (Component) => (props) => {
           window.scrollTo(0, 0);
           setIsEdit(false);
           if (isCreate) {
-            fns.create(props, fns).then(() => {
+            // fns.create(props, fns).then(() => {
+            fns.create(props).then(() => {            // TESTING CHANGE
               window.location = path;
             });
           } else {
-            fns.update({ ...fns, ...props }).then(() => {
+            // fns.update({ ...fns, ...props }).then(() => {
+            fns.update(props).then(() => {     // TESTING CHANGE
               console.log("Formprops", props);
               formType === "signedIn" ? (window.location = path) : <div></div>;
             });

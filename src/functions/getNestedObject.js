@@ -18,7 +18,7 @@
  * // returns undefined 
  * 
  * let x = foo.barbar.foobar
- * // returns an error
+ * // causes an error
  * */ 
 const getNestedObject = (nestedObj, pathArr) => {
   return pathArr.reduce((obj, key) =>
