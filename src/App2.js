@@ -21,10 +21,11 @@ import { NavBottom } from "./AppStructure/Nav";
 
 import Pages from "./AppStructure/Pages";
 
+import "./index.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
-import "./index.css";
+
 
 import { checkUser } from "./AppStructure/Auth/AuthHelpers";
 import Loader from "./AppStructure/Loader";

@@ -67,8 +67,10 @@ function ProductList({ selectedProduct, setSelectedProduct }) {
     setIsCreate(!isCreate);
   };
 
+
   const FadeProductDataTable = withFadeIn(() => {
     return (
+      <div className="bpbDataTable">
       <DataTable
         className="dataTable"
         value={productList.data}
@@ -84,6 +86,7 @@ function ProductList({ selectedProduct, setSelectedProduct }) {
       >
         <Column field="prodName" filterPlaceholder="Search Products" filter />
       </DataTable>
+      </div>
     );
   });
 

@@ -30,7 +30,7 @@ function Locations() {
         <FadeLocationList />
       ) : (
         <React.Fragment>
-          <button onClick={handleLocClick}>LOCATION LIST</button>
+          <button className="fullButton" onClick={handleLocClick}>LOCATION LIST</button>
           <LocationDetails initialState={selectedLocation} />
         </React.Fragment>
       )}
