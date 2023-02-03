@@ -48,7 +48,16 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
     locName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
 
-  const locationList = useLocationListFull(true);
+  const { data:locationList, errors:locationListErrors } = useLocationListFull(true);
+  const formKeys = Object.keys(initialState)
+  const tableData = locationList?.map(item => {
+    let cleanedItem = formKeys.reduce((cItem, key) => {
+      if (item.hasOwnProperty(key)) return {...cItem, [key]: item[key]}
+      else return {...cItem, [key]: initialState[key]}
+    }, {})
+
+    return cleanedItem
+  })
 
   const handleClick = () => {
     setIsCreate(!isCreate);
@@ -59,11 +68,11 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
       <div className="bpbDataTable">
         <DataTable
         className="datatable"
-        value={locationList.data}
+        value={tableData}
         selectionMode="single"
         metaKeySelection={false}
         selection={selectedLocation}
-        onSelectionChange={(e) =>
+        onSelectionChange={(e) => 
           setSelectedLocation({ ...initialState, ...e.value })
         }
         sortField="locName"
@@ -92,10 +101,10 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
       ) : (
         <React.Fragment>
           <button onClick={handleClick}>+ CREATE LOCATION</button>
-          {locationList.isLoading ? setIsLoading(true) : setIsLoading(false)}
+          {(!locationList && !locationListErrors) ? setIsLoading(true) : setIsLoading(false)}
 
-          {locationList.isError && <div>Table Failed to load</div>}
-          {locationList.data && <FadeLocationDataTable />}
+          {locationListErrors && <div>Table Failed to load</div>}
+          {locationList && <FadeLocationDataTable />}
           <div className="bottomSpace"></div>
         </React.Fragment>
       )}
