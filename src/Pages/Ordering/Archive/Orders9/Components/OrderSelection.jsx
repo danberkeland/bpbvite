@@ -17,7 +17,7 @@ export const OrderSelection = ({ selection, orderHeaderState }) => {
           <Calendar
             id="calendar"
             touchUI={true}
-            style={{ width: "100px" }}
+            style={{ width: "115px" }}
             value={delivDate}
             onChange={(e) => {
               setDelivDate(e.value);
