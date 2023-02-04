@@ -68,7 +68,7 @@ export function makeOrderHeader(locationDetails, cartData, standingData, delivDa
     route: headerRoute,
     ItemNote: headerNote,
   }
-  // console.log("ORDER HEADER: ", orderHeader)
+  //console.log("ORDER HEADER: ", orderHeader)
   return orderHeader
  
 }

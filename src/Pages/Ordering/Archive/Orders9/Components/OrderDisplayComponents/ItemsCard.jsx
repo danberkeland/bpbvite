@@ -144,7 +144,7 @@ export const ItemsCard = ({
   };
 
   return (
-    <React.Fragment>
+    <div className="bpbDataTable">
       {/* <pre>{"rollback: " + rollbackQty + ", " + typeof(rollbackQty)}</pre> */}
       <pre>{JSON.stringify(locationDetails, null, 2)}</pre>
       <DataTable
@@ -264,6 +264,6 @@ export const ItemsCard = ({
         />
       </DataTable>
       <CardTitleTemplate />
-    </React.Fragment>
+    </div>
   );
 };

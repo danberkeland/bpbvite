@@ -72,7 +72,7 @@ export const StandingDisplay = ({ standingSettings, user }) => {
         products={products}
       />
 
-      <div style={{margin: "10px"}}>
+      <div style={{margin: "10px"}} className="bpbDataTable">
       <DataTable 
         value={standingView}
         responsiveLayout="scroll"
@@ -457,7 +457,7 @@ const StandingDisplayOptions = ({ viewSettings, products }) => {
   const { viewMode, setViewMode, dayOfWeek, setDayOfWeek, selectedProduct, setSelectedProduct } = viewSettings
 
   return (
-    <Card title="Display..." style={{margin: "10px"}}>
+    <div className="standOptions">
         <div style={{display: "flex"}}>
           <Button label="by Day" 
             onClick={e => {
@@ -512,7 +512,7 @@ const StandingDisplayOptions = ({ viewSettings, products }) => {
           <label htmlFor="product-dropdown">Product</label>
         </div>
         }
-      </Card>
+      </div>
   )
 
 }

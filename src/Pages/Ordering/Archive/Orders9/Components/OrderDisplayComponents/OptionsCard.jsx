@@ -26,7 +26,7 @@ export const OptionsCard = ({ orderHeaderState, readOnly }) => {
             disabled={readOnly}
           />
 
-          <CustomRadioButton label='Pick up Carlton' value='atownPick'
+          <CustomRadioButton label='Pick up Carlton' value='atownpick'
             orderHeaderState={orderHeaderState}
             disabled={readOnly}
           />
@@ -58,7 +58,7 @@ export const OptionsCard = ({ orderHeaderState, readOnly }) => {
 
 const CustomRadioButton = ({value, label, orderHeaderState, hidden, disabled}) => {
   const { orderHeader, orderHeaderChanges, setOrderHeaderChanges } = orderHeaderState
-
+  
   const isDefaultOption = value === orderHeader.defaultRoute
   const checked = value === orderHeaderChanges.route
   const valueUpdated = orderHeader.route !== orderHeaderChanges.route

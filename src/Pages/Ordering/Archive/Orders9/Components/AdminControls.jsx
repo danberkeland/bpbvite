@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 // import { Card } from "primereact/card";
 import { Dropdown } from "primereact/dropdown";
 import { Checkbox } from "primereact/checkbox";
 
 import { useLocationList } from "../Data/locationData";
+import { useSettingsStore } from "../../../../../Contexts/SettingsZustand";
 
 export const AdminControls = ({ adminSettings, orderingType }) => {
   const { location, setLocation, isWhole, setIsWhole, isStand, setIsStand } =
@@ -55,6 +56,16 @@ export const AdminControls = ({ adminSettings, orderingType }) => {
 const LocationDropdown = ({ location, setLocation }) => {
   const { data: locationList } =
     useLocationList(true);
+
+    const currentLoc = useSettingsStore((state) => state.currentLoc);
+  
+  useEffect(() => {
+    console.log("location", location)
+    if (!location) {
+      setLocation(currentLoc)
+    }
+  }, [location, currentLoc])
+  
 
   return (
     <div
