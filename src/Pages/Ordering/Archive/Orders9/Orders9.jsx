@@ -81,19 +81,7 @@ const Orders9 = () => {
 
   return (
     <React.Fragment>
-      {/*<TabMenu 
-        style={{width: '60%'}}
-        model={[
-          {label: 'Cart', value: 'cart', icon: 'pi pi-fw pi-shopping-cart'},
-          {label: 'Standing', value: 'standing', icon: 'pi pi-fw pi-calendar'}
-        ]}
-        activeIndex={activeIndex}
-        onTabChange={e => {
-          setActiveIndex(e.index)
-          setOrderingType(e.value.value)
-        }}
-      />
-      {/* <Button label="STANDINGCART" /> */}
+      
       {user.location === "backporch" && (
         <AdminControls
           adminSettings={adminSettings}
