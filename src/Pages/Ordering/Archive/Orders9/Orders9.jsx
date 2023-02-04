@@ -81,7 +81,7 @@ const Orders9 = () => {
 
   return (
     <React.Fragment>
-      <TabMenu 
+      {/*<TabMenu 
         style={{width: '60%'}}
         model={[
           {label: 'Cart', value: 'cart', icon: 'pi pi-fw pi-shopping-cart'},
