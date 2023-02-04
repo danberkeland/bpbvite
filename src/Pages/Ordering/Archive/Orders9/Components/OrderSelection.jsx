@@ -7,11 +7,13 @@ export const OrderSelection = ({ selection }) => {
 
   return (
     <div className="bpbCalendar">
+      <div className="fulfillStyle">CARLTON PICKUP (DEFAULT)</div>
       <span className="p-float-label p-fluid" style={{ marginTop: "0px" }}>
+        
         <Calendar
           id="calendar"
           touchUI={true}
-          style={{ width: "100%" }}
+          style={{ width: "100px" }}
           value={delivDate}
           onChange={(e) => {
             setDelivDate(e.value);

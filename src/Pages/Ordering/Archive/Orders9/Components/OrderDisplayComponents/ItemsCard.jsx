@@ -59,8 +59,8 @@ export const ItemsCard = ({
   const rowExpansionTemplate = (rowData) => {
     return (
       <div>
-        <p>{"Rate: " + rowData.rate}</p>
-        <p>{"Subtotal: " + (rowData.rate * rowData.qty).toFixed(2)}</p>
+        <p>{"Rate: $" + rowData.rate + "/.ea"}</p>
+        <p>{"Subtotal: $" + (rowData.rate * rowData.qty).toFixed(2)}</p>
         {rowData.qtyUpdatedOn && (
           <p>
             Item edited <TimeAgo datetime={rowData.qtyUpdatedOn} />
@@ -78,7 +78,7 @@ export const ItemsCard = ({
       }, 0)
       .toFixed(2);
 
-    return <div>{"Total: " + total}</div>;
+    return <div>{"Total: $" + total}</div>;
   };
 
   const qtyInputTemplate = (rowData) => {
