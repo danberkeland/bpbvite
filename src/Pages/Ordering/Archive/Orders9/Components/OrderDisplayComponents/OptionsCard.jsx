@@ -38,20 +38,7 @@ export const OptionsCard = ({ orderHeaderState, readOnly }) => {
       style={{ marginTop: "0px" }}
       //title={readOnly ? "Items (Read Only)" : "Items"}
     >
-      {orderHeaderChanges && (
-        <div style={{ marginBottom: "30px" }}>
-          <Dropdown
-            id="filfillDropdown"
-            options={fulfillOptions}
-            optionLabel="label"
-            optionValue="value"
-            value={orderHeaderChanges.route}
-            onChange={(e) =>
-              setOrderHeaderChanges({ ...orderHeaderChanges, route: e.value })
-            }
-          />
-        </div>
-      )}
+      
 
       {orderHeaderChanges && (
         <span className="p-float-label">

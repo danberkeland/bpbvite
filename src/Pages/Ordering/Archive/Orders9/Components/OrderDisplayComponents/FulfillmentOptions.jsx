@@ -40,7 +40,7 @@ export const FullfillmentOptions = ({ orderHeaderState }) => {
   return (
     <div className="fullfillmentOptions">
       {orderHeaderChanges && (
-        <div style={{ marginBottom: "30px" }}>
+      
           <Dropdown
             id="filfillDropdown"
             options={fulfillOptions}
@@ -51,7 +51,7 @@ export const FullfillmentOptions = ({ orderHeaderState }) => {
               setOrderHeaderChanges({ ...orderHeaderChanges, route: e.value })
             }
           />
-        </div>
+       
       )}
     </div>
   );

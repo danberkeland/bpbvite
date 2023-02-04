@@ -39,7 +39,8 @@ h1 {
   color: #006aff;
 }
 
-h3, h4 {
+h3,
+h4 {
   color: grey;
 }
 
@@ -73,19 +74,19 @@ button:hover {
 
 
 .bottomSpace {
-  position:relative;
+  position: relative;
   width: 100%;
   height: 200px;
   background-color: #c69749;
 }
 
 
-.panelMenu .mypanel .p-menuitem-text { 
+.panelMenu .mypanel .p-menuitem-text {
   font-size: 1.2em;
   color: #282a3a;
 }
 
-.panelMenu .mypanel .p-menuitem-text:hover { 
+.panelMenu .mypanel .p-menuitem-text:hover {
   font-size: 1.2em;
   color: white;
 }
@@ -96,13 +97,13 @@ button:hover {
 }
 
 .panelMenu .mypanel .p-panelmenu-header .p-panelmenu-header-link {
-  background-color:#f4cc8b;
+  background-color: #f4cc8b;
   border-color: #735f32;
   margin: 15px;
   height: 80px;
 }
 
-.panelMenu .mypanel .p-panelmenu-header:not(.p-highlight):not(.p-disabled) > a:hover {
+.panelMenu .mypanel .p-panelmenu-header:not(.p-highlight):not(.p-disabled)>a:hover {
   background: #f1b451;
   border-color: #735f32;
 }
@@ -115,13 +116,13 @@ button:hover {
   color: white;
 }
 
-.panelMenu .p-panelmenu .p-panelmenu-header > a:focus {
+.panelMenu .p-panelmenu .p-panelmenu-header>a:focus {
   outline: 0 none;
   outline-offset: 0;
   box-shadow: 0 0 0 0.2rem #735f32;
 }
 
-.panelMenu .p-panelmenu .p-panelmenu-header > a {
+.panelMenu .p-panelmenu .p-panelmenu-header>a {
   padding: 1rem;
   border: 1px solid #735f32;
   color: #495057;
@@ -144,7 +145,7 @@ button:hover {
   justify-content: center;
 }
 
-.tabContainer .tabMenu  .p-menuitem-icon {
+.tabContainer .tabMenu .p-menuitem-icon {
   font-size: 2em;
 }
 
@@ -153,7 +154,7 @@ button:hover {
 
 .tabContainer {
   z-index: 200;
-  position:fixed;
+  position: fixed;
   width: 100%;
   bottom: 0;
 }
@@ -170,7 +171,7 @@ button:hover {
   border-color: transparent transparent #735f32 transparent;
   background: #735f32;
   color: #f1b451;
- 
+
 }
 
 .tabContainer .p-tabmenu .p-tabmenu-nav .p-tabmenuitem.p-highlight .p-menuitem-link {
@@ -201,7 +202,7 @@ button:hover {
 }
 */
 
-.dataTable .p-datatable-table .p-datatable-tbody tr td{
+.dataTable .p-datatable-table .p-datatable-tbody tr td {
   border-color: white;
   font-size: 1.2em;
 }
@@ -219,7 +220,7 @@ button:hover {
 }
 
 div .photoBox {
-  
+
   padding: 30px;
 }
 
@@ -230,10 +231,10 @@ div .photoBox {
 }
 
 .floatButtonsTop {
-    position: fixed;
-    z-index: 100;
-    top: 0px;
-    right: 0px
+  position: fixed;
+  z-index: 100;
+  top: 0px;
+  right: 0px
 }
 
 .p-password input {
@@ -241,15 +242,17 @@ div .photoBox {
 }
 
 .headerBlock {
-  display:flex;
+  display: flex;
   width: 100%;
   height: 55px;
-  align-items:flex-start;
+  align-items: flex-start;
   background-image: url("/public/bpbbanner.jpg");
   background-position: center;
   background-size: cover;
 }
-.currentCustomer, .signOutButton {
+
+.currentCustomer,
+.signOutButton {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -308,37 +311,39 @@ div .photoBox {
   border-bottom-right-radius: 3px;
 }
 
-.bpbSimpleForm .field .p-disabled, .p-component:disabled {
+.bpbSimpleForm .field .p-disabled,
+.p-component:disabled {
   opacity: .8;
 }
 
-.p-datatable .p-datatable-tbody > tr {
+.p-datatable .p-datatable-tbody>tr {
   background: #c69749;
   color: #495057;
   transition: box-shadow 0.2s;
 }
 
-.bpbDataTable .p-datatable .p-datatable-thead > tr > th {
+.bpbDataTable .p-datatable .p-datatable-thead>tr>th {
   text-align: left;
   padding: 1rem 1rem;
   border: 1px solid #c69749;
   border-width: 0 0 1px 0;
   font-weight: 600;
-  color:white;
+  color: white;
   background: #c69749;
   transition: box-shadow 0.2s;
 }
 
 
-.bpbDataTable .p-datatable .p-datatable-tbody > tr {
+.bpbDataTable .p-datatable .p-datatable-tbody>tr {
   background-color: #f4cc8b;
   color: #495057;
   transition: box-shadow 0.2s;
 }
 
-.bpbDataTable .p-datatable .p-datatable-tbody > tr > td {
+.bpbDataTable .p-datatable .p-datatable-tbody>tr>td {
   text-align: left;
-  font-size: 1em;;
+  font-size: 1em;
+  ;
   border: 1px solid #c69749;
   border-width: 0 5px 5px 5px;
   padding: .75rem .75rem;
@@ -379,11 +384,11 @@ div .photoBox {
   font-weight: 600;
 }
 
-.bpbDataTable .p-datatable .p-datatable-tbody .p-datatable-row-expansion > td {
+.bpbDataTable .p-datatable .p-datatable-tbody .p-datatable-row-expansion>td {
   width: 100%;
   text-align: right;
   font-weight: bold;
-  
+
 }
 
 .bpbCalendar {
@@ -391,7 +396,7 @@ div .photoBox {
   align-items: center;
   justify-content: center;
   background-color: #495057;
-  
+
 }
 
 
@@ -416,5 +421,31 @@ div .photoBox {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #495057; 
+  background-color: #495057;
+}
+
+
+.fulDrop .p-dropdown {
+  background-color: #495057;
+  border: none;
+  color: #e1b163;
+  font-size: 1.2em;
+  margin: 0 10px 0 0;
+  text-transform: uppercase;
+}
+
+.fulDrop .p-dropdown .p-inputtext {
+  color: white;
+  display: flex;
+  justify-content: center;
+  font-size: .8em;
+  text-transform: uppercase;
+}
+
+.fulDrop .p-dropdown .p-dropdown-trigger {
+  background: transparent;
+  color: white;
+  width: 2.357rem;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
 }

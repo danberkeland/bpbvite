@@ -8,7 +8,10 @@ export const OrderSelection = ({ selection, orderHeaderState }) => {
 
   return (
     <div className="fulfillBox">
+      <div className="fulDrop">
       <FullfillmentOptions orderHeaderState={orderHeaderState} />
+      </div>
+     
       <div className="bpbCalendar">
         <span className="p-float-label p-fluid" style={{ marginTop: "0px" }}>
           <Calendar
