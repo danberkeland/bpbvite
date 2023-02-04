@@ -6,7 +6,7 @@ export const OrderSelection = ({ selection }) => {
   const { delivDate, setDelivDate } = selection;
 
   return (
-    <React.Fragment>
+    <div className="bpbCalendar">
       <span className="p-float-label p-fluid" style={{ marginTop: "0px" }}>
         <Calendar
           id="calendar"
@@ -19,6 +19,6 @@ export const OrderSelection = ({ selection }) => {
         />
         {/* <label htmlFor="calendar">{"Delivery Date"}</label> */}
       </span>
-    </React.Fragment>
+    </div>
   );
 };

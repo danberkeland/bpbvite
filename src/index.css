@@ -366,3 +366,24 @@ div .photoBox {
   box-shadow: 0 0 0 0.2rem #eeeeee;
   border-color: #c69749;
 }
+
+.bpbCalendar {
+  display: flex;
+  justify-content: center;
+  background-color: #495057;
+  
+}
+
+.bpbCalendar .p-inputtext {
+  text-align: center;
+  font-size: 1em;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  color: white;
+  background: #495057;
+  padding: 0.5rem 0.5rem;
+  border: 1px solid #495057;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+  border-radius: 3px;
+ 
+}
