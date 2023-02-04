@@ -26,23 +26,27 @@ import {
 import { gqlFetcher } from "../Data/fetchers";
 import { createOrder, updateOrder } from "../Data/gqlQueries";
 
-export const OrderDisplay = ({ location, delivDate, userName }) => {
+export const OrderDisplay = ({
+  location,
+  delivDate,
+  userName,
+  orderHeaderState,
+}) => {
   const [showAddItem, setShowAddItem] = useState(false);
   const sidebarProps = { showAddItem, setShowAddItem };
-
-  const [orderHeader, setOrderHeader] = useState();
-  const [orderHeaderChanges, setOrderHeaderChanges] = useState();
 
   const [orderItems, setOrderItems] = useState();
   const [orderItemChanges, setOrderItemChanges] = useState();
 
   const [revalidating, setRevalidating] = useState(false);
 
-  const orderHeaderState = {
+  const {
     orderHeader,
     orderHeaderChanges,
     setOrderHeaderChanges,
-  };
+    setOrderHeader,
+  } = orderHeaderState;
+
   const orderItemsState = { orderItems, orderItemChanges, setOrderItemChanges };
 
   // const { locationDetails, standingData, cartData } = useOrderData
@@ -214,7 +218,9 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
           disabled={
             !orderItemChanges || orderItemChanges?.length === 0 || revalidating
           } // disable when no changes detected
-        >SUBMIT</button>
+        >
+          SUBMIT
+        </button>
       )}
 
       <AddItemSidebar

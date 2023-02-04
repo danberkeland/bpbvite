@@ -75,6 +75,18 @@ const Orders9 = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [orderingType, setOrderingType] = useState("cart");
 
+  
+  const [orderHeader, setOrderHeader] = useState();
+  const [orderHeaderChanges, setOrderHeaderChanges] = useState();
+
+  
+  const orderHeaderState = {
+    orderHeader,
+    orderHeaderChanges,
+    setOrderHeaderChanges,
+    setOrderHeader
+  };
+
   const handleCartStand = () => {
     setActiveIndex(Math.abs(activeIndex-1))
   }
@@ -93,12 +105,13 @@ const Orders9 = () => {
       </div>
       {activeIndex===0 && (
         <>
-          <OrderSelection selection={selection} />
+          <OrderSelection selection={selection} orderHeaderState={orderHeaderState}/>
 
           <OrderDisplay
             location={location}
             delivDate={delivDate}
             userName={user.name}
+            orderHeaderState={orderHeaderState}
           />
         </>
       )}
