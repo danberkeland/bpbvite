@@ -449,3 +449,9 @@ div .photoBox {
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
 }
+
+
+.noteBox {
+  padding: 10px;
+  background-color: #f4cc8b;
+}

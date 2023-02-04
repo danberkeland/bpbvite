@@ -34,12 +34,7 @@ export const OptionsCard = ({ orderHeaderState, readOnly }) => {
   ];
 
   return (
-    <Card
-      style={{ marginTop: "0px" }}
-      //title={readOnly ? "Items (Read Only)" : "Items"}
-    >
-      
-
+    <div className="noteBox">
       {orderHeaderChanges && (
         <span className="p-float-label">
           <InputTextarea
@@ -68,6 +63,6 @@ export const OptionsCard = ({ orderHeaderState, readOnly }) => {
           </label>
         </span>
       )}
-    </Card>
+    </div>
   );
 };
