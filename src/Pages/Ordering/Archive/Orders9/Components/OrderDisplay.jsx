@@ -205,8 +205,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
       />
 
       {getOrderSubmitDate() < delivDate && (
-        <Button
-          label="Submit"
+        <button
           onClick={() => {
             setRevalidating(true);
             handleSubmit();
@@ -215,7 +214,7 @@ export const OrderDisplay = ({ location, delivDate, userName }) => {
           disabled={
             !orderItemChanges || orderItemChanges?.length === 0 || revalidating
           } // disable when no changes detected
-        />
+        >SUBMIT</button>
       )}
 
       <AddItemSidebar

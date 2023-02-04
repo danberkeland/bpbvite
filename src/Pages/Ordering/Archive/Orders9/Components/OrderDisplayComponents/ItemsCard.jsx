@@ -46,11 +46,11 @@ export const ItemsCard = ({
           {readOnly ? "Items (Read Only)" : "Items"}
     </div>*/}
         <div style={{ flex: "35%" }}>
-          <Button
-            label="+ Add Item"
+          <button
+            
             disabled={readOnly}
             onClick={() => setShowAddItem(true)}
-          />
+          >+ ADD PRODUCT</button>
         </div>
       </div>
     );
