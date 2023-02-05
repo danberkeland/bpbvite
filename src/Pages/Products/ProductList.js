@@ -56,7 +56,7 @@ function ProductList({ selectedProduct, setSelectedProduct }) {
     prodName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
 
-  const productList = useProductListSimple();
+  const productList = useProductListSimple(true);
 
   useEffect(() => {
     console.log('productList', productList)
