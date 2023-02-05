@@ -18,7 +18,7 @@ import { Column } from "primereact/column"
 import dynamicSort from "../Functions/dynamicSort"
 import { Card } from "primereact/card"
 import { InputNumber } from "primereact/inputnumber"
-import { getTransitionDates, getTtl, getWeekday, getWorkingDateTime } from "../Functions/dateAndTime"
+import { getBpbTime, getTransitionDates, getTtl, getWeekday, getWorkingDateTime } from "../Functions/dateAndTime"
 
 import { gqlFetcher } from "../Data/fetchers"
 import * as queries from '../Data/gqlQueries'
@@ -30,8 +30,8 @@ export const StandingDisplay = ({ standingSettings, user }) => {
   const  { location, isWhole, isStand } = standingSettings
 
   // Display Controls
-  const [viewMode, setViewMode] = useState(null) // 'DAY' or 'PRODUCT'. for future, perhaps a 'FULL' view which is a DAY view but with all 7 day columns.
-  const [dayOfWeek, setDayOfWeek] = useState(null) // select day in viewMode 'DAY'
+  const [viewMode, setViewMode] = useState('DAY') // 'DAY' or 'PRODUCT'. for future, perhaps a 'FULL' view which is a DAY view but with all 7 day columns.
+  const [dayOfWeek, setDayOfWeek] = useState(getWeekday(getBpbTime().toJSDate())) // select day in viewMode 'DAY'
   const [selectedProduct, setSelectedProduct] = useState(null)
   const viewSettings = { viewMode, setViewMode, dayOfWeek, setDayOfWeek, selectedProduct, setSelectedProduct } 
   
