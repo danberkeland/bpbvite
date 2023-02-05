@@ -25,6 +25,7 @@ import {
 
 import { gqlFetcher } from "../Data/fetchers";
 import { createOrder, updateOrder } from "../Data/gqlQueries";
+import { useSettingsStore } from "../../../../../Contexts/SettingsZustand";
 
 export const OrderDisplay = ({
   location,
@@ -60,6 +61,8 @@ export const OrderDisplay = ({
     delivDate,
     !!location && !!delivDate
   );
+
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
   //const OrderItemList = makeOrderObject(locationDetails, cartData, standingData, delivDate)
 
@@ -97,6 +100,7 @@ export const OrderDisplay = ({
   }, [locationDetails, standingData, cartData, mutateCart, delivDate]);
 
   const handleSubmit = async () => {
+    setIsLoading(true)
     // combine header data with items
     // combination & submission logic will be designed
     // to focus on one item at a time.
@@ -170,7 +174,7 @@ export const OrderDisplay = ({
         response = response.data.updateOrder;
         console.log(response);
       }
-
+      setIsLoading(false)
       mutateCart();
 
       // Testing mutate with generic SWR mutate below
