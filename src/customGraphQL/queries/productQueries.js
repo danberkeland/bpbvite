@@ -38,8 +38,6 @@ export const getProductDetails = /* GraphQL */ `
       createdAt
       updatedAt
       inventoryProductId
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -62,6 +60,63 @@ export const listProductsSimple = /* GraphQL */ `
       items {
         prodName
         prodNick
+      }
+    }
+  }
+`;
+
+export const listProductsFull = /* GraphQL */ `
+  query ListProducts(
+    $prodNick: String
+    $filter: ModelProductFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listProducts(
+      prodNick: $prodNick
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        Type
+        prodName
+        prodNick
+        packGroup
+        packSize
+        doughNick
+        freezerThaw
+        packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
+        transferStage
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isRetail
+        retailName
+        retailDescrip
+        isWhole
+        isEOD
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        qbID
+        createdAt
+        updatedAt
+        inventoryProductId
       }
     }
   }

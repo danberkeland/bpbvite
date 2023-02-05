@@ -7,7 +7,7 @@ import { Column } from "primereact/column";
 
 import ProductDetails from "./ProductDetails";
 // import { useProductList } from "../../swr";
-import { useProductListSimple } from "../../data/productData"
+import { useProductListFull } from "../../data/productData"
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { withFadeIn } from "../../hoc/withFadeIn";
 import { useEffect } from "react";
@@ -56,7 +56,16 @@ function ProductList({ selectedProduct, setSelectedProduct }) {
     prodName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
 
-  const productList = useProductListSimple();
+  const {data: productList, errors: productListErrors} = useProductListFull(true);
+  const formKeys = Object.keys(initialState)
+  const tableData = productList?.map(item => {
+    let cleanedItem = formKeys.reduce((cItem, key) => {
+      if (item.hasOwnProperty(key)) return {...cItem, [key]: item[key]}
+      else return {...cItem, [key]: initialState[key]}
+    }, {})
+
+    return cleanedItem
+  })
 
   useEffect(() => {
     console.log('productList', productList)
@@ -73,7 +82,7 @@ function ProductList({ selectedProduct, setSelectedProduct }) {
       <div className="bpbDataTable">
       <DataTable
         className="dataTable"
-        value={productList.data}
+        value={tableData}
         selectionMode="single"
         metaKeySelection={false}
         selection={selectedProduct}
@@ -103,10 +112,10 @@ function ProductList({ selectedProduct, setSelectedProduct }) {
       ) : (
         <React.Fragment>
           <button onClick={handleClick}>+ CREATE PRODUCT</button>
-          {productList.isLoading ? setIsLoading(true) : setIsLoading(false)}
+          {(!productList && !productListErrors) ? setIsLoading(true) : setIsLoading(false)}
 
-          {productList.errors && <div>Table Failed to load</div>}
-          {productList.data && <FadeProductDataTable />}
+          {productListErrors && <div>Table Failed to load</div>}
+          {productList && <FadeProductDataTable />}
           <div className="bottomSpace"></div>
         </React.Fragment>
       )}

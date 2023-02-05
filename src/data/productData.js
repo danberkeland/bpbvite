@@ -55,6 +55,43 @@ export const revalidateProductListSimple = () => {
   )
 }
 
+/**
+ * Produces a full list of prodNick/prodName items.
+ * @param {boolean} shouldFetch Fetches data only when true.
+ * @returns {{ data: Array<{ locNick: string, locName: string }>, errors: object }} A list of locNick ID's and locName text labels.
+ */
+export const useProductListFull = (shouldFetch) => {
+  const { data, errors } = useSWR(
+    shouldFetch ? [queries.listProductsFull, { limit: 1000 }] : null, 
+    gqlFetcher, 
+    defaultSwrOptions
+  )
+
+  const transformData = () => {
+    if (!data) return undefined
+    return getNestedObject(data, ['data', 'listProducts', 'items']).sort(dynamicSort("locName"))
+  }
+  const _data = useMemo(transformData, [data])
+
+  return({
+    data: _data,
+    errors: errors
+  })
+
+}
+
+/** 
+ * Can be called whenever productListFull data is affected by a mutation.
+ * Revalidation can be called anywhere, even when useProductListFull is not present.
+ */
+export const revalidateProductListFull = () => {
+  mutate(
+    [queries.listProductsFull, { limit: 1000 }], 
+    null, 
+    { revalidate: true}
+  )
+}
+
 export const useProductListForOrders = (shouldFetch) => {
   const { data, errors } = useSWR(
     shouldFetch ? [queries.listProductsForOrders, { limit: 1000 }] : null, 
