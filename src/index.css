@@ -1,3 +1,15 @@
+:root {
+  --bpb-background-0: #282a3a;
+  --bpb-background-1: #495057;
+  --bpb-background-2: #735f32;
+  --bpb-background-3: #c69749;
+  --bpb-background-4: #e1b163;
+  --bpb-background-5: #f1b451;
+  --bpb-background-6: #f4cc8b;
+}
+  
+  
+  
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -6,7 +18,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   box-sizing: border-box;
-  background-color: #c69749;
+  background-color: var(--bpb-background-3)
 }
 
 code {
@@ -48,8 +60,8 @@ button {
   width: 100%;
   margin: auto;
   padding: 5mitpx;
-  color: #e1b163;
-  background-color: #735f32;
+  color: var(--bpb-background-4);
+  background-color: var(--bpb-background-2);
   font-size: 1em;
   border: none;
 }
@@ -77,13 +89,13 @@ button:hover {
   position: relative;
   width: 100%;
   height: 200px;
-  background-color: #c69749;
+  background-color:var(--bpb-background-3);
 }
 
 
 .panelMenu .mypanel .p-menuitem-text {
   font-size: 1.2em;
-  color: #282a3a;
+  color: var(--bpb-background-0);
 }
 
 .panelMenu .mypanel .p-menuitem-text:hover {
@@ -93,19 +105,19 @@ button:hover {
 
 .panelMenu .mypanel .p-menuitem-icon {
   font-size: 1.2em;
-  color: #282a3a;
+  color: var(--bpb-background-0);
 }
 
 .panelMenu .mypanel .p-panelmenu-header .p-panelmenu-header-link {
-  background-color: #f4cc8b;
-  border-color: #735f32;
+  background-color: var(--bpb-background-6);
+  border-color:var(--bpb-background-2);
   margin: 15px;
   height: 80px;
 }
 
 .panelMenu .mypanel .p-panelmenu-header:not(.p-highlight):not(.p-disabled)>a:hover {
-  background: #f1b451;
-  border-color: #735f32;
+  background: var(--bpb-background-5);
+  border-color:var(--bpb-background-2);
 }
 
 .panelMenu .mypanel .p-panelmenu-header .p-panelmenu-header-link:hover .p-menuitem-text {
@@ -119,14 +131,14 @@ button:hover {
 .panelMenu .p-panelmenu .p-panelmenu-header>a:focus {
   outline: 0 none;
   outline-offset: 0;
-  box-shadow: 0 0 0 0.2rem #735f32;
+  box-shadow: 0 0 0 0.2rem var(--bpb-background-2);
 }
 
 .panelMenu .p-panelmenu .p-panelmenu-header>a {
   padding: 1rem;
-  border: 1px solid #735f32;
-  color: #495057;
-  background: #f1b451;
+  border: 1px solid var(--bpb-background-2);
+  color: var(--bpb-background-1);
+  background: var(--bpb-background-5);
   font-weight: 600;
   border-radius: 3px;
   transition: box-shadow 0.2s;
@@ -160,23 +172,23 @@ button:hover {
 }
 
 .tabContainer .p-tabmenu .p-tabmenu-nav {
-  background: #735f32;
-  border: 1px solid #735f32;
+  background: var(--bpb-background-2);
+  border: 1px solid var(--bpb-background-2);
   border-width: 0 0 2px 0;
 }
 
 .tabContainer .p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link {
-  border: solid #735f32;
+  border: solid var(--bpb-background-2);
   border-width: 0 0 2px 0;
-  border-color: transparent transparent #735f32 transparent;
-  background: #735f32;
-  color: #f1b451;
+  border-color: transparent transparent var(--bpb-background-2) transparent;
+  background: var(--bpb-background-2);
+  color: var(--bpb-background-5);
 
 }
 
 .tabContainer .p-tabmenu .p-tabmenu-nav .p-tabmenuitem.p-highlight .p-menuitem-link {
-  background: #c69749;
-  border-color: #c69749;
+  background:var(--bpb-background-3);
+  border-color:var(--bpb-background-3);
   color: #ffffff;
 }
 
@@ -257,12 +269,12 @@ div .photoBox {
   align-items: center;
   justify-content: center;
   height: 40px;
-  background-color: #282a3a;
-  color: #e1b163;
+  background-color: var(--bpb-background-0);
+  color: var(--bpb-background-4);
 }
 
 .cust {
-  color: #e1b163;
+  color: var(--bpb-background-4);
   font-size: 1.2em;
   text-transform: uppercase;
 }
@@ -272,7 +284,7 @@ div .photoBox {
   align-items: center;
   justify-content: center;
   height: 30px;
-  background-color: #735f32;
+  background-color: var(--bpb-background-2);
 }
 
 .cartStand {
@@ -283,20 +295,20 @@ div .photoBox {
 
 .custDrop {
   display: flex;
-  background-color: #282a3a;
+  background-color: var(--bpb-background-0);
   justify-content: center;
 }
 
 .custDrop .p-dropdown {
-  background-color: #282a3a;
+  background-color: var(--bpb-background-0);
   border: none;
-  color: #e1b163;
+  color: var(--bpb-background-4);
   font-size: 1.2em;
   text-transform: uppercase;
 }
 
 .custDrop .p-dropdown .p-inputtext {
-  color: #e1b163;
+  color: var(--bpb-background-4);
   display: flex;
   justify-content: center;
   font-size: 1em;
@@ -305,7 +317,7 @@ div .photoBox {
 
 .custDrop .p-dropdown .p-dropdown-trigger {
   background: transparent;
-  color: #e1b163;
+  color: var(--bpb-background-4);
   width: 2.357rem;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
@@ -317,26 +329,26 @@ div .photoBox {
 }
 
 .p-datatable .p-datatable-tbody>tr {
-  background: #c69749;
-  color: #495057;
+  background:var(--bpb-background-3);
+  color: var(--bpb-background-1);
   transition: box-shadow 0.2s;
 }
 
 .bpbDataTable .p-datatable .p-datatable-thead>tr>th {
   text-align: left;
   padding: 1rem 1rem;
-  border: 1px solid #c69749;
+  border: 1px solidvar(--bpb-background-3);
   border-width: 0 0 1px 0;
   font-weight: 600;
   color: white;
-  background: #c69749;
+  background:var(--bpb-background-3);
   transition: box-shadow 0.2s;
 }
 
 
 .bpbDataTable .p-datatable .p-datatable-tbody>tr {
-  background-color: #f4cc8b;
-  color: #495057;
+  background-color: var(--bpb-background-6);
+  color: var(--bpb-background-1);
   transition: box-shadow 0.2s;
 }
 
@@ -344,7 +356,7 @@ div .photoBox {
   text-align: left;
   font-size: 1em;
   ;
-  border: 1px solid #c69749;
+  border: 1px solid var(--bpb-background-3);
   border-width: 0 5px 5px 5px;
   padding: .75rem .75rem;
 }
@@ -352,32 +364,32 @@ div .photoBox {
 .bpbDataTable .p-inputtext {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 1rem;
-  color: #495057;
+  color: var(--bpb-background-1);
   background: #eeeeee;
   padding: 0.5rem 0.5rem;
-  border: 1px solid #495057;
+  border: 1px solid var(--bpb-background-1);
   transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
   appearance: none;
   border-radius: 3px;
 }
 
 .bpbDataTable .p-inputtext:enabled:hover {
-  border-color: #495057;
+  border-color: var(--bpb-background-1);
 }
 
 .bpbDataTable .p-inputtext:enabled:focus {
   outline: 0 none;
   outline-offset: 0;
   box-shadow: 0 0 0 0.2rem #eeeeee;
-  border-color: #c69749;
+  border-color:var(--bpb-background-3);
 }
 
 .bpbDataTable .p-datatable .p-datatable-footer {
   display: flex;
   justify-content: center;
-  background: #c69749;
+  background:var(--bpb-background-3);
   color: white;
-  border: 1px solid #c69749;
+  border: 1px solid var(--bpb-background-3);
   font-size: 1.2em;
   border-width: 0 0 1px 0;
   padding: 1rem 1rem;
@@ -395,7 +407,7 @@ div .photoBox {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #495057;
+  background-color: var(--bpb-background-1);
 
 }
 
@@ -405,9 +417,9 @@ div .photoBox {
   font-size: 1em;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   color: white;
-  background: #495057;
+  background: var(--bpb-background-1);
   padding: 0.5rem 0.5rem;
-  border: 1px solid #495057;
+  border: 1px solid var(--bpb-background-1);
   transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
   appearance: none;
   border-radius: 3px;
@@ -421,14 +433,14 @@ div .photoBox {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #495057;
+  background-color: var(--bpb-background-1);
 }
 
 
 .fulDrop .p-dropdown {
-  background-color: #495057;
+  background-color: var(--bpb-background-1);
   border: none;
-  color: #e1b163;
+  color: var(--bpb-background-4);
   font-size: 1.2em;
   margin: 0 10px 0 0;
   text-transform: uppercase;
@@ -453,5 +465,5 @@ div .photoBox {
 
 .noteBox {
   padding: 10px;
-  background-color: #f4cc8b;
+  background-color: var(--bpb-background-6);
 }
