@@ -11,6 +11,8 @@ import gqlFetcher from "./fetchers"
 import * as queries from "../customGraphQL/queries/productQueries"
 import * as mutations from "../customGraphQL/mutations/productMutations"
 
+import { useLocationDetails } from "./locationData"
+
 // import * as yup from "yup"
 
 
@@ -157,6 +159,61 @@ export const revalidateProductDetails = (prodNick) => {
     { revalidate: true }
   )
 }
+
+
+/**
+ * Compound data hook + transformation. Returns a detailed product list modified
+ * with Location-specific settings. Intended to use for Ordering
+*/
+export const useProductDataWithLocationCustomization = (locNick) => {
+  const { data:productData, errors:productErrors } = useProductListFull(true)
+  const { altPrices, templateProds, prodsNotAllowed, altLeadTimes, errors:locationErrors } = useLocationDetails(locNick, !!locNick)
+
+  const applyOverrides = () => {
+    if (!productData || !altPrices || !templateProds || !prodsNotAllowed || !altLeadTimes) return undefined
+
+    return productData.filter(item => {
+      let override = prodsNotAllowed.find(i => i.prodNick === item.prodNick)
+      return override ? override.isAllowed : item.defaultInclude
+
+    }).map(item => {
+      let override = altPrices.find(i => i.prodNick === item.prodNick)
+      return override ? { ...item, wholePrice: override.wholePrice } : { ...item }
+
+    }).map(item => {
+      let override = altLeadTimes.find(i => i.prodNick === item.prodNick)
+      return override ? { ...item, leadTime: override.leadTime } : { ...item }
+
+    }).sort(
+      dynamicSort("prodName")
+
+    ).sort( (a, b) => {
+      let _a = templateProds.indexOf(a.prodNick) > -1 ? 0 : 1
+      let _b = templateProds.indexOf(b.prodNick) > -1 ? 0 : 1
+      return _a - _b
+
+    })
+  
+  }
+
+  const productsForLocation = useMemo(
+    applyOverrides, 
+    [productData, altPrices, templateProds, prodsNotAllowed, altLeadTimes]
+  )
+
+  return ({
+    data: productsForLocation,
+    errors: {
+      product: productErrors,
+      location: locationErrors
+    }
+  })
+
+}
+
+
+
+
 
 // consider calling the revalidate functions above after 
 // performing one or a batch of mutations below.

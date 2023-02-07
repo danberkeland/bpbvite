@@ -1,17 +1,17 @@
 import useSWR, { mutate } from "swr"
 import { defaultSwrOptions } from "./constants"
 
-import { useMemo } from "react"
+//import { useMemo } from "react"
 
-import dynamicSort from "../functions/dynamicSort"
+//import dynamicSort from "../functions/dynamicSort"
 import getNestedObject from "../functions/getNestedObject"
 
 import gqlFetcher from "./fetchers"
 
-import * as queries from "../customGraphQL/queries/productQueries"
-import * as mutations from "../customGraphQL/mutations/productMutations"
+import * as queries from "../customGraphQL/queries/standingQueries"
+import * as mutations from "../customGraphQL/mutations/standingMutations"
 
-import * as yup from "yup"
+//import * as yup from "yup"
 
 
 /******************
