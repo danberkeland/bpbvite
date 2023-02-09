@@ -1,3 +1,4 @@
+import { useMemo } from "react"
 import useSWR, { mutate } from "swr"
 import { defaultSwrOptions } from "./constants"
 
@@ -5,13 +6,17 @@ import { defaultSwrOptions } from "./constants"
 
 // import dynamicSort from "../functions/dynamicSort"
 import getNestedObject from "../functions/getNestedObject"
+import { getWeekday, dateToYyyymmdd } from "../functions/dateAndTime"
 
 import gqlFetcher from "./fetchers"
 
 import * as queries from "../customGraphQL/queries/orderQueries"
 import * as mutations from "../customGraphQL/mutations/orderMutations"
 
-import * as yup from "yup"
+//import * as yup from "yup"
+
+import { useLocationDetails } from "./locationData"
+import { useStandingByLocation } from "./standingData"
 
 
 /******************
@@ -32,7 +37,7 @@ export const useOrdersByLocationByDate = (locNick, delivDate, shouldFetch) => {
     delivDate: delivDate
   } : null
   // if (shouldFetch) console.log("Fetching cart data...")
-  const { data, errors } = useSWR(
+  const { data, errors, mutate } = useSWR(
     shouldFetch ? [queries.listOrdersByLocationByDate, variables] : null, 
     gqlFetcher, 
     defaultSwrOptions
@@ -45,23 +50,9 @@ export const useOrdersByLocationByDate = (locNick, delivDate, shouldFetch) => {
 
   return ({
     data: _data,
-    errors: errors
+    errors: errors,
+    mutate: mutate
   })
-}
-
-
-/** 
- * Can be called whenever productListSimple data is affected by a mutation.
- * Revalidation can be called anywhere, even when useProductListSimple is not present.
- * @param {String} locNick Location ID attribute.
- * @param {String} delivDate Date string in ISO yyyy-mm-dd format.
- */
-export const revalidateOrdersByLocationByDate = (locNick, delivDate) => {
-  mutate(
-    [queries.listOrdersByLocationByDate, { locNick: locNick, delivDate: delivDate }], 
-    null, 
-    { revalidate: true}
-  )
 }
 
 /*************
@@ -78,9 +69,10 @@ export const createOrder = async (createOrderInput) => {
   )
   if (LOGGING) console.log("Create order response: ", response)
 
+  return response
 }
 
-export const updateProduct = async (updateOrderInput) => {
+export const updateOrder = async (updateOrderInput) => {
   if (LOGGING) console.log("Update order input: ", updateOrderInput)
   const response = await gqlFetcher(
     mutations.updateOrder, 
@@ -88,9 +80,10 @@ export const updateProduct = async (updateOrderInput) => {
   )
   if (LOGGING) console.log("Update order response: ", response)
 
+  return response
 }
 
-export const deleteProduct = async (deleteOrderInput) => {
+export const deleteOrder = async (deleteOrderInput) => {
   if (LOGGING) console.log("Delete order input: ", deleteOrderInput)
   const response = await gqlFetcher(
     mutations.deleteOrder,
@@ -98,6 +91,7 @@ export const deleteProduct = async (deleteOrderInput) => {
   )
   if (LOGGING) console.log("Delete order response: ", response)
 
+  return response
 }
 
 
@@ -105,14 +99,103 @@ export const deleteProduct = async (deleteOrderInput) => {
  * SCHEMAS *
  ***********/
 
-const createProductSchema = yup.object().shape({
+// const createProductSchema = yup.object().shape({
   
-})
+// })
 
-const updateProductSchema = yup.object().shape({
+// const updateProductSchema = yup.object().shape({
 
-})
+// })
 
-const deleteProductSchema = yup.object().shape({
-  id: yup.string().required()
-})
+// const deleteProductSchema = yup.object().shape({
+//   id: yup.string().required()
+// })
+
+
+
+
+/**
+ * Compound SWR hook + data transformation. Produces a header object and items object, 
+ * combining cart and standing data according to business logic.
+ * @param {string} locNick - location ID for query 
+ * @param {Date} delivDateJS - js Date for the desired delivery date. Converts to ISO string automatically
+ * @param {boolean} isWhole - for possible future cases of handling wholesale and retail orders
+ * @returns 
+ */
+export const useCartOrderData = (locNick, delivDateJS, isWhole) => {
+  const delivDate = dateToYyyymmdd(delivDateJS)
+  const dayOfWeek = getWeekday(delivDateJS)
+  const { data:locationDetails } = useLocationDetails(locNick, !!locNick)
+  const { data:cartData } = useOrdersByLocationByDate(locNick, delivDate, !!locNick && !!delivDate)
+  const { data:standingData } = useStandingByLocation(locNick, !!locNick)
+  
+  // console.log(locNick, delivDate, isWhole, dayOfWeek)
+  // console.log("L C S:", locationDetails?1:0, cartData?1:0, standingData?1:0)
+
+  const makeCartOrder = () => {
+    if (!locationDetails || !cartData || !standingData) return undefined
+
+    const altPrices = locationDetails.customProd.items
+
+    const _cart = cartData.map(item => ({...item, orderType: 'C'}))
+    const _standing = standingData
+      .filter(item => item.dayOfWeek === dayOfWeek && item.isWhole === true && item.isStand === true)
+      .map(item => {
+        let altPriceItem = altPrices.find(altItem => altItem.prodNick = item.product.prodNick)
+        let rate = (!!altPriceItem) 
+          ? altPriceItem.wholePrice 
+          : item.product.wholePrice
+        let orderType = 'S'
+
+        return {...item, rate: rate, orderType: orderType}
+      })
+ 
+    // append standing items to cart items if
+    // no cart item exists for the same product
+    const orderItems = _standing
+      .reduce((prev, curr) => {
+        let matchIndex = prev.findIndex(item => 
+          item.product.prodNick === curr.product.prodNick
+        )
+        if (matchIndex === -1) prev.push(curr)
+        return prev
+
+      }, _cart)
+      .sort((a, b) => a.product.prodName < b.product.prodName ? -1 
+        : a.product.prodName > b.product.prodname ? 1
+        : 0
+      )
+
+    // Make Header
+    const defaultRoute = ['atownpick', 'slopick'].includes(locationDetails.zone.zoneNick) 
+      ? locationDetails.zone.zoneNick
+      : 'deliv'
+    const cartRoute = cartData.length ? cartData[0].route : null
+    //const standingRoute = ... <-- for when we enable setting the attribute in standing orders
+    
+    const cartNote = cartData.length ? cartData[0].ItemNote : null
+    //const standingNote = ... <-- for when we enable setting the attribute in standing orders
+    
+    const orderHeader = {
+      locNick: locationDetails.locNick,
+      isWhole: isWhole,
+      delivDate: delivDate,
+      defaultRoute: defaultRoute,
+      route: cartRoute ? cartRoute : defaultRoute,
+      ItemNote: cartNote ? cartNote : '',
+    }
+
+    return {
+      header: orderHeader,
+      items: orderItems
+    }
+  }
+
+ const cartOrder = useMemo(
+    makeCartOrder, 
+    [locationDetails, cartData, standingData, delivDate, dayOfWeek, isWhole]
+  )
+
+  return cartOrder
+
+}

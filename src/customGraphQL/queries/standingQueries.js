@@ -11,6 +11,7 @@ export const listStandingByLocation = /* GraphQL */ `
             prodName
             wholePrice
             retailPrice
+            leadTime
           } 
           qty
           dayOfWeek

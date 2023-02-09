@@ -88,7 +88,7 @@ export function dateToYyyymmdd(date) {
  */
 
 export function getWeekday(date) {
-  //if (!date) return null
+  if (!date) return null
   const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
   return (weekdays[date.getDay()])
 }

@@ -12,6 +12,7 @@ export const listOrdersByLocationByDate = /* GraphQL */ `
             prodName
             wholePrice
             retailPrice
+            leadTime
           } 
           qty
           qtyUpdatedOn
