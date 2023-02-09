@@ -212,8 +212,9 @@ export const submitConfirm = async (props) => {
     });
 };
 
-export const setNewPassword = async (props) => {
-  const { setIsLoading, setFormType, passwordConfirm, userObject } = props;
+export const setNewPassword = async (props, fns) => {
+  const { setIsLoading, setFormType, userObject } = fns;
+  const { passwordConfirm } = props
   setIsLoading(true);
   await Auth.completeNewPassword(userObject, passwordConfirm).then((use) => {
     setFormType("onNoUser");

@@ -78,7 +78,7 @@
         },
         "bpbadmin2testFetchLayer": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
-          "s3Key": "amplify-builds/bpbadmin2testFetchLayer-LambdaLayerVersionf9bd7a95-build.zip"
+          "s3Key": "amplify-builds/bpbadmin2testFetchLayer-LambdaLayerVersion4a15bdc8-build.zip"
         },
         "bpbrouter": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
