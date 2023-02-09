@@ -72,6 +72,7 @@ function LocationDetails({ initialState }) {
           <BPB.CustomTextInput label="Address" name="addr2" converter={props} />
           <BPB.CustomTextInput label="City" name="city" converter={props} />
           <BPB.CustomTextInput label="Zip" name="zip" converter={props} />
+          <BPB.CustomTextInput label="Google Maps Link" name="gMap" converter={props} />
         </GroupBox>
 
         <GroupBox>
