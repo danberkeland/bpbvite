@@ -31,18 +31,17 @@ function Logistics() {
 
   const [zone, setZone] = useState(null)
   const [loc, setLoc] = useState(null)
-  //const location = locationData?.find(() => i=> i.locNick === loc)
   const [location, setLocation] = useState(null)
+
+  const gMapLink = makeLink(location?.gMap)
+
 
   return (
     <div>
       {readAuthorized &&
         <div style={{padding: "0.5rem", marginBottom: "200px"}}>
-
           <h1>Logistics: Locations</h1>
-          <pre>{zone + ", " + loc}</pre>
-          <pre>{JSON.stringify(location, null, 2)}</pre>
-          <pre>{getMobileOperatingSystem()}</pre>
+
           <div style={{padding: "0.5rem"}} className="p-fluid">
             <Dropdown 
               className="p-column-filter"
@@ -59,48 +58,64 @@ function Logistics() {
             />
           </div>
           
-          <div style={{padding: "0.5rem"}}>
-          <DataTable
-            value={makeTableData(locationData, zone, loc)}
-            responsiveLayout
-            selectionMode="single"
-            onSelectionChange={e => {
-              setLoc(e.value.locNick)
-              setLocation(locationData.find(i => i.locNick === e.value.locNick))
-            }}
-          >
-            <Column
-              field="locName"
-              header="Location"
-            />
-          </DataTable>
+          <div style={{margin: "0.5rem"}}>
+          {!loc &&
+            <DataTable
+              value={makeTableData(locationData, zone, loc)}
+              responsiveLayout
+              selectionMode="single"
+              onSelectionChange={e => {
+                setLoc(e.value.locNick)
+                setLocation(locationData.find(i => i.locNick === e.value.locNick))
+              }}
+            >
+              <Column
+                field="locName"
+                header="Location"
+              />
+            </DataTable>
+          }
 
           {!!loc &&
-            <div style={{marginTop: "2rem"}}>
+            <div>
               <Button label="Back to list" icon="pi pi-chevron-left" onClick={() => {
                 setLoc(null)
                 setLocation(null)
               }}/>
 
+
               <Card
                 title={location.locName}
               >
-                <p>{location.addr1}</p>
-                <p>{location.addr2}</p>
-                <p>{location.city + ", CA " + location.zip}</p>
-                <p>{location.phone}</p>
+                {/* <p>{location.addr1}</p> */}
 
-                <p>{`${location.addr1.replaceAll(' ', '+')}+${location.addr2.replaceAll(' ', '+')},+${location.city.replaceAll(' ', '+')}+,${location.zip}`}</p>
-                {/* <p>{mapsSelector(`${location.addr1.replaceAll(' ', '+')}+${location.addr2.replaceAll(' ', '+')},+${location.city.replaceAll(' ', '+')}+,${location.zip}`)}</p> */}
-                <p><a href={`${getMapsLink()}/place/${location.addr2.replaceAll(' ', '+')},+${location.city.replaceAll(' ', '+')}+,${location.zip}`} target="_blank" rel="noopener noreferrer">{'Find on Google Maps'}</a></p>
+                <div style={{margin: ".25rem", display: "flex", gap: "1rem"}}>
+                  <div style={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
+                    <i className="pi pi-map-marker"></i>
+                  </div>
+                  <div>
+                    <div>{location.addr2}</div>
+                    <div>{location.city + ", CA " + location.zip}</div>
+                  </div>
 
-                {/* <a href={"tel:" + location.phone.replaceAll('-', '')} className="tel-link">{location.phone}</a> */}
+                </div>
+                <div style={{margin: ".25rem", padding: ".75rem", backgroundColor: "#f4cc8b", border: "1px solid #e1b163", borderRadius: ".25rem", width: "fit-content", display: "flex", justifyContent: "left", gap: "1rem"}}>
+                  <i className="pi pi-phone" /> <span><b>{location.phone}</b></span>
+                </div>
 
-                {/* <Button label='View with Maps' 
-                  onClick={() => mapsSelector(`${location.addr1.replaceAll(' ', '+')}+${location.addr2.replaceAll(' ', '+')},+${location.city.replaceAll(' ', '+')}+,${location.zip}`)}
-                /> */}
+                {!!location.gMap && 
+                  <div style={{margin: ".25rem"}}>
+                    <i style={{marginRight: "1rem"}} className="pi pi-map" />
+                    <a href={gMapLink} target="_blank" rel="noopener noreferrer">View in Google Maps</a>
+                  </div>}
+                {!location.gMap && <p>Google Maps link not found.</p>}
+
 
               </Card>
+
+              <pre>{getMobileOperatingSystem()}</pre>
+              <pre>{zone + ", " + loc}</pre>
+              {/* <pre>{JSON.stringify(location, null, 2)}</pre> */}
 
             </div>
           }
@@ -127,19 +142,22 @@ const makeTableData = (locationData, zone, loc) => {
 }
 
 
-const getMapsLink = () => {
+/**
+ * Adjusts google maps link for iOS users by changing the 
+ * stored address from "https://..." to "maps://..." as recommended from
+ * https://medium.com/@colinlord/opening-native-map-apps-from-the-mobile-browser-afd66fbbb8a4
+ * 
+ * Allows mobile users to open links in the native maps app.
+ * 
+ * @param {string} gMapLink - googleMaps address value stored in DDB
+ * @returns 
+ */
+const makeLink = (gMapLink) => {
+  if (!gMapLink) return ''
   let os = getMobileOperatingSystem()
-  if (os === 'iOS') return 'maps://maps.google.com/maps'
-  else return 'https://maps.google.com/maps'}
 
-
-function mapsSelector(placeString) {
-  let os = getMobileOperatingSystem()
-  if (os === 'iOS') {
-    window.open(`maps://maps.google.com/maps/place/${placeString}`)
-  } else {
-    window.open(`https://maps.google.com/maps/place/${placeString}`)
-  } 
+  if (os === 'iOS') return gMapLink.replace('https', 'maps')
+  else return gMapLink
 }
 
 /**
@@ -168,8 +186,6 @@ function getMobileOperatingSystem() {
   return "unknown";
 }
 
-
-// locations by zone, sorted in delivOrder
 
 
 // <div>
