@@ -35,6 +35,11 @@ function Logistics() {
 
   const gMapLink = makeLink(location?.gMap)
 
+  const tableData = makeTableData(locationData, zone, loc)
+  const directionsString = tableData
+  .map(loc => getGMapEntity(loc.gMap))
+  .filter(item => item !== '')
+  .join('/')
 
   return (
     <div>
@@ -60,20 +65,39 @@ function Logistics() {
           
           <div style={{margin: "0.5rem"}}>
           {!loc &&
-            <DataTable
-              value={makeTableData(locationData, zone, loc)}
-              responsiveLayout
-              selectionMode="single"
-              onSelectionChange={e => {
-                setLoc(e.value.locNick)
-                setLocation(locationData.find(i => i.locNick === e.value.locNick))
-              }}
-            >
-              <Column
-                field="locName"
-                header="Location"
-              />
-            </DataTable>
+            <div>
+              <DataTable
+                value={tableData}
+                responsiveLayout
+                reorderableRows
+                selectionMode="single"
+                onSelectionChange={e => {
+                  setLoc(e.value.locNick)
+                  setLocation(locationData.find(i => i.locNick === e.value.locNick))
+                  //console.log(e.value.locName, e.value.gMap)
+                  console.log(getGMapEntity(e.value.gMap))
+                }}
+              >
+                {/* <Column rowReorder style={{width: '3em'}} /> */}
+                <Column
+                  field="locName"
+                  header="Location"
+                />
+                <Column 
+                  field="gMap"
+                  body={rowData => {
+                    if (!!rowData.gMap) return <i className="pi pi-map-marker" />
+                    return null
+                  }}
+                />
+              </DataTable>
+
+              {!!zone && 
+                <div style={{marginTop: "1.5rem", padding: ".5rem"}}>
+                  <a href={`https://www.google.com/maps/dir/${directionsString}`} target="_blank" rel="noopener noreferrer">Load Directions in Google Maps</a>
+                </div>
+              }
+            </div>
           }
 
           {!!loc &&
@@ -186,6 +210,14 @@ function getMobileOperatingSystem() {
   return "unknown";
 }
 
+
+const getGMapEntity = (gMapLink) => {
+  if (!gMapLink) return ''
+  const parts = gMapLink.split('/')
+
+  return(parts[5])
+
+}
 
 
 // <div>
