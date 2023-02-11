@@ -35,17 +35,14 @@ function Logistics() {
   const [location, setLocation] = useState(null);
   const [training, setTraining] = useState(false);
 
-  const gMapLink = makeLink(location?.gMap);
-
-  const tableData = makeTableData(locationData, zone, loc);
+  const gMapLink = makeLink(location?.gMap)
+  const tableData = makeTableData(locationData, zone, loc)
   const directionsString = tableData
-    .map((loc) => getGMapEntity(loc.gMap))
-    .filter((item) => item !== "")
-    .join("/");
+  .map(loc => getGMapEntity(loc.gMap))
+  .filter(item => item !== '')
+  .join('/')
 
-  const handleTraining = () => {
-    setTraining(!training);
-  };
+  const os = getMobileOperatingSystem()
 
   return (
     <div>
@@ -101,19 +98,20 @@ function Logistics() {
                   />
                 </DataTable>
 
-                {!!zone && (
-                  <div style={{ marginTop: "1.5rem", padding: ".5rem" }}>
-                    <a
-                      href={`https://www.google.com/maps/dir/${directionsString}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Load Directions in Google Maps
-                    </a>
+              {!!zone && 
+                <div style={{marginTop: "1.5rem", padding: ".5rem"}}>
+                  {/* <a href={`${os === 'iOS' ? 'maps' : 'https'}://www.google.com/maps/dir//${directionsString}`} target="_blank" rel="noopener noreferrer">Load Directions in Google Maps</a> */}
+                  <div style={{marginTop: "1.5rem", padding: ".5rem"}}>
+                    <a href={`https://www.google.com/maps/dir//${directionsString}`} target="_blank" rel="noopener noreferrer">Load Directions in Google Maps ("Android Link")</a>
                   </div>
-                )}
-              </div>
-            )}
+                  <div style={{marginTop: "1.5rem", padding: ".5rem"}}>
+                    <a href={`maps://www.google.com/maps/dir//${directionsString}`} target="_blank" rel="noopener noreferrer">Load Directions in Google Maps ("iOS Link")</a>
+                  </div>
+                
+                </div>
+              }
+            </div>
+          }
 
             {!!loc && (
               <div>
@@ -129,59 +127,36 @@ function Logistics() {
                 <Card title={location.locName}>
                   {/* <p>{location.addr1}</p> */}
 
-                  <div
-                    style={{ margin: ".25rem", display: "flex", gap: "1rem" }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <i className="pi pi-map-marker"></i>
-                    </div>
-                    <div>
-                      <div>{location.addr2}</div>
-                      <div>{location.city + ", CA " + location.zip}</div>
-                    </div>
+                <div style={{margin: ".25rem", display: "flex", gap: "1rem"}}>
+                  <div style={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
+                    <i className="pi pi-map-marker"></i>
                   </div>
-                  <div
-                    style={{
-                      margin: ".25rem",
-                      padding: ".75rem",
-                      backgroundColor: "#f4cc8b",
-                      border: "1px solid #e1b163",
-                      borderRadius: ".25rem",
-                      width: "fit-content",
-                      display: "flex",
-                      justifyContent: "left",
-                      gap: "1rem",
-                    }}
-                  >
-                    <i className="pi pi-phone" />{" "}
-                    <span>
-                      <b>{location.phone}</b>
-                    </span>
+                  <div>
+                    <div>{location.addr2}</div>
+                    <div>{location.city + ", CA " + location.zip}</div>
                   </div>
 
-                  {!!location.gMap && (
-                    <div style={{ margin: ".25rem" }}>
-                      <i
-                        style={{ marginRight: "1rem" }}
-                        className="pi pi-map"
-                      />
-                      <a
-                        href={gMapLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        View in Google Maps
-                      </a>
+                </div>
+                <div style={{margin: ".25rem", padding: ".75rem", backgroundColor: "#f4cc8b", border: "1px solid #e1b163", borderRadius: ".25rem", width: "fit-content", display: "flex", justifyContent: "left", gap: "1rem"}}>
+                  <i className="pi pi-phone" /> <span>{location.phone}</span>
+                </div>
+
+                {!!location.gMap && 
+                  <>
+                    <div style={{margin: ".25rem"}}>
+                      <i style={{marginRight: "1rem"}} className="pi pi-map" />
+                      <a href={location.gMap} target="_blank" rel="noopener noreferrer">View in Google Maps (Android Link)</a>
                     </div>
-                  )}
-                  {!location.gMap && <p>Google Maps link not found.</p>}
-                </Card>
+                    <div style={{margin: ".25rem"}}>
+                      <i style={{marginRight: "1rem"}} className="pi pi-map" />
+                      <a href={location.gMap.replace('https', 'maps')} target="_blank" rel="noopener noreferrer">View in Google Maps (iOS Link)</a>
+                    </div>
+                  </>
+                }
+                {!location.gMap && <p>Google Maps link not found.</p>}
+
+
+              </Card>
 
                 <pre>{getMobileOperatingSystem()}</pre>
                 <pre>{zone + ", " + loc}</pre>
