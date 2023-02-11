@@ -103,15 +103,12 @@ function Logistics() {
               </DataTable>
 
               {!!zone && 
-                <div style={{marginTop: "1.5rem", padding: ".5rem"}}>
+                <div style={{padding: ".5rem"}}>
                   {/* <a href={`${os === 'iOS' ? 'maps' : 'https'}://www.google.com/maps/dir//${directionsString}`} target="_blank" rel="noopener noreferrer">Load Directions in Google Maps</a> */}
                   <div style={{marginTop: "1.5rem", padding: ".5rem"}}>
-                    <a href={`https://www.google.com/maps/dir//${directionsString}`} target="_blank" rel="noopener noreferrer">Load Directions in Google Maps ("Android Link")</a>
+                    <a href={`https://www.google.com/maps/dir//${directionsString}`} target="_blank" rel="noopener noreferrer">Load Directions in Google Maps</a>
                   </div>
-                  <div style={{marginTop: "1.5rem", padding: ".5rem"}}>
-                    <a href={`maps://www.google.com/maps/dir//${directionsString}`} target="_blank" rel="noopener noreferrer">Load Directions in Google Maps ("iOS Link")</a>
-                  </div>
-                
+
                 </div>
               }
             </div>
@@ -130,34 +127,28 @@ function Logistics() {
               >
                 {/* <p>{location.addr1}</p> */}
 
-                <div style={{margin: ".25rem", display: "flex", gap: "1rem"}}>
+                <div style={{ width: "fit-content", marginBottom: "2rem", display: "flex", gap: "1rem"}}>
                   <div style={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
                     <i className="pi pi-map-marker"></i>
                   </div>
-                  <div>
+
+                  <div style={{width: "fit-content"}}>
                     <div>{location.addr2}</div>
                     <div>{location.city + ", CA " + location.zip}</div>
                   </div>
-
                 </div>
-                <div style={{margin: ".25rem", padding: ".75rem", backgroundColor: "#f4cc8b", border: "1px solid #e1b163", borderRadius: ".25rem", width: "fit-content", display: "flex", justifyContent: "left", gap: "1rem"}}>
-                  <i className="pi pi-phone" /> <span>{location.phone}</span>
+  
+                <div style={{marginBottom: "2rem"}}>
+                  <i style={{marginRight: "1rem"}} className="pi pi-phone" /> 
+                  {!!location.phone && <a href={`tel:+${location.phone.replaceAll('-', '')}`}>{location.phone}</a>}
+                  {!location.phone && <span>Phone # not found</span>}
                 </div>
 
-                {!!location.gMap && 
-                  <>
-                    <div style={{margin: ".25rem"}}>
-                      <i style={{marginRight: "1rem"}} className="pi pi-map" />
-                      <a href={location.gMap} target="_blank" rel="noopener noreferrer">View in Google Maps (Android Link)</a>
-                    </div>
-                    <div style={{margin: ".25rem"}}>
-                      <i style={{marginRight: "1rem"}} className="pi pi-map" />
-                      <a href={location.gMap.replace('https', 'maps')} target="_blank" rel="noopener noreferrer">View in Google Maps (iOS Link)</a>
-                    </div>
-                  </>
-                }
-                {!location.gMap && <p>Google Maps link not found.</p>}
-
+                <div>
+                  <i style={{marginRight: "1rem"}} className="pi pi-map" />
+                  {!!location.gMap && <a href={location.gMap} target="_blank" rel="noopener noreferrer">View in Google Maps</a>}
+                  {!location.gMap && <span>Google Maps link not found</span>}
+                </div>
 
               </Card>
 
