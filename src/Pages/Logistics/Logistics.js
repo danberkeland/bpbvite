@@ -46,57 +46,54 @@ function Logistics() {
 
   return (
     <div>
-      {readAuthorized && (
-        <div style={{ padding: "0.5rem", marginBottom: "200px" }}>
+      {readAuthorized &&
+        <div style={{padding: "0.5rem", marginBottom: "200px"}}>
           <h1>Logistics: Locations</h1>
-          <button onClick={handleTraining}>Long Driver Training</button>
 
-          {training && <LogisticsTraining />}
-
-          <div style={{ padding: "0.5rem" }} className="p-fluid">
-            <Dropdown
+          <div style={{padding: "0.5rem"}} className="p-fluid">
+            <Dropdown 
               className="p-column-filter"
               options={zoneData?.sort(dynamicSort("zoneName"))}
               optionLabel="zoneName"
               optionValue="zoneNick"
               placeholder="Filter by Zone"
               value={zone}
-              onChange={(e) => setZone(e.value)}
+              onChange={e => setZone(e.value)}
               filter
               resetFilterOnHide
               showClear
               disabled={!!loc}
             />
           </div>
-
-          <div style={{ margin: "0.5rem" }}>
-            {!loc && (
-              <div>
-                <DataTable
-                  value={tableData}
-                  responsiveLayout
-                  reorderableRows
-                  selectionMode="single"
-                  onSelectionChange={(e) => {
-                    setLoc(e.value.locNick);
-                    setLocation(
-                      locationData.find((i) => i.locNick === e.value.locNick)
-                    );
-                    //console.log(e.value.locName, e.value.gMap)
-                    console.log(getGMapEntity(e.value.gMap));
+          
+          <div style={{margin: "0.5rem"}}>
+          {!loc &&
+            <div>
+              <DataTable
+                value={tableData}
+                responsiveLayout
+                reorderableRows
+                selectionMode="single"
+                onSelectionChange={e => {
+                  setLoc(e.value.locNick)
+                  setLocation(locationData.find(i => i.locNick === e.value.locNick))
+                  //console.log(e.value.locName, e.value.gMap)
+                  console.log(getGMapEntity(e.value.gMap))
+                }}
+              >
+                {/* <Column rowReorder style={{width: '3em'}} /> */}
+                <Column
+                  field="locName"
+                  header="Location"
+                />
+                <Column 
+                  field="gMap"
+                  body={rowData => {
+                    if (!!rowData.gMap) return <i className="pi pi-map-marker" />
+                    return null
                   }}
-                >
-                  {/* <Column rowReorder style={{width: '3em'}} /> */}
-                  <Column field="locName" header="Location" />
-                  <Column
-                    field="gMap"
-                    body={(rowData) => {
-                      if (!!rowData.gMap)
-                        return <i className="pi pi-map-marker" />;
-                      return null;
-                    }}
-                  />
-                </DataTable>
+                />
+              </DataTable>
 
               {!!zone && 
                 <div style={{marginTop: "1.5rem", padding: ".5rem"}}>
@@ -113,19 +110,18 @@ function Logistics() {
             </div>
           }
 
-            {!!loc && (
-              <div>
-                <Button
-                  label="Back to list"
-                  icon="pi pi-chevron-left"
-                  onClick={() => {
-                    setLoc(null);
-                    setLocation(null);
-                  }}
-                />
+          {!!loc &&
+            <div>
+              <Button label="Back to list" icon="pi pi-chevron-left" onClick={() => {
+                setLoc(null)
+                setLocation(null)
+              }}/>
 
-                <Card title={location.locName}>
-                  {/* <p>{location.addr1}</p> */}
+
+              <Card
+                title={location.locName}
+              >
+                {/* <p>{location.addr1}</p> */}
 
                 <div style={{margin: ".25rem", display: "flex", gap: "1rem"}}>
                   <div style={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
@@ -158,14 +154,16 @@ function Logistics() {
 
               </Card>
 
-                <pre>{getMobileOperatingSystem()}</pre>
-                <pre>{zone + ", " + loc}</pre>
-                {/* <pre>{JSON.stringify(location, null, 2)}</pre> */}
-              </div>
-            )}
+              <pre>{getMobileOperatingSystem()}</pre>
+              <pre>{zone + ", " + loc}</pre>
+              {/* <pre>{JSON.stringify(location, null, 2)}</pre> */}
+
+            </div>
+          }
+
           </div>
         </div>
-      )}
+      }
     </div>
   );
 }
