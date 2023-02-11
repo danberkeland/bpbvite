@@ -44,11 +44,18 @@ function Logistics() {
 
   const os = getMobileOperatingSystem()
 
+  const handleTraining = () => {
+    setTraining(!training)
+  }
+
   return (
     <div>
       {readAuthorized &&
         <div style={{padding: "0.5rem", marginBottom: "200px"}}>
           <h1>Logistics: Locations</h1>
+          <button onClick={handleTraining}>Long Driver Training</button>
+
+          {training && <LogisticsTraining />}
 
           <div style={{padding: "0.5rem"}} className="p-fluid">
             <Dropdown 
