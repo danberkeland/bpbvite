@@ -53,7 +53,7 @@ function Logistics() {
       {readAuthorized &&
         <div style={{padding: "0.5rem", marginBottom: "200px"}}>
           <h1>Logistics: Locations</h1>
-          <button onClick={handleTraining}>Long Driver Training</button>
+          <button onClick={handleTraining}>{training ? "Turn off training" : "turn on training"}</button>
 
           {training && <LogisticsTraining />}
 
