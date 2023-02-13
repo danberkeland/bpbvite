@@ -75,7 +75,7 @@ function Logistics() {
           
           <div style={{margin: "0.5rem"}}>
           {!loc &&
-            <div>
+            <div className="bpbDataTable">
               <DataTable
                 value={tableData}
                 responsiveLayout
