@@ -20,6 +20,8 @@ import { useZoneListFull } from "../../data/zoneData";
 import dynamicSort from "../../functions/dynamicSort";
 import LogisticsTraining from "./LogisticsTraining";
 
+import DOMPurify from 'dompurify';
+
 function Logistics() {
   const { currentLoc: locNick, user: name, authClass } = useSettingsStore();
   const user = { locNick, name, authClass };
@@ -128,6 +130,24 @@ function Logistics() {
                 {/* <p>{location.addr1}</p> */}
 
                 <div style={{ width: "fit-content", marginBottom: "2rem", display: "flex", gap: "1rem"}}>
+
+               
+
+                  <div style={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
+                    <i className="pi pi-info-circle"></i>
+                  </div>
+
+                  <div style={{width: "fit-content"}}>
+                  <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(location.specialInstructions)}}></div>
+                   
+                    
+                  </div>
+                </div>
+
+                <div style={{ width: "fit-content", marginBottom: "2rem", display: "flex", gap: "1rem"}}>
+
+               
+
                   <div style={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
                     <i className="pi pi-map-marker"></i>
                   </div>
