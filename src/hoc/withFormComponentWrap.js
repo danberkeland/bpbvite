@@ -21,10 +21,10 @@ export const withFormComponentWrap = (Component) => (props) => {
         <div>
           <div className="field">
             <label>{props.label}</label>
+
             <Component
               {...props}
               {...field}
-
               disabled={isEdit ? props.dontedit==="true" ? true : false : isCreate ? false : true}
               className={meta.touched && meta.error ? "p-error" : ""}
             />

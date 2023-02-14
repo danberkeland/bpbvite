@@ -6,6 +6,7 @@ import { SelectButton } from "primereact/selectbutton";
 import { Dropdown } from "primereact/dropdown";
 import { MultiSelect } from "primereact/multiselect";
 import { Password } from 'primereact/password';
+import { Editor } from 'primereact/editor';
 
 import { withFormComponentWrap } from "../hoc/withFormComponentWrap";
 
@@ -153,6 +154,24 @@ const CustomMultiSelectInputBase = ({ label, ...props }) => {
   );
 };
 
+const CustomEditor = ({ label, ...props }) => {
+  console.log('props', props)
+  
+  return (
+
+    <Editor
+      {...props}
+      value={
+        props.value
+          ? props.value
+          : null
+      }
+      style={{ height: '100px' }}
+      onTextChange={(e) => props.converter.setFieldValue(props.name, e.htmlValue)}
+    />
+  );
+};
+
 export class CustomInputs {
   constructor() {
     this.CustomTextInput = withFormComponentWrap(CustomTextInputBase);
@@ -164,6 +183,9 @@ export class CustomInputs {
     this.CustomDropdownInput = withFormComponentWrap(CustomDropdownInputBase);
     this.CustomMultiSelectInput = withFormComponentWrap(
       CustomMultiSelectInputBase
+    );
+    this.CustomEditor = withFormComponentWrap(
+      CustomEditor
     );
   }
 }
