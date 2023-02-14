@@ -3,6 +3,16 @@ import React, { useEffect } from "react";
 import AnimatedRoutes from "./AnimatedRoutes";
 import { useSettingsStore } from "../Contexts/SettingsZustand";
 
+const bpbmgrItems = [
+  {
+    label: "Logistics",
+    icon: "pi pi-fw pi-map",
+    command: () => {
+      window.location = "/Logistics";
+    },
+  }
+]
+
 const itemsAuth2 = [
   
   {
@@ -107,6 +117,8 @@ function Pages(props) {
   useEffect(() => {
     if (authClass === "customer"){
       setItems(itemsAuth2);
+    } else if (authClass === "bpbmgr") {
+      setItems(bpbmgrItems)
     } else {
       setItems(itemsAuth1)
     }

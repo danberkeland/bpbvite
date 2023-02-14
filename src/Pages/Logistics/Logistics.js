@@ -27,7 +27,7 @@ function Logistics() {
   const user = { locNick, name, authClass };
 
   const readAuthorized =
-    user.authClass === "bpbreadonly" || user.authClass === "bpbfull";
+    user.authClass === "bpbmgr" || user.authClass === "bpbfull";
 
   const { data: locationData } = useLocationListFull(readAuthorized);
   const { data: zoneData } = useZoneListFull(readAuthorized);

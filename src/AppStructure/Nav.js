@@ -14,7 +14,7 @@ const itemsAuth4min = [
   {
     icon: "pi pi-fw pi-home",
     command: () => {
-      window.location = "/CustomerNews";
+      window.location = "/";
     },
   },
   {
@@ -38,9 +38,19 @@ const itemsAuth4min = [
   },
 ];
 
+const onlyHome = [
+  {
+    icon: "pi pi-fw pi-home",
+    command: () => {
+      window.location = "/";
+    },
+  }
+];
+
 export function NavSide() {
   const items = useSettingsStore((state) => state.items);
   const user = useSettingsStore((state) => state.user);
+  
 
   return (
     <motion.div
@@ -68,6 +78,7 @@ export function NavSide() {
 
 export function NavBottom() {
   const setFormType = useSettingsStore((state) => state.setFormType);
+  const authClass = useSettingsStore((state) => state.authClass);
  
 
   const signOut = () => {
@@ -81,7 +92,7 @@ export function NavBottom() {
     >
       {/* <div className="greyBar"></div> */}
       <div className="tabContainer">
-        <TabMenu className="tabMenu" model={itemsAuth4min} />
+        <TabMenu className="tabMenu" model={authClass === "bpbfull" ? itemsAuth4min : onlyHome} />
         <button className="signOutButton" onClick={signOut}>
           Sign Out
         </button>
