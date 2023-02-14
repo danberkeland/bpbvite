@@ -6,9 +6,9 @@ import { Accordion, AccordionTab } from "primereact/accordion";
 
 function LogisticsTraining() {
   return (
-    <div>
+    <div className="bpbAccordion">
       <React.Fragment>
-        <h1>Training</h1>
+        <h1>Long Driver Training</h1>
         <Accordion>
           <AccordionTab header="Print North Driver Lists">
             <p className="m-0">On office computer, go to:</p>

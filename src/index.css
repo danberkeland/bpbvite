@@ -47,8 +47,9 @@ h4 {
 
 h1 {
   font-weight: normal;
-  margin: 10px 20px;
-  color: #006aff;
+  font-size: 1.5em;
+  margin: 10px 0px;
+  color: var(--bpb-background-0);
 }
 
 h3,
@@ -59,8 +60,8 @@ h4 {
 button {
   width: 100%;
   margin: auto;
-  padding: 5mitpx;
-  color: var(--bpb-background-4);
+  padding: 5px;
+  color: white;
   background-color: var(--bpb-background-2);
   font-size: 1em;
   border: none;
@@ -466,4 +467,19 @@ div .photoBox {
 .noteBox {
   padding: 10px;
   background-color: var(--bpb-background-6);
+}
+
+.twoFilters {
+  display: flex;
+}
+
+
+.bpbAccordion .p-accordion .p-accordion-header .p-accordion-header-link {
+  padding: 1rem;
+  border: 1px solid #dee2e6;
+  color: white;
+  background: var(--bpb-background-3);
+  font-weight: 600;
+  border-radius: 3px;
+  transition: box-shadow 0.2s;
 }

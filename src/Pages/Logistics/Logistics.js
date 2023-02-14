@@ -54,7 +54,7 @@ function Logistics() {
     <div>
       {readAuthorized &&
         <div style={{padding: "0.5rem", marginBottom: "200px"}}>
-          <h1>Logistics: Locations</h1>
+         
           <button onClick={handleTraining}>{training ? "Turn off training" : "turn on training"}</button>
 
           {training && <LogisticsTraining />}
@@ -73,6 +73,7 @@ function Logistics() {
               showClear
               disabled={!!loc}
             />
+            
           </div>
           
           <div style={{margin: "0.5rem"}}>
@@ -102,6 +103,13 @@ function Logistics() {
                     return null
                   }}
                 />
+                <Column 
+                  field="specialInstructions"
+                  body={rowData => {
+                    if (!!rowData.specialInstructions) return <i className="pi pi-info-circle" />
+                    return null
+                  }}
+                />
               </DataTable>
 
               {!!zone && 
@@ -118,10 +126,10 @@ function Logistics() {
 
           {!!loc &&
             <div>
-              <Button label="Back to list" icon="pi pi-chevron-left" onClick={() => {
+              <button label="Back to list" icon="pi pi-chevron-left" onClick={() => {
                 setLoc(null)
                 setLocation(null)
-              }}/>
+              }}>Back to list </button>
 
 
               <Card
