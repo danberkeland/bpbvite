@@ -10516,3 +10516,51 @@ export const deleteAltLeadTime = /* GraphQL */ `
     }
   }
 `;
+export const createTraining = /* GraphQL */ `
+  mutation CreateTraining(
+    $input: CreateTrainingInput!
+    $condition: ModelTrainingConditionInput
+  ) {
+    createTraining(input: $input, condition: $condition) {
+      id
+      role
+      order
+      heading
+      instruction
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateTraining = /* GraphQL */ `
+  mutation UpdateTraining(
+    $input: UpdateTrainingInput!
+    $condition: ModelTrainingConditionInput
+  ) {
+    updateTraining(input: $input, condition: $condition) {
+      id
+      role
+      order
+      heading
+      instruction
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteTraining = /* GraphQL */ `
+  mutation DeleteTraining(
+    $input: DeleteTrainingInput!
+    $condition: ModelTrainingConditionInput
+  ) {
+    deleteTraining(input: $input, condition: $condition) {
+      id
+      role
+      order
+      heading
+      instruction
+      createdAt
+      updatedAt
+    }
+  }
+`;

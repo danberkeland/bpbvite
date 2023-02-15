@@ -5458,6 +5458,39 @@ export const listAltLeadTimes = /* GraphQL */ `
     }
   }
 `;
+export const getTraining = /* GraphQL */ `
+  query GetTraining($id: ID!) {
+    getTraining(id: $id) {
+      id
+      role
+      order
+      heading
+      instruction
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listTrainings = /* GraphQL */ `
+  query ListTrainings(
+    $filter: ModelTrainingFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listTrainings(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        role
+        order
+        heading
+        instruction
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const locSortAZ = /* GraphQL */ `
   query LocSortAZ(
     $Type: String!

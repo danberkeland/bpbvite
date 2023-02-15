@@ -10306,3 +10306,42 @@ export const onDeleteAltLeadTime = /* GraphQL */ `
     }
   }
 `;
+export const onCreateTraining = /* GraphQL */ `
+  subscription OnCreateTraining($filter: ModelSubscriptionTrainingFilterInput) {
+    onCreateTraining(filter: $filter) {
+      id
+      role
+      order
+      heading
+      instruction
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateTraining = /* GraphQL */ `
+  subscription OnUpdateTraining($filter: ModelSubscriptionTrainingFilterInput) {
+    onUpdateTraining(filter: $filter) {
+      id
+      role
+      order
+      heading
+      instruction
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteTraining = /* GraphQL */ `
+  subscription OnDeleteTraining($filter: ModelSubscriptionTrainingFilterInput) {
+    onDeleteTraining(filter: $filter) {
+      id
+      role
+      order
+      heading
+      instruction
+      createdAt
+      updatedAt
+    }
+  }
+`;

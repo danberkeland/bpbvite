@@ -600,3 +600,11 @@ type AltLeadTime @model {
   product: Product! @belongsTo(fields: ["prodNick"])
 }
 
+type Training @model {
+  id: ID!
+  role: String
+  order: Int
+  heading: String
+  instruction: String
+}
+
