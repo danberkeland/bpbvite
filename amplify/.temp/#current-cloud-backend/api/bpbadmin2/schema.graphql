@@ -1,0 +1,602 @@
+# This "input" configures a global authorization rule to enable public access to
+# all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
+input AMPLIFY {
+  globalAuthRule: AuthRule = { allow: public }
+} # FOR TESTING ONLY!
+# Backup Schemas
+
+type LocationBackup @model {
+  id: ID!
+  nickName: String!
+  custName: String!
+  zoneName: String
+  addr1: String
+  addr2: String
+  city: String
+  zip: String
+  email: String
+  firstName: String
+  lastName: String
+  phone: String
+  toBePrinted: Boolean
+  toBeEmailed: Boolean
+  printDuplicate: Boolean
+  terms: String
+  invoicing: String
+  prodsNotAllowed: [String]
+  latestFirstDeliv: Float
+  latestFinalDeliv: Float
+  webpageURL: String
+  picURL: String
+  gMap: String
+  specialInstructions: String
+  delivOrder: Int
+  customProd: [String]
+  templateProd: [String]
+  userSubs: [String]
+  qbID: String
+  currentBalance: String
+}
+
+type ProductBackup @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  prodName: String!
+  nickName: String!
+  packGroup: String
+  packSize: Int
+  doughType: String
+  freezerThaw: Boolean
+  eodCount: Boolean
+  packGroupOrder: Int
+  readyTime: Float
+  bakedWhere: [String]
+  wholePrice: Float
+  retailPrice: Float
+  isWhole: Boolean
+  depends: String
+  weight: Float
+  descrip: String
+  picURL: String
+  squareID: String
+  currentStock: Int
+  whoCountedLast: String
+  forBake: String
+  bakeExtra: Int
+  batchSize: Int
+  preshaped: Int
+  prepreshaped: Int
+  updatePreDate: String
+  updateFreezerDate: String
+  backporchbakerypre: Int
+  backporchbakery: Int
+  bpbextrapre: Int
+  bpbextra: Int
+  bpbssetoutpre: Int
+  bpbssetout: Int
+  defaultInclude: Boolean
+  leadTime: Int
+  qbID: String
+  freezerCount: Int
+  freezerClosing: Int
+  sheetMake: Int
+  freezerNorth: Int
+  freezerNorthClosing: Int
+  freezerNorthFlag: String
+}
+
+
+type OrderBackup @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  qty: Int
+  prodName: String!
+  custName: String
+  PONote: String
+  route: String
+  SO: Int
+  isWhole: Boolean
+  delivDate: String
+  timeStamp: String
+  rate: Float
+  isLate: Int
+}
+
+
+type StandingBackup @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  timeStamp: String
+  prodName: String
+  custName: String
+  isStand: Boolean
+  Sun: Int
+  Mon: Int
+  Tue: Int
+  Wed: Int
+  Thu: Int
+  Fri: Int
+  Sat: Int
+}
+
+
+
+
+type RouteBackup @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  routeName: String
+  routeStart: Float
+  routeTime: Float
+  RouteDepart: String
+  RouteArrive: String
+  RouteServe: [String]
+  RouteSched: [String]
+  printOrder: Int
+  driver: String
+}
+
+type ZoneBackup @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  zoneNum: Int
+  zoneName: String
+  zoneFee: Int
+}
+
+
+
+
+# Base Schemas 123
+
+type User @model {
+  name: String!
+  email: String!
+  phone: String
+  authClass: String
+  sub: String! @primaryKey
+  locNick: String
+  defaultLoc: Location @hasOne(fields: ["locNick"])
+  locs: [LocationUser] @hasMany(indexName: "bySub", fields: ["sub"])
+}
+
+type CreditApp @model {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  companyName: String!
+  phone: String
+  email: String
+  addr1: String
+  addr2: String
+  city: String
+  state: String
+  zip: String
+  locAddr1: String
+  locAddr2: String
+  locCity: String
+  locState: String
+  locZip: String
+  startDate: String
+  businessType: String
+  bankName: String
+  bankPhone: String
+  refName: [String]
+  refAddr1: [String]
+  refAddr2: [String]
+  refCity: [String]
+  refZip: [String]
+  refPhone: [String]
+  refEmail: [String]
+  refDescrip: String
+  signture: String
+  sigDate: String
+  sigName: String
+  sigTitle: String
+}
+
+type Location @model {
+  Type: String
+    @default(value: "Location")
+    @index(
+      name: "locSortAZ"
+      queryField: "locSortAZ"
+      sortKeyFields: ["locName"]
+    )
+  locNick: String! @primaryKey
+  locName: String!
+  subs: [LocationUser] @hasMany(indexName: "byLoc", fields: ["locNick"])
+  standing: [Standing] @hasMany(indexName: "byLoc", fields: ["locNick"])
+  orders: [Order] @hasMany(indexName: "byLoc", fields: ["locNick"])
+  ordersByDate: [Order] @hasMany(indexName: "byLocationByDelivDate", fields: ["locNick"])
+  zoneNick: String
+  zone: Zone @hasOne(fields: ["zoneNick"])
+  creditApp: CreditApp @hasOne
+  addr1: String
+  addr2: String
+  city: String
+  zip: String
+  email: String
+  phone: String
+  firstName: String
+  lastName: String
+  toBePrinted: Boolean
+  toBeEmailed: Boolean
+  printDuplicate: Boolean
+  terms: String
+  invoicing: String
+  latestFirstDeliv: Float
+  latestFinalDeliv: Float
+  webpageURL: String
+  picURL: String
+  gMap: String
+  specialInstructions: String
+  delivOrder: Int
+  qbID: String
+  currentBalance: String
+  isActive: Boolean
+  prodsNotAllowed: [ProdsNotAllowed]
+    @hasMany(indexName: "byProd", fields: ["locNick"])
+  customProd: [AltPricing] @hasMany(indexName: "byLoc", fields: ["locNick"])
+  templateProd: [TemplateProd]
+    @hasMany(indexName: "byProd", fields: ["locNick"])
+  altLeadTimeByProduct: [AltLeadTime] @hasMany(indexName: "byLocByProd", fields: ["locNick"])
+}
+
+type Product @model {
+  Type: String
+    @default(value: "Product")
+    @index(
+      name: "prodSortAZ"
+      queryField: "prodSortAZ"
+      sortKeyFields: ["prodName"]
+    )
+  prodName: String!
+  prodNick: String! @primaryKey
+  packGroup: String
+  packSize: Int
+  doughNick: String
+  doughType: Dough @hasOne(fields: ["doughNick"])
+  freezerThaw: Boolean
+  packGroupOrder: Int
+  shapeDay: Int
+  shapeNick: String
+  bakeDay: Int
+  bakeNick: String
+  guarantee: String
+  transferStage: String
+  readyTime: Float
+  bakedWhere: [String]
+  wholePrice: Float
+  retailPrice: Float
+  isRetail: Boolean
+  retailName: String
+  retailDescrip: String
+  isWhole: Boolean
+  isEOD: Boolean
+  weight: Float
+  descrip: String
+  picURL: String
+  squareID: String
+  forBake: String
+  bakeExtra: Int
+  batchSize: Int
+  defaultInclude: Boolean
+  leadTime: Int
+  qbID: String
+  retailLoc: [RetailProdLoc] @hasMany(indexName: "byRetailProd", fields: ["prodNick"])
+  standing: [Standing] @hasMany(indexName: "byProd", fields: ["prodNick"])
+  orders: [Order] @hasMany(indexName: "byProd", fields: ["prodNick"])
+  depends: [ProductDepend] @hasMany(indexName: "byProd2", fields: ["prodNick"])
+  altPricing: [AltPricing] @hasMany(indexName: "byProd", fields: ["prodNick"])
+  templateProd: [TemplateProd]
+    @hasMany(indexName: "byProd", fields: ["prodNick"])
+  prodsNotAllowed: [ProdsNotAllowed]
+    @hasMany(indexName: "byProd", fields: ["prodNick"])
+  productVendor: [ProductVendor]
+    @hasMany(indexName: "byProd", fields: ["prodNick"])
+  EODCount: EODCount @hasOne(fields: ["prodNick"])
+  ActualSetOut: ActualSetOut @hasOne(fields: ["prodNick"])
+  altLeadTimeByLocation: [AltLeadTime] @hasMany(indexName: "byProdByLoc", fields: ["prodNick"])
+}
+
+type RetailLoc @model {
+  squareId: ID!
+  location: String!
+  retailProds: [RetailProdLoc] @hasMany(indexName: "byRetailLoc", fields: ["squareId"])
+}
+
+type RetailProdLoc @model {
+  id: ID!
+  specialStart: String
+  specialEnd: String
+  dayOfWeek: [Int]
+  timeOfDayStart: Float
+  timeOfDayEnd: Float
+  prodNick: String! @index(name: "byRetailProd")
+  product: Product! @belongsTo(fields: ["prodNick"])
+  locSquareId: ID @index(name: "byRetailLoc")
+  loc: RetailLoc @belongsTo(fields: ["locSquareId"])
+}
+
+type Order @model (timestamps: { createdAt: "createdOn", updatedAt: "updatedOn"}) {
+  Type: String
+    @default(value: "Orders")
+  id: ID!
+  qty: Int
+  qtyUpdatedOn: AWSDateTime
+  sameDayMaxQty: Int
+  prodNick: String! @index(name: "byProd")
+  product: Product! @hasOne(fields: ["prodNick"])
+  locNick: String! 
+    @index(name: "byLoc") 
+    @index(name: "byLocationByDelivDate", sortKeyFields: ["delivDate"], queryField: "orderByLocByDelivDate")
+  location: Location! @hasOne(fields: ["locNick"])
+  ItemNote: String
+  SO: Int
+  isWhole: Boolean
+  delivDate: String
+  rate: Float
+  route: String
+  isLate: Int
+  createdOn: AWSDateTime!
+  updatedOn: AWSDateTime!
+  updatedBy: String!
+  ttl: Int
+}
+
+type Standing @model {
+  id: ID!
+  locNick: String! @index(name: "byLoc") 
+    @index(name: "byLocByStartDate", sortKeyFields: ["startDate"], queryField: "standingByLocByStartDate")
+    @index(name: "byLocByEndDate", sortKeyFields: ["endDate"], queryField: "standingByLocByEndDate")
+  location: Location @hasOne(fields: ["locNick"])
+  isWhole: Boolean!
+  isStand: Boolean!
+  dayOfWeek: String!
+  route: String!
+  prodNick: String! @index(name: "byProd")
+  product: Product @hasOne(fields: ["prodNick"])
+  qty: Int!
+  ItemNote: String
+  startDate: String!
+  endDate: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  updatedBy: String!
+}
+ 
+type Zone @model {
+  zoneNick: String! @primaryKey
+  zoneName: String
+  description: String
+  zoneFee: Int
+  zoneRoute: [ZoneRoute] @hasMany(indexName: "byZone", fields: ["zoneNick"])
+}
+
+type Route @model {
+  routeNick: String! @primaryKey
+  routeName: String
+  routeStart: Float
+  routeTime: Float
+  RouteDepart: String
+  RouteArrive: String
+  RouteSched: [String]
+  printOrder: Int
+  driver: String
+  zoneRoute: [ZoneRoute] @hasMany(indexName: "byRoute", fields: ["routeNick"])
+}
+
+type PackGroup @model {
+  packGroupNick: String! @primaryKey
+  packGroup: String
+}
+
+type Dough @model {
+  doughNick: String! @primaryKey
+  doughName: String
+  hydration: Float
+  batchSize: Float
+  mixedWhere: String
+  buckets: [BucketInfo] @hasMany
+  isBakeReady: Boolean
+  buffer: Float
+  saltInDry: Boolean
+}
+
+type BucketInfo @model {
+  id: ID!
+  bucketType: String!
+  invId: ID
+  inventoryItem: Inventory @hasOne(fields: ["invId"])
+  doughNick: String
+  dough: Dough @hasOne(fields: ["doughNick"])
+  qty: Int
+  unitNick: String
+  unit: Unit @hasOne(fields:["unitNick"])
+  totalDoughWeight: Int
+  whoMixed: String
+}
+
+
+
+type PocketCount @model {
+  doughNick: String! @primaryKey(sortKeyFields: ["size"])
+  doughType: Dough! @hasOne(fields: ["doughNick"])
+  size: Int!
+  qty: Int
+  whoCounted: String
+}
+
+type Inventory @model {
+  id: ID!
+  ingName: String!
+  ingNick: String!
+  ingTypeNick: String
+  ingType: IngType @hasOne(fields: ["ingTypeNick"])
+  vendor: [Vendor] @hasMany
+  product: [Product] @hasMany
+  unitNick: String
+  unit: Unit @hasOne(fields: ["unitNick"])
+  bakeryLocation: String
+  intLocNick: String
+  internalLocation: InternalLoc @hasOne(fields: ["intLocNick"])
+  whoCounted: String
+}
+
+type Unit @model {
+  unitNick: String! @primaryKey
+  unitName: String
+}
+
+type InternalLoc @model {
+  intLocNick: String! @primaryKey
+  bakeryLoc: String!
+    @index(name: "byBakeryLoc", queryField: "internalByBakeryLoc")
+  intLocDescrip: String!
+}
+
+type IngType @model {
+  ingTypeNick: String! @primaryKey
+  ingType: String
+}
+
+type Vendor @model {
+  vendorName: String!
+  vendorNick: String! @primaryKey
+  productVendor: [ProductVendor]
+    @hasMany(indexName: "byVend", fields: ["vendorNick"])
+}
+
+
+type ProductVendor @model {
+  id: ID!
+  prodNick: String! @index(name: "byProd")
+  vendorNick: String! @index(name: "byVend")
+  product: Product! @belongsTo(fields: ["prodNick"])
+  vendor: Vendor! @belongsTo(fields: ["vendorNick"])
+}
+
+
+type InfoQBAuth @model {
+  id: ID!
+  infoName: String
+  infoContent: String
+}
+
+ #Dynamic Counts
+
+
+type EODCount @model {
+  prodNick: String! @primaryKey
+  product: Product @belongsTo(fields: ["prodNick"])
+  shelfOrFreezer: String
+  startOrFinish: String
+  location: String
+  qty: Int
+  whoCounted: String
+}
+
+
+type ActualSetOut @model {
+  prodNick: String! @primaryKey
+  prodName: Product! @belongsTo(fields: ["prodNick"])
+  qty: Int
+  location: String
+  whoSetOut: String
+}
+
+
+type CroixSheetCount @model {
+  id: ID!
+  qty: Int
+  whoCounted: String
+}
+
+type OldDough @model {
+  id: ID!
+  doughNick: String!
+  dough: Dough @hasOne(fields: ["doughNick"])
+  qty: Int
+}
+
+type Notes @model {
+  id: ID!
+  note: String
+  forWhom: String
+  byWhom: String
+  when: String
+}
+
+type EventLog @model {
+  id: ID!
+  eventType: String!
+  eventDescrip: String
+  userID: String
+  user: User @hasOne(fields: ["userID"])
+}
+
+# Join Schemas
+
+type TemplateProd @model {
+  id: ID!
+  locNick: String! @index(name: "byLoc")
+  prodNick: String! @index(name: "byProd")
+  location: Location! @belongsTo(fields: ["locNick"])
+  product: Product! @belongsTo(fields: ["prodNick"])
+}
+
+type ProdsNotAllowed @model {
+  id: ID!
+  isAllowed: Boolean!
+  locNick: String! @index(name: "byLoc")
+  prodNick: String! @index(name: "byProd")
+  location: Location! @belongsTo(fields: ["locNick"])
+  product: Product! @belongsTo(fields: ["prodNick"])
+}
+
+type ProductDepend @model {
+  id: ID!
+  prod1Nick: String @index(name: "byProd1")
+  prod1: Product! @belongsTo(fields: ["prod1Nick"])
+  prod2Nick: String @index(name: "byProd2")
+  prod2: Product @belongsTo(fields: ["prod2Nick"])
+}
+
+type ZoneRoute @model {
+  id: ID!
+  routeNick: String @index(name: "byRoute")
+  route: Route! @belongsTo(fields: ["routeNick"])
+  zoneNick: String @index(name: "byZone")
+  zone: Zone @belongsTo(fields: ["zoneNick"])
+}
+
+type LocationUser @model {
+  id: ID!
+  Type: String!
+    @default(value: "LocationUser")
+    @index(
+      name: "locUsersByAuthType"
+      queryField: "locUsersByAuthType"
+      sortKeyFields: ["authType"]
+    )
+  authType: Int
+  locNick: String! @index(name: "byLoc")
+  sub: String! @index(name: "bySub")
+  location: Location @belongsTo(fields: ["locNick"])
+  user: User @belongsTo(fields: ["sub"])
+}
+
+type AltPricing @model {
+  id: ID!
+  wholePrice: Float
+  locNick: String @index(name: "byLoc", sortKeyFields: ["wholePrice"])
+  loc: Location! @belongsTo(fields: ["locNick"])
+  prodNick: String @index(name: "byProd", sortKeyFields: ["wholePrice"])
+  product: Product @belongsTo(fields: ["prodNick"])
+}
+
+type AltLeadTime @model {
+  id: ID!
+  leadTime: Int!
+  locNick: String! @index(name: "byLocByProd", sortKeyFields: ["prodNick"])
+  loc: Location! @belongsTo(fields: ["locNick"])
+  prodNick: String! @index(name: "byProdByLoc", sortKeyFields: ["locNick"])
+  product: Product! @belongsTo(fields: ["prodNick"])
+}
+

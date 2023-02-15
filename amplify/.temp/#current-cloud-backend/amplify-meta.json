@@ -1,0 +1,889 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-bpbadmin2-devtwo-113532-authRole",
+      "UnauthRoleArn": "arn:aws:iam::191477602114:role/amplify-bpbadmin2-devtwo-113532-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::191477602114:role/amplify-bpbadmin2-devtwo-113532-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+      "UnauthRoleName": "amplify-bpbadmin2-devtwo-113532-unauthRole",
+      "StackName": "amplify-bpbadmin2-devtwo-113532",
+      "StackId": "arn:aws:cloudformation:us-east-2:191477602114:stack/amplify-bpbadmin2-devtwo-113532/dd3b1650-23a0-11ed-a7cc-02a84e8f2060",
+      "AmplifyAppId": "d2nhue3419gd8g"
+    }
+  },
+  "api": {
+    "bpbadmin2": {
+      "dependsOn": [],
+      "output": {
+        "authConfig": {
+          "additionalAuthenticationProviders": [],
+          "defaultAuthentication": {
+            "apiKeyConfig": {
+              "apiKeyExpirationDate": "2023-11-18T19:28:35.849Z",
+              "apiKeyExpirationDays": 365,
+              "description": ""
+            },
+            "authenticationType": "API_KEY"
+          }
+        },
+        "GraphQLAPIIdOutput": "ehiwp5sas5fabdfpmpphzjpu2i",
+        "GraphQLAPIEndpointOutput": "https://w62uxpwwbvglvei22czphwsgoq.appsync-api.us-east-2.amazonaws.com/graphql",
+        "GraphQLAPIKeyOutput": "da2-665hu7c4pjflbc3adkqe4hmqxm"
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync",
+      "lastPushTimeStamp": "2023-02-09T17:16:15.974Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+        "logicalId": "apibpbadmin2"
+      },
+      "lastPushDirHash": "AFWzeKUne7ri1b5CwaQrk4jmaRU="
+    }
+  },
+  "auth": {
+    "bpbadmin2db0d25d4": {
+      "customAuth": false,
+      "dependsOn": [],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyMinLength": 8,
+          "passwordPolicyCharacters": []
+        },
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [
+          "EMAIL"
+        ],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito",
+      "output": {
+        "UserPoolId": "us-east-2_931DOUCFU",
+        "AppClientIDWeb": "4orudv8n2o8188geubsadbttri",
+        "AppClientID": "4ij3pnuksevirkpmmeagj0kcda",
+        "IdentityPoolId": "us-east-2:e043f2f9-d66e-4afe-9202-c52539e6e3d4",
+        "UserPoolArn": "arn:aws:cognito-idp:us-east-2:191477602114:userpool/us-east-2_931DOUCFU",
+        "IdentityPoolName": "bpbadmin2db0d25d4_identitypool_db0d25d4__devtwo",
+        "UserPoolName": "bpbadmin2db0d25d4_userpool_db0d25d4"
+      },
+      "lastPushTimeStamp": "2023-02-09T17:16:15.986Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/auth/bpbadmin2db0d25d4-cloudformation-template.json",
+        "logicalId": "authbpbadmin2db0d25d4"
+      },
+      "lastPushDirHash": "PNUgukya/X7+YJTpHCUM2Rp6aHg="
+    }
+  },
+  "function": {
+    "bpbadmin2SDKLayer": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer",
+      "output": {
+        "Arn": "arn:aws:lambda:us-east-2:191477602114:layer:bpbadmin2SDKLayer-devtwo:3"
+      },
+      "lastPushTimeStamp": "2023-02-09T17:16:16.008Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/function/bpbadmin2SDKLayer-awscloudformation-template.json",
+        "logicalId": "functionbpbadmin2SDKLayer"
+      },
+      "lastBuildTimeStamp": "2023-02-01T19:53:41.355Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2023-02-01T19:53:46.387Z",
+      "distZipFilename": "bpbadmin2SDKLayer-LambdaLayerVersione53e2e3b-build.zip",
+      "latestPushedVersionHash": "503fab0ced0d8c1369c5ef6d19bb638a5bca4337234149daa76de26ecdf5e8d8",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+        "s3Key": "amplify-builds/bpbadmin2SDKLayer-LambdaLayerVersione53e2e3b-build.zip"
+      }
+    },
+    "bpbadmin2anotherTest": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer",
+      "output": {
+        "Arn": "arn:aws:lambda:us-east-2:191477602114:layer:bpbadmin2anotherTest-devtwo:3"
+      },
+      "lastPushTimeStamp": "2023-02-09T17:16:16.028Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/function/bpbadmin2anotherTest-awscloudformation-template.json",
+        "logicalId": "functionbpbadmin2anotherTest"
+      },
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+        "s3Key": "amplify-builds/bpbadmin2anotherTest-LambdaLayerVersion540ba128-build.zip"
+      },
+      "lastBuildTimeStamp": "2023-02-01T19:53:41.357Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2023-02-01T19:53:41.784Z",
+      "distZipFilename": "bpbadmin2anotherTest-LambdaLayerVersion540ba128-build.zip",
+      "latestPushedVersionHash": "1562c889fdfe6df4089a18c38061b932f9cf264ca5d80ecde4aa04b1160a8e98"
+    },
+    "bpbadmin2fetchLayer": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer",
+      "output": {
+        "Arn": "arn:aws:lambda:us-east-2:191477602114:layer:bpbadmin2fetchLayer-devtwo:3"
+      },
+      "lastPushTimeStamp": "2023-02-09T17:16:16.045Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/function/bpbadmin2fetchLayer-awscloudformation-template.json",
+        "logicalId": "functionbpbadmin2fetchLayer"
+      },
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+        "s3Key": "amplify-builds/bpbadmin2fetchLayer-LambdaLayerVersion318ddd60-build.zip"
+      },
+      "lastBuildTimeStamp": "2023-02-01T19:53:41.358Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2023-02-01T19:53:41.616Z",
+      "distZipFilename": "bpbadmin2fetchLayer-LambdaLayerVersion318ddd60-build.zip",
+      "latestPushedVersionHash": "df5114e287ce9af3d3aec6a9f138b6f1b5b84a140a5003d8c88b8f96178a6654"
+    },
+    "bpbadmin2testFetchLayer": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer",
+      "output": {
+        "Arn": "arn:aws:lambda:us-east-2:191477602114:layer:bpbadmin2testFetchLayer-devtwo:3"
+      },
+      "lastPushTimeStamp": "2023-02-09T17:19:06.914Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/function/bpbadmin2testFetchLayer-awscloudformation-template.json",
+        "logicalId": "functionbpbadmin2testFetchLayer"
+      },
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+        "s3Key": "amplify-builds/bpbadmin2testFetchLayer-LambdaLayerVersion4a15bdc8-build.zip"
+      },
+      "lastBuildTimeStamp": "2023-02-09T17:13:34.106Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2023-02-09T17:14:04.931Z",
+      "distZipFilename": "bpbadmin2testFetchLayer-LambdaLayerVersion4a15bdc8-build.zip",
+      "latestPushedVersionHash": "71898101df46e0dd642bebb1bbb85bf64d4ea1f43929c04a2ba273f69eb55038"
+    },
+    "bpbrouter": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        },
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "bpbadmin2db0d25d4"
+        },
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::191477602114:role/bpbadmin2LambdaRole047057be-devtwo",
+        "Region": "us-east-2",
+        "Arn": "arn:aws:lambda:us-east-2:191477602114:function:bpbrouter-devtwo",
+        "Name": "bpbrouter-devtwo",
+        "LambdaExecutionRole": "bpbadmin2LambdaRole047057be-devtwo"
+      },
+      "lastPushTimeStamp": "2023-02-09T17:16:16.085Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/function/bpbrouter-cloudformation-template.json",
+        "logicalId": "functionbpbrouter"
+      },
+      "lastBuildTimeStamp": "2023-02-01T19:53:41.362Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2023-02-01T19:53:42.516Z",
+      "distZipFilename": "bpbrouter-3837756b4e422b535270-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+        "s3Key": "amplify-builds/bpbrouter-3837756b4e422b535270-build.zip"
+      },
+      "lastPushDirHash": "ntpXyMKjOC2rw5jZht7292Q2cnc="
+    },
+    "confirmCognitoEmail": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2SDKLayer"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::191477602114:role/bpbadmin2LambdaRoled45460f5-devtwo",
+        "Region": "us-east-2",
+        "Arn": "arn:aws:lambda:us-east-2:191477602114:function:confirmCognitoEmail-devtwo",
+        "Name": "confirmCognitoEmail-devtwo",
+        "LambdaExecutionRole": "bpbadmin2LambdaRoled45460f5-devtwo"
+      },
+      "lastPushTimeStamp": "2023-02-09T17:16:16.106Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/function/confirmCognitoEmail-cloudformation-template.json",
+        "logicalId": "functionconfirmCognitoEmail"
+      },
+      "lastBuildTimeStamp": "2023-02-01T19:53:41.364Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2023-02-01T19:53:42.954Z",
+      "distZipFilename": "confirmCognitoEmail-48426f6d526648596e46-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+        "s3Key": "amplify-builds/confirmCognitoEmail-48426f6d526648596e46-build.zip"
+      },
+      "lastPushDirHash": "IrUkTlSL1kzCMnECShGXldLw1GM="
+    },
+    "createCognitoUser": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2SDKLayer"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::191477602114:role/bpbadmin2LambdaRolefe5ac35e-devtwo",
+        "Region": "us-east-2",
+        "Arn": "arn:aws:lambda:us-east-2:191477602114:function:createCognitoUser-devtwo",
+        "Name": "createCognitoUser-devtwo",
+        "LambdaExecutionRole": "bpbadmin2LambdaRolefe5ac35e-devtwo"
+      },
+      "lastPushTimeStamp": "2023-02-09T17:16:16.125Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/function/createCognitoUser-cloudformation-template.json",
+        "logicalId": "functioncreateCognitoUser"
+      },
+      "lastBuildTimeStamp": "2023-02-01T19:53:41.365Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2023-02-01T19:53:42.960Z",
+      "distZipFilename": "createCognitoUser-6e50495136432f70624f-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+        "s3Key": "amplify-builds/createCognitoUser-6e50495136432f70624f-build.zip"
+      },
+      "lastPushDirHash": "k9jwbe3gqu6vEXsN8XPaYM/T8WQ="
+    },
+    "createProduct": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        },
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::191477602114:role/bpbadmin2LambdaRole64597825-devtwo",
+        "Region": "us-east-2",
+        "Arn": "arn:aws:lambda:us-east-2:191477602114:function:createProduct-devtwo",
+        "Name": "createProduct-devtwo",
+        "LambdaExecutionRole": "bpbadmin2LambdaRole64597825-devtwo"
+      },
+      "lastPushTimeStamp": "2023-02-09T17:16:16.143Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/function/createProduct-cloudformation-template.json",
+        "logicalId": "functioncreateProduct"
+      },
+      "lastBuildTimeStamp": "2023-02-01T19:53:41.371Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2023-02-01T19:53:42.338Z",
+      "distZipFilename": "createProduct-417a7932524b78574654-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+        "s3Key": "amplify-builds/createProduct-417a7932524b78574654-build.zip"
+      },
+      "lastPushDirHash": "8tKNBEN+tz6Gb/rQu+W2hAesyUg="
+    },
+    "deleteCognitoUser": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2SDKLayer"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::191477602114:role/bpbadmin2LambdaRolea3037f11-devtwo",
+        "Region": "us-east-2",
+        "Arn": "arn:aws:lambda:us-east-2:191477602114:function:deleteCognitoUser-devtwo",
+        "Name": "deleteCognitoUser-devtwo",
+        "LambdaExecutionRole": "bpbadmin2LambdaRolea3037f11-devtwo"
+      },
+      "lastPushTimeStamp": "2023-02-09T17:16:16.163Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/function/deleteCognitoUser-cloudformation-template.json",
+        "logicalId": "functiondeleteCognitoUser"
+      },
+      "lastBuildTimeStamp": "2023-02-01T19:53:41.373Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2023-02-01T19:53:42.967Z",
+      "distZipFilename": "deleteCognitoUser-496377575a62526e6d54-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+        "s3Key": "amplify-builds/deleteCognitoUser-496377575a62526e6d54-build.zip"
+      },
+      "lastPushDirHash": "WFaSiaLr2PDeGaaJhmV44Alx3mQ="
+    },
+    "deleteProduct": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        },
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::191477602114:role/bpbadmin2LambdaRole5761aea8-devtwo",
+        "Region": "us-east-2",
+        "Arn": "arn:aws:lambda:us-east-2:191477602114:function:deleteProduct-devtwo",
+        "Name": "deleteProduct-devtwo",
+        "LambdaExecutionRole": "bpbadmin2LambdaRole5761aea8-devtwo"
+      },
+      "lastPushTimeStamp": "2023-02-09T17:16:16.178Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/function/deleteProduct-cloudformation-template.json",
+        "logicalId": "functiondeleteProduct"
+      },
+      "lastBuildTimeStamp": "2023-02-01T19:53:41.375Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2023-02-01T19:53:42.334Z",
+      "distZipFilename": "deleteProduct-736951484878515a7546-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+        "s3Key": "amplify-builds/deleteProduct-736951484878515a7546-build.zip"
+      },
+      "lastPushDirHash": "/mczdD2J6SKHDUux8BDRONKNgyk="
+    },
+    "grabDetailedLocationList": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        },
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::191477602114:role/bpbadmin2LambdaRole934b1447-devtwo",
+        "Region": "us-east-2",
+        "Arn": "arn:aws:lambda:us-east-2:191477602114:function:grabDetailedLocationList-devtwo",
+        "Name": "grabDetailedLocationList-devtwo",
+        "LambdaExecutionRole": "bpbadmin2LambdaRole934b1447-devtwo"
+      },
+      "lastPushTimeStamp": "2023-02-09T17:16:16.195Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/function/grabDetailedLocationList-cloudformation-template.json",
+        "logicalId": "functiongrabDetailedLocationList"
+      },
+      "lastBuildTimeStamp": "2023-02-01T19:53:41.376Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2023-02-01T19:53:42.341Z",
+      "distZipFilename": "grabDetailedLocationList-3752593162575273554b-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+        "s3Key": "amplify-builds/grabDetailedLocationList-3752593162575273554b-build.zip"
+      },
+      "lastPushDirHash": "i6BZRttUKAqx1eUNxRsN8zgMbgI="
+    },
+    "grabDetailedProductList": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer"
+        },
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::191477602114:role/bpbadmin2LambdaRole48573aea-devtwo",
+        "Region": "us-east-2",
+        "Arn": "arn:aws:lambda:us-east-2:191477602114:function:grabDetailedProductList-devtwo",
+        "Name": "grabDetailedProductList-devtwo",
+        "LambdaExecutionRole": "bpbadmin2LambdaRole48573aea-devtwo"
+      },
+      "lastPushTimeStamp": "2023-02-09T17:16:16.212Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/function/grabDetailedProductList-cloudformation-template.json",
+        "logicalId": "functiongrabDetailedProductList"
+      },
+      "lastBuildTimeStamp": "2023-02-01T19:53:41.378Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2023-02-01T19:53:42.349Z",
+      "distZipFilename": "grabDetailedProductList-4e74634c726149516b43-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+        "s3Key": "amplify-builds/grabDetailedProductList-4e74634c726149516b43-build.zip"
+      },
+      "lastPushDirHash": "SAog0TSzFmgbhTqBfFw/wnBNhOw="
+    },
+    "grabLocList": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::191477602114:role/bpbadmin2LambdaRole157d8b1b-devtwo",
+        "Region": "us-east-2",
+        "Arn": "arn:aws:lambda:us-east-2:191477602114:function:grabLocList-devtwo",
+        "Name": "grabLocList-devtwo",
+        "LambdaExecutionRole": "bpbadmin2LambdaRole157d8b1b-devtwo"
+      },
+      "lastPushTimeStamp": "2023-02-09T17:16:16.230Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/function/grabLocList-cloudformation-template.json",
+        "logicalId": "functiongrabLocList"
+      },
+      "lastBuildTimeStamp": "2023-02-01T19:53:41.380Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2023-02-01T19:53:42.505Z",
+      "distZipFilename": "grabLocList-363770556a3334444c34-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+        "s3Key": "amplify-builds/grabLocList-363770556a3334444c34-build.zip"
+      },
+      "lastPushDirHash": "CDazae6jDiEP7wuDMIrgD0g7HBo="
+    },
+    "grabOrder": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2fetchLayer"
+        },
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::191477602114:role/bpbadmin2LambdaRoleea5e5c66-devtwo",
+        "Region": "us-east-2",
+        "Arn": "arn:aws:lambda:us-east-2:191477602114:function:grabOrder-devtwo",
+        "Name": "grabOrder-devtwo",
+        "LambdaExecutionRole": "bpbadmin2LambdaRoleea5e5c66-devtwo"
+      },
+      "lastPushTimeStamp": "2023-02-09T17:16:16.246Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/function/grabOrder-cloudformation-template.json",
+        "logicalId": "functiongrabOrder"
+      },
+      "lastBuildTimeStamp": "2023-02-01T19:53:41.381Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2023-02-01T19:53:41.742Z",
+      "distZipFilename": "grabOrder-5644624d31626f5a2f6a-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+        "s3Key": "amplify-builds/grabOrder-5644624d31626f5a2f6a-build.zip"
+      },
+      "lastPushDirHash": "XpqA0uL/ZFknX8/eZG/GjgPx5+k="
+    },
+    "grabProductById": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer"
+        },
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::191477602114:role/bpbadmin2LambdaRole65cd9ce6-devtwo",
+        "Region": "us-east-2",
+        "Arn": "arn:aws:lambda:us-east-2:191477602114:function:grabProductById-devtwo",
+        "Name": "grabProductById-devtwo",
+        "LambdaExecutionRole": "bpbadmin2LambdaRole65cd9ce6-devtwo"
+      },
+      "lastPushTimeStamp": "2023-02-09T17:16:16.261Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/function/grabProductById-cloudformation-template.json",
+        "logicalId": "functiongrabProductById"
+      },
+      "lastBuildTimeStamp": "2023-02-01T19:53:41.384Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2023-02-01T19:53:42.359Z",
+      "distZipFilename": "grabProductById-376d2f626a624234334f-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+        "s3Key": "amplify-builds/grabProductById-376d2f626a624234334f-build.zip"
+      },
+      "lastPushDirHash": "qEscVUqTvSlJdQIko5MqDm2l7zw="
+    },
+    "grabSimpleLocationList": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        },
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "bpbadmin2db0d25d4"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::191477602114:role/bpbadmin2LambdaRole5d4f8f48-devtwo",
+        "Region": "us-east-2",
+        "Arn": "arn:aws:lambda:us-east-2:191477602114:function:grabSimpleLocationList-devtwo",
+        "Name": "grabSimpleLocationList-devtwo",
+        "LambdaExecutionRole": "bpbadmin2LambdaRole5d4f8f48-devtwo"
+      },
+      "lastPushTimeStamp": "2023-02-09T17:16:16.277Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/function/grabSimpleLocationList-cloudformation-template.json",
+        "logicalId": "functiongrabSimpleLocationList"
+      },
+      "lastBuildTimeStamp": "2023-02-01T19:53:41.385Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2023-02-01T19:53:41.705Z",
+      "distZipFilename": "grabSimpleLocationList-34595369425855344f32-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+        "s3Key": "amplify-builds/grabSimpleLocationList-34595369425855344f32-build.zip"
+      },
+      "lastPushDirHash": "MbHIs7h8VMm+g6s8MvyklBqd8vk="
+    },
+    "grabSimpleProductList": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer"
+        },
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::191477602114:role/bpbadmin2LambdaRole1ecaeca2-devtwo",
+        "Region": "us-east-2",
+        "Arn": "arn:aws:lambda:us-east-2:191477602114:function:grabSimpleProductList-devtwo",
+        "Name": "grabSimpleProductList-devtwo",
+        "LambdaExecutionRole": "bpbadmin2LambdaRole1ecaeca2-devtwo"
+      },
+      "lastPushTimeStamp": "2023-02-09T17:16:16.293Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/function/grabSimpleProductList-cloudformation-template.json",
+        "logicalId": "functiongrabSimpleProductList"
+      },
+      "lastBuildTimeStamp": "2023-02-01T19:53:41.387Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2023-02-01T19:53:42.354Z",
+      "distZipFilename": "grabSimpleProductList-365758556b564b5a7178-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+        "s3Key": "amplify-builds/grabSimpleProductList-365758556b564b5a7178-build.zip"
+      },
+      "lastPushDirHash": "mpdS4nV0c8rdPdVHupdeD7nj+/Q="
+    },
+    "grabStandOrder": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2fetchLayer"
+        },
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::191477602114:role/bpbadmin2LambdaRole19015942-devtwo",
+        "Region": "us-east-2",
+        "Arn": "arn:aws:lambda:us-east-2:191477602114:function:grabStandOrder-devtwo",
+        "Name": "grabStandOrder-devtwo",
+        "LambdaExecutionRole": "bpbadmin2LambdaRole19015942-devtwo"
+      },
+      "lastPushTimeStamp": "2023-02-09T17:16:16.308Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/function/grabStandOrder-cloudformation-template.json",
+        "logicalId": "functiongrabStandOrder"
+      },
+      "lastBuildTimeStamp": "2023-02-01T19:53:41.393Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2023-02-01T19:53:42.511Z",
+      "distZipFilename": "grabStandOrder-6b31667059645a644e70-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+        "s3Key": "amplify-builds/grabStandOrder-6b31667059645a644e70-build.zip"
+      },
+      "lastPushDirHash": "n5gLuNpa5OcPHgBCiCd+6UzzT+w="
+    },
+    "testingGrQL": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer"
+        },
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::191477602114:role/bpbadmin2LambdaRole2f10b74a-devtwo",
+        "Region": "us-east-2",
+        "Arn": "arn:aws:lambda:us-east-2:191477602114:function:testingGrQL-devtwo",
+        "Name": "testingGrQL-devtwo",
+        "LambdaExecutionRole": "bpbadmin2LambdaRole2f10b74a-devtwo"
+      },
+      "lastPushTimeStamp": "2023-02-09T17:16:16.325Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/function/testingGrQL-cloudformation-template.json",
+        "logicalId": "functiontestingGrQL"
+      },
+      "lastBuildTimeStamp": "2023-02-01T19:53:41.395Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2023-02-01T19:53:42.364Z",
+      "distZipFilename": "testingGrQL-3331576e737745723250-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+        "s3Key": "amplify-builds/testingGrQL-3331576e737745723250-build.zip"
+      },
+      "lastPushDirHash": "chWTlOfTBJb5RtcWoTOmJrGCnLE="
+    },
+    "updateCognitoUser": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2SDKLayer"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::191477602114:role/bpbadmin2LambdaRole06067161-devtwo",
+        "Region": "us-east-2",
+        "Arn": "arn:aws:lambda:us-east-2:191477602114:function:updateCognitoUser-devtwo",
+        "Name": "updateCognitoUser-devtwo",
+        "LambdaExecutionRole": "bpbadmin2LambdaRole06067161-devtwo"
+      },
+      "lastPushTimeStamp": "2023-02-09T17:16:16.340Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/function/updateCognitoUser-cloudformation-template.json",
+        "logicalId": "functionupdateCognitoUser"
+      },
+      "lastBuildTimeStamp": "2023-02-01T19:53:41.397Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2023-02-01T19:53:42.964Z",
+      "distZipFilename": "updateCognitoUser-6b63455149503472376c-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+        "s3Key": "amplify-builds/updateCognitoUser-6b63455149503472376c-build.zip"
+      },
+      "lastPushDirHash": "AaRukIQ4dm1YhXGPA1zgCDQfE1E="
+    },
+    "updateProduct": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "bpbadmin2"
+        },
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbadmin2testFetchLayer"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::191477602114:role/bpbadmin2LambdaRole7beca89b-devtwo",
+        "Region": "us-east-2",
+        "Arn": "arn:aws:lambda:us-east-2:191477602114:function:updateProduct-devtwo",
+        "Name": "updateProduct-devtwo",
+        "LambdaExecutionRole": "bpbadmin2LambdaRole7beca89b-devtwo"
+      },
+      "lastPushTimeStamp": "2023-02-09T17:16:16.356Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bpbadmin2-devtwo-113532-deployment/amplify-cfn-templates/function/updateProduct-cloudformation-template.json",
+        "logicalId": "functionupdateProduct"
+      },
+      "lastBuildTimeStamp": "2023-02-01T19:53:41.399Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2023-02-01T19:53:42.346Z",
+      "distZipFilename": "updateProduct-34347076417230382f68-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+        "s3Key": "amplify-builds/updateProduct-34347076417230382f68-build.zip"
+      },
+      "lastPushDirHash": "Fs67nSh6Xp3Om3IG591KvSoNL4g="
+    }
+  }
+}
