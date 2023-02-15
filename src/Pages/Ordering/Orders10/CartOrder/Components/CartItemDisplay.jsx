@@ -37,7 +37,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
     if (delivDate < getWorkingDateTime('NOW')) helperText = '-- delivery date passed'
     
     return (
-      <div>
+      <div style={rowData.qty === 0 ? {color : "gray"} : null}>
         <div style={{fontStyle: qtyChanged ? "italic" : "normal", fontWeight: "bold"}}>{`${rowData.product.prodName}`}</div>
         <div style={{paddingTop: ".1rem", fontSize:".9rem"}}>{`${helperText}`}</div>
       </div>
@@ -68,11 +68,13 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
       || (maxQty === 0 || delivDate < getWorkingDateTime('NOW'))
 
     const updateProductQty = (newQty, prodNick) => {
-      const _itemChanges = itemChanges.map((item) =>
-        item.product.prodNick === prodNick 
-          ? { ...item, qty: newQty > 999 ? 999 : newQty } 
-          : item
-      )
+      const _itemChanges = itemChanges.map((item) => {
+        if (item.product.prodNick === prodNick) {
+          return { ...item, qty: newQty > 999 ? 999 : newQty } 
+
+        } 
+        return item
+      })
       setItemChanges(_itemChanges);
     }
 
@@ -91,18 +93,20 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
           onValueChange={(e) => updateProductQty(e.value, prodNick)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
-              if (e.target.value === "") updateProductQty(0, prodNick);
               e.target.blur();
+              if (e.target.value === "") updateProductQty(0, prodNick);
             }
 
             if (e.key === "Escape") {
               if (e.target.value === "") {
-                let resetQty = baseItem.qty;
+                e.target.blur()
+                let resetQty = baseItem ? baseItem.qty : 0
                 updateProductQty(resetQty, prodNick);
+                setRollbackQty(resetQty)
               } else {
+                e.target.blur()
                 updateProductQty(rollbackQty, prodNick);
               }
-              e.target.blur();
             }
           }}
           onBlur={() => {

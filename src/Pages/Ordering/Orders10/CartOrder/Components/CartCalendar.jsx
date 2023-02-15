@@ -7,7 +7,7 @@ export const CartCalendar = ({ delivDate, setDelivDate }) => {
   return (
     <Calendar
       id="calendar"
-      style={{ width: "115px" }}
+      //style={{ width: "115px" }}
       touchUI={true}
       value={delivDate}
       minDate={getWorkingDateTime('NOW').minus({ days: 1}).toJSDate()}

@@ -9,7 +9,7 @@ import { CartItemDisplay } from "./Components/CartItemDisplay"
 import { FulfillmentDropdown } from "./Components/FulfillmentDropdown"
 import { ItemNoteInput } from "./Components/ItemNoteInput"
 
-import { createOrder, revalidateOrdersByLocationByDate, updateOrder, useCartOrderData, useOrdersByLocationByDate } from "../../../../data/orderData"
+import { createOrder, updateOrder, useCartOrderData, useOrdersByLocationByDate } from "../../../../data/orderData"
 
 
 export const CartOrder = ({ user, locNick }) => {
@@ -133,18 +133,14 @@ export const CartOrder = ({ user, locNick }) => {
         <div>Admin Settings</div>
       } */}
 
-      <div style={{padding: "0.5rem", display: "flex", gap: "1rem"}}>
-        {/* <div style={{flex: "85%"}} className="bpb-input-field p-fluid"> */}
-          <div className="fulfillBox">
-            <div className="fulDrop">
-              <FulfillmentDropdown 
-                headerChanges={headerChanges}
-                setHeaderChanges={setHeaderChanges}
-              />
-            </div>
-          </div>
-        {/* </div> */}
-        <div style={{flex: "15%"}} className="bpb-input-field p-fluid">
+      <div style={{width: "100%", display: "flex", justifyContent: "left", flexWrap: ""}}>
+        <div style={{padding: "0.5rem", flex: "100%"}} className="bpb-input-field p-fluid">
+          <FulfillmentDropdown 
+            headerChanges={headerChanges}
+            setHeaderChanges={setHeaderChanges}
+          />
+        </div>
+        <div style={{padding: "0.5rem", flex: "0 0 7.5rem"}} className="bpb-input-field p-fluid">
           <CartCalendar 
             delivDate={delivDate}
             setDelivDate={setDelivDate}
