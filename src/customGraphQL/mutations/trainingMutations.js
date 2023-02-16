@@ -7,7 +7,7 @@ export const createTraining = /* GraphQL */ `
       id
       role
       order
-      header
+      heading
       instruction
     }
   }
@@ -21,7 +21,7 @@ export const updateTraining = /* GraphQL */ `
       id
       role
       order
-      header
+      heading
       instruction
     }
   }
@@ -35,7 +35,7 @@ export const deleteTraining = /* GraphQL */ `
       id
       order
       role
-      header
+      heading
       instruction
     }
   }

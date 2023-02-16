@@ -17,7 +17,7 @@ export const listTrainingsSimple = /* GraphQL */ `
         id
         role
         order
-        header
+        heading
         instruction
       }
     }
@@ -47,7 +47,7 @@ export const getTrainingDetails = /* GraphQL */ `
       id
       role
       order
-      header
+      heading
       instruction
     }
   }
