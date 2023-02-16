@@ -11,7 +11,7 @@ import { withFadeIn } from "../../../hoc/withFadeIn";
 import { useTrainingListFull } from "../../../data/trainingData"; 
 
 const initialState = {
-  id: null,
+  id:"",
   role: "",
   order: 0,
   heading: "",

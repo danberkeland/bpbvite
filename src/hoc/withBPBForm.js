@@ -48,6 +48,8 @@ export const withBPBForm = (Component) => (props) => {
     setCurrentLoc,
   };
 
+  console.log('Updateprops', props)
+
   let str = props.name;
   let source = str + "List";
   let path = "/" + str.charAt(0).toUpperCase() + str.slice(1) + "s";

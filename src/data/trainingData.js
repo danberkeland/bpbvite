@@ -129,8 +129,8 @@ export const revalidateTrainingDetails = (id) => {
 const LOGGING = true;
 
 export const createTraining = async (createTrainingInput) => {
-  if (LOGGING) console.log("Create training input: ", createTrainingInput);
-
+  console.log("Create training input: ", createTrainingInput);
+  delete createTrainingInput.id;
   if (!createTrainingSchema.isValid(createTrainingInput)) {
     console.log("createTraining validation failed");
     return;

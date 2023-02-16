@@ -116,7 +116,7 @@ const CustomEditor = ({ label, ...props }) => {
       {...props}
       headerTemplate={toolbarHeader}
       value={props.value ? props.value : null}
-      style={{ height: "100px" }}
+      style={{ height: "300px" }}
       onTextChange={(e) =>
         props.converter.setFieldValue(props.name, e.htmlValue)
       }

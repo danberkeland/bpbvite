@@ -42,11 +42,20 @@ function TrainingDetails({ initialState }) {
               name="heading"
               converter={props}
             />
-            <BPB.CustomTextInput
-              label="Instruction"
+            {!isEdit ? (
+              <BPB.CustomEditor
+              label="Instructions"
               name="instruction"
+              readOnly
               converter={props}
             />
+            ) : (
+              <BPB.CustomEditor
+                label="Instructions"
+                name="instruction"
+                converter={props}
+              />
+            )}
 
             <BPB.CustomIntInput label="Order" name="order" converter={props} />
           </GroupBox>

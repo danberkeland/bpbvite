@@ -5,10 +5,7 @@ export const createTraining = /* GraphQL */ `
   ) {
     createTraining(input: $input, condition: $condition) {
       id
-      role
-      order
-      heading
-      instruction
+      createdAt
     }
   }
 `;
