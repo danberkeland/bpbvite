@@ -57,7 +57,7 @@ function TrainingDetails({ initialState }) {
 
   return (
     <BPBTrainingForm
-      name="training"
+      name="settings/ManageTraining"
       validationSchema={validationSchema}
       initialState={initialState}
       create={createTraining}

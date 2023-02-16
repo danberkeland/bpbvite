@@ -46,7 +46,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
               element={<ManageCustomers />}
             />
             <Route
-              path="/Settings/ManageTraining"
+              path="/Settings/ManageTrainings"
               element={<ManageTraining />}
             />
           </React.Fragment>

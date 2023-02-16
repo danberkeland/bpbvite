@@ -1,7 +1,7 @@
 export const createTraining = /* GraphQL */ `
   mutation CreateTraining(
     $input: CreateTrainingInput!
-    $condition: ModelOrderConditionInput
+    $condition: ModelTrainingConditionInput
   ) {
     createTraining(input: $input, condition: $condition) {
       id
@@ -15,7 +15,7 @@ export const createTraining = /* GraphQL */ `
 export const updateTraining = /* GraphQL */ `
   mutation UpdateTraining(
     $input: UpdateTrainingInput!
-    $condition: ModelOrderConditionInput
+    $condition: ModelTrainingConditionInput
   ) {
     updateTraining(input: $input, condition: $condition) {
       id
@@ -29,7 +29,7 @@ export const updateTraining = /* GraphQL */ `
 export const deleteTraining = /* GraphQL */ `
   mutation DeleteTraining(
     $input: DeleteTrainingInput!
-    $condition: ModelOrderConditionInput
+    $condition: ModelTrainingConditionInput
   ) {
     deleteTraining(input: $input, condition: $condition) {
       id
