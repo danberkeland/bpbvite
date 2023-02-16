@@ -320,6 +320,9 @@ const makeStandingBase = (standingData, isStand, isWhole) => {
   const _standingData = standingData
     .filter(item => item.isStand === isStand && item.isWhole === isWhole)
 
+
+  /*
+
   const weekdays = weekdayOptions.map(i => i.value)
   const products = [...new Set (tableData.map(i => i.product.prodNick))]
 
@@ -336,6 +339,6 @@ const makeStandingBase = (standingData, isStand, isWhole) => {
   }
   
   
-
+*/
 
 }
