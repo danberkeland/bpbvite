@@ -62,6 +62,7 @@ function TrainingList({ selectedTraining, setSelectedTraining }) {
         filters={filter}
       >
         <Column field="heading" filterPlaceholder="Search Headers" filter />
+        <Column field="order"  />
       </DataTable>
       </div>
       
