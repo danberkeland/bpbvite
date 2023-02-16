@@ -14,6 +14,7 @@ import EODCounts from "../Pages/EODCounts/EODCounts";
 import Logistics from "../Pages/Logistics/Logistics";
 import Locations from "../Pages/Locations/Locations";
 import ManageCustomers from "../Pages/Settings/ManageCustomers/ManageCustomers";
+import ManageTraining from "../Pages/Settings/ManageTraining/ManageTraining";
 import { NavSide } from "./Nav";
 
 import { AnimatePresence } from "framer-motion";
@@ -43,6 +44,10 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             <Route
               path="/Settings/ManageCustomers"
               element={<ManageCustomers />}
+            />
+            <Route
+              path="/Settings/ManageTrainings"
+              element={<ManageTraining />}
             />
           </React.Fragment>
         )}

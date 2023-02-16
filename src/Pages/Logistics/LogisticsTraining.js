@@ -3,12 +3,33 @@ import React from "react";
 // Components
 
 import { Accordion, AccordionTab } from "primereact/accordion";
+import { useTrainingListFull } from "../../data/trainingData";
 
 function LogisticsTraining() {
+  const { data: trainingList, errors: trainingListErrors } =
+    useTrainingListFull(true);
+
+  if (trainingListErrors) {
+    return <div>Error loading data</div>;
+  }
+
+  if (!trainingList) {
+    return <div>Loading data...</div>;
+  }
   return (
     <div className="bpbAccordion">
       <React.Fragment>
         <h1>Long Driver Training</h1>
+       
+        <Accordion>
+          {trainingList.map((item, index) => (
+            <AccordionTab key={index} header={item.heading}>
+              <div dangerouslySetInnerHTML={{ __html: item.instruction }}></div>
+            </AccordionTab>
+          ))}
+        </Accordion>
+       
+        {/*}
         <Accordion>
           <AccordionTab header="Print North Driver Lists">
             <p className="m-0">On office computer, go to:</p>
@@ -143,71 +164,66 @@ function LogisticsTraining() {
           </AccordionTab>
           <AccordionTab header="Unload proofing, unbaked products">
             <p className="m-0">
-              Deliver unbaked ficelle and any other unbaked product to the morning baker.
+              Deliver unbaked ficelle and any other unbaked product to the
+              morning baker.
             </p>
-            
           </AccordionTab>
           <AccordionTab header="Unload breads and pastries">
             <p className="m-0">
-              All other breads and pastries can be brought in and placed on the long metal table to be sorted for delivery and cafe use.
+              All other breads and pastries can be brought in and placed on the
+              long metal table to be sorted for delivery and cafe use.
             </p>
-            
           </AccordionTab>
           <AccordionTab header="Communicate with cook on Costco stuff">
             <p className="m-0">
               Check with bakery crew on what to do with Costco stuff.
             </p>
             <p className="m-0">
-              Some stuff may need to be refrigerated immediately.  Be sure to coordinate a plan with the cook.
+              Some stuff may need to be refrigerated immediately. Be sure to
+              coordinate a plan with the cook.
             </p>
-            
           </AccordionTab>
           <AccordionTab header="Take back sheet pans, pins, and couches">
             <p className="m-0">
-              Keep track of how many sheet pans, bins, couches are brought into bakery.
+              Keep track of how many sheet pans, bins, couches are brought into
+              bakery.
             </p>
             <p className="m-0">
-              That's how many need to go back to Prado.  Might as well load them into the van immediately.
+              That's how many need to go back to Prado. Might as well load them
+              into the van immediately.
             </p>
-            
           </AccordionTab>
           <AccordionTab header="Post Carlton Pickup list and invoices">
             <p className="m-0">
-              Clip Carlton Pickup list and invoices to rail above long metal table.
+              Clip Carlton Pickup list and invoices to rail above long metal
+              table.
             </p>
             <p className="m-0">
-              Communicate well with bakery crew on how these pickups will be handled.
+              Communicate well with bakery crew on how these pickups will be
+              handled.
             </p>
-            
           </AccordionTab>
           <AccordionTab header="Prepare orders for AM North County run">
+            <p className="m-0">Pack and load AM North deliveries.</p>
             <p className="m-0">
-              Pack and load AM North deliveries.
+              Always double check for accuracy. Make sure you have all related
+              invoices.
             </p>
-            <p className="m-0">
-              Always double check for accuracy.  Make sure you have all related invoices.
-            </p>
-            
           </AccordionTab>
           <AccordionTab header="DOUBLE CHECK">
-            <p className="m-0">
-              I mean it!
-            </p>
-            <p className="m-0">
-              Triple check your deliveries!
-            </p>
-            
+            <p className="m-0">I mean it!</p>
+            <p className="m-0">Triple check your deliveries!</p>
           </AccordionTab>
           <AccordionTab header="Make AM North Deliveries">
             <p className="m-0">
-              Drive carefully.  SMILE.  You are the face of the Back Porch Bakery.
+              Drive carefully. SMILE. You are the face of the Back Porch Bakery.
             </p>
             <p className="m-0">
-              Click location links below for detailed information about each location as well as specific instructions.
+              Click location links below for detailed information about each
+              location as well as specific instructions.
             </p>
-            
           </AccordionTab>
-        </Accordion>
+          </Accordion>*/}
       </React.Fragment>
     </div>
   );

@@ -107,6 +107,13 @@ const itemsAuth1 = itemsAuth2b.concat([
           window.location = "/Settings/ManageCustomers";
         },
       },
+      {
+        label: "Manage Training",
+        icon: "pi pi-fw pi-home",
+        command: () => {
+          window.location = "/Settings/ManageTrainings";
+        },
+      },
     ],
   },
 ]);

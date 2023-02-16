@@ -66,19 +66,19 @@
         },
         "bpbadmin2SDKLayer": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
-          "s3Key": "amplify-builds/bpbadmin2SDKLayer-LambdaLayerVersion4faaa502-build.zip"
+          "s3Key": "amplify-builds/bpbadmin2SDKLayer-LambdaLayerVersione53e2e3b-build.zip"
         },
         "bpbadmin2anotherTest": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
-          "s3Key": "amplify-builds/bpbadmin2anotherTest-LambdaLayerVersion1d5d1738-build.zip"
+          "s3Key": "amplify-builds/bpbadmin2anotherTest-LambdaLayerVersion540ba128-build.zip"
         },
         "bpbadmin2fetchLayer": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
-          "s3Key": "amplify-builds/bpbadmin2fetchLayer-LambdaLayerVersiond8a774d4-build.zip"
+          "s3Key": "amplify-builds/bpbadmin2fetchLayer-LambdaLayerVersion318ddd60-build.zip"
         },
         "bpbadmin2testFetchLayer": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
-          "s3Key": "amplify-builds/bpbadmin2testFetchLayer-LambdaLayerVersion4a15bdc8-build.zip"
+          "s3Key": "amplify-builds/bpbadmin2testFetchLayer-LambdaLayerVersion8974406d-build.zip"
         },
         "bpbrouter": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
