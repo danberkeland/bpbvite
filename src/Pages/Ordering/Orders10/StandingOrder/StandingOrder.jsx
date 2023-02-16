@@ -51,7 +51,7 @@ export const StandingOrder = ({ user, locNick }) => {
   
   //const productOptions = makeProductOptions(standingChanges, isStand, isWhole)
 
-  const [standingBase] = useState(null)
+  const [standingBase, setStandingBase] = useState(null)
   const [standingChanges, setStandingChanges] = useState(null)
 
 
@@ -76,15 +76,16 @@ export const StandingOrder = ({ user, locNick }) => {
 
   useEffect(() => {
     if (!!standingData) {
-      const baseData = makeStandingBase(standingData, isStand, isWhole)
+      const baseItems = makeStandingBase(standingData, locNick)
 
-
-      setStandingChanges(JSON.parse(JSON.stringify(standingData)))
+      setStandingBase(JSON.parse(JSON.stringify(baseItems)))
+      setStandingChanges(JSON.parse(JSON.stringify(baseItems)))
     }
-  }, [standingData])
+  }, [standingData, locNick])
 
-  const tableData = makeTableData(standingChanges, productOptions, viewMode, dayOfWeek, product, isStand, isWhole)
-  console.log(tableData)
+  const tableData = makeTableData(standingChanges, viewMode, dayOfWeek, product, isStand, isWhole)
+
+  //console.log(tableData)
   return(
     <div>
       {user.authClass === 'bpbfull' &&
@@ -148,7 +149,7 @@ export const StandingOrder = ({ user, locNick }) => {
           responsiveLayout
           showGridlines
         >
-          <Column header="label" 
+          <Column header={viewMode === 'DAY' ? "Product" : "Weekday"}
             field={viewMode === 'DAY' 
               ? "product.prodName" 
               : "dayOfWeek"}
@@ -180,12 +181,7 @@ export const StandingOrder = ({ user, locNick }) => {
                         setStandingChanges(_update)
                         console.log(_updateItem)
                       } else {
-                        let newItem = {
-                          ...rowData,
-                          qty: e.value
-                        }
-                        setStandingChanges([...standingChanges].concat([newItem]))
-                        console.log(newItem)
+                        console.log("error: standing data could not be updated.")
                       }
                     }}
                   />
@@ -227,7 +223,7 @@ export const StandingOrder = ({ user, locNick }) => {
 
 // }
 
-const makeTableData = (standingChanges, productOptions, viewMode, dayOfWeek, product, isStand, isWhole) => {
+const makeTableData = (standingChanges, viewMode, dayOfWeek, product, isStand, isWhole) => {
   if (!standingChanges || (viewMode === 'PRODUCT' && !product)) return []
   
   let tableData = standingChanges
@@ -236,106 +232,88 @@ const makeTableData = (standingChanges, productOptions, viewMode, dayOfWeek, pro
   if (viewMode === 'DAY') {
     tableData = tableData
       .filter(item => item.dayOfWeek === dayOfWeek)
-
-    // add placeholders for products
-    for (let p of productOptions) {
-      if (tableData.findIndex(i => i.product.prodNick === p.prodNick) === -1) {
-        //let matchProduct = productOptions.find(i => i.prodNick === prodNick)
-        tableData.push({
-          dayOfWeek: dayOfWeek,
-          product: {
-            prodNick: p.prodNick,
-            prodName: p.prodName
-          },
-          qty: 0,
-          isWhole: isWhole,
-          isStand: isStand
-        })
-      }
-    }
-
-    tableData.sort((a, b) => {
-      if (a.product.prodName < b.product.prodName) return -1
-      if (a.product.prodName > b.product.prodName) return 1
-      return 0
-    })
-
   }
+
   else if (viewMode === 'PRODUCT') {
     tableData = tableData
       .filter(item => item.product.prodNick === product.prodNick)
-    console.log(tableData)
-    // add placeholders for missing days
-    for (let day of weekdayOptions) {
-      if (tableData.findIndex(i => i.dayOfWeek === day.value) === -1) {
-        //let matchProduct = productOptions.find(i => i.prodNick === prodNick)
-        tableData.push({
-          dayOfWeek: day.value,
-          product: {
-            prodNick: product.prodNick,
-            prodName: product.prodName
-          },
-          qty: 0,
-          isWhole: isWhole,
-          isStand: isStand
-        })
-      }
-    }
-
-    tableData.sort((a, b) => {
-      let _a = weekdayOptions.findIndex(i => i.value === a.dayOfWeek)
-      let _b = weekdayOptions.findIndex(i => i.value === b.dayOfWeek)
-      return _a - _b
-    })
   }
-  return tableData
 
+  return tableData
 }
 
-// const cartesian =
-//   (...a) => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())))
+/** 
+ * Fills in missing cells of the standing grid(s) and 
+ * sorts data by prodName and by weekday.
+ * 
+ * We're now front-loading the data processing more,
+ * leaving the more frequent update routines lighter.
+ */
+const makeStandingBase = (standingData, locNick) => {
 
-// const makeStandingBase = (standingData, isStand, isWhole) => {
-//   let tableData = standingData.filter(i => i.isStand === isStand && i.isWhole === isWhole)
-  
-//   const weekdays = weekdayOptions.map(i => i.value)
-//   const products = [...new Set (tableData.map(i => i.product.prodNick))]
-
-//   const placeholders = cartesian(weekdays, products).map(item => ({
-//     dayOfWeek: item[0],
-//     prodNick: item[1],
-//     qty: 0
-//   }))
-//   console.log(placeholders)
-  
-
-// }
-
-
-const makeStandingBase = (standingData, isStand, isWhole) => {
-  // filter to category
-  // fill in missing items with placeholders
-  // placeholders should be 'ready to go' for submission;
-  // supply attributes.
-  const _standingData = standingData
-    .filter(item => item.isStand === isStand && item.isWhole === isWhole)
-
+  const categories = [
+    { isStand: true, isWhole: true },
+    { isStand: true, isWhole: false },
+    { isStand: false, isWhole: true },
+    { isStand: false, isWhole: false },
+  ]
   const weekdays = weekdayOptions.map(i => i.value)
-  const products = [...new Set (tableData.map(i => i.product.prodNick))]
 
-  //group filtered standing data by product
-  const baseData = products.map(p => _standingData.filter(i => i.product.prodNick === p))
+  let placeholders = []
+  
+  for (let cat of categories) {
 
-  for (let pGroup of baseData) {
-    let days = [...new Set (pGroup.map(i => i.dayOfWeek))]
+    let catItems = standingData.filter(i => i.isStand === cat.isStand && i.isWhole === cat.isWhole)
+    let catProducts = catItems.reduce((acc, curr) => {
+      if (acc.findIndex(item => item.prodNick === curr.product.prodNick) === -1) {
+        acc.push(curr.product)
+      }
+      return acc
+    }, [])
 
-    
+    for (let p of catProducts) {
+      for (let day of weekdays) {
+        if (catItems.findIndex(i => i.product.prodNick === p.prodNick && i.dayOfWeek === day) === -1) {
+          let newItem = {
+            locNick: locNick,
+            isStand: cat.isStand,
+            isWhole: cat.isWhole,
+            route: 'deliv',
+            ItemNote: null,
+            dayOfWeek: day,
+            qty: 0,
+            startDate: null, // assign value on submit
+            updatedBy: null, // assign value on submit
+            product: {
+              prodNick: p.prodNick,
+              prodName: p.prodName
+            }
+          }
+          placeholders.push(newItem)
 
-
-
+        }
+      }
+    }
   }
-  
-  
 
+  console.log("placeholders", placeholders)
+
+  const baseItems = standingData.concat(placeholders)
+
+  baseItems.sort((a, b) => {
+    let _a = weekdayOptions.findIndex(i => i.value === a.dayOfWeek)
+    let _b = weekdayOptions.findIndex(i => i.value === b.dayOfWeek)
+    return _a - _b
+  })
+
+  baseItems.sort((a, b) => {
+    if (a.product.prodName < b.product.prodName) return -1
+    if (a.product.prodName > b.product.prodName) return 1
+    return 0
+  })
+
+  console.log("baseItems", baseItems)
+
+  return baseItems
 
 }
