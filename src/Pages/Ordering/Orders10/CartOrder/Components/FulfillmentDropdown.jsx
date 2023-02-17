@@ -11,14 +11,17 @@ const pickupOptions = [
 
 export const FulfillmentDropdown = ({ headerChanges, setHeaderChanges }) => {
 
-  const fulfillmentDropdownModel = headerChanges?.defaultRoute === 'deliv'
-    ? delivOptions + pickupOptions
-    : pickupOptions
+  let dropdownModel = headerChanges
+    ? headerChanges.defaultRoute === 'deliv' 
+        ? delivOptions.concat(pickupOptions) 
+        : pickupOptions
+    : []
 
   return (
     <Dropdown 
-      options={fulfillmentDropdownModel}
-      value={headerChanges?.route}
+      options={dropdownModel}
+      placeholder="loading..."
+      value={headerChanges ? headerChanges.route : null}
       onChange={e => {
         console.log(e.value)
         setHeaderChanges({ ...headerChanges, route: e.value })

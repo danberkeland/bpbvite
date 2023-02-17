@@ -20,7 +20,7 @@ import * as mutations from "../customGraphQL/mutations/standingMutations"
 
 /** Fetches ALL standing items for location */
 export const useStandingByLocation = (locNick, shouldFetch) => {
-  const { data, errors } = useSWR(
+  const { data, errors, mutate } = useSWR(
     shouldFetch ? [queries.listStandingByLocation, { locNick: locNick }] : null,
     gqlFetcher, 
     defaultSwrOptions
@@ -34,7 +34,8 @@ export const useStandingByLocation = (locNick, shouldFetch) => {
 
   return ({
     data: _data,
-    errors: errors
+    errors: errors,
+    mutate: mutate
   })
 }
 

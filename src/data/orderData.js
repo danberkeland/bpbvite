@@ -6,7 +6,7 @@ import { defaultSwrOptions } from "./constants"
 
 // import dynamicSort from "../functions/dynamicSort"
 import getNestedObject from "../functions/getNestedObject"
-import { getWeekday, dateToYyyymmdd } from "../functions/dateAndTime"
+import { getWeekday, dateToYyyymmdd, getTransitionDates } from "../functions/dateAndTime"
 
 import gqlFetcher from "./fetchers"
 
@@ -184,6 +184,8 @@ export const useCartOrderData = (locNick, delivDateJS, isWhole) => {
       route: cartRoute ? cartRoute : defaultRoute,
       ItemNote: cartNote ? cartNote : '',
     }
+    // console.log("header", orderHeader)
+    // console.log("items", orderItems)
 
     return {
       header: orderHeader,
@@ -191,11 +193,31 @@ export const useCartOrderData = (locNick, delivDateJS, isWhole) => {
     }
   }
 
- const cartOrder = useMemo(
+  const cartOrder = useMemo(
     makeCartOrder, 
     [locationDetails, cartData, standingData, delivDate, dayOfWeek, isWhole]
   )
 
   return cartOrder
 
+}
+
+
+
+/**
+ * Specialized fetcher to retrieve cart orders from the current working date
+ * to 3 days after.
+ */
+export const fetchTransitionOrders = async (location) => {
+  const transitionDates = getTransitionDates()
+
+  const query = queries.transitionOrdersByLocByDelivDate
+  const variables = {
+    locNick: location,
+    delivDate: {between: [transitionDates[0], transitionDates[3]]}
+  }
+
+  const data = (await gqlFetcher(query, variables)).data.orderByLocByDelivDate.items
+
+  return data
 }
