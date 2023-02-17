@@ -483,3 +483,17 @@ div .photoBox {
   border-radius: 3px;
   transition: box-shadow 0.2s;
 }
+.ql-size-small {
+  font-size: .8em;;
+}
+
+.ql-size-normal {
+  font-size: 1em;;
+}
+.ql-size-large {
+  font-size: 1.2em;;
+}
+
+.ql-size-huge {
+  font-size: 1.5em;;
+}
