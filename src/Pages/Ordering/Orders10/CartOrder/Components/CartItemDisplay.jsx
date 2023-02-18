@@ -139,7 +139,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
         footer={footerTemplate}
       >
         <Column header="Products"
-         
+          
           field="product.prodName" 
           body={productColumnTemplate}  
         />

@@ -47,7 +47,7 @@ const Orders10 = () => {
         />
         </div>
       }
-        <div className="cartStandButton p-fluid" style={{margin: "0.5rem"}}>
+        <div className="cartStandButton p-fluid" style={{padding: "0.5rem"}}>
           <Button 
             {... buttonModel[activeIndex]} 
             onClick={() => {setActiveIndex((activeIndex + 1) % buttonModel.length)}}

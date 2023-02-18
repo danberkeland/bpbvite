@@ -84,11 +84,12 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
         setSelectedProduct(null)
         setSelectedQty(null)
       }}  
-      position="bottom"
+      blockScroll={true}
       icons={() => <div>Add a product</div>}
-      style={{height: "350px"}}
+      position="top"
+      style={{height: "200px"}}
     >
-      <div className="dropdown-container p-fluid">
+      <div className="p-fluid" style={{margin: ".5rem"}}>
         <Dropdown options={customProductData || []} 
           optionLabel="prodName" optionValue="prodNick"
           value={selectedProduct ? selectedProduct.prodNick : null}
@@ -103,12 +104,13 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
         />
       </div>
 
-      <div style={{display: "flex", justifyContent: "flex-end", gap: "25px", marginTop: "25px"}}>
+      <div style={{display: "flex", justifyContent: "flex-end", gap: "1rem", padding: ".5rem"}}>
         <div className="p-fluid" style={{flex: "0 0 80px", maxWidth: "80px"}}>
           <InputNumber 
             value={selectedQty}
             min={0}
             max={selectedProductMaxQty}
+            placeholder="Qty"
             disabled={
               !selectedProduct || 
               selectedProductMaxQty === 0
@@ -132,7 +134,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
           />
       </div>
       <Button label="ADD"
-        className="p-button-outlined p-button-rounded"
+        // className="p-button-outlined p-button-rounded"
         onClick={()=>{
           console.log("product added")
           handleAddProduct()

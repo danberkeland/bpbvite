@@ -97,8 +97,8 @@
 
   --bpb-contrast-color: hsl(240, 18%, 34%);
 
-  --bpb-hilight-color: #4050c0;
-  --bpb-hilight-color-text:#ffffff;
+  --bpb-hilight-color: hsl(214, 75%, 75%);
+  --bpb-hilight-color-text: var(--bpb-orange-vibrant-900);
 
   --bpb-button-color: var(--bpb-contrast-color);
   --bpb-button-text-color: #ffffff;
@@ -443,6 +443,7 @@
   transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
   font-weight: 600;
   padding: 0.5rem;
+  text-align: center; /* custom */
 }
 .p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-year:enabled:hover,
 .p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-month:enabled:hover {
@@ -853,7 +854,7 @@
   padding: 0.5rem 1rem;
   border-bottom: 0 none;
   color: #495057;
-  background: var(--bpb-surface-header);
+  background: var(--bpb-surface-input);
   margin: 0;
   border-top-right-radius: 3px;
   border-top-left-radius: 3px;
@@ -1243,8 +1244,10 @@
 }
 
 .p-listbox {
-  background: #ffffff;
-  color: #495057;
+  /* background: #ffffff; */
+  /* color: #495057; */
+  background: var(--bpb-surface-input);
+  color: var(--bpb-text-color);
   border: 1px solid var(--bpb-border-input);
   border-radius: 3px;
 }
@@ -1276,8 +1279,10 @@
   border-radius: 0;
 }
 .p-listbox .p-listbox-list .p-listbox-item.p-highlight {
-  color: #495057;
-  background: #E3F2FD;
+  /* color: #495057; */
+  /* background: #E3F2FD; */
+  color: var(--bpb-text-color-heavy);
+  background: var(--bpb-hilight-color);
 }
 .p-listbox .p-listbox-list .p-listbox-item:focus {
   outline: 0 none;
@@ -4479,13 +4484,15 @@
 }
 
 .p-sidebar {
-  background: #ffffff;
+  /* background: #ffffff; */
+  background: var(--bpb-surface-content);
   color: #495057;
   border: 0 none;
   box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
 }
 .p-sidebar .p-sidebar-header {
   padding: 1rem;
+  justify-content: space-between; /* custom */
 }
 .p-sidebar .p-sidebar-header .p-sidebar-close,
 .p-sidebar .p-sidebar-header .p-sidebar-icon {

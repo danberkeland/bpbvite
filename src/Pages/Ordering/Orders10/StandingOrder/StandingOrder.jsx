@@ -7,6 +7,7 @@ import { DataTable } from "primereact/datatable"
 import { Sidebar } from "primereact/sidebar"
 import { Dropdown } from "primereact/dropdown"
 import { InputNumber } from "primereact/inputnumber"
+import { ListBox } from "primereact/listbox"
 
 import { createStanding, deleteStanding, updateStanding, useStandingByLocation } from "../../../../data/standingData"
 import { createOrder, fetchTransitionOrders } from "../../../../data/orderData"
@@ -92,25 +93,28 @@ export const StandingOrder = ({ user, locNick }) => {
   return(
     <div>
       {user.authClass === 'bpbfull' &&
-        <div style={{display: "flex", justifyContent:"space-between"}}>
-          <div style={{padding: ".5rem"}}>
-            <SelectButton 
-              value={isStand} 
-              onChange={(e) => {if (e.value !== null) setIsStand(e.value)}} 
-              options={standOptions}
-            />
-          </div>
-          <div style={{padding: ".5rem"}}>
-            <SelectButton 
-              value={isWhole} 
-              onChange={(e) => {if (e.value !== null) setIsWhole(e.value)}} 
-              options={wholeOptions}
-            />
+        <div style={{margin: ".5rem", padding: ".5rem", border: "1px solid", borderRadius: "3px", backgroundColor: "#ffc466", borderColor: "hsl(37, 67%, 60%)"}}>
+          <h2>Category:</h2>
+          <div style={{display: "flex", gap: "2rem"}}>
+            <div style={{padding: ".5rem", flex: "50%"}}>
+              <ListBox 
+                options={standOptions}
+                value={isStand}
+                onChange={e => {if (e.value !== null) setIsStand(e.value)}}
+              />
+            </div>
+            <div style={{padding: ".5rem", flex: "50%"}}>
+              <ListBox 
+                options={wholeOptions}
+                value={isWhole}
+                onChange={e => {if (e.value !== null) setIsWhole(e.value)}}
+              />
+            </div>
           </div>
         </div>
       }
 
-      <div style={{margin: ".5rem"}}>
+      <div style={{padding: ".5rem"}}>
         <SelectButton
           value={viewMode}
           onChange={e => {
@@ -180,9 +184,12 @@ export const StandingOrder = ({ user, locNick }) => {
         </DataTable>
       </div>
 
-      <Button label="Submit Changes" 
-        onClick={() => handleSubmit(locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, user.name, locationDetails)}
-      />
+      <div style={{padding: ".5rem"}}>
+        <Button label="Submit Changes" 
+          className="p-button-lg" 
+          onClick={() => handleSubmit(locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, user.name, locationDetails)}
+        />
+      </div>
 
       <AddItemSidebar
         showAddItem={showAddItem}
@@ -380,6 +387,7 @@ const AddItemSidebar = ({showAddItem, setShowAddItem, locNick, standingChanges, 
       visible={showAddItem}
       position="top"
       blockScroll={true}
+      icons={() => <div>Add a product</div>}
       onHide={() => {
         setShowAddItem(false)
         setSelectedProdNick(null)
@@ -419,61 +427,62 @@ const AddItemSidebar = ({showAddItem, setShowAddItem, locNick, standingChanges, 
 
 const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, userName, locationDetails) => {
 
-  // submission only handles the current category 
+  // Submission only handles the current category 
   // of standing order (according to isStand, isWhole).
   const baseItems = standingBase.filter(item => (item.isWhole === isWhole && item.isStand === isStand))
   const submissionCandidates = standingChanges.filter(item => (item.isWhole === isWhole && item.isStand === isStand))
 
-  // submit items are standing items that have a change 
+  // Submit items are standing items that have a change 
   // requiring database action ('CREATE', 'UPDATE', or 'DELETE')
   const submitItems = getSubmitItems(baseItems, submissionCandidates, userName)
   
   if (!submitItems.length) return
 
+  // *******************************
+  // * DETERMINE CART PLACEHOLDERS *
+  // *******************************
 
-  // Create cart placeholders over transition period.
-
+  // For standing/wholesale and standing/retail order items
+  // being submitted, we may need to create "placeholder"
+  // cart items during the transition period (T+0 to T+3)
+  // to preserve the state of those orders.  
+  //
   // If the existing cart orders have custom header values 
   // (i.e. route or ItemNote), we want to use those values 
   // for the placeholder items, or fall back to defaults.
-  
+
   const _cartOrders = await fetchTransitionOrders(locNick)
   const cartOrders = _cartOrders.filter(item => item.isWhole === isWhole)
   const cartHeaders = getCartHeaders(cartOrders, locationDetails)
 
   // console.log(transitionDates)
-  // console.log(cartHeaders)
+  // console.log("cart headers", cartHeaders)
+
+  let placeholderCandidates = submitItems.filter(item =>
+    item.isStand === true
+  )
 
   let cartPlaceHolderItems = []
 
-  // for each transition date, see if there are any submitItems that
-  // apply to that date. Cart headers can hold date/weekday info.
-  //
-  // If submit items exist, see if there is already a cart order for that product.
-  // If there is no cart order, create a placeholder containing...
-  //    a zero qty item if the standing item was just created, otherwise
-  //    an item with the previous standing order's qty 
-
-  //console.log("cart headers", cartHeaders)
-
   for (let header of cartHeaders) {
-    let submitItemsByDate = submitItems.filter(item =>
+
+    let placeholderCandidatesByDate = placeholderCandidates.filter(item =>
       item.dayOfWeek === header.dayOfWeek
     )
 
-    for (let subItem of submitItemsByDate) {
+    for (let subItem of placeholderCandidatesByDate) {
       let cartMatchItem = cartOrders.find(cartItem =>
         cartItem.prodNick === subItem.product.prodNick
         && cartItem.delivDate === header.delivDateISO  
       )
 
-      let standingBaseItem = baseItems.find(b => 
-        b.product.prodNick === subItem.product.prodNick
-        && b.dayOfWeek === subItem.dayOfWeek  
-      )
-      let placeholderQty = subItem.action === 'CREATE' ? 0 : standingBaseItem.qty
-
       if (!cartMatchItem) {
+        let standingBaseItem = baseItems.find(b => 
+          b.product.prodNick === subItem.product.prodNick
+          && b.dayOfWeek === subItem.dayOfWeek  
+        )
+        let placeholderQty = subItem.action === 'CREATE' ? 0 : standingBaseItem.qty
+
         let placeholderItem = {
           locNick: locNick,
           isWhole: subItem.isWhole,
@@ -497,6 +506,10 @@ const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingCha
 
   // console.log("Submit Items: ", submitItems)
   // console.log("Cart placeholders:", cartPlaceHolderItems)
+
+  // ***************************
+  // * SUBMIT STANDING CHANGES *
+  // ***************************
 
   for (let subItem of submitItems) {
     let { action, ...item } = subItem
@@ -528,6 +541,9 @@ const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingCha
     }
   }
 
+  // ***********************
+  // * SUBMIT PLACEHOLDERS *
+  // ***********************
   for (let placeholder of cartPlaceHolderItems) {
     console.log(placeholder)
     createOrder(placeholder)
