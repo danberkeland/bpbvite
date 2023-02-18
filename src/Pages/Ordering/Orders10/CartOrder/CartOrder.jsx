@@ -10,6 +10,7 @@ import { FulfillmentDropdown } from "./Components/FulfillmentDropdown"
 import { ItemNoteInput } from "./Components/ItemNoteInput"
 
 import { createOrder, updateOrder, useCartOrderData, useOrdersByLocationByDate } from "../../../../data/orderData"
+import { DateTime } from "luxon"
 
 
 export const CartOrder = ({ user, locNick }) => {
@@ -20,6 +21,9 @@ export const CartOrder = ({ user, locNick }) => {
   const [delivDate, setDelivDate] = useState(
     new Date(getWorkingDateTime("NOW").plus({ days: 1 }).toISO())
   )
+  const delivDateString = DateTime
+    .fromJSDate(delivDate, {zone: 'America/Los_Angeles'})
+    .toLocaleString({ weekday: 'short', month: 'short', day: 'numeric' })
 
   // data
   const cartOrderData = useCartOrderData(locNick, delivDate, isWhole)
@@ -29,9 +33,9 @@ export const CartOrder = ({ user, locNick }) => {
   
   useEffect(() => {
     if (!!cartOrderData) {
-      setHeaderChanges(JSON.parse(JSON.stringify(cartOrderData.header)))
-      setItemChanges(JSON.parse(JSON.stringify(cartOrderData.items)))
-      console.log(cartOrderData)
+        setHeaderChanges(JSON.parse(JSON.stringify(cartOrderData.header)))
+        setItemChanges(JSON.parse(JSON.stringify(cartOrderData.items)))
+        console.log(cartOrderData)
     }
   }, [cartOrderData])
 
@@ -56,6 +60,8 @@ export const CartOrder = ({ user, locNick }) => {
       const rateChanged = !!baseItem && orderItem.rate !== baseItem.rate
 
       const changeDetected = routeChanged || noteChanged || qtyChanged || rateChanged
+
+      console.log(orderItem.product.prodNick, routeChanged, noteChanged, qtyChanged, rateChanged)
 
       // decide action
       let action = 'NONE'
@@ -87,8 +93,8 @@ export const CartOrder = ({ user, locNick }) => {
         // console.log(createItem)
 
         // make api call
+
         const response = await createOrder(createItem)
-        
         if (!!response.errors) console.log('error')
         else console.log('ok')
         if (response && !response.errors) shouldRevalidate = true
@@ -109,8 +115,8 @@ export const CartOrder = ({ user, locNick }) => {
         // console.log(updateItem)
 
         // make api call
+
         const response = await updateOrder(updateItem)
-        
         if (!!response.errors) console.log('error')
         else console.log('ok')
         if (response && !response.errors) shouldRevalidate = true
@@ -165,100 +171,12 @@ export const CartOrder = ({ user, locNick }) => {
 
       <div style={{padding: "0.5rem"}}>
         <Button className="p-button-lg" 
-          label="Submit"
+          label={`Submit for ${delivDateString}`}
           onClick={handleSumbit}  
         />
       </div>
+
     </div>
   )
 
 }
-
-
-
-// const handleSubmit = async () => {
-//   // combine header data with items
-//   // combination & submission logic will be designed 
-//   // to focus on one item at a time.
-  
-//   // We build the submission item, then decide what, if anything,
-//   // to do with it.
-//   // For now we will build uniform submission items without
-//   // worrying about submitting non-changes over the wire.
-//   console.log("Submitting...")
-//   for (let ordItm of orderItemChanges) {
-//     // build submit item
-//     let subItem = {
-//       isWhole: true,
-//       delivDate: dateToYyyymmdd(delivDate),
-//       route: orderHeaderChanges.route,
-//       ItemNote: orderHeaderChanges.ItemNote,
-//       locNick: location,
-//       prodNick: ordItm.prodNick,
-//       qty: ordItm.qty,
-//       rate: ordItm.rate,
-//       isLate: 0,
-//       updatedBy: userName,
-//       ttl: getTtl(delivDate)
-//     }
-//     // can conditionally add other attributes in the future
-//     if (!!ordItm.id && ordItm.type === "C") subItem.id = ordItm.id
-
-//     // Decide Action
-//     let action = "NONE"
-//     if (subItem.hasOwnProperty("id")) {
-//       // check changes for route, ItemNote, qty, rate
-//       if (ordItm.qty !== orderItems[ordItm.prodNick]?.qty) action = "UPDATE"
-//       if (ordItm.rate !== orderItems[ordItm.prodNick]?.rate) action = "UPDATE"
-//       if (orderHeader.route !== orderHeaderChanges.route) action = "UPDATE"
-//       if (orderHeader.ItemNote !== orderHeaderChanges.ItemNote) action = "UPDATE"
-//     } else {
-//       if (ordItm.qty > 0) action = "CREATE"
-//       if (orderHeader.route !== orderHeaderChanges.route) action = "CREATE" // convert all items to cart when header values change
-//       if (orderHeader.ItemNote !== orderHeaderChanges.ItemNote) action = "CREATE" // ditto here
-//     }
-
-//     if (action === "CREATE") {
-//       subItem.sameDayMaxQty = ordItm.qty
-//       subItem.qtyUpdatedOn = new Date().toISOString()
-//     }
-
-//     if (action === "UPDATE") {
-//       if (getWorkingDate('NOW') !== getWorkingDate(ordItm.updatedOn)) {
-//         subItem.sameDayMaxQty = orderItems[ordItm.prodNick].qty
-//       }
-//       if (ordItm.qty !== orderItems[ordItm.prodNick].qty) subItem.qtyUpdatedOn = new Date().toISOString()
-//     }
-
-//     // make API calls and revalidate cartData cache after.
-//     // less dynamic/efficient, but simple.  Can be enhanced later.
-//     // because of the final revalidation, response items serve no function.
-//     console.log(action+": ", JSON.stringify(subItem, null, 2))
-
-//     let response
-//     if (action === "CREATE") {
-//       response = await gqlFetcher(createOrder, {input: subItem})
-//       response = response.data.createOrder
-//       console.log(response)
-
-//     }
-//     if (action === "UPDATE") {
-//       response = await gqlFetcher(updateOrder, {input: subItem})
-//       response = response.data.updateOrder
-//       console.log(response)
-
-//     }
-
-//     mutateCart()
-    
-//     // Testing mutate with generic SWR mutate below
-
-//     // let variables = {
-//     //   locNick: location,
-//     //   delivDate: dateToYyyymmdd(delivDate)
-//     // }
-//     // let key = [listOrdersByLocationByDate, variables]
-//     // mutate(key)
-//   }
-
-// }

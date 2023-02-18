@@ -17,6 +17,7 @@ import * as mutations from "../customGraphQL/mutations/orderMutations"
 
 import { useLocationDetails } from "./locationData"
 import { useStandingByLocation } from "./standingData"
+import dynamicSort from "../functions/dynamicSort"
 
 
 /******************
@@ -126,7 +127,7 @@ export const useCartOrderData = (locNick, delivDateJS, isWhole) => {
   const delivDate = dateToYyyymmdd(delivDateJS)
   const dayOfWeek = getWeekday(delivDateJS)
   const { data:locationDetails } = useLocationDetails(locNick, !!locNick)
-  const { data:cartData } = useOrdersByLocationByDate(locNick, delivDate, !!locNick && !!delivDate)
+  const { data:cartData, mutate:mutateCart } = useOrdersByLocationByDate(locNick, delivDate, !!locNick && !!delivDate)
   const { data:standingData } = useStandingByLocation(locNick, !!locNick)
   
   // console.log(locNick, delivDate, isWhole, dayOfWeek)
@@ -198,8 +199,46 @@ export const useCartOrderData = (locNick, delivDateJS, isWhole) => {
     [locationDetails, cartData, standingData, delivDate, dayOfWeek, isWhole]
   )
 
+  const cartIsValid = validateCart(cartData)
+
+  if (!cartIsValid) {
+    mutateCart()
+    return undefined
+  }
+
   return cartOrder
 
+}
+
+
+const validateCart = (cartData) => {
+  if (!cartData) return true
+  
+  let cartIsValid = true
+
+  const prodNicks = [...new Set(cartData.map(p => p.product.prodNick))]
+  const productGroups = prodNicks.map(pn => 
+    cartData.filter(c => c.product.prodNick === pn)
+      .sort(dynamicSort("updatedOn"))  
+  )
+
+  for (let group of productGroups) {
+    if (group.length > 1) {
+      cartIsValid = false
+      console.log(`duplicates found for ${group[0].product.prodNick}`)
+      let deleteItems = group.slice(0, -1).map(i => {
+        return ({ id: i.id })
+      })
+      
+      deleteItems.forEach(item => {
+        let response = deleteOrder(item)
+        console.log(response)
+      })
+
+    }
+  }
+  
+  return cartIsValid
 }
 
 

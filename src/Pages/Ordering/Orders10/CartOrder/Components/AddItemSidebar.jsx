@@ -49,7 +49,11 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
         action: "CREATE"
       }
       _cartItemChanges = [ ..._cartItemChanges, newItem]
-        .sort(dynamicSort("prodName"))
+        .sort((a, b) => {
+          if (a.product.prodName < b.product.prodName) return -1
+          if (a.product.prodName > b.product.prodName) return 1
+          return 0
+        })
     }
     setCartItemChanges(_cartItemChanges)
 

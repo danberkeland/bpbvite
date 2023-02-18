@@ -94,7 +94,7 @@ export const StandingOrder = ({ user, locNick }) => {
     <div>
       {user.authClass === 'bpbfull' &&
         <div style={{margin: ".5rem", padding: ".5rem", border: "1px solid", borderRadius: "3px", backgroundColor: "#ffc466", borderColor: "hsl(37, 67%, 60%)"}}>
-          <h2>Category:</h2>
+          <h2>Admin Settings</h2>
           <div style={{display: "flex", gap: "2rem"}}>
             <div style={{padding: ".5rem", flex: "50%"}}>
               <ListBox 
@@ -130,12 +130,38 @@ export const StandingOrder = ({ user, locNick }) => {
 
       <div style={{padding: ".5rem"}}>
         {viewMode === 'DAY' &&
-          <div className="p-fluid">
-            <Dropdown 
-              options={weekdayOptions}
-              value={dayOfWeek}
-              onChange={e => setDayOfWeek(e.value)}
-            />
+          <div style={{display: "flex", justifyContent: "space-between"}}>
+            <div className="p-fluid" style={{flex: "0 0 9rem"}}>
+              <Dropdown 
+                options={weekdayOptions}
+                value={dayOfWeek}
+                onChange={e => setDayOfWeek(e.value)}
+              />
+            </div>
+            <div style={{display: "flex", flex: "100%", justifyContent: "right", gap: "2rem"}}>
+              <div style={{flex: "0 0 4rem"}}>
+                <Button icon="pi pi-chevron-left"
+                  style={{width: "4rem"}}
+                  onClick={() => {
+                    let matchIdx = weekdayOptions.findIndex(item =>
+                      item.value === dayOfWeek
+                    )
+                    setDayOfWeek(weekdayOptions[(matchIdx - 1 + 7) % 7].value)
+                  }}
+                />
+              </div>
+              <div style={{flex: "0 0 4rem"}}>
+                <Button icon="pi pi-chevron-right"
+                  style={{width: "4rem"}}
+                  onClick={() => {
+                    let matchIdx = weekdayOptions.findIndex(item =>
+                      item.value === dayOfWeek
+                    )
+                    setDayOfWeek(weekdayOptions[(matchIdx + 1) % 7].value)
+                  }}
+                />
+              </div>
+            </div>
           </div>
         }
         {viewMode === 'PRODUCT' &&
@@ -202,10 +228,10 @@ export const StandingOrder = ({ user, locNick }) => {
       />
 
 
-      <pre>{JSON.stringify(isStand)}</pre>
-      <pre>{JSON.stringify(isWhole)}</pre>
-      <pre>{JSON.stringify(viewMode)}</pre>
-      <pre>{JSON.stringify(dayOfWeek)}</pre>
+      {/* <pre>{JSON.stringify(isStand)}</pre> */}
+      {/* <pre>{JSON.stringify(isWhole)}</pre> */}
+      {/* <pre>{JSON.stringify(viewMode)}</pre> */}
+      {/* <pre>{JSON.stringify(dayOfWeek)}</pre> */}
       {/* <pre>{JSON.stringify(productOptions, null, 2)}</pre> */}
 
     </div>

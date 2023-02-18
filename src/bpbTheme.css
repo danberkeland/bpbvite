@@ -1897,17 +1897,20 @@
 }
 .p-button.p-button-text {
   background-color: transparent;
-  color: #2196F3;
+  /* color: #2196F3; */
+  color: var(--bpb-button-color);
   border-color: transparent;
 }
 .p-button.p-button-text:enabled:hover, .p-button.p-button-text:not(button):not(a):not(.p-disabled):hover {
   background: rgba(33, 150, 243, 0.04);
-  color: #2196F3;
+  /* color: #2196F3; */
+  color: var(--bpb-button-color);
   border-color: transparent;
 }
 .p-button.p-button-text:enabled:active, .p-button.p-button-text:not(button):not(a):not(.p-disabled):active {
   background: rgba(33, 150, 243, 0.16);
-  color: #2196F3;
+  /* color: #2196F3; */
+  color: var(--bpb-button-color);
   border-color: transparent;
 }
 .p-button.p-button-text.p-button-plain {

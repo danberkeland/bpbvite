@@ -4,6 +4,7 @@ import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 import { InputNumber } from "primereact/inputnumber"
 import { Button } from "primereact/button"
+import { Tag } from "primereact/tag"
 // import { Sidebar } from "primereact/sidebar"
 
 import { AddItemSidebar } from "./AddItemSidebar"
@@ -11,12 +12,18 @@ import { AddItemSidebar } from "./AddItemSidebar"
 import { getWorkingDate, getWorkingDateTime } from "../../../../../functions/dateAndTime"
 import { useLocationDetails } from "../../../../../data/locationData"
 import { useState } from "react"
+import TimeAgo from "timeago-react"
 
 export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick, delivDate, user }) => {
   const { altLeadTimes } = useLocationDetails(locNick, !!locNick)
   const [rollbackQty, setRollbackQty] = useState(null)
   
   const [showSidebar, setShowSidebar] = useState(false)
+
+  const [showDetails, setShowDetails] = useState(false)
+
+  const isDelivDate = delivDate.getTime() === getWorkingDateTime('NOW').toMillis()
+  const isPastDeliv = delivDate < getWorkingDateTime('NOW')
 
   const productColumnTemplate = (rowData) => {
     const prodNick = rowData.product.prodNick
@@ -30,16 +37,28 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
       : rowData.product.leadTime
     const qtyChanged = baseItem ? baseItem.qty !== rowData.qty : rowData.qty > 0
 
-    let helperText = ''
-    if (!baseItem) helperText = '-- adding item'
-    if (delivDate < getWorkingDateTime('NOW').plus({ days: leadTime })) helperText = '-- in production'
-    if (delivDate.getTime() === getWorkingDateTime('NOW').toMillis()) helperText = '-- delivery date reached'
-    if (delivDate < getWorkingDateTime('NOW')) helperText = '-- delivery date passed'
+    const isInProduction = delivDate < getWorkingDateTime('NOW').plus({ days: leadTime })
+    const timingStatus = isPastDeliv ? 'past' : (isDelivDate ? 'deliv' : (isInProduction ? 'inprod' : 'none'))
     
     return (
       <div style={rowData.qty === 0 ? {color : "gray"} : null}>
         <div style={{fontStyle: qtyChanged ? "italic" : "normal", fontWeight: "bold"}}>{`${rowData.product.prodName}`}</div>
-        <div style={{paddingTop: ".1rem", fontSize:".9rem"}}>{`${helperText}`}</div>
+        {/* <div style={{paddingTop: ".1rem", fontSize:".9rem", whiteSpace: "nowrap"}}>{`${helperText}`}</div> */}
+        {timingStatus === 'inprod' && <div style={{marginTop: ".25rem", fontSize: ".9rem"}}><i className="pi pi-info-circle" style={{fontSize: ".9rem"}} />{` in production`}</div>}
+        {timingStatus === 'deliv' && <div style={{marginTop: ".25rem", fontSize: ".9rem"}}><i className="pi pi-info-circle" style={{fontSize: ".9rem"}} />{` delivery date reached`}</div>}
+        {timingStatus === 'past' && <div style={{marginTop: ".25rem", fontSize: ".9rem"}}><i className="pi pi-info-circle" style={{fontSize: ".9rem"}} />{` delivery date has passed`}</div>}
+        {showDetails && 
+          <>
+            {rowData.qtyUpdatedOn && (
+              <div style={{paddingTop: ".5rem", fontSize:".9rem"}}>edited <TimeAgo datetime={rowData.qtyUpdatedOn}/></div>
+              )}
+            {rowData.updatedBy && <div style={{fontSize:".9rem"}}>{`by ${rowData.updatedBy}`}</div>}
+            {rowData.orderType === 'S' &&
+              <div style={{fontSize:".9rem"}}>-- standing order</div>
+            }
+            {/* <div style={{paddingTop: ".5rem", fontSize:".9rem"}}>{`$${(rowData.rate).toFixed(2)}/ea, Subtotal: $${(rowData.rate * rowData.qty).toFixed(2)}`}</div> */}
+          </>
+        }
       </div>
     )
   }
@@ -81,6 +100,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
     return (
       <div className="p-fluid">
         <InputNumber
+          onClick={() => console.log(rowData)}
           disabled={disableInput}
           value={rowData.qty}
           min={0}
@@ -115,6 +135,13 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
             }
           }}
         />
+        {showDetails &&
+          <>
+            <div style={{paddingTop: ".5rem", fontSize:".9rem"}}>{`$${rowData.rate.toFixed(2)}/ea.`}</div>
+            <div style={{paddingTop: ".5rem", fontSize:".9rem"}}>Subtotal:</div>
+            <div style={{fontSize:".9rem"}}>{`$${(rowData.rate * rowData.qty).toFixed(2)}`}</div>
+          </>
+        }
       </div>
     )
   }
@@ -125,11 +152,9 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
     }, 0).toFixed(2) : 0
 
     return (
-      <div>{`Total: $${total}`}</div>
+      <div style={{textAlign: 'right'}}>{`Total: $${total}`}</div>
     )
   }
-
-
 
   return (
     <div className="bpb-datatable-orders" style={{padding: ".5rem"}}>
@@ -138,8 +163,20 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
         responsiveLayout
         footer={footerTemplate}
       >
-        <Column header="Products"
-          
+        <Column 
+          header={() => {
+            return (
+              <div style={{width: "200px", display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                <span>Products</span> 
+                <Button 
+                  icon={showDetails ? "pi pi-search-minus" : "pi pi-search-plus"}
+                  className="p-button-rounded p-button-text" 
+                  onClick={() => setShowDetails(!showDetails)}
+                />
+              </div>
+
+            )
+          }}
           field="product.prodName" 
           body={productColumnTemplate}  
         />
@@ -149,7 +186,6 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
           style={{width: "90px"}}
         />
       </DataTable>
-
 
       <AddItemSidebar 
         locNick={locNick}
