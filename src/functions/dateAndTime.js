@@ -66,7 +66,7 @@ export const getTransitionDates = (format) => {
  * Takes a JS Date object and returns a mm/dd/yyyy string.
  */
 export function dateToMmddyyyy(date) {
-  //if (!date) return null
+  if (!date) return null
 
   const mm = ('0' + (date.getMonth() + 1)).slice(-2) 
   const dd = ('0' + date.getDate()).slice(-2)
@@ -79,6 +79,7 @@ export function dateToMmddyyyy(date) {
  * Takes a JS Date object and returns an IS0 yyyy-mm-dd string.
  */
 export function dateToYyyymmdd(date) {
+  if (!date) return null
   return date.toISOString().split('T')[0]
 }
 
