@@ -3,7 +3,7 @@ import { defaultSwrOptions } from "./constants"
 
 import { useMemo } from "react"
 
-import dynamicSort from "../functions/dynamicSort"
+//import dynamicSort from "../functions/dynamicSort"
 import getNestedObject from "../functions/getNestedObject"
 
 import gqlFetcher from "./fetchers"
@@ -28,8 +28,6 @@ export const useUserDetails = (sub, shouldFetch) => {
     gqlFetcher, 
     defaultSwrOptions
   )
-
-  console.log(sub, data)
 
   const transformData = () => {
     if (!data) return undefined

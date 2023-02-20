@@ -40,7 +40,7 @@ export const CartOrder = ({ user, locNick }) => {
     if (!!cartOrderData) {
         setHeaderChanges(JSON.parse(JSON.stringify(cartOrderData.header)))
         setItemChanges(JSON.parse(JSON.stringify(cartOrderData.items)))
-        console.log(cartOrderData)
+        // console.log(cartOrderData)
     }
   }, [cartOrderData])
 

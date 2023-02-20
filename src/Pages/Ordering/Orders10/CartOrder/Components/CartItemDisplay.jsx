@@ -158,10 +158,20 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
     )
   }
 
+  const tableDisplayData = (!!itemBase && itemChanges) ? itemChanges.filter(rowData => {
+    const baseItem = itemBase.find(i => i.product.prodNick === rowData.product.prodNick)
+
+    return (!baseItem)
+      || (baseItem.qty !== rowData.qty)
+      || (rowData.qty > 0)
+      || (rowData.orderType === 'C' && rowData.sameDayMaxQty > 0 && getWorkingDate(rowData.qtyUpdatedOn) === getWorkingDate('NOW'))
+
+  }) : []
+
   return (
     <div className="bpb-datatable-orders" style={{padding: ".5rem"}}>
       <DataTable
-        value={itemChanges} 
+        value={tableDisplayData} 
         responsiveLayout
         footer={footerTemplate}
       >
@@ -169,7 +179,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
           header={() => {
             return (
               <div style={{width: "200px", display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                <span>Products</span> 
+                <span onClick={() => {console.log(itemChanges)}}>Products</span> 
                 <Button 
                   icon={showDetails ? "pi pi-search-minus" : "pi pi-search-plus"}
                   className="p-button-rounded p-button-text" 
