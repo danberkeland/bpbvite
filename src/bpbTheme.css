@@ -106,6 +106,12 @@
 
 }
 
+/* custom */
+div.read-only-button > .p-disabled, .p-component:disabled {
+  opacity: 1;
+}
+
+
 ::-moz-selection { /* Code for Firefox */
   color: var(--bpb-text-color-heavy);
   background: #d0e8fb;
@@ -1870,17 +1876,20 @@
 }
 .p-button.p-button-outlined {
   background-color: transparent;
-  color: #2196F3;
+  /* color: #2196F3; */
+  color: var(--bpb-button-color);
   border: 1px solid;
 }
 .p-button.p-button-outlined:enabled:hover, .p-button.p-button-outlined:not(button):not(a):not(.p-disabled):hover {
   background: rgba(33, 150, 243, 0.04);
-  color: #2196F3;
+  /* color: #2196F3; */
+  color: var(--bpb-button-color);
   border: 1px solid;
 }
 .p-button.p-button-outlined:enabled:active, .p-button.p-button-outlined:not(button):not(a):not(.p-disabled):active {
   background: rgba(33, 150, 243, 0.16);
-  color: #2196F3;
+  /* color: #2196F3; */
+  color: var(--bpb-button-color);
   border: 1px solid;
 }
 .p-button.p-button-outlined.p-button-plain {

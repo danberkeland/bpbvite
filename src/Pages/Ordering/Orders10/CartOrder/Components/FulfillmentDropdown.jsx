@@ -9,7 +9,7 @@ const pickupOptions = [
   {label: 'Carlton Pickup', value: 'atownpick'}
 ]
 
-export const FulfillmentDropdown = ({ headerChanges, setHeaderChanges }) => {
+export const FulfillmentDropdown = ({ headerChanges, setHeaderChanges, disabled }) => {
 
   let dropdownModel = headerChanges
     ? headerChanges.defaultRoute === 'deliv' 
@@ -34,6 +34,8 @@ export const FulfillmentDropdown = ({ headerChanges, setHeaderChanges }) => {
         if (option) return <div>{option.label}</div>
         return <span>{props.placeholder}</span>
       }}
+      disabled={disabled}
+      //readOnly={disabled}
     />
 
   )

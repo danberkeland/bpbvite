@@ -23,7 +23,12 @@ export const CartOrder = ({ user, locNick }) => {
   )
   const delivDateString = DateTime
     .fromJSDate(delivDate, {zone: 'America/Los_Angeles'})
-    .toLocaleString({ weekday: 'short', month: 'short', day: 'numeric' })
+    .toLocaleString({ weekday: 'short', month: 'short', day: 'numeric' })  
+  
+  const isDelivDate = delivDate.getTime() === getWorkingDateTime('NOW').toMillis()
+  const isPastDeliv = delivDate < getWorkingDateTime('NOW')
+
+  const disableInputs = isPastDeliv || (isDelivDate && user.authClass !== 'bpbfull')
 
   // data
   const cartOrderData = useCartOrderData(locNick, delivDate, isWhole)
@@ -133,17 +138,13 @@ export const CartOrder = ({ user, locNick }) => {
   
   return(
     <div>
-      {/* <h1>Cart Order</h1>
-      <pre>{JSON.stringify(headerChanges, null, 2)}</pre> */}
-      {/* {user.authClass === 'bpbfull' &&
-        <div>Admin Settings</div>
-      } */}
-
+      <h1 style={{padding: ".5rem"}}>Cart Order</h1>
       <div style={{width: "100%", display: "flex", justifyContent: "left", flexWrap: ""}}>
         <div style={{padding: "0.5rem", flex: "100%"}} className="bpb-input-field p-fluid">
           <FulfillmentDropdown 
             headerChanges={headerChanges}
             setHeaderChanges={setHeaderChanges}
+            disabled={disableInputs}
           />
         </div>
         <div style={{padding: "0.5rem", flex: "0 0 7.5rem"}} className="bpb-input-field p-fluid">
@@ -167,12 +168,14 @@ export const CartOrder = ({ user, locNick }) => {
       <ItemNoteInput 
         headerChanges={headerChanges}
         setHeaderChanges={setHeaderChanges}
+        disabled={disableInputs}
       />
 
       <div style={{padding: "0.5rem"}}>
         <Button className="p-button-lg" 
           label={`Submit for ${delivDateString}`}
-          onClick={handleSumbit}  
+          onClick={handleSumbit}
+          disabled={disableInputs}
         />
       </div>
 

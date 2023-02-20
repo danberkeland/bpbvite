@@ -4,7 +4,7 @@ import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 import { InputNumber } from "primereact/inputnumber"
 import { Button } from "primereact/button"
-import { Tag } from "primereact/tag"
+// import { Tag } from "primereact/tag"
 // import { Sidebar } from "primereact/sidebar"
 
 import { AddItemSidebar } from "./AddItemSidebar"
@@ -24,6 +24,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
 
   const isDelivDate = delivDate.getTime() === getWorkingDateTime('NOW').toMillis()
   const isPastDeliv = delivDate < getWorkingDateTime('NOW')
+  const disableInputs = isPastDeliv || (isDelivDate && user.authClass !== 'bpbfull')
 
   const productColumnTemplate = (rowData) => {
     const prodNick = rowData.product.prodNick
@@ -46,7 +47,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
         {/* <div style={{paddingTop: ".1rem", fontSize:".9rem", whiteSpace: "nowrap"}}>{`${helperText}`}</div> */}
         {timingStatus === 'inprod' && <div style={{marginTop: ".25rem", fontSize: ".9rem"}}><i className="pi pi-info-circle" style={{fontSize: ".9rem"}} />{` in production`}</div>}
         {timingStatus === 'deliv' && <div style={{marginTop: ".25rem", fontSize: ".9rem"}}><i className="pi pi-info-circle" style={{fontSize: ".9rem"}} />{` delivery date reached`}</div>}
-        {timingStatus === 'past' && <div style={{marginTop: ".25rem", fontSize: ".9rem"}}><i className="pi pi-info-circle" style={{fontSize: ".9rem"}} />{` delivery date has passed`}</div>}
+        {timingStatus === 'past' && <div style={{marginTop: ".25rem", fontSize: ".9rem"}}><i className="pi pi-info-circle" style={{fontSize: ".9rem"}} />{` past delivery date`}</div>}
         {showDetails && 
           <>
             {rowData.qtyUpdatedOn && (
@@ -69,7 +70,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
     const prodNick = rowData.product.prodNick
     const baseItem = itemBase?.find(item => item.product.prodNick === prodNick)
     const leadTimeOverride = altLeadTimes?.find(
-      (item) => item.prodNick === rowData.prodNick
+      (item) => item.prodNick === rowData.product.prodNick
     )
     const leadTime = leadTimeOverride 
       ? leadTimeOverride.altLeadTime 
@@ -81,10 +82,10 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
       : !baseItem ? 0        
       : !sameDayUpdate ? baseItem.qty
       : baseItem.sameDayMaxQty
-    const qtyChanged = baseItem ? baseItem.qty !== rowData.qty : rowData.qty > 0
+    // const qtyChanged = baseItem ? baseItem.qty !== rowData.qty : rowData.qty > 0
 
     const disableInput = (user.authClass === 'bpbfull' && delivDate < getWorkingDateTime('NOW'))
-      || (maxQty === 0 || delivDate < getWorkingDateTime('NOW'))
+      || (maxQty === 0 || delivDate <= getWorkingDateTime('NOW'))
 
     const updateProductQty = (newQty, prodNick) => {
       const _itemChanges = itemChanges.map((item) => {
@@ -101,13 +102,14 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
       <div className="p-fluid">
         <InputNumber
           onClick={() => console.log(rowData)}
-          disabled={disableInput}
+          readOnly={disableInput}
+          //disabled={disableInput}
           value={rowData.qty}
           min={0}
           max={maxQty}
           onFocus={(e) => {
             setRollbackQty(parseInt(e.target.value));
-            e.target.select();
+            if (!disableInput) e.target.select();
           }}
           onChange={(e) => updateProductQty(e.value, prodNick)}
           onValueChange={(e) => updateProductQty(e.value, prodNick)}
@@ -180,10 +182,10 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
           field="product.prodName" 
           body={productColumnTemplate}  
         />
-        <Column header={() => <Button onClick={() => setShowSidebar(true)}>Add</Button>}
+        <Column header={() => <Button onClick={() => setShowSidebar(true)} disabled={disableInputs}>Add</Button>}
           field="qty" 
           body={qtyColumnTemplate}
-          style={{width: "90px"}}
+          style={{width: "6rem"}}
         />
       </DataTable>
 

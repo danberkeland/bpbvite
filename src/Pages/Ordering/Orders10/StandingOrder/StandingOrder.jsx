@@ -49,7 +49,7 @@ export const StandingOrder = ({ user, locNick }) => {
   // standing::public state
   const [viewMode, setViewMode] = useState('DAY')
   const [dayOfWeek, setDayOfWeek] = useState(getWeekday(new Date(getWorkingDate('NOW'))))
-  const [prodNick, setProdNick] = useState(null)
+  // const [prodNick, setProdNick] = useState(null)
   const [product, setProduct] = useState(null)
   const [showAddItem, setShowAddItem] = useState(false)
   
@@ -92,6 +92,7 @@ export const StandingOrder = ({ user, locNick }) => {
   //console.log(tableData)
   return(
     <div>
+      <h1 style={{padding: ".5rem"}}>Standing Order</h1>
       {user.authClass === 'bpbfull' &&
         <div style={{margin: ".5rem", padding: ".5rem", border: "1px solid", borderRadius: "3px", backgroundColor: "#ffc466", borderColor: "hsl(37, 67%, 60%)"}}>
           <h2>Admin Settings</h2>
@@ -119,8 +120,8 @@ export const StandingOrder = ({ user, locNick }) => {
           value={viewMode}
           onChange={e => {
             if (e.value !== null) setViewMode(e.value)
-            if (prodNick === null && e.value === 'PRODUCT' && productOptions.length) {
-              setProdNick(productOptions[0].prodNick)
+            if (product === null && e.value === 'PRODUCT' && productOptions.length) {
+              // setProdNick(productOptions[0].prodNick)
               setProduct(productOptions[0])
             }
           }}
@@ -170,9 +171,9 @@ export const StandingOrder = ({ user, locNick }) => {
               options={productOptions}
               optionLabel="prodName"
               optionValue="prodNick"
-              value={prodNick}
+              value={product.prodNick}
               onChange={(e) => {
-                setProdNick(e.value)
+                // setProdNick(e.value)
                 setProduct(productOptions.find(i => i.prodNick === e.value))
               }}
             />
@@ -223,6 +224,9 @@ export const StandingOrder = ({ user, locNick }) => {
         locNick={locNick}
         standingChanges={standingChanges}
         setStandingChanges={setStandingChanges}
+        setProduct={setProduct}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
         isStand={isStand}
         isWhole={isWhole}
       />
@@ -345,7 +349,7 @@ const makeStandingBase = (standingData, locNick) => {
 
 
 
-const AddItemSidebar = ({showAddItem, setShowAddItem, locNick, standingChanges, setStandingChanges, isStand, isWhole, userName, locationDetails}) => {
+const AddItemSidebar = ({showAddItem, setShowAddItem, locNick, standingChanges, setStandingChanges, setProduct, viewMode, setViewMode, isStand, isWhole, userName, locationDetails}) => {
   const { data:productData } = useProductDataWithLocationCustomization(locNick)
 
   const [selectedProdNick, setSelectedProdNick] = useState(null)
@@ -401,6 +405,14 @@ const AddItemSidebar = ({showAddItem, setShowAddItem, locNick, standingChanges, 
       })
 
     setStandingChanges(newData)
+
+    if (viewMode === 'PRODUCT') setProduct({
+      prodNick: prod.prodNick,
+      prodName: prod.prodName,
+      leadTime: prod.leadTime,
+      retailPrice: prod.retailPrice,
+      wholePrice: prod.wholePrice
+    })
     setSelectedProdNick(null)
     setShowAddItem(false)
 
@@ -454,12 +466,12 @@ const AddItemSidebar = ({showAddItem, setShowAddItem, locNick, standingChanges, 
 const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, userName, locationDetails) => {
 
   // Submission only handles the current category 
-  // of standing order (according to isStand, isWhole).
+  // of standing order (according to isStand, isWhole values).
   const baseItems = standingBase.filter(item => (item.isWhole === isWhole && item.isStand === isStand))
   const submissionCandidates = standingChanges.filter(item => (item.isWhole === isWhole && item.isStand === isStand))
 
-  // Submit items are standing items that have a change 
-  // requiring database action ('CREATE', 'UPDATE', or 'DELETE')
+  // Submit items are standing items that have a change requiring
+  // some database action ('CREATE', 'UPDATE', or 'DELETE')
   const submitItems = getSubmitItems(baseItems, submissionCandidates, userName)
   
   if (!submitItems.length) return

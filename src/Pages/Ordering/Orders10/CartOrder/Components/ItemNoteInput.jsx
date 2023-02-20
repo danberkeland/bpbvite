@@ -2,7 +2,7 @@ import React from "react"
 
 import { InputTextarea } from "primereact/inputtextarea"
 
-export const ItemNoteInput = ({ headerChanges, setHeaderChanges }) => {
+export const ItemNoteInput = ({ headerChanges, setHeaderChanges, disabled }) => {
   return (
     <div className="bpb-inputtext" style={{padding: ".5rem"}}>
       <InputTextarea
@@ -13,6 +13,7 @@ export const ItemNoteInput = ({ headerChanges, setHeaderChanges }) => {
         value={headerChanges?.ItemNote}
         onChange={(e) => setHeaderChanges({ ...headerChanges,ItemNote: e.target.value })}
         placeholder="(Optional) Note:"
+        disabled={disabled}
         //disabled={readOnly}
       />
     </div>
