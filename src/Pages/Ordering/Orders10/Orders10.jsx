@@ -49,7 +49,7 @@ const Orders10 = () => {
           value={locNick}
           onChange={e => setLocNick(e.value)}
           filter
-          filterby="locNick,locName"
+          filterBy="locNick,locName"
           showFilterClear
           placeholder={locationList ? "LOCATION" : "loading..."}
         />

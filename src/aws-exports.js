@@ -7,6 +7,13 @@ const awsmobile = {
     "aws_appsync_region": "us-east-2",
     "aws_appsync_authenticationType": "API_KEY",
     "aws_appsync_apiKey": "da2-665hu7c4pjflbc3adkqe4hmqxm",
+    "aws_cloud_logic_custom": [
+        {
+            "name": "bpbGateway",
+            "endpoint": "https://sicmwf1c2k.execute-api.us-east-2.amazonaws.com/devtwo",
+            "region": "us-east-2"
+        }
+    ],
     "aws_cognito_identity_pool_id": "us-east-2:e043f2f9-d66e-4afe-9202-c52539e6e3d4",
     "aws_cognito_region": "us-east-2",
     "aws_user_pools_id": "us-east-2_931DOUCFU",

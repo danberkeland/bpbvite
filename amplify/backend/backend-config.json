@@ -1,5 +1,19 @@
 {
   "api": {
+    "bpbGateway": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "bpbrouter"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
     "bpbadmin2": {
       "dependsOn": [],
       "output": {

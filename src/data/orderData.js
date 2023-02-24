@@ -8,7 +8,7 @@ import { defaultSwrOptions } from "./constants"
 import getNestedObject from "../functions/getNestedObject"
 import { getWeekday, dateToYyyymmdd, getTransitionDates } from "../functions/dateAndTime"
 
-import gqlFetcher from "./fetchers"
+import gqlFetcher, { APIGatewayFetcher } from "./fetchers"
 
 import * as queries from "../customGraphQL/queries/orderQueries"
 import * as mutations from "../customGraphQL/mutations/orderMutations"
@@ -259,4 +259,11 @@ export const fetchTransitionOrders = async (location) => {
   const data = (await gqlFetcher(query, variables)).data.orderByLocByDelivDate.items
 
   return data
+}
+
+
+export const submitToLegacy = async (body) => {
+  let response = await APIGatewayFetcher('/orders/submitLegacyCart', body)
+
+  return response
 }
