@@ -59,9 +59,17 @@ export const StandingOrder = ({ user, locNick }) => {
   const [standingBase, setStandingBase] = useState(null)
   const [standingChanges, setStandingChanges] = useState(null)
 
+  useEffect(() => {
+    if (!!standingData) {
+      const baseItems = makeStandingBase(standingData, locNick)
+
+      setStandingBase(JSON.parse(JSON.stringify(baseItems)))
+      setStandingChanges(JSON.parse(JSON.stringify(baseItems)))
+    }
+  }, [standingData, locNick])
+
   const makeProductOptions = () => {
     if (!standingChanges) return []
-    
     return standingChanges
       .filter(item => item.isStand === isStand && item.isWhole === isWhole)
       .reduce((acc, curr) => {
@@ -77,15 +85,6 @@ export const StandingOrder = ({ user, locNick }) => {
       
   }
   const productOptions = useMemo(makeProductOptions, [standingChanges, isStand, isWhole])
-
-  useEffect(() => {
-    if (!!standingData) {
-      const baseItems = makeStandingBase(standingData, locNick)
-
-      setStandingBase(JSON.parse(JSON.stringify(baseItems)))
-      setStandingChanges(JSON.parse(JSON.stringify(baseItems)))
-    }
-  }, [standingData, locNick])
 
   const tableData = makeTableData(standingChanges, viewMode, dayOfWeek, product, isStand, isWhole)
 
@@ -471,7 +470,7 @@ const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingCha
   const submissionCandidates = standingChanges.filter(item => (item.isWhole === isWhole && item.isStand === isStand))
 
   // Submit items are standing items that have a change requiring
-  // some database action ('CREATE', 'UPDATE', or 'DELETE')
+  // some database action ('CREATE', 'UPDATE', or 'DELETE'/'DELETE_NO_OVERRIDE')
   const submitItems = getSubmitItems(baseItems, submissionCandidates, userName)
   
   if (!submitItems.length) return
@@ -498,6 +497,7 @@ const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingCha
 
   let placeholderCandidates = submitItems.filter(item =>
     item.isStand === true
+    && (item.action === 'CREATE' || item.action === 'UPDATE' || item.action === 'DELETE')
   )
 
   let cartPlaceHolderItems = []
@@ -571,7 +571,7 @@ const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingCha
       }
       updateStanding(updateItem)
     }
-    if (action === "DELETE") {
+    if (action === "DELETE" || action === "DELETE_NO_OVERRIDE") {
       const deleteItem = {
         id: subItem.id
       }
@@ -594,7 +594,7 @@ const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingCha
 /**
  * Checks all submission items and returns those that require
  * a database action. The action type is attached to each item
- * with the 'action' attribute. Also fills in startDate and
+ * under the 'action' attribute. Also fills in startDate and
  * updatedBy values to prep items for submission.
  */
 const getSubmitItems = (baseItems, submissionCandidates, userName) => {
@@ -630,7 +630,8 @@ const decideAction = (baseItem, subItem) => {
   let action = 'NONE'
 
   if (subItem.hasOwnProperty('id')) {
-    if (subItem.qty === 0) action = 'DELETE'
+    if (subItem.qty === 0 && baseItem.qty === 0) action = 'DELETE_NO_OVERRIDE' // mostly for catching 0 qty items from remap
+    else if (subItem.qty === 0) action = 'DELETE'
     else if (subItem.qty !== baseItem.qty) action = 'UPDATE'
   } else {
     if (subItem.qty > 0) action = 'CREATE'

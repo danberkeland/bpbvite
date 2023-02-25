@@ -93,9 +93,9 @@ export function NavBottom() {
       {/* <div className="greyBar"></div> */}
       <div className="tabContainer">
         <TabMenu className="tabMenu" model={authClass === "bpbfull" ? itemsAuth4min : onlyHome} />
-        <button className="signOutButton" onClick={signOut}>
+        {/* <button className="signOutButton" onClick={signOut}>
           Sign Out
-        </button>
+        </button> */}
       </div>
     </motion.div>
   );
