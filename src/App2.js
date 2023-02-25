@@ -85,7 +85,8 @@ export function App() {
       use && setAccess(use.signInUserSession.accessToken.jwtToken);
       use && setUser(use.attributes["custom:name"]);
       use && setAuthClass(use.attributes["custom:authType"]);
-      use && setCurrentLoc(use.attributes["custom:defLoc"]);
+      console.log('currentLoc', currentLoc)
+      use && setCurrentLoc(currentLoc !== "" ? currentLoc : use.attributes["custom:defLoc"]);
       use && setUserObject(use);
       setFormType(use ? "signedIn" : "onNoUser");
       setIsLoading(false);
