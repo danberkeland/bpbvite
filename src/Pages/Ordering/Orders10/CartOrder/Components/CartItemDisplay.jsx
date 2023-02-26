@@ -40,6 +40,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
 
     const isInProduction = delivDate < getWorkingDateTime('NOW').plus({ days: leadTime })
     const timingStatus = isPastDeliv ? 'past' : (isDelivDate ? 'deliv' : (isInProduction ? 'inprod' : 'none'))
+    const recentlyDeleted = rowData.orderType === 'C' && rowData.sameDayMaxQty > 0 && getWorkingDate(rowData.qtyUpdatedOn) === getWorkingDate('NOW')
     
     return (
       <div style={rowData.qty === 0 ? {color : "gray"} : null}>
@@ -48,6 +49,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
         {timingStatus === 'inprod' && <div style={{marginTop: ".25rem", fontSize: ".9rem"}}><i className="pi pi-info-circle" style={{fontSize: ".9rem"}} />{` in production`}</div>}
         {timingStatus === 'deliv' && <div style={{marginTop: ".25rem", fontSize: ".9rem"}}><i className="pi pi-info-circle" style={{fontSize: ".9rem"}} />{` delivery date reached`}</div>}
         {timingStatus === 'past' && <div style={{marginTop: ".25rem", fontSize: ".9rem"}}><i className="pi pi-info-circle" style={{fontSize: ".9rem"}} />{` past delivery date`}</div>}
+        {recentlyDeleted && rowData.qty === 0 && <div style={{marginTop: ".25rem", fontSize: ".9rem"}}>{`recently deleted`}</div>}
         {showDetails && 
           <>
             {rowData.qtyUpdatedOn && (
@@ -164,6 +166,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
     return (!baseItem)
       || (baseItem.qty !== rowData.qty)
       || (rowData.qty > 0)
+      || (rowData.action === 'CREATE')
       || (rowData.orderType === 'C' && rowData.sameDayMaxQty > 0 && getWorkingDate(rowData.qtyUpdatedOn) === getWorkingDate('NOW'))
 
   }) : []

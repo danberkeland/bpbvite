@@ -44,7 +44,7 @@ export const CartOrder = ({ user, locNick }) => {
     if (!!cartOrderData) {
         setHeaderChanges(JSON.parse(JSON.stringify(cartOrderData.header)))
         setItemChanges(JSON.parse(JSON.stringify(cartOrderData.items)))
-        // console.log(cartOrderData)
+        console.log(cartOrderData)
     }
   }, [cartOrderData])
 
@@ -114,8 +114,8 @@ export const CartOrder = ({ user, locNick }) => {
         }
 
         // add only changed values for submisison
-        if (routeChanged) updateItem.route = orderItem.route
-        if (noteChanged) updateItem.ItemNote = orderItem.ItemNote
+        if (routeChanged) updateItem.route = headerChanges.route
+        if (noteChanged) updateItem.ItemNote = headerChanges.ItemNote
         if (qtyChanged) updateItem.qty = orderItem.qty
         if (qtyChanged) updateItem.qtyUpdatedOn = new Date().toISOString()
         if (getWorkingDate(orderItem.qtyUpdatedOn) !== getWorkingDate('NOW')) {
@@ -173,7 +173,6 @@ export const CartOrder = ({ user, locNick }) => {
     // should get (logical) deleted (qty set to 0). This will be handled by the
     // lambda function.
   
-    let legacyResponse
     const dateParts = headerChanges.delivDate.split('-')
     const mmddyyyyDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`
 
@@ -200,7 +199,7 @@ export const CartOrder = ({ user, locNick }) => {
 
     console.log("submitting:", body)
 
-    legacyResponse = await APIGatewayFetcher('/orders/submitLegacyCart', {body: [body]})
+    let legacyResponse = await APIGatewayFetcher('/orders/submitLegacyCart', {body: [body]})
     console.log("bpbGateway response:", legacyResponse)
     //const legacyItems = response.body.data
       

@@ -25,7 +25,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
   const handleAddProduct = () => {
     let _cartItemChanges = [...cartItemChanges]
     let oldItem = cartItemChanges.find(item => 
-      item.prodNick === selectedProduct.prodNick
+      item.product.prodNick === selectedProduct.prodNick
     )
     let newItem
     
@@ -33,8 +33,12 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
       // case: update qty on an existing cart order
       newItem = { ...oldItem, qty: selectedQty }
       _cartItemChanges = [...cartItemChanges]
-        .map(item => item.prodNick === selectedProduct.prodNick ? newItem : item)
-        .sort(dynamicSort("prodName"))
+        .map(item => item.product.prodNick === selectedProduct.prodNick ? newItem : item)
+        .sort((a, b) => {
+          if (a.product.prodName < b.product.prodName) return -1
+          if (a.product.prodName > b.product.prodName) return 1
+          return 0
+        })
     } else {
       // case: create a new cart item
       newItem = { 
