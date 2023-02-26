@@ -14,8 +14,13 @@ import { createOrder, fetchTransitionOrders } from "../../../../data/orderData"
 import { useLocationDetails } from "../../../../data/locationData"
 import { useProductDataWithLocationCustomization } from "../../../../data/productData"
 
+import { mutate } from "swr"
+
+
 import dynamicSort from "../../../../functions/dynamicSort"
-import { getTransitionDates, getTtl, getWeekday, getWorkingDate, getWorkingDateTime } from "../../../../functions/dateAndTime"
+import { getTransitionDates, getTtl, getWeekday, getWorkingDate, getWorkingDateJS, getWorkingDateTime } from "../../../../functions/dateAndTime"
+import { listOrdersByLocationByDate } from "../../../../customGraphQL/queries/orderQueries"
+import { APIGatewayFetcher } from "../../../../data/fetchers"
 
 const standOptions = [
   {label: "Standing", value: true},
@@ -23,7 +28,7 @@ const standOptions = [
 ]
 const wholeOptions = [
   {label: "Wholesale", value: true},
-  {label: "Retail", value: false}
+  {label: "Retail", value: false, disabled: true}
 ]
 const viewOptions = [
   {label: 'By Day', value: 'DAY'},
@@ -48,8 +53,9 @@ export const StandingOrder = ({ user, locNick }) => {
   
   // standing::public state
   const [viewMode, setViewMode] = useState('DAY')
-  const [dayOfWeek, setDayOfWeek] = useState(getWeekday(new Date(getWorkingDate('NOW'))))
-  // const [prodNick, setProdNick] = useState(null)
+  const [dayOfWeek, setDayOfWeek] = useState(getWeekday(getWorkingDateJS('NOW')))
+
+  const { data:productData } = useProductDataWithLocationCustomization(locNick)
   const [product, setProduct] = useState(null)
   const [showAddItem, setShowAddItem] = useState(false)
   
@@ -60,13 +66,14 @@ export const StandingOrder = ({ user, locNick }) => {
   const [standingChanges, setStandingChanges] = useState(null)
 
   useEffect(() => {
-    if (!!standingData) {
-      const baseItems = makeStandingBase(standingData, locNick)
+    if (!!standingData && !!productData) {
+      const baseItems = makeStandingBase(standingData, productData, locNick)
 
       setStandingBase(JSON.parse(JSON.stringify(baseItems)))
       setStandingChanges(JSON.parse(JSON.stringify(baseItems)))
+      //console.log(baseItems)
     }
-  }, [standingData, locNick])
+  }, [standingData, productData, locNick])
 
   const makeProductOptions = () => {
     if (!standingChanges) return []
@@ -170,7 +177,7 @@ export const StandingOrder = ({ user, locNick }) => {
               options={productOptions}
               optionLabel="prodName"
               optionValue="prodNick"
-              value={product.prodNick}
+              value={product?.prodNick}
               onChange={(e) => {
                 // setProdNick(e.value)
                 setProduct(productOptions.find(i => i.prodNick === e.value))
@@ -211,9 +218,9 @@ export const StandingOrder = ({ user, locNick }) => {
       </div>
 
       <div style={{padding: ".5rem"}}>
-        <Button label="Submit Changes" 
+        <Button label="Submit Changes (Warning: mutates prod database!)" 
           className="p-button-lg" 
-          onClick={() => handleSubmit(locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, user.name, locationDetails)}
+          onClick={() => handleSubmit(locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, user.name, locationDetails, productData)}
         />
       </div>
 
@@ -223,6 +230,7 @@ export const StandingOrder = ({ user, locNick }) => {
         locNick={locNick}
         standingChanges={standingChanges}
         setStandingChanges={setStandingChanges}
+        productData={productData}
         setProduct={setProduct}
         viewMode={viewMode}
         setViewMode={setViewMode}
@@ -277,7 +285,7 @@ const makeTableData = (standingChanges, viewMode, dayOfWeek, product, isStand, i
  * We're now front-loading the data processing more,
  * leaving the more frequent update routines lighter.
  */
-const makeStandingBase = (standingData, locNick) => {
+const makeStandingBase = (standingData, productData, locNick) => {
 
   const categories = [
     { isStand: true, isWhole: true },
@@ -300,6 +308,12 @@ const makeStandingBase = (standingData, locNick) => {
     }, [])
 
     for (let p of catProducts) {
+      // productData has location-specific overrides applied to prices/leadtime.
+      // Use values from productData if possible; fall-back to default values fetched
+      // with standing data otherwise. There's probably a better place to apply overrides
+      // than here...
+      let pLoc = productData.find(item => item.prodNick === p.prodNick)
+
       for (let day of weekdays) {
         if (catItems.findIndex(i => i.product.prodNick === p.prodNick && i.dayOfWeek === day) === -1) {
           let newItem = {
@@ -314,7 +328,10 @@ const makeStandingBase = (standingData, locNick) => {
             updatedBy: null, // assign value on submit
             product: {
               prodNick: p.prodNick,
-              prodName: p.prodName
+              prodName: p.prodName,
+              retailPrice: pLoc ? pLoc.retailPrice : p.retailPrice,
+              wholePrice: pLoc ? pLoc.wholePrice : p.wholePrice,
+              leadTime: pLoc ? pLoc.leadTime : p.leadTime
             }
           }
           placeholders.push(newItem)
@@ -324,8 +341,7 @@ const makeStandingBase = (standingData, locNick) => {
     }
   }
 
-  console.log("placeholders", placeholders)
-
+  //console.log("placeholders", placeholders)
   const baseItems = standingData.concat(placeholders)
 
   baseItems.sort((a, b) => {
@@ -348,9 +364,7 @@ const makeStandingBase = (standingData, locNick) => {
 
 
 
-const AddItemSidebar = ({showAddItem, setShowAddItem, locNick, standingChanges, setStandingChanges, setProduct, viewMode, setViewMode, isStand, isWhole, userName, locationDetails}) => {
-  const { data:productData } = useProductDataWithLocationCustomization(locNick)
-
+const AddItemSidebar = ({showAddItem, setShowAddItem, locNick, standingChanges, setStandingChanges, productData, setProduct, viewMode, setViewMode, isStand, isWhole, userName, locationDetails}) => {
   const [selectedProdNick, setSelectedProdNick] = useState(null)
 
   const handleAddItem = () => {
@@ -434,7 +448,8 @@ const AddItemSidebar = ({showAddItem, setShowAddItem, locNick, standingChanges, 
         <Dropdown 
           id="productDropdown"
           value={selectedProdNick}
-          options={productData}
+          options={productData || []}
+          disabled={!productData}
           onChange={e => setSelectedProdNick(e.value)}
           optionLabel="prodName"
           optionValue="prodNick"
@@ -450,6 +465,7 @@ const AddItemSidebar = ({showAddItem, setShowAddItem, locNick, standingChanges, 
       <Button label="Add Item"
         style={{flex: "35%", marginTop: "28px"}}
         onClick={handleAddItem}
+        disabled={!productData || !selectedProdNick}
       />
     </Sidebar>
 
@@ -462,7 +478,7 @@ const AddItemSidebar = ({showAddItem, setShowAddItem, locNick, standingChanges, 
 // detect which action is to be taken,
 // associate these directives with each submisison candidate
 
-const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, userName, locationDetails) => {
+const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, userName, locationDetails, productData) => {
 
   // Submission only handles the current category 
   // of standing order (according to isStand, isWhole values).
@@ -530,7 +546,7 @@ const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingCha
           qty: placeholderQty,
           qtyUpdatedOn: new Date().toISOString(),
           sameDayMaxQty: placeholderQty,
-          rate: subItem.product.wholePrice,
+          rate: subItem.isWhole ? subItem.product.wholePrice : subItem.product.retailPrice,
           ItemNote: header.ItemNote,
           isLate: 0,
           updatedBy: 'standing_order',
@@ -541,17 +557,86 @@ const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingCha
       }
     }
   }
+  
+  // **************************************
+  // * SUBMIT CART PLACEHOLDERS TO LEGACY *
+  // **************************************
+  console.log("Cart placeholders:", cartPlaceHolderItems)
+  
+  const legacyCartSubmitBody = cartHeaders.map(header => {
+    const dateParts = header.delivDateISO.split('-')
+    const mmddyyyyDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`
 
-  // console.log("Submit Items: ", submitItems)
-  // console.log("Cart placeholders:", cartPlaceHolderItems)
+    const headerByDate = {
+      isWhole: isWhole,
+      custName: locationDetails.locName,
+      delivDate: mmddyyyyDate,
+      route: header.route,
+      PONote: header.ItemNote,
+    }
+    const itemsByDate = cartPlaceHolderItems.filter(item => 
+      item.delivDate === header.delivDateISO
+    ).map(item => ({
+      prodName: productData.find(p => p.prodNick === item.prodNick).prodName,
+      qty: item.qty,
+      rate: item.rate
+    }))
 
+    return ({
+      header: headerByDate,
+      items: itemsByDate
+    })
+
+  }).filter(order => order.items.length > 0)
+
+  console.log("Submitting cart placeholders to legacy system:", legacyCartSubmitBody)
+  let legacyCartResponse
+  if (legacyCartSubmitBody.length) {
+    legacyCartResponse = await APIGatewayFetcher('/orders/submitLegacyCart', {body: legacyCartSubmitBody})
+    console.log("Legacy cart response:", legacyCartResponse)
+  }
+
+  // *****************************
+  // * SUBMIT STANDING TO LEGACY *
+  // *****************************
+  
+  // The new system attempts to handle more features by handling
+  // different categories of standing order simultaneously.
+  // To prevent unexpected behavior in the old system we will only
+  // make changes to the legacy system when submitting 
+  // standing/wholesale type orders
+
+  // Although code execution gets terminated earlier if there are
+  // no submitItems, we will take this chance to assert the full
+  // standing order from the new system onto the old system, 
+  console.log("Submit for new system: ", submitItems)
+
+  let legacyStandingResponse
+  if (isStand === true && isWhole === true) {
+    const legacyStandingSubmitBody = getLegacyStandingSubmitBody(submitItems, locationDetails, productData, submissionCandidates, isStand)
+    console.log("Submit for legacy system:", legacyStandingSubmitBody)
+
+    legacyStandingResponse = await APIGatewayFetcher('/orders/submitLegacyStanding', {body: legacyStandingSubmitBody})
+    console.log("Legacy standing response:", legacyStandingResponse)
+  }
+
+  // ***********************
+  // * SUBMIT PLACEHOLDERS *
+  // ***********************
+
+  
+  for (let placeholder of cartPlaceHolderItems) {
+    console.log("creating cart placeholder:")
+    createOrder(placeholder)
+  }
+  
   // ***************************
   // * SUBMIT STANDING CHANGES *
   // ***************************
 
   for (let subItem of submitItems) {
     let { action, ...item } = subItem
-    console.log(action, item)
+    //console.log(action, item)
     if (action === "CREATE") {
       const { product, ..._createItem} = item
       const createItem = {
@@ -579,14 +664,18 @@ const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingCha
     }
   }
 
-  // ***********************
-  // * SUBMIT PLACEHOLDERS *
-  // ***********************
-  for (let placeholder of cartPlaceHolderItems) {
-    console.log(placeholder)
-    createOrder(placeholder)
-  }
+  // revailidate SWR data
 
+  if (cartPlaceHolderItems.length) {
+    for (let header of cartHeaders) {
+      let variables = {
+        locNick: locNick,
+        delivDate: header.delivDateISO
+      }
+      let key = [listOrdersByLocationByDate, variables]
+      mutate(key, undefined, {revalidate: true})
+    }
+  }
   mutateStanding()
 
 }
@@ -641,14 +730,16 @@ const decideAction = (baseItem, subItem) => {
 }
 
 /**
- * Returns an array of cart header object, each representing
+ * Returns an array of cart header objects, each representing
  * the header for a different transition date (T+0 to T+3). 
  */
 const getCartHeaders = (cartOrders, locationDetails) => {
   const transitionDates = getTransitionDates('UTCString')
-  const defaultRoute = (locationDetails.zone !== 'atownpick' || locationDetails.zone !== 'slopick')
-    ? 'deliv'
-    : locationDetails.zone
+  //console.log(locationDetails)
+  console.log("reading cart orders for transition dates: ", cartOrders)
+  const defaultRoute = (locationDetails.zoneNick === 'atownpick' || locationDetails.zoneNick === 'slopick')
+    ? locationDetails.zoneNick
+    : 'deliv'
 
   // array of header-value objects for each transition delivery date.
   // if cart order doesn't exist for a given date, fall back to default values
@@ -657,21 +748,16 @@ const getCartHeaders = (cartOrders, locationDetails) => {
       delivDateISO: utcDate.split('T')[0],
       dayOfWeek: getWeekday(new Date(utcDate)),
       ttl: getTtl(new Date(utcDate)),
-      route: '',
+      route: defaultRoute,
       ItemNote: ''
     }
-    
+
     let ordersByDate = cartOrders.filter(order => 
-      order.delivDate === utcDate.delivDateISO
+      order.delivDate === header.delivDateISO
     )
-
-
     if (ordersByDate.length) { 
       header.route = ordersByDate[0].route
-      header.ItemNote = ordersByDate[0].ItemNote
-    } else {
-      header.route = defaultRoute
-      header.ItemNote = null 
+      header.ItemNote = ordersByDate[0].ItemNote || ''
     }
 
     return header
@@ -723,3 +809,58 @@ const CustomInputNumber = ({ rowData, standingChanges, setStandingChanges }) => 
   )
 
 }
+
+
+//need to add itemChanges to arguments so that we can copy that info into qties.
+const getLegacyStandingSubmitBody = (submitItems, locationDetails, productData, submissionCandidates, isStand) => {
+  
+  const prodNicks = [...new Set(submitItems.map(i => i.product.prodNick))]
+
+  const standingHeader = {
+    custName: locationDetails.locName,
+    isStand: isStand
+  }
+  
+  const standingItems = prodNicks.map(pn => {
+    const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+    const qtys = Object.fromEntries(
+      weekdays.map(day => 
+        [
+          day, 
+          submissionCandidates.find(item => 
+            item.product.prodNick === pn && item.dayOfWeek === day
+          )?.qty || 0
+        ]
+      )
+    )
+
+    return ({
+      prodName: (productData.find(item => item.prodNick === pn)).prodName,
+      ...qtys
+    })
+  })
+  
+  return ({
+    header: standingHeader,
+    items: standingItems
+  })
+}
+
+
+// legacy standing item shape
+
+// id: auto uuid
+// __typename: str = "Standing"
+// custName: str
+// isStand: boolean
+// prodName: str
+// Sun: int
+// Mon: int
+// Tue: int
+// Wed: int
+// Thu: int
+// Fri: int 
+// Sat: int
+// timeStamp: AWSDateTime
+// createdAt: AWSDateTime
+// updatedAt: AWSDateTime

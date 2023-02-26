@@ -49,6 +49,10 @@ export const getWorkingDate = (isoDateTimeString) => {
   return getWorkingDateTime(isoDateTimeString).toISODate()
 }
 
+export const getWorkingDateJS = (isoDateTimeString) => {
+  return getWorkingDateTime(isoDateTimeString).toJSDate()
+}
+
 /**
  * Returns an array of ISO strings starting from the current working date (T +0)
  * to three days ahead (T +3). Default format is yyyy-mm-dd string; use format parameter

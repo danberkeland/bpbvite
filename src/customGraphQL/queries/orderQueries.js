@@ -56,6 +56,8 @@ export const transitionOrdersByLocByDelivDate = /* GraphQL */ `
         prodNick
         isWhole
         delivDate
+        route
+        ItemNote
         # updatedOn
         # updatedBy
       }
