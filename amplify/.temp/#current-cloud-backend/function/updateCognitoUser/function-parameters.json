@@ -1,0 +1,12 @@
+{
+  "permissions": {},
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "bpbadmin2SDKLayer",
+      "version": "Always choose latest version",
+      "isLatestVersionSelected": true,
+      "env": "devtwo"
+    }
+  ]
+}

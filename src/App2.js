@@ -43,9 +43,9 @@ export function App() {
 
   const formType = useSettingsStore((state) => state.formType);
   const isLoading = useSettingsStore((state) => state.isLoading);
-  //const user = useSettingsStore((state) => state.user);
-  //const authClass = useSettingsStore((state) => state.authClass);
-  //const currentLoc = useSettingsStore((state) => state.currentLoc);
+  const user = useSettingsStore((state) => state.user);
+  const authClass = useSettingsStore((state) => state.authClass);
+  const currentLoc = useSettingsStore((state) => state.currentLoc);
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
   Hub.listen("auth", (data) => {
