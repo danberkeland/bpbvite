@@ -44,8 +44,8 @@ export function App() {
   const formType = useSettingsStore((state) => state.formType);
   const isLoading = useSettingsStore((state) => state.isLoading);
   //const user = useSettingsStore((state) => state.user);
-  //const authClass = useSettingsStore((state) => state.authClass);
-  //const currentLoc = useSettingsStore((state) => state.currentLoc);
+  const authClass = useSettingsStore((state) => state.authClass);
+  const currentLoc = useSettingsStore((state) => state.currentLoc);
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
   Hub.listen("auth", (data) => {
@@ -85,8 +85,8 @@ export function App() {
     checkUser().then((use) => {
       use && setAccess(use.signInUserSession.accessToken.jwtToken);
       use && setUser(use.attributes["custom:name"]);
-      use && setAuthClass(use.attributes["custom:authType"]);
-      use && setCurrentLoc(use.attributes["custom:defLoc"]);
+      use && !authClass && setAuthClass(use.attributes["custom:authType"]);
+      use && !currentLoc && setCurrentLoc(use.attributes["custom:defLoc"]);
       use && setUserObject(use);
       setFormType(use ? "signedIn" : "onNoUser");
       setIsLoading(false);
