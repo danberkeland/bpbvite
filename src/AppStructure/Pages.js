@@ -10,7 +10,21 @@ const bpbmgrItems = [
     command: () => {
       window.location = "/Logistics";
     },
-  }
+  },
+  {
+    label: "Locations",
+    icon: "pi pi-fw pi-map-marker",
+    command: () => {
+      window.location = "/Locations";
+    },
+  },
+  {
+    label: "Products",
+    icon: "pi pi-fw pi-tags",
+    command: () => {
+      window.location = "/Products";
+    },
+  },
 ]
 
 const itemsAuth2 = [

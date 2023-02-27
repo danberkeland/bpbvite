@@ -82,6 +82,7 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
         filters={filter}
       >
         <Column field="locName" filterPlaceholder="Search Locations" filter />
+        <Column field="locNick"  />
       </DataTable>
       </div>
       

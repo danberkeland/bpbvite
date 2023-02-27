@@ -94,6 +94,7 @@ function ProductList({ selectedProduct, setSelectedProduct }) {
         filters={filter}
       >
         <Column field="prodName" filterPlaceholder="Search Products" filter />
+        <Column field="prodNick"  />
       </DataTable>
       </div>
     );
