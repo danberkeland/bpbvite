@@ -10,7 +10,7 @@ import { useProductDataWithLocationCustomization } from "../../../../../data/pro
 import { getWorkingDate, getWorkingDateTime } from "../../../../../functions/dateAndTime"
 import dynamicSort from "../../../../../functions/dynamicSort"
 
-export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartItems, cartItemChanges, setCartItemChanges}) => {
+export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartItems, cartItemChanges, setCartItemChanges, user}) => {
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [selectedQty, setSelectedQty] = useState(null)
 
@@ -101,7 +101,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
         <Dropdown options={customProductData || []} 
           optionLabel="prodName" optionValue="prodNick"
           value={selectedProduct ? selectedProduct.prodNick : null}
-          filter filterBy="prodName,prodNick" showFilterClear resetFilterOnHide
+          filter filterBy={`prodName${user.locNick === 'backporch' ? ",prodNick" : ""}`} showFilterClear resetFilterOnHide
           itemTemplate={dropdownItemTemplate}
           onChange={e => {
             console.log("selectedProduct:", customProductData?.find(item => item.prodNick === e.value))

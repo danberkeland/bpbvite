@@ -131,11 +131,14 @@ export const useCartOrderData = (locNick, delivDateJS, isWhole) => {
   const { data:standingData } = useStandingByLocation(locNick, !!locNick)
   
   // console.log(locNick, delivDate, isWhole, dayOfWeek)
-  // console.log("L C S:", locationDetails?1:0, cartData?1:0, standingData?1:0)
+  console.log("L C S:", locationDetails?1:0, cartData?1:0, standingData?1:0)
 
   const makeCartOrder = () => {
     if (!locationDetails || !cartData || !standingData) return undefined
 
+    // console.log("building cart order from...", locNick, delivDate, isWhole, dayOfWeek)
+    // console.log(cartData)
+    // console.log(standingData)
     const altPrices = locationDetails.customProd.items
 
     const _cart = cartData.map(item => ({...item, orderType: 'C'}))

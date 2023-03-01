@@ -1,5 +1,7 @@
 import { DateTime } from "luxon";
 
+const CUTOFF_TIME = 20 // 20 === 8:00pm
+
 /**
  * Access BPB's local time on any system.
  * BPB time follows 'America/Los_Angeles' locale rules.*/
@@ -12,7 +14,7 @@ export const getBpbTime = () => DateTime.now().setZone('America/Los_Angeles')
 export const getOrderSubmitDate = () => {
   const bpbTime = getBpbTime()
   const bpbHour = bpbTime.hour
-  const orderSubmitDate = bpbHour >= 18 ? 
+  const orderSubmitDate = bpbHour >= CUTOFF_TIME ? 
     bpbTime.startOf('day').plus({ days: 1 }) : 
     bpbTime.startOf('day')
   
@@ -33,7 +35,7 @@ export const getWorkingDateTime = (isoDateTimeString) => {
     DateTime.fromISO(isoDateTimeString).setZone('America/Los_Angeles')
 
   const bpbHour = bpbTime.hour
-  const workingDate = bpbHour >= 18 ? 
+  const workingDate = bpbHour >= CUTOFF_TIME ? 
     bpbTime.startOf('day').plus({ days: 1 }) : 
     bpbTime.startOf('day')
 
@@ -109,5 +111,5 @@ export function getWeekday(date) {
  * 
  */
 export function getTtl(delivDate) {
-  return getWorkingDateTime(delivDate.toISOString()).plus({ days: 1}).plus({ hours: 18}).toSeconds()
+  return getWorkingDateTime(delivDate.toISOString()).plus({ days: 1}).plus({ hours: CUTOFF_TIME}).toSeconds()
 }

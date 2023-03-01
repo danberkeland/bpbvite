@@ -33,18 +33,21 @@ export const CartOrder = ({ user, locNick }) => {
   const disableInputs = isPastDeliv || (isDelivDate && user.authClass !== 'bpbfull')
 
   // data
-  const cartOrderData = useCartOrderData(locNick, delivDate, isWhole)
-  const { mutate:mutateCart } = useOrdersByLocationByDate(locNick, dateToYyyymmdd(delivDate), !!cartOrderData)
-  const [headerChanges, setHeaderChanges] = useState(null)
-  const [itemChanges, setItemChanges] = useState(null)
-
   const { data:locationDetails } = useLocationDetails(locNick, !!locNick)
   
+  const [headerChanges, setHeaderChanges] = useState(null)
+  const [itemChanges, setItemChanges] = useState(null)
+  const cartOrderData = useCartOrderData(locNick, delivDate, isWhole)
+  const { mutate:mutateCart } = useOrdersByLocationByDate(locNick, dateToYyyymmdd(delivDate), !!cartOrderData)
+  console.log("CART ORDER DATA:", cartOrderData)
   useEffect(() => {
     if (!!cartOrderData) {
-        setHeaderChanges(JSON.parse(JSON.stringify(cartOrderData.header)))
-        setItemChanges(JSON.parse(JSON.stringify(cartOrderData.items)))
-        console.log(cartOrderData)
+      setHeaderChanges(JSON.parse(JSON.stringify(cartOrderData.header)))
+      setItemChanges(JSON.parse(JSON.stringify(cartOrderData.items)))
+      console.log(cartOrderData)
+    } else {
+      setHeaderChanges({})
+      setItemChanges([])
     }
   }, [cartOrderData])
 
@@ -321,6 +324,10 @@ export const CartOrder = ({ user, locNick }) => {
         />
       </div>
 
+      {/* <pre>{`${locNick}`}</pre> */}
+      {/* <pre>{"CART ORDER DATA:" + JSON.stringify(cartOrderData, null, 2)}</pre> */}
+      {/* <pre>{"HEADER CHANGES" + JSON.stringify(headerChanges, null, 2)}</pre> */}
+      {/* <pre>{"ITEM CHANGES" + JSON.stringify(itemChanges, null, 2)}</pre> */}
     </div>
   )
 

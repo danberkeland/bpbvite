@@ -26,6 +26,17 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
   const isPastDeliv = delivDate < getWorkingDateTime('NOW')
   const disableInputs = isPastDeliv || (isDelivDate && user.authClass !== 'bpbfull')
 
+  const tableDisplayData = (!!itemBase && !!itemChanges) ? itemChanges.filter(rowData => {
+    const baseItem = itemBase.find(i => i.product.prodNick === rowData.product.prodNick)
+
+    return (!baseItem)
+      || (baseItem.qty !== rowData.qty)
+      || (rowData.qty > 0)
+      || (rowData.action === 'CREATE')
+      || (rowData.orderType === 'C' && rowData.sameDayMaxQty > 0 && getWorkingDate(rowData.qtyUpdatedOn) === getWorkingDate('NOW'))
+
+  }) : []
+
   const productColumnTemplate = (rowData) => {
     const prodNick = rowData.product.prodNick
     const baseItem = itemBase?.find(item => item.product.prodNick === prodNick)
@@ -84,7 +95,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
       : !baseItem ? 0        
       : !sameDayUpdate ? baseItem.qty
       : baseItem.sameDayMaxQty
-    // const qtyChanged = baseItem ? baseItem.qty !== rowData.qty : rowData.qty > 0
+    const qtyChanged = baseItem ? baseItem.qty !== rowData.qty : rowData.qty > 0
 
     const disableInput = (user.authClass === 'bpbfull' && delivDate < getWorkingDateTime('NOW'))
       || (maxQty === 0 || delivDate <= getWorkingDateTime('NOW'))
@@ -103,12 +114,13 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
     return (
       <div className="p-fluid">
         <InputNumber
-          onClick={() => console.log(rowData)}
-          readOnly={disableInput}
-          //disabled={disableInput}
           value={rowData.qty}
           min={0}
           max={maxQty}
+          inputStyle={{fontWeight : qtyChanged ? "bold" : "normal"}}
+          onClick={() => console.log(rowData)}
+          //readOnly={disableInput}
+          disabled={disableInput}
           onFocus={(e) => {
             setRollbackQty(parseInt(e.target.value));
             if (!disableInput) e.target.select();
@@ -160,21 +172,11 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
     )
   }
 
-  const tableDisplayData = (!!itemBase && itemChanges) ? itemChanges.filter(rowData => {
-    const baseItem = itemBase.find(i => i.product.prodNick === rowData.product.prodNick)
-
-    return (!baseItem)
-      || (baseItem.qty !== rowData.qty)
-      || (rowData.qty > 0)
-      || (rowData.action === 'CREATE')
-      || (rowData.orderType === 'C' && rowData.sameDayMaxQty > 0 && getWorkingDate(rowData.qtyUpdatedOn) === getWorkingDate('NOW'))
-
-  }) : []
-
   return (
     <div className="bpb-datatable-orders" style={{padding: ".5rem"}}>
       <DataTable
         value={tableDisplayData} 
+        //value={itemChanges}
         responsiveLayout
         footer={footerTemplate}
       >
@@ -210,6 +212,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
         cartItems={itemBase}
         cartItemChanges={itemChanges}
         setCartItemChanges={setItemChanges}
+        user={user}
       />
     </div>
   )

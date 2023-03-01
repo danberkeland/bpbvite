@@ -207,6 +207,7 @@ export const StandingOrder = ({ user, locNick }) => {
                 <div className="p-fluid">
                   <CustomInputNumber 
                     rowData={rowData}
+                    standingBase={standingBase}
                     standingChanges={standingChanges}
                     setStandingChanges={setStandingChanges}
                   />
@@ -236,6 +237,7 @@ export const StandingOrder = ({ user, locNick }) => {
         setViewMode={setViewMode}
         isStand={isStand}
         isWhole={isWhole}
+        user={user}
       />
 
 
@@ -362,9 +364,7 @@ const makeStandingBase = (standingData, productData, locNick) => {
 
 }
 
-
-
-const AddItemSidebar = ({showAddItem, setShowAddItem, locNick, standingChanges, setStandingChanges, productData, setProduct, viewMode, setViewMode, isStand, isWhole, userName, locationDetails}) => {
+const AddItemSidebar = ({showAddItem, setShowAddItem, locNick, standingChanges, setStandingChanges, productData, setProduct, viewMode, setViewMode, isStand, isWhole, user}) => {
   const [selectedProdNick, setSelectedProdNick] = useState(null)
 
   const handleAddItem = () => {
@@ -455,7 +455,7 @@ const AddItemSidebar = ({showAddItem, setShowAddItem, locNick, standingChanges, 
           optionValue="prodNick"
           filter 
           showClear 
-          filterBy="prodName" 
+          filterBy={`prodName${user.locNick === 'backporch' ? ",prodNick" : ""}`}
           scrollHeight="350px"
           //itemTemplate={dropdownItemTemplate}
         />
@@ -769,7 +769,15 @@ const getCartHeaders = (cartOrders, locationDetails) => {
 
 
 
-const CustomInputNumber = ({ rowData, standingChanges, setStandingChanges }) => {
+const CustomInputNumber = ({ rowData, standingBase, standingChanges, setStandingChanges }) => {
+  const baseItem = standingBase.find(i =>
+    i.product.prodNick === rowData.product.prodNick
+    && i.dayOfWeek === rowData.dayOfWeek  
+    && i.isWhole === rowData.isWhole
+    && i.isStand === rowData.isStand
+  )
+
+  const qtyChanged = (baseItem && baseItem.qty !== rowData.qty) || (!baseItem && rowData.qty > 0)
   
   const matchIndex = standingChanges.findIndex(i =>
     i.product.prodNick === rowData.product.prodNick
@@ -777,32 +785,49 @@ const CustomInputNumber = ({ rowData, standingChanges, setStandingChanges }) => 
     && i.isWhole === rowData.isWhole
     && i.isStand === rowData.isStand
   )
-    
+  
+  const updateQty = (value) => {    
+    let newQty = value >= 999 ? 999 : value
+
+    //console.log(e, e.value, typeof(e.value), newQty)
+    if (matchIndex > -1) {
+      let _update = [...standingChanges]
+      let _updateItem = {
+        ..._update[matchIndex],
+        qty: newQty
+      }
+      _update[matchIndex] = _updateItem
+      setStandingChanges(_update)
+      console.log("new qty", rowData.qty)
+
+    } else {
+      console.log("error: standing data could not be updated.")
+    }
+  }
+
+  // useEffect(() => {
+  //   if (qtyRef.current.value > 999) updateQty(999)
+  // }, [qtyRef, updateQty])
 
   return (
     <InputNumber
       value={rowData.qty}
       min={0}
       max={999}
-      //onClick={() => console.log(rowData)}
-      onKeyDown={e =>
-        console.log(e)
-      }
-      onChange={e => {    
-        let newQty = e.value >= 999 ? 999 : e.value
-    
-        //console.log(e, e.value, typeof(e.value), newQty)
-        if (matchIndex > -1) {
-          let _update = [...standingChanges]
-          let _updateItem = {
-            ..._update[matchIndex],
-            qty: newQty
-          }
-          _update[matchIndex] = _updateItem
-          setStandingChanges(_update)
-
-        } else {
-          console.log("error: standing data could not be updated.")
+      inputStyle={{fontWeight: qtyChanged ? "bold" : "normal"}}
+      onClick={() => console.log(rowData)}
+      onFocus={e => e.target.select()}
+      // onKeyDown={e => console.log(e)}
+      onChange={e => {updateQty(e.value); console.log(e)}}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          e.target.blur();
+          if (e.target.value === "") updateQty(0);
+        }
+      }}
+      onBlur={() => {
+        if (rowData.qty === null) {
+          updateQty(0)
         }
       }}
     />
