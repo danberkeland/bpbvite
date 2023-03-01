@@ -6,18 +6,18 @@ const submitLegacyCart = async (event) => {
   let statusCode = 200
   let errors
   
-  let requestData = JSON.parse(event.body) 
-  // try { 
-  //   requestData = JSON.parse(event.body) 
-  // } catch { 
-  //   requestData = event.body 
-  // }
+  let requestData = typeof(event.body) === "string" ?
+    JSON.parse(event.body) :
+    event.body
   
-  console.log("requestData:", requestData)
+  let cloudwatchLog = {
+    path: event.path
+  }
+  //console.log("requestData:", typeof(requestData), requestData.length, event.body)
 
   let responseItems = []
   for (let order of requestData) {
-    let responseByDate = await submitCartByDate(order)
+    let responseByDate = await submitCartByDate(order, cloudwatchLog)
     responseItems.push(responseByDate)
   }
 
@@ -37,8 +37,8 @@ export default submitLegacyCart
 
 
 
-const submitCartByDate = async (order) => {
-  console.log("order", order)
+const submitCartByDate = async (order, cloudwatchLog) => {
+  //console.log("order", order)
   const custName = order.header.custName
   const delivDate = order.header.delivDate
   
@@ -49,42 +49,65 @@ const submitCartByDate = async (order) => {
   let returnData = []
   let newItems = order.items
   let legacyItems = (await getLegacyOrders(custName, delivDate)).Items
-  console.log("from ddb", legacyItems)
+  
+  let prods = [...new Set(newItems.concat(legacyItems).map(i => i.prodName))]
+  let diff = prods.map(p => {
+    let prevItem = legacyItems.find(i => i.prodName === p)
+    let newItem = newItems.find(i => i.prodName === p)
+    
+    let dQty
+    if (!newItem) dQty = 0
+    else if (!prevItem) dQty = newItem.qty
+    else dQty = (newItem.qty - prevItem.qty)
+    
+    return({
+      prodName: p,
+      dQty: dQty
+    })
+  })
+ 
+  let dateParts = delivDate.split('/')
+  let delivDateISO = `${dateParts[2]}-${dateParts[0]}-${dateParts[1]}`
+  let log = {
+    ...cloudwatchLog,
+    logType: "cartOrderSummary",
+    custName: custName,
+    delivDate: delivDateISO,
+    route: order.header.route,
+    PONote: order.header.PONote,
+    submitItems: newItems.map(i => `${i.prodName}: ${i.qty}`).join(", "),
+    itemChanges: diff.map(i => `${i.prodName}: ${i.dQty}`).join(", ")
+    //currentItems: Object.fromEntries(legacyItems.map(i => [i.prodName, i.qty])),
+    //submitItems: Object.fromEntries(newItems.map(i => [i.prodName, i.qty])),
+    //itemChanges: Object.fromEntries(diff.map(i => [i.prodName, i.dQty])),
+    // headerChanges: {
+    //   route: null,
+    //   PONote: null
+    // }
+  }
   
   for (let newItem of newItems) {
     let legacyItem = legacyItems.find(i => i.prodName === newItem.prodName)
     
     if (!!legacyItem) {
-      // returnData.push({prodName: newItem.prodName, action: 'UPDATE'})
-      if (
-        legacyItem.qty !== newItem.qty 
-          || legacyItem.route !== order.header.route
-          || legacyItem.PONote !== order.header.PONote
-      ) {
+      let dQty = legacyItem.qty !== newItem.qty
+      let dRoute = legacyItem.route !== order.header.route
+      let dPONote = legacyItem.PONote !== order.header.PONote
+      
+      if (dQty || dRoute || dPONote) {
         let resp = await updateItem(order.header, newItem, legacyItem)
-        returnData.push(resp)
+        //returnData.push(resp)
       }
+      if (dRoute) cloudwatchLog.headerChanges.route = order.header.route
+      if (dPONote) cloudwatchLog.headerChanges.PONote = order.header.PONote
+      
     } else {
-      // returnData.push({prodName: newItem.prodName, action: 'CREATE'})
       let resp = await createItem(order.header, newItem)
-      returnData.push(resp)
+      //returnData.push(resp)
     }
   }
   
-  for (let legacyItem of legacyItems) {
-    let newItem = newItems.find(i => i.prodName === legacyItem.prodName)
-    if (!newItem) {
-      // returnData.push({prodName: oldItem.prodName, action: 'DELETE'})
-      if (
-        legacyItem.qty > 0
-          || legacyItem.route !== order.header.route
-          || legacyItem.PONote !== order.header.PONote
-      ) {
-        let resp = await deleteItem(order.header, legacyItem)
-        returnData.push(resp)
-      }
-    }
-  }
+  console.log(JSON.stringify(log))
   
   return ({
     statusCode: statusCode,
@@ -139,7 +162,7 @@ function createItem(header, item) {
     TableName: "Order-huppwy3hefgohh6ur7yuz5vkcm-newone",
     Item: {
       id: AWS.util.uuid.v4(),
-      _typename: "Order",
+      __typename: "Order",
       isWhole: header.isWhole,
       custName: header.custName,
       delivDate: header.delivDate,
@@ -158,29 +181,4 @@ function createItem(header, item) {
   return dynamo.put(params).promise();
   // console.log("create item:", params.Item)
   // return params.Item
-}
-
-
-
-function deleteItem(header, oldItem) {
-  const params = {
-    TableName: "Order-huppwy3hefgohh6ur7yuz5vkcm-newone",
-    Key: { id: oldItem.id },
-    ExpressionAttributeNames: {
-      "#q": "qty",
-      "#so": "SO",
-      "#r": "route",
-      "#po": "PONote"
-    },
-    ExpressionAttributeValues: {
-      ":q": 0,
-      ":so": 0,
-      ":r": header.route,
-      ":po": header.PONote
-    },
-    UpdateExpression: "set #q = :q, #so = :so, #r = :r, #po = :po",
-  };
-  return dynamo.update(params).promise();
-  // console.log("delete item:", oldItem.prodName, params.Key.id)
-  // return params.Key.id
 }
