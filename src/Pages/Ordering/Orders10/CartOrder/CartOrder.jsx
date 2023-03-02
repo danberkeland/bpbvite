@@ -39,7 +39,7 @@ export const CartOrder = ({ user, locNick }) => {
   const [itemChanges, setItemChanges] = useState(null)
   const cartOrderData = useCartOrderData(locNick, delivDate, isWhole)
   const { mutate:mutateCart } = useOrdersByLocationByDate(locNick, dateToYyyymmdd(delivDate), !!cartOrderData)
-  console.log("CART ORDER DATA:", cartOrderData)
+  //console.log("CART ORDER DATA:", cartOrderData)
   useEffect(() => {
     if (!!cartOrderData) {
       setHeaderChanges(JSON.parse(JSON.stringify(cartOrderData.header)))

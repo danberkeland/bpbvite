@@ -11,6 +11,7 @@ export const listStandingByLocation = /* GraphQL */ `
             prodName
             wholePrice
             retailPrice
+            packSize
             leadTime
           } 
           qty

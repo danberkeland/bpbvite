@@ -6,6 +6,7 @@ import { InputNumber } from "primereact/inputnumber"
 import { Button } from "primereact/button"
 // import { Tag } from "primereact/tag"
 // import { Sidebar } from "primereact/sidebar"
+import { Tooltip } from "primereact/tooltip"
 
 import { AddItemSidebar } from "./AddItemSidebar"
 
@@ -13,6 +14,7 @@ import { getWorkingDate, getWorkingDateTime } from "../../../../../functions/dat
 import { useLocationDetails } from "../../../../../data/locationData"
 import { useState } from "react"
 import TimeAgo from "timeago-react"
+import { InputText } from "primereact/inputtext"
 
 export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick, delivDate, user }) => {
   const { altLeadTimes } = useLocationDetails(locNick, !!locNick)
@@ -50,16 +52,25 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
     const qtyChanged = baseItem ? baseItem.qty !== rowData.qty : rowData.qty > 0
 
     const isInProduction = delivDate < getWorkingDateTime('NOW').plus({ days: leadTime })
-    const timingStatus = isPastDeliv ? 'past' : (isDelivDate ? 'deliv' : (isInProduction ? 'inprod' : 'none'))
     const recentlyDeleted = rowData.orderType === 'C' && rowData.sameDayMaxQty > 0 && getWorkingDate(rowData.qtyUpdatedOn) === getWorkingDate('NOW')
-    
+    const timingStatus = isPastDeliv ? 'past' : (isDelivDate ? 'deliv' : (isInProduction ? 'inprod' : null))
+    const timingMessage = {
+      inprod: " In production",
+      deliv: " Delivery date reached",
+      past: " Past delivery date"
+    }
     return (
       <div style={rowData.qty === 0 ? {color : "gray"} : null}>
         <div style={{fontStyle: qtyChanged ? "italic" : "normal", fontWeight: "bold"}}>{`${rowData.product.prodName}`}</div>
         {/* <div style={{paddingTop: ".1rem", fontSize:".9rem", whiteSpace: "nowrap"}}>{`${helperText}`}</div> */}
-        {timingStatus === 'inprod' && <div style={{marginTop: ".25rem", fontSize: ".9rem"}}><i className="pi pi-info-circle" style={{fontSize: ".9rem"}} />{` in production`}</div>}
-        {timingStatus === 'deliv' && <div style={{marginTop: ".25rem", fontSize: ".9rem"}}><i className="pi pi-info-circle" style={{fontSize: ".9rem"}} />{` delivery date reached`}</div>}
-        {timingStatus === 'past' && <div style={{marginTop: ".25rem", fontSize: ".9rem"}}><i className="pi pi-info-circle" style={{fontSize: ".9rem"}} />{` past delivery date`}</div>}
+        {rowData.product.packSize > 1 && <div style={{fontSize: ".9rem"}}>{`-- pack of ${rowData.product.packSize}`}</div>}
+        {!!timingStatus && 
+          <div style={{display: "flex", alignItems: "center", gap: ".2rem", marginBlock: ".1rem"}}>
+            <span><i className="pi pi-info-circle" style={{fontSize: ".9rem"}} /></span>
+            <span style={{fontSize: ".9rem"}}>
+              {timingMessage[timingStatus]}
+            </span>
+          </div>}
         {recentlyDeleted && rowData.qty === 0 && <div style={{marginTop: ".25rem", fontSize: ".9rem"}}>{`recently deleted`}</div>}
         {showDetails && 
           <>
@@ -98,12 +109,12 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
     const qtyChanged = baseItem ? baseItem.qty !== rowData.qty : rowData.qty > 0
 
     const disableInput = (user.authClass === 'bpbfull' && delivDate < getWorkingDateTime('NOW'))
-      || (maxQty === 0 || delivDate <= getWorkingDateTime('NOW'))
+      || (maxQty === 0 || (user.authClass !== 'bpbfull' && delivDate <= getWorkingDateTime('NOW')))
 
     const updateProductQty = (newQty, prodNick) => {
       const _itemChanges = itemChanges.map((item) => {
         if (item.product.prodNick === prodNick) {
-          return { ...item, qty: newQty > 999 ? 999 : newQty } 
+          return { ...item, qty: newQty > maxQty ? maxQty : newQty } 
 
         } 
         return item
@@ -112,31 +123,38 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
     }
 
     return (
-      <div className="p-fluid">
-        <InputNumber
+      <div className="p-fluid" style={{width: "3em", float: "right"}}>
+        <InputText
+          //className={`qty-input-${rowData.product.prodNick}`}
           value={rowData.qty}
-          min={0}
-          max={maxQty}
-          inputStyle={{fontWeight : qtyChanged ? "bold" : "normal"}}
+          inputmode="numeric"
+          keyfilter={/[0-9]/}
+          style={{
+            fontWeight : qtyChanged ? "bold" : "normal",
+            color: rowData.qty === 0 ? "gray" : '',
+            backgroundColor: qtyChanged ? 'hsl(37, 67%, 95%)' :'',
+          }}
+          tooltip={rowData.product.packSize > 1 ? `${rowData.qty || 0} pk = ${(rowData.qty || 0) * rowData.product.packSize} ea` : ''}
+          tooltipOptions={{ event: 'focus', position: 'left' }}
           onClick={() => console.log(rowData)}
-          //readOnly={disableInput}
-          disabled={disableInput}
+          readOnly={disableInput}
+          //disabled={disableInput}
           onFocus={(e) => {
             setRollbackQty(parseInt(e.target.value));
             if (!disableInput) e.target.select();
           }}
-          onChange={(e) => updateProductQty(e.value, prodNick)}
-          onValueChange={(e) => updateProductQty(e.value, prodNick)}
+          onChange={(e) => updateProductQty(e.target.value, prodNick)}
           onKeyDown={(e) => {
-            if (e.key === "Enter") {
+            console.log(e)
+            if (e.key === "Enter") { 
               e.target.blur();
               if (e.target.value === "") updateProductQty(0, prodNick);
             }
 
             if (e.key === "Escape") {
-              if (e.target.value === "") {
+              if (e.target.value === '') {
                 e.target.blur()
-                let resetQty = baseItem ? baseItem.qty : 0
+                let resetQty = baseItem.qty || 0
                 updateProductQty(resetQty, prodNick);
                 setRollbackQty(resetQty)
               } else {
@@ -146,14 +164,26 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
             }
           }}
           onBlur={() => {
-            if (rowData.qty === null) {
+            if (rowData.qty === '') {
               updateProductQty(0, prodNick)
             }
           }}
         />
+        {/* <Tooltip 
+          target={`.qty-input-${rowData.product.prodNick}`}
+          position="left"
+          event="focus"
+          autoHide={false}
+        >
+          {rowData.product.packSize > 1 && 
+            <div style={{display: "flex"}}>
+              <span style={{width: "4.5rem"}}>{`${(rowData.qty || 0) * rowData.product.packSize} pcs`}</span>
+            </div>
+          }
+        </Tooltip> */}
         {showDetails &&
           <>
-            <div style={{paddingTop: ".5rem", fontSize:".9rem"}}>{`$${rowData.rate.toFixed(2)}/ea.`}</div>
+            <div style={{paddingTop: ".5rem", fontSize:".9rem"}}>{`$${rowData.rate.toFixed(2)}/${rowData.product.packSize > 1 ? "pk" :"ea"}.`}</div>
             <div style={{paddingTop: ".5rem", fontSize:".9rem"}}>Subtotal:</div>
             <div style={{fontSize:".9rem"}}>{`$${(rowData.rate * rowData.qty).toFixed(2)}`}</div>
           </>

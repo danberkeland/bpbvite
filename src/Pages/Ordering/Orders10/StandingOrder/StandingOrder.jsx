@@ -21,6 +21,7 @@ import dynamicSort from "../../../../functions/dynamicSort"
 import { getTransitionDates, getTtl, getWeekday, getWorkingDate, getWorkingDateJS, getWorkingDateTime } from "../../../../functions/dateAndTime"
 import { listOrdersByLocationByDate } from "../../../../customGraphQL/queries/orderQueries"
 import { APIGatewayFetcher } from "../../../../data/fetchers"
+import { InputText } from "primereact/inputtext"
 
 const standOptions = [
   {label: "Standing", value: true},
@@ -197,6 +198,21 @@ export const StandingOrder = ({ user, locNick }) => {
             field={viewMode === 'DAY' 
               ? "product.prodName" 
               : "dayOfWeek"}
+            body={rowData => {
+              const baseItem = standingBase.find(i =>
+                i.product.prodNick === rowData.product.prodNick
+                && i.dayOfWeek === rowData.dayOfWeek  
+                && i.isWhole === rowData.isWhole
+                && i.isStand === rowData.isStand
+              )
+              const qtyChanged = baseItem ? (baseItem.qty !== rowData.qty) : (rowData.qty > 0)
+              const displayText = viewMode === 'DAY' ? rowData.product.prodName : rowData.dayOfWeek
+              const style = {fontWeight: "bold", fontStyle: qtyChanged ? "italic" : "normal"}
+              
+              return (
+                <div style={style}>{displayText}</div>
+              )
+            }}
             />
           <Column 
             header={() => <Button label="Add" onClick={() => setShowAddItem(true)}/>}
@@ -770,6 +786,8 @@ const getCartHeaders = (cartOrders, locationDetails) => {
 
 
 const CustomInputNumber = ({ rowData, standingBase, standingChanges, setStandingChanges }) => {
+  const [rollbackQty, setRollbackQty] = useState()
+
   const baseItem = standingBase.find(i =>
     i.product.prodNick === rowData.product.prodNick
     && i.dayOfWeek === rowData.dayOfWeek  
@@ -805,28 +823,46 @@ const CustomInputNumber = ({ rowData, standingBase, standingChanges, setStanding
     }
   }
 
-  // useEffect(() => {
-  //   if (qtyRef.current.value > 999) updateQty(999)
-  // }, [qtyRef, updateQty])
-
   return (
-    <InputNumber
+    <InputText
       value={rowData.qty}
-      min={0}
-      max={999}
-      inputStyle={{fontWeight: qtyChanged ? "bold" : "normal"}}
+      inputmode="numeric"
+      keyfilter={/[0-9]/}
+      style={{
+        fontWeight : qtyChanged ? "bold" : "normal",
+        color: rowData.qty === 0 ? "gray" : '',
+        backgroundColor: qtyChanged ? 'hsl(37, 67%, 95%)' :'',
+      }}
+      tooltip={rowData.product.packSize > 1 ? `${rowData.qty || 0} pk = ${(rowData.qty || 0) * rowData.product.packSize} ea` : ''}
+      tooltipOptions={{ event: 'focus', position: 'left' }}
       onClick={() => console.log(rowData)}
-      onFocus={e => e.target.select()}
+      onFocus={e => {
+        e.target.select()
+        setRollbackQty(rowData.qty)
+      }}
       // onKeyDown={e => console.log(e)}
-      onChange={e => {updateQty(e.value); console.log(e)}}
+      onChange={e => {updateQty(e.target.value)}}
       onKeyDown={(e) => {
-        if (e.key === "Enter") {
+        console.log(e)
+        if (e.key === "Enter") { 
           e.target.blur();
           if (e.target.value === "") updateQty(0);
         }
+
+        if (e.key === "Escape") {
+          if (e.target.value === "0") {
+            e.target.blur()
+            let resetQty = baseItem.qty || 0
+            updateQty(resetQty);
+            setRollbackQty(resetQty)
+          } else {
+            e.target.blur()
+            updateQty(rollbackQty);
+          }
+        }
       }}
       onBlur={() => {
-        if (rowData.qty === null) {
+        if (rowData.qty === '') {
           updateQty(0)
         }
       }}
