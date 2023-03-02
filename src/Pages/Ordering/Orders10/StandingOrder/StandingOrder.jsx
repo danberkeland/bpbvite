@@ -66,6 +66,8 @@ export const StandingOrder = ({ user, locNick }) => {
   const [standingBase, setStandingBase] = useState(null)
   const [standingChanges, setStandingChanges] = useState(null)
 
+  const isMobile = useIsMobile()
+
   useEffect(() => {
     if (!!standingData && !!productData) {
       const baseItems = makeStandingBase(standingData, productData, locNick)
@@ -94,7 +96,7 @@ export const StandingOrder = ({ user, locNick }) => {
   }
   const productOptions = useMemo(makeProductOptions, [standingChanges, isStand, isWhole])
 
-  const tableData = makeTableData(standingChanges, viewMode, dayOfWeek, product, isStand, isWhole)
+  const tableData = makeTableData(standingChanges, viewMode, dayOfWeek, product, isStand, isWhole, isMobile)
 
   //console.log(tableData)
   return(
@@ -122,6 +124,8 @@ export const StandingOrder = ({ user, locNick }) => {
         </div>
       }
 
+      {isMobile && 
+      <>
       <div style={{padding: ".5rem"}}>
         <SelectButton
           value={viewMode}
@@ -192,7 +196,6 @@ export const StandingOrder = ({ user, locNick }) => {
         <DataTable 
           value={tableData}
           responsiveLayout
-          showGridlines
         >
           <Column header={viewMode === 'DAY' ? "Product" : "Weekday"}
             field={viewMode === 'DAY' 
@@ -223,6 +226,8 @@ export const StandingOrder = ({ user, locNick }) => {
                 <div className="p-fluid">
                   <CustomInputNumber 
                     rowData={rowData}
+                    qtyAtt="qty"
+                    dayOfWeek={rowData.dayOfweek}
                     standingBase={standingBase}
                     standingChanges={standingChanges}
                     setStandingChanges={setStandingChanges}
@@ -233,6 +238,44 @@ export const StandingOrder = ({ user, locNick }) => {
           />
         </DataTable>
       </div>
+      </>
+      }
+      {!isMobile && 
+      <DataTable
+        style={{padding: ".5rem"}}
+        value={tableData}
+        responsiveLayout
+        showGridlines
+      >
+        <Column header="Product" 
+          field="product.prodName"
+        />
+        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(weekday => {
+          
+          return(
+            <Column
+              header={weekday}
+              //field={weekday}
+              body={rowData => {
+                return(
+                  <div className="p-fluid" style={{width: "45px"}}>
+                    <CustomInputNumber 
+                      rowData={rowData}
+                      qtyAtt={weekday}
+                      dayOfWeek={weekday}
+                      standingBase={standingBase}
+                      standingChanges={standingChanges}
+                      setStandingChanges={setStandingChanges}
+                    />
+                  </div>
+                )
+              }}  
+            />
+          )  
+        })}
+
+      </DataTable>
+      }
 
       <div style={{padding: ".5rem"}}>
         <Button label="Submit Changes (Warning: mutates prod database!)" 
@@ -277,20 +320,42 @@ export const StandingOrder = ({ user, locNick }) => {
  * For 'PRODUCT' and 'DAY' view, data is just filtered to the
  * applicable product or weekday, respectively.
  */
-const makeTableData = (standingChanges, viewMode, dayOfWeek, product, isStand, isWhole) => {
-  if (!standingChanges || (viewMode === 'PRODUCT' && !product)) return []
+const makeTableData = (standingChanges, viewMode, dayOfWeek, product, isStand, isWhole, isMobile) => {
+  if (!standingChanges) return []
   
-  let tableData = standingChanges
+  let _standingChanges = standingChanges
     .filter(item => item.isStand === isStand && item.isWhole === isWhole)
+  let tableData
 
-  if (viewMode === 'DAY') {
-    tableData = tableData
-      .filter(item => item.dayOfWeek === dayOfWeek)
-  }
+  if (isMobile) {
+    if (viewMode === 'PRODUCT' && !product) return []
 
-  else if (viewMode === 'PRODUCT') {
-    tableData = tableData
-      .filter(item => item.product.prodNick === product.prodNick)
+    if (viewMode === 'DAY') {
+      tableData = _standingChanges
+        .filter(item => item.dayOfWeek === dayOfWeek)
+    }
+
+    else if (viewMode === 'PRODUCT') {
+      tableData = _standingChanges
+        .filter(item => item.product.prodNick === product.prodNick)
+    }
+  } else {
+    let products = [...new Set(_standingChanges.map(i => i.product.prodNick))]
+    let productGroups = products
+      .map(pn => _standingChanges.filter(i => i.product.prodNick === pn))
+
+    tableData = productGroups.map(grp => ({
+      product: grp[0].product,
+      isStand: isStand,
+      isWhole: isWhole,
+      Sun: grp.find(i => i.dayOfWeek === "Sun").qty,
+      Mon: grp.find(i => i.dayOfWeek === "Mon").qty,
+      Tue: grp.find(i => i.dayOfWeek === "Tue").qty,
+      Wed: grp.find(i => i.dayOfWeek === "Wed").qty,
+      Thu: grp.find(i => i.dayOfWeek === "Thu").qty,
+      Fri: grp.find(i => i.dayOfWeek === "Fri").qty,
+      Sat: grp.find(i => i.dayOfWeek === "Sat").qty
+    }))
   }
 
   return tableData
@@ -785,21 +850,21 @@ const getCartHeaders = (cartOrders, locationDetails) => {
 
 
 
-const CustomInputNumber = ({ rowData, standingBase, standingChanges, setStandingChanges }) => {
+const CustomInputNumber = ({ rowData, qtyAtt, dayOfWeek, standingBase, standingChanges, setStandingChanges }) => {
   const [rollbackQty, setRollbackQty] = useState()
 
   const baseItem = standingBase.find(i =>
     i.product.prodNick === rowData.product.prodNick
-    && i.dayOfWeek === rowData.dayOfWeek  
+    && i.dayOfWeek === dayOfWeek  
     && i.isWhole === rowData.isWhole
     && i.isStand === rowData.isStand
   )
 
-  const qtyChanged = (baseItem && baseItem.qty !== rowData.qty) || (!baseItem && rowData.qty > 0)
+  const qtyChanged = (baseItem && baseItem.qty !== rowData[qtyAtt]) || (!baseItem && rowData[qtyAtt] > 0)
   
   const matchIndex = standingChanges.findIndex(i =>
     i.product.prodNick === rowData.product.prodNick
-    && i.dayOfWeek === rowData.dayOfWeek  
+    && i.dayOfWeek === dayOfWeek  
     && i.isWhole === rowData.isWhole
     && i.isStand === rowData.isStand
   )
@@ -816,8 +881,6 @@ const CustomInputNumber = ({ rowData, standingBase, standingChanges, setStanding
       }
       _update[matchIndex] = _updateItem
       setStandingChanges(_update)
-      console.log("new qty", rowData.qty)
-
     } else {
       console.log("error: standing data could not be updated.")
     }
@@ -825,20 +888,20 @@ const CustomInputNumber = ({ rowData, standingBase, standingChanges, setStanding
 
   return (
     <InputText
-      value={rowData.qty}
-      inputmode="numeric"
+      value={rowData[qtyAtt]}
+      inputMode="numeric"
       keyfilter={/[0-9]/}
       style={{
         fontWeight : qtyChanged ? "bold" : "normal",
-        color: rowData.qty === 0 ? "gray" : '',
+        color: rowData[qtyAtt] === 0 ? "gray" : '',
         backgroundColor: qtyChanged ? 'hsl(37, 67%, 95%)' :'',
       }}
-      tooltip={rowData.product.packSize > 1 ? `${rowData.qty || 0} pk = ${(rowData.qty || 0) * rowData.product.packSize} ea` : ''}
+      tooltip={rowData.product.packSize > 1 ? `${rowData[qtyAtt] || 0} pk = ${(rowData[qtyAtt] || 0) * rowData.product.packSize} ea` : ''}
       tooltipOptions={{ event: 'focus', position: 'left' }}
       onClick={() => console.log(rowData)}
       onFocus={e => {
         e.target.select()
-        setRollbackQty(rowData.qty)
+        setRollbackQty(rowData[qtyAtt])
       }}
       // onKeyDown={e => console.log(e)}
       onChange={e => {updateQty(e.target.value)}}
@@ -850,7 +913,7 @@ const CustomInputNumber = ({ rowData, standingBase, standingChanges, setStanding
         }
 
         if (e.key === "Escape") {
-          if (e.target.value === "0") {
+          if (e.target.value === "") {
             e.target.blur()
             let resetQty = baseItem.qty || 0
             updateQty(resetQty);
@@ -862,7 +925,7 @@ const CustomInputNumber = ({ rowData, standingBase, standingChanges, setStanding
         }
       }}
       onBlur={() => {
-        if (rowData.qty === '') {
+        if (rowData[qtyAtt] === '') {
           updateQty(0)
         }
       }}
@@ -925,3 +988,23 @@ const getLegacyStandingSubmitBody = (submitItems, locationDetails, productData, 
 // timeStamp: AWSDateTime
 // createdAt: AWSDateTime
 // updatedAt: AWSDateTime
+
+
+const getIsMobile = () => window.innerWidth <= 768;
+function useIsMobile() {
+    const [isMobile, setIsMobile] = useState(getIsMobile());
+
+    useEffect(() => {
+        const onResize = () => {
+            setIsMobile(getIsMobile());
+        }
+
+        window.addEventListener("resize", onResize);
+    
+        return () => {
+            window.removeEventListener("resize", onResize);
+        }
+    }, []);
+    
+    return isMobile;
+}

@@ -127,7 +127,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
         <InputText
           //className={`qty-input-${rowData.product.prodNick}`}
           value={rowData.qty}
-          inputmode="numeric"
+          inputMode="numeric"
           keyfilter={/[0-9]/}
           style={{
             fontWeight : qtyChanged ? "bold" : "normal",
