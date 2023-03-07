@@ -1610,9 +1610,11 @@ div.read-only-button > .p-disabled, .p-component:disabled {
 }
 
 .p-selectbutton .p-button {
-  background: #ffffff;
-  border: 1px solid #ced4da;
-  color: #495057;
+  background: var(--bpb-surface-input);
+  /* border: 1px solid #ced4da; */
+  border: 1px solid var(--bpb-orange-tone-050);
+  /* color: #495057; */
+  color: var(--text-color-secondary);
   transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 .p-selectbutton .p-button .p-button-icon-left,
@@ -1850,9 +1852,10 @@ div.read-only-button > .p-disabled, .p-component:disabled {
 }
 
 .p-button {
-  color: #ffffff;
+  /* color: #ffffff; */
   /* background: #2196F3; */
   /* border: 1px solid #2196F3; */
+  color: hsl(37, 100%, 95%);
   background: var(--bpb-button-color);
   border: var(--bpb-button-color);
   padding: 0.5rem 1rem;
@@ -4932,7 +4935,8 @@ div.read-only-button > .p-disabled, .p-component:disabled {
   box-shadow: inset 0 0 0 0.15rem #a6d5fa;
 }
 .p-menu.p-menu-overlay {
-  background: #ffffff;
+  /* background: #ffffff; */
+  background: var(--bpb-surface-input);
   border: 0 none;
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
 }
@@ -4940,7 +4944,8 @@ div.read-only-button > .p-disabled, .p-component:disabled {
   margin: 0;
   padding: 0.75rem 1rem;
   color: #495057;
-  background: #ffffff;
+  /* background: #ffffff; */
+  background: var(--bpb-surface-input);
   font-weight: 600;
   border-top-right-radius: 0;
   border-top-left-radius: 0;

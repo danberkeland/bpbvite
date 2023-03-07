@@ -22,6 +22,7 @@ import { getTransitionDates, getTtl, getWeekday, getWorkingDate, getWorkingDateJ
 import { listOrdersByLocationByDate } from "../../../../customGraphQL/queries/orderQueries"
 import { APIGatewayFetcher } from "../../../../data/fetchers"
 import { InputText } from "primereact/inputtext"
+import { useSettingsStore } from "../../../../Contexts/SettingsZustand"
 
 const standOptions = [
   {label: "Standing", value: true},
@@ -48,6 +49,9 @@ const weekdayOptions = [
 
 
 export const StandingOrder = ({ user, locNick }) => {
+  const isLoading = useSettingsStore((state) => state.isLoading)
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
+
   // standing::admin state
   const [isStand, setIsStand] = useState(true)
   const [isWhole, setIsWhole] = useState(true)
@@ -65,6 +69,9 @@ export const StandingOrder = ({ user, locNick }) => {
 
   const [standingBase, setStandingBase] = useState(null)
   const [standingChanges, setStandingChanges] = useState(null)
+
+  // console.log(standingBase)
+  // console.log(standingChanges)
 
   const isMobile = useIsMobile()
 
@@ -97,11 +104,10 @@ export const StandingOrder = ({ user, locNick }) => {
   const productOptions = useMemo(makeProductOptions, [standingChanges, isStand, isWhole])
 
   const tableData = makeTableData(standingChanges, viewMode, dayOfWeek, product, isStand, isWhole, isMobile)
-
   //console.log(tableData)
   return(
     <div>
-      <h1 style={{padding: ".5rem"}}>Standing Order</h1>
+      {/* <h1 style={{padding: ".5rem"}}>Standing Order</h1> */}
       {user.authClass === 'bpbfull' &&
         <div style={{margin: ".5rem", padding: ".5rem", border: "1px solid", borderRadius: "3px", backgroundColor: "#ffc466", borderColor: "hsl(37, 67%, 60%)"}}>
           <h2>Admin Settings</h2>
@@ -227,7 +233,7 @@ export const StandingOrder = ({ user, locNick }) => {
                   <CustomInputNumber 
                     rowData={rowData}
                     qtyAtt="qty"
-                    dayOfWeek={rowData.dayOfweek}
+                    dayOfWeek={rowData.dayOfWeek}
                     standingBase={standingBase}
                     standingChanges={standingChanges}
                     setStandingChanges={setStandingChanges}
@@ -248,12 +254,17 @@ export const StandingOrder = ({ user, locNick }) => {
         showGridlines
       >
         <Column header="Product" 
-          field="product.prodName"
+          // field="product.prodName"
+          body={rowData => {
+            
+            return(<div style={{fontWeight: "bold"}}>{rowData.product.prodName}</div>)
+          }}
         />
         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(weekday => {
           
           return(
             <Column
+              key={weekday}
               header={weekday}
               //field={weekday}
               body={rowData => {
@@ -280,7 +291,7 @@ export const StandingOrder = ({ user, locNick }) => {
       <div style={{padding: ".5rem"}}>
         <Button label="Submit Changes (Warning: mutates prod database!)" 
           className="p-button-lg" 
-          onClick={() => handleSubmit(locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, user.name, locationDetails, productData)}
+          onClick={() => handleSubmit(locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, user.name, locationDetails, productData, setIsLoading)}
         />
       </div>
 
@@ -559,8 +570,8 @@ const AddItemSidebar = ({showAddItem, setShowAddItem, locNick, standingChanges, 
 // detect which action is to be taken,
 // associate these directives with each submisison candidate
 
-const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, userName, locationDetails, productData) => {
-
+const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, userName, locationDetails, productData, setIsLoading) => {
+  setIsLoading(true)
   // Submission only handles the current category 
   // of standing order (according to isStand, isWhole values).
   const baseItems = standingBase.filter(item => (item.isWhole === isWhole && item.isStand === isStand))
@@ -570,7 +581,10 @@ const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingCha
   // some database action ('CREATE', 'UPDATE', or 'DELETE'/'DELETE_NO_OVERRIDE')
   const submitItems = getSubmitItems(baseItems, submissionCandidates, userName)
   
-  if (!submitItems.length) return
+  if (!submitItems.length) {
+    setIsLoading(false)
+    return
+  }
 
   // *******************************
   // * DETERMINE CART PLACEHOLDERS *
@@ -758,6 +772,7 @@ const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingCha
     }
   }
   mutateStanding()
+  setIsLoading(false)
 
 }
 
@@ -870,7 +885,7 @@ const CustomInputNumber = ({ rowData, qtyAtt, dayOfWeek, standingBase, standingC
   )
   
   const updateQty = (value) => {    
-    let newQty = value >= 999 ? 999 : value
+    let newQty = Number(value) >= 999 ? 999 : (value === '' ? value : Number(value))
 
     //console.log(e, e.value, typeof(e.value), newQty)
     if (matchIndex > -1) {

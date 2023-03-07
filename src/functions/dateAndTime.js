@@ -89,6 +89,15 @@ export function dateToYyyymmdd(date) {
   return date.toISOString().split('T')[0]
 }
 
+
+/**string to string conversion */
+export function yyyymmddToWeekday(dateString) {
+  const [year, month, day] = dateString.split('-')
+  const jsDate = new Date(year, month - 1, day, 0, 0)
+
+  return getWeekday(jsDate)
+}
+
 /**
  * Convert JS date into capitalized 3 letter weekday,
  * compatible with database entries.
