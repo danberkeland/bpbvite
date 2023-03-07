@@ -44,7 +44,7 @@ export const CartOrder = ({ user, locNick }) => {
   const [headerChanges, setHeaderChanges] = useState(null)
   const [itemChanges, setItemChanges] = useState(null)
   const cartOrderData = useCartOrderData(locNick, delivDate, isWhole)
-  const { mutate:mutateCart } = useOrdersByLocationByDate(locNick, dateToYyyymmdd(delivDate), !!cartOrderData)
+  const { mutate:mutateCart } = useOrdersByLocationByDate(locNick, null, !!cartOrderData)
   //console.log("CART ORDER DATA:", cartOrderData)
   useEffect(() => {
     if (!!cartOrderData) {
