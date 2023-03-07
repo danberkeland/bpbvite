@@ -6,7 +6,7 @@ import { defaultSwrOptions } from "./constants"
 
 // import dynamicSort from "../functions/dynamicSort"
 import getNestedObject from "../functions/getNestedObject"
-import { getWeekday, dateToYyyymmdd, getTransitionDates } from "../functions/dateAndTime"
+import { getWeekday, dateToYyyymmdd, getTransitionDates, yyyymmddToWeekday } from "../functions/dateAndTime"
 
 import gqlFetcher, { APIGatewayFetcher } from "./fetchers"
 
@@ -23,7 +23,35 @@ import dynamicSort from "../functions/dynamicSort"
 /******************
  * QUERIES/CACHES *
  ******************/
+// /**
+//  * Produces a list of cart order items for the given location & delivery date.
+//  * @param {String} locNick Location ID attribute.
+//  * @param {String} delivDate Date string in ISO yyyy-mm-dd format.
+//  * @param {Boolean} shouldFetch Fetches data only when true.
+//  * @return {{data: Array<Object>, errors: Object}}
+//  */
+// export const useOrdersByLocation = (locNick, shouldFetch) => {
+//   const variables = {
+//     locNick: locNick,
+//   }
+//   // if (shouldFetch) console.log("Fetching cart data...")
+//   const { data, errors, mutate } = useSWR(
+//     shouldFetch ? [queries.listOrdersByLocationByDate, variables] : null, 
+//     gqlFetcher, 
+//     defaultSwrOptions
+//   )
 
+//   // if (data) console.log("Cart Data response: ", data)
+//   // if (errors) console.log("Cart Data errors", errors)
+  
+//   const _data = getNestedObject(data, ['data', 'getLocation', 'ordersByDate', 'items'])
+
+//   return ({
+//     data: _data,
+//     errors: errors,
+//     mutate: mutate
+//   })
+// }
 
 /**
  * Produces a list of cart order items for the given location & delivery date.
@@ -127,11 +155,14 @@ export const useCartOrderData = (locNick, delivDateJS, isWhole) => {
   const delivDate = dateToYyyymmdd(delivDateJS)
   const dayOfWeek = getWeekday(delivDateJS)
   const { data:locationDetails } = useLocationDetails(locNick, !!locNick)
-  const { data:cartData, mutate:mutateCart } = useOrdersByLocationByDate(locNick, delivDate, !!locNick && !!delivDate)
   const { data:standingData } = useStandingByLocation(locNick, !!locNick)
-  
+  // const { data:cartData, mutate:mutateCart } = useOrdersByLocationByDate(locNick, delivDate, !!locNick && !!delivDate)
+  const { data:cartData, mutate:mutateCart } = useOrdersByLocationByDate(locNick, null, !!locNick)
+
+
   // console.log(locNick, delivDate, isWhole, dayOfWeek)
   console.log("L C S:", locationDetails?1:0, cartData?1:0, standingData?1:0)
+  if (!!cartData) console.log(cartData)
 
   const makeCartOrder = () => {
     if (!locationDetails || !cartData || !standingData) return undefined
@@ -141,7 +172,10 @@ export const useCartOrderData = (locNick, delivDateJS, isWhole) => {
     // console.log(standingData)
     const altPrices = locationDetails.customProd.items
 
-    const _cart = cartData.map(item => ({...item, orderType: 'C'}))
+    // const _cart = cartData.map(item => ({...item, orderType: 'C'}))
+    const _cart = cartData
+      .filter(item => item.delivDate === delivDate)
+      .map(item => ({...item, orderType: 'C'}))
     const _standing = standingData
       .filter(item => item.dayOfWeek === dayOfWeek && item.isWhole === true && item.isStand === true)
       .map(item => {
@@ -219,25 +253,30 @@ const validateCart = (cartData) => {
   
   let cartIsValid = true
 
-  const prodNicks = [...new Set(cartData.map(p => p.product.prodNick))]
-  const productGroups = prodNicks.map(pn => 
-    cartData.filter(c => c.product.prodNick === pn)
-      .sort(dynamicSort("updatedOn"))  
-  )
+  const dates = [...new Set(cartData.map(i => i.delivDate))]
 
-  for (let group of productGroups) {
-    if (group.length > 1) {
-      cartIsValid = false
-      console.log(`duplicates found for ${group[0].product.prodNick}`)
-      let deleteItems = group.slice(0, -1).map(i => {
-        return ({ id: i.id })
-      })
-      
-      deleteItems.forEach(item => {
-        let response = deleteOrder(item)
-        console.log(response)
-      })
+  for (let date of dates) {
+    let cartByDate = cartData.filter(i => i.delivDate === date)
+    const prodNicks = [...new Set(cartByDate.map(i => i.product.prodNick))]
+    const productGroups = prodNicks.map(pn => 
+      cartByDate.filter(c => c.product.prodNick === pn)
+        .sort(dynamicSort("updatedOn"))  
+    )
 
+    for (let group of productGroups) {
+      if (group.length > 1) {
+        cartIsValid = false
+        console.log(`duplicates found for ${group[0].product.prodNick}`)
+        let deleteItems = group.slice(0, -1).map(i => {
+          return ({ id: i.id })
+        })
+        
+        deleteItems.forEach(item => {
+          let response = deleteOrder(item)
+          console.log(response)
+        })
+
+      }
     }
   }
   
@@ -269,4 +308,83 @@ export const submitToLegacy = async (body) => {
   let response = await APIGatewayFetcher('/orders/submitLegacyCart', body)
 
   return response
+}
+
+export const useOrderSummary = (locNick, shouldFetch) => {
+  const { data:cartData, mutate:mutateCart } = useOrdersByLocationByDate(locNick, null, shouldFetch)
+  const { data:standingData } = useStandingByLocation(locNick, shouldFetch)
+
+  const transformData = () => {
+    if (!cartData || !standingData) return undefined
+    
+    let _cart = cartData.map(i => ({
+      prodNick: i.product.prodNick, 
+      qty: i.qty, 
+      delivDate: i.delivDate, 
+      orderType: 'C'
+    }))
+    let _standing = standingData
+      .filter(i => i.isStand && i.isWhole)
+      .map(i => ({
+        prodNick: i.product.prodNick, 
+        qty: i.qty, 
+        dayOfWeek: i.dayOfWeek,
+        orderType: 'S'
+      }))
+    let dates = [...new Set(_cart.map(i => i.delivDate))]
+
+    let ordersByDate = {}
+    for (let delivDate of dates) {
+      let cart = _cart.filter(i => i.delivDate === delivDate)
+
+      let standing = _standing
+        .filter (s => s.dayOfWeek === yyyymmddToWeekday(delivDate))
+        .filter (s => cart.findIndex(c => c.prodNick === s.prodNick) === -1) // keep only if not matching cart item
+
+      let orderByDate = cart.concat(standing)
+      let hasCart = false
+      let hasStanding = false
+
+      for (let item of orderByDate) {
+        if (item.orderType === 'C' && item.qty > 0) hasCart = true
+        if (item.orderType === 'S' && item.qty > 0) hasStanding = true
+      }
+
+      ordersByDate[delivDate] = {
+        hasCart: hasCart,
+        hasStanding: hasStanding
+      }
+
+    }
+
+    let weekdays = [...new Set(_standing.map(i => i.dayOfWeek))]
+
+    let standingByWeekday = {}
+    for (let dayOfWeek of weekdays) {
+      let nonZeroMatchIdx = _standing
+        .findIndex(s => s.dayOfWeek === dayOfWeek && s.qty > 0)
+        
+      let hasStanding = nonZeroMatchIdx > -1
+
+      standingByWeekday[dayOfWeek] = hasStanding
+    }
+
+    const orderSummary = {
+      dates: ordersByDate,
+      days: standingByWeekday
+    }
+
+    console.log(orderSummary)
+    return orderSummary
+  }
+
+  const orderSummary = useMemo(
+    transformData, 
+    [cartData, standingData]
+  )
+
+  return ({ 
+    data: orderSummary 
+  })
+
 }
