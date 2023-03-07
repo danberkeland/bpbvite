@@ -13,9 +13,15 @@ import { createOrder, updateOrder, useCartOrderData, useOrdersByLocationByDate }
 import { DateTime } from "luxon"
 import { useLocationDetails } from "../../../../data/locationData"
 import { APIGatewayFetcher } from "../../../../data/fetchers"
+import { useSettingsStore } from "../../../../Contexts/SettingsZustand"
 
 
 export const CartOrder = ({ user, locNick }) => {
+  const isLoading = useSettingsStore((state) => state.isLoading)
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
+
+  // const [isLoading, setIsLoading] = useState(false)
+
   // cart::admin state
   const [isWhole, ] = useState(true) // for possible future extension to retail orders
   
@@ -30,7 +36,7 @@ export const CartOrder = ({ user, locNick }) => {
   const isDelivDate = delivDate.getTime() === getWorkingDateTime('NOW').toMillis()
   const isPastDeliv = delivDate < getWorkingDateTime('NOW')
 
-  const disableInputs = isPastDeliv || (isDelivDate && user.authClass !== 'bpbfull')
+  const disableInputs = isPastDeliv || (isDelivDate && user.authClass !== 'bpbfull') || isLoading
 
   // data
   const { data:locationDetails } = useLocationDetails(locNick, !!locNick)
@@ -52,6 +58,7 @@ export const CartOrder = ({ user, locNick }) => {
   }, [cartOrderData])
 
   const handleCartSubmit = async () => {
+    setIsLoading(true)
     console.log("submitting...")
     // console.log(headerChanges)
     // console.log("itemBase:", cartOrderData.items)
@@ -96,7 +103,7 @@ export const CartOrder = ({ user, locNick }) => {
           prodNick: orderItem.product.prodNick,
           qty: orderItem.qty,
           qtyUpdatedOn: new Date().toISOString(),
-          sameDayMaxQty: orderItem.qty,
+          sameDayMaxQty: baseItem ? baseItem.qty : orderItem.qty,
           rate: orderItem.rate,
           isLate: 0,
           updatedBy: user.name,
@@ -139,11 +146,12 @@ export const CartOrder = ({ user, locNick }) => {
         console.log('revalidating')
         mutateCart()
       }
-
+      setIsLoading(false)
     }
   }
 
   const handleCartLegacySubmit = async () => {
+    setIsLoading(true)
     const routeChanged = headerChanges.route !== cartOrderData.header.route
     const noteChanged = headerChanges.ItemNote !== cartOrderData.header.ItemNote
   
@@ -161,6 +169,7 @@ export const CartOrder = ({ user, locNick }) => {
     const submitItems = submissionCandidates.filter(item => item.action !== 'NONE')
     if (!submitItems.length) {
       console.log("Nothing to submit")
+      setIsLoading(false)
       return
     }
   
@@ -212,10 +221,13 @@ export const CartOrder = ({ user, locNick }) => {
   
     if (legacyResponse.statusCode !== 200) {
       console.log("Submission error")
+      setIsLoading(false)
       return
     }
   
     for (let submitItem of submitItems) {
+      const baseItem = cartOrderData.items.find(b => b.product.prodNick === submitItem.product.prodNick)
+      
       if (submitItem.action === 'CREATE') {
         const createItem = {
           locNick: locNick,
@@ -226,7 +238,7 @@ export const CartOrder = ({ user, locNick }) => {
           prodNick: submitItem.product.prodNick,
           qty: submitItem.qty,
           qtyUpdatedOn: new Date().toISOString(),
-          sameDayMaxQty: submitItem.qty,
+          sameDayMaxQty: baseItem ? baseItem.qty : submitItem.qty,
           rate: submitItem.rate,
           isLate: 0,
           updatedBy: user.name,
@@ -240,7 +252,6 @@ export const CartOrder = ({ user, locNick }) => {
         else console.log('ok')
       }
       if (submitItem.action === 'UPDATE') {
-        const baseItem = cartOrderData.items.find(b => b.product.prodNick === submitItem.product.prodNick)
         const qtyChanged = baseItem.qty !== submitItem.qty
         const rateChanged = baseItem.rate !== submitItem.rate
   
@@ -266,6 +277,7 @@ export const CartOrder = ({ user, locNick }) => {
   
       }
       mutateCart()
+      setIsLoading(false)
     }
   }
   
@@ -275,7 +287,7 @@ export const CartOrder = ({ user, locNick }) => {
   
   return(
     <div>
-      <h1 style={{padding: ".5rem"}}>Cart Order</h1>
+      {/* <h1 style={{padding: ".5rem"}}>Cart Order</h1> */}
       <div style={{width: "100%", display: "flex", justifyContent: "left", flexWrap: ""}}>
         <div style={{padding: "0.5rem", flex: "100%"}} className="bpb-input-field p-fluid">
           <FulfillmentDropdown 
@@ -288,6 +300,7 @@ export const CartOrder = ({ user, locNick }) => {
           <CartCalendar 
             delivDate={delivDate}
             setDelivDate={setDelivDate}
+            locNick={locNick}
           />
         </div>
       </div>
@@ -308,18 +321,25 @@ export const CartOrder = ({ user, locNick }) => {
         disabled={disableInputs}
       />
 
-      <div style={{padding: "0.5rem"}}>
+      
+      {/* <div style={{padding: "0.5rem"}}>
         <Button className="p-button-lg" 
           label={`Submit for ${delivDateString} (New System Only)`}
-          onClick={handleCartSubmit}
+          onClick={() => {
+            setIsLoading(true)
+            handleCartSubmit()
+            setIsLoading(false)
+          }}
           disabled={disableInputs}
         />
-      </div>
+      </div> */}
 
       <div style={{padding: "0.5rem"}}>
         <Button className="p-button-lg" 
-          label={`Test Submit (Warning: mutates prod database!)`}
-          onClick={handleCartLegacySubmit}
+          label={`Submit for ${delivDateString}${user.locNick === 'backporch' && ' (Legacy + New System)'}`}
+          onClick={() => {
+            handleCartLegacySubmit()
+          }}
           disabled={disableInputs}
         />
       </div>
