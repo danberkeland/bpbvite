@@ -61,9 +61,9 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
     }
     return (
       <div style={rowData.qty === 0 ? {color : "gray"} : null}>
-        <div style={{fontStyle: qtyChanged ? "italic" : "normal", fontWeight: "bold"}}>{`${rowData.product.prodName}`}</div>
+        <div style={{fontStyle: qtyChanged ? "italic" : "normal", fontWeight: "bold"}}>{`${rowData.product.prodName.replace(/\([0-9]+\)/, '').trim()}${rowData.product.packSize > 1 ? ` (${rowData.product.packSize}pk)` : ''}`}</div>
         {/* <div style={{paddingTop: ".1rem", fontSize:".9rem", whiteSpace: "nowrap"}}>{`${helperText}`}</div> */}
-        {rowData.product.packSize > 1 && <div style={{fontSize: ".9rem"}}>{`-- pack of ${rowData.product.packSize}`}</div>}
+        {/* {rowData.product.packSize > 1 && <div style={{fontSize: ".9rem"}}>{`-- pack of ${rowData.product.packSize}`}</div>} */}
         {!!timingStatus && 
           <div style={{display: "flex", alignItems: "center", gap: ".2rem", marginBlock: ".1rem"}}>
             <span><i className="pi pi-info-circle" style={{fontSize: ".9rem"}} /></span>
@@ -114,7 +114,10 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
     const updateProductQty = (newQty, prodNick) => {
       const _itemChanges = itemChanges.map((item) => {
         if (item.product.prodNick === prodNick) {
-          return { ...item, qty: newQty > maxQty ? maxQty : newQty } 
+          return ({ 
+            ...item, 
+            qty: newQty > maxQty ? maxQty : (newQty === '' ? newQty : Number(newQty)) 
+          })
 
         } 
         return item
@@ -123,7 +126,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
     }
 
     return (
-      <div className="p-fluid" style={{width: "3em", float: "right"}}>
+      <div className="p-fluid">
         <InputText
           //className={`qty-input-${rowData.product.prodNick}`}
           value={rowData.qty}
@@ -230,7 +233,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
         <Column header={() => <Button onClick={() => setShowSidebar(true)} disabled={disableInputs}>Add</Button>}
           field="qty" 
           body={qtyColumnTemplate}
-          style={{width: "6rem"}}
+          style={{width: "5.5rem"}}
         />
       </DataTable>
 
