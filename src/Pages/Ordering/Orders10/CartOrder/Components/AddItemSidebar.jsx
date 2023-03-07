@@ -52,6 +52,8 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
         product: {
           prodNick: selectedProduct.prodNick,
           prodName: selectedProduct.prodName,
+          leadTime: selectedProduct.leadTime,
+          packSize: selectedProduct.packSize
         },
         qty: selectedQty,
         orderType: "C",
