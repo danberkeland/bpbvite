@@ -18,7 +18,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
   const { data:customProductData } = useProductDataWithLocationCustomization(locNick)
 
   const orderSubmitDate = getWorkingDateTime('NOW')
-  const selectedProductMaxQty = getMaxQty(selectedProduct, delivDate, cartItems)
+  const selectedProductMaxQty = getMaxQty(user, selectedProduct, delivDate, cartItems)
   
 
   
@@ -29,16 +29,22 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
     )
     let newItem
     
-    if (oldItem && oldItem.orderType === "C") {
-      // case: update qty on an existing cart order
-      newItem = { ...oldItem, qty: selectedQty }
-      _cartItemChanges = [...cartItemChanges]
-        .map(item => item.product.prodNick === selectedProduct.prodNick ? newItem : item)
-        .sort((a, b) => {
-          if (a.product.prodName < b.product.prodName) return -1
-          if (a.product.prodName > b.product.prodName) return 1
-          return 0
-        })
+    // if (oldItem && oldItem.orderType === "C") {
+    //   // case: update qty on an existing cart order
+    //   newItem = { ...oldItem, qty: selectedQty }
+    //   _cartItemChanges = [...cartItemChanges]
+    //     .map(item => item.product.prodNick === selectedProduct.prodNick ? newItem : item)
+    //     .sort((a, b) => {
+    //       if (a.product.prodName < b.product.prodName) return -1
+    //       if (a.product.prodName > b.product.prodName) return 1
+    //       return 0
+    //     })
+    if (oldItem) {
+      _cartItemChanges = cartItemChanges.map(item => 
+        item.product.prodNick === selectedProduct.prodNick
+          ? { ...item, qty: selectedQty}
+          : { ...item }  
+      )
     } else {
       // case: create a new cart item
       newItem = { 
@@ -69,15 +75,18 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
     const inProduction = delivDate < orderSubmitDate.plus({ days: option.leadTime })
     const availableDate = orderSubmitDate.plus({ days: option.leadTime }).toLocaleString()
     
-    const cartMatchItem = cartItemChanges.find(i => i.prodNick === option.prodNick)
-    const inCart = cartMatchItem && (cartMatchItem.qty > 0 || cartMatchItem.action === 'CREATE')
+    const cartMatchItem = cartItemChanges.find(i => i.product.prodNick === option.prodNick)
+    const inCart = !!cartMatchItem && (cartMatchItem.qty > 0 || cartMatchItem.action === 'CREATE')
     const recentlyDeleted = cartMatchItem && getWorkingDate('NOW') === getWorkingDate(cartMatchItem.qtyUpdatedOn) && cartMatchItem.qty === 0
 
     return(
-      <div style={{fontWeight: (recentlyDeleted && inProduction) ? "bold" : "normal"}}>
-        <div>{option.prodName}</div>
-        {(recentlyDeleted && inProduction) && <div>Recently Deleted</div>}
-        {!(recentlyDeleted && inProduction) && <div>{inCart ? "In cart" : (option.leadTime + " day lead; " + (inProduction ? "earliest " + availableDate : 'available'))}</div>}
+      <div>
+        <Button icon="pi pi-fw pi-star" onClick={() => console.log("toggle fav")} />
+        <div style={{width: "250px", height: "40px", overflowWrap: "break-word", fontWeight: (recentlyDeleted && inProduction) ? "bold" : "normal"}}>
+          <div style={{width: "250px", height: "auto", overflowWrap: "break-word"}}>{option.prodName}</div>
+          {(recentlyDeleted && inProduction) && <div>Recently Deleted</div>}
+          {!(recentlyDeleted && inProduction) && <div>{inCart ? "In cart" : (option.leadTime + " day lead; " + (inProduction ? "earliest " + availableDate : 'available'))}</div>}
+        </div>
       </div>
     )
   }
@@ -106,7 +115,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
           onChange={e => {
             console.log("selectedProduct:", customProductData?.find(item => item.prodNick === e.value))
             setSelectedProduct(customProductData?.find(item => item.prodNick === e.value))
-            setSelectedQty(0)
+            setSelectedQty(cartItemChanges.find(i => i.product.prodNick === e.value)?.qty || 0)
           }}
           placeholder={customProductData ? "Select Product" : "Loading..."}
         />
@@ -153,7 +162,9 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
         disabled={
           !selectedProduct || 
           selectedProductMaxQty === 0 ||
-          selectedQty === 0
+          selectedQty === 0 ||
+          (user.authClass === 'bpbfull' && delivDate < getWorkingDateTime('NOW')) ||
+          (user.authClass !== 'bpbfull' && delivDate <= getWorkingDateTime('NOW'))
         }
         style={{flex: "0 0 100px"}}
       />
@@ -167,7 +178,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
 
 
 
-const getMaxQty = (selectedProduct, delivDate, cartItems) => {
+const getMaxQty = (user, selectedProduct, delivDate, cartItems) => {
   if (!selectedProduct || !cartItems || !delivDate) return null
 
   // we only look through cart items returned from the DB; i.e. items already entered.
@@ -182,7 +193,7 @@ const getMaxQty = (selectedProduct, delivDate, cartItems) => {
 
   let selectedProductMax
 
-  if (!inProduction) {
+  if (!inProduction || user.authClass === 'bpbfull') {
     selectedProductMax = 999
 
   } else if (!inCartItems) { 
