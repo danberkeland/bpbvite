@@ -19,6 +19,7 @@ import { mutate } from "swr"
 
 import dynamicSort from "../../../../functions/dynamicSort"
 import { getTransitionDates, getTtl, getWeekday, getWorkingDate, getWorkingDateJS, getWorkingDateTime } from "../../../../functions/dateAndTime"
+import { DateTime } from "luxon"
 import { listOrdersByLocationByDate } from "../../../../customGraphQL/queries/orderQueries"
 import { APIGatewayFetcher } from "../../../../data/fetchers"
 import { InputText } from "primereact/inputtext"
@@ -69,6 +70,9 @@ export const StandingOrder = ({ user, locNick }) => {
 
   const [standingBase, setStandingBase] = useState(null)
   const [standingChanges, setStandingChanges] = useState(null)
+
+  const effectDateParts = getWorkingDateTime('NOW').plus({days: 4}).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY).split(',')
+  const effectDate = `${effectDateParts[0]}, ${effectDateParts[1]}`
 
   // console.log(standingBase)
   // console.log(standingChanges)
@@ -289,10 +293,12 @@ export const StandingOrder = ({ user, locNick }) => {
       }
 
       <div style={{padding: ".5rem"}}>
-        <Button label="Submit Changes (Warning: mutates prod database!)" 
+        <Button label="Submit Changes" 
           className="p-button-lg" 
           onClick={() => handleSubmit(locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, user.name, locationDetails, productData, setIsLoading)}
         />
+
+        <div style={{margin: ".5rem"}}>Changes will not take effect until <b>{effectDate}</b>. Orders can still be edited from the Cart Order screen in the meantime.</div>
       </div>
 
       <AddItemSidebar
