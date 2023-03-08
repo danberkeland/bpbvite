@@ -336,7 +336,7 @@ export const CartOrder = ({ user, locNick }) => {
 
       <div style={{padding: "0.5rem"}}>
         <Button className="p-button-lg" 
-          label={`Submit for ${delivDateString}${user.locNick === 'backporch' && ' (Legacy + New System)'}`}
+          label={`Submit for ${delivDateString}${user.locNick === 'backporch' ? ' (Legacy + New System)' : ''}`}
           onClick={() => {
             handleCartLegacySubmit()
           }}
