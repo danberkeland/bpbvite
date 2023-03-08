@@ -74,7 +74,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
   
   
   
-  const dropdownItemTemplate = (option) => {
+  const DropdownItemTemplate = (option) => {
     const inProduction = delivDate < orderSubmitDate.plus({ days: option.leadTime })
 
     const dateParts = orderSubmitDate.plus({ days: option.leadTime }).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY).split(',')
@@ -86,6 +86,9 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
 
     const displayText = wrap(option.prodName, 25)
 
+    const [isFav, setIsFav] = useState(false)
+    const icon = isFav ? "pi pi-star-fill" : "pi pi-star"
+
     return(
       <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
         <div style={{width: "fit-content", fontWeight: (recentlyDeleted && inProduction) ? "bold" : "normal"}}>
@@ -94,7 +97,16 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
           {(recentlyDeleted && inProduction) && <div style={{fontSize: ".9rem"}}>Recently Deleted</div>}
           {!(recentlyDeleted && inProduction) && <div style={{fontSize: ".9rem"}}>{inCart ? "In cart" : (option.leadTime + " day lead; " + (inProduction ? "earliest " + availableDate : 'available'))}</div>}
         </div>
-        <Button icon="pi pi-fw pi-star" onClick={e => {e.preventDefault(); e.stopPropagation(); console.log(displayText)}} />
+        <Button icon={icon}
+          onClick={e => {
+            e.preventDefault() 
+            e.stopPropagation()
+            setIsFav(() => !isFav)
+            console.log(option)
+
+          }} 
+          className="p-button-text p-button-rounded"
+        />
       </div>
     )
   }
@@ -120,7 +132,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
           optionLabel="prodName" optionValue="prodNick"
           value={selectedProduct ? selectedProduct.prodNick : null}
           filter filterBy={`prodName${user.locNick === 'backporch' ? ",prodNick" : ""}`} showFilterClear resetFilterOnHide
-          itemTemplate={dropdownItemTemplate}
+          itemTemplate={DropdownItemTemplate}
           onChange={e => {
             console.log("selectedProduct:", customProductData?.find(item => item.prodNick === e.value))
             setSelectedProduct(customProductData?.find(item => item.prodNick === e.value))
