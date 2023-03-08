@@ -11,7 +11,8 @@ import { useLocationListSimple } from "../../../data/locationData"
 
 //import './Orders10.css'
 
-const standingBlacklist = ['high', 'hios', 'sandos']
+//const standingBlacklist = ['high', 'hios', 'sandos']
+const standingBlacklist = []
 
 const buttonModel = [
   {label: "Standing", icon: "pi pi-chevron-right", iconPos: "right"},
