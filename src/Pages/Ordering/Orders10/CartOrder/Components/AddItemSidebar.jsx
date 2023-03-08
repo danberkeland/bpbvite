@@ -9,6 +9,7 @@ import { useProductDataWithLocationCustomization } from "../../../../../data/pro
 
 import { getWorkingDate, getWorkingDateTime } from "../../../../../functions/dateAndTime"
 import dynamicSort from "../../../../../functions/dynamicSort"
+import { DateTime } from "luxon"
 
 export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartItems, cartItemChanges, setCartItemChanges, user}) => {
   const [selectedProduct, setSelectedProduct] = useState(null)
@@ -20,7 +21,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
   const orderSubmitDate = getWorkingDateTime('NOW')
   const selectedProductMaxQty = getMaxQty(user, selectedProduct, delivDate, cartItems)
   
-
+  
   
   const handleAddProduct = () => {
     let _cartItemChanges = [...cartItemChanges]
@@ -75,20 +76,25 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
   
   const dropdownItemTemplate = (option) => {
     const inProduction = delivDate < orderSubmitDate.plus({ days: option.leadTime })
-    const availableDate = orderSubmitDate.plus({ days: option.leadTime }).toLocaleString()
+
+    const dateParts = orderSubmitDate.plus({ days: option.leadTime }).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY).split(',')
+    const availableDate = `${dateParts[0]}, ${dateParts[1]}`
     
     const cartMatchItem = cartItemChanges.find(i => i.product.prodNick === option.prodNick)
     const inCart = !!cartMatchItem && (cartMatchItem.qty > 0 || cartMatchItem.action === 'CREATE')
     const recentlyDeleted = cartMatchItem && getWorkingDate('NOW') === getWorkingDate(cartMatchItem.qtyUpdatedOn) && cartMatchItem.qty === 0
 
+    const displayText = wrap(option.prodName, 25)
+
     return(
-      <div>
-        <Button icon="pi pi-fw pi-star" onClick={() => console.log("toggle fav")} />
-        <div style={{width: "250px", height: "40px", overflowWrap: "break-word", fontWeight: (recentlyDeleted && inProduction) ? "bold" : "normal"}}>
-          <div style={{width: "250px", height: "auto", overflowWrap: "break-word"}}>{option.prodName}</div>
-          {(recentlyDeleted && inProduction) && <div>Recently Deleted</div>}
-          {!(recentlyDeleted && inProduction) && <div>{inCart ? "In cart" : (option.leadTime + " day lead; " + (inProduction ? "earliest " + availableDate : 'available'))}</div>}
+      <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+        <div style={{width: "fit-content", fontWeight: (recentlyDeleted && inProduction) ? "bold" : "normal"}}>
+          {/* {option.prodName} */}
+          {displayText.split('\n').map(line => <div style={{fontWeight: "bold"}}>{line}</div>)}
+          {(recentlyDeleted && inProduction) && <div style={{fontSize: ".9rem"}}>Recently Deleted</div>}
+          {!(recentlyDeleted && inProduction) && <div style={{fontSize: ".9rem"}}>{inCart ? "In cart" : (option.leadTime + " day lead; " + (inProduction ? "earliest " + availableDate : 'available'))}</div>}
         </div>
+        <Button icon="pi pi-fw pi-star" onClick={e => {e.preventDefault(); e.stopPropagation(); console.log(displayText)}} />
       </div>
     )
   }
@@ -110,6 +116,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
     >
       <div className="p-fluid" style={{margin: ".5rem"}}>
         <Dropdown options={customProductData || []} 
+          //showOnFocus={true}
           optionLabel="prodName" optionValue="prodNick"
           value={selectedProduct ? selectedProduct.prodNick : null}
           filter filterBy={`prodName${user.locNick === 'backporch' ? ",prodNick" : ""}`} showFilterClear resetFilterOnHide
@@ -218,3 +225,6 @@ const getMaxQty = (user, selectedProduct, delivDate, cartItems) => {
 
 
 
+const wrap = (s, w) => s.replace(
+  new RegExp(`(?![^\\n]{1,${w}}$)([^\\n]{1,${w}})\\s`, 'g'), '$1\n'
+);
