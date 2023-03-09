@@ -744,8 +744,7 @@ const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingCha
         ..._createItem,
         prodNick: product.prodNick
       }
-
-      createStanding(createItem)
+      await createStanding(createItem)
 
     }
     if (action === "UPDATE") {
@@ -755,13 +754,13 @@ const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingCha
         startDate: subItem.startDate,
         updatedBy: subItem.updatedBy
       }
-      updateStanding(updateItem)
+      await updateStanding(updateItem)
     }
     if (action === "DELETE" || action === "DELETE_NO_OVERRIDE") {
       const deleteItem = {
         id: subItem.id
       }
-      deleteStanding(deleteItem)
+      await deleteStanding(deleteItem)
     }
   }
 
@@ -777,7 +776,10 @@ const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingCha
       mutate(key, undefined, {revalidate: true})
     }
   }
+
+  console.log("start mutate")
   mutateStanding()
+  console.log("finished mutate")
   setIsLoading(false)
 
 }
