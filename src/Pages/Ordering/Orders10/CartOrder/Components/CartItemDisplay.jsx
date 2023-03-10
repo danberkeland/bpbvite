@@ -231,7 +231,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
           field="product.prodName" 
           body={productColumnTemplate}  
         />
-        <Column header={() => <Button onClick={() => setShowSidebar(true)} disabled={disableInputs}>Add</Button>}
+        <Column header={() => <Button onClick={() => setShowSidebar(true)} disabled={disableInputs} style={{width: "62px"}}>Add</Button>}
           field="qty" 
           body={qtyColumnTemplate}
           style={{width: "5.5rem"}}
