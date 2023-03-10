@@ -256,7 +256,8 @@ export const CartOrder = ({ user, locNick }) => {
         const rateChanged = baseItem.rate !== submitItem.rate
   
         const updateItem = {
-          id: submitItem.id
+          id: submitItem.id,
+          updatedBy: user.name
         }
   
         // add only changed values for submisison
