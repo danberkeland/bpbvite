@@ -2828,6 +2828,16 @@ div.read-only-button > .p-disabled, .p-component:disabled {
 .p-datatable .p-datatable-tbody > tr > td .p-row-editor-save {
   margin-right: 0.5rem;
 }
+
+/* 
+  CUSTOM: header-split-content is a custom className for a 
+  DataTable Column with custom template. This setting allows
+  the cell to 'split' its content using flex/space-between.
+*/
+.p-datatable .header-split-content .p-column-header-content {
+  display: inline;
+}
+
 .p-datatable .p-datatable-tbody > tr > td > .p-column-title {
   font-weight: 600;
 }
