@@ -31,3 +31,34 @@ export const deleteLocation = /* GraphQL */ `
     }
   }
 `;
+
+
+// ********************************
+// * tables connected to Location *
+// ********************************
+
+export const createTemplateProd = /* GraphQL */ `
+  mutation CreateTemplateProd(
+    $input: CreateTemplateProdInput!
+    $condition: ModelTemplateProdConditionInput
+  ) {
+    createTemplateProd(input: $input, condition: $condition) {
+      id
+      locNick
+      prodNick
+    }
+  }
+`;
+
+export const deleteTemplateProd = /* GraphQL */ `
+  mutation DeleteTemplateProd(
+    $input: DeleteTemplateProdInput!
+    $condition: ModelTemplateProdConditionInput
+  ) {
+    deleteTemplateProd(input: $input, condition: $condition) {
+      id
+      locNick
+      prodNick
+    }
+  }
+`;
