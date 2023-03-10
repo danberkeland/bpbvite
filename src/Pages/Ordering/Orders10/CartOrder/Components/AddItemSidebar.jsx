@@ -11,17 +11,21 @@ import { getWorkingDate, getWorkingDateTime } from "../../../../../functions/dat
 import dynamicSort from "../../../../../functions/dynamicSort"
 import { DateTime } from "luxon"
 
+import gqlFetcher from "../../../../../data/fetchers"
+import { createTemplateProd, deleteTemplateProd } from "../../../../../customGraphQL/mutations/locationMutations"
+import { useLocationDetails } from "../../../../../data/locationData"
+
+
+
 export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartItems, cartItemChanges, setCartItemChanges, user}) => {
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [selectedQty, setSelectedQty] = useState(null)
 
-
   const { data:customProductData } = useProductDataWithLocationCustomization(locNick)
+  const { mutate:mutateLocation, isValidating:locationIsValidating } = useLocationDetails(locNick, !!locNick)
 
   const orderSubmitDate = getWorkingDateTime('NOW')
   const selectedProductMaxQty = getMaxQty(user, selectedProduct, delivDate, cartItems)
-  
-  
   
   const handleAddProduct = () => {
     let _cartItemChanges = [...cartItemChanges]
@@ -74,7 +78,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
   
   
   
-  const dropdownItemTemplate = (option) => {
+  const DropdownItemTemplate = (option) => {
     const inProduction = delivDate < orderSubmitDate.plus({ days: option.leadTime })
 
     const dateParts = orderSubmitDate.plus({ days: option.leadTime }).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY).split(',')
@@ -86,17 +90,46 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
 
     const displayText = wrap(option.prodName, 25)
 
+    //const [isFav, setIsFav] = useState(!!option.templateProd)
+    const icon = !!option.templateProd ? "pi pi-star-fill" : "pi pi-star"
+
     return(
       <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
         <div style={{width: "fit-content", fontWeight: (recentlyDeleted && inProduction) ? "bold" : "normal"}}>
           {/* {option.prodName} */}
-          {displayText.split('\n').map(line => <div style={{fontWeight: "bold"}}>{line}</div>)}
+          {displayText.split('\n').map((line, idx) => <div style={{fontWeight: !!option.templateProd ? "bold" : "normal"}} key={idx}>{line}</div>)}
           {(recentlyDeleted && inProduction) && <div style={{fontSize: ".9rem"}}>Recently Deleted</div>}
           {!(recentlyDeleted && inProduction) && <div style={{fontSize: ".9rem"}}>{inCart ? "In cart" : (option.leadTime + " day lead; " + (inProduction ? "earliest " + availableDate : 'available'))}</div>}
         </div>
-        <Button icon="pi pi-fw pi-star" onClick={e => {e.preventDefault(); e.stopPropagation(); console.log(displayText)}} />
+        <Button icon={icon}
+          onClick={e => {
+            e.preventDefault() 
+            e.stopPropagation()
+            //if (locNick === user.locNick) {
+              console.log(locNick, option.prodNick, option.templateProd)
+              toggleFav(locNick, option.prodNick, option.templateProd, mutateLocation)
+              //setIsFav(() => !isFav)
+           // }
+            
+          }} 
+          className="p-button-text p-button-rounded"
+          disabled={
+            //locNick !== user.locNick || 
+            locationIsValidating
+          }
+        />
       </div>
     )
+  }
+
+  const dropdownValueTemplate = (option, props) => {
+    if (option) return(
+      <div style={{display: "flex", justifyContent: "space-between"}}>
+        <div>{option.prodName || ''}</div>{!!option.templateProd && <i className="pi pi-star-fill"/>}
+      </div>
+    )
+
+    return <span>{props.placeholder}</span>;
   }
   
   
@@ -120,7 +153,8 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
           optionLabel="prodName" optionValue="prodNick"
           value={selectedProduct ? selectedProduct.prodNick : null}
           filter filterBy={`prodName${user.locNick === 'backporch' ? ",prodNick" : ""}`} showFilterClear resetFilterOnHide
-          itemTemplate={dropdownItemTemplate}
+          itemTemplate={DropdownItemTemplate}
+          valueTemplate={dropdownValueTemplate}
           onChange={e => {
             console.log("selectedProduct:", customProductData?.find(item => item.prodNick === e.value))
             setSelectedProduct(customProductData?.find(item => item.prodNick === e.value))
@@ -228,3 +262,39 @@ const getMaxQty = (user, selectedProduct, delivDate, cartItems) => {
 const wrap = (s, w) => s.replace(
   new RegExp(`(?![^\\n]{1,${w}}$)([^\\n]{1,${w}})\\s`, 'g'), '$1\n'
 );
+
+
+
+const toggleFav = async (locNick, prodNick, id, mutateLocation) => {
+  console.log(id)
+
+  if (!!id) await deleteFav(id)
+  else await createFav(locNick, prodNick)
+
+  mutateLocation()
+}
+
+const createFav = async (locNick, prodNick) => {
+  let query = createTemplateProd
+  let variables = { 
+    input: {
+      locNick: locNick,
+      prodNick: prodNick
+    }
+  }
+
+  let response = await gqlFetcher(query, variables)
+  console.log("createFav", response)
+}
+
+const deleteFav = async (id) => {
+  let query = deleteTemplateProd
+  let variables = { 
+    input: {
+      id: id
+    }
+  }
+
+  let response = await gqlFetcher(query, variables)
+  console.log("deleteFav", response)
+}

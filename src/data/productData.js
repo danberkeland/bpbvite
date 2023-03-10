@@ -169,7 +169,7 @@ export const useProductDataWithLocationCustomization = (locNick) => {
   const { data:productData, errors:productErrors } = useProductListFull(true)
   const { altPrices, templateProds, prodsNotAllowed, altLeadTimes, errors:locationErrors } = useLocationDetails(locNick, !!locNick)
 
-  const applyOverrides = () => {
+  const applyCustomizations = () => {
     if (!productData || !altPrices || !templateProds || !prodsNotAllowed || !altLeadTimes) return undefined
 
     return productData.filter(item => {
@@ -184,12 +184,15 @@ export const useProductDataWithLocationCustomization = (locNick) => {
       let override = altLeadTimes.find(i => i.prodNick === item.prodNick)
       return override ? { ...item, leadTime: override.leadTime } : { ...item }
 
+    }).map(item => {
+      let favorite = templateProds.find(i => i.prodNick === item.prodNick)
+      return { ...item, templateProd: (favorite ? favorite.id : null)}
     }).sort(
       dynamicSort("prodName")
 
     ).sort( (a, b) => {
-      let _a = templateProds.indexOf(a.prodNick) > -1 ? 0 : 1
-      let _b = templateProds.indexOf(b.prodNick) > -1 ? 0 : 1
+      let _a = a.templateProd !== null ? 0 : 1
+      let _b = b.templateProd !== null ? 0 : 1
       return _a - _b
 
     })
@@ -197,7 +200,7 @@ export const useProductDataWithLocationCustomization = (locNick) => {
   }
 
   const productsForLocation = useMemo(
-    applyOverrides, 
+    applyCustomizations, 
     [productData, altPrices, templateProds, prodsNotAllowed, altLeadTimes]
   )
 

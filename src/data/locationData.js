@@ -110,7 +110,7 @@ export const revalidateLocationListFull = () => {
  */
 export const useLocationDetails = (locNick, shouldFetch) => {
 
-  const { data, errors } = useSWR(
+  const { data, errors, mutate, isValidating } = useSWR(
     shouldFetch ? [queries.getLocationDetails, { locNick: locNick }] : null, 
     gqlFetcher, 
     defaultSwrOptions
@@ -128,7 +128,9 @@ export const useLocationDetails = (locNick, shouldFetch) => {
     prodsNotAllowed: _prodsNotAllowed,
     altPrices: _altPrices,
     altLeadTimes: _altLeadTimes,
-    errors: errors
+    errors: errors,
+    mutate: mutate,
+    isValidating: isValidating
   })
 }
 

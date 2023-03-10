@@ -214,9 +214,10 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
         footer={footerTemplate}
       >
         <Column 
+          headerClassName="header-split-content"
           header={() => {
             return (
-              <div style={{width: "200px", display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+              <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                 <span onClick={() => {console.log(itemChanges)}}>Products</span> 
                 <Button 
                   icon={showDetails ? "pi pi-search-minus" : "pi pi-search-plus"}

@@ -256,7 +256,8 @@ export const CartOrder = ({ user, locNick }) => {
         const rateChanged = baseItem.rate !== submitItem.rate
   
         const updateItem = {
-          id: submitItem.id
+          id: submitItem.id,
+          updatedBy: user.name
         }
   
         // add only changed values for submisison
@@ -336,7 +337,7 @@ export const CartOrder = ({ user, locNick }) => {
 
       <div style={{padding: "0.5rem"}}>
         <Button className="p-button-lg" 
-          label={`Submit for ${delivDateString}${user.locNick === 'backporch' && ' (Legacy + New System)'}`}
+          label={`Submit for ${delivDateString}${user.locNick === 'backporch' ? ' (Legacy + New System)' : ''}`}
           onClick={() => {
             handleCartLegacySubmit()
           }}

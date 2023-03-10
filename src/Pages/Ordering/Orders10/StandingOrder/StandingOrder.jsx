@@ -19,6 +19,7 @@ import { mutate } from "swr"
 
 import dynamicSort from "../../../../functions/dynamicSort"
 import { getTransitionDates, getTtl, getWeekday, getWorkingDate, getWorkingDateJS, getWorkingDateTime } from "../../../../functions/dateAndTime"
+import { DateTime } from "luxon"
 import { listOrdersByLocationByDate } from "../../../../customGraphQL/queries/orderQueries"
 import { APIGatewayFetcher } from "../../../../data/fetchers"
 import { InputText } from "primereact/inputtext"
@@ -69,6 +70,9 @@ export const StandingOrder = ({ user, locNick }) => {
 
   const [standingBase, setStandingBase] = useState(null)
   const [standingChanges, setStandingChanges] = useState(null)
+
+  const effectDateParts = getWorkingDateTime('NOW').plus({days: 4}).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY).split(',')
+  const effectDate = `${effectDateParts[0]}, ${effectDateParts[1]}`
 
   // console.log(standingBase)
   // console.log(standingChanges)
@@ -224,7 +228,7 @@ export const StandingOrder = ({ user, locNick }) => {
             }}
             />
           <Column 
-            header={() => <Button label="Add" onClick={() => setShowAddItem(true)}/>}
+            header={() => <Button label="Add" onClick={() => setShowAddItem(true)} style={{width: "60px"}}/>}
             style={{width: "80px"}}
             field="qty" 
             body={rowData => {
@@ -253,10 +257,18 @@ export const StandingOrder = ({ user, locNick }) => {
         responsiveLayout
         showGridlines
       >
-        <Column header="Product" 
-          // field="product.prodName"
+        <Column 
+          headerStyle={{maxWidth: "15rem"}}
+          headerClassName="header-split-content"
+          header={(rowData) => {
+            return (
+              <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                <span>Product</span>
+                <Button style={{width: "60px"}} label="Add" onClick={() => setShowAddItem(true)}/>
+              </div>
+            )
+          }}
           body={rowData => {
-            
             return(<div style={{fontWeight: "bold"}}>{rowData.product.prodName}</div>)
           }}
         />
@@ -289,10 +301,12 @@ export const StandingOrder = ({ user, locNick }) => {
       }
 
       <div style={{padding: ".5rem"}}>
-        <Button label="Submit Changes (Warning: mutates prod database!)" 
+        <Button label="Submit Changes" 
           className="p-button-lg" 
           onClick={() => handleSubmit(locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, user.name, locationDetails, productData, setIsLoading)}
         />
+
+        <div style={{margin: ".5rem"}}>Changes will not take effect until <b>{effectDate}</b>. Orders can still be edited from the Cart Order screen in the meantime.</div>
       </div>
 
       <AddItemSidebar
@@ -738,8 +752,7 @@ const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingCha
         ..._createItem,
         prodNick: product.prodNick
       }
-
-      createStanding(createItem)
+      await createStanding(createItem)
 
     }
     if (action === "UPDATE") {
@@ -749,13 +762,13 @@ const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingCha
         startDate: subItem.startDate,
         updatedBy: subItem.updatedBy
       }
-      updateStanding(updateItem)
+      await updateStanding(updateItem)
     }
     if (action === "DELETE" || action === "DELETE_NO_OVERRIDE") {
       const deleteItem = {
         id: subItem.id
       }
-      deleteStanding(deleteItem)
+      await deleteStanding(deleteItem)
     }
   }
 
@@ -771,7 +784,10 @@ const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingCha
       mutate(key, undefined, {revalidate: true})
     }
   }
+
+  console.log("start mutate")
   mutateStanding()
+  console.log("finished mutate")
   setIsLoading(false)
 
 }

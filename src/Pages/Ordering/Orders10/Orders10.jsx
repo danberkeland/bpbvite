@@ -11,6 +11,9 @@ import { useLocationListSimple } from "../../../data/locationData"
 
 //import './Orders10.css'
 
+//const standingBlacklist = ['high', 'hios', 'sandos']
+const standingBlacklist = []
+
 const buttonModel = [
   {label: "Standing", icon: "pi pi-chevron-right", iconPos: "right"},
   {label: "Cart", icon: "pi pi-chevron-left"}
@@ -55,15 +58,20 @@ const Orders10 = () => {
         />
         </div>
       }
+
+      
       <div className="cartStandButton p-fluid" style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.5rem"}}>
         <h1 style={{width: "fit-content"}}>{activeIndex === 0 ? "Cart Order" : "Standing Order"}</h1>
-        <Button
-          className="p-button-text"
-          style={{width: "fit-content", height: "2.25rem"}}
-          {... buttonModel[activeIndex]} 
-          onClick={() => {setActiveIndex((activeIndex + 1) % buttonModel.length)}}
-        />
+        {standingBlacklist.indexOf(user.locNick) === -1 &&
+          <Button
+            className="p-button-text"
+            style={{width: "fit-content", height: "2.25rem"}}
+            {... buttonModel[activeIndex]} 
+            onClick={() => {setActiveIndex((activeIndex + 1) % buttonModel.length)}}
+          />
+        }
       </div>
+      
 
       {activeIndex === 0 &&
         <CartOrder 
@@ -73,7 +81,7 @@ const Orders10 = () => {
 
       }
 
-      {activeIndex === 1 &&
+      {standingBlacklist.indexOf(user.locNick) === -1 && activeIndex === 1 && 
         <StandingOrder 
           user={user}
           locNick={locNick}
