@@ -191,8 +191,8 @@ export const useProductDataWithLocationCustomization = (locNick) => {
       dynamicSort("prodName")
 
     ).sort( (a, b) => {
-      let _a = templateProds.indexOf(a.prodNick) > -1 ? 0 : 1
-      let _b = templateProds.indexOf(b.prodNick) > -1 ? 0 : 1
+      let _a = a.templateProd !== null ? 0 : 1
+      let _b = b.templateProd !== null ? 0 : 1
       return _a - _b
 
     })
