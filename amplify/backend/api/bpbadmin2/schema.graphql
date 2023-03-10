@@ -234,7 +234,7 @@ type Location @model {
     @hasMany(indexName: "byProd", fields: ["locNick"])
   customProd: [AltPricing] @hasMany(indexName: "byLoc", fields: ["locNick"])
   templateProd: [TemplateProd]
-    @hasMany(indexName: "byProd", fields: ["locNick"])
+    @hasMany(indexName: "byLoc", fields: ["locNick"])
   altLeadTimeByProduct: [AltLeadTime] @hasMany(indexName: "byLocByProd", fields: ["locNick"])
 }
 
