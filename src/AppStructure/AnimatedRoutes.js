@@ -6,7 +6,7 @@ import CustomerNews from "../Pages/CustomerNews/CustomerNews";
 import CustomerBilling from "../Pages/CustomerBilling/CustomerBilling";
 import CustomerSettings from "../Pages/CustomerSettings/CustomerSettings";
 import CustomerProducts from "../Pages/CustomerProducts/CustomerProducts";
-import Production from "../Pages/Production/Production";
+import BPBNBaker1 from "../Pages/Production/BPBNBaker1";
 import Products from "../Pages/Products/Products";
 import Settings from "../Pages/Settings/Settings";
 import Billing from "../Pages/Billing/Billing";
@@ -36,7 +36,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
         <Route path="/CustomerProducts" element={<CustomerProducts />} />
         {authClass !== "customer" && (
           <React.Fragment>
-            <Route path="/Production" element={<Production />} />
+            <Route path="/Production/BPBNBaker1" element={<BPBNBaker1 />} />
             <Route path="/Products" element={<Products />} />
             <Route path="/Settings" element={<Settings />} />
             <Route path="/Billing" element={<Billing />} />

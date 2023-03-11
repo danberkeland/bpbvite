@@ -70,9 +70,22 @@ const itemsAuth1 = itemsAuth2b.concat([
   {
     label: "Production",
     icon: "pi pi-fw pi-chart-bar",
-    command: () => {
-      window.location = "/Production";
-    },
+    items: [
+      {
+        label: "BPBN Baker 1",
+        icon: "pi pi-fw pi-home",
+        command: () => {
+          window.location = "/Production/BPBNBaker1";
+        },
+      },
+      {
+        label: "BPBN Baker 2",
+        icon: "pi pi-fw pi-home",
+        command: () => {
+          window.location = "/Production/BPBNBaker2";
+        },
+      },
+    ],
   },
   {
     label: "Logistics",
