@@ -279,6 +279,15 @@ type Product @model {
   defaultInclude: Boolean
   leadTime: Int
   qbID: String
+  currentStock: Int
+  freezerClosing: Int
+  freezerCount: Int
+  freezerNorth: Int
+  freezerNorthClosing: Int
+  freezerNorthFlag: String
+  prepreshaped: Int
+  preshaped: Int
+  updatePreDate: String
   retailLoc: [RetailProdLoc] @hasMany(indexName: "byRetailProd", fields: ["prodNick"])
   standing: [Standing] @hasMany(indexName: "byProd", fields: ["prodNick"])
   orders: [Order] @hasMany(indexName: "byProd", fields: ["prodNick"])
