@@ -11,8 +11,7 @@ import { useLocationListSimple } from "../../../data/locationData"
 
 //import './Orders10.css'
 
-//const standingBlacklist = ['high', 'hios', 'sandos']
-const standingBlacklist = []
+const standingBlacklist = ['high', 'hios', 'sandos']
 
 const buttonModel = [
   {label: "Standing", icon: "pi pi-chevron-right", iconPos: "right"},
@@ -20,21 +19,14 @@ const buttonModel = [
 ]
 
 const Orders10 = () => {
-  //const globalState = useSettingsStore()
   const user = {
     name: useSettingsStore(state => state.user),
     sub: useSettingsStore(state => state.username),
     authClass: useSettingsStore(state => state.authClass),
     locNick: useSettingsStore(state => state.currentLoc),
   }
-  //const setCurrentLoc = useSettingsStore(state => state.setCurrentLoc)
-
-  // const { data:userDetails } = useUserDetails(user.sub, !!user.sub)
-  // const { data:currentLocDetails } = useLocationDetails(user.locNick, !!user.locNick)
-  const { data:locationList } = useLocationListSimple(true)
-
+  const { data:locationList } = useLocationListSimple(user.authClass === 'bpbfull')
   const [locNick, setLocNick] = useState(user.locNick)
-  //const [locNick, setLocNick] = useState(user.locNick)
   const [activeIndex, setActiveIndex] = useState(0)
 
   useEffect(() => {
@@ -45,20 +37,20 @@ const Orders10 = () => {
     <div id="ordering-page" className="ordering-page-container" style={{padding: "0.5rem 0.5rem 200px 0.5rem"}}>
       {user.authClass === 'bpbfull' &&
         <div className="custDrop p-fluid" style={{margin: "0.5rem"}}>
-        <Dropdown 
-          options={locationList}
-          optionLabel="locName"
-          optionValue="locNick"
-          value={locNick}
-          onChange={e => setLocNick(e.value)}
-          filter
-          filterBy="locNick,locName"
-          showFilterClear
-          placeholder={locationList ? "LOCATION" : "loading..."}
-        />
+          <Dropdown
+            style={{width: "100%"}} 
+            options={locationList}
+            optionLabel="locName"
+            optionValue="locNick"
+            value={locNick}
+            onChange={e => setLocNick(e.value)}
+            filter
+            filterBy="locNick,locName"
+            showFilterClear
+            placeholder={locationList ? "LOCATION" : "loading..."}
+          />
         </div>
       }
-
       
       <div className="cartStandButton p-fluid" style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.5rem"}}>
         <h1 style={{width: "fit-content"}}>{activeIndex === 0 ? "Cart Order" : "Standing Order"}</h1>
@@ -71,7 +63,6 @@ const Orders10 = () => {
           />
         }
       </div>
-      
 
       {activeIndex === 0 &&
         <CartOrder 
@@ -80,7 +71,6 @@ const Orders10 = () => {
         />
 
       }
-
       {standingBlacklist.indexOf(user.locNick) === -1 && activeIndex === 1 && 
         <StandingOrder 
           user={user}
