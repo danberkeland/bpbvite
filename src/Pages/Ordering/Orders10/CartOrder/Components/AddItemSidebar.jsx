@@ -8,14 +8,12 @@ import { InputNumber } from "primereact/inputnumber"
 import { useProductDataWithLocationCustomization } from "../../../../../data/productData"
 
 import { getWorkingDate, getWorkingDateTime } from "../../../../../functions/dateAndTime"
-import dynamicSort from "../../../../../functions/dynamicSort"
+//import dynamicSort from "../../../../../functions/dynamicSort"
 import { DateTime } from "luxon"
 
 import gqlFetcher from "../../../../../data/fetchers"
 import { createTemplateProd, deleteTemplateProd } from "../../../../../customGraphQL/mutations/locationMutations"
 import { useLocationDetails } from "../../../../../data/locationData"
-
-
 
 export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartItems, cartItemChanges, setCartItemChanges, user}) => {
   const [selectedProduct, setSelectedProduct] = useState(null)
@@ -26,6 +24,10 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
 
   const orderSubmitDate = getWorkingDateTime('NOW')
   const selectedProductMaxQty = getMaxQty(user, selectedProduct, delivDate, cartItems)
+
+  const delivDateString = DateTime
+    .fromJSDate(delivDate, {zone: 'America/Los_Angeles'})
+    .toLocaleString({ weekday: 'short', month: 'short', day: 'numeric' })  
   
   const handleAddProduct = () => {
     let _cartItemChanges = [...cartItemChanges]
@@ -34,17 +36,8 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
     )
     let newItem
     
-    // if (oldItem && oldItem.orderType === "C") {
-    //   // case: update qty on an existing cart order
-    //   newItem = { ...oldItem, qty: selectedQty }
-    //   _cartItemChanges = [...cartItemChanges]
-    //     .map(item => item.product.prodNick === selectedProduct.prodNick ? newItem : item)
-    //     .sort((a, b) => {
-    //       if (a.product.prodName < b.product.prodName) return -1
-    //       if (a.product.prodName > b.product.prodName) return 1
-    //       return 0
-    //     })
     if (oldItem) {
+      // case: update qty on an existing cart order
       _cartItemChanges = cartItemChanges.map(item => 
         item.product.prodNick === selectedProduct.prodNick
           ? { ...item, qty: selectedQty}
@@ -90,7 +83,6 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
 
     const displayText = wrap(option.prodName, 25)
 
-    //const [isFav, setIsFav] = useState(!!option.templateProd)
     const icon = !!option.templateProd ? "pi pi-star-fill" : "pi pi-star"
 
     return(
@@ -143,7 +135,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
         setSelectedQty(null)
       }}  
       blockScroll={true}
-      icons={() => <div>Add a product</div>}
+      icons={() => <div>Adding for {delivDateString}</div>}
       position="top"
       style={{height: "200px"}}
     >

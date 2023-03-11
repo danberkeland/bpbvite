@@ -1,28 +1,25 @@
-import React from "react"
+import React, {useState} from "react"
 
-import { DataTable } from "primereact/datatable"
-import { Column } from "primereact/column"
-import { InputNumber } from "primereact/inputnumber"
 import { Button } from "primereact/button"
+import { Column } from "primereact/column"
+import { DataTable } from "primereact/datatable"
+// import { InputNumber } from "primereact/inputnumber"
 // import { Tag } from "primereact/tag"
 // import { Sidebar } from "primereact/sidebar"
-import { Tooltip } from "primereact/tooltip"
+// import { Tooltip } from "primereact/tooltip"
 
 import { AddItemSidebar } from "./AddItemSidebar"
 
 import { getWorkingDate, getWorkingDateTime } from "../../../../../functions/dateAndTime"
 import { useLocationDetails } from "../../../../../data/locationData"
-import { useState } from "react"
 import TimeAgo from "timeago-react"
 import { InputText } from "primereact/inputtext"
 
 export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick, delivDate, user }) => {
   const { altLeadTimes } = useLocationDetails(locNick, !!locNick)
   const [rollbackQty, setRollbackQty] = useState(null)
-  
-  const [showSidebar, setShowSidebar] = useState(false)
-
   const [showDetails, setShowDetails] = useState(false)
+  const [showSidebar, setShowSidebar] = useState(false)
 
   const isDelivDate = delivDate.getTime() === getWorkingDateTime('NOW').toMillis()
   const isPastDeliv = delivDate < getWorkingDateTime('NOW')
