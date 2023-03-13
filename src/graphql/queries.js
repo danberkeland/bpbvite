@@ -6118,6 +6118,124 @@ export const orderByLocByDelivDate = /* GraphQL */ `
     }
   }
 `;
+export const orderByDelivDate = /* GraphQL */ `
+  query OrderByDelivDate(
+    $delivDate: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelOrderFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    orderByDelivDate(
+      delivDate: $delivDate
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        Type
+        id
+        qty
+        qtyUpdatedOn
+        sameDayMaxQty
+        prodNick
+        product {
+          Type
+          prodName
+          prodNick
+          packGroup
+          packSize
+          doughNick
+          freezerThaw
+          packGroupOrder
+          shapeDay
+          shapeNick
+          bakeDay
+          bakeNick
+          guarantee
+          transferStage
+          readyTime
+          bakedWhere
+          wholePrice
+          retailPrice
+          isRetail
+          retailName
+          retailDescrip
+          isWhole
+          isEOD
+          weight
+          descrip
+          picURL
+          squareID
+          forBake
+          bakeExtra
+          batchSize
+          defaultInclude
+          leadTime
+          qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
+          createdAt
+          updatedAt
+          inventoryProductId
+        }
+        locNick
+        location {
+          Type
+          locNick
+          locName
+          zoneNick
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          firstName
+          lastName
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          isActive
+          createdAt
+          updatedAt
+          locationCreditAppId
+        }
+        ItemNote
+        SO
+        isWhole
+        delivDate
+        rate
+        route
+        isLate
+        createdOn
+        updatedOn
+        updatedBy
+        ttl
+      }
+      nextToken
+    }
+  }
+`;
 export const standingByLocByStartDate = /* GraphQL */ `
   query StandingByLocByStartDate(
     $locNick: String!
@@ -6246,6 +6364,236 @@ export const standingByLocByEndDate = /* GraphQL */ `
     standingByLocByEndDate(
       locNick: $locNick
       endDate: $endDate
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        locNick
+        location {
+          Type
+          locNick
+          locName
+          zoneNick
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          firstName
+          lastName
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          isActive
+          createdAt
+          updatedAt
+          locationCreditAppId
+        }
+        isWhole
+        isStand
+        dayOfWeek
+        route
+        prodNick
+        product {
+          Type
+          prodName
+          prodNick
+          packGroup
+          packSize
+          doughNick
+          freezerThaw
+          packGroupOrder
+          shapeDay
+          shapeNick
+          bakeDay
+          bakeNick
+          guarantee
+          transferStage
+          readyTime
+          bakedWhere
+          wholePrice
+          retailPrice
+          isRetail
+          retailName
+          retailDescrip
+          isWhole
+          isEOD
+          weight
+          descrip
+          picURL
+          squareID
+          forBake
+          bakeExtra
+          batchSize
+          defaultInclude
+          leadTime
+          qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
+          createdAt
+          updatedAt
+          inventoryProductId
+        }
+        qty
+        ItemNote
+        startDate
+        endDate
+        createdAt
+        updatedAt
+        updatedBy
+      }
+      nextToken
+    }
+  }
+`;
+export const standingByLocByDayOfWeek = /* GraphQL */ `
+  query StandingByLocByDayOfWeek(
+    $locNick: String!
+    $dayOfWeek: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelStandingFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    standingByLocByDayOfWeek(
+      locNick: $locNick
+      dayOfWeek: $dayOfWeek
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        locNick
+        location {
+          Type
+          locNick
+          locName
+          zoneNick
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          firstName
+          lastName
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          isActive
+          createdAt
+          updatedAt
+          locationCreditAppId
+        }
+        isWhole
+        isStand
+        dayOfWeek
+        route
+        prodNick
+        product {
+          Type
+          prodName
+          prodNick
+          packGroup
+          packSize
+          doughNick
+          freezerThaw
+          packGroupOrder
+          shapeDay
+          shapeNick
+          bakeDay
+          bakeNick
+          guarantee
+          transferStage
+          readyTime
+          bakedWhere
+          wholePrice
+          retailPrice
+          isRetail
+          retailName
+          retailDescrip
+          isWhole
+          isEOD
+          weight
+          descrip
+          picURL
+          squareID
+          forBake
+          bakeExtra
+          batchSize
+          defaultInclude
+          leadTime
+          qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
+          createdAt
+          updatedAt
+          inventoryProductId
+        }
+        qty
+        ItemNote
+        startDate
+        endDate
+        createdAt
+        updatedAt
+        updatedBy
+      }
+      nextToken
+    }
+  }
+`;
+export const standingByDayOfWeek = /* GraphQL */ `
+  query StandingByDayOfWeek(
+    $dayOfWeek: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelStandingFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    standingByDayOfWeek(
+      dayOfWeek: $dayOfWeek
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
