@@ -187,6 +187,7 @@ export const useProductDataWithLocationCustomization = (locNick) => {
     }).map(item => {
       let favorite = templateProds.find(i => i.prodNick === item.prodNick)
       return { ...item, templateProd: (favorite ? favorite.id : null)}
+
     }).sort(
       dynamicSort("prodName")
 
@@ -213,14 +214,6 @@ export const useProductDataWithLocationCustomization = (locNick) => {
   })
 
 }
-
-
-
-
-
-// consider calling the revalidate functions above after 
-// performing one or a batch of mutations below.
-
 
 /*************
  * MUTATIONS *

@@ -228,7 +228,7 @@ export const StandingOrder = ({ user, locNick }) => {
             }}
             />
           <Column 
-            header={() => <Button label="Add" onClick={() => setShowAddItem(true)} style={{width: "60px"}}/>}
+            header={() => <Button label="Add" onClick={() => setShowAddItem(true)} style={{width: "62px"}}/>}
             style={{width: "80px"}}
             field="qty" 
             body={rowData => {
@@ -264,7 +264,7 @@ export const StandingOrder = ({ user, locNick }) => {
             return (
               <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                 <span>Product</span>
-                <Button style={{width: "60px"}} label="Add" onClick={() => setShowAddItem(true)}/>
+                <Button style={{width: "62px"}} label="Add" onClick={() => setShowAddItem(true)}/>
               </div>
             )
           }}

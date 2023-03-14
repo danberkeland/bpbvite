@@ -1678,6 +1678,15 @@ export const onCreateProduct = /* GraphQL */ `
       defaultInclude
       leadTime
       qbID
+      currentStock
+      freezerClosing
+      freezerCount
+      freezerNorth
+      freezerNorthClosing
+      freezerNorthFlag
+      prepreshaped
+      preshaped
+      updatePreDate
       retailLoc {
         items {
           id
@@ -1823,6 +1832,15 @@ export const onCreateProduct = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -1871,6 +1889,15 @@ export const onCreateProduct = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -1949,6 +1976,15 @@ export const onUpdateProduct = /* GraphQL */ `
       defaultInclude
       leadTime
       qbID
+      currentStock
+      freezerClosing
+      freezerCount
+      freezerNorth
+      freezerNorthClosing
+      freezerNorthFlag
+      prepreshaped
+      preshaped
+      updatePreDate
       retailLoc {
         items {
           id
@@ -2094,6 +2130,15 @@ export const onUpdateProduct = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -2142,6 +2187,15 @@ export const onUpdateProduct = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -2220,6 +2274,15 @@ export const onDeleteProduct = /* GraphQL */ `
       defaultInclude
       leadTime
       qbID
+      currentStock
+      freezerClosing
+      freezerCount
+      freezerNorth
+      freezerNorthClosing
+      freezerNorthFlag
+      prepreshaped
+      preshaped
+      updatePreDate
       retailLoc {
         items {
           id
@@ -2365,6 +2428,15 @@ export const onDeleteProduct = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -2413,6 +2485,15 @@ export const onDeleteProduct = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -2582,6 +2663,15 @@ export const onCreateRetailProdLoc = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -2705,6 +2795,15 @@ export const onUpdateRetailProdLoc = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -2828,6 +2927,15 @@ export const onDeleteRetailProdLoc = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -2948,6 +3056,15 @@ export const onCreateOrder = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -3167,6 +3284,15 @@ export const onUpdateOrder = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -3386,6 +3512,15 @@ export const onDeleteOrder = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -3706,6 +3841,15 @@ export const onCreateStanding = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -3921,6 +4065,15 @@ export const onUpdateStanding = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -4136,6 +4289,15 @@ export const onDeleteStanding = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -4852,6 +5014,15 @@ export const onCreateInventory = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -4940,6 +5111,15 @@ export const onUpdateInventory = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -5028,6 +5208,15 @@ export const onDeleteInventory = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -5272,6 +5461,15 @@ export const onCreateProductVendor = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -5390,6 +5588,15 @@ export const onUpdateProductVendor = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -5508,6 +5715,15 @@ export const onDeleteProductVendor = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -5661,6 +5877,15 @@ export const onCreateEODCount = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -5770,6 +5995,15 @@ export const onUpdateEODCount = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -5879,6 +6113,15 @@ export const onDeleteEODCount = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -5990,6 +6233,15 @@ export const onCreateActualSetOut = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -6099,6 +6351,15 @@ export const onUpdateActualSetOut = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -6208,6 +6469,15 @@ export const onDeleteActualSetOut = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -6746,6 +7016,15 @@ export const onCreateTemplateProd = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -6954,6 +7233,15 @@ export const onUpdateTemplateProd = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -7162,6 +7450,15 @@ export const onDeleteTemplateProd = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -7371,6 +7668,15 @@ export const onCreateProdsNotAllowed = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -7580,6 +7886,15 @@ export const onUpdateProdsNotAllowed = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -7789,6 +8104,15 @@ export const onDeleteProdsNotAllowed = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -7896,6 +8220,15 @@ export const onCreateProductDepend = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -7992,6 +8325,15 @@ export const onCreateProductDepend = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -8099,6 +8441,15 @@ export const onUpdateProductDepend = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -8195,6 +8546,15 @@ export const onUpdateProductDepend = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -8302,6 +8662,15 @@ export const onDeleteProductDepend = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -8398,6 +8767,15 @@ export const onDeleteProductDepend = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -9207,6 +9585,15 @@ export const onCreateAltPricing = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -9416,6 +9803,15 @@ export const onUpdateAltPricing = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -9625,6 +10021,15 @@ export const onDeleteAltPricing = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -9834,6 +10239,15 @@ export const onCreateAltLeadTime = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -10043,6 +10457,15 @@ export const onUpdateAltLeadTime = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -10252,6 +10675,15 @@ export const onDeleteAltLeadTime = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }

@@ -20,8 +20,6 @@ export const CartOrder = ({ user, locNick }) => {
   const isLoading = useSettingsStore((state) => state.isLoading)
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
-  // const [isLoading, setIsLoading] = useState(false)
-
   // cart::admin state
   const [isWhole, ] = useState(true) // for possible future extension to retail orders
   
