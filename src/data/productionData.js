@@ -45,12 +45,12 @@ export const useProductionDataByDate = (delivDateJS, shouldFetch) => {
     // console.log("data:", data)
     if (!data) return undefined
 
-    // for easy lookup, these arrays will be transformed into dictionaries
-    // keyed on their "----Nick" primary index.
+    // for easy lookup, these arrays will be transformed into 
+    // dictionaries keyed on their "----Nick" primary index.
     let locations = Object.fromEntries(data.data.listLocations.items.map(L => [L.locNick, L]))
     let products = Object.fromEntries(data.data.listProducts.items.map(P => [P.prodNick, P]))
-    let routes = Object.fromEntries(data.data.listRoutes.items
-      .map(route => {
+    let routes = Object.fromEntries(
+      data.data.listRoutes.items.map(route => {
         let { RouteArrive, RouteDepart, RouteSched, ...otherAtts } = route
         return ({
           ...otherAtts,
@@ -75,8 +75,8 @@ export const useProductionDataByDate = (delivDateJS, shouldFetch) => {
 
     // console.log("locations", locations)
     // console.log("products", products)
-    // console.log("routes", routes)
-    // console.log("zoneRoutes", zoneRoutes)
+    console.log("routes", routes)
+    console.log("zoneRoutes", zoneRoutes)
     // console.log("cartOrders", cartOrders)
     // console.log("standingOrders", standingOrders)
     // console.log("holdingOrders", holdingOrders)
@@ -206,12 +206,18 @@ const determineRouteStatus = (location, product, route, allRoutes, dayOfWeek) =>
         || testRouteEndTime > location.latestFinalDeliv
       )
 
+    let failureReasons = []
+    if (!productBakeLocations.includes(testRouteDepartLocation)) failureReasons.push("product not baked at start hub")
+    if (testRouteArriveLocation !== routeDepartLocation) failureReasons.push("transit route doesn't end at deliv route start")
+    if (!(testRouteEndTime < routeStartTime || testRouteEndTime > location.latestFinalDeliv)) failureReasons.push("transit route ends after deliv route starts AND before locations latest final time")
+
     transitRoutes = transitRoutes.concat({
       routeNick: testRoute.routeNick,
       depart: testRouteDepartLocation,
       arrive: testRouteArriveLocation,
       EndTime: testRouteEndTime,
-      isValid: testRouteIsValidTransitRoute
+      isValid: testRouteIsValidTransitRoute,
+      testFailures: failureReasons
     })
 
     if (testRouteIsValidTransitRoute) {
