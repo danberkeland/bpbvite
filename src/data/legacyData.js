@@ -14,11 +14,14 @@ import * as legacyQueries from "../customGraphQL/queries/legacyQueries"
  * 
  * Those functions are housed in legacyDataFunctions.js
  */
+
+const LIMIT = 5000
+
 export const useLegacyFormatDatabase = () => {
 
   const query = legacyQueries.getLegacyDatabase
   const variables = {
-    limit: 5000
+    limit: LIMIT
   }
 
   const { data, errors } = useSWR(
@@ -30,19 +33,19 @@ export const useLegacyFormatDatabase = () => {
   const transformData = () => {
     if (!data) return undefined
 
+    for (let table of Object.keys(data.data)) {
+      if (data.data[table].items.length >= LIMIT) {
+        console.log(`warning: ${table} has reached query limit of ${LIMIT}.`)
+      }
+    }
+
     const products = mapProductsToLegacy(data.data.listProducts.items)
     const customers = mapLocationsToLegacy(data.data.listLocations.items)
     const routes = mapRoutesToLegacy(data.data.listRoutes.items)
     const standing = mapStandingItemsToLegacy(data.data.listStandings.items)
     const orders = mapOrdersToLegacy(data.data.listOrders.items)
 
-    return ([
-      products,
-      customers,
-      routes,
-      standing,
-      orders
-    ])
+    return ([products, customers, routes, standing, orders])
   }
 
   const _data = useMemo(transformData, [data])
