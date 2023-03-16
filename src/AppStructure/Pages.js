@@ -97,9 +97,15 @@ const itemsAuth1 = itemsAuth2b.concat([
   {
     label: "Logistics",
     icon: "pi pi-fw pi-map",
-    command: () => {
-      window.location = "/Logistics";
-    },
+    items: [
+      {
+        label: "By Route (Legacy)",
+        icon: "pi pi-fw pi-home",
+        command: () => {
+          window.location = "/Logistics/ByRoute";
+        },
+      },
+    ],
   },
   {
     label: "EOD Counts",

@@ -13,6 +13,7 @@ import Settings from "../Pages/Settings/Settings";
 import Billing from "../Pages/Billing/Billing";
 import EODCounts from "../Pages/EODCounts/EODCounts";
 import Logistics from "../Pages/Logistics/Logistics";
+import ByRoute from "../Pages/Logistics/ByRoute/ByRoute";
 import Locations from "../Pages/Locations/Locations";
 import ManageCustomers from "../Pages/Settings/ManageCustomers/ManageCustomers";
 import ManageTraining from "../Pages/Settings/ManageTraining/ManageTraining";
@@ -44,6 +45,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             <Route path="/Billing" element={<Billing />} />
             <Route path="/EODCounts" element={<EODCounts />} />
             <Route path="/Logistics" element={<Logistics />} />
+            <Route path="/Logistics/ByRoute" element={<ByRoute />} />
             <Route path="/Locations" element={<Locations />} />
             <Route
               path="/Settings/ManageCustomers"
