@@ -43,6 +43,7 @@ function ByRoute() {
 
   useEffect(() => {
     gatherProdGridInfo(database);
+    console.log('database', database)
   }, [delivDate, database]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const gatherProdGridInfo = (data) => {

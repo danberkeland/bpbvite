@@ -113,6 +113,7 @@ const RouteGrid = ({ route, orderList, altPricing, database, delivDate }) => {
   const dynamicColumns = columns.map((col, i) => {
     return (
       <Column
+        key={col.field+col.header+i}
         npmkey={col.field}
         field={col.field}
         header={col.header}
@@ -121,7 +122,8 @@ const RouteGrid = ({ route, orderList, altPricing, database, delivDate }) => {
     );
   });
 
-  const exportColumns = columns.map((col) => ({
+  const exportColumns = columns.map((col,i) => ({
+    key: col.header+col.field+i,
     title: col.header,
     dataKey: col.field,
   }));
@@ -296,7 +298,8 @@ const RouteGrid = ({ route, orderList, altPricing, database, delivDate }) => {
 
         columns = createRouteGridColumns(listOfProducts);
       }
-      columns = columns.map((col) => ({
+      columns = columns.map((col, ind) => ({
+        key: col.header+col.field+ind,
         title: col.header,
         dataKey: col.field,
       }));

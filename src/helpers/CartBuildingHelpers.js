@@ -44,13 +44,14 @@ export const buildCartList = (chosen, delivDate, orders) => {
 
 export const buildStandList = (chosen, delivDate, standing, route, ponote) => {
   let filteredStanding = clonedeep(standing);
+  console.log('filteredStanding', filteredStanding)
   let builtStandList = [];
   builtStandList = filteredStanding.filter((stand) =>
     stand["custName"].match(wildcardRegExp(`${chosen}`))
   );
 
   builtStandList = builtStandList.filter((stand) => stand.isStand === true);
-
+  console.log('builtStandList', builtStandList)
   let convertedStandList = convertStandListtoStandArray(
     builtStandList,
     delivDate,

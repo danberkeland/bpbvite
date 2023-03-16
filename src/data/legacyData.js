@@ -18,7 +18,7 @@ export const useLegacyFormatDatabase = () => {
 
   const query = legacyQueries.getLegacyDatabase
   const variables = {
-    limit: 2000
+    limit: 5000
   }
 
   const { data, errors } = useSWR(
@@ -146,7 +146,7 @@ const mapOrdersToLegacy = (orders) => orders.map(order => {
 // weekday qty attribute more than once.
 
 const mapStandingItemsToLegacy = (standingItems) => {
-  
+
   let init = {
     items: {},
     duplicates: []

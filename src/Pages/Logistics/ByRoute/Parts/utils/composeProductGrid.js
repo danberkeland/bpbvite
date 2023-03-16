@@ -85,7 +85,7 @@ const addRoutes = (delivDate, prodGrid, database) => {
 export default class ComposeProductGrid {
   returnProdGrid = (database, delivDate) => {
     let prodGrid = this.getProdGrid(database, delivDate);
-   
+    console.log('"Got here"')
     // [freshProds, shelfProds] = handleFrenchConundrum(freshProds, shelfProds);
 
     return {
@@ -96,6 +96,7 @@ export default class ComposeProductGrid {
   getProdGrid(database, delivDate) {
     const [products, customers, routes, standing, orders] = database;
     let prodGrid = getFullOrders(delivDate, database);
+    console.log('prodGrid', prodGrid)
    
     prodGrid = zerosDelivFilter(prodGrid, delivDate, database);
     
