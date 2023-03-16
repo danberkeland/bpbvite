@@ -3,9 +3,13 @@ import React, { useEffect, useState, useContext } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import ToolBar from "./BPBNBaker1Parts/Toolbar";
+import ToolBar from "../Production/BPBNBaker1Parts/Toolbar"
 
-import { convertDatetoBPBDate, todayPlus } from "../../helpers/dateTimeHelpers";
+import {
+  convertDatetoBPBDate,
+  todayPlus,
+} from "../../functions/legacyFunctions/helpers/dateTimeHelpers";
+import { useLegacyFormatDatabase } from "../../data/legacyData";
 
 import ComposeWhatToBake from "./Utils/composeWhatToBake";
 
@@ -61,7 +65,7 @@ let yes =
 
 //for push7
 
-const doobieStuffx = [
+const doobieStuff = [
   {
     Prod: "Doobie Buns",
     Bucket: "YES",
@@ -76,7 +80,7 @@ const doobieStuffx = [
   },
 ];
 
-const doobieStuff = [
+const doobieStuffx = [
   {
     Prod: "Doobie Buns",
     Bucket: "YES",
@@ -106,6 +110,8 @@ function BPBNBaker1() {
 
   const [width, setWidth] = useState(window.innerWidth);
   const breakpoint = 620;
+
+  const { data: database } = useLegacyFormatDatabase();
 
   useEffect(() => {
     window.addEventListener("resize", () => setWidth(window.innerWidth));
@@ -138,96 +144,15 @@ function BPBNBaker1() {
   ]);
 
   useEffect(() => {
-    
-    // Compose database as below with delivDates for chosen delvDate and next day, 
-    // and packGroup of "rustic breads" or "retail".
-    // and where: ["Carlton"]
-
-
-    // getOrderList(delivDate)
-    // getOrderList(delivDate+1)
-    // concat
-    // attach route info
-
-    let database = [
-      {
-        delivDate: "2023-03-10",
-        locNick: "Novo",
-        forBake: "Baguette",
-        qty: 10,
-        packSize: 1,
-        preshaped: 150,
-        routeStart: 8.5,
-        routeDepart: "Prado",
-        routeArrive: "Prado",
-        zone: "Downtown SLO",
-        packGroup: "rustic breads",
-        where: ["Carlton"],
-      },
-      {
-        delivDate: "2023-03-10",
-        locNick: "slonat",
-        forBake: "Baguette",
-        qty: 15,
-        packSize: 1,
-        preshaped: 150,
-        routeStart: 8.5,
-        routeDepart: "Prado",
-        routeArrive: "Prado",
-        zone: "Downtown SLO",
-        packGroup: "retail",
-        where: ["Carlton"],
-      },
-      {
-        delivDate: "2023-03-10",
-        locNick: "thill",
-        forBake: "Baguette",
-        qty: 20,
-        packSize: 1,
-        preshaped: 150,
-        routeStart: 6.5,
-        routeDepart: "Carlton",
-        routeArrive: "Carlton",
-        zone: "Paso",
-        packGroup: "rustic breads",
-        where: ["Carlton"],
-      },
-      {
-        delivDate: "2023-03-11",
-        locNick: "lucys",
-        forBake: "Baguette",
-        qty: 4,
-        packSize: 1,
-        preshaped: 150,
-        routeStart: 6.5,
-        routeDepart: "Prado",
-        routeArrive: "Prado",
-        zone: "Avila",
-        packGroup: "rustic breads",
-        where: ["Carlton"],
-      },
-      {
-        delivDate: "2023-03-11",
-        locNick: "lucys",
-        forBake: "Real Lev",
-        qty: 6,
-        packSize: 1,
-        preshaped: 6,
-        routeStart: 6.5,
-        routeDepart: "Prado",
-        routeArrive: "Prado",
-        zone: "Avila",
-        packGroup: "rustic breads",
-        where: ["Carlton"],
-      },
-    ];
-
     gatherWhatToMakeInfo(database);
-  }, [delivDate]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [delivDate, database]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const gatherWhatToMakeInfo = (database) => {
-    let whatToMakeData = compose.returnWhatToMakeBreakDown(delivDate, database);
+    try{
+      let whatToMakeData = compose.returnWhatToMakeBreakDown(delivDate, database);
     setWhatToMake(whatToMakeData.whatToMake);
+    } catch {}
+    
   };
 
   const handlePrint = () => {

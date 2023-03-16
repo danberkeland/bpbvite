@@ -279,6 +279,15 @@ type Product @model {
   defaultInclude: Boolean
   leadTime: Int
   qbID: String
+  currentStock: Int
+  freezerClosing: Int
+  freezerCount: Int
+  freezerNorth: Int
+  freezerNorthClosing: Int
+  freezerNorthFlag: String
+  prepreshaped: Int
+  preshaped: Int
+  updatePreDate: String
   retailLoc: [RetailProdLoc] @hasMany(indexName: "byRetailProd", fields: ["prodNick"])
   standing: [Standing] @hasMany(indexName: "byProd", fields: ["prodNick"])
   orders: [Order] @hasMany(indexName: "byProd", fields: ["prodNick"])
@@ -330,7 +339,7 @@ type Order @model (timestamps: { createdAt: "createdOn", updatedAt: "updatedOn"}
   ItemNote: String
   SO: Int
   isWhole: Boolean
-  delivDate: String
+  delivDate: String @index(name: "byDelivDate", queryField: "orderByDelivDate")
   rate: Float
   route: String
   isLate: Int
@@ -345,10 +354,11 @@ type Standing @model {
   locNick: String! @index(name: "byLoc") 
     @index(name: "byLocByStartDate", sortKeyFields: ["startDate"], queryField: "standingByLocByStartDate")
     @index(name: "byLocByEndDate", sortKeyFields: ["endDate"], queryField: "standingByLocByEndDate")
+    @index(name: "byLocByDayOfWeek", sortKeyFields: ["dayOfWeek"], queryField: "standingByLocByDayOfWeek")
   location: Location @hasOne(fields: ["locNick"])
   isWhole: Boolean!
   isStand: Boolean!
-  dayOfWeek: String!
+  dayOfWeek: String! @index(name: "byDayOfWeek", queryField: "standingByDayOfWeek")
   route: String!
   prodNick: String! @index(name: "byProd")
   product: Product @hasOne(fields: ["prodNick"])

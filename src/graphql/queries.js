@@ -1011,6 +1011,15 @@ export const getProduct = /* GraphQL */ `
       defaultInclude
       leadTime
       qbID
+      currentStock
+      freezerClosing
+      freezerCount
+      freezerNorth
+      freezerNorthClosing
+      freezerNorthFlag
+      prepreshaped
+      preshaped
+      updatePreDate
       retailLoc {
         items {
           id
@@ -1156,6 +1165,15 @@ export const getProduct = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -1204,6 +1222,15 @@ export const getProduct = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -1292,6 +1319,15 @@ export const listProducts = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -1448,6 +1484,15 @@ export const getRetailProdLoc = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -1562,6 +1607,15 @@ export const listRetailProdLocs = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -1636,6 +1690,15 @@ export const getOrder = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -1848,6 +1911,15 @@ export const listOrders = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -2057,6 +2129,15 @@ export const getStanding = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -2197,6 +2278,15 @@ export const listStandings = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -2683,6 +2773,15 @@ export const getInventory = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -2968,6 +3067,15 @@ export const getProductVendor = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -3077,6 +3185,15 @@ export const listProductVendors = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -3174,6 +3291,15 @@ export const getEODCount = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -3284,6 +3410,15 @@ export const listEODCounts = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -3350,6 +3485,15 @@ export const getActualSetOut = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -3458,6 +3602,15 @@ export const listActualSetOuts = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -3832,6 +3985,15 @@ export const getTemplateProd = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -3963,6 +4125,15 @@ export const listTemplateProds = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -4127,6 +4298,15 @@ export const getProdsNotAllowed = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -4263,6 +4443,15 @@ export const listProdsNotAlloweds = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -4325,6 +4514,15 @@ export const getProductDepend = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -4421,6 +4619,15 @@ export const getProductDepend = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -4519,6 +4726,15 @@ export const listProductDepends = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -4558,6 +4774,15 @@ export const listProductDepends = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -5019,6 +5244,15 @@ export const getAltPricing = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -5151,6 +5385,15 @@ export const listAltPricings = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -5315,6 +5558,15 @@ export const getAltLeadTime = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -5447,6 +5699,15 @@ export const listAltLeadTimes = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -5675,6 +5936,15 @@ export const prodSortAZ = /* GraphQL */ `
         defaultInclude
         leadTime
         qbID
+        currentStock
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
         retailLoc {
           nextToken
         }
@@ -5786,6 +6056,133 @@ export const orderByLocByDelivDate = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
+          createdAt
+          updatedAt
+          inventoryProductId
+        }
+        locNick
+        location {
+          Type
+          locNick
+          locName
+          zoneNick
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          firstName
+          lastName
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          isActive
+          createdAt
+          updatedAt
+          locationCreditAppId
+        }
+        ItemNote
+        SO
+        isWhole
+        delivDate
+        rate
+        route
+        isLate
+        createdOn
+        updatedOn
+        updatedBy
+        ttl
+      }
+      nextToken
+    }
+  }
+`;
+export const orderByDelivDate = /* GraphQL */ `
+  query OrderByDelivDate(
+    $delivDate: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelOrderFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    orderByDelivDate(
+      delivDate: $delivDate
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        Type
+        id
+        qty
+        qtyUpdatedOn
+        sameDayMaxQty
+        prodNick
+        product {
+          Type
+          prodName
+          prodNick
+          packGroup
+          packSize
+          doughNick
+          freezerThaw
+          packGroupOrder
+          shapeDay
+          shapeNick
+          bakeDay
+          bakeNick
+          guarantee
+          transferStage
+          readyTime
+          bakedWhere
+          wholePrice
+          retailPrice
+          isRetail
+          retailName
+          retailDescrip
+          isWhole
+          isEOD
+          weight
+          descrip
+          picURL
+          squareID
+          forBake
+          bakeExtra
+          batchSize
+          defaultInclude
+          leadTime
+          qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -5930,6 +6327,15 @@ export const standingByLocByStartDate = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId
@@ -6037,6 +6443,245 @@ export const standingByLocByEndDate = /* GraphQL */ `
           defaultInclude
           leadTime
           qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
+          createdAt
+          updatedAt
+          inventoryProductId
+        }
+        qty
+        ItemNote
+        startDate
+        endDate
+        createdAt
+        updatedAt
+        updatedBy
+      }
+      nextToken
+    }
+  }
+`;
+export const standingByLocByDayOfWeek = /* GraphQL */ `
+  query StandingByLocByDayOfWeek(
+    $locNick: String!
+    $dayOfWeek: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelStandingFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    standingByLocByDayOfWeek(
+      locNick: $locNick
+      dayOfWeek: $dayOfWeek
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        locNick
+        location {
+          Type
+          locNick
+          locName
+          zoneNick
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          firstName
+          lastName
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          isActive
+          createdAt
+          updatedAt
+          locationCreditAppId
+        }
+        isWhole
+        isStand
+        dayOfWeek
+        route
+        prodNick
+        product {
+          Type
+          prodName
+          prodNick
+          packGroup
+          packSize
+          doughNick
+          freezerThaw
+          packGroupOrder
+          shapeDay
+          shapeNick
+          bakeDay
+          bakeNick
+          guarantee
+          transferStage
+          readyTime
+          bakedWhere
+          wholePrice
+          retailPrice
+          isRetail
+          retailName
+          retailDescrip
+          isWhole
+          isEOD
+          weight
+          descrip
+          picURL
+          squareID
+          forBake
+          bakeExtra
+          batchSize
+          defaultInclude
+          leadTime
+          qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
+          createdAt
+          updatedAt
+          inventoryProductId
+        }
+        qty
+        ItemNote
+        startDate
+        endDate
+        createdAt
+        updatedAt
+        updatedBy
+      }
+      nextToken
+    }
+  }
+`;
+export const standingByDayOfWeek = /* GraphQL */ `
+  query StandingByDayOfWeek(
+    $dayOfWeek: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelStandingFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    standingByDayOfWeek(
+      dayOfWeek: $dayOfWeek
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        locNick
+        location {
+          Type
+          locNick
+          locName
+          zoneNick
+          addr1
+          addr2
+          city
+          zip
+          email
+          phone
+          firstName
+          lastName
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          isActive
+          createdAt
+          updatedAt
+          locationCreditAppId
+        }
+        isWhole
+        isStand
+        dayOfWeek
+        route
+        prodNick
+        product {
+          Type
+          prodName
+          prodNick
+          packGroup
+          packSize
+          doughNick
+          freezerThaw
+          packGroupOrder
+          shapeDay
+          shapeNick
+          bakeDay
+          bakeNick
+          guarantee
+          transferStage
+          readyTime
+          bakedWhere
+          wholePrice
+          retailPrice
+          isRetail
+          retailName
+          retailDescrip
+          isWhole
+          isEOD
+          weight
+          descrip
+          picURL
+          squareID
+          forBake
+          bakeExtra
+          batchSize
+          defaultInclude
+          leadTime
+          qbID
+          currentStock
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
           createdAt
           updatedAt
           inventoryProductId

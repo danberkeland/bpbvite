@@ -1,7 +1,4 @@
-import {
-  todayPlus,
-  tomBasedOnDelivDate,
-} from "../../../helpers/dateTimeHelpers";
+import { todayPlus } from "../../../helpers/dateTimeHelpers";
 
 import { DayOneFilter, DayTwoFilter, getOrdersList, addUp } from "./utils";
 
@@ -9,8 +6,6 @@ let tomorrow = todayPlus()[1];
 
 export default class ComposeWhatToMake {
   returnWhatToMakeBreakDown = (delivDate, database, loc) => {
-    console.log("delivDate", delivDate);
-
     let whatToMake = this.returnWhatToMake(delivDate, database, loc);
 
     return {
@@ -19,24 +14,28 @@ export default class ComposeWhatToMake {
   };
 
   returnWhatToMake = (delivDate, database) => {
-    let whatToMakeList = database.filter((set) => set.delivDate === delivDate);
+    console.log('Made it here')
+    console.log('delivDate', delivDate)
+    console.log('database', database)
+    let whatToMakeList = getOrdersList(delivDate, database);
+    console.log('whatToMakeList', whatToMakeList)
     let whatToMakeToday = whatToMakeList.filter((set) => DayOneFilter(set));
+    console.log('whatToMakeToday', whatToMakeToday)
 
-    let whatToMakeTomList = database.filter(
-      (set) => set.delivDate === tomBasedOnDelivDate(delivDate)
-    );
+    let whatToMakeTomList = getOrdersList(tomorrow, database);
     let whatToMakeTomorrow = whatToMakeTomList.filter((set) =>
       DayTwoFilter(set)
     );
-
+   
     let MakeList = whatToMakeToday.concat(whatToMakeTomorrow);
-
+    console.log('MakeList', MakeList)
     let whatToMake = this.makeAddQty(MakeList);
 
     return whatToMake;
   };
 
   makeAddQty = (bakedTomorrow) => {
+   
     let makeList2 = Array.from(
       new Set(bakedTomorrow.map((prod) => prod.forBake))
     ).map((mk) => ({
@@ -105,6 +104,7 @@ export default class ComposeWhatToMake {
 
       make.qty = qtyAccToday;
     }
+
 
     //makeList2[0].qty -= 54
     return makeList2;
