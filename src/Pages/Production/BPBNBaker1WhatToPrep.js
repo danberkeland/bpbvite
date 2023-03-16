@@ -7,6 +7,8 @@ import { convertDatetoBPBDate, todayPlus } from "../../helpers/dateTimeHelpers";
 import ComposeWhatToPrep from "./Utils/composeWhatToPrep";
 
 import styled from "styled-components";
+import { useLegacyFormatDatabase } from "../../data/legacyData";
+import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
 const WholeBox = styled.div`
   display: flex;
@@ -30,7 +32,9 @@ function BPBNBaker1WhatToPrep({ whatToPrep, setWhatToPrep, deliv, doobieStuff })
 
   const [width, setWidth] = useState(window.innerWidth);
   const breakpoint = 620;
-
+  
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
+  const { data: database } = useLegacyFormatDatabase();
   
 
   useEffect(() => {
@@ -39,18 +43,30 @@ function BPBNBaker1WhatToPrep({ whatToPrep, setWhatToPrep, deliv, doobieStuff })
 
   let delivDate = deliv
 
-  /*
+
+
+  
   useEffect(() => {
-    promisedData(setIsLoading).then((database) =>
-      gatherWhatToPrepInfo(database)
-    );
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  */
+    gatherWhatToPrepInfo(database);
+  }, [delivDate, database]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const gatherWhatToPrepInfo = (database) => {
-    let whatToPrepData = compose.returnWhatToPrepBreakDown(delivDate, database);
-    setWhatToPrep(whatToPrepData.whatToPrep);
+    setIsLoading(true)
+    try{
+      let whatToPrepData = compose.returnWhatToPrepBreakDown(delivDate, database);
+      setWhatToPrep(whatToPrepData.whatToPrep);
+    setIsLoading(false)
+    } catch {}
+    
   };
+
+
+
+
+
+
+
+
 
   const innards = (
     <React.Fragment>

@@ -19,6 +19,7 @@ import BPBNBaker1WhatToPrep from "./BPBNBaker1WhatToPrep.js";
 import { ExportPastryPrepPdf } from "./BPBNBaker1Parts/ExportPastryPrepPdf";
 
 import styled from "styled-components";
+import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
 const WholeBox = styled.div`
   display: flex;
@@ -111,6 +112,7 @@ function BPBNBaker1() {
   const [width, setWidth] = useState(window.innerWidth);
   const breakpoint = 620;
 
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
   const { data: database } = useLegacyFormatDatabase();
 
   useEffect(() => {
@@ -148,9 +150,11 @@ function BPBNBaker1() {
   }, [delivDate, database]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const gatherWhatToMakeInfo = (database) => {
+    setIsLoading(true)
     try{
       let whatToMakeData = compose.returnWhatToMakeBreakDown(delivDate, database);
     setWhatToMake(whatToMakeData.whatToMake);
+    setIsLoading(false)
     } catch {}
     
   };

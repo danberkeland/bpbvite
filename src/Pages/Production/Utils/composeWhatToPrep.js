@@ -17,6 +17,7 @@ export default class ComposeWhatToMake {
 
   returnWhatToPrep = (delivDate, database) => {
     let whatToPrepList = getOrdersList(delivDate, database);
+    console.log('whatToPrepList', whatToPrepList)
     let tomorrow = tomBasedOnDelivDate(delivDate)
   
     let whatToPrepListTom = getOrdersList(tomorrow, database);

@@ -68,7 +68,7 @@ const itemsAuth2b = [
 
 const itemsAuth1 = itemsAuth2b.concat([
   {
-    label: "Production",
+    label: "Legacy Production",
     icon: "pi pi-fw pi-chart-bar",
     items: [
       {
@@ -83,6 +83,13 @@ const itemsAuth1 = itemsAuth2b.concat([
         icon: "pi pi-fw pi-home",
         command: () => {
           window.location = "/Production/BPBNBaker2";
+        },
+      },
+      {
+        label: "Test Production Grid",
+        icon: "pi pi-fw pi-home",
+        command: () => {
+          window.location = "/Production/Production";
         },
       },
     ],

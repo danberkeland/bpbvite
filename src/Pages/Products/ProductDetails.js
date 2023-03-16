@@ -28,7 +28,7 @@ function ProductDetails({ initialState }) {
     { label: "French", value: "french" },
     { label: "Baguette", value: "baguette" },
     { label: "Brioche", value: "brioche" },
-    { label: "Croissant", value: "croix" },
+    { label: "Croissant", value: "Croissant" },
     { label: "Levain", value: "lev" },
     { label: "Rustic Rye", value: "rusticRye" },
     { label: "Multigrain", value: "multi" },
