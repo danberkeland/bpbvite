@@ -58,6 +58,10 @@ const RouteGrid = ({ route, orderList, altPricing, database, delivDate }) => {
   const [columns, setColumns] = useState([]);
   const [data, setData] = useState([]);
 
+  useEffect(() => {
+    console.log('data', data)
+  },[data])
+
   
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
   

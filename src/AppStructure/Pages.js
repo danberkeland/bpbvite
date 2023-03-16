@@ -72,19 +72,47 @@ const itemsAuth1 = itemsAuth2b.concat([
     icon: "pi pi-fw pi-chart-bar",
     items: [
       {
-        label: "BPBN Baker 1",
+        label: "BPBN",
         icon: "pi pi-fw pi-home",
-        command: () => {
-          window.location = "/Production/BPBNBaker1";
-        },
+        items: [
+          {
+            label: "Baker 1",
+            icon: "pi pi-fw pi-home",
+            command: () => {
+              window.location = "/Production/BPBNBaker1";
+            },
+          },
+          {
+            label: "Baker 2",
+            icon: "pi pi-fw pi-home",
+            command: () => {
+              window.location = "/Production/BPBNBaker2";
+            },
+          },
+          {
+            label: "BPBN Setout",
+            icon: "pi pi-fw pi-home",
+            command: () => {
+              window.location = "/Production/BPBNSetout";
+            },
+          },
+          {
+            label: "Who Bake",
+            icon: "pi pi-fw pi-home",
+            command: () => {
+              window.location = "/Production/WhoBake";
+            },
+          },
+          {
+            label: "Who Shape",
+            icon: "pi pi-fw pi-home",
+            command: () => {
+              window.location = "/Production/WhoShape";
+            },
+          },
+        ],
       },
-      {
-        label: "BPBN Baker 2",
-        icon: "pi pi-fw pi-home",
-        command: () => {
-          window.location = "/Production/BPBNBaker2";
-        },
-      },
+      
       {
         label: "Test Production Grid",
         icon: "pi pi-fw pi-home",
