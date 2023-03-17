@@ -118,6 +118,15 @@ const productQuery = /* GraphQL */ `
       prepreshaped
       preshaped
       updatePreDate
+      whoCountedLast
+      updateFreezerDate
+      backporchbakerypre
+      backporchbakery
+      bpbextrapre
+      bpbextra
+      bpbssetoutpre
+      bpbssetout
+      sheetMake
       # retailLoc {}
       # standing {}
       # orders {}
@@ -135,24 +144,24 @@ const productQuery = /* GraphQL */ `
       # templateProd {}
       # prodsNotAllowed {}
       # productVendor {}
-      EODCount {
-        prodNick
-        shelfOrFreezer
-        startOrFinish
-        location
-        qty
-        whoCounted
+      # EODCount {
+      #   prodNick
+      #   shelfOrFreezer
+      #   startOrFinish
+      #   location
+      #   qty
+      #   whoCounted
+      #   # createdAt
+      #   # updatedAt
+      # }
+      # ActualSetOut {
+      #   prodNick
+      #   qty
+      #   location
+      #   whoSetOut
         # createdAt
         # updatedAt
-      }
-      ActualSetOut {
-        prodNick
-        qty
-        location
-        whoSetOut
-        # createdAt
-        # updatedAt
-      }
+      # }
       # altLeadTimeByLocation {}
       # createdAt
       # updatedAt

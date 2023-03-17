@@ -1721,6 +1721,7 @@ export const createProduct = /* GraphQL */ `
       leadTime
       qbID
       currentStock
+      whoCountedLast
       freezerClosing
       freezerCount
       freezerNorth
@@ -1729,6 +1730,14 @@ export const createProduct = /* GraphQL */ `
       prepreshaped
       preshaped
       updatePreDate
+      updateFreezerDate
+      backporchbakerypre
+      backporchbakery
+      bpbextrapre
+      bpbextra
+      bpbssetoutpre
+      bpbssetout
+      sheetMake
       retailLoc {
         items {
           id
@@ -1875,6 +1884,7 @@ export const createProduct = /* GraphQL */ `
           leadTime
           qbID
           currentStock
+          whoCountedLast
           freezerClosing
           freezerCount
           freezerNorth
@@ -1883,6 +1893,14 @@ export const createProduct = /* GraphQL */ `
           prepreshaped
           preshaped
           updatePreDate
+          updateFreezerDate
+          backporchbakerypre
+          backporchbakery
+          bpbextrapre
+          bpbextra
+          bpbssetoutpre
+          bpbssetout
+          sheetMake
           createdAt
           updatedAt
           inventoryProductId
@@ -1932,6 +1950,7 @@ export const createProduct = /* GraphQL */ `
           leadTime
           qbID
           currentStock
+          whoCountedLast
           freezerClosing
           freezerCount
           freezerNorth
@@ -1940,6 +1959,14 @@ export const createProduct = /* GraphQL */ `
           prepreshaped
           preshaped
           updatePreDate
+          updateFreezerDate
+          backporchbakerypre
+          backporchbakery
+          bpbextrapre
+          bpbextra
+          bpbssetoutpre
+          bpbssetout
+          sheetMake
           createdAt
           updatedAt
           inventoryProductId
@@ -2022,6 +2049,7 @@ export const updateProduct = /* GraphQL */ `
       leadTime
       qbID
       currentStock
+      whoCountedLast
       freezerClosing
       freezerCount
       freezerNorth
@@ -2030,6 +2058,14 @@ export const updateProduct = /* GraphQL */ `
       prepreshaped
       preshaped
       updatePreDate
+      updateFreezerDate
+      backporchbakerypre
+      backporchbakery
+      bpbextrapre
+      bpbextra
+      bpbssetoutpre
+      bpbssetout
+      sheetMake
       retailLoc {
         items {
           id
@@ -2176,6 +2212,7 @@ export const updateProduct = /* GraphQL */ `
           leadTime
           qbID
           currentStock
+          whoCountedLast
           freezerClosing
           freezerCount
           freezerNorth
@@ -2184,6 +2221,14 @@ export const updateProduct = /* GraphQL */ `
           prepreshaped
           preshaped
           updatePreDate
+          updateFreezerDate
+          backporchbakerypre
+          backporchbakery
+          bpbextrapre
+          bpbextra
+          bpbssetoutpre
+          bpbssetout
+          sheetMake
           createdAt
           updatedAt
           inventoryProductId
@@ -2233,6 +2278,7 @@ export const updateProduct = /* GraphQL */ `
           leadTime
           qbID
           currentStock
+          whoCountedLast
           freezerClosing
           freezerCount
           freezerNorth
@@ -2241,6 +2287,14 @@ export const updateProduct = /* GraphQL */ `
           prepreshaped
           preshaped
           updatePreDate
+          updateFreezerDate
+          backporchbakerypre
+          backporchbakery
+          bpbextrapre
+          bpbextra
+          bpbssetoutpre
+          bpbssetout
+          sheetMake
           createdAt
           updatedAt
           inventoryProductId
@@ -2323,6 +2377,7 @@ export const deleteProduct = /* GraphQL */ `
       leadTime
       qbID
       currentStock
+      whoCountedLast
       freezerClosing
       freezerCount
       freezerNorth
@@ -2331,6 +2386,14 @@ export const deleteProduct = /* GraphQL */ `
       prepreshaped
       preshaped
       updatePreDate
+      updateFreezerDate
+      backporchbakerypre
+      backporchbakery
+      bpbextrapre
+      bpbextra
+      bpbssetoutpre
+      bpbssetout
+      sheetMake
       retailLoc {
         items {
           id
@@ -2477,6 +2540,7 @@ export const deleteProduct = /* GraphQL */ `
           leadTime
           qbID
           currentStock
+          whoCountedLast
           freezerClosing
           freezerCount
           freezerNorth
@@ -2485,6 +2549,14 @@ export const deleteProduct = /* GraphQL */ `
           prepreshaped
           preshaped
           updatePreDate
+          updateFreezerDate
+          backporchbakerypre
+          backporchbakery
+          bpbextrapre
+          bpbextra
+          bpbssetoutpre
+          bpbssetout
+          sheetMake
           createdAt
           updatedAt
           inventoryProductId
@@ -2534,6 +2606,7 @@ export const deleteProduct = /* GraphQL */ `
           leadTime
           qbID
           currentStock
+          whoCountedLast
           freezerClosing
           freezerCount
           freezerNorth
@@ -2542,6 +2615,14 @@ export const deleteProduct = /* GraphQL */ `
           prepreshaped
           preshaped
           updatePreDate
+          updateFreezerDate
+          backporchbakerypre
+          backporchbakery
+          bpbextrapre
+          bpbextra
+          bpbssetoutpre
+          bpbssetout
+          sheetMake
           createdAt
           updatedAt
           inventoryProductId
@@ -2716,6 +2797,7 @@ export const createRetailProdLoc = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -2724,6 +2806,14 @@ export const createRetailProdLoc = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -2849,6 +2939,7 @@ export const updateRetailProdLoc = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -2857,6 +2948,14 @@ export const updateRetailProdLoc = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -2982,6 +3081,7 @@ export const deleteRetailProdLoc = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -2990,6 +3090,14 @@ export const deleteRetailProdLoc = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -3114,6 +3222,7 @@ export const createOrder = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -3122,6 +3231,14 @@ export const createOrder = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -3345,6 +3462,7 @@ export const updateOrder = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -3353,6 +3471,14 @@ export const updateOrder = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -3576,6 +3702,7 @@ export const deleteOrder = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -3584,6 +3711,14 @@ export const deleteOrder = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -3908,6 +4043,7 @@ export const createStanding = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -3916,6 +4052,14 @@ export const createStanding = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -4135,6 +4279,7 @@ export const updateStanding = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -4143,6 +4288,14 @@ export const updateStanding = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -4362,6 +4515,7 @@ export const deleteStanding = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -4370,6 +4524,14 @@ export const deleteStanding = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -5124,6 +5286,7 @@ export const createInventory = /* GraphQL */ `
           leadTime
           qbID
           currentStock
+          whoCountedLast
           freezerClosing
           freezerCount
           freezerNorth
@@ -5132,6 +5295,14 @@ export const createInventory = /* GraphQL */ `
           prepreshaped
           preshaped
           updatePreDate
+          updateFreezerDate
+          backporchbakerypre
+          backporchbakery
+          bpbextrapre
+          bpbextra
+          bpbssetoutpre
+          bpbssetout
+          sheetMake
           createdAt
           updatedAt
           inventoryProductId
@@ -5222,6 +5393,7 @@ export const updateInventory = /* GraphQL */ `
           leadTime
           qbID
           currentStock
+          whoCountedLast
           freezerClosing
           freezerCount
           freezerNorth
@@ -5230,6 +5402,14 @@ export const updateInventory = /* GraphQL */ `
           prepreshaped
           preshaped
           updatePreDate
+          updateFreezerDate
+          backporchbakerypre
+          backporchbakery
+          bpbextrapre
+          bpbextra
+          bpbssetoutpre
+          bpbssetout
+          sheetMake
           createdAt
           updatedAt
           inventoryProductId
@@ -5320,6 +5500,7 @@ export const deleteInventory = /* GraphQL */ `
           leadTime
           qbID
           currentStock
+          whoCountedLast
           freezerClosing
           freezerCount
           freezerNorth
@@ -5328,6 +5509,14 @@ export const deleteInventory = /* GraphQL */ `
           prepreshaped
           preshaped
           updatePreDate
+          updateFreezerDate
+          backporchbakerypre
+          backporchbakery
+          bpbextrapre
+          bpbextra
+          bpbssetoutpre
+          bpbssetout
+          sheetMake
           createdAt
           updatedAt
           inventoryProductId
@@ -5604,6 +5793,7 @@ export const createProductVendor = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -5612,6 +5802,14 @@ export const createProductVendor = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -5732,6 +5930,7 @@ export const updateProductVendor = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -5740,6 +5939,14 @@ export const updateProductVendor = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -5860,6 +6067,7 @@ export const deleteProductVendor = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -5868,6 +6076,14 @@ export const deleteProductVendor = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -6028,6 +6244,7 @@ export const createEODCount = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -6036,6 +6253,14 @@ export const createEODCount = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -6149,6 +6374,7 @@ export const updateEODCount = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -6157,6 +6383,14 @@ export const updateEODCount = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -6270,6 +6504,7 @@ export const deleteEODCount = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -6278,6 +6513,14 @@ export const deleteEODCount = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -6391,6 +6634,7 @@ export const createActualSetOut = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -6399,6 +6643,14 @@ export const createActualSetOut = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -6510,6 +6762,7 @@ export const updateActualSetOut = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -6518,6 +6771,14 @@ export const updateActualSetOut = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -6629,6 +6890,7 @@ export const deleteActualSetOut = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -6637,6 +6899,14 @@ export const deleteActualSetOut = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -7207,6 +7477,7 @@ export const createTemplateProd = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -7215,6 +7486,14 @@ export const createTemplateProd = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -7425,6 +7704,7 @@ export const updateTemplateProd = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -7433,6 +7713,14 @@ export const updateTemplateProd = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -7643,6 +7931,7 @@ export const deleteTemplateProd = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -7651,6 +7940,14 @@ export const deleteTemplateProd = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -7862,6 +8159,7 @@ export const createProdsNotAllowed = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -7870,6 +8168,14 @@ export const createProdsNotAllowed = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -8081,6 +8387,7 @@ export const updateProdsNotAllowed = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -8089,6 +8396,14 @@ export const updateProdsNotAllowed = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -8300,6 +8615,7 @@ export const deleteProdsNotAllowed = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -8308,6 +8624,14 @@ export const deleteProdsNotAllowed = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -8417,6 +8741,7 @@ export const createProductDepend = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -8425,6 +8750,14 @@ export const createProductDepend = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -8522,6 +8855,7 @@ export const createProductDepend = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -8530,6 +8864,14 @@ export const createProductDepend = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -8639,6 +8981,7 @@ export const updateProductDepend = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -8647,6 +8990,14 @@ export const updateProductDepend = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -8744,6 +9095,7 @@ export const updateProductDepend = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -8752,6 +9104,14 @@ export const updateProductDepend = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -8861,6 +9221,7 @@ export const deleteProductDepend = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -8869,6 +9230,14 @@ export const deleteProductDepend = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -8966,6 +9335,7 @@ export const deleteProductDepend = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -8974,6 +9344,14 @@ export const deleteProductDepend = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -9791,6 +10169,7 @@ export const createAltPricing = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -9799,6 +10178,14 @@ export const createAltPricing = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -10010,6 +10397,7 @@ export const updateAltPricing = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -10018,6 +10406,14 @@ export const updateAltPricing = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -10229,6 +10625,7 @@ export const deleteAltPricing = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -10237,6 +10634,14 @@ export const deleteAltPricing = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -10448,6 +10853,7 @@ export const createAltLeadTime = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -10456,6 +10862,14 @@ export const createAltLeadTime = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -10667,6 +11081,7 @@ export const updateAltLeadTime = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -10675,6 +11090,14 @@ export const updateAltLeadTime = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
@@ -10886,6 +11309,7 @@ export const deleteAltLeadTime = /* GraphQL */ `
         leadTime
         qbID
         currentStock
+        whoCountedLast
         freezerClosing
         freezerCount
         freezerNorth
@@ -10894,6 +11318,14 @@ export const deleteAltLeadTime = /* GraphQL */ `
         prepreshaped
         preshaped
         updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         retailLoc {
           nextToken
         }
