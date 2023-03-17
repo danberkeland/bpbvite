@@ -280,6 +280,7 @@ type Product @model {
   leadTime: Int
   qbID: String
   currentStock: Int
+  whoCountedLast: String
   freezerClosing: Int
   freezerCount: Int
   freezerNorth: Int
@@ -288,6 +289,14 @@ type Product @model {
   prepreshaped: Int
   preshaped: Int
   updatePreDate: String
+  updateFreezerDate: String
+  backporchbakerypre: Int
+  backporchbakery: Int
+  bpbextrapre: Int
+  bpbextra: Int
+  bpbssetoutpre: Int
+  bpbssetout: Int
+  sheetMake: Int
   retailLoc: [RetailProdLoc] @hasMany(indexName: "byRetailProd", fields: ["prodNick"])
   standing: [Standing] @hasMany(indexName: "byProd", fields: ["prodNick"])
   orders: [Order] @hasMany(indexName: "byProd", fields: ["prodNick"])
