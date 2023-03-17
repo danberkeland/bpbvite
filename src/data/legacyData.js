@@ -87,14 +87,13 @@ const mapLocationsToLegacy = (locations) => locations.map(location => {
 
 
 const mapProductsToLegacy = (products) => products.map(product => {
-  const { prodNick, doughNick, isEOD, EODCount, ActualSetOut, ...unchangedAttributes } = product
+  const { prodNick, doughNick, isEOD, ...unchangedAttributes } = product
   
   return ({
     ...unchangedAttributes,
     nickName: prodNick,
     doughType: doughNick,
-    eodCount: isEOD,
-    whoCountedLast: EODCount?.whoCounted || null
+    eodCount: isEOD
   })
 })
 

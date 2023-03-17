@@ -7,7 +7,6 @@ import { DataTable } from "primereact/datatable"
 import { useLegacyFormatDatabase } from "../../data/legacyData";
 
 import ComposeProductGrid from "../../functions/legacyFunctions/utils/composeProductGrid"
-import { DateTime } from "luxon";
 import { dateToYyyymmdd } from "../../functions/dateAndTime";
 
 const compose = new ComposeProductGrid()
@@ -27,7 +26,7 @@ function Production() {
       console.log("database:", database)
       console.log("prodGrid:", _prodGridData.prodGrid)
     }
-  }, [delivDate])
+  }, [database, delivDate])
 
   return(
     <div style={{padding: "1rem", marginBottom: "6rem"}}>
