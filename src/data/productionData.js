@@ -7,113 +7,102 @@ import dynamicSort from "../functions/dynamicSort"
 import getNestedObject from "../functions/getNestedObject"
 
 import gqlFetcher from "./fetchers"
-
 import * as queries from "../customGraphQL/queries/productionQueries"
+import * as queries2 from "../customGraphQL/queries/productionQueries2"
 
-import { dateToYyyymmdd, getWeekday } from "../functions/dateAndTime"
+import { dateToYyyymmdd, getWeekday, yyyymmddToWeekday } from "../functions/dateAndTime"
 
+// export const useProductionDataByDate = (delivDateJS, shouldFetch) => {
+//   const delivDate = dateToYyyymmdd(delivDateJS)
+//   const dayOfWeek = getWeekday(delivDateJS)
 
-const ddbRouteSchedMap = {
-  '1': 'Sun',
-  '2': 'Mon',
-  '3': 'Tue',
-  '4': 'Wed',
-  '5': 'Thu',
-  '6': 'Fri',
-  '7': 'Sat',
-}
+//   const query = queries.getProductionDataByDate
+//   const variables = {
+//     delivDate: delivDate,
+//     dayOfWeek: dayOfWeek,
+//     limit: 2000
+//   }
+//   console.log(variables)
 
-export const useProductionDataByDate = (delivDateJS, shouldFetch) => {
-  const delivDate = dateToYyyymmdd(delivDateJS)
-  const dayOfWeek = getWeekday(delivDateJS)
+//   const { data, errors } = useSWR(
+//     shouldFetch ? [query, variables] : null, 
+//     gqlFetcher, 
+//     defaultSwrOptions
+//   )
 
-  const query = queries.getProductionDataByDate
-  const variables = {
-    delivDate: delivDate,
-    dayOfWeek: dayOfWeek,
-    limit: 2000
-  }
-  console.log(variables)
+//   const transformData = () => {
+//     // console.log("data:", data)
+//     if (!data) return undefined
 
-  const { data, errors } = useSWR(
-    shouldFetch ? [query, variables] : null, 
-    gqlFetcher, 
-    defaultSwrOptions
-  )
+//     // for easy lookup, these arrays will be transformed into 
+//     // dictionaries keyed on their "----Nick" primary index.
+//     let locations = Object.fromEntries(data.data.listLocations.items.map(L => [L.locNick, L]))
+//     let products = Object.fromEntries(data.data.listProducts.items.map(P => [P.prodNick, P]))
+//     let routes = Object.fromEntries(
+//       data.data.listRoutes.items.map(route => {
+//         let { RouteArrive, RouteDepart, RouteSched, ...otherAtts } = route
+//         return ({
+//           ...otherAtts,
+//           routeArrive: RouteArrive,
+//           routeDepart: RouteDepart,
+//           routeSched: RouteSched.map(n => ddbRouteSchedMap[n])
+//         })
+//       })
+//       .sort(dynamicSort("routeStart"))
+//       .map(R => [R.routeNick, R])
+//     )
 
-  const transformData = () => {
-    // console.log("data:", data)
-    if (!data) return undefined
+//     let zoneRoutes = data.data.listZoneRoutes.items
+//     let cartOrders = data.data.orderByDelivDate.items
+//       .map(i => ({...i, type: i.isWhole ? 'CW' : 'CR'}))
+//     let standingOrders = data.data.standingByDayOfWeek.items
+//       .filter(i => i.isStand === true)
+//       .map(i => ({...i, type: i.isWhole ? 'SW' : 'SR'}))
+//     let holdingOrders = data.data.standingByDayOfWeek.items
+//       .filter(i => i.isStand === false)
+//       .map(i => ({...i, type: i.isWhole ? 'HW' : 'HR'}))
 
-    // for easy lookup, these arrays will be transformed into 
-    // dictionaries keyed on their "----Nick" primary index.
-    let locations = Object.fromEntries(data.data.listLocations.items.map(L => [L.locNick, L]))
-    let products = Object.fromEntries(data.data.listProducts.items.map(P => [P.prodNick, P]))
-    let routes = Object.fromEntries(
-      data.data.listRoutes.items.map(route => {
-        let { RouteArrive, RouteDepart, RouteSched, ...otherAtts } = route
-        return ({
-          ...otherAtts,
-          routeArrive: RouteArrive,
-          routeDepart: RouteDepart,
-          routeSched: RouteSched.map(n => ddbRouteSchedMap[n])
-        })
-      })
-      .sort(dynamicSort("routeStart"))
-      .map(R => [R.routeNick, R])
-    )
+//     // console.log("locations", locations)
+//     // console.log("products", products)
+//     console.log("routes", routes)
+//     console.log("zoneRoutes", zoneRoutes)
+//     // console.log("cartOrders", cartOrders)
+//     // console.log("standingOrders", standingOrders)
+//     // console.log("holdingOrders", holdingOrders)
 
-    let zoneRoutes = data.data.listZoneRoutes.items
-    let cartOrders = data.data.orderByDelivDate.items
-      .map(i => ({...i, type: i.isWhole ? 'CW' : 'CR'}))
-    let standingOrders = data.data.standingByDayOfWeek.items
-      .filter(i => i.isStand === true)
-      .map(i => ({...i, type: i.isWhole ? 'SW' : 'SR'}))
-    let holdingOrders = data.data.standingByDayOfWeek.items
-      .filter(i => i.isStand === false)
-      .map(i => ({...i, type: i.isWhole ? 'HW' : 'HR'}))
+//     const items = cartOrders.concat(standingOrders).concat(holdingOrders)
+//       .map(orderItem => ({
+//         ...orderItem,
+//         zoneRoutes: zoneRoutes.filter(zr => zr.zoneNick === locations[orderItem.locNick]["zoneNick"])
+//           .map(zr => ({
+//             routeNick: zr.routeNick,
+//             status: determineRouteStatus(
+//               locations[orderItem.locNick], 
+//               products[orderItem.prodNick], 
+//               routes[zr.routeNick], 
+//               routes, 
+//               dayOfWeek
+//             )
+//           }))
+//       }))
+//       .map(orderItem => ({
+//         ...orderItem,
+//         location: locations[orderItem.locNick],
+//         product: products[orderItem.prodNick]
+//       }))
 
-    // console.log("locations", locations)
-    // console.log("products", products)
-    console.log("routes", routes)
-    console.log("zoneRoutes", zoneRoutes)
-    // console.log("cartOrders", cartOrders)
-    // console.log("standingOrders", standingOrders)
-    // console.log("holdingOrders", holdingOrders)
+//     return items
+//   }
 
-    const items = cartOrders.concat(standingOrders).concat(holdingOrders)
-      .map(orderItem => ({
-        ...orderItem,
-        zoneRoutes: zoneRoutes.filter(zr => zr.zoneNick === locations[orderItem.locNick]["zoneNick"])
-          .map(zr => ({
-            routeNick: zr.routeNick,
-            status: determineRouteStatus(
-              locations[orderItem.locNick], 
-              products[orderItem.prodNick], 
-              routes[zr.routeNick], 
-              routes, 
-              dayOfWeek
-            )
-          }))
-      }))
-      .map(orderItem => ({
-        ...orderItem,
-        location: locations[orderItem.locNick],
-        product: products[orderItem.prodNick]
-      }))
+//   const _data = useMemo(transformData, [data, dayOfWeek])
+//   // console.log("_data:", _data)
 
-    return items
-  }
+//   return ({
+//     data: _data,
+//     errors: errors
+//   })
 
-  const _data = useMemo(transformData, [data, dayOfWeek])
-  // console.log("_data:", _data)
-
-  return ({
-    data: _data,
-    errors: errors
-  })
-
-}
+// }
 
 
 /**
@@ -242,3 +231,287 @@ const determineRouteStatus = (location, product, route, allRoutes, dayOfWeek) =>
 
   return statusItem
 }
+
+
+const LIMIT = 2000
+
+export const useRouteGrid = (delivDateJS, shouldFetch) => {
+  const delivDate = dateToYyyymmdd(delivDateJS)
+  const dayOfWeek = getWeekday(delivDateJS)
+
+  const query = queries2.getRouteGridData
+  const variables = {
+    delivDate: delivDate,
+    dayOfWeek: dayOfWeek,
+    limit: LIMIT
+  }
+  console.log(variables)
+
+  const { data, errors } = useSWR(
+    shouldFetch ? [query, variables] : null, 
+    gqlFetcher, 
+    defaultSwrOptions
+  )
+
+  console.log("data:", data)
+  console.log("errors:", errors)
+
+  const transformData = () => {
+    if (!data) return undefined
+
+    if (data.data.orderByDelivDate.items.length === LIMIT) console.log("Warning: cart order items has reached limit")
+    if (data.data.standingByDayOfWeek.items.length === LIMIT) console.log("Warning: standing order items has reached limit")
+    
+    let routes = Object.fromEntries(data.data.listRoutes.items.map(r => [r.routeNick, r]))
+    let cartOrdersByDate = data.data.orderByDelivDate.items
+    let standingOrdersByDay = data.data.standingByDayOfWeek.items
+      .filter(item => item.isStand)
+
+    let orders = combineOrdersByDate(cartOrdersByDate, standingOrdersByDay)
+      .filter(item => item.qty !== 0)
+      .map(orderItem => {
+        let fulfillmentOption = orderItem.route
+        let calculatedRouteNick = calculateRoute(
+          orderItem.product, 
+          orderItem.location, 
+          dayOfWeek,
+          fulfillmentOption, 
+          routes
+        )
+
+        return ({
+          ...orderItem,
+          routeNick: calculatedRouteNick
+        })
+      })
+    
+    return {
+      orders: orders,
+      routes: data.data.listRoutes.items
+    }
+  }
+
+  const transformedData = useMemo(transformData, [data])
+  //console.log(transformedData)
+
+  return ({
+    data: transformedData,
+    errors: errors
+  })
+}
+
+/**
+ * Assumes cart and standing orders are "cleaned" to the point where cart
+ * overrides can be applied on product/location match.
+ * 
+ * This means cart and standing datasets are for equivalent day/dates, and
+ * that standing orders do not contain holding order records.
+ */
+const combineOrdersByDate = (cartOrdersbyDate, standingOrdersbyDay) => {
+  // We forego the simple Object.fromEntries construction and build our objects by
+  // looping, allowing us to record any duplicate items, which could cause inaccurate 
+  // output.
+
+  // Current behavior keeps the first of any duplicate records with the other normal
+  // items. Any subsequent duplicates get recorded as a duplicate, but not along with
+  // the original item -- so we'll know it's a duplicate, but won't be able to easily
+  // see which record it's a duplicate of.
+  
+  const keyedStanding = { items: {}, duplicates: [] }
+  for (let item of standingOrdersbyDay) {
+    let dataKey = `${item.location.locNick}#${item.product.prodNick}`
+
+    if (dataKey in keyedStanding.items) {
+      keyedStanding.duplicates.push(item)
+    } else {
+      keyedStanding.items[dataKey] = item
+    }
+
+  }
+  
+  const keyedOrders = { items: {}, duplicates: [] }
+  for (let item of cartOrdersbyDate) {
+    let dataKey = `${item.location.locNick}#${item.product.prodNick}`
+
+    if (dataKey in keyedOrders.items) {
+      keyedOrders.duplicates.push(item)
+    } else {
+      keyedOrders.items[dataKey] = item
+    }
+
+  }
+
+  if (keyedStanding.duplicates.length) {
+    console.log("Duplicate standing orders:", keyedStanding.duplicates)
+  }
+  if (keyedOrders.duplicates.length) {
+    console.log("Duplicate cart orders:", keyedOrders.duplicates)
+  }
+
+  return Object.values({ ...keyedStanding.items, ...keyedOrders.items })
+
+}
+
+const ddbRouteSchedMap = {
+  Sun: '1',
+  Mon: '2',
+  Tue: '3',
+  Wed: '4',
+  Thu: '5',
+  Fri: '6',
+  Sat: '7'
+}
+
+/**
+ * 
+ * @param {Object} product 
+ * @param {Object} location 
+ * @param {Object} dayOfWeek 
+ * @param {Object} allRoutes 
+ */
+const calculateRoute = (product, location, dayOfWeek, fulfillmentOption, allRoutes) => {
+
+  let dayNum = ddbRouteSchedMap[dayOfWeek]
+  let { prodNick, readyTime, bakedWhere } = product
+  let { locNick, latestFirstDeliv, latestFinalDeliv } = location
+  let zoneNick = location.zone.zoneNick
+  let zoneRoutes = location.zone.zoneRoute.items
+    .map(item => item.routeNick)
+    .sort((a,b) => {
+      return allRoutes[a].routeStart - allRoutes[b].routeStart
+    })
+  
+
+  let calculatedRoute = "NOT ASSIGNED"
+
+  // ***TESTS***
+
+  for (let routeNick of zoneRoutes) {
+    let {   
+      routeStart, 
+      routeTime, 
+      RouteDepart, 
+      //RouteArrive, 
+      RouteSched
+    } = allRoutes[routeNick]
+    let routeEndTime = Number(routeStart) + Number(routeTime)
+
+    let routeRunsThatDay = RouteSched.includes(dayNum)
+
+    let validTransitRouteExists = false
+    for (let testRoute of Object.values(allRoutes)) {
+      let testRouteEndTime = Number(testRoute.routeStart) + Number(testRoute.routeTime)
+
+      let testRouteIsValidTransitRoute = 
+        bakedWhere.includes(testRoute.RouteDepart)
+        && testRoute.RouteArrive === RouteDepart
+        && (
+          testRouteEndTime < Number(routeStart) 
+          || testRouteEndTime > latestFinalDeliv
+        )
+
+      if (testRouteIsValidTransitRoute) {
+        validTransitRouteExists = true
+        break
+      }
+    }
+    
+    let productCanBeInPlace = bakedWhere.includes("Mixed") 
+      || bakedWhere.includes(RouteDepart)
+      || validTransitRouteExists
+
+    let productReadyBeforeRouteStarts = readyTime < routeStart
+      || readyTime > latestFinalDeliv
+
+    let customerIsOpen = latestFirstDeliv < routeEndTime
+
+    const routeIsValid = routeRunsThatDay
+      && productCanBeInPlace
+      && productReadyBeforeRouteStarts
+      && customerIsOpen
+
+    if (routeIsValid) {
+      calculatedRoute = routeNick
+      break
+    }
+  }
+
+  // ***EXCEPTIONS & OVERRIDES***
+
+  if (locNick === 'lincoln' && (prodNick === 'fr' || prodNick === 'dtch')) {
+    calculatedRoute = "Lunch"
+  }
+
+  if (zoneNick === 'slopick' || zoneNick === 'Prado Retail') calculatedRoute = "Pick up SLO"
+  if (zoneNick === 'atownpick' || zoneNick === "Carlton Retail") calculatedRoute = "Pick up Carlton"
+  if (fulfillmentOption === 'slopick' || fulfillmentOption === 'Prado Retail') calculatedRoute = "Pick up SLO"
+  if (fulfillmentOption === 'atownpick' || fulfillmentOption === 'Carlton Retail') calculatedRoute = "Pick up Carlton"
+
+  return calculatedRoute
+}
+
+
+
+// const addRoutes = (delivDate, prodGrid, database) => {
+//   const [products, customers, routes, standing, orders] = database;
+//   sortZtoADataByIndex(routes, "routeStart");
+//       for (let rte of routes) {
+//         for (let grd of prodGrid) {
+//           let dayNum = calcDayNum(delivDate);
+          
+//           if (!rte["RouteServe"].includes(grd["zone"])) {
+//             continue;
+//           } else {
+//             if (
+//               routeRunsThatDay(rte, dayNum) &&
+//               productCanBeInPlace(grd, routes, customers, rte) &&
+//               productReadyBeforeRouteStarts(
+//                 products,
+//                 customers,
+//                 routes,
+//                 grd,
+//                 rte
+//               ) &&
+//               customerIsOpen(customers, grd, routes, rte)
+//             ) {
+//               grd.route = rte.routeName;
+//               grd.routeDepart = rte.RouteDepart;
+//               grd.routeStart = rte.routeStart;
+//               grd.routeServe = rte.RouteServe;
+//             }
+
+//             // Lincoln Market French exception
+//             if (
+//               (grd.prodName === "French Stick" || grd.prodName === "Dutch Stick")  && grd.custName === "Lincoln Market"
+//             ){
+//               grd.route = "Lunch";
+//               grd.routeDepart = "Prado";
+//               grd.routeStart = 9.5;
+//               grd.routeServe = ['Downtown SLO', 'Foothill'];
+//             }
+
+
+//           }
+//         }
+//       }
+//       for (let grd of prodGrid) {
+//         if (grd.zone==="slopick" || grd.zone==="Prado Retail"){
+//           grd.route="Pick up SLO"
+//         }
+//         if (grd.zone==="atownpick" || grd.zone==="Carlton Retail"){
+//           grd.route="Pick up Carlton"
+//         }
+//         if (grd.route==="slopick" || grd.route==="Prado Retail"){
+//           grd.route="Pick up SLO"
+//         }
+//         if (grd.route==="atownpick" || grd.route==="Carlton Retail"){
+//           grd.route="Pick up Carlton"
+//         }
+//         if (grd.route==="deliv"){
+//           grd.route="NOT ASSIGNED"
+//         }
+//       }
+
+ 
+//   return prodGrid
+// }
