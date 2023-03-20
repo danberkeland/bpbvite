@@ -123,3 +123,19 @@ export const getRouteGridData = /* GraphQL */ `
     ${routeQuery}
   }
 `;
+
+
+// The above query is inefficient because of redundant fetching.
+// When we get data through table connections, appsync performs
+// a getItem or Query in DDB to fetch the connected item or items.
+// In order to reduce redundancy it is much more efficient to
+// Set up our retrieval pattern "starting on the one side, and
+// connecting to the many side".  Starting with orders and working
+// back to locations, and zones as we've done before leads to
+// a lot of redundant fetching of the same locations and zones.
+// Instead we should start by zone, then connect to locations,
+// then connect to orders.
+
+// Orders will connect N-to-1 with products which will cause
+// redundant fetches.  
+

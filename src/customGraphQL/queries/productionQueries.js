@@ -615,6 +615,23 @@ const routeQuery = /* GraphQL */ `
     }
   }
 `;
+const zoneQuery = /* GraphQL */ ` 
+  listZones(
+    limit: $limit
+  ) {
+    items {
+      zoneNick
+      zoneName
+      description
+      zoneFee
+      # zoneRoute {
+      #   nextToken
+      # }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 const orderQuery = /* GraphQL */ `
   orderByDelivDate(
     delivDate: $delivDate
@@ -657,6 +674,9 @@ const zoneRouteQuery = /* GraphQL */ `
     }
 `;
 
+// *********************
+// * Depreciated Query *
+// *********************
 
 export const getProductionDataByDate = /* GraphQL */ `
   query GetProductionDataByDate(
@@ -670,5 +690,32 @@ export const getProductionDataByDate = /* GraphQL */ `
     ${zoneRouteQuery}
     ${orderQuery}
     ${standingQuery}
+  }
+`;
+
+// *******************
+// * Current Queries *
+// *******************
+
+export const getAllOrdersByDate = /* GraphQL */ `
+  query GetProductionDataByDate(
+    $delivDate: String!
+    $dayOfWeek: String!
+    $limit: Int
+  ) {
+    ${orderQuery}
+    ${standingQuery}
+  }
+`;
+
+export const getDimensionData = /* GraphQL */ `
+  query GetZonesAndRoutes(
+    $limit: Int
+  ) {
+    ${productQuery}
+    ${locationQuery}
+    ${zoneQuery}
+    ${routeQuery}
+    ${zoneRouteQuery}
   }
 `;
