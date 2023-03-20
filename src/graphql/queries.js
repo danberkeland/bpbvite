@@ -361,6 +361,94 @@ export const listZoneBackups = /* GraphQL */ `
     }
   }
 `;
+export const getDoughBackup = /* GraphQL */ `
+  query GetDoughBackup($id: ID!) {
+    getDoughBackup(id: $id) {
+      id
+      doughName
+      hydration
+      process
+      batchSize
+      mixedWhere
+      components
+      oldDough
+      isBakeReady
+      buffer
+      bucketSets
+      preBucketSets
+      updatePreBucket
+      saltInDry
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listDoughBackups = /* GraphQL */ `
+  query ListDoughBackups(
+    $filter: ModelDoughBackupFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listDoughBackups(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        doughName
+        hydration
+        process
+        batchSize
+        mixedWhere
+        components
+        oldDough
+        isBakeReady
+        buffer
+        bucketSets
+        preBucketSets
+        updatePreBucket
+        saltInDry
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getDoughComponentBackup = /* GraphQL */ `
+  query GetDoughComponentBackup($id: ID!) {
+    getDoughComponentBackup(id: $id) {
+      id
+      dough
+      componentType
+      componentName
+      amount
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listDoughComponentBackups = /* GraphQL */ `
+  query ListDoughComponentBackups(
+    $filter: ModelDoughComponentBackupFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listDoughComponentBackups(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        dough
+        componentType
+        componentName
+        amount
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getUser = /* GraphQL */ `
   query GetUser($sub: String!) {
     getUser(sub: $sub) {

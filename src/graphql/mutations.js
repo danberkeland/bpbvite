@@ -532,6 +532,129 @@ export const deleteZoneBackup = /* GraphQL */ `
     }
   }
 `;
+export const createDoughBackup = /* GraphQL */ `
+  mutation CreateDoughBackup(
+    $input: CreateDoughBackupInput!
+    $condition: ModelDoughBackupConditionInput
+  ) {
+    createDoughBackup(input: $input, condition: $condition) {
+      id
+      doughName
+      hydration
+      process
+      batchSize
+      mixedWhere
+      components
+      oldDough
+      isBakeReady
+      buffer
+      bucketSets
+      preBucketSets
+      updatePreBucket
+      saltInDry
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateDoughBackup = /* GraphQL */ `
+  mutation UpdateDoughBackup(
+    $input: UpdateDoughBackupInput!
+    $condition: ModelDoughBackupConditionInput
+  ) {
+    updateDoughBackup(input: $input, condition: $condition) {
+      id
+      doughName
+      hydration
+      process
+      batchSize
+      mixedWhere
+      components
+      oldDough
+      isBakeReady
+      buffer
+      bucketSets
+      preBucketSets
+      updatePreBucket
+      saltInDry
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteDoughBackup = /* GraphQL */ `
+  mutation DeleteDoughBackup(
+    $input: DeleteDoughBackupInput!
+    $condition: ModelDoughBackupConditionInput
+  ) {
+    deleteDoughBackup(input: $input, condition: $condition) {
+      id
+      doughName
+      hydration
+      process
+      batchSize
+      mixedWhere
+      components
+      oldDough
+      isBakeReady
+      buffer
+      bucketSets
+      preBucketSets
+      updatePreBucket
+      saltInDry
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createDoughComponentBackup = /* GraphQL */ `
+  mutation CreateDoughComponentBackup(
+    $input: CreateDoughComponentBackupInput!
+    $condition: ModelDoughComponentBackupConditionInput
+  ) {
+    createDoughComponentBackup(input: $input, condition: $condition) {
+      id
+      dough
+      componentType
+      componentName
+      amount
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateDoughComponentBackup = /* GraphQL */ `
+  mutation UpdateDoughComponentBackup(
+    $input: UpdateDoughComponentBackupInput!
+    $condition: ModelDoughComponentBackupConditionInput
+  ) {
+    updateDoughComponentBackup(input: $input, condition: $condition) {
+      id
+      dough
+      componentType
+      componentName
+      amount
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteDoughComponentBackup = /* GraphQL */ `
+  mutation DeleteDoughComponentBackup(
+    $input: DeleteDoughComponentBackupInput!
+    $condition: ModelDoughComponentBackupConditionInput
+  ) {
+    deleteDoughComponentBackup(input: $input, condition: $condition) {
+      id
+      dough
+      componentType
+      componentName
+      amount
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createUser = /* GraphQL */ `
   mutation CreateUser(
     $input: CreateUserInput!

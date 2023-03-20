@@ -514,6 +514,123 @@ export const onDeleteZoneBackup = /* GraphQL */ `
     }
   }
 `;
+export const onCreateDoughBackup = /* GraphQL */ `
+  subscription OnCreateDoughBackup(
+    $filter: ModelSubscriptionDoughBackupFilterInput
+  ) {
+    onCreateDoughBackup(filter: $filter) {
+      id
+      doughName
+      hydration
+      process
+      batchSize
+      mixedWhere
+      components
+      oldDough
+      isBakeReady
+      buffer
+      bucketSets
+      preBucketSets
+      updatePreBucket
+      saltInDry
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateDoughBackup = /* GraphQL */ `
+  subscription OnUpdateDoughBackup(
+    $filter: ModelSubscriptionDoughBackupFilterInput
+  ) {
+    onUpdateDoughBackup(filter: $filter) {
+      id
+      doughName
+      hydration
+      process
+      batchSize
+      mixedWhere
+      components
+      oldDough
+      isBakeReady
+      buffer
+      bucketSets
+      preBucketSets
+      updatePreBucket
+      saltInDry
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteDoughBackup = /* GraphQL */ `
+  subscription OnDeleteDoughBackup(
+    $filter: ModelSubscriptionDoughBackupFilterInput
+  ) {
+    onDeleteDoughBackup(filter: $filter) {
+      id
+      doughName
+      hydration
+      process
+      batchSize
+      mixedWhere
+      components
+      oldDough
+      isBakeReady
+      buffer
+      bucketSets
+      preBucketSets
+      updatePreBucket
+      saltInDry
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateDoughComponentBackup = /* GraphQL */ `
+  subscription OnCreateDoughComponentBackup(
+    $filter: ModelSubscriptionDoughComponentBackupFilterInput
+  ) {
+    onCreateDoughComponentBackup(filter: $filter) {
+      id
+      dough
+      componentType
+      componentName
+      amount
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateDoughComponentBackup = /* GraphQL */ `
+  subscription OnUpdateDoughComponentBackup(
+    $filter: ModelSubscriptionDoughComponentBackupFilterInput
+  ) {
+    onUpdateDoughComponentBackup(filter: $filter) {
+      id
+      dough
+      componentType
+      componentName
+      amount
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteDoughComponentBackup = /* GraphQL */ `
+  subscription OnDeleteDoughComponentBackup(
+    $filter: ModelSubscriptionDoughComponentBackupFilterInput
+  ) {
+    onDeleteDoughComponentBackup(filter: $filter) {
+      id
+      dough
+      componentType
+      componentName
+      amount
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateUser = /* GraphQL */ `
   subscription OnCreateUser($filter: ModelSubscriptionUserFilterInput) {
     onCreateUser(filter: $filter) {

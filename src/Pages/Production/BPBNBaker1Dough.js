@@ -15,13 +15,11 @@ import { binInfo } from "./BPBNBaker1Parts/BinInfo";
 import { panAmount } from "./BPBNBaker1Parts/PanAmount";
 import { bucketAmount } from "./BPBNBaker1Parts/BucketAmount";
 
-import { updateDough } from "../../graphql/mutations";
-
 import { BagMixesScreen } from "./BPBNBaker1Parts/BagMixesScreen";
-
-import { API, graphqlOperation } from "aws-amplify";
+import { useLegacyFormatDatabase } from "../../data/legacyData";
 
 import styled from "styled-components";
+import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
 const WholeBox = styled.div`
   display: flex;
@@ -74,13 +72,19 @@ function BPBNBaker1Dough({
     window.addEventListener("resize", () => setWidth(window.innerWidth));
   });
 
-  /*
+  
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
+  const { data: database } = useLegacyFormatDatabase();
+
+  
   useEffect(() => {
-    promisedData(setIsLoading).then((database) => gatherDoughInfo(database,deliv));
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  */
+    gatherDoughInfo(database, deliv);
+  }, [deliv, database]); // eslint-disable-line react-hooks/exhaustive-deps
+
 
   const gatherDoughInfo = (database,deliv) => {
+    setIsLoading(true)
+    try{
     console.log("deliv1",deliv)
     let doughData = compose.returnDoughBreakDown(database, "Carlton",deliv);
     setDoughs(doughData.Baker1Dough);
@@ -89,6 +93,8 @@ function BPBNBaker1Dough({
     setOliveCount(doughData.oliveCount);
     setBcCount(doughData.bcCount);
     setBagDoughTwoDays(doughData.bagDoughTwoDays);
+    setIsLoading(false)
+    } catch {}
   };
 
   useEffect(() => {
