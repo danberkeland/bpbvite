@@ -140,6 +140,34 @@ type ZoneBackup @model @auth(rules: [{allow: public}]) {
 }
 
 
+type DoughBackup @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  doughName: String
+  hydration: Float
+  process: [String]
+  batchSize: Float
+  mixedWhere: String
+  components: [String]
+  oldDough: Float
+  isBakeReady: Boolean
+  buffer: Float
+  bucketSets: Int
+  preBucketSets: Int
+  updatePreBucket: String
+  saltInDry: Boolean
+ 
+}
+
+type DoughComponentBackup @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  dough: String
+  componentType: String
+  componentName: String
+  amount: Float
+}
+
+
+
 
 
 # Base Schemas 123
@@ -278,6 +306,7 @@ type Product @model {
   batchSize: Int
   defaultInclude: Boolean
   leadTime: Int
+  daysAvailable: [Int]
   qbID: String
   currentStock: Int
   whoCountedLast: String

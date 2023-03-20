@@ -514,6 +514,123 @@ export const onDeleteZoneBackup = /* GraphQL */ `
     }
   }
 `;
+export const onCreateDoughBackup = /* GraphQL */ `
+  subscription OnCreateDoughBackup(
+    $filter: ModelSubscriptionDoughBackupFilterInput
+  ) {
+    onCreateDoughBackup(filter: $filter) {
+      id
+      doughName
+      hydration
+      process
+      batchSize
+      mixedWhere
+      components
+      oldDough
+      isBakeReady
+      buffer
+      bucketSets
+      preBucketSets
+      updatePreBucket
+      saltInDry
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateDoughBackup = /* GraphQL */ `
+  subscription OnUpdateDoughBackup(
+    $filter: ModelSubscriptionDoughBackupFilterInput
+  ) {
+    onUpdateDoughBackup(filter: $filter) {
+      id
+      doughName
+      hydration
+      process
+      batchSize
+      mixedWhere
+      components
+      oldDough
+      isBakeReady
+      buffer
+      bucketSets
+      preBucketSets
+      updatePreBucket
+      saltInDry
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteDoughBackup = /* GraphQL */ `
+  subscription OnDeleteDoughBackup(
+    $filter: ModelSubscriptionDoughBackupFilterInput
+  ) {
+    onDeleteDoughBackup(filter: $filter) {
+      id
+      doughName
+      hydration
+      process
+      batchSize
+      mixedWhere
+      components
+      oldDough
+      isBakeReady
+      buffer
+      bucketSets
+      preBucketSets
+      updatePreBucket
+      saltInDry
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateDoughComponentBackup = /* GraphQL */ `
+  subscription OnCreateDoughComponentBackup(
+    $filter: ModelSubscriptionDoughComponentBackupFilterInput
+  ) {
+    onCreateDoughComponentBackup(filter: $filter) {
+      id
+      dough
+      componentType
+      componentName
+      amount
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateDoughComponentBackup = /* GraphQL */ `
+  subscription OnUpdateDoughComponentBackup(
+    $filter: ModelSubscriptionDoughComponentBackupFilterInput
+  ) {
+    onUpdateDoughComponentBackup(filter: $filter) {
+      id
+      dough
+      componentType
+      componentName
+      amount
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteDoughComponentBackup = /* GraphQL */ `
+  subscription OnDeleteDoughComponentBackup(
+    $filter: ModelSubscriptionDoughComponentBackupFilterInput
+  ) {
+    onDeleteDoughComponentBackup(filter: $filter) {
+      id
+      dough
+      componentType
+      componentName
+      amount
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateUser = /* GraphQL */ `
   subscription OnCreateUser($filter: ModelSubscriptionUserFilterInput) {
     onCreateUser(filter: $filter) {
@@ -1677,6 +1794,7 @@ export const onCreateProduct = /* GraphQL */ `
       batchSize
       defaultInclude
       leadTime
+      daysAvailable
       qbID
       currentStock
       whoCountedLast
@@ -1840,6 +1958,7 @@ export const onCreateProduct = /* GraphQL */ `
           batchSize
           defaultInclude
           leadTime
+          daysAvailable
           qbID
           currentStock
           whoCountedLast
@@ -1906,6 +2025,7 @@ export const onCreateProduct = /* GraphQL */ `
           batchSize
           defaultInclude
           leadTime
+          daysAvailable
           qbID
           currentStock
           whoCountedLast
@@ -2002,6 +2122,7 @@ export const onUpdateProduct = /* GraphQL */ `
       batchSize
       defaultInclude
       leadTime
+      daysAvailable
       qbID
       currentStock
       whoCountedLast
@@ -2165,6 +2286,7 @@ export const onUpdateProduct = /* GraphQL */ `
           batchSize
           defaultInclude
           leadTime
+          daysAvailable
           qbID
           currentStock
           whoCountedLast
@@ -2231,6 +2353,7 @@ export const onUpdateProduct = /* GraphQL */ `
           batchSize
           defaultInclude
           leadTime
+          daysAvailable
           qbID
           currentStock
           whoCountedLast
@@ -2327,6 +2450,7 @@ export const onDeleteProduct = /* GraphQL */ `
       batchSize
       defaultInclude
       leadTime
+      daysAvailable
       qbID
       currentStock
       whoCountedLast
@@ -2490,6 +2614,7 @@ export const onDeleteProduct = /* GraphQL */ `
           batchSize
           defaultInclude
           leadTime
+          daysAvailable
           qbID
           currentStock
           whoCountedLast
@@ -2556,6 +2681,7 @@ export const onDeleteProduct = /* GraphQL */ `
           batchSize
           defaultInclude
           leadTime
+          daysAvailable
           qbID
           currentStock
           whoCountedLast
@@ -2743,6 +2869,7 @@ export const onCreateRetailProdLoc = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -2884,6 +3011,7 @@ export const onUpdateRetailProdLoc = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -3025,6 +3153,7 @@ export const onDeleteRetailProdLoc = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -3163,6 +3292,7 @@ export const onCreateOrder = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -3400,6 +3530,7 @@ export const onUpdateOrder = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -3637,6 +3768,7 @@ export const onDeleteOrder = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -3975,6 +4107,7 @@ export const onCreateStanding = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -4208,6 +4341,7 @@ export const onUpdateStanding = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -4441,6 +4575,7 @@ export const onDeleteStanding = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -5175,6 +5310,7 @@ export const onCreateInventory = /* GraphQL */ `
           batchSize
           defaultInclude
           leadTime
+          daysAvailable
           qbID
           currentStock
           whoCountedLast
@@ -5281,6 +5417,7 @@ export const onUpdateInventory = /* GraphQL */ `
           batchSize
           defaultInclude
           leadTime
+          daysAvailable
           qbID
           currentStock
           whoCountedLast
@@ -5387,6 +5524,7 @@ export const onDeleteInventory = /* GraphQL */ `
           batchSize
           defaultInclude
           leadTime
+          daysAvailable
           qbID
           currentStock
           whoCountedLast
@@ -5649,6 +5787,7 @@ export const onCreateProductVendor = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -5785,6 +5924,7 @@ export const onUpdateProductVendor = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -5921,6 +6061,7 @@ export const onDeleteProductVendor = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -6092,6 +6233,7 @@ export const onCreateEODCount = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -6219,6 +6361,7 @@ export const onUpdateEODCount = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -6346,6 +6489,7 @@ export const onDeleteEODCount = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -6475,6 +6619,7 @@ export const onCreateActualSetOut = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -6602,6 +6747,7 @@ export const onUpdateActualSetOut = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -6729,6 +6875,7 @@ export const onDeleteActualSetOut = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -7285,6 +7432,7 @@ export const onCreateTemplateProd = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -7511,6 +7659,7 @@ export const onUpdateTemplateProd = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -7737,6 +7886,7 @@ export const onDeleteTemplateProd = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -7964,6 +8114,7 @@ export const onCreateProdsNotAllowed = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -8191,6 +8342,7 @@ export const onUpdateProdsNotAllowed = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -8418,6 +8570,7 @@ export const onDeleteProdsNotAllowed = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -8543,6 +8696,7 @@ export const onCreateProductDepend = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -8657,6 +8811,7 @@ export const onCreateProductDepend = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -8782,6 +8937,7 @@ export const onUpdateProductDepend = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -8896,6 +9052,7 @@ export const onUpdateProductDepend = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -9021,6 +9178,7 @@ export const onDeleteProductDepend = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -9135,6 +9293,7 @@ export const onDeleteProductDepend = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -9962,6 +10121,7 @@ export const onCreateAltPricing = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -10189,6 +10349,7 @@ export const onUpdateAltPricing = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -10416,6 +10577,7 @@ export const onDeleteAltPricing = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -10643,6 +10805,7 @@ export const onCreateAltLeadTime = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -10870,6 +11033,7 @@ export const onUpdateAltLeadTime = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
@@ -11097,6 +11261,7 @@ export const onDeleteAltLeadTime = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
         currentStock
         whoCountedLast
