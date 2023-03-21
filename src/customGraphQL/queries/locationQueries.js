@@ -97,7 +97,9 @@ export const getLocationDetails = /* GraphQL */ `
         description
         zoneFee
         zoneRoute {
-          nextToken
+          items {
+            routeNick
+          }
         }
         createdAt
         updatedAt
