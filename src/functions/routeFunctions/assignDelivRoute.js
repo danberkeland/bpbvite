@@ -55,28 +55,40 @@
  * @returns 
  */
 export const assignDelivRoute = (order, locationZoneNick, dayOfWeek, routeMatrix) => {
-  let { locNick, prodNick, route:fulfillmentOption } = order
-  let zoneNick = locationZoneNick
-  let routeNick = ''
-  
-  // ***EXCEPTIONS & OVERRIDES***
-  if (locNick === 'lincoln' && (prodNick === 'fr' || prodNick === 'dtch')) {
-    routeNick = "Lunch"
-  }
-
-  if (zoneNick === 'slopick' || zoneNick === 'Prado Retail') routeNick = "Pick up SLO"
-  if (zoneNick === 'atownpick' || zoneNick === "Carlton Retail") routeNick = "Pick up Carlton"
-  if (fulfillmentOption === 'slopick' || fulfillmentOption === 'Prado Retail') routeNick = "Pick up SLO"
-  if (fulfillmentOption === 'atownpick' || fulfillmentOption === 'Carlton Retail') routeNick = "Pick up Carlton"
-
-  if (!routeNick) {
-    let key = `${locNick}#${prodNick}#${dayOfWeek}`
-    let validRoutes = routeMatrix[key]
-    routeNick = !!validRoutes ? validRoutes[0] : "NOT ASSIGNED"
-  }
+  const { locNick, prodNick, route:fulfillmentOption } = order
 
   return ({
     ...order,
-    routeNick: routeNick
+    routeNick: (calculateValidRoutes(locNick, prodNick, fulfillmentOption, locationZoneNick, dayOfWeek, routeMatrix))[0]
   })
+}
+
+
+/**
+ * Returns an array of valid routes. Return type is always an array.
+ *
+ * Returns the array ["NOT ASSIGNED"] if no routes are found.
+ */
+export const calculateValidRoutes = (locNick, prodNick, fulfillmentOption, locationZoneNick, dayOfWeek, routeMatrix) => {
+  let zoneNick = locationZoneNick
+  if (!locNick || !prodNick || !fulfillmentOption || !zoneNick) return [null]
+
+  let validRoutes = ''
+  
+  // ***EXCEPTIONS & OVERRIDES***
+  if (locNick === 'lincoln' && (prodNick === 'fr' || prodNick === 'dtch')) {
+    validRoutes = ["Lunch"]
+  }
+
+  if (zoneNick === 'slopick' || zoneNick === 'Prado Retail') validRoutes = ["Pick up SLO"]
+  if (zoneNick === 'atownpick' || zoneNick === "Carlton Retail") validRoutes = ["Pick up Carlton"]
+  if (fulfillmentOption === 'slopick' || fulfillmentOption === 'Prado Retail') validRoutes = ["Pick up SLO"]
+  if (fulfillmentOption === 'atownpick' || fulfillmentOption === 'Carlton Retail') validRoutes = ["Pick up Carlton"]
+
+  if (!validRoutes) {
+    let key = `${locNick}#${prodNick}#${dayOfWeek}`
+    validRoutes = routeMatrix[key] || ["NOT ASSIGNED"]
+  }
+
+  return validRoutes
 }
