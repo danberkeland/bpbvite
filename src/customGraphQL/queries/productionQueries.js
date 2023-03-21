@@ -610,8 +610,8 @@ const routeQuery = /* GraphQL */ `
       RouteDepart
       RouteArrive
       RouteSched
-      # printOrder
-      # driver
+      printOrder
+      driver
     }
   }
 `;
