@@ -18,9 +18,9 @@ export const listZonesFull = /* GraphQL */ `
         zoneName
         description
         zoneFee
-        zoneRoute {
-          nextToken
-        }
+        # zoneRoute {
+        #   nextToken
+        # }
         createdAt
         updatedAt
       }

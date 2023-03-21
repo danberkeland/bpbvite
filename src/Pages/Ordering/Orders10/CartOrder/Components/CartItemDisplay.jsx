@@ -15,7 +15,7 @@ import { useLocationDetails } from "../../../../../data/locationData"
 import TimeAgo from "timeago-react"
 import { InputText } from "primereact/inputtext"
 
-export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick, delivDate, user }) => {
+export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick, delivDate, user, fulfillmentOption }) => {
   const { altLeadTimes } = useLocationDetails(locNick, !!locNick)
   const [rollbackQty, setRollbackQty] = useState(null)
   const [showDetails, setShowDetails] = useState(false)
@@ -244,6 +244,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
         cartItemChanges={itemChanges}
         setCartItemChanges={setItemChanges}
         user={user}
+        fulfillmentOption={fulfillmentOption}
       />
     </div>
   )

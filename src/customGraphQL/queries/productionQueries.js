@@ -610,8 +610,25 @@ const routeQuery = /* GraphQL */ `
       RouteDepart
       RouteArrive
       RouteSched
-      # printOrder
-      # driver
+      printOrder
+      driver
+    }
+  }
+`;
+const zoneQuery = /* GraphQL */ ` 
+  listZones(
+    limit: $limit
+  ) {
+    items {
+      zoneNick
+      zoneName
+      description
+      zoneFee
+      # zoneRoute {
+      #   nextToken
+      # }
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -657,6 +674,9 @@ const zoneRouteQuery = /* GraphQL */ `
     }
 `;
 
+// *********************
+// * Depreciated Query *
+// *********************
 
 export const getProductionDataByDate = /* GraphQL */ `
   query GetProductionDataByDate(
@@ -670,5 +690,32 @@ export const getProductionDataByDate = /* GraphQL */ `
     ${zoneRouteQuery}
     ${orderQuery}
     ${standingQuery}
+  }
+`;
+
+// *******************
+// * Current Queries *
+// *******************
+
+export const getAllOrdersByDate = /* GraphQL */ `
+  query GetProductionDataByDate(
+    $delivDate: String!
+    $dayOfWeek: String!
+    $limit: Int
+  ) {
+    ${orderQuery}
+    ${standingQuery}
+  }
+`;
+
+export const getDimensionData = /* GraphQL */ `
+  query GetZonesAndRoutes(
+    $limit: Int
+  ) {
+    ${productQuery}
+    ${locationQuery}
+    ${zoneQuery}
+    ${routeQuery}
+    ${zoneRouteQuery}
   }
 `;
