@@ -7,8 +7,10 @@ import CustomerBilling from "../Pages/CustomerBilling/CustomerBilling";
 import CustomerSettings from "../Pages/CustomerSettings/CustomerSettings";
 import CustomerProducts from "../Pages/CustomerProducts/CustomerProducts";
 import BPBNBaker1 from "../Pages/Production/BPBNBaker1";
+import BPBNBaker2 from "../Pages/Production/BPBNBaker2";
 import WhoBake from "../Pages/Production/WhoBake";
 import WhoShape from "../Pages/Production/WhoShape";
+import BPBNSetout from "../Pages/Production/BPBNSetout";
 import Production from "../Pages/Production/Production";
 import Products from "../Pages/Products/Products";
 import Settings from "../Pages/Settings/Settings";
@@ -41,9 +43,11 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
         {authClass !== "customer" && (
           <React.Fragment>
             <Route path="/Production/BPBNBaker1" element={<BPBNBaker1 />} />
+            <Route path="/Production/BPBNBaker2" element={<BPBNBaker2 />} />
             <Route path="/Production/Production" element={<Production />} />
             <Route path="/Production/WhoBake" element={<WhoBake />} />
             <Route path="/Production/WhoShape" element={<WhoShape />} />
+            <Route path="/Production/BPBNSetout" element={<BPBNSetout />} />
             <Route path="/Products" element={<Products />} />
             <Route path="/Settings" element={<Settings />} />
             <Route path="/Billing" element={<Billing />} />

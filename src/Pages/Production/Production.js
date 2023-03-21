@@ -27,10 +27,10 @@ function Production() {
     ? makeGrid(routedOrderData, selectedRoute, dimensionData.locations)
     : null
 
-  console.log(tableData)
-  return(
-    <div style={{padding: "1rem", marginBottom: "6rem"}}>
-      <Calendar 
+  console.log(tableData);
+  return (
+    <div style={{ padding: "1rem", marginBottom: "6rem" }}>
+      <Calendar
         touchUI={true}
         value={calendarDate}
         onChange={(e) => setCalendarDate(e.value)}
@@ -41,42 +41,39 @@ function Production() {
         optionLabel="routeNick"
         optionValue="routeNick"
         value={selectedRoute}
-        onChange={e => setSelectedRoute(e.value)}
-
+        onChange={(e) => setSelectedRoute(e.value)}
       />
       <DataTable
-        value={tableData || []} 
+        value={tableData || []}
         responsiveLayout
-
         showGridlines
         size="small"
       >
-        <Column style={{width: "200px"}} header="Location" field="location.locName" />
-        {!!tableData && 
-          Object.keys(tableData[0].productQtys).map(prodNick => {
-            return(
-              <Column 
-                // headerStyle={{transform: "rotate(300deg)"}} 
-                bodyStyle={{textAlign: "center", width: "3rem"}}
+        <Column
+          style={{ width: "200px" }}
+          header="Location"
+          field="location.locName"
+        />
+        {!!tableData &&
+          Object.keys(tableData[0].productQtys).map((prodNick) => {
+            return (
+              <Column
+                // headerStyle={{transform: "rotate(300deg)"}}
+                bodyStyle={{ textAlign: "center", width: "3rem" }}
                 header={prodNick}
-                key={prodNick} 
-                field={`productQtys.${prodNick}`} 
+                key={prodNick}
+                field={`productQtys.${prodNick}`}
               />
-            )
-          }
-        )}
+            );
+          })}
       </DataTable>
     </div>
-  )
+  );
 
-// }
-
-  
+  // }
 }
 
 export default Production;
-
-
 
 const makeGrid = (orders, selectedRoute, locations) => {
   orders = orders.filter(item => item.routeNick === selectedRoute)
@@ -89,9 +86,9 @@ const makeGrid = (orders, selectedRoute, locations) => {
     // [...new Set(orders.map(order => order.location.locNick))]
     [...new Set(orders.map(order => order.locNick))]
 
-  console.log(locationList, productList)
+  console.log(locationList, productList);
 
-  let gridData = []
+  let gridData = [];
   for (let locNick of locationList) {
     // let ordersByLocation = orders.filter(item => item.location.locNick === locNick)
     let ordersByLocation = orders.filter(item => item.locNick === locNick)
@@ -109,9 +106,9 @@ const makeGrid = (orders, selectedRoute, locations) => {
   
   }
 
-  gridData.sort((a,b) => {
-    return a.location.delivOrder - b.location.delivOrder
-  })
-    
-  return gridData
-}
+  gridData.sort((a, b) => {
+    return a.location.delivOrder - b.location.delivOrder;
+  });
+
+  return gridData;
+};

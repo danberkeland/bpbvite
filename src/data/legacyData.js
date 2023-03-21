@@ -44,8 +44,10 @@ export const useLegacyFormatDatabase = () => {
     const routes = mapRoutesToLegacy(data.data.listRoutes.items)
     const standing = mapStandingItemsToLegacy(data.data.listStandings.items)
     const orders = mapOrdersToLegacy(data.data.listOrders.items)
+    const doughs = mapDoughsToLegacy(data.data.listDoughBackups.items)
+    const doughComponents = mapDoughComponentsToLegacy(data.data.listDoughComponentBackups.items)
 
-    return ([products, customers, routes, standing, orders])
+    return ([products, customers, routes, standing, orders, doughs, doughComponents])
   }
 
   const _data = useMemo(transformData, [data])
@@ -199,3 +201,25 @@ const mapStandingItemsToLegacy = (standingItems) => {
   return returnItems
 
 }
+
+
+const mapDoughsToLegacy = (doughs) => doughs.map(dough => {
+  const { ...unchangedAttributes } = dough
+  
+  return ({
+    ...unchangedAttributes,
+   
+  })
+  
+})
+
+
+const mapDoughComponentsToLegacy = (doughs) => doughs.map(dough => {
+  const { ...unchangedAttributes } = dough
+  
+  return ({
+    ...unchangedAttributes,
+   
+  })
+  
+})

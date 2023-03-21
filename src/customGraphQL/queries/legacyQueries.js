@@ -251,6 +251,47 @@ export const standingQuery = /* GraphQL */ `
     }
 `;
 
+export const doughBackupsQuery = /* GraphQL */ `
+
+  listDoughBackups(limit: $limit) {
+    items {
+      batchSize
+      bucketSets
+      buffer
+      components
+      createdAt
+      doughName
+      hydration
+      id
+      isBakeReady
+      mixedWhere
+      oldDough
+      preBucketSets
+      process
+      saltInDry
+      updatePreBucket
+      updatedAt
+    }
+  }
+
+`;
+
+export const doughComponentsBackupsQuery = /* GraphQL */ `
+
+listDoughComponentBackups(limit: $limit)  {
+  items {
+    amount
+    componentName
+    componentType
+    createdAt
+    dough
+    id
+    updatedAt
+  }
+}
+
+`;
+
 export const getLegacyDatabase = /* GraphQL */ `
   query GetLegacyDatabase(
     $limit: Int
@@ -260,5 +301,7 @@ export const getLegacyDatabase = /* GraphQL */ `
     ${routeQuery}
     ${orderQuery}
     ${standingQuery}
+    ${doughBackupsQuery}
+    ${doughComponentsBackupsQuery}
   }
 `;

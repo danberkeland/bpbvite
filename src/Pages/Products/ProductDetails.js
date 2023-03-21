@@ -25,16 +25,16 @@ function ProductDetails({ initialState }) {
   ];
 
   const doughs = [
-    { label: "French", value: "french" },
-    { label: "Baguette", value: "baguette" },
-    { label: "Brioche", value: "brioche" },
+    { label: "French", value: "French" },
+    { label: "Baguette", value: "Baguette" },
+    { label: "Brioche", value: "Brioche" },
     { label: "Croissant", value: "Croissant" },
-    { label: "Levain", value: "lev" },
-    { label: "Rustic Rye", value: "rusticRye" },
-    { label: "Multigrain", value: "multi" },
-    { label: "Ciabatta", value: "cia" },
+    { label: "Country", value: "Country" },
+    { label: "Rustic Rye", value: "Rye" },
+    { label: "Multigrain", value: "Multi" },
+    { label: "Ciabatta", value: "Ciabatta" },
     { label: "Doobie", value: "doobie" },
-    { label: "Siciliano", value: "siciliano" },
+    { label: "Pretzel Bun", value: "Pretzel Bun" },
   ];
 
   const bakedWhere = [
