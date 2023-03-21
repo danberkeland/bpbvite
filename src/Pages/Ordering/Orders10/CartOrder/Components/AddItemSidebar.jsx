@@ -7,27 +7,39 @@ import { InputNumber } from "primereact/inputnumber"
 
 import { useProductDataWithLocationCustomization } from "../../../../../data/productData"
 
-import { getWorkingDate, getWorkingDateTime } from "../../../../../functions/dateAndTime"
+import { getWeekday, getWorkingDate, getWorkingDateTime } from "../../../../../functions/dateAndTime"
 //import dynamicSort from "../../../../../functions/dynamicSort"
 import { DateTime } from "luxon"
 
 import gqlFetcher from "../../../../../data/fetchers"
 import { createTemplateProd, deleteTemplateProd } from "../../../../../customGraphQL/mutations/locationMutations"
 import { useLocationDetails } from "../../../../../data/locationData"
+import { useCalculateRoutesByLocation, useRouteAssignmentByLocation } from "../../../../../data/productionData"
 
-export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartItems, cartItemChanges, setCartItemChanges, user}) => {
+export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartItems, cartItemChanges, setCartItemChanges, user, fulfillmentOption}) => {
+  const dayOfWeek = getWeekday(delivDate)
+  const delivDateString = DateTime
+    .fromJSDate(delivDate, {zone: 'America/Los_Angeles'})
+    .toLocaleString({ weekday: 'short', month: 'short', day: 'numeric' })  
+
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [selectedQty, setSelectedQty] = useState(null)
 
   const { data:customProductData } = useProductDataWithLocationCustomization(locNick)
-  const { mutate:mutateLocation, isValidating:locationIsValidating } = useLocationDetails(locNick, !!locNick)
+  const { data:locationData, mutate:mutateLocation, isValidating:locationIsValidating } = useLocationDetails(locNick, !!locNick)
+
+  const calculateRoutes = useCalculateRoutesByLocation(locNick, !!locNick)
 
   const orderSubmitDate = getWorkingDateTime('NOW')
   const selectedProductMaxQty = getMaxQty(user, selectedProduct, delivDate, cartItems)
+  const selectedProductRoutes = selectedProduct ? (calculateRoutes(selectedProduct.prodNick, dayOfWeek, fulfillmentOption)) : []
+  const selectedProductIsDeliverable = fulfillmentOption === 'deliv' 
+  ? (selectedProductRoutes[0] !== 'NOT ASSIGNED' && selectedProductRoutes[0] !== null) 
+  : true
 
-  const delivDateString = DateTime
-    .fromJSDate(delivDate, {zone: 'America/Los_Angeles'})
-    .toLocaleString({ weekday: 'short', month: 'short', day: 'numeric' })  
+  const selectedProductInProduction = selectedProduct ? delivDate < orderSubmitDate.plus({ days: selectedProduct.leadTime }) : null
+  const selectedProductIsAvailable = selectedProduct ? testProductAvailability(selectedProduct.prodNick, dayOfWeek) : null
+  const errorFlag = selectedProductInProduction || !selectedProductIsAvailable || !selectedProductIsDeliverable
   
   const handleAddProduct = () => {
     let _cartItemChanges = [...cartItemChanges]
@@ -80,18 +92,31 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
     const cartMatchItem = cartItemChanges.find(i => i.product.prodNick === option.prodNick)
     const inCart = !!cartMatchItem && (cartMatchItem.qty > 0 || cartMatchItem.action === 'CREATE')
     const recentlyDeleted = cartMatchItem && getWorkingDate('NOW') === getWorkingDate(cartMatchItem.qtyUpdatedOn) && cartMatchItem.qty === 0
+    const delivRoutes = calculateRoutes(option.prodNick, dayOfWeek, fulfillmentOption)
+    const isDeliverable = fulfillmentOption === 'deliv' 
+      ? (delivRoutes[0] !== 'NOT ASSIGNED' && delivRoutes[0] !== null)
+      : true
+    const productIsAvailable = testProductAvailability(option.prodNick, dayOfWeek)
 
     const displayText = wrap(option.prodName, 25)
 
     const icon = !!option.templateProd ? "pi pi-star-fill" : "pi pi-star"
 
+    const errorFlag = inProduction || !productIsAvailable || !isDeliverable
+
     return(
       <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-        <div style={{width: "fit-content", fontWeight: (recentlyDeleted && inProduction) ? "bold" : "normal"}}>
-          {/* {option.prodName} */}
-          {displayText.split('\n').map((line, idx) => <div style={{fontWeight: !!option.templateProd ? "bold" : "normal"}} key={idx}>{line}</div>)}
-          {(recentlyDeleted && inProduction) && <div style={{fontSize: ".9rem"}}>Recently Deleted</div>}
-          {!(recentlyDeleted && inProduction) && <div style={{fontSize: ".9rem"}}>{inCart ? "In cart" : (option.leadTime + " day lead; " + (inProduction ? "earliest " + availableDate : 'available'))}</div>}
+        <div style={{width: "100%", display: "flex", justifyContent:"space-between", alignItems: "center"}}>
+          <div style={{width: "fit-content", fontWeight: (recentlyDeleted && inProduction) ? "bold" : "normal"}}>
+            {/* {option.prodName} */}
+            {displayText.split('\n').map((line, idx) => <div style={{fontWeight: !!option.templateProd ? "bold" : "normal"}} key={idx}>{line}</div>)}
+            {(recentlyDeleted && inProduction) && <div style={{fontSize: ".9rem"}}>Recently Deleted</div>}
+            {!(recentlyDeleted && inProduction) && <div style={{fontSize: ".9rem"}}>{inCart ? "In cart" : (option.leadTime + " day lead; " + (inProduction ? "earliest " + availableDate : 'available'))}</div>}
+            {/* {!isDeliverable && <div style={{fontSize: ".9rem"}}>{`Pick up Only for ${dayOfWeek}`}</div>} */}
+            {/* {!productIsAvailable && <div style={{fontSize: ".9rem"}}>{`Not available for ${dayOfWeek}`}</div>} */}
+            {/* <div style={{fontSize: ".9rem"}}>{JSON.stringify(delivRoutes)}</div> */}
+          </div>
+          <i className={errorFlag ? "pi pi-exclamation-circle" : ""} style={{fontSize: "1.25rem", marginRight: "1rem"}}/>
         </div>
         <Button icon={icon}
           onClick={e => {
@@ -145,6 +170,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
           optionLabel="prodName" optionValue="prodNick"
           value={selectedProduct ? selectedProduct.prodNick : null}
           filter filterBy={`prodName${user.locNick === 'backporch' ? ",prodNick" : ""}`} showFilterClear resetFilterOnHide
+          class
           itemTemplate={DropdownItemTemplate}
           valueTemplate={dropdownValueTemplate}
           onChange={e => {
@@ -155,7 +181,20 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
           placeholder={customProductData ? "Select Product" : "Loading..."}
         />
       </div>
-
+      {errorFlag && 
+        <div style={{width: "100%", display: "flex", justifyContent:"space-between", alignItems: "center"}}>
+          <div style={{width: "fit-content"}}>
+              {/* {option.prodName} */}
+              {/* {displayText.split('\n').map((line, idx) => <div style={{fontWeight: !!option.templateProd ? "bold" : "normal"}} key={idx}>{line}</div>)} */}
+              {/* {(recentlyDeleted && inProduction) && <div style={{fontSize: ".9rem"}}>Recently Deleted</div>} */}
+              {/* {!(recentlyDeleted && inProduction) && <div style={{fontSize: ".9rem"}}>{inCart ? "In cart" : (option.leadTime + " day lead; " + (inProduction ? "earliest " + availableDate : 'available'))}</div>} */}
+              {/* {!isDeliverable && <div style={{fontSize: ".9rem"}}>{`Pick up Only for ${dayOfWeek}`}</div>} */}
+              {/* {!productIsAvailable && <div style={{fontSize: ".9rem"}}>{`Not available for ${dayOfWeek}`}</div>} */}
+              {/* <div style={{fontSize: ".9rem"}}>{JSON.stringify(delivRoutes)}</div> */}
+          </div>
+          <i className={errorFlag ? "pi pi-exclamation-circle" : ""} style={{fontSize: "1.25rem", marginRight: "1rem"}}/>
+        </div>
+      }
       <div style={{display: "flex", justifyContent: "flex-end", gap: "1rem", padding: ".5rem"}}>
         <div className="p-fluid" style={{flex: "0 0 80px", maxWidth: "80px"}}>
           <InputNumber 
@@ -184,25 +223,27 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
               }
             }}
           />
-      </div>
-      <Button label="ADD"
-        // className="p-button-outlined p-button-rounded"
-        onClick={()=>{
-          console.log("product added")
-          handleAddProduct()
-          setVisible(false)
-          setSelectedProduct(null)
-          setSelectedQty(null)
-        }}
-        disabled={
-          !selectedProduct || 
-          selectedProductMaxQty === 0 ||
-          selectedQty === 0 ||
-          (user.authClass === 'bpbfull' && delivDate < getWorkingDateTime('NOW')) ||
-          (user.authClass !== 'bpbfull' && delivDate <= getWorkingDateTime('NOW'))
-        }
-        style={{flex: "0 0 100px"}}
-      />
+        </div>
+
+        <Button label="ADD"
+          // className="p-button-outlined p-button-rounded"
+          onClick={()=>{
+            console.log("product added")
+            handleAddProduct()
+            setVisible(false)
+            setSelectedProduct(null)
+            setSelectedQty(null)
+          }}
+          disabled={
+            !selectedProduct || 
+            selectedProductMaxQty === 0 ||
+            selectedQty === 0 ||
+            (user.authClass === 'bpbfull' && delivDate < getWorkingDateTime('NOW')) ||
+            (user.authClass !== 'bpbfull' && delivDate <= getWorkingDateTime('NOW')) ||
+            (!selectedProductIsDeliverable)
+          }
+          style={{flex: "0 0 100px"}}
+        />
       </div>
 
     </Sidebar>
@@ -289,4 +330,10 @@ const deleteFav = async (id) => {
 
   let response = await gqlFetcher(query, variables)
   console.log("deleteFav", response)
+}
+
+
+const testProductAvailability = (prodNick, dayOfWeek) => {
+  if (['ptz', 'unpz', 'pbz'].includes(prodNick) && ['Sun', 'Mon'].includes(dayOfWeek)) return false
+  return true  
 }

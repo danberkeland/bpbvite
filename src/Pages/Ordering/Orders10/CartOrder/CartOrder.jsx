@@ -311,6 +311,7 @@ export const CartOrder = ({ user, locNick }) => {
         locNick={locNick}
         delivDate={delivDate}
         user={user}
+        fulfillmentOption={headerChanges?.route}
       />
 
 
