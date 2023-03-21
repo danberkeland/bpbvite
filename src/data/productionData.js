@@ -9,7 +9,10 @@ import * as queries from "../customGraphQL/queries/productionQueries"
 import { dateToYyyymmdd, getWeekday } from "../functions/dateAndTime"
 import { combineOrdersByDate } from "../functions/orderingFunctions/combineOrders"
 import { buildRouteMatrix } from "../functions/routeFunctions/buildRouteMatrix"
-import { assignDelivRoute } from "../functions/routeFunctions/assignDelivRoute"
+import { assignDelivRoute, calculateValidRoutes } from "../functions/routeFunctions/assignDelivRoute"
+import { useLocationDetails } from "./locationData"
+import { useProductListFull } from "./productData"
+import { useRouteListFull } from "./routeData"
 
 const LIMIT = 2000
 
@@ -117,4 +120,49 @@ export const useLogisticsDataByDate = (delivDateJS, shouldFetch) => {
     dimensionData: dimensionData,
     routedOrderData: useMemo(transformData, [orderData, dimensionData])
   })
+}
+
+
+// ***Cache to enable general route assignment in the ordering page***
+
+/**
+ * Call up a delivery-route-calculating function for the given location.
+ * 
+ * The function takes a prodNick, dayOfWeek, and fulfillmentOption and
+ * produces a list of routeNicks, sorted by routeStart time.
+ * 
+ * If no valid route exists, the function returns the array ['NOT ASSIGNED'].
+ * 
+ * Function uses a memoized lookup table of fetched/cached data. If the function
+ * is not supplied with all arguments, or if the data has not been fetched, the
+ * function will return null.
+ */
+export const useCalculateRoutesByLocation = (locNick, shouldFetch) => {
+  const { data:locationData } = useLocationDetails(locNick, shouldFetch)
+  const { data:productData } = useProductListFull(shouldFetch)
+  const { data:routeData } = useRouteListFull(shouldFetch)
+
+  const transformData = () => {
+    if (!locationData || !productData || !routeData) return (() => null)
+
+    let zoneRoutes = locationData.zone.zoneRoute.items.map(zr => zr.routeNick)
+
+    const locationDict = { [locationData.locNick] : { ...locationData, zoneRoutes: [...zoneRoutes] } }
+    const productDict = Object.fromEntries(productData.map(p => [p.prodNick, p]))
+    const routeDict = Object.fromEntries(routeData.map(r => [r.routeNick, r]))
+    const routeMatrix = buildRouteMatrix(locationDict, productDict, routeDict)
+
+    return [routeMatrix, locationData.zoneNick]
+  }
+
+  const memo = useMemo(transformData, [locationData, productData, routeData])
+  const routeMatrix = memo ? memo[0] : undefined 
+  const locationZoneNick = memo ? memo[1] : undefined
+
+  const calculateRoute = (prodNick, dayOfWeek, fulfillmentOption) => 
+    calculateValidRoutes(locNick, prodNick, fulfillmentOption, locationZoneNick, dayOfWeek, routeMatrix)
+
+  // calculateValidRoutes({locNick: locNick, prodNick: prodNick, route: fulfillmentOption}, locationZoneNick, dayOfWeek, routeMatrix)
+  
+  return calculateRoute
 }
