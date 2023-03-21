@@ -306,6 +306,7 @@ type Product @model {
   batchSize: Int
   defaultInclude: Boolean
   leadTime: Int
+  daysAvailable: [Int]
   qbID: String
   currentStock: Int
   whoCountedLast: String
