@@ -32,7 +32,6 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
       const baseItem = itemBase.find(i => i.product.prodNick === item.product.prodNick)
 
       const validRoutes = calculateRoutes(item.product.prodNick, getWeekday(delivDate), fulfillmentOption)
-      console.log("route test:", locNick, item.product.prodNick, getWeekday(delivDate), fulfillmentOption)
       const leadTimeOverride = altLeadTimes?.find(
         (alt) => alt.prodNick === item.product.prodNick
         )
@@ -133,7 +132,6 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
             {rowData.orderType === 'S' &&
               <div style={{fontSize:".9rem"}}>-- standing order</div>
             }
-            {/* <div style={{paddingTop: ".5rem", fontSize:".9rem"}}>{`$${(rowData.rate).toFixed(2)}/ea, Subtotal: $${(rowData.rate * rowData.qty).toFixed(2)}`}</div> */}
           </>
         }
       </div>
@@ -143,22 +141,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
 
 
   const qtyColumnTemplate = (rowData) => {
-    // const baseItem = itemBase?.find(item => item.product.prodNick === prodNick)
-    // const leadTimeOverride = altLeadTimes?.find(
-    //   (item) => item.prodNick === rowData.product.prodNick
-    // )
-    // const leadTime = leadTimeOverride 
-    //   ? leadTimeOverride.altLeadTime 
-    //   : rowData.product.leadTime
-    // const inProduction = delivDate < getWorkingDateTime('NOW').plus({ days: leadTime })
-    // const sameDayUpdate = !!baseItem && getWorkingDate('NOW') === getWorkingDate(baseItem.qtyUpdatedOn)
-    
-    // const maxQty = !inProduction || user.authClass === 'bpbfull' ? 999
-    //   : !baseItem ? 0        
-    //   : !sameDayUpdate ? baseItem.qty
-    //   : baseItem.sameDayMaxQty
-    // const qtyChanged = baseItem ? baseItem.qty !== rowData.qty : rowData.qty > 0
-    
+   
     const prodNick = rowData.product.prodNick
     const { baseItem, maxQty, qtyChanged } = rowData.info
     const disableInput = (user.authClass === 'bpbfull' && delivDate < getWorkingDateTime('NOW'))
