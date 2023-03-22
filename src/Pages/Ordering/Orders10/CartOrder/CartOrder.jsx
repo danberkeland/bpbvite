@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 
-import { dateToYyyymmdd, getTtl, getWorkingDate, getWorkingDateTime } from "../../../../functions/dateAndTime"
+import { dateToYyyymmdd, getTtl, getWeekday, getWorkingDate, getWorkingDateTime, yyyymmddToWeekday } from "../../../../functions/dateAndTime"
 
 import { Button } from "primereact/button"
 
@@ -14,6 +14,7 @@ import { DateTime } from "luxon"
 import { useLocationDetails } from "../../../../data/locationData"
 import { APIGatewayFetcher } from "../../../../data/fetchers"
 import { useSettingsStore } from "../../../../Contexts/SettingsZustand"
+import { useCalculateRoutesByLocation } from "../../../../data/productionData"
 
 
 export const CartOrder = ({ user, locNick }) => {
@@ -30,6 +31,7 @@ export const CartOrder = ({ user, locNick }) => {
   const delivDateString = DateTime
     .fromJSDate(delivDate, {zone: 'America/Los_Angeles'})
     .toLocaleString({ weekday: 'short', month: 'short', day: 'numeric' })  
+  const dayOfWeek = getWeekday(delivDate)
   
   const isDelivDate = delivDate.getTime() === getWorkingDateTime('NOW').toMillis()
   const isPastDeliv = delivDate < getWorkingDateTime('NOW')
@@ -38,12 +40,28 @@ export const CartOrder = ({ user, locNick }) => {
 
   // data
   const { data:locationDetails } = useLocationDetails(locNick, !!locNick)
-  
-  const [headerChanges, setHeaderChanges] = useState(null)
-  const [itemChanges, setItemChanges] = useState(null)
   const cartOrderData = useCartOrderData(locNick, delivDate, isWhole)
   const { mutate:mutateCart } = useOrdersByLocationByDate(locNick, null, !!cartOrderData)
+
+  const [headerChanges, setHeaderChanges] = useState({})
+  const [itemChanges, setItemChanges] = useState([])
   //console.log("CART ORDER DATA:", cartOrderData)
+  
+  const calculateRoutes = useCalculateRoutesByLocation(locNick, !!locNick)
+
+  const fulfillmentOptionIsValid = (!!Object.keys(headerChanges).length) 
+    ? itemChanges.map(item => {
+        let validRoutes = calculateRoutes(item.product.prodNick, getWeekday(delivDate), headerChanges.route)
+
+        return (!!validRoutes.length && validRoutes[0] !== 'NOT ASSIGNED' || item.qty === 0)
+      }).every(item => item === true)
+    : true
+  const itemsAreAllAvailable = itemChanges?.map(item => {
+    const isAvailable = testProductAvailability(item.product.prodNick, dayOfWeek)
+    return (isAvailable || item.qty === 0)
+  }).every(item => item === true)
+  const errorsExist = !fulfillmentOptionIsValid || ! itemsAreAllAvailable
+
   useEffect(() => {
     if (!!cartOrderData) {
       setHeaderChanges(JSON.parse(JSON.stringify(cartOrderData.header)))
@@ -55,98 +73,100 @@ export const CartOrder = ({ user, locNick }) => {
     }
   }, [cartOrderData])
 
-  const handleCartSubmit = async () => {
-    setIsLoading(true)
-    console.log("submitting...")
-    // console.log(headerChanges)
-    // console.log("itemBase:", cartOrderData.items)
-    // console.log("itemChanges:", itemChanges)
+  // Using 'handleCartLegacySubmit' while transitioning. NOT depreciated!
 
-    let shouldRevalidate = false
+  // const handleCartSubmit = async () => {
+  //   setIsLoading(true)
+  //   console.log("submitting...")
+  //   // console.log(headerChanges)
+  //   // console.log("itemBase:", cartOrderData.items)
+  //   // console.log("itemChanges:", itemChanges)
 
-    for (let orderItem of itemChanges) {
-      const baseItem = cartOrderData.items
-        .find(item => item.product.prodNick === orderItem.product.prodNick)
+  //   let shouldRevalidate = false
 
-      // detect changes worth submitting to the DB
-      const routeChanged = headerChanges.route !== cartOrderData.header.route
-      const noteChanged = headerChanges.ItemNote !== cartOrderData.header.ItemNote
+  //   for (let orderItem of itemChanges) {
+  //     const baseItem = cartOrderData.items
+  //       .find(item => item.product.prodNick === orderItem.product.prodNick)
 
-      const qtyChanged = (!baseItem && orderItem.qty > 0)
-        || (!!baseItem && orderItem.qty !== baseItem.qty)
-      const rateChanged = !!baseItem && orderItem.rate !== baseItem.rate
+  //     // detect changes worth submitting to the DB
+  //     const routeChanged = headerChanges.route !== cartOrderData.header.route
+  //     const noteChanged = headerChanges.ItemNote !== cartOrderData.header.ItemNote
 
-      const changeDetected = routeChanged || noteChanged || qtyChanged || rateChanged
+  //     const qtyChanged = (!baseItem && orderItem.qty > 0)
+  //       || (!!baseItem && orderItem.qty !== baseItem.qty)
+  //     const rateChanged = !!baseItem && orderItem.rate !== baseItem.rate
 
-      console.log(orderItem.product.prodNick, routeChanged, noteChanged, qtyChanged, rateChanged)
+  //     const changeDetected = routeChanged || noteChanged || qtyChanged || rateChanged
 
-      // decide action
-      let action = 'NONE'
+  //     console.log(orderItem.product.prodNick, routeChanged, noteChanged, qtyChanged, rateChanged)
 
-      if (!orderItem.id && orderItem.qty > 0) {
-        action = 'CREATE'
-      } else {
-        if (changeDetected && orderItem.orderType === 'S') action = 'CREATE'
-        if (changeDetected && orderItem.orderType === 'C') action = 'UPDATE'
-      }
-      console.log(action, orderItem.product.prodNick)
+  //     // decide action
+  //     let action = 'NONE'
+
+  //     if (!orderItem.id && orderItem.qty > 0) {
+  //       action = 'CREATE'
+  //     } else {
+  //       if (changeDetected && orderItem.orderType === 'S') action = 'CREATE'
+  //       if (changeDetected && orderItem.orderType === 'C') action = 'UPDATE'
+  //     }
+  //     console.log(action, orderItem.product.prodNick)
       
-      if (action === 'CREATE') {
-        const createItem = {
-          locNick: locNick,
-          delivDate: dateToYyyymmdd(delivDate),
-          isWhole: true,
-          route: headerChanges.route,
-          ItemNote: headerChanges.ItemNote,
-          prodNick: orderItem.product.prodNick,
-          qty: orderItem.qty,
-          qtyUpdatedOn: new Date().toISOString(),
-          sameDayMaxQty: baseItem ? baseItem.qty : orderItem.qty,
-          rate: orderItem.rate,
-          isLate: 0,
-          updatedBy: user.name,
-          ttl: getTtl(delivDate)
-        }
-        // console.log(createItem)
+  //     if (action === 'CREATE') {
+  //       const createItem = {
+  //         locNick: locNick,
+  //         delivDate: dateToYyyymmdd(delivDate),
+  //         isWhole: true,
+  //         route: headerChanges.route,
+  //         ItemNote: headerChanges.ItemNote,
+  //         prodNick: orderItem.product.prodNick,
+  //         qty: orderItem.qty,
+  //         qtyUpdatedOn: new Date().toISOString(),
+  //         sameDayMaxQty: baseItem ? baseItem.qty : orderItem.qty,
+  //         rate: orderItem.rate,
+  //         isLate: 0,
+  //         updatedBy: user.name,
+  //         ttl: getTtl(delivDate)
+  //       }
+  //       // console.log(createItem)
 
-        // make api call
+  //       // make api call
 
-        const response = await createOrder(createItem)
-        if (!!response.errors) console.log('error')
-        else console.log('ok')
-        if (response && !response.errors) shouldRevalidate = true
+  //       const response = await createOrder(createItem)
+  //       if (!!response.errors) console.log('error')
+  //       else console.log('ok')
+  //       if (response && !response.errors) shouldRevalidate = true
       
-      } else if (action === 'UPDATE') {
-        const updateItem = {
-          id: orderItem.id
-        }
+  //     } else if (action === 'UPDATE') {
+  //       const updateItem = {
+  //         id: orderItem.id
+  //       }
 
-        // add only changed values for submisison
-        if (routeChanged) updateItem.route = headerChanges.route
-        if (noteChanged) updateItem.ItemNote = headerChanges.ItemNote
-        if (qtyChanged) updateItem.qty = orderItem.qty
-        if (qtyChanged) updateItem.qtyUpdatedOn = new Date().toISOString()
-        if (getWorkingDate(orderItem.qtyUpdatedOn) !== getWorkingDate('NOW')) {
-          updateItem.sameDayMaxQty = baseItem.qty
-        }
-        // console.log(updateItem)
+  //       // add only changed values for submisison
+  //       if (routeChanged) updateItem.route = headerChanges.route
+  //       if (noteChanged) updateItem.ItemNote = headerChanges.ItemNote
+  //       if (qtyChanged) updateItem.qty = orderItem.qty
+  //       if (qtyChanged) updateItem.qtyUpdatedOn = new Date().toISOString()
+  //       if (getWorkingDate(orderItem.qtyUpdatedOn) !== getWorkingDate('NOW')) {
+  //         updateItem.sameDayMaxQty = baseItem.qty
+  //       }
+  //       // console.log(updateItem)
 
-        // make api call
+  //       // make api call
 
-        const response = await updateOrder(updateItem)
-        if (!!response.errors) console.log('error')
-        else console.log('ok')
-        if (response && !response.errors) shouldRevalidate = true
+  //       const response = await updateOrder(updateItem)
+  //       if (!!response.errors) console.log('error')
+  //       else console.log('ok')
+  //       if (response && !response.errors) shouldRevalidate = true
         
-      }
+  //     }
 
-      if (shouldRevalidate) {
-        console.log('revalidating')
-        mutateCart()
-      }
-      setIsLoading(false)
-    }
-  }
+  //     if (shouldRevalidate) {
+  //       console.log('revalidating')
+  //       mutateCart()
+  //     }
+  //     setIsLoading(false)
+  //   }
+  // }
 
   const handleCartLegacySubmit = async () => {
     setIsLoading(true)
@@ -259,8 +279,8 @@ export const CartOrder = ({ user, locNick }) => {
         }
   
         // add only changed values for submisison
-        if (routeChanged) updateItem.route = submitItem.route
-        if (noteChanged) updateItem.ItemNote = submitItem.ItemNote
+        if (routeChanged) updateItem.route = headerChanges.route
+        if (noteChanged) updateItem.ItemNote = headerChanges.ItemNote
         if (qtyChanged) updateItem.qty = submitItem.qty
         if (qtyChanged) updateItem.qtyUpdatedOn = new Date().toISOString()
         if (getWorkingDate(submitItem.qtyUpdatedOn) !== getWorkingDate('NOW')) {
@@ -281,9 +301,7 @@ export const CartOrder = ({ user, locNick }) => {
   }
   
   
-  
 
-  
   return(
     <div>
       {/* <h1 style={{padding: ".5rem"}}>Cart Order</h1> */}
@@ -312,6 +330,7 @@ export const CartOrder = ({ user, locNick }) => {
         delivDate={delivDate}
         user={user}
         fulfillmentOption={headerChanges?.route}
+        calculateRoutes={calculateRoutes}
       />
 
 
@@ -336,13 +355,22 @@ export const CartOrder = ({ user, locNick }) => {
 
       <div style={{padding: "0.5rem"}}>
         <Button className="p-button-lg" 
-          label={`Submit for ${delivDateString}${user.locNick === 'backporch' ? ' (Legacy + New System)' : ''}`}
+          label={`Submit for ${delivDateString}`}
           onClick={() => {
             handleCartLegacySubmit()
           }}
-          disabled={disableInputs}
+          disabled={
+            disableInputs 
+            || !fulfillmentOptionIsValid
+            || !itemsAreAllAvailable
+          }
         />
       </div>
+      {errorsExist && <div style={{margin: "0 .5rem .5rem .5rem"}}>Fix Errors to submit</div>}
+      {/* <pre>{JSON.stringify(itemChanges?.map(i => i.product.prodNick))}</pre>
+      <pre>{JSON.stringify(getWeekday(delivDate))}</pre>
+      <pre>{JSON.stringify(headerChanges?.route)}</pre>
+      <pre>{JSON.stringify(fulfillmentOptionIsValid)}</pre> */}
 
       {/* <pre>{`${locNick}`}</pre> */}
       {/* <pre>{"CART ORDER DATA:" + JSON.stringify(cartOrderData, null, 2)}</pre> */}
@@ -372,5 +400,7 @@ const assignAction = (changeItem, baseItem, routeChanged, noteChanged) => {
   return action
 }
 
-// The following was originally inside the component body:
-
+const testProductAvailability = (prodNick, dayOfWeek) => {
+  if (['ptz', 'unpz', 'pbz'].includes(prodNick) && ['Sun', 'Mon'].includes(dayOfWeek)) return false
+  return true  
+}

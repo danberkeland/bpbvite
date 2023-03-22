@@ -10,12 +10,13 @@ import { DataTable } from "primereact/datatable"
 
 import { AddItemSidebar } from "./AddItemSidebar"
 
-import { getWorkingDate, getWorkingDateTime } from "../../../../../functions/dateAndTime"
+import { getWeekday, getWorkingDate, getWorkingDateTime } from "../../../../../functions/dateAndTime"
 import { useLocationDetails } from "../../../../../data/locationData"
 import TimeAgo from "timeago-react"
 import { InputText } from "primereact/inputtext"
 
-export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick, delivDate, user, fulfillmentOption }) => {
+export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick, delivDate, user, fulfillmentOption, calculateRoutes }) => {
+  const dayOfWeek = getWeekday(delivDate)
   const { altLeadTimes } = useLocationDetails(locNick, !!locNick)
   const [rollbackQty, setRollbackQty] = useState(null)
   const [showDetails, setShowDetails] = useState(false)
@@ -25,50 +26,104 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
   const isPastDeliv = delivDate < getWorkingDateTime('NOW')
   const disableInputs = isPastDeliv || (isDelivDate && user.authClass !== 'bpbfull')
 
-  const tableDisplayData = (!!itemBase && !!itemChanges) ? itemChanges.filter(rowData => {
-    const baseItem = itemBase.find(i => i.product.prodNick === rowData.product.prodNick)
 
-    return (!baseItem)
-      || (baseItem.qty !== rowData.qty)
-      || (rowData.qty > 0)
-      || (rowData.action === 'CREATE')
-      || (rowData.orderType === 'C' && rowData.sameDayMaxQty > 0 && getWorkingDate(rowData.qtyUpdatedOn) === getWorkingDate('NOW'))
+  const tableDisplayData = (!!itemBase && !!itemChanges) 
+    ? itemChanges.map(item => {
+      const baseItem = itemBase.find(i => i.product.prodNick === item.product.prodNick)
 
-  }) : []
+      const validRoutes = calculateRoutes(item.product.prodNick, getWeekday(delivDate), fulfillmentOption)
+      console.log("route test:", locNick, item.product.prodNick, getWeekday(delivDate), fulfillmentOption)
+      const leadTimeOverride = altLeadTimes?.find(
+        (alt) => alt.prodNick === item.product.prodNick
+        )
+      const leadTime = leadTimeOverride 
+        ? leadTimeOverride.altLeadTime 
+        : item.product.leadTime
+
+      const lastAction = (baseItem?.orderType) === 'C' ? (
+        baseItem.createdOn === baseItem.updatedOn ? "Created" 
+          : (baseItem.qty === 0 ? "Deleted" : "Updated")
+      ) : null
+      const inProduction = delivDate < getWorkingDateTime('NOW').plus({ days: item.leadTime })
+      
+      
+      const sameDayUpdate = !!baseItem && getWorkingDate('NOW') === getWorkingDate(baseItem.qtyUpdatedOn)
+      const maxQty = !inProduction || user.authClass === 'bpbfull' ? 999
+        : !baseItem ? 0        
+        : !sameDayUpdate ? baseItem.qty
+        : baseItem.sameDayMaxQty
+      const qtyChanged = baseItem ? baseItem.qty !== item.qty : item.qty > 0
+
+      const info = {
+        validRoutes: validRoutes,
+        canFulfill: (!!validRoutes.length) && validRoutes[0] !== 'NOT ASSIGNED',
+        isAvailable: testProductAvailability(item.product.prodNick, dayOfWeek),
+        leadTimeForLocation: leadTime,
+        inProduction: inProduction,
+        lastAction: lastAction,
+        sameDayUpdate: sameDayUpdate,
+        timingStatus: isPastDeliv ? 'past' : (isDelivDate ? 'deliv' : (inProduction ? 'inprod' : null)),
+        maxQty: maxQty,
+        qtyChanged: qtyChanged
+      }
+
+      return ({...item, info: info})
+    }).filter(item => {
+      const baseItem = itemBase.find(i => i.product.prodNick === item.product.prodNick)
+
+      return (!baseItem)
+        || (baseItem.qty !== item.qty)
+        || (item.qty > 0)
+        || (item.action === 'CREATE')
+        || (item.orderType === 'C' && item.sameDayMaxQty > 0 && getWorkingDate(item.qtyUpdatedOn) === getWorkingDate('NOW'))
+
+    })
+    : []
 
   const productColumnTemplate = (rowData) => {
     const prodNick = rowData.product.prodNick
-    const baseItem = itemBase?.find(item => item.product.prodNick === prodNick)
+    // const baseItem = itemBase?.find(item => item.product.prodNick === prodNick)
+    // const leadTimeOverride = altLeadTimes?.find(
+    //   (item) => item.prodNick === prodNick
+    //   )
+    // const leadTime = leadTimeOverride 
+    //   ? leadTimeOverride.altLeadTime 
+    //   : rowData.product.leadTime
+    // const qtyChanged = baseItem ? baseItem.qty !== rowData.qty : rowData.qty > 0
+    // const inProduction = delivDate < getWorkingDateTime('NOW').plus({ days: leadTime })
+    // const timingStatus = isPastDeliv ? 'past' : (isDelivDate ? 'deliv' : (inProduction ? 'inprod' : null))
 
-    const leadTimeOverride = altLeadTimes?.find(
-      (item) => item.prodNick === prodNick
-      )
-    const leadTime = leadTimeOverride 
-      ? leadTimeOverride.altLeadTime 
-      : rowData.product.leadTime
-    const qtyChanged = baseItem ? baseItem.qty !== rowData.qty : rowData.qty > 0
+    const { qtyChanged, timingStatus, lastAction, sameDayUpdate, canFulfill, isAvailable } = rowData.info
+    const recentlyDeleted = (lastAction === "Deleted") && sameDayUpdate
+    const cleanedProdName = rowData.product.prodName.replace(/\([0-9]+\)/, '').trim()
+    const packSizeString = rowData.product.packSize > 1 ? ` (${rowData.product.packSize}pk)` : ''
+    const displayProdName = `${cleanedProdName}${packSizeString}`
 
-    const isInProduction = delivDate < getWorkingDateTime('NOW').plus({ days: leadTime })
-    const recentlyDeleted = rowData.orderType === 'C' && rowData.sameDayMaxQty > 0 && getWorkingDate(rowData.qtyUpdatedOn) === getWorkingDate('NOW')
-    const timingStatus = isPastDeliv ? 'past' : (isDelivDate ? 'deliv' : (isInProduction ? 'inprod' : null))
-    const timingMessage = {
-      inprod: " In production",
-      deliv: " Delivery date reached",
-      past: " Past delivery date"
-    }
     return (
       <div style={rowData.qty === 0 ? {color : "gray"} : null}>
-        <div style={{fontStyle: qtyChanged ? "italic" : "normal", fontWeight: "bold"}}>{`${rowData.product.prodName.replace(/\([0-9]+\)/, '').trim()}${rowData.product.packSize > 1 ? ` (${rowData.product.packSize}pk)` : ''}`}</div>
-        {/* <div style={{paddingTop: ".1rem", fontSize:".9rem", whiteSpace: "nowrap"}}>{`${helperText}`}</div> */}
-        {/* {rowData.product.packSize > 1 && <div style={{fontSize: ".9rem"}}>{`-- pack of ${rowData.product.packSize}`}</div>} */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignContent: "center", gap: ".25rem"}}>
+          <span style={{
+            fontStyle: qtyChanged && rowData.qty > 0 ? "italic" : "normal", 
+            fontWeight: "bold"
+          }}>
+              {displayProdName}
+          </span>
+        </div>
+        {rowData.action === 'CREATE' && rowData.qty === 0 &&
+          <IconInfoMsg infoMessage="Will not be added" iconClassName="pi pi-info-circle" />
+        }
         {!!timingStatus && 
-          <div style={{display: "flex", alignItems: "center", gap: ".2rem", marginBlock: ".1rem"}}>
-            <span><i className="pi pi-info-circle" style={{fontSize: ".9rem"}} /></span>
-            <span style={{fontSize: ".9rem"}}>
-              {timingMessage[timingStatus]}
-            </span>
-          </div>}
-        {recentlyDeleted && rowData.qty === 0 && <div style={{marginTop: ".25rem", fontSize: ".9rem"}}>{`recently deleted`}</div>}
+          <IconInfoMsg { ...timingMessageModel[timingStatus] } />
+        }
+        {(fulfillmentOption === 'deliv' && !canFulfill && rowData.qty > 0) && 
+          <IconInfoMsg infoMessage={`Pick up only for ${dayOfWeek}`} iconClassName="pi pi-times" />
+        }
+        {!isAvailable && rowData.qty > 0 && 
+          <IconInfoMsg infoMessage={`Not available ${dayOfWeek}`} iconClassName="pi pi-times" />
+        }
+        {(recentlyDeleted && rowData.qty === 0) && 
+          <IconInfoMsg infoMessage="recently deleted" iconClassName="pi pi-info-circle" />
+        }
         {showDetails && 
           <>
             {rowData.qtyUpdatedOn && (
@@ -83,28 +138,29 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
         }
       </div>
     )
-  }
+  } // end productColumnTemplate
 
 
 
   const qtyColumnTemplate = (rowData) => {
+    // const baseItem = itemBase?.find(item => item.product.prodNick === prodNick)
+    // const leadTimeOverride = altLeadTimes?.find(
+    //   (item) => item.prodNick === rowData.product.prodNick
+    // )
+    // const leadTime = leadTimeOverride 
+    //   ? leadTimeOverride.altLeadTime 
+    //   : rowData.product.leadTime
+    // const inProduction = delivDate < getWorkingDateTime('NOW').plus({ days: leadTime })
+    // const sameDayUpdate = !!baseItem && getWorkingDate('NOW') === getWorkingDate(baseItem.qtyUpdatedOn)
+    
+    // const maxQty = !inProduction || user.authClass === 'bpbfull' ? 999
+    //   : !baseItem ? 0        
+    //   : !sameDayUpdate ? baseItem.qty
+    //   : baseItem.sameDayMaxQty
+    // const qtyChanged = baseItem ? baseItem.qty !== rowData.qty : rowData.qty > 0
+    
     const prodNick = rowData.product.prodNick
-    const baseItem = itemBase?.find(item => item.product.prodNick === prodNick)
-    const leadTimeOverride = altLeadTimes?.find(
-      (item) => item.prodNick === rowData.product.prodNick
-    )
-    const leadTime = leadTimeOverride 
-      ? leadTimeOverride.altLeadTime 
-      : rowData.product.leadTime
-    const inProduction = delivDate < getWorkingDateTime('NOW').plus({ days: leadTime })
-    const sameDayUpdate = !!baseItem && getWorkingDate('NOW') === getWorkingDate(baseItem.qtyUpdatedOn)
-
-    const maxQty = !inProduction || user.authClass === 'bpbfull' ? 999
-      : !baseItem ? 0        
-      : !sameDayUpdate ? baseItem.qty
-      : baseItem.sameDayMaxQty
-    const qtyChanged = baseItem ? baseItem.qty !== rowData.qty : rowData.qty > 0
-
+    const { baseItem, maxQty, qtyChanged } = rowData.info
     const disableInput = (user.authClass === 'bpbfull' && delivDate < getWorkingDateTime('NOW'))
       || (maxQty === 0 || (user.authClass !== 'bpbfull' && delivDate <= getWorkingDateTime('NOW')))
 
@@ -190,7 +246,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
         }
       </div>
     )
-  }
+  } // end qtyColumnTemplate
 
   const footerTemplate = () => {
     const total = itemChanges ? itemChanges.reduce((acc, item) => {
@@ -245,9 +301,36 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
         setCartItemChanges={setItemChanges}
         user={user}
         fulfillmentOption={fulfillmentOption}
+        calculateRoutes={calculateRoutes}
       />
     </div>
   )
 }
 
+const timingMessageModel = {
+  inprod: { infoMessage: "In production", iconClassName: "pi pi-exclamation-triangle" },
+  deliv: { infoMessage: "Delivery date reached", iconClassName: "pi pi-times" },
+  past: { infoMessage: "Past delivery date", iconClassName: "pi pi-times" }
+}
 
+const IconInfoMsg = ({ infoMessage, iconClassName, iconPosition="left" }) => {
+
+  return(
+    <div style={{
+      display: "flex", 
+      alignContent: "center", 
+      gap: ".25rem", 
+      fontSize: ".9rem"
+    }}>
+      {iconPosition === 'left' && <i className={iconClassName} />}
+      <span>{infoMessage}</span>
+      {iconPosition === 'right' && <i className={iconClassName} />}
+    </div>
+  ) 
+
+}
+
+const testProductAvailability = (prodNick, dayOfWeek) => {
+  if (['ptz', 'unpz', 'pbz'].includes(prodNick) && ['Sun', 'Mon'].includes(dayOfWeek)) return false
+  return true  
+}

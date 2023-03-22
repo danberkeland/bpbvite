@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useMemo, useState } from "react"
 
 import { Button } from "primereact/button"
 import { Dropdown } from "primereact/dropdown"
@@ -16,30 +16,59 @@ import { createTemplateProd, deleteTemplateProd } from "../../../../../customGra
 import { useLocationDetails } from "../../../../../data/locationData"
 import { useCalculateRoutesByLocation, useRouteAssignmentByLocation } from "../../../../../data/productionData"
 
-export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartItems, cartItemChanges, setCartItemChanges, user, fulfillmentOption}) => {
+export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartItems, cartItemChanges, setCartItemChanges, user, fulfillmentOption, calculateRoutes}) => {
   const dayOfWeek = getWeekday(delivDate)
-  const delivDateString = DateTime
-    .fromJSDate(delivDate, {zone: 'America/Los_Angeles'})
-    .toLocaleString({ weekday: 'short', month: 'short', day: 'numeric' })  
+  const delivDateDT = DateTime.fromJSDate(delivDate, {zone: 'America/Los_Angeles'})
+  const delivDateString = delivDateDT.toLocaleString({ weekday: 'long', month: 'short', day: 'numeric' })  
+  const orderSubmitDate = getWorkingDateTime('NOW')
+  const timeDeltaDays = delivDateDT.diff(orderSubmitDate, 'days').toObject().days
 
-  const [selectedProduct, setSelectedProduct] = useState(null)
   const [selectedQty, setSelectedQty] = useState(null)
+  const [selectedProduct, setSelectedProduct] = useState(null)
+  const errorFlag = !!selectedProduct && (selectedProduct.info.inProduction || !selectedProduct.info.isAvailable || !selectedProduct.info.canFulFill)
 
   const { data:customProductData } = useProductDataWithLocationCustomization(locNick)
   const { data:locationData, mutate:mutateLocation, isValidating:locationIsValidating } = useLocationDetails(locNick, !!locNick)
 
-  const calculateRoutes = useCalculateRoutesByLocation(locNick, !!locNick)
+  // const selectedProductMaxQty = getMaxQty(user, selectedProduct, delivDate, cartItems)
+  // const selectedProductRoutes = selectedProduct ? (calculateRoutes(selectedProduct.prodNick, dayOfWeek, fulfillmentOption)) : []
+  // const selectedProductIsDeliverable = fulfillmentOption === 'deliv' 
+  // ? (selectedProductRoutes[0] !== 'NOT ASSIGNED' && selectedProductRoutes[0] !== null) 
+  // : true
 
-  const orderSubmitDate = getWorkingDateTime('NOW')
-  const selectedProductMaxQty = getMaxQty(user, selectedProduct, delivDate, cartItems)
-  const selectedProductRoutes = selectedProduct ? (calculateRoutes(selectedProduct.prodNick, dayOfWeek, fulfillmentOption)) : []
-  const selectedProductIsDeliverable = fulfillmentOption === 'deliv' 
-  ? (selectedProductRoutes[0] !== 'NOT ASSIGNED' && selectedProductRoutes[0] !== null) 
-  : true
+  
+  const addInfoToProducts = () => {
+    if (!customProductData || !cartItems || !cartItemChanges) return undefined
 
-  const selectedProductInProduction = selectedProduct ? delivDate < orderSubmitDate.plus({ days: selectedProduct.leadTime }) : null
-  const selectedProductIsAvailable = selectedProduct ? testProductAvailability(selectedProduct.prodNick, dayOfWeek) : null
-  const errorFlag = selectedProductInProduction || !selectedProductIsAvailable || !selectedProductIsDeliverable
+    const enhancedData = customProductData.map(product => {
+      const validRoutes = calculateRoutes(product.prodNick, dayOfWeek, fulfillmentOption)
+      const cartMatchItem = cartItemChanges.find(i => i.product.prodNick === product.prodNick)
+      const earliestDate = orderSubmitDate.plus({ days: product.leadTime })
+        .toLocaleString({ weekday: 'short', month: 'short', day: 'numeric' })  
+
+      const info = { 
+        inProduction: delivDate < orderSubmitDate.plus({ days: product.leadTime }),
+        isAvailable: testProductAvailability(product.prodNick, dayOfWeek),
+        earliestDateString: earliestDate,
+        maxQty: getMaxQty(user, product, delivDate, cartItems),
+        canFulfill: validRoutes[0] !== null && validRoutes[0] !== 'NOT ASSIGNED',
+        validRoutes: validRoutes,
+        inCart: !!cartMatchItem && (cartMatchItem.qty > 0 || cartMatchItem.action === 'CREATE'),
+        recentlyDeleted: cartMatchItem && getWorkingDate('NOW') === getWorkingDate(cartMatchItem.qtyUpdatedOn) && cartMatchItem.qty === 0,
+      }
+
+      return({ ...product, info: info })
+
+    }) // end customProductData.map
+
+    return enhancedData
+
+  } // end addInfoToProducts
+
+  const productDataWithInfo = useMemo(
+    addInfoToProducts, 
+    [customProductData, delivDate, dayOfWeek, fulfillmentOption, orderSubmitDate, user, cartItems, cartItemChanges]
+  )
   
   const handleAddProduct = () => {
     let _cartItemChanges = [...cartItemChanges]
@@ -84,39 +113,21 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
   
   
   const DropdownItemTemplate = (option) => {
-    const inProduction = delivDate < orderSubmitDate.plus({ days: option.leadTime })
-
-    const dateParts = orderSubmitDate.plus({ days: option.leadTime }).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY).split(',')
-    const availableDate = `${dateParts[0]}, ${dateParts[1]}`
-    
-    const cartMatchItem = cartItemChanges.find(i => i.product.prodNick === option.prodNick)
-    const inCart = !!cartMatchItem && (cartMatchItem.qty > 0 || cartMatchItem.action === 'CREATE')
-    const recentlyDeleted = cartMatchItem && getWorkingDate('NOW') === getWorkingDate(cartMatchItem.qtyUpdatedOn) && cartMatchItem.qty === 0
-    const delivRoutes = calculateRoutes(option.prodNick, dayOfWeek, fulfillmentOption)
-    const isDeliverable = fulfillmentOption === 'deliv' 
-      ? (delivRoutes[0] !== 'NOT ASSIGNED' && delivRoutes[0] !== null)
-      : true
-    const productIsAvailable = testProductAvailability(option.prodNick, dayOfWeek)
-
-    const displayText = wrap(option.prodName, 25)
-
+    const { inProduction, inCart, recentlyDeleted, canFulfill, isAvailable } = option.info
+    const prodNameDisplayText = wrap(option.prodName, 25).split('\n')
     const icon = !!option.templateProd ? "pi pi-star-fill" : "pi pi-star"
 
-    const errorFlag = inProduction || !productIsAvailable || !isDeliverable
+    const errorFlag = (inProduction && !inCart) || !isAvailable || !canFulfill
 
     return(
       <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
         <div style={{width: "100%", display: "flex", justifyContent:"space-between", alignItems: "center"}}>
           <div style={{width: "fit-content", fontWeight: (recentlyDeleted && inProduction) ? "bold" : "normal"}}>
-            {/* {option.prodName} */}
-            {displayText.split('\n').map((line, idx) => <div style={{fontWeight: !!option.templateProd ? "bold" : "normal"}} key={idx}>{line}</div>)}
+            {prodNameDisplayText.map((line, idx) => <div style={{fontWeight: !!option.templateProd ? "bold" : "normal"}} key={idx}>{line}</div>)}
             {(recentlyDeleted && inProduction) && <div style={{fontSize: ".9rem"}}>Recently Deleted</div>}
-            {!(recentlyDeleted && inProduction) && <div style={{fontSize: ".9rem"}}>{inCart ? "In cart" : (option.leadTime + " day lead; " + (inProduction ? "earliest " + availableDate : 'available'))}</div>}
-            {/* {!isDeliverable && <div style={{fontSize: ".9rem"}}>{`Pick up Only for ${dayOfWeek}`}</div>} */}
-            {/* {!productIsAvailable && <div style={{fontSize: ".9rem"}}>{`Not available for ${dayOfWeek}`}</div>} */}
-            {/* <div style={{fontSize: ".9rem"}}>{JSON.stringify(delivRoutes)}</div> */}
+            <div style={{fontSize: ".9rem"}}>{`${inCart ? "In cart; " : ""}${option.leadTime} day lead`}</div>
           </div>
-          <i className={errorFlag ? "pi pi-exclamation-circle" : ""} style={{fontSize: "1.25rem", marginRight: "1rem"}}/>
+          <i className={errorFlag ? "pi pi-exclamation-triangle" : ""} style={{fontSize: "1.25rem", marginRight: "1rem"}}/>
         </div>
         <Button icon={icon}
           onClick={e => {
@@ -160,12 +171,12 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
         setSelectedQty(null)
       }}  
       blockScroll={true}
-      icons={() => <div>Adding for {delivDateString}</div>}
+      icons={() => <div>{`Adding for ${delivDateString} (T +${timeDeltaDays})`}</div>}
       position="top"
-      style={{height: "200px"}}
+      style={{height: "16rem"}}
     >
       <div className="p-fluid" style={{margin: ".5rem"}}>
-        <Dropdown options={customProductData || []} 
+        <Dropdown options={productDataWithInfo || []} 
           //showOnFocus={true}
           optionLabel="prodName" optionValue="prodNick"
           value={selectedProduct ? selectedProduct.prodNick : null}
@@ -175,24 +186,27 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
           valueTemplate={dropdownValueTemplate}
           onChange={e => {
             console.log("selectedProduct:", customProductData?.find(item => item.prodNick === e.value))
-            setSelectedProduct(customProductData?.find(item => item.prodNick === e.value))
+            setSelectedProduct(productDataWithInfo?.find(item => item.prodNick === e.value))
             setSelectedQty(cartItemChanges.find(i => i.product.prodNick === e.value)?.qty || 0)
           }}
           placeholder={customProductData ? "Select Product" : "Loading..."}
         />
       </div>
-      {errorFlag && 
-        <div style={{width: "100%", display: "flex", justifyContent:"space-between", alignItems: "center"}}>
-          <div style={{width: "fit-content"}}>
-              {/* {option.prodName} */}
-              {/* {displayText.split('\n').map((line, idx) => <div style={{fontWeight: !!option.templateProd ? "bold" : "normal"}} key={idx}>{line}</div>)} */}
-              {/* {(recentlyDeleted && inProduction) && <div style={{fontSize: ".9rem"}}>Recently Deleted</div>} */}
-              {/* {!(recentlyDeleted && inProduction) && <div style={{fontSize: ".9rem"}}>{inCart ? "In cart" : (option.leadTime + " day lead; " + (inProduction ? "earliest " + availableDate : 'available'))}</div>} */}
-              {/* {!isDeliverable && <div style={{fontSize: ".9rem"}}>{`Pick up Only for ${dayOfWeek}`}</div>} */}
-              {/* {!productIsAvailable && <div style={{fontSize: ".9rem"}}>{`Not available for ${dayOfWeek}`}</div>} */}
-              {/* <div style={{fontSize: ".9rem"}}>{JSON.stringify(delivRoutes)}</div> */}
-          </div>
-          <i className={errorFlag ? "pi pi-exclamation-circle" : ""} style={{fontSize: "1.25rem", marginRight: "1rem"}}/>
+      {selectedProduct && errorFlag && 
+        <div style={{maxWidth: "20rem", display: "flex", justifyContent:"space-between", alignItems: "center"}}>
+          {selectedProduct && 
+            <div style={{width: "fit-content", margin: ".5rem", fontSize: ".9rem"}}>
+              {!selectedProduct.info.isAvailable && 
+                <IconInfoMsg infoMessage={`Product not available on ${dayOfWeek}`} iconClassName="pi pi-fw pi-times" />
+              }
+              {fulfillmentOption === 'deliv' && !selectedProduct.info.canFulfill && 
+                <IconInfoMsg infoMessage={`Pick up only for ${dayOfWeek}`} iconClassName="pi pi-fw pi-exclamation-triangle" />
+              }
+              {selectedProduct.info.inProduction && !selectedProduct.info.inCart && 
+                <IconInfoMsg infoMessage={`In production: available ${selectedProduct.info.earliestDateString}`} iconClassName="pi pi-times" />
+              }
+            </div>
+          }
         </div>
       }
       <div style={{display: "flex", justifyContent: "flex-end", gap: "1rem", padding: ".5rem"}}>
@@ -200,11 +214,11 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
           <InputNumber 
             value={selectedQty}
             min={0}
-            max={selectedProductMaxQty}
+            max={selectedProduct?.info.maxQty}
             placeholder="Qty"
             disabled={
               !selectedProduct || 
-              selectedProductMaxQty === 0
+              selectedProduct?.info.maxQty === 0
             }
             onFocus={(e) => {
               e.target.select();
@@ -225,7 +239,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
           />
         </div>
 
-        <Button label="ADD"
+        <Button label={selectedProduct?.info.inCart ? "UPDATE" : "ADD"}
           // className="p-button-outlined p-button-rounded"
           onClick={()=>{
             console.log("product added")
@@ -236,11 +250,12 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
           }}
           disabled={
             !selectedProduct || 
-            selectedProductMaxQty === 0 ||
+            selectedProduct?.info.maxQty === 0 ||
             selectedQty === 0 ||
             (user.authClass === 'bpbfull' && delivDate < getWorkingDateTime('NOW')) ||
             (user.authClass !== 'bpbfull' && delivDate <= getWorkingDateTime('NOW')) ||
-            (!selectedProductIsDeliverable)
+            (user.authClass !== 'bpbfull' && !selectedProduct?.info.isAvailable) ||
+            (user.authClass !== 'bpbfull' && !selectedProduct?.info.inProduction && !selectedProduct?.info.inCart)
           }
           style={{flex: "0 0 100px"}}
         />
@@ -336,4 +351,20 @@ const deleteFav = async (id) => {
 const testProductAvailability = (prodNick, dayOfWeek) => {
   if (['ptz', 'unpz', 'pbz'].includes(prodNick) && ['Sun', 'Mon'].includes(dayOfWeek)) return false
   return true  
+}
+
+const IconInfoMsg = ({ infoMessage, iconClassName }) => {
+
+  return(
+    <div style={{
+      display: "flex", 
+      alignContent: "center", 
+      gap: ".25rem", 
+      fontSize: ".9rem"
+    }}>
+      <i className={iconClassName || ''} />
+      <span>{infoMessage}</span>
+    </div>
+  ) 
+
 }

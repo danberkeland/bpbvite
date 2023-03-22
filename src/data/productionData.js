@@ -161,6 +161,8 @@ export const useCalculateRoutesByLocation = (locNick, shouldFetch) => {
 
   const calculateRoute = (prodNick, dayOfWeek, fulfillmentOption) => 
     calculateValidRoutes(locNick, prodNick, fulfillmentOption, locationZoneNick, dayOfWeek, routeMatrix)
+  
+  // console.log("route matrix:",routeMatrix)
 
   // calculateValidRoutes({locNick: locNick, prodNick: prodNick, route: fulfillmentOption}, locationZoneNick, dayOfWeek, routeMatrix)
   
