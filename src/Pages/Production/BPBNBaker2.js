@@ -132,12 +132,13 @@ function BPBNBaker2() {
         database,
         delivDate
       );
+      console.log("WHAT TO MAKE:", whatToMakeData)
       setWhatToMake(whatToMakeData.whatToMake);
       setIsLoading(false);
     } catch {}
   };
 
-  /*
+  // DEBUGGING
   const setoutTimeInStone = async () => {
     let addDetails = {
       id: "CarltonsetoutTime",
@@ -152,7 +153,7 @@ function BPBNBaker2() {
       console.log("error on updating info", error);
     }
   };
-  */
+  // END DEBUGGING
 
   const gatherPastryPrepInfo = (database) => {
     setIsLoading(true);
@@ -181,14 +182,13 @@ function BPBNBaker2() {
 
       console.log('addDetails', addDetails)
       
-      /*
       try {
         await API.graphql(
           graphqlOperation(updateProduct, { input: { ...addDetails } })
         );
       } catch (error) {
         console.log("error on updating product", error);
-      }*/
+      }
     }
     
 
@@ -198,14 +198,14 @@ function BPBNBaker2() {
         prodNick: make.prodNick,
         prepreshaped: make.qty,
       };
-      /*
+      
       try {
         await API.graphql(
           graphqlOperation(updateProduct, { input: { ...addDetails } })
         );
       } catch (error) {
         console.log("error on updating product", error);
-      }*/
+      }
     }
 
     const doc = new jsPDF("p", "mm", "a4");
