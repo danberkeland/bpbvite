@@ -181,7 +181,6 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
           optionLabel="prodName" optionValue="prodNick"
           value={selectedProduct ? selectedProduct.prodNick : null}
           filter filterBy={`prodName${user.locNick === 'backporch' ? ",prodNick" : ""}`} showFilterClear resetFilterOnHide
-          class
           itemTemplate={DropdownItemTemplate}
           valueTemplate={dropdownValueTemplate}
           onChange={e => {
@@ -255,7 +254,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
             (user.authClass === 'bpbfull' && delivDate < getWorkingDateTime('NOW')) ||
             (user.authClass !== 'bpbfull' && delivDate <= getWorkingDateTime('NOW')) ||
             (user.authClass !== 'bpbfull' && !selectedProduct?.info.isAvailable) ||
-            (user.authClass !== 'bpbfull' && !selectedProduct?.info.inProduction && !selectedProduct?.info.inCart)
+            (user.authClass !== 'bpbfull' && selectedProduct?.info.inProduction && !selectedProduct?.info.inCart)
           }
           style={{flex: "0 0 100px"}}
         />

@@ -57,7 +57,8 @@ export default class ComposeWhatToMake {
       make.qty = qtyAccToday * bakeInd.packSize;
       make.dough = bakeInd.doughType;
       make.weight = bakeInd.weight;
-      make.id = bakeInd.prodID;
+      make.id = bakeInd.prodID; // old system PK was 'id'
+      make.prodNick = bakeInd.prodNick; // new system PK is 'prodNick'
     }
     return makeList2;
   };
