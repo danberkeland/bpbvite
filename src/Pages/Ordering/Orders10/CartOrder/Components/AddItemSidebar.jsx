@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react"
+import React, { useMemo, useRef, useState } from "react"
 
 import { Button } from "primereact/button"
 import { Dropdown } from "primereact/dropdown"
@@ -15,6 +15,9 @@ import gqlFetcher from "../../../../../data/fetchers"
 import { createTemplateProd, deleteTemplateProd } from "../../../../../customGraphQL/mutations/locationMutations"
 import { useLocationDetails } from "../../../../../data/locationData"
 import { testProductAvailability } from "../../_utils/testProductAvailability"
+import { reformatProdName } from "../../_utils/reformatProdName"
+import { IconInfoMessage } from "../../_components/IconInfoMessage"
+import { wrapText } from "../../_utils/wrapText"
 
 export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartItems, cartItemChanges, setCartItemChanges, user, fulfillmentOption, calculateRoutes}) => {
   const dayOfWeek = getWeekday(delivDate)
@@ -29,6 +32,8 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
 
   const { data:customProductData } = useProductDataWithLocationCustomization(locNick)
   const { mutate:mutateLocation, isValidating:locationIsValidating } = useLocationDetails(locNick, !!locNick)
+
+  const inputNumberRef = useRef(null)
   
   const addInfoToProducts = () => {
     if (!customProductData || !cartItems || !cartItemChanges) return undefined
@@ -107,7 +112,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
   
   const DropdownItemTemplate = (option) => {
     const { inProduction, inCart, recentlyDeleted, canFulfill, isAvailable } = option.info
-    const prodNameDisplayText = wrap(option.prodName, 25).split('\n')
+    const prodNameDisplayText = wrapText(reformatProdName(option.prodName, option.packSize), 25).split('\n')
     const icon = !!option.templateProd ? "pi pi-star-fill" : "pi pi-star"
 
     const errorFlag = (inProduction && !inCart) || !isAvailable || !canFulfill
@@ -146,7 +151,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
   const dropdownValueTemplate = (option, props) => {
     if (option) return(
       <div style={{display: "flex", justifyContent: "space-between"}}>
-        <div>{option.prodName || ''}</div>{!!option.templateProd && <i className="pi pi-star-fill"/>}
+        <div>{reformatProdName(option.prodName, option.packSize) || ''}</div>{!!option.templateProd && <i className="pi pi-star-fill"/>}
       </div>
     )
 
@@ -170,10 +175,11 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
     >
       <div className="p-fluid" style={{margin: ".5rem"}}>
         <Dropdown options={productDataWithInfo || []} 
+          autoFocus={true}
           //showOnFocus={true}
           optionLabel="prodName" optionValue="prodNick"
           value={selectedProduct ? selectedProduct.prodNick : null}
-          filter filterBy={`prodName${user.locNick === 'backporch' ? ",prodNick" : ""}`} showFilterClear resetFilterOnHide
+          filter filterBy={`prodName${user.locNick === 'backporch' ? ",prodNick" : ""}`} showFilterClear resetFilterOnHide filterInputAutoFocus
           itemTemplate={DropdownItemTemplate}
           valueTemplate={dropdownValueTemplate}
           onChange={e => {
@@ -181,6 +187,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
             setSelectedProduct(productDataWithInfo?.find(item => item.prodNick === e.value))
             setSelectedQty(cartItemChanges.find(i => i.product.prodNick === e.value)?.qty || 0)
           }}
+          onHide={() => selectedProduct && inputNumberRef.current.focus()}
           placeholder={customProductData ? "Select Product" : "Loading..."}
         />
       </div>
@@ -189,13 +196,13 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
           {selectedProduct && 
             <div style={{width: "fit-content", margin: ".5rem", fontSize: ".9rem"}}>
               {!selectedProduct.info.isAvailable && 
-                <IconInfoMsg infoMessage={`Product not available on ${dayOfWeek}`} iconClassName="pi pi-fw pi-times" />
+                <IconInfoMessage text={`Product not available on ${dayOfWeek}`} iconClass="pi pi-fw pi-times" />
               }
               {fulfillmentOption === 'deliv' && !selectedProduct.info.canFulfill && 
-                <IconInfoMsg infoMessage={`Pick up only for ${dayOfWeek}`} iconClassName="pi pi-fw pi-exclamation-triangle" />
+                <IconInfoMessage text={`Pick up only for ${dayOfWeek}`} iconClass="pi pi-fw pi-exclamation-triangle" />
               }
               {selectedProduct.info.inProduction && !selectedProduct.info.inCart && 
-                <IconInfoMsg infoMessage={`In production: available ${selectedProduct.info.earliestDateString}`} iconClassName="pi pi-times" />
+                <IconInfoMessage text={`In production: available ${selectedProduct.info.earliestDateString}`} iconClass="pi pi-times" />
               }
             </div>
           }
@@ -204,6 +211,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
       <div style={{display: "flex", justifyContent: "flex-end", gap: "1rem", padding: ".5rem"}}>
         <div className="p-fluid" style={{flex: "0 0 80px", maxWidth: "80px"}}>
           <InputNumber 
+            inputRef={inputNumberRef}
             value={selectedQty}
             min={0}
             max={selectedProduct?.info.maxQty}
@@ -299,9 +307,6 @@ const getMaxQty = (user, selectedProduct, delivDate, cartItems) => {
 
 
 
-const wrap = (s, w) => s.replace(
-  new RegExp(`(?![^\\n]{1,${w}}$)([^\\n]{1,${w}})\\s`, 'g'), '$1\n'
-);
 
 
 
@@ -337,20 +342,4 @@ const deleteFav = async (id) => {
 
   let response = await gqlFetcher(query, variables)
   console.log("deleteFav", response)
-}
-
-const IconInfoMsg = ({ infoMessage, iconClassName }) => {
-
-  return(
-    <div style={{
-      display: "flex", 
-      alignContent: "center", 
-      gap: ".25rem", 
-      fontSize: ".9rem"
-    }}>
-      <i className={iconClassName || ''} />
-      <span>{infoMessage}</span>
-    </div>
-  ) 
-
 }
