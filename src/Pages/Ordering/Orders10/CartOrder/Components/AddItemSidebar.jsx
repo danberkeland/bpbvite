@@ -14,7 +14,7 @@ import { DateTime } from "luxon"
 import gqlFetcher from "../../../../../data/fetchers"
 import { createTemplateProd, deleteTemplateProd } from "../../../../../customGraphQL/mutations/locationMutations"
 import { useLocationDetails } from "../../../../../data/locationData"
-import { useCalculateRoutesByLocation, useRouteAssignmentByLocation } from "../../../../../data/productionData"
+import { testProductAvailability } from "../../_utils/testProductAvailability"
 
 export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartItems, cartItemChanges, setCartItemChanges, user, fulfillmentOption, calculateRoutes}) => {
   const dayOfWeek = getWeekday(delivDate)
@@ -28,14 +28,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
   const errorFlag = !!selectedProduct && (selectedProduct.info.inProduction || !selectedProduct.info.isAvailable || !selectedProduct.info.canFulFill)
 
   const { data:customProductData } = useProductDataWithLocationCustomization(locNick)
-  const { data:locationData, mutate:mutateLocation, isValidating:locationIsValidating } = useLocationDetails(locNick, !!locNick)
-
-  // const selectedProductMaxQty = getMaxQty(user, selectedProduct, delivDate, cartItems)
-  // const selectedProductRoutes = selectedProduct ? (calculateRoutes(selectedProduct.prodNick, dayOfWeek, fulfillmentOption)) : []
-  // const selectedProductIsDeliverable = fulfillmentOption === 'deliv' 
-  // ? (selectedProductRoutes[0] !== 'NOT ASSIGNED' && selectedProductRoutes[0] !== null) 
-  // : true
-
+  const { mutate:mutateLocation, isValidating:locationIsValidating } = useLocationDetails(locNick, !!locNick)
   
   const addInfoToProducts = () => {
     if (!customProductData || !cartItems || !cartItemChanges) return undefined
@@ -344,12 +337,6 @@ const deleteFav = async (id) => {
 
   let response = await gqlFetcher(query, variables)
   console.log("deleteFav", response)
-}
-
-
-const testProductAvailability = (prodNick, dayOfWeek) => {
-  if (['ptz', 'unpz', 'pbz'].includes(prodNick) && ['Sun', 'Mon'].includes(dayOfWeek)) return false
-  return true  
 }
 
 const IconInfoMsg = ({ infoMessage, iconClassName }) => {
