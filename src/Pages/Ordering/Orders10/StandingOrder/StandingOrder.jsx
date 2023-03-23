@@ -27,6 +27,9 @@ import { useSettingsStore } from "../../../../Contexts/SettingsZustand"
 import { useRouteListFull } from "../../../../data/routeData"
 import { testProductAvailability } from "../_utils/testProductAvailability"
 import { IconInfoMessage } from "../_components/IconInfoMessage"
+import { reformatProdName } from "../_utils/reformatProdName"
+import { wrapText } from "../_utils/wrapText"
+import { toggleFav } from "../_utils/toggleFavorite"
 
 const standOptions = [
   {label: "Standing", value: true},
@@ -77,7 +80,7 @@ export const StandingOrder = ({ user, locNick }) => {
   const [showTableDetails, setShowTableDetails] = useState(false)
   const [showAddItem, setShowAddItem] = useState(false)
   
-  const { data:locationDetails } = useLocationDetails(locNick, !!locNick)
+  const { data:locationDetails, mutate:mutateLocation, locationIsValidating } = useLocationDetails(locNick, !!locNick)
   const { data:routeData } = useRouteListFull(true)
   const { data:standingData, mutate:mutateStanding } = useStandingByLocation(locNick, !!locNick)
 
@@ -259,7 +262,7 @@ export const StandingOrder = ({ user, locNick }) => {
                 && i.isStand === rowData.isStand
               )
               const qtyChanged = baseItem ? (baseItem.qty !== rowData.qty) : (rowData.qty > 0)
-              const displayText = viewMode === 'DAY' ? rowData.product.prodName : rowData.dayOfWeek
+              const displayText = viewMode === 'DAY' ? reformatProdName(rowData.product.prodName, rowData.product.packSize) : rowData.dayOfWeek
               const style = {fontWeight: "bold", fontStyle: qtyChanged ? "italic" : "normal"}
               
               return (
@@ -328,7 +331,7 @@ export const StandingOrder = ({ user, locNick }) => {
             )
           }}
           body={rowData => {
-            return(<div style={{fontWeight: "bold"}}>{rowData.product.prodName}</div>)
+            return(<div style={{fontWeight: "bold"}}>{reformatProdName(rowData.product.prodName, rowData.product.packSize)}</div>)
           }}
         />
         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(weekday => {
@@ -385,6 +388,8 @@ export const StandingOrder = ({ user, locNick }) => {
         isStand={isStand}
         isWhole={isWhole}
         user={user}
+        mutateLocation={mutateLocation}
+        locationIsValidating={locationIsValidating}
       />
 
 
@@ -533,7 +538,7 @@ const makeStandingBase = (standingData, productData, locNick) => {
 
 }
 
-const AddItemSidebar = ({showAddItem, setShowAddItem, locNick, standingChanges, setStandingChanges, productData, setProduct, viewMode, setViewMode, isStand, isWhole, user}) => {
+const AddItemSidebar = ({showAddItem, setShowAddItem, locNick, standingChanges, setStandingChanges, productData, setProduct, viewMode, setViewMode, isStand, isWhole, user, mutateLocation, locationIsValidating}) => {
   const [selectedProdNick, setSelectedProdNick] = useState(null)
 
   const handleAddItem = () => {
@@ -600,6 +605,46 @@ const AddItemSidebar = ({showAddItem, setShowAddItem, locNick, standingChanges, 
 
   }
 
+  const DropdownItemTemplate = (option) => {
+    const prodNameDisplayText = wrapText(reformatProdName(option.prodName, option.packSize), 25).split('\n')
+    const icon = !!option.templateProd ? "pi pi-star-fill" : "pi pi-star"
+
+    return(
+      <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+        <div style={{width: "fit-content"}}>
+          {prodNameDisplayText.map((line, idx) => <div style={{fontWeight: !!option.templateProd ? "bold" : "normal"}} key={idx}>{line}</div>)}
+        </div>
+        <Button icon={icon}
+          onClick={e => {
+            e.preventDefault() 
+            e.stopPropagation()
+            //if (locNick === user.locNick) {
+              console.log(locNick, option.prodNick, option.templateProd)
+              toggleFav(locNick, option.prodNick, option.templateProd, mutateLocation)
+              //setIsFav(() => !isFav)
+           // }
+            
+          }} 
+          className="p-button-text p-button-rounded"
+          disabled={
+            //locNick !== user.locNick || 
+            locationIsValidating
+          }
+        />
+      </div>
+    )
+  }
+
+  const dropdownValueTemplate = (option, props) => {
+    if (option) return(
+      <div style={{display: "flex", justifyContent: "space-between"}}>
+        <div>{reformatProdName(option.prodName, option.packSize) || ''}</div>{!!option.templateProd && <i className="pi pi-star-fill"/>}
+      </div>
+    )
+
+    return <span>{props.placeholder}</span>;
+  }
+
   return (
     <Sidebar
       //className="p-sidebar-lg"
@@ -622,9 +667,12 @@ const AddItemSidebar = ({showAddItem, setShowAddItem, locNick, standingChanges, 
           onChange={e => setSelectedProdNick(e.value)}
           optionLabel="prodName"
           optionValue="prodNick"
+          itemTemplate={DropdownItemTemplate}
+          valueTemplate={dropdownValueTemplate}
           filter 
           showClear 
           filterBy={`prodName${user.locNick === 'backporch' ? ",prodNick" : ""}`}
+          placeholder={productData ? "Select Product" : "Loading..."}
           scrollHeight="350px"
           //itemTemplate={dropdownItemTemplate}
         />
@@ -1103,3 +1151,6 @@ function useIsMobile() {
     
     return isMobile;
 }
+
+
+

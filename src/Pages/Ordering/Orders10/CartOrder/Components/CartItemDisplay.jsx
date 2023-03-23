@@ -15,6 +15,7 @@ import { useLocationDetails } from "../../../../../data/locationData"
 import TimeAgo from "timeago-react"
 import { InputText } from "primereact/inputtext"
 import { testProductAvailability } from "../../_utils/testProductAvailability"
+import { reformatProdName } from "../../_utils/reformatProdName"
 
 export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick, delivDate, user, fulfillmentOption, calculateRoutes }) => {
   const dayOfWeek = getWeekday(delivDate)
@@ -83,9 +84,9 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
   const productColumnTemplate = (rowData) => {
     const { qtyChanged, timingStatus, lastAction, sameDayUpdate, canFulfill, isAvailable } = rowData.info
     const recentlyDeleted = (lastAction === "Deleted") && sameDayUpdate
-    const cleanedProdName = rowData.product.prodName.replace(/\([0-9]+\)/, '').trim()
-    const packSizeString = rowData.product.packSize > 1 ? ` (${rowData.product.packSize}pk)` : ''
-    const displayProdName = `${cleanedProdName}${packSizeString}`
+    // const cleanedProdName = rowData.product.prodName.replace(/\([0-9]+\)/, '').trim()
+    // const packSizeString = rowData.product.packSize > 1 ? ` (${rowData.product.packSize}pk)` : ''
+    const displayProdName = reformatProdName(rowData.product.prodName, rowData.product.packSize)
 
     return (
       <div style={rowData.qty === 0 ? {color : "gray"} : null}>
