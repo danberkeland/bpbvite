@@ -15,6 +15,7 @@ import { useLocationDetails } from "../../../../data/locationData"
 import { APIGatewayFetcher } from "../../../../data/fetchers"
 import { useSettingsStore } from "../../../../Contexts/SettingsZustand"
 import { useCalculateRoutesByLocation } from "../../../../data/productionData"
+import { testProductAvailability } from "../_utils/testProductAvailability"
 
 
 export const CartOrder = ({ user, locNick }) => {
@@ -398,9 +399,4 @@ const assignAction = (changeItem, baseItem, routeChanged, noteChanged) => {
   }
 
   return action
-}
-
-const testProductAvailability = (prodNick, dayOfWeek) => {
-  if (['ptz', 'unpz', 'pbz'].includes(prodNick) && ['Sun', 'Mon'].includes(dayOfWeek)) return false
-  return true  
 }

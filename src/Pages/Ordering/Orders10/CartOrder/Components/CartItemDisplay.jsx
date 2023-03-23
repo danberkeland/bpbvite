@@ -14,6 +14,7 @@ import { getWeekday, getWorkingDate, getWorkingDateTime } from "../../../../../f
 import { useLocationDetails } from "../../../../../data/locationData"
 import TimeAgo from "timeago-react"
 import { InputText } from "primereact/inputtext"
+import { testProductAvailability } from "../../_utils/testProductAvailability"
 
 export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick, delivDate, user, fulfillmentOption, calculateRoutes }) => {
   const dayOfWeek = getWeekday(delivDate)
@@ -80,18 +81,6 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
     : []
 
   const productColumnTemplate = (rowData) => {
-    const prodNick = rowData.product.prodNick
-    // const baseItem = itemBase?.find(item => item.product.prodNick === prodNick)
-    // const leadTimeOverride = altLeadTimes?.find(
-    //   (item) => item.prodNick === prodNick
-    //   )
-    // const leadTime = leadTimeOverride 
-    //   ? leadTimeOverride.altLeadTime 
-    //   : rowData.product.leadTime
-    // const qtyChanged = baseItem ? baseItem.qty !== rowData.qty : rowData.qty > 0
-    // const inProduction = delivDate < getWorkingDateTime('NOW').plus({ days: leadTime })
-    // const timingStatus = isPastDeliv ? 'past' : (isDelivDate ? 'deliv' : (inProduction ? 'inprod' : null))
-
     const { qtyChanged, timingStatus, lastAction, sameDayUpdate, canFulfill, isAvailable } = rowData.info
     const recentlyDeleted = (lastAction === "Deleted") && sameDayUpdate
     const cleanedProdName = rowData.product.prodName.replace(/\([0-9]+\)/, '').trim()
@@ -311,9 +300,4 @@ const IconInfoMsg = ({ infoMessage, iconClassName, iconPosition="left" }) => {
     </div>
   ) 
 
-}
-
-const testProductAvailability = (prodNick, dayOfWeek) => {
-  if (['ptz', 'unpz', 'pbz'].includes(prodNick) && ['Sun', 'Mon'].includes(dayOfWeek)) return false
-  return true  
 }
