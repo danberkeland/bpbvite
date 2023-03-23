@@ -24,6 +24,9 @@ import { listOrdersByLocationByDate } from "../../../../customGraphQL/queries/or
 import { APIGatewayFetcher } from "../../../../data/fetchers"
 import { InputText } from "primereact/inputtext"
 import { useSettingsStore } from "../../../../Contexts/SettingsZustand"
+import { useRouteListFull } from "../../../../data/routeData"
+import { testProductAvailability } from "../_utils/testProductAvailability"
+import { IconInfoMessage } from "../_components/IconInfoMessage"
 
 const standOptions = [
   {label: "Standing", value: true},
@@ -47,7 +50,15 @@ const weekdayOptions = [
   {label: "Saturday", value: "Sat"},
 ]
 
-
+const routeSchedToWeekdayMap = {
+  '1': 'Sun',
+  '2': 'Mon',
+  '3': 'Tue',
+  '4': 'Wed',
+  '5': 'Thu',
+  '6': 'Fri',
+  '7': 'Sat'
+}
 
 export const StandingOrder = ({ user, locNick }) => {
   const isLoading = useSettingsStore((state) => state.isLoading)
@@ -63,10 +74,24 @@ export const StandingOrder = ({ user, locNick }) => {
 
   const { data:productData } = useProductDataWithLocationCustomization(locNick)
   const [product, setProduct] = useState(null)
+  const [showTableDetails, setShowTableDetails] = useState(false)
   const [showAddItem, setShowAddItem] = useState(false)
   
   const { data:locationDetails } = useLocationDetails(locNick, !!locNick)
+  const { data:routeData } = useRouteListFull(true)
   const { data:standingData, mutate:mutateStanding } = useStandingByLocation(locNick, !!locNick)
+
+  const availableRouteScheds = (!!locationDetails && !!routeData) 
+    ? locationDetails.zone.zoneRoute.items.map(zr => zr.routeNick)
+      .map(routeNick => routeData.find(r => r.routeNick === routeNick).RouteSched)
+    : []
+  const fulfillmentAvailabilityDays = [...new Set(availableRouteScheds.flat())]
+    .map(dayNumString => routeSchedToWeekdayMap[dayNumString])
+
+  // console.log("fulfillmentDays:", fulfillmentAvailabilityDays)
+  // console.log(locationDetails?.zone.zoneRoute.items || [])
+  // console.log(availableRouteScheds)
+  // console.log(routeData)
 
   const [standingBase, setStandingBase] = useState(null)
   const [standingChanges, setStandingChanges] = useState(null)
@@ -207,7 +232,22 @@ export const StandingOrder = ({ user, locNick }) => {
           value={tableData}
           responsiveLayout
         >
-          <Column header={viewMode === 'DAY' ? "Product" : "Weekday"}
+          <Column 
+            header={viewMode === 'DAY' ? "Product" : "Weekday"}
+            // header={() => {
+            //   return (
+            //     <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+            //       <span onClick={() => {console.log(standingChanges)}}>{viewMode === 'DAY' ? "Product" : "Weekday"}</span> 
+            //       <Button 
+            //         icon={showTableDetails ? "pi pi-search-minus" : "pi pi-search-plus"}
+            //         className="p-button-rounded p-button-text" 
+            //         onClick={() => setShowTableDetails(!showTableDetails)}
+            //       />
+            //     </div>
+  
+            //   )
+            // }}
+            // headerClassName="header-split-content"
             field={viewMode === 'DAY' 
               ? "product.prodName" 
               : "dayOfWeek"}
@@ -223,7 +263,15 @@ export const StandingOrder = ({ user, locNick }) => {
               const style = {fontWeight: "bold", fontStyle: qtyChanged ? "italic" : "normal"}
               
               return (
-                <div style={style}>{displayText}</div>
+                <>
+                  <div style={style}>{displayText}</div>
+                  {testProductAvailability(rowData.product.prodNick, rowData.dayOfWeek) === false &&
+                    <IconInfoMessage text={`Product not available`} iconClass="pi pi-times" />
+                  }
+                  {fulfillmentAvailabilityDays.includes(rowData.dayOfWeek) === false &&
+                    <IconInfoMessage text={`Delivery not available`} iconClass="pi pi-times" />
+                  }
+                </>
               )
             }}
             />
@@ -232,7 +280,10 @@ export const StandingOrder = ({ user, locNick }) => {
             style={{width: "80px"}}
             field="qty" 
             body={rowData => {
-              return(
+              const disableInput = !(testProductAvailability(rowData.product.prodNick, rowData.dayOfWeek)) 
+                || !fulfillmentAvailabilityDays.includes(rowData.dayOfWeek) 
+              
+                return(
                 <div className="p-fluid">
                   <CustomInputNumber 
                     rowData={rowData}
@@ -241,7 +292,15 @@ export const StandingOrder = ({ user, locNick }) => {
                     standingBase={standingBase}
                     standingChanges={standingChanges}
                     setStandingChanges={setStandingChanges}
+                    disabled={disableInput}
                   />
+                  {/* {showTableDetails &&
+                    <>
+                      <div style={{paddingTop: ".5rem", fontSize:".9rem"}}>{`$${rowData.rate.toFixed(2)}/${rowData.product.packSize > 1 ? "pk" :"ea"}.`}</div>
+                      <div style={{paddingTop: ".5rem", fontSize:".9rem"}}>Subtotal:</div>
+                      <div style={{fontSize:".9rem"}}>{`$${(rowData.rate * rowData.qty).toFixed(2)}`}</div>
+                    </>
+                  } */}
                 </div>
               )
             }}  
@@ -273,13 +332,16 @@ export const StandingOrder = ({ user, locNick }) => {
           }}
         />
         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(weekday => {
-          
           return(
             <Column
               key={weekday}
               header={weekday}
               //field={weekday}
               body={rowData => {
+
+                const disableInput = !(testProductAvailability(rowData.product.prodNick, weekday)) 
+                || !fulfillmentAvailabilityDays.includes(weekday) 
+
                 return(
                   <div className="p-fluid" style={{width: "45px"}}>
                     <CustomInputNumber 
@@ -289,6 +351,7 @@ export const StandingOrder = ({ user, locNick }) => {
                       standingBase={standingBase}
                       standingChanges={standingChanges}
                       setStandingChanges={setStandingChanges}
+                      disabled={disableInput}
                     />
                   </div>
                 )
@@ -881,7 +944,7 @@ const getCartHeaders = (cartOrders, locationDetails) => {
 
 
 
-const CustomInputNumber = ({ rowData, qtyAtt, dayOfWeek, standingBase, standingChanges, setStandingChanges }) => {
+const CustomInputNumber = ({ rowData, qtyAtt, dayOfWeek, standingBase, standingChanges, setStandingChanges, disabled }) => {
   const [rollbackQty, setRollbackQty] = useState()
 
   const baseItem = standingBase.find(i =>
@@ -927,6 +990,7 @@ const CustomInputNumber = ({ rowData, qtyAtt, dayOfWeek, standingBase, standingC
         color: rowData[qtyAtt] === 0 ? "gray" : '',
         backgroundColor: qtyChanged ? 'hsl(37, 67%, 95%)' :'',
       }}
+      disabled={disabled}
       tooltip={rowData.product.packSize > 1 ? `${rowData[qtyAtt] || 0} pk = ${(rowData[qtyAtt] || 0) * rowData.product.packSize} ea` : ''}
       tooltipOptions={{ event: 'focus', position: 'left' }}
       onClick={() => console.log(rowData)}
