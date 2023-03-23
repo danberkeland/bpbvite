@@ -16,6 +16,8 @@ import TimeAgo from "timeago-react"
 import { InputText } from "primereact/inputtext"
 import { testProductAvailability } from "../../_utils/testProductAvailability"
 import { reformatProdName } from "../../_utils/reformatProdName"
+import { DateTime } from "luxon"
+import { IconInfoMessage } from "../../_components/IconInfoMessage"
 
 export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick, delivDate, user, fulfillmentOption, calculateRoutes }) => {
   const dayOfWeek = getWeekday(delivDate)
@@ -34,6 +36,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
       const baseItem = itemBase.find(i => i.product.prodNick === item.product.prodNick)
 
       const validRoutes = calculateRoutes(item.product.prodNick, getWeekday(delivDate), fulfillmentOption)
+      const isAvailable = testProductAvailability(item.product.prodNick, dayOfWeek)
       const leadTimeOverride = altLeadTimes?.find(
         (alt) => alt.prodNick === item.product.prodNick
         )
@@ -45,20 +48,20 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
         baseItem.createdOn === baseItem.updatedOn ? "Created" 
           : (baseItem.qty === 0 ? "Deleted" : "Updated")
       ) : null
-      const inProduction = delivDate < getWorkingDateTime('NOW').plus({ days: item.leadTime })
+      const inProduction = delivDate < getWorkingDateTime('NOW').plus({ days: item.product.leadTime })
       
       
       const sameDayUpdate = !!baseItem && getWorkingDate('NOW') === getWorkingDate(baseItem.qtyUpdatedOn)
-      const maxQty = !inProduction || user.authClass === 'bpbfull' ? 999
+      const maxQty = (!inProduction && isAvailable) || user.authClass === 'bpbfull' ? 999
         : !baseItem ? 0        
-        : !sameDayUpdate ? baseItem.qty
+        : !sameDayUpdate ? (baseItem.qty)
         : baseItem.sameDayMaxQty
       const qtyChanged = baseItem ? baseItem.qty !== item.qty : item.qty > 0
 
       const info = {
         validRoutes: validRoutes,
         canFulfill: (!!validRoutes.length) && validRoutes[0] !== 'NOT ASSIGNED',
-        isAvailable: testProductAvailability(item.product.prodNick, dayOfWeek),
+        isAvailable: isAvailable,
         leadTimeForLocation: leadTime,
         inProduction: inProduction,
         lastAction: lastAction,
@@ -68,7 +71,11 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
         qtyChanged: qtyChanged
       }
 
-      return ({...item, info: info})
+      return (
+        { 
+          ...item,
+          info: info
+        })
     }).filter(item => {
       const baseItem = itemBase.find(i => i.product.prodNick === item.product.prodNick)
 
@@ -82,10 +89,8 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
     : []
 
   const productColumnTemplate = (rowData) => {
-    const { qtyChanged, timingStatus, lastAction, sameDayUpdate, canFulfill, isAvailable } = rowData.info
+    const { qtyChanged, timingStatus, lastAction, sameDayUpdate, canFulfill, isAvailable, maxQty } = rowData.info
     const recentlyDeleted = (lastAction === "Deleted") && sameDayUpdate
-    // const cleanedProdName = rowData.product.prodName.replace(/\([0-9]+\)/, '').trim()
-    // const packSizeString = rowData.product.packSize > 1 ? ` (${rowData.product.packSize}pk)` : ''
     const displayProdName = reformatProdName(rowData.product.prodName, rowData.product.packSize)
 
     return (
@@ -98,20 +103,20 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
               {displayProdName}
           </span>
         </div>
-        {rowData.action === 'CREATE' && rowData.qty === 0 &&
-          <IconInfoMsg infoMessage="Will not be added" iconClassName="pi pi-info-circle" />
+        {rowData.action === 'CREATE' && rowData.qty === 0 && !rowData.isTemplate && 
+          <IconInfoMessage text="Will not be added" iconClass="pi pi-info-circle" />
+        }
+        {recentlyDeleted && rowData.qty === 0 &&
+          <IconInfoMessage text="recently deleted" iconClass="pi pi-info-circle" />
         }
         {!!timingStatus && 
-          <IconInfoMsg { ...timingMessageModel[timingStatus] } />
+          <IconInfoMessage { ...timingMessageModel[timingStatus] } />
         }
-        {(fulfillmentOption === 'deliv' && !canFulfill && rowData.qty > 0) && 
-          <IconInfoMsg infoMessage={`Pick up only for ${dayOfWeek}`} iconClassName="pi pi-times" />
+        {(fulfillmentOption === 'deliv' && !canFulfill) && 
+          <IconInfoMessage text={`Pick up only for ${dayOfWeek}`} iconClass={rowData.qty > 0 ? "pi pi-times" : "pi pi-info-circle"} />
         }
-        {!isAvailable && rowData.qty > 0 && 
-          <IconInfoMsg infoMessage={`Not available ${dayOfWeek}`} iconClassName="pi pi-times" />
-        }
-        {(recentlyDeleted && rowData.qty === 0) && 
-          <IconInfoMsg infoMessage="recently deleted" iconClassName="pi pi-info-circle" />
+        {!isAvailable &&
+          <IconInfoMessage text={`Not available ${dayOfWeek}`} iconClass={rowData.qty > 0 ? "pi pi-times" : "pi pi-info-circle"} />
         }
         {showDetails && 
           <>
@@ -281,24 +286,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
 }
 
 const timingMessageModel = {
-  inprod: { infoMessage: "In production", iconClassName: "pi pi-exclamation-triangle" },
-  deliv: { infoMessage: "Delivery date reached", iconClassName: "pi pi-times" },
-  past: { infoMessage: "Past delivery date", iconClassName: "pi pi-times" }
-}
-
-const IconInfoMsg = ({ infoMessage, iconClassName, iconPosition="left" }) => {
-
-  return(
-    <div style={{
-      display: "flex", 
-      alignContent: "center", 
-      gap: ".25rem", 
-      fontSize: ".9rem"
-    }}>
-      {iconPosition === 'left' && <i className={iconClassName} />}
-      <span>{infoMessage}</span>
-      {iconPosition === 'right' && <i className={iconClassName} />}
-    </div>
-  ) 
-
+  inprod: { text: "In production", iconClass: "pi pi-times" },
+  deliv: { text: "Delivery date reached", iconClass: "pi pi-times" },
+  past: { text: "Past delivery date", iconClass: "pi pi-times" }
 }

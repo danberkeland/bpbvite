@@ -190,6 +190,14 @@ export const getLocationDetails = /* GraphQL */ `
           id
           locNick
           prodNick
+          product {
+            prodNick
+            prodName
+            wholePrice
+            retailPrice
+            leadTime
+            packSize
+          }
           createdAt
           updatedAt
         }

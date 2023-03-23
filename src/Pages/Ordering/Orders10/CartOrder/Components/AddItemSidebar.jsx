@@ -43,12 +43,13 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
       const cartMatchItem = cartItemChanges.find(i => i.product.prodNick === product.prodNick)
       const earliestDate = orderSubmitDate.plus({ days: product.leadTime })
         .toLocaleString({ weekday: 'short', month: 'short', day: 'numeric' })  
+      const isAvailable = testProductAvailability(product.prodNick, dayOfWeek)
 
       const info = { 
         inProduction: delivDate < orderSubmitDate.plus({ days: product.leadTime }),
-        isAvailable: testProductAvailability(product.prodNick, dayOfWeek),
+        isAvailable: isAvailable,
         earliestDateString: earliestDate,
-        maxQty: getMaxQty(user, product, delivDate, cartItems),
+        maxQty: getMaxQty(user, product, delivDate, cartItems, isAvailable),
         canFulfill: validRoutes[0] !== null && validRoutes[0] !== 'NOT ASSIGNED',
         validRoutes: validRoutes,
         inCart: !!cartMatchItem && (cartMatchItem.qty > 0 || cartMatchItem.action === 'CREATE'),
@@ -269,7 +270,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
 
 
 
-const getMaxQty = (user, selectedProduct, delivDate, cartItems) => {
+const getMaxQty = (user, selectedProduct, delivDate, cartItems, isAvailable) => {
   if (!selectedProduct || !cartItems || !delivDate) return null
 
   // we only look through cart items returned from the DB; i.e. items already entered.
@@ -284,7 +285,7 @@ const getMaxQty = (user, selectedProduct, delivDate, cartItems) => {
 
   let selectedProductMax
 
-  if (!inProduction || user.authClass === 'bpbfull') {
+  if ((!inProduction && isAvailable) || user.authClass === 'bpbfull') {
     selectedProductMax = 999
 
   } else if (!inCartItems) { 
