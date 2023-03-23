@@ -95,7 +95,7 @@ export const withBPBForm = (Component) => (props) => {
             // fns.update({ ...fns, ...props }).then(() => {
             //fns.update(props).then(() => {     // TESTING CHANGE
             fns.update(props, {...fns}).then(() => {
-              console.log("Formprops", props);
+              //console.log("Formprops", props);
               formType === "signedIn" ? (window.location = path) : <div></div>
             });
           }
