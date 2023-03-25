@@ -274,7 +274,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
           <InputText
             //inputRef={inputNumberRef}
             ref={inputNumberRef}
-            value={selectedQty}
+            value={String(selectedQty)}
             placeholder="Qty"
             inputMode="numeric"
             keyfilter={/[0-9]/}
