@@ -77,7 +77,7 @@ export const StandingOrder = ({ user, locNick }) => {
 
   const { data:productData } = useProductDataWithLocationCustomization(locNick)
   const [product, setProduct] = useState(null)
-  const [showTableDetails, setShowTableDetails] = useState(false)
+  //const [showTableDetails, setShowTableDetails] = useState(false)
   const [showAddItem, setShowAddItem] = useState(false)
   
   const { data:locationDetails, mutate:mutateLocation, locationIsValidating } = useLocationDetails(locNick, !!locNick)
@@ -372,7 +372,7 @@ export const StandingOrder = ({ user, locNick }) => {
           onClick={() => handleSubmit(locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, user.name, locationDetails, productData, setIsLoading)}
         />
 
-        <div style={{margin: ".5rem"}}>Changes will not take effect until <b>{effectDate}</b>. Orders can still be edited from the Cart Order screen in the meantime.</div>
+        <div style={{color: "hsl(37, 100%, 5%)", margin: ".5rem"}}>Changes will not take effect until <b>{effectDate}</b>. Orders can still be edited from the Cart Order screen in the meantime.</div>
       </div>
 
       <AddItemSidebar

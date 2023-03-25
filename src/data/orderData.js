@@ -190,7 +190,7 @@ export const useCartOrderData = (locNick, delivDateJS, isWhole) => {
  
     // append standing items to cart items if
     // no cart item exists for the same product
-    const orderItems = _standing
+    const combinedOrder = _standing
       .reduce((prev, curr) => {
         let matchIndex = prev.findIndex(item => 
           item.product.prodNick === curr.product.prodNick
@@ -203,6 +203,62 @@ export const useCartOrderData = (locNick, delivDateJS, isWhole) => {
         : a.product.prodName > b.product.prodname ? 1
         : 0
       )
+
+    let orderItems = [...combinedOrder]
+    const favItems = locationDetails.templateProd.items
+    for (let fav of favItems) {
+      let orderMatchItem = combinedOrder.find(order => order.product.prodNick === fav.prodNick)
+      let inCart = !!orderMatchItem && orderMatchItem.orderType === 'C' && orderMatchItem.updatedBy !== 'standing_order'
+      let shouldTakeId = orderMatchItem?.orderType === 'C' && orderMatchItem.updatedBy === 'standing_order' && orderMatchItem.qty === 0
+      
+      let shouldAppend = !orderMatchItem
+      let shouldReplace = shouldTakeId || (orderMatchItem?.orderType === 'S' && orderMatchItem.qty === 0)
+      
+      if (!inCart) {
+        let altPriceItem = altPrices.find(item => item.prodNick === fav.product.prodNick)
+        let newItem = { 
+          id: shouldTakeId ? orderMatchItem.id : null,
+          product: {
+            prodNick: fav.product.prodNick,
+            prodName: fav.product.prodName,
+            leadTime: fav.product.leadTime,
+            packSize: fav.product.packSize
+          },
+          qty: 0,
+          orderType: "C",
+          rate: altPriceItem ? altPriceItem.wholePrice : fav.product.wholePrice,
+          action: "CREATE",
+          isTemplate: true
+        }
+        
+        if (shouldReplace) orderItems = orderItems.filter(o => o.product.prodNick !== newItem.product.prodNick).concat(newItem)
+        if (shouldAppend) orderItems = orderItems.concat(newItem)
+      }
+    }
+
+    let altLeadTimes = locationDetails.altLeadTimeByProduct.items
+    orderItems = orderItems.map(order => {
+      let altItem = altLeadTimes.find(alt => 
+        alt.prodNick === order.product.prodNick
+      )
+      const leadTime = altItem 
+        ? altItem.altLeadTime 
+        : order.product.leadTime
+
+      return ({
+        ...order,
+        product: {...order.product, leadTime: leadTime}
+      })
+
+
+    }).sort((a, b) => a.product.prodName < b.product.prodName ? -1 
+      : a.product.prodName > b.product.prodname ? 1
+      : 0
+    )
+    
+
+
+    
 
     // Make Header
     const defaultRoute = ['atownpick', 'slopick'].includes(locationDetails.zone.zoneNick) 

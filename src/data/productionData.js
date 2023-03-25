@@ -118,7 +118,7 @@ export const useLogisticsDataByDate = (delivDateJS, shouldFetch) => {
   
   return ({
     dimensionData: dimensionData,
-    routedOrderData: useMemo(transformData, [orderData, dimensionData])
+    routedOrderData: useMemo(transformData, [orderData, dimensionData, dayOfWeek])
   })
 }
 

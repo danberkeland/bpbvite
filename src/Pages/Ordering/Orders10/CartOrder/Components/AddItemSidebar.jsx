@@ -18,6 +18,7 @@ import { testProductAvailability } from "../../_utils/testProductAvailability"
 import { reformatProdName } from "../../_utils/reformatProdName"
 import { IconInfoMessage } from "../../_components/IconInfoMessage"
 import { wrapText } from "../../_utils/wrapText"
+import { InputText } from "primereact/inputtext"
 
 export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartItems, cartItemChanges, setCartItemChanges, user, fulfillmentOption, calculateRoutes}) => {
   const dayOfWeek = getWeekday(delivDate)
@@ -26,7 +27,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
   const orderSubmitDate = getWorkingDateTime('NOW')
   const timeDeltaDays = delivDateDT.diff(orderSubmitDate, 'days').toObject().days
 
-  const [selectedQty, setSelectedQty] = useState(null)
+  const [selectedQty, setSelectedQty] = useState(0)
   const [selectedProduct, setSelectedProduct] = useState(null)
   const errorFlag = !!selectedProduct && (selectedProduct.info.inProduction || !selectedProduct.info.isAvailable || !selectedProduct.info.canFulFill)
 
@@ -39,19 +40,33 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
     if (!customProductData || !cartItems || !cartItemChanges) return undefined
 
     const enhancedData = customProductData.map(product => {
-      const validRoutes = calculateRoutes(product.prodNick, dayOfWeek, fulfillmentOption)
       const cartMatchItem = cartItemChanges.find(i => i.product.prodNick === product.prodNick)
+      const baseMatchItem = cartItems.find(i => i.product.prodNick === product.prodNick)
+
+      const inProduction = delivDate < orderSubmitDate.plus({ days: product.leadTime })
+      const isAvailable = testProductAvailability(product.prodNick, dayOfWeek)
       const earliestDate = orderSubmitDate.plus({ days: product.leadTime })
         .toLocaleString({ weekday: 'short', month: 'short', day: 'numeric' })  
+      const validRoutes = calculateRoutes(product.prodNick, dayOfWeek, fulfillmentOption)
+      const inCart = !!baseMatchItem && (baseMatchItem.qty > 0 
+        || cartMatchItem.action === 'CREATE')
+      const sameDayUpdate = !!baseMatchItem && getWorkingDate('NOW') === getWorkingDate(baseMatchItem.qtyUpdatedOn)
+
+      const maxQty = (!inProduction && isAvailable) || user.authClass === 'bpbfull' ? 999
+      //const maxQty = (!inProduction && isAvailable) ? 999  
+        : !baseMatchItem ? 0        
+        : !sameDayUpdate ? (baseMatchItem.qty)
+        : baseMatchItem.sameDayMaxQty
 
       const info = { 
-        inProduction: delivDate < orderSubmitDate.plus({ days: product.leadTime }),
-        isAvailable: testProductAvailability(product.prodNick, dayOfWeek),
+        inProduction: inProduction,
+        isAvailable: isAvailable,
         earliestDateString: earliestDate,
-        maxQty: getMaxQty(user, product, delivDate, cartItems),
-        canFulfill: validRoutes[0] !== null && validRoutes[0] !== 'NOT ASSIGNED',
         validRoutes: validRoutes,
-        inCart: !!cartMatchItem && (cartMatchItem.qty > 0 || cartMatchItem.action === 'CREATE'),
+        canFulfill: validRoutes[0] !== null && validRoutes[0] !== 'NOT ASSIGNED',
+        inCart: inCart,
+        //maxQty: getMaxQty(user, selectedProduct, delivDate, cartMatchItem, isAvailable),
+        maxQty: maxQty,
         recentlyDeleted: cartMatchItem && getWorkingDate('NOW') === getWorkingDate(cartMatchItem.qtyUpdatedOn) && cartMatchItem.qty === 0,
       }
 
@@ -115,7 +130,9 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
     const prodNameDisplayText = wrapText(reformatProdName(option.prodName, option.packSize), 25).split('\n')
     const icon = !!option.templateProd ? "pi pi-star-fill" : "pi pi-star"
 
-    const errorFlag = (inProduction && !inCart) || !isAvailable || !canFulfill
+    const warnFlag = !canFulfill
+    const errorFlag = (inProduction && !inCart) || !isAvailable
+    const severity = errorFlag ? "error" : warnFlag ? "warn" : "info"
 
     return(
       <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
@@ -125,7 +142,13 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
             {(recentlyDeleted && inProduction) && <div style={{fontSize: ".9rem"}}>Recently Deleted</div>}
             <div style={{fontSize: ".9rem"}}>{`${inCart ? "In cart; " : ""}${option.leadTime} day lead`}</div>
           </div>
-          <i className={errorFlag ? "pi pi-exclamation-triangle" : ""} style={{fontSize: "1.25rem", marginRight: "1rem"}}/>
+          <i className={errorFlag ? "pi pi-times" : (warnFlag ? "pi pi-exclamation-triangle" : "")} 
+            style={{
+              fontSize: "1.25rem", 
+              marginRight: "1rem", 
+              color: errorFlag ? "#BF0404" : warnFlag? "hsl(45, 96%, 35%)" : "",
+            }}
+          />
         </div>
         <Button icon={icon}
           onClick={e => {
@@ -184,8 +207,8 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
           valueTemplate={dropdownValueTemplate}
           onChange={e => {
             console.log("selectedProduct:", customProductData?.find(item => item.prodNick === e.value))
-            setSelectedProduct(productDataWithInfo?.find(item => item.prodNick === e.value))
             setSelectedQty(cartItemChanges.find(i => i.product.prodNick === e.value)?.qty || 0)
+            setSelectedProduct(productDataWithInfo?.find(item => item.prodNick === e.value))
           }}
           onHide={() => selectedProduct && inputNumberRef.current.focus()}
           placeholder={customProductData ? "Select Product" : "Loading..."}
@@ -196,13 +219,24 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
           {selectedProduct && 
             <div style={{width: "fit-content", margin: ".5rem", fontSize: ".9rem"}}>
               {!selectedProduct.info.isAvailable && 
-                <IconInfoMessage text={`Product not available on ${dayOfWeek}`} iconClass="pi pi-fw pi-times" />
+                <IconInfoMessage text={`Product not available on ${dayOfWeek}`} 
+                  iconClass="pi pi-fw pi-times" iconColor="#BF0404"
+                />
               }
               {fulfillmentOption === 'deliv' && !selectedProduct.info.canFulfill && 
-                <IconInfoMessage text={`Pick up only for ${dayOfWeek}`} iconClass="pi pi-fw pi-exclamation-triangle" />
+                <IconInfoMessage text={`Pick up only for ${dayOfWeek}`} 
+                  iconClass="pi pi-fw pi-exclamation-triangle" iconColor="hsl(45, 96%, 35%)"
+                />
               }
               {selectedProduct.info.inProduction && !selectedProduct.info.inCart && 
-                <IconInfoMessage text={`In production: available ${selectedProduct.info.earliestDateString}`} iconClass="pi pi-times" />
+                <IconInfoMessage text={`In production: earliest ${selectedProduct.info.earliestDateString}`} 
+                  iconClass="pi pi-fw pi-times" iconColor="#BF0404"
+                />
+              }
+              {selectedProduct.info.inProduction && !!selectedProduct.info.inCart && 
+                <IconInfoMessage text={`In cart; In production (max ${selectedProduct.info.maxQty})`} 
+                  iconClass="pi pi-fw pi-info-circle" iconColor="hsl(218, 43%, 50%)"
+                />
               }
             </div>
           }
@@ -210,7 +244,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
       }
       <div style={{display: "flex", justifyContent: "flex-end", gap: "1rem", padding: ".5rem"}}>
         <div className="p-fluid" style={{flex: "0 0 80px", maxWidth: "80px"}}>
-          <InputNumber 
+          {/* <InputNumber 
             inputRef={inputNumberRef}
             value={selectedQty}
             min={0}
@@ -236,7 +270,61 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
                 setSelectedQty(0)
               }
             }}
-          />
+          /> */}
+          <InputText
+            //inputRef={inputNumberRef}
+            ref={inputNumberRef}
+            value={selectedQty}
+            placeholder="Qty"
+            inputMode="numeric"
+            keyfilter={/[0-9]/}
+            style={{
+              // fontWeight : qtyChanged ? "bold" : "normal",
+              color: selectedQty === 0 ? "gray" : '',
+              backgroundColor: selectedQty > 0 ? 'hsl(37, 67%, 95%)' :'',
+            }}
+            disabled={
+              !selectedProduct || 
+              selectedProduct?.info.maxQty === 0
+            }
+            // tooltip={rowData.product.packSize > 1 ? `${rowData[qtyAtt] || 0} pk = ${(rowData[qtyAtt] || 0) * rowData.product.packSize} ea` : ''}
+            // tooltipOptions={{ event: 'focus', position: 'left' }}
+            // onClick={() => console.log(rowData)}
+            onFocus={e => {
+              e.target.select()
+              // setRollbackQty(rowData[qtyAtt])
+            }}
+            // onKeyDown={e => console.log(e)}
+            onChange={e => {
+              setSelectedQty(Math.min(Number(e.target.value), selectedProduct.info.maxQty))
+              // setSelectedQty(Number(e.target.value))
+            }}
+            onKeyDown={(e) => {
+              console.log(e)
+              if (e.key === "Enter") { 
+                e.target.blur();
+                if (e.target.value === "") setSelectedQty(0);
+              }
+
+              if (e.key === "Escape") {
+                if (e.target.value === "") {
+                  e.target.blur()
+                  // let resetQty = baseItem.qty || 0
+                  // updateQty(resetQty);
+                  // setRollbackQty(resetQty)
+                } else {
+                  e.target.blur()
+                  // updateQty(rollbackQty);
+                }
+              }
+            }}
+            onBlur={() => {
+              if (selectedQty === '') {
+                setSelectedQty(0)
+              }
+            }}
+          /> 
+
         </div>
 
         <Button label={selectedProduct?.info.inCart ? "UPDATE" : "ADD"}
@@ -246,12 +334,11 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
             handleAddProduct()
             setVisible(false)
             setSelectedProduct(null)
-            setSelectedQty(null)
+            setSelectedQty(0)
           }}
           disabled={
             !selectedProduct || 
             selectedProduct?.info.maxQty === 0 ||
-            selectedQty === 0 ||
             (user.authClass === 'bpbfull' && delivDate < getWorkingDateTime('NOW')) ||
             (user.authClass !== 'bpbfull' && delivDate <= getWorkingDateTime('NOW')) ||
             (user.authClass !== 'bpbfull' && !selectedProduct?.info.isAvailable) ||
@@ -265,48 +352,6 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
   )
 
 }
-
-
-
-
-const getMaxQty = (user, selectedProduct, delivDate, cartItems) => {
-  if (!selectedProduct || !cartItems || !delivDate) return null
-
-  // we only look through cart items returned from the DB; i.e. items already entered.
-  // items just added in the app dont count as part of the order if the product is in production.
-  // probably need to review all cases more closely in the future.
-  const cartMatchItem = cartItems.find(
-    item => item.product.prodNick === selectedProduct.prodNick
-  )
-  const inProduction = delivDate < getWorkingDateTime('NOW').plus({ days: selectedProduct.leadTime })
-  const inCartItems = !!cartMatchItem
-  const qtyUpdatedToday = inCartItems && getWorkingDate('NOW') === getWorkingDate(cartMatchItem.qtyUpdatedOn) 
-
-  let selectedProductMax
-
-  if (!inProduction || user.authClass === 'bpbfull') {
-    selectedProductMax = 999
-
-  } else if (!inCartItems) { 
-    // implied inProduction === true
-    selectedProductMax = 0
-
-  } else if (!qtyUpdatedToday) { 
-    // implied inProduction === true && inCartItems === true
-    selectedProductMax = cartMatchItem.qty
-
-  } else { 
-    // implied all true
-    selectedProductMax = cartMatchItem.sameDayMaxQty
-
-  }
-
-  return selectedProductMax
-
-}
-
-
-
 
 
 
@@ -342,4 +387,91 @@ const deleteFav = async (id) => {
 
   let response = await gqlFetcher(query, variables)
   console.log("deleteFav", response)
+}
+
+
+      
+const CustomInputNumber = ({ rowData, qtyAtt, dayOfWeek, standingBase, standingChanges, setStandingChanges, disabled }) => {
+  const [rollbackQty, setRollbackQty] = useState()
+
+  const baseItem = standingBase.find(i =>
+    i.product.prodNick === rowData.product.prodNick
+    && i.dayOfWeek === dayOfWeek  
+    && i.isWhole === rowData.isWhole
+    && i.isStand === rowData.isStand
+  )
+
+  const qtyChanged = (baseItem && baseItem.qty !== rowData[qtyAtt]) || (!baseItem && rowData[qtyAtt] > 0)
+  
+  const matchIndex = standingChanges.findIndex(i =>
+    i.product.prodNick === rowData.product.prodNick
+    && i.dayOfWeek === dayOfWeek  
+    && i.isWhole === rowData.isWhole
+    && i.isStand === rowData.isStand
+  )
+  
+  const updateQty = (value) => {    
+    let newQty = Number(value) >= 999 ? 999 : (value === '' ? value : Number(value))
+
+    //console.log(e, e.value, typeof(e.value), newQty)
+    if (matchIndex > -1) {
+      let _update = [...standingChanges]
+      let _updateItem = {
+        ..._update[matchIndex],
+        qty: newQty
+      }
+      _update[matchIndex] = _updateItem
+      setStandingChanges(_update)
+    } else {
+      console.log("error: standing data could not be updated.")
+    }
+  }
+
+  return (
+    <InputText
+      value={rowData[qtyAtt]}
+      inputMode="numeric"
+      keyfilter={/[0-9]/}
+      style={{
+        fontWeight : qtyChanged ? "bold" : "normal",
+        color: rowData[qtyAtt] === 0 ? "gray" : '',
+        backgroundColor: qtyChanged ? 'hsl(37, 67%, 95%)' :'',
+      }}
+      disabled={disabled}
+      tooltip={rowData.product.packSize > 1 ? `${rowData[qtyAtt] || 0} pk = ${(rowData[qtyAtt] || 0) * rowData.product.packSize} ea` : ''}
+      tooltipOptions={{ event: 'focus', position: 'left' }}
+      onClick={() => console.log(rowData)}
+      onFocus={e => {
+        e.target.select()
+        setRollbackQty(rowData[qtyAtt])
+      }}
+      // onKeyDown={e => console.log(e)}
+      onChange={e => {updateQty(e.target.value)}}
+      onKeyDown={(e) => {
+        console.log(e)
+        if (e.key === "Enter") { 
+          e.target.blur();
+          if (e.target.value === "") updateQty(0);
+        }
+
+        if (e.key === "Escape") {
+          if (e.target.value === "") {
+            e.target.blur()
+            let resetQty = baseItem.qty || 0
+            updateQty(resetQty);
+            setRollbackQty(resetQty)
+          } else {
+            e.target.blur()
+            updateQty(rollbackQty);
+          }
+        }
+      }}
+      onBlur={() => {
+        if (rowData[qtyAtt] === '') {
+          updateQty(0)
+        }
+      }}
+    />
+  )
+
 }
