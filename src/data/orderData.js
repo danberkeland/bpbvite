@@ -205,8 +205,9 @@ export const useCartOrderData = (locNick, delivDateJS, isWhole) => {
       )
 
     let orderItems = [...combinedOrder]
+    let shouldHideTemplates = combinedOrder.findIndex(i => i.orderType === 'C' && i.updatedBy !== 'standing_order') > -1
     const favItems = locationDetails.templateProd.items
-    for (let fav of favItems) {
+    if (!shouldHideTemplates) for (let fav of favItems) {
       let orderMatchItem = combinedOrder.find(order => order.product.prodNick === fav.prodNick)
       let inCart = !!orderMatchItem && orderMatchItem.orderType === 'C' && orderMatchItem.updatedBy !== 'standing_order'
       let shouldTakeId = orderMatchItem?.orderType === 'C' && orderMatchItem.updatedBy === 'standing_order' && orderMatchItem.qty === 0
