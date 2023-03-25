@@ -48,7 +48,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
         .toLocaleString({ weekday: 'short', month: 'short', day: 'numeric' })  
       const validRoutes = calculateRoutes(product.prodNick, dayOfWeek, fulfillmentOption)
       const inCart = !!baseMatchItem && (baseMatchItem.qty > 0 
-        || cartMatchItem?.action === 'CREATE')
+        || (cartMatchItem?.action === 'CREATE' && (!cartMatchItem.isTemplate || !!cartMatchItem.qty)))
       const sameDayUpdate = !!baseMatchItem && getWorkingDate('NOW') === getWorkingDate(baseMatchItem.qtyUpdatedOn)
 
       const maxQty = (!inProduction && isAvailable) || user.authClass === 'bpbfull' ? 999
@@ -139,6 +139,8 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
           <div style={{width: "fit-content", fontWeight: (recentlyDeleted && inProduction) ? "bold" : "normal"}}>
             {prodNameDisplayText.map((line, idx) => <div style={{fontWeight: !!option.templateProd ? "bold" : "normal"}} key={idx}>{line}</div>)}
             {(recentlyDeleted && inProduction) && <div style={{fontSize: ".9rem"}}>Recently Deleted</div>}
+            {/* <div style={{fontSize: ".9rem", marginTop: ".1rem" }}>{`${option.leadTime} day lead`}</div> */}
+            {/* {inCart && <IconInfoMessage text="In cart" iconClass="pi pi-fw pi-shopping-cart" />} */}
             <div style={{fontSize: ".9rem"}}>{`${inCart ? "In cart; " : ""}${option.leadTime} day lead`}</div>
           </div>
           <i className={errorFlag ? "pi pi-times" : (warnFlag ? "pi pi-exclamation-triangle" : "")} 
