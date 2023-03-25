@@ -1,6 +1,6 @@
 import React from "react"
 
-export const IconInfoMessage = ({text, iconClass, iconColor=null, position="left"}) => {
+export const IconInfoMessage = ({text, textStyle, iconClass, iconColor=null, position="left"}) => {
   const iconStyle = {
     color: iconColor
   }
@@ -14,7 +14,7 @@ export const IconInfoMessage = ({text, iconClass, iconColor=null, position="left
       fontSize: ".9rem"
     }}>
       {!!iconClass && position === "left" && <i style={iconStyle} className={iconClass || ''} />}
-      <span>{text}</span>
+      <span style={textStyle}>{text}</span>
       {!!iconClass && position === "right" && <i style={iconStyle} className={iconClass || ''} />}
     </div>
   ) 

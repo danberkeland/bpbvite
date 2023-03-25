@@ -49,7 +49,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
       //const maxQty = (!inProduction && isAvailable) ? 999
         : !baseItem ? 0        
         : !sameDayUpdate ? (baseItem.qty)
-        : baseItem.sameDayMaxQty
+        : (baseItem.sameDayMaxQty || 0)
 
       const info = {
         validRoutes: validRoutes,
@@ -96,11 +96,11 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
               {displayProdName}
           </span>
         </div>
-        {rowData.action === 'CREATE' && rowData.qty === 0 && !rowData.isTemplate && 
+        {/* {rowData.action === 'CREATE' && rowData.qty === 0 && !rowData.isTemplate && 
           <IconInfoMessage text="Will not be added" 
             iconClass="pi pi-fw pi-info-circle" iconColor="hsl(218, 43%, 50%)"
           />
-        }
+        } */}
         {recentlyDeleted && rowData.qty === 0 &&
           <IconInfoMessage text="recently deleted" 
             iconClass="pi pi-fw pi-info-circle" iconColor="hsl(218, 43%, 50%)" 
@@ -118,18 +118,20 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
           />
         }        
         {timingStatus === 'inprod' && maxQty === 0 &&
-          <IconInfoMessage text={`In production`} iconClass="pi pi-fw pi-times" iconColor="#BF0404" />
+          <IconInfoMessage text={`In production`} iconClass="pi pi-fw pi-times" />
         }
         {(fulfillmentOption === 'deliv' && !canFulfill) &&
           <IconInfoMessage text={`Pick up only for ${dayOfWeek}`} 
-            iconClass={rowData.qty > 0 ? "pi pi-fw pi-times" : "pi pi-fw pi-info-circle"} 
-            iconColor={rowData.qty > 0 ? "#BF0404" : "hsl(218, 43%, 50%)"}
+            textStyle={{fontWeight: !!rowData.qty ? "bold" : ""}}
+            iconClass={"pi pi-fw pi-exclamation-triangle"} 
+            iconColor={!!rowData.qty ? "hsl(45, 96%, 35%)"  : ""}
           />
         }
         {!isAvailable &&
           <IconInfoMessage text={`Not available ${dayOfWeek}`} 
-            iconClass={rowData.qty > 0 ? "pi pi-fw pi-times" : "pi pi-fw pi-info-circle"}
-            iconColor={rowData.qty > 0 ? "#BF0404" : "hsl(218, 43%, 50%)"}
+            textStyle={{fontWeight: !!rowData.qty ? "bold" : ""}}
+            iconClass={"pi pi-fw pi-times"}
+            iconColor={!!rowData.qty ? "#BF0404" : ""}
           />
         }
         {showDetails && 
