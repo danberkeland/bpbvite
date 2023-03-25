@@ -233,8 +233,8 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
                   iconClass="pi pi-fw pi-times" iconColor="#BF0404"
                 />
               }
-              {selectedProduct.info.inProduction && !!selectedProduct.info.inCart && 
-                <IconInfoMessage text={`In cart; In production (max ${selectedProduct.info.maxQty})`} 
+              {selectedProduct.info.inProduction && !!selectedProduct.info.inCart && selectedProduct.info.maxQty > 0 &&
+                <IconInfoMessage text={`In cart; In production${selectedProduct.info.maxQty < 999 ? `(max ${selectedProduct.info.maxQty})` : ""}`} 
                   iconClass="pi pi-fw pi-info-circle" iconColor="hsl(218, 43%, 50%)"
                 />
               }
