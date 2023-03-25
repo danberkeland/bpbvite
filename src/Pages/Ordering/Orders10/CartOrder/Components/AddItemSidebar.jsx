@@ -3,7 +3,6 @@ import React, { useMemo, useRef, useState } from "react"
 import { Button } from "primereact/button"
 import { Dropdown } from "primereact/dropdown"
 import { Sidebar } from "primereact/sidebar"
-import { InputNumber } from "primereact/inputnumber"
 
 import { useProductDataWithLocationCustomization } from "../../../../../data/productData"
 
@@ -27,7 +26,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
   const orderSubmitDate = getWorkingDateTime('NOW')
   const timeDeltaDays = delivDateDT.diff(orderSubmitDate, 'days').toObject().days
 
-  const [selectedQty, setSelectedQty] = useState(0)
+  const [selectedQty, setSelectedQty] = useState('')
   const [selectedProduct, setSelectedProduct] = useState(null)
   const errorFlag = !!selectedProduct && (selectedProduct.info.inProduction || !selectedProduct.info.isAvailable || !selectedProduct.info.canFulFill)
 
@@ -52,8 +51,8 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
         || cartMatchItem?.action === 'CREATE')
       const sameDayUpdate = !!baseMatchItem && getWorkingDate('NOW') === getWorkingDate(baseMatchItem.qtyUpdatedOn)
 
-      const maxQty = (!inProduction && isAvailable) || user.authClass === 'bpbfull' ? 999
-      //const maxQty = (!inProduction && isAvailable) ? 999  
+      //const maxQty = (!inProduction && isAvailable) || user.authClass === 'bpbfull' ? 999
+      const maxQty = (!inProduction && isAvailable) ? 999  
         : !baseMatchItem ? 0        
         : !sameDayUpdate ? (baseMatchItem.qty)
         : baseMatchItem.sameDayMaxQty
@@ -189,7 +188,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
       onHide={() => {
         setVisible(false)
         setSelectedProduct(null)
-        setSelectedQty(null)
+        setSelectedQty('')
       }}  
       blockScroll={true}
       icons={() => <div>{`Adding for ${delivDateString} (T +${timeDeltaDays})`}</div>}
@@ -324,7 +323,6 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
               }
             }}
           /> 
-
         </div>
 
         <Button label={selectedProduct?.info.inCart ? "UPDATE" : "ADD"}
@@ -391,87 +389,88 @@ const deleteFav = async (id) => {
 
 
       
-const CustomInputNumber = ({ rowData, qtyAtt, dayOfWeek, standingBase, standingChanges, setStandingChanges, disabled }) => {
-  const [rollbackQty, setRollbackQty] = useState()
+// const CustomInputNumber = ({ rowData, qtyAtt, dayOfWeek, standingBase, standingChanges, setStandingChanges, disabled }) => {
+//   const [rollbackQty, setRollbackQty] = useState()
 
-  const baseItem = standingBase.find(i =>
-    i.product.prodNick === rowData.product.prodNick
-    && i.dayOfWeek === dayOfWeek  
-    && i.isWhole === rowData.isWhole
-    && i.isStand === rowData.isStand
-  )
+//   const baseItem = standingBase.find(i =>
+//     i.product.prodNick === rowData.product.prodNick
+//     && i.dayOfWeek === dayOfWeek  
+//     && i.isWhole === rowData.isWhole
+//     && i.isStand === rowData.isStand
+//   )
 
-  const qtyChanged = (baseItem && baseItem.qty !== rowData[qtyAtt]) || (!baseItem && rowData[qtyAtt] > 0)
+//   const qtyChanged = (baseItem && baseItem.qty !== rowData[qtyAtt]) || (!baseItem && rowData[qtyAtt] > 0)
   
-  const matchIndex = standingChanges.findIndex(i =>
-    i.product.prodNick === rowData.product.prodNick
-    && i.dayOfWeek === dayOfWeek  
-    && i.isWhole === rowData.isWhole
-    && i.isStand === rowData.isStand
-  )
+//   const matchIndex = standingChanges.findIndex(i =>
+//     i.product.prodNick === rowData.product.prodNick
+//     && i.dayOfWeek === dayOfWeek  
+//     && i.isWhole === rowData.isWhole
+//     && i.isStand === rowData.isStand
+//   )
   
-  const updateQty = (value) => {    
-    let newQty = Number(value) >= 999 ? 999 : (value === '' ? value : Number(value))
+//   const updateQty = (value) => {    
+//     let newQty = Number(value) >= 999 ? 999 : (value === '' ? value : Number(value))
 
-    //console.log(e, e.value, typeof(e.value), newQty)
-    if (matchIndex > -1) {
-      let _update = [...standingChanges]
-      let _updateItem = {
-        ..._update[matchIndex],
-        qty: newQty
-      }
-      _update[matchIndex] = _updateItem
-      setStandingChanges(_update)
-    } else {
-      console.log("error: standing data could not be updated.")
-    }
-  }
+//     //console.log(e, e.value, typeof(e.value), newQty)
+//     if (matchIndex > -1) {
+//       let _update = [...standingChanges]
+//       let _updateItem = {
+//         ..._update[matchIndex],
+//         qty: newQty
+//       }
+//       _update[matchIndex] = _updateItem
+//       setStandingChanges(_update)
+//     } else {
+//       console.log("error: standing data could not be updated.")
+//     }
+//   }
 
-  return (
-    <InputText
-      value={rowData[qtyAtt]}
-      inputMode="numeric"
-      keyfilter={/[0-9]/}
-      style={{
-        fontWeight : qtyChanged ? "bold" : "normal",
-        color: rowData[qtyAtt] === 0 ? "gray" : '',
-        backgroundColor: qtyChanged ? 'hsl(37, 67%, 95%)' :'',
-      }}
-      disabled={disabled}
-      tooltip={rowData.product.packSize > 1 ? `${rowData[qtyAtt] || 0} pk = ${(rowData[qtyAtt] || 0) * rowData.product.packSize} ea` : ''}
-      tooltipOptions={{ event: 'focus', position: 'left' }}
-      onClick={() => console.log(rowData)}
-      onFocus={e => {
-        e.target.select()
-        setRollbackQty(rowData[qtyAtt])
-      }}
-      // onKeyDown={e => console.log(e)}
-      onChange={e => {updateQty(e.target.value)}}
-      onKeyDown={(e) => {
-        console.log(e)
-        if (e.key === "Enter") { 
-          e.target.blur();
-          if (e.target.value === "") updateQty(0);
-        }
+//   return (
+//     <InputText
+//       value={rowData[qtyAtt]}
+//       placeholder="Qty"
+//       inputMode="numeric"
+//       keyfilter={/[0-9]/}
+//       style={{
+//         fontWeight : qtyChanged ? "bold" : "normal",
+//         color: rowData[qtyAtt] === 0 ? "gray" : '',
+//         backgroundColor: qtyChanged ? 'hsl(37, 67%, 95%)' :'',
+//       }}
+//       disabled={disabled}
+//       tooltip={rowData.product.packSize > 1 ? `${rowData[qtyAtt] || 0} pk = ${(rowData[qtyAtt] || 0) * rowData.product.packSize} ea` : ''}
+//       tooltipOptions={{ event: 'focus', position: 'left' }}
+//       onClick={() => console.log(rowData)}
+//       onFocus={e => {
+//         e.target.select()
+//         setRollbackQty(rowData[qtyAtt])
+//       }}
+//       // onKeyDown={e => console.log(e)}
+//       onChange={e => {updateQty(e.target.value)}}
+//       onKeyDown={(e) => {
+//         console.log(e)
+//         if (e.key === "Enter") { 
+//           e.target.blur();
+//           if (e.target.value === "") updateQty(0);
+//         }
 
-        if (e.key === "Escape") {
-          if (e.target.value === "") {
-            e.target.blur()
-            let resetQty = baseItem.qty || 0
-            updateQty(resetQty);
-            setRollbackQty(resetQty)
-          } else {
-            e.target.blur()
-            updateQty(rollbackQty);
-          }
-        }
-      }}
-      onBlur={() => {
-        if (rowData[qtyAtt] === '') {
-          updateQty(0)
-        }
-      }}
-    />
-  )
+//         if (e.key === "Escape") {
+//           if (e.target.value === "") {
+//             e.target.blur()
+//             let resetQty = baseItem.qty || 0
+//             updateQty(resetQty);
+//             setRollbackQty(resetQty)
+//           } else {
+//             e.target.blur()
+//             updateQty(rollbackQty);
+//           }
+//         }
+//       }}
+//       onBlur={() => {
+//         if (rowData[qtyAtt] === '') {
+//           updateQty(0)
+//         }
+//       }}
+//     />
+//   )
 
-}
+// }

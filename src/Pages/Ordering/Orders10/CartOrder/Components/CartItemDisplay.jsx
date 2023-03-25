@@ -97,10 +97,14 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
           </span>
         </div>
         {rowData.action === 'CREATE' && rowData.qty === 0 && !rowData.isTemplate && 
-          <IconInfoMessage text="Will not be added" iconClass="pi pi-fw pi-info-circle" iconColor="hsl(218, 43%, 50%)" />
+          <IconInfoMessage text="Will not be added" 
+            iconClass="pi pi-fw pi-info-circle" iconColor="hsl(218, 43%, 50%)"
+          />
         }
         {recentlyDeleted && rowData.qty === 0 &&
-          <IconInfoMessage text="recently deleted" iconClass="pi pi-fw pi-info-circle" iconColor="hsl(218, 43%, 50%)" />
+          <IconInfoMessage text="recently deleted" 
+            iconClass="pi pi-fw pi-info-circle" iconColor="hsl(218, 43%, 50%)" 
+          />
         }
         {/* {!!timingStatus && 
           <IconInfoMessage { ...timingMessageModel[timingStatus] } />
