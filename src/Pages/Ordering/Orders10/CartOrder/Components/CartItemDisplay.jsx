@@ -45,8 +45,8 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
       ) : null
       const sameDayUpdate = !!baseItem && getWorkingDate('NOW') === getWorkingDate(baseItem.qtyUpdatedOn)
 
-      //const maxQty = (!inProduction && isAvailable) || user.authClass === 'bpbfull' ? 999
-      const maxQty = (!inProduction && isAvailable) ? 999
+      const maxQty = (!inProduction && isAvailable) || user.authClass === 'bpbfull' ? 999
+      //const maxQty = (!inProduction && isAvailable) ? 999
         : !baseItem ? 0        
         : !sameDayUpdate ? (baseItem.qty)
         : baseItem.sameDayMaxQty
@@ -97,10 +97,10 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
           </span>
         </div>
         {rowData.action === 'CREATE' && rowData.qty === 0 && !rowData.isTemplate && 
-          <IconInfoMessage text="Will not be added" iconClass="pi pi-fw pi-info-circle" />
+          <IconInfoMessage text="Will not be added" iconClass="pi pi-fw pi-info-circle" iconColor="hsl(218, 43%, 50%)" />
         }
         {recentlyDeleted && rowData.qty === 0 &&
-          <IconInfoMessage text="recently deleted" iconClass="pi pi-fw pi-info-circle" />
+          <IconInfoMessage text="recently deleted" iconClass="pi pi-fw pi-info-circle" iconColor="hsl(218, 43%, 50%)" />
         }
         {/* {!!timingStatus && 
           <IconInfoMessage { ...timingMessageModel[timingStatus] } />

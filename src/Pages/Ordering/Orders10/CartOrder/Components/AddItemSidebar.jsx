@@ -52,8 +52,8 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
         || cartMatchItem.action === 'CREATE')
       const sameDayUpdate = !!baseMatchItem && getWorkingDate('NOW') === getWorkingDate(baseMatchItem.qtyUpdatedOn)
 
-      // const maxQty = (!inProduction && isAvailable) || user.authClass === 'bpbfull' ? 999
-      const maxQty = (!inProduction && isAvailable) ? 999  
+      const maxQty = (!inProduction && isAvailable) || user.authClass === 'bpbfull' ? 999
+      //const maxQty = (!inProduction && isAvailable) ? 999  
         : !baseMatchItem ? 0        
         : !sameDayUpdate ? (baseMatchItem.qty)
         : baseMatchItem.sameDayMaxQty
