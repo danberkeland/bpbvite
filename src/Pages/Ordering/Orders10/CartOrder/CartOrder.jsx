@@ -306,8 +306,11 @@ export const CartOrder = ({ user, locNick }) => {
   return(
     <div>
       {/* <h1 style={{padding: ".5rem"}}>Cart Order</h1> */}
-      <div style={{width: "100%", display: "flex", justifyContent: "left", flexWrap: ""}}>
+      <div style={{width: "100%", display: "flex", alignItems: "flex-end", justifyContent: "left", flexWrap: ""}}>
         <div style={{padding: "0.5rem", flex: "100%"}} className="bpb-input-field p-fluid">
+          <div style={{color: "hsl(37, 100%, 10%)", fontSize: ".9rem", paddingBottom: ".1rem"}}>
+              Fulfillment Method:
+          </div>
           <FulfillmentDropdown 
             headerChanges={headerChanges}
             setHeaderChanges={setHeaderChanges}
@@ -315,6 +318,21 @@ export const CartOrder = ({ user, locNick }) => {
           />
         </div>
         <div style={{padding: "0.5rem", flex: "0 0 7.5rem"}} className="bpb-input-field p-fluid">
+          <div style={{display: "flex", justifyContent: "flex-start", alignItems: "flex-end"}}>
+            {/* {weekLetterDisplayModel.map(dayItem => (
+              <span key={dayItem.dayOfWeek} 
+                style={{
+                  color: dayItem.dayOfWeek === dayOfWeek ? "hsl(37, 100%, 10%)" : "hsl(37, 30%, 20%)",
+                  fontWeight: dayItem.dayOfWeek === dayOfWeek ? "bold": "normal",
+                  fontSize: dayItem.dayOfWeek === dayOfWeek ? "1rem": ".8rem"
+                }}
+              >
+                {dayItem.symbol}
+              </span>))} */}
+            <div style={{color: "hsl(37, 100%, 10%)", fontSize: ".9rem", paddingBottom: ".1rem"}}>
+              Order Date:
+            </div>
+          </div>
           <CartCalendar 
             delivDate={delivDate}
             setDelivDate={setDelivDate}
@@ -400,3 +418,13 @@ const assignAction = (changeItem, baseItem, routeChanged, noteChanged) => {
 
   return action
 }
+
+const weekLetterDisplayModel = [
+  {dayOfWeek: 'Sun', symbol: 'S'},
+  {dayOfWeek: 'Mon', symbol: 'M'},
+  {dayOfWeek: 'Tue', symbol: 'T'},
+  {dayOfWeek: 'Wed', symbol: 'W'},
+  {dayOfWeek: 'Thu', symbol: 'Th'},
+  {dayOfWeek: 'Fri', symbol: 'F'},
+  {dayOfWeek: 'Sat', symbol: 'S'},
+]
