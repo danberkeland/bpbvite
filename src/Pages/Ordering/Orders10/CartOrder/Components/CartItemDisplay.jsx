@@ -106,7 +106,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
           <IconInfoMessage { ...timingMessageModel[timingStatus] } />
         } */}
         {timingStatus === 'inprod' && 0 < maxQty && 
-          <IconInfoMessage text={`In production${maxQty < 999 ? ` (max ${maxQty})` : ''}`} 
+            <IconInfoMessage text={`In production${maxQty < 999 ? ` (max ${maxQty})` : ''}`} 
             // iconClass="pi pi-fw pi-exclamation-triangle" 
             // iconColor="hsl(45, 96%, 35%)" 
             iconClass="pi pi-fw pi-info-circle"
@@ -119,13 +119,13 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
         {(fulfillmentOption === 'deliv' && !canFulfill) &&
           <IconInfoMessage text={`Pick up only for ${dayOfWeek}`} 
             iconClass={rowData.qty > 0 ? "pi pi-fw pi-times" : "pi pi-fw pi-info-circle"} 
-            iconColor={rowData.qty > 0 ? "#BF0404" : ""}
+            iconColor={rowData.qty > 0 ? "#BF0404" : "hsl(218, 43%, 50%)"}
           />
         }
         {!isAvailable &&
           <IconInfoMessage text={`Not available ${dayOfWeek}`} 
             iconClass={rowData.qty > 0 ? "pi pi-fw pi-times" : "pi pi-fw pi-info-circle"}
-            iconColor={rowData.qty > 0 ? "#BF0404" : ""}
+            iconColor={rowData.qty > 0 ? "#BF0404" : "hsl(218, 43%, 50%)"}
           />
         }
         {showDetails && 

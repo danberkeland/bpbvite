@@ -49,7 +49,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
         .toLocaleString({ weekday: 'short', month: 'short', day: 'numeric' })  
       const validRoutes = calculateRoutes(product.prodNick, dayOfWeek, fulfillmentOption)
       const inCart = !!baseMatchItem && (baseMatchItem.qty > 0 
-        || cartMatchItem.action === 'CREATE')
+        || cartMatchItem?.action === 'CREATE')
       const sameDayUpdate = !!baseMatchItem && getWorkingDate('NOW') === getWorkingDate(baseMatchItem.qtyUpdatedOn)
 
       const maxQty = (!inProduction && isAvailable) || user.authClass === 'bpbfull' ? 999
