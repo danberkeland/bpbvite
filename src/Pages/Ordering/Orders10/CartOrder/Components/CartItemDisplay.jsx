@@ -114,11 +114,23 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
             // iconClass="pi pi-fw pi-exclamation-triangle" 
             // iconColor="hsl(45, 96%, 35%)" 
             iconClass="pi pi-fw pi-info-circle"
-            iconColor="hsl(218, 43%, 50%)"
+            iconColor={!!rowData.qty ? "hsl(218, 43%, 50%)" : ""}
           />
         }        
         {timingStatus === 'inprod' && maxQty === 0 &&
           <IconInfoMessage text={`In production`} iconClass="pi pi-fw pi-times" />
+        }
+        {timingStatus === 'deliv' &&
+          <IconInfoMessage text={`Delivery date reached`} 
+            iconClass="pi pi-fw pi-info-circle"
+            iconColor={!!rowData.qty ? "hsl(218, 43%, 50%)" : ""}
+          />
+        }
+        {timingStatus === 'past' &&
+          <IconInfoMessage text={`Past delivery date`} 
+            iconClass="pi pi-fw pi-info-circle"
+            iconColor={!!rowData.qty ? "hsl(218, 43%, 50%)" : ""}
+          />
         }
         {(fulfillmentOption === 'deliv' && !canFulfill) &&
           <IconInfoMessage text={`Pick up only for ${dayOfWeek}`} 
