@@ -51,6 +51,8 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
         : !sameDayUpdate ? (baseItem.qty)
         : (baseItem.sameDayMaxQty || 0)
 
+      // console.log("last action", lastAction)
+      // console.log("same day update", sameDayUpdate)
       const info = {
         validRoutes: validRoutes,
         canFulfill: canFulfill,

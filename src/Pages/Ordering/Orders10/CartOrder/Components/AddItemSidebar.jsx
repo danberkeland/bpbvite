@@ -66,7 +66,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
         inCart: inCart,
         //maxQty: getMaxQty(user, selectedProduct, delivDate, cartMatchItem, isAvailable),
         maxQty: maxQty,
-        recentlyDeleted: cartMatchItem && getWorkingDate('NOW') === getWorkingDate(cartMatchItem.qtyUpdatedOn) && cartMatchItem.qty === 0,
+        recentlyDeleted: baseMatchItem && getWorkingDate('NOW') === getWorkingDate(baseMatchItem.qtyUpdatedOn) && baseMatchItem.qty === 0 && cartMatchItem.qty === 0,
       }
 
       return({ ...product, info: info })
@@ -136,7 +136,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
     return(
       <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
         <div style={{width: "100%", display: "flex", justifyContent:"space-between", alignItems: "center"}}>
-          <div style={{width: "fit-content", fontWeight: (recentlyDeleted && inProduction) ? "bold" : "normal"}}>
+          <div style={{width: "fit-content"}}>
             {prodNameDisplayText.map((line, idx) => <div style={{fontWeight: !!option.templateProd ? "bold" : "normal"}} key={idx}>{line}</div>)}
             {(recentlyDeleted && inProduction) && <div style={{fontSize: ".9rem"}}>Recently Deleted</div>}
             {/* <div style={{fontSize: ".9rem", marginTop: ".1rem" }}>{`${option.leadTime} day lead`}</div> */}
