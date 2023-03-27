@@ -16,11 +16,21 @@ import { APIGatewayFetcher } from "../../../../data/fetchers"
 import { useSettingsStore } from "../../../../Contexts/SettingsZustand"
 import { useCalculateRoutesByLocation } from "../../../../data/productionData"
 import { testProductAvailability } from "../_utils/testProductAvailability"
+import useWindowDimensions from "../_utils/useWindowDimensions"
+import { BpbTerminal } from "./Components/BpbTerminal"
 
 
-export const CartOrder = ({ user, locNick }) => {
+export const CartOrder = ({ locNick, setLocNick }) => {
+  const user = {
+    name: useSettingsStore(state => state.user),
+    sub: useSettingsStore(state => state.username),
+    authClass: useSettingsStore(state => state.authClass),
+    locNick: useSettingsStore(state => state.currentLoc),
+  }
   const isLoading = useSettingsStore((state) => state.isLoading)
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
+  const windowSize = useWindowDimensions()
+  const isMobile = windowSize.width < 768
 
   // cart::admin state
   const [isWhole, ] = useState(true) // for possible future extension to retail orders
@@ -304,10 +314,29 @@ export const CartOrder = ({ user, locNick }) => {
   
 
   return(
-    <div>
+    <>
+    <div style={{
+      height: isMobile ? "" : "50rem",
+      margin: "auto",
+      maxWidth: "27rem",
+      // width: isMobile ? "100%" : "",
+      display: "flex", 
+      flexDirection: isMobile ? "row" : "column" , 
+      alignItems: isMobile ? "flex-start" : "flex-end", 
+      justifyContent: isMobile ? "flex-start" : "flex-start",
+      alignContent: isMobile ? "" : "center",
+      flexWrap: "wrap"
+    }}>
       {/* <h1 style={{padding: ".5rem"}}>Cart Order</h1> */}
-      <div style={{width: "100%", display: "flex", alignItems: "flex-end", justifyContent: "left", flexWrap: ""}}>
-        <div style={{padding: "0.5rem", flex: "100%"}} className="bpb-input-field p-fluid">
+      {/* <div style={{width: "100%", display: "flex", flexDirection: isMobile ? "row" : "column" ,alignItems: "flex-end", justifyContent: "left", flexWrap: ""}}> */}
+        <div style={{
+            padding: "0.5rem", 
+            flex: isMobile ? "1 1 10rem" : "", 
+            order: isMobile ? "1" : "2",
+            width: isMobile? "" : "18rem"
+          }}
+          className="bpb-input-field"
+        >
           <div style={{color: "hsl(37, 100%, 10%)", fontSize: ".9rem", paddingBottom: ".1rem"}}>
               Fulfillment Method:
           </div>
@@ -317,62 +346,71 @@ export const CartOrder = ({ user, locNick }) => {
             disabled={disableInputs}
           />
         </div>
-        <div style={{padding: "0.5rem", flex: "0 0 7.5rem"}} className="bpb-input-field p-fluid">
-          <div style={{display: "flex", justifyContent: "flex-start", alignItems: "flex-end"}}>
-            {/* {weekLetterDisplayModel.map(dayItem => (
-              <span key={dayItem.dayOfWeek} 
-                style={{
-                  color: dayItem.dayOfWeek === dayOfWeek ? "hsl(37, 100%, 10%)" : "hsl(37, 30%, 20%)",
-                  fontWeight: dayItem.dayOfWeek === dayOfWeek ? "bold": "normal",
-                  fontSize: dayItem.dayOfWeek === dayOfWeek ? "1rem": ".8rem"
-                }}
-              >
-                {dayItem.symbol}
-              </span>))} */}
-            <div style={{color: "hsl(37, 100%, 10%)", fontSize: ".9rem", paddingBottom: ".1rem"}}>
+        <div style={{
+          // display: "inline",
+          padding: "0.5rem", 
+          flex: isMobile ? "0 0 7.5rem" : "", 
+          order: isMobile ? "2" : "1"
+          }} 
+          className="bpb-input-field"
+        >
+          {/* <div style={{display: "flex", justifyContent: "flex-start", alignItems: "flex-end"}}> */}
+            {isMobile && <div style={{color: "hsl(37, 100%, 10%)", fontSize: ".9rem", paddingBottom: ".1rem"}}>
               Order Date:
-            </div>
-          </div>
+            </div>}
+          {/* </div> */}
           <CartCalendar 
             delivDate={delivDate}
             setDelivDate={setDelivDate}
             locNick={locNick}
+            inline={!isMobile}
           />
         </div>
+      {/* </div> */}
+      
+      <div className="bpb-datatable-orders bpb-datatable-rounded-header bpb-datatable-rounded-footer" 
+        style={{
+          width: "100%",
+          padding: ".5rem", 
+          order: isMobile ? "3" : "5"
+        }}
+      >
+        <CartItemDisplay 
+          itemBase={cartOrderData?.items}
+          itemChanges={itemChanges}  
+          setItemChanges={setItemChanges}
+          locNick={locNick}
+          delivDate={delivDate}
+          //user={user}
+          fulfillmentOption={headerChanges?.route}
+          calculateRoutes={calculateRoutes}
+          isMobile={isMobile}
+        />
       </div>
 
-      <CartItemDisplay 
-        itemBase={cartOrderData?.items}
-        itemChanges={itemChanges}  
-        setItemChanges={setItemChanges}
-        locNick={locNick}
-        delivDate={delivDate}
-        user={user}
-        fulfillmentOption={headerChanges?.route}
-        calculateRoutes={calculateRoutes}
-      />
-
-
-      <ItemNoteInput 
-        headerChanges={headerChanges}
-        setHeaderChanges={setHeaderChanges}
-        disabled={disableInputs}
-      />
-
-      
-      {/* <div style={{padding: "0.5rem"}}>
-        <Button className="p-button-lg" 
-          label={`Submit for ${delivDateString} (New System Only)`}
-          onClick={() => {
-            setIsLoading(true)
-            handleCartSubmit()
-            setIsLoading(false)
-          }}
+      <div className="bpb-inputtext" 
+        style={{
+          padding: ".5rem", 
+          order: isMobile ? "4" : "3",
+          width: isMobile ? "100%" : "18rem",
+        }
+      }>
+        <ItemNoteInput 
+          headerChanges={headerChanges}
+          setHeaderChanges={setHeaderChanges}
           disabled={disableInputs}
         />
-      </div> */}
+      </div>
 
-      <div style={{padding: "0.5rem"}}>
+      {!isMobile && <div style={{flexBasis: "100%", width: "0px", order: "5"}}/>}
+
+      <div 
+        style={{
+          width: isMobile ? "100%" : "18rem",
+          padding: "0.5rem", 
+          order: isMobile ? "6" : "3"
+        }}
+      >
         <Button className="p-button-lg" 
           label={`Submit for ${delivDateString}`}
           onClick={() => {
@@ -385,6 +423,8 @@ export const CartOrder = ({ user, locNick }) => {
           }
         />
       </div>
+
+
       {errorsExist && <div style={{margin: "0 .5rem .5rem .5rem"}}>Fix Errors to submit</div>}
       {/* <pre>{JSON.stringify(itemChanges?.map(i => i.product.prodNick))}</pre>
       <pre>{JSON.stringify(getWeekday(delivDate))}</pre>
@@ -396,6 +436,23 @@ export const CartOrder = ({ user, locNick }) => {
       {/* <pre>{"HEADER CHANGES" + JSON.stringify(headerChanges, null, 2)}</pre> */}
       {/* <pre>{"ITEM CHANGES" + JSON.stringify(itemChanges, null, 2)}</pre> */}
     </div>
+    {user.authClass === 'bpbfull' && !isMobile &&
+      <div style={{padding: "6rem .5rem .5rem .5rem", margin: "auto", width: "50rem", order: "5"}}>
+        <BpbTerminal 
+          locNick={locNick}
+          setLocNick={setLocNick}
+          delivDate={delivDate}
+          setDelivDate={setDelivDate}
+          headerBase={cartOrderData?.header}
+          headerChanges={headerChanges}
+          setHeaderChanges={setHeaderChanges}
+          itemBase={cartOrderData?.items}
+          itemChanges={itemChanges}
+          setItemChanges={setItemChanges}
+        />
+      </div>
+    }
+    </>
   )
 
 }

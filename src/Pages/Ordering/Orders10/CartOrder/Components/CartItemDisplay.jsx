@@ -17,8 +17,15 @@ import { InputText } from "primereact/inputtext"
 import { testProductAvailability } from "../../_utils/testProductAvailability"
 import { reformatProdName } from "../../_utils/reformatProdName"
 import { IconInfoMessage } from "../../_components/IconInfoMessage"
+import { useSettingsStore } from "../../../../../Contexts/SettingsZustand"
 
-export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick, delivDate, user, fulfillmentOption, calculateRoutes }) => {
+export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick, delivDate, fulfillmentOption, calculateRoutes, isMobile }) => {
+  const user = {
+    name: useSettingsStore(state => state.user),
+    sub: useSettingsStore(state => state.username),
+    authClass: useSettingsStore(state => state.authClass),
+    locNick: useSettingsStore(state => state.currentLoc),
+  }
   const dayOfWeek = getWeekday(delivDate)
   const { altLeadTimes } = useLocationDetails(locNick, !!locNick)
   const [rollbackQty, setRollbackQty] = useState(null)
@@ -28,7 +35,6 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
   const isDelivDate = delivDate.getTime() === getWorkingDateTime('NOW').toMillis()
   const isPastDeliv = delivDate < getWorkingDateTime('NOW')
   const disableInputs = isPastDeliv || (isDelivDate && user.authClass !== 'bpbfull')
-
 
   const tableDisplayData = (!!itemBase && !!itemChanges) 
     ? itemChanges.map(item => {
@@ -44,9 +50,9 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
           : (baseItem.qty === 0 ? "Deleted" : "Updated")
       ) : null
       const sameDayUpdate = !!baseItem && getWorkingDate('NOW') === getWorkingDate(baseItem.qtyUpdatedOn)
-
-      const maxQty = (!inProduction && isAvailable) || user.authClass === 'bpbfull' ? 999
+      
       //const maxQty = (!inProduction && isAvailable) ? 999
+      const maxQty = (!inProduction && isAvailable) || user.authClass === 'bpbfull' ? 999
         : !baseItem ? 0        
         : !sameDayUpdate ? (baseItem.qty)
         : (baseItem.sameDayMaxQty || 0)
@@ -187,7 +193,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
     }
 
     return (
-      <div className="p-fluid">
+      <div className="p-fluid" style={{width: "62px"}}>
         <InputText
           //className={`qty-input-${rowData.product.prodNick}`}
           value={rowData.qty}
@@ -258,18 +264,26 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
   }
 
   return (
-    <div className="bpb-datatable-orders" style={{padding: ".5rem"}}>
+    <>
       <DataTable
         value={tableDisplayData} 
         //value={itemChanges}
-        responsiveLayout
+        responsiveLayout="scroll"
         footer={footerTemplate}
+        scrollable={!isMobile}
+        scrollHeight={!isMobile ? "50rem" : undefined}
+        // style={{maxWidth: "400px"}}
       >
         <Column 
           headerClassName="header-split-content"
           header={() => {
             return (
-              <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+              <div style={{
+                fontSize: "1.2rem",
+                display: "flex", 
+                justifyContent: "space-between", 
+                alignItems: "center"
+              }}>
                 <span onClick={() => {console.log(itemChanges)}}>Products</span> 
                 <Button 
                   icon={showDetails ? "pi pi-search-minus" : "pi pi-search-plus"}
@@ -286,7 +300,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
         <Column header={() => <Button onClick={() => setShowSidebar(true)} disabled={disableInputs} style={{width: "62px"}}>Add</Button>}
           field="qty" 
           body={qtyColumnTemplate}
-          style={{width: "5.5rem"}}
+          style={{flex: "0 0 90px"}}
         />
       </DataTable>
 
@@ -302,7 +316,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
         fulfillmentOption={fulfillmentOption}
         calculateRoutes={calculateRoutes}
       />
-    </div>
+    </>
   )
 }
 

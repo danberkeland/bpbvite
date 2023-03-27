@@ -5,7 +5,7 @@ import Orders10 from "./Orders10/Orders10"
 const Ordering2 = () => {
 
   return(
-    <div style={{maxWidth: "50rem", margin:"auto"}}>
+    <div style={{margin:"auto"}}>
       {/* <Orders9 /> */}
       <Orders10 />
     </div>

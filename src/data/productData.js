@@ -187,7 +187,8 @@ export const useProductDataWithLocationCustomization = (locNick) => {
 
     return productData.filter(item => {
       let override = prodsNotAllowed.find(i => i.prodNick === item.prodNick)
-      return override ? override.isAllowed : item.defaultInclude
+      //return override ? override.isAllowed : item.defaultInclude // 'override rule'
+      return override ? !item.defaultInclude : item.defaultInclude // 'negate rule'
 
     }).map(item => {
       let override = altPrices.find(i => i.prodNick === item.prodNick)

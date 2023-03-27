@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Calendar } from "primereact/calendar";
-import { dateToYyyymmdd, getWorkingDateTime, yyyymmddToWeekday } from "../../../../../functions/dateAndTime";
+import { dateToMmddyyyy, dateToYyyymmdd, getWorkingDateTime, yyyymmddToWeekday } from "../../../../../functions/dateAndTime";
 import { useOrderSummary } from "../../../../../data/orderData";
 
 
-export const CartCalendar = ({ delivDate, setDelivDate, locNick }) => {
+export const CartCalendar = ({ delivDate, setDelivDate, locNick, inline }) => {
   const { data:orderSummary } = useOrderSummary(locNick, !!locNick)
   //console.log("order Summary", orderSummary)
 
@@ -23,18 +23,21 @@ export const CartCalendar = ({ delivDate, setDelivDate, locNick }) => {
     return <div style={style} onClick={() => {console.log(date, calendarDate, dayOfWeek, hasCart, hasStanding)}}>{date.day}</div>
   }
 
+
   return (
     <Calendar
       id="calendar"
-      touchUI={true}
+      touchUI={!inline}
       value={delivDate}
-      readOnlyInput // prevent keyboard input of invalid date string
+      placeholder={dateToMmddyyyy(delivDate)} // hacky workaround for buggy behavior when toggling inline property
+      readOnlyInput={!inline} // prevent keyboard input of invalid date string
       minDate={getWorkingDateTime('NOW').minus({ days: 1}).toJSDate()}
       maxDate={getWorkingDateTime('NOW').plus({ months: 2}).endOf('month').minus({ hours: 1}).toJSDate()}
       showOtherMonths={false}
-      showMinMaxRange={true}
+      //showMinMaxRange={!inline}
       dateTemplate={dateTemplate}
       onChange={(e) => setDelivDate(e.value)}
+      inline={inline}
     />
   )
 }

@@ -138,7 +138,7 @@ export const StandingOrder = ({ user, locNick }) => {
   const tableData = makeTableData(standingChanges, viewMode, dayOfWeek, product, isStand, isWhole, isMobile)
   //console.log(tableData)
   return(
-    <div>
+    <div style={{maxWidth: "50rem", margin: "auto"}}>
       {/* <h1 style={{padding: ".5rem"}}>Standing Order</h1> */}
       {user.authClass === 'bpbfull' &&
         <div style={{margin: ".5rem", padding: ".5rem", border: "1px solid", borderRadius: "3px", backgroundColor: "#ffc466", borderColor: "hsl(37, 67%, 60%)"}}>
@@ -230,7 +230,7 @@ export const StandingOrder = ({ user, locNick }) => {
         }
       </div>
 
-      <div style={{margin: ".5rem"}}>
+      <div style={{margin: ".5rem"}} className="bpb-datatable-rounded-header bpb-datatable-rounded-last-row">
         <DataTable 
           value={tableData}
           responsiveLayout
@@ -315,6 +315,7 @@ export const StandingOrder = ({ user, locNick }) => {
       {!isMobile && 
       <DataTable
         style={{padding: ".5rem"}}
+        className="bpb-datatable-rounded-header bpb-datatable-rounded-last-row"
         value={tableData}
         responsiveLayout
         showGridlines

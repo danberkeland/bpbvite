@@ -4,7 +4,6 @@ import { InputTextarea } from "primereact/inputtextarea"
 
 export const ItemNoteInput = ({ headerChanges, setHeaderChanges, disabled }) => {
   return (
-    <div className="bpb-inputtext" style={{padding: ".5rem"}}>
       <InputTextarea
         id="input-note"
         style={{width: "100%"}}
@@ -16,6 +15,5 @@ export const ItemNoteInput = ({ headerChanges, setHeaderChanges, disabled }) => 
         disabled={disabled}
         //disabled={readOnly}
       />
-    </div>
   )
 }

@@ -19,6 +19,7 @@ export const FulfillmentDropdown = ({ headerChanges, setHeaderChanges, disabled 
 
   return (
     <Dropdown 
+      style={{width: "100%"}}
       options={dropdownModel}
       placeholder="loading..."
       value={headerChanges ? headerChanges.route : null}

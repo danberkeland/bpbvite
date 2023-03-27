@@ -18,6 +18,7 @@ import { reformatProdName } from "../../_utils/reformatProdName"
 import { IconInfoMessage } from "../../_components/IconInfoMessage"
 import { wrapText } from "../../_utils/wrapText"
 import { InputText } from "primereact/inputtext"
+import { handleAddCartProduct } from "../../_utils/handleAddProduct"
 
 export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartItems, cartItemChanges, setCartItemChanges, user, fulfillmentOption, calculateRoutes}) => {
   const dayOfWeek = getWeekday(delivDate)
@@ -82,45 +83,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
     [customProductData, delivDate, dayOfWeek, fulfillmentOption, orderSubmitDate, user, cartItems, cartItemChanges]
   )
   
-  const handleAddProduct = () => {
-    let _cartItemChanges = [...cartItemChanges]
-    let oldItem = cartItemChanges.find(item => 
-      item.product.prodNick === selectedProduct.prodNick
-    )
-    let newItem
-    
-    if (oldItem) {
-      // case: update qty on an existing cart order
-      _cartItemChanges = cartItemChanges.map(item => 
-        item.product.prodNick === selectedProduct.prodNick
-          ? { ...item, qty: selectedQty}
-          : { ...item }  
-      )
-    } else {
-      // case: create a new cart item
-      newItem = { 
-        id: null,
-        product: {
-          prodNick: selectedProduct.prodNick,
-          prodName: selectedProduct.prodName,
-          leadTime: selectedProduct.leadTime,
-          packSize: selectedProduct.packSize
-        },
-        qty: selectedQty,
-        orderType: "C",
-        rate: selectedProduct.wholePrice,
-        action: "CREATE"
-      }
-      _cartItemChanges = [ ..._cartItemChanges, newItem]
-        .sort((a, b) => {
-          if (a.product.prodName < b.product.prodName) return -1
-          if (a.product.prodName > b.product.prodName) return 1
-          return 0
-        })
-    }
-    setCartItemChanges(_cartItemChanges)
-
-  }
+  
   
   
   
@@ -331,7 +294,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
           // className="p-button-outlined p-button-rounded"
           onClick={()=>{
             console.log("product added")
-            handleAddProduct()
+            handleAddCartProduct(selectedProduct, selectedQty, cartItemChanges, setCartItemChanges)
             setVisible(false)
             setSelectedProduct(null)
             setSelectedQty(0)
@@ -476,3 +439,4 @@ const deleteFav = async (id) => {
 //   )
 
 // }
+

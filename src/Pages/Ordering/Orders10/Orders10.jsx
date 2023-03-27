@@ -9,7 +9,7 @@ import { StandingOrder } from "./StandingOrder/StandingOrder";
 import { useSettingsStore } from "../../../Contexts/SettingsZustand"
 import { useLocationListSimple } from "../../../data/locationData"
 
-//import './Orders10.css'
+// import './Orders10.css'
 
 const standingBlacklist = ['high', 'hios', 'sandos']
 
@@ -25,6 +25,8 @@ const Orders10 = () => {
     authClass: useSettingsStore(state => state.authClass),
     locNick: useSettingsStore(state => state.currentLoc),
   }
+
+  // console.log(user)
   const { data:locationList } = useLocationListSimple(user.authClass === 'bpbfull')
   const [locNick, setLocNick] = useState(user.locNick)
   const [activeIndex, setActiveIndex] = useState(0)
@@ -34,7 +36,7 @@ const Orders10 = () => {
   }, [user.locNick])
 
   return (
-    <div id="ordering-page" className="ordering-page-container" style={{padding: "0.5rem 0.5rem 150px 0.5rem"}}>
+    <div id="ordering-page" className="ordering-page-container" style={{padding: ".5rem .5rem 9rem .5rem"}}>
       {user.authClass === 'bpbfull' &&
         <div className="custDrop p-fluid" style={{margin: "0.5rem"}}>
           <Dropdown
@@ -52,7 +54,7 @@ const Orders10 = () => {
         </div>
       }
       
-      <div className="cartStandButton p-fluid" style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.5rem"}}>
+      <div className="cartStandButton p-fluid" style={{display: "flex", justifyContent: "space-between", alignItems: "center", maxWidth: "50rem", margin: "auto", padding: "0.5rem"}}>
         <h1 style={{width: "fit-content"}}>{activeIndex === 0 ? "Cart Order" : "Standing Order"}</h1>
         {standingBlacklist.indexOf(user.locNick) === -1 &&
           <Button
@@ -66,10 +68,10 @@ const Orders10 = () => {
 
       {activeIndex === 0 &&
         <CartOrder 
-          user={user}
+          //user={user}
           locNick={locNick}
+          setLocNick={setLocNick}
         />
-
       }
       {standingBlacklist.indexOf(user.locNick) === -1 && activeIndex === 1 && 
         <StandingOrder 
