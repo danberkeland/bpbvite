@@ -63,7 +63,7 @@ export const revalidateProductListSimple = () => {
  * @returns {{ data: Array<{ locNick: string, locName: string }>, errors: object }} A list of locNick ID's and locName text labels.
  */
 export const useProductListFull = (shouldFetch) => {
-  const { data, errors } = useSWR(
+  const { data, errors, isValidating } = useSWR(
     shouldFetch ? [queries.listProductsFull, { limit: 1000 }] : null, 
     gqlFetcher, 
     defaultSwrOptions
@@ -77,7 +77,8 @@ export const useProductListFull = (shouldFetch) => {
 
   return({
     data: _data,
-    errors: errors
+    errors: errors,
+    isValidating: isValidating,
   })
 
 }
@@ -166,8 +167,20 @@ export const revalidateProductDetails = (prodNick) => {
  * with Location-specific settings. Intended to use for Ordering
 */
 export const useProductDataWithLocationCustomization = (locNick) => {
-  const { data:productData, errors:productErrors } = useProductListFull(true)
-  const { altPrices, templateProds, prodsNotAllowed, altLeadTimes, errors:locationErrors } = useLocationDetails(locNick, !!locNick)
+  const { 
+    data:productData, 
+    errors:productErrors, 
+    isValidating:productsAreValidating 
+  } = useProductListFull(true)
+
+  const { 
+      altPrices, 
+      templateProds, 
+      prodsNotAllowed, 
+      altLeadTimes, 
+      errors:locationErrors, 
+      isValidating:locationIsValidating,
+    } = useLocationDetails(locNick, !!locNick)
 
   const applyCustomizations = () => {
     if (!productData || !altPrices || !templateProds || !prodsNotAllowed || !altLeadTimes) return undefined
@@ -210,7 +223,8 @@ export const useProductDataWithLocationCustomization = (locNick) => {
     errors: {
       product: productErrors,
       location: locationErrors
-    }
+    },
+    isValidating: (productsAreValidating || locationIsValidating)
   })
 
 }

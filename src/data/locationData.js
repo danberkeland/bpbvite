@@ -24,7 +24,7 @@ import * as yup from "yup"
  * @returns {{ data: Array<{ locNick: string, locName: string }>, errors: object }} A list of locNick ID's and locName text labels.
  */
 export const useLocationListSimple = (shouldFetch) => {
-  const { data, errors } = useSWR(
+  const { data, errors, isValidating } = useSWR(
     shouldFetch ? [queries.listLocationsSimple, { limit: 1000 }] : null, 
     gqlFetcher, 
     defaultSwrOptions
@@ -41,7 +41,8 @@ export const useLocationListSimple = (shouldFetch) => {
 
   return({
     data: _data,
-    errors: errors
+    errors: errors,
+    isValidating: isValidating,
   })
 
 }
