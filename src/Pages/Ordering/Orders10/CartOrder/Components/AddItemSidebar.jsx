@@ -3,7 +3,6 @@ import React, { useMemo, useRef, useState } from "react"
 import { Button } from "primereact/button"
 import { Dropdown } from "primereact/dropdown"
 import { Sidebar } from "primereact/sidebar"
-import { InputNumber } from "primereact/inputnumber"
 
 import { useProductDataWithLocationCustomization } from "../../../../../data/productData"
 
@@ -27,7 +26,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
   const orderSubmitDate = getWorkingDateTime('NOW')
   const timeDeltaDays = delivDateDT.diff(orderSubmitDate, 'days').toObject().days
 
-  const [selectedQty, setSelectedQty] = useState(0)
+  const [selectedQty, setSelectedQty] = useState('')
   const [selectedProduct, setSelectedProduct] = useState(null)
   const errorFlag = !!selectedProduct && (selectedProduct.info.inProduction || !selectedProduct.info.isAvailable || !selectedProduct.info.canFulFill)
 
@@ -49,14 +48,14 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
         .toLocaleString({ weekday: 'short', month: 'short', day: 'numeric' })  
       const validRoutes = calculateRoutes(product.prodNick, dayOfWeek, fulfillmentOption)
       const inCart = !!baseMatchItem && (baseMatchItem.qty > 0 
-        || cartMatchItem.action === 'CREATE')
+        || (cartMatchItem?.action === 'CREATE' && (!cartMatchItem.isTemplate || !!cartMatchItem.qty)))
       const sameDayUpdate = !!baseMatchItem && getWorkingDate('NOW') === getWorkingDate(baseMatchItem.qtyUpdatedOn)
 
       const maxQty = (!inProduction && isAvailable) || user.authClass === 'bpbfull' ? 999
       //const maxQty = (!inProduction && isAvailable) ? 999  
         : !baseMatchItem ? 0        
         : !sameDayUpdate ? (baseMatchItem.qty)
-        : baseMatchItem.sameDayMaxQty
+        : (baseMatchItem.sameDayMaxQty || 0)
 
       const info = { 
         inProduction: inProduction,
@@ -67,7 +66,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
         inCart: inCart,
         //maxQty: getMaxQty(user, selectedProduct, delivDate, cartMatchItem, isAvailable),
         maxQty: maxQty,
-        recentlyDeleted: cartMatchItem && getWorkingDate('NOW') === getWorkingDate(cartMatchItem.qtyUpdatedOn) && cartMatchItem.qty === 0,
+        recentlyDeleted: baseMatchItem && getWorkingDate('NOW') === getWorkingDate(baseMatchItem.qtyUpdatedOn) && baseMatchItem.qty === 0 && cartMatchItem.qty === 0,
       }
 
       return({ ...product, info: info })
@@ -137,9 +136,11 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
     return(
       <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
         <div style={{width: "100%", display: "flex", justifyContent:"space-between", alignItems: "center"}}>
-          <div style={{width: "fit-content", fontWeight: (recentlyDeleted && inProduction) ? "bold" : "normal"}}>
+          <div style={{width: "fit-content"}}>
             {prodNameDisplayText.map((line, idx) => <div style={{fontWeight: !!option.templateProd ? "bold" : "normal"}} key={idx}>{line}</div>)}
             {(recentlyDeleted && inProduction) && <div style={{fontSize: ".9rem"}}>Recently Deleted</div>}
+            {/* <div style={{fontSize: ".9rem", marginTop: ".1rem" }}>{`${option.leadTime} day lead`}</div> */}
+            {/* {inCart && <IconInfoMessage text="In cart" iconClass="pi pi-fw pi-shopping-cart" />} */}
             <div style={{fontSize: ".9rem"}}>{`${inCart ? "In cart; " : ""}${option.leadTime} day lead`}</div>
           </div>
           <i className={errorFlag ? "pi pi-times" : (warnFlag ? "pi pi-exclamation-triangle" : "")} 
@@ -189,7 +190,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
       onHide={() => {
         setVisible(false)
         setSelectedProduct(null)
-        setSelectedQty(null)
+        setSelectedQty('')
       }}  
       blockScroll={true}
       icons={() => <div>{`Adding for ${delivDateString} (T +${timeDeltaDays})`}</div>}
@@ -233,8 +234,8 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
                   iconClass="pi pi-fw pi-times" iconColor="#BF0404"
                 />
               }
-              {selectedProduct.info.inProduction && !!selectedProduct.info.inCart && 
-                <IconInfoMessage text={`In cart; In production (max ${selectedProduct.info.maxQty})`} 
+              {selectedProduct.info.inProduction && !!selectedProduct.info.inCart && selectedProduct.info.maxQty > 0 &&
+                <IconInfoMessage text={`In cart; In production${selectedProduct.info.maxQty < 999 ? `(max ${selectedProduct.info.maxQty})` : ""}`} 
                   iconClass="pi pi-fw pi-info-circle" iconColor="hsl(218, 43%, 50%)"
                 />
               }
@@ -274,7 +275,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
           <InputText
             //inputRef={inputNumberRef}
             ref={inputNumberRef}
-            value={selectedQty}
+            value={String(selectedQty)}
             placeholder="Qty"
             inputMode="numeric"
             keyfilter={/[0-9]/}
@@ -324,7 +325,6 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
               }
             }}
           /> 
-
         </div>
 
         <Button label={selectedProduct?.info.inCart ? "UPDATE" : "ADD"}
@@ -391,87 +391,88 @@ const deleteFav = async (id) => {
 
 
       
-const CustomInputNumber = ({ rowData, qtyAtt, dayOfWeek, standingBase, standingChanges, setStandingChanges, disabled }) => {
-  const [rollbackQty, setRollbackQty] = useState()
+// const CustomInputNumber = ({ rowData, qtyAtt, dayOfWeek, standingBase, standingChanges, setStandingChanges, disabled }) => {
+//   const [rollbackQty, setRollbackQty] = useState()
 
-  const baseItem = standingBase.find(i =>
-    i.product.prodNick === rowData.product.prodNick
-    && i.dayOfWeek === dayOfWeek  
-    && i.isWhole === rowData.isWhole
-    && i.isStand === rowData.isStand
-  )
+//   const baseItem = standingBase.find(i =>
+//     i.product.prodNick === rowData.product.prodNick
+//     && i.dayOfWeek === dayOfWeek  
+//     && i.isWhole === rowData.isWhole
+//     && i.isStand === rowData.isStand
+//   )
 
-  const qtyChanged = (baseItem && baseItem.qty !== rowData[qtyAtt]) || (!baseItem && rowData[qtyAtt] > 0)
+//   const qtyChanged = (baseItem && baseItem.qty !== rowData[qtyAtt]) || (!baseItem && rowData[qtyAtt] > 0)
   
-  const matchIndex = standingChanges.findIndex(i =>
-    i.product.prodNick === rowData.product.prodNick
-    && i.dayOfWeek === dayOfWeek  
-    && i.isWhole === rowData.isWhole
-    && i.isStand === rowData.isStand
-  )
+//   const matchIndex = standingChanges.findIndex(i =>
+//     i.product.prodNick === rowData.product.prodNick
+//     && i.dayOfWeek === dayOfWeek  
+//     && i.isWhole === rowData.isWhole
+//     && i.isStand === rowData.isStand
+//   )
   
-  const updateQty = (value) => {    
-    let newQty = Number(value) >= 999 ? 999 : (value === '' ? value : Number(value))
+//   const updateQty = (value) => {    
+//     let newQty = Number(value) >= 999 ? 999 : (value === '' ? value : Number(value))
 
-    //console.log(e, e.value, typeof(e.value), newQty)
-    if (matchIndex > -1) {
-      let _update = [...standingChanges]
-      let _updateItem = {
-        ..._update[matchIndex],
-        qty: newQty
-      }
-      _update[matchIndex] = _updateItem
-      setStandingChanges(_update)
-    } else {
-      console.log("error: standing data could not be updated.")
-    }
-  }
+//     //console.log(e, e.value, typeof(e.value), newQty)
+//     if (matchIndex > -1) {
+//       let _update = [...standingChanges]
+//       let _updateItem = {
+//         ..._update[matchIndex],
+//         qty: newQty
+//       }
+//       _update[matchIndex] = _updateItem
+//       setStandingChanges(_update)
+//     } else {
+//       console.log("error: standing data could not be updated.")
+//     }
+//   }
 
-  return (
-    <InputText
-      value={rowData[qtyAtt]}
-      inputMode="numeric"
-      keyfilter={/[0-9]/}
-      style={{
-        fontWeight : qtyChanged ? "bold" : "normal",
-        color: rowData[qtyAtt] === 0 ? "gray" : '',
-        backgroundColor: qtyChanged ? 'hsl(37, 67%, 95%)' :'',
-      }}
-      disabled={disabled}
-      tooltip={rowData.product.packSize > 1 ? `${rowData[qtyAtt] || 0} pk = ${(rowData[qtyAtt] || 0) * rowData.product.packSize} ea` : ''}
-      tooltipOptions={{ event: 'focus', position: 'left' }}
-      onClick={() => console.log(rowData)}
-      onFocus={e => {
-        e.target.select()
-        setRollbackQty(rowData[qtyAtt])
-      }}
-      // onKeyDown={e => console.log(e)}
-      onChange={e => {updateQty(e.target.value)}}
-      onKeyDown={(e) => {
-        console.log(e)
-        if (e.key === "Enter") { 
-          e.target.blur();
-          if (e.target.value === "") updateQty(0);
-        }
+//   return (
+//     <InputText
+//       value={rowData[qtyAtt]}
+//       placeholder="Qty"
+//       inputMode="numeric"
+//       keyfilter={/[0-9]/}
+//       style={{
+//         fontWeight : qtyChanged ? "bold" : "normal",
+//         color: rowData[qtyAtt] === 0 ? "gray" : '',
+//         backgroundColor: qtyChanged ? 'hsl(37, 67%, 95%)' :'',
+//       }}
+//       disabled={disabled}
+//       tooltip={rowData.product.packSize > 1 ? `${rowData[qtyAtt] || 0} pk = ${(rowData[qtyAtt] || 0) * rowData.product.packSize} ea` : ''}
+//       tooltipOptions={{ event: 'focus', position: 'left' }}
+//       onClick={() => console.log(rowData)}
+//       onFocus={e => {
+//         e.target.select()
+//         setRollbackQty(rowData[qtyAtt])
+//       }}
+//       // onKeyDown={e => console.log(e)}
+//       onChange={e => {updateQty(e.target.value)}}
+//       onKeyDown={(e) => {
+//         console.log(e)
+//         if (e.key === "Enter") { 
+//           e.target.blur();
+//           if (e.target.value === "") updateQty(0);
+//         }
 
-        if (e.key === "Escape") {
-          if (e.target.value === "") {
-            e.target.blur()
-            let resetQty = baseItem.qty || 0
-            updateQty(resetQty);
-            setRollbackQty(resetQty)
-          } else {
-            e.target.blur()
-            updateQty(rollbackQty);
-          }
-        }
-      }}
-      onBlur={() => {
-        if (rowData[qtyAtt] === '') {
-          updateQty(0)
-        }
-      }}
-    />
-  )
+//         if (e.key === "Escape") {
+//           if (e.target.value === "") {
+//             e.target.blur()
+//             let resetQty = baseItem.qty || 0
+//             updateQty(resetQty);
+//             setRollbackQty(resetQty)
+//           } else {
+//             e.target.blur()
+//             updateQty(rollbackQty);
+//           }
+//         }
+//       }}
+//       onBlur={() => {
+//         if (rowData[qtyAtt] === '') {
+//           updateQty(0)
+//         }
+//       }}
+//     />
+//   )
 
-}
+// }

@@ -49,8 +49,10 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
       //const maxQty = (!inProduction && isAvailable) ? 999
         : !baseItem ? 0        
         : !sameDayUpdate ? (baseItem.qty)
-        : baseItem.sameDayMaxQty
+        : (baseItem.sameDayMaxQty || 0)
 
+      // console.log("last action", lastAction)
+      // console.log("same day update", sameDayUpdate)
       const info = {
         validRoutes: validRoutes,
         canFulfill: canFulfill,
@@ -96,36 +98,54 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
               {displayProdName}
           </span>
         </div>
-        {rowData.action === 'CREATE' && rowData.qty === 0 && !rowData.isTemplate && 
-          <IconInfoMessage text="Will not be added" iconClass="pi pi-fw pi-info-circle" iconColor="hsl(218, 43%, 50%)" />
-        }
+        {/* {rowData.action === 'CREATE' && rowData.qty === 0 && !rowData.isTemplate && 
+          <IconInfoMessage text="Will not be added" 
+            iconClass="pi pi-fw pi-info-circle" iconColor="hsl(218, 43%, 50%)"
+          />
+        } */}
         {recentlyDeleted && rowData.qty === 0 &&
-          <IconInfoMessage text="recently deleted" iconClass="pi pi-fw pi-info-circle" iconColor="hsl(218, 43%, 50%)" />
+          <IconInfoMessage text="recently deleted" 
+            iconClass="pi pi-fw pi-info-circle" iconColor="hsl(218, 43%, 50%)" 
+          />
         }
         {/* {!!timingStatus && 
           <IconInfoMessage { ...timingMessageModel[timingStatus] } />
         } */}
         {timingStatus === 'inprod' && 0 < maxQty && 
-          <IconInfoMessage text={`In production${maxQty < 999 ? ` (max ${maxQty})` : ''}`} 
+            <IconInfoMessage text={`In production${maxQty < 999 ? ` (max ${maxQty})` : ''}`} 
             // iconClass="pi pi-fw pi-exclamation-triangle" 
             // iconColor="hsl(45, 96%, 35%)" 
             iconClass="pi pi-fw pi-info-circle"
-            iconColor="hsl(218, 43%, 50%)"
+            iconColor={!!rowData.qty ? "hsl(218, 43%, 50%)" : ""}
           />
         }        
         {timingStatus === 'inprod' && maxQty === 0 &&
-          <IconInfoMessage text={`In production`} iconClass="pi pi-fw pi-times" iconColor="#BF0404" />
+          <IconInfoMessage text={`In production`} iconClass="pi pi-fw pi-times" />
+        }
+        {timingStatus === 'deliv' &&
+          <IconInfoMessage text={`Delivery date reached`} 
+            iconClass="pi pi-fw pi-info-circle"
+            iconColor={!!rowData.qty ? "hsl(218, 43%, 50%)" : ""}
+          />
+        }
+        {timingStatus === 'past' &&
+          <IconInfoMessage text={`Past delivery date`} 
+            iconClass="pi pi-fw pi-info-circle"
+            iconColor={!!rowData.qty ? "hsl(218, 43%, 50%)" : ""}
+          />
         }
         {(fulfillmentOption === 'deliv' && !canFulfill) &&
           <IconInfoMessage text={`Pick up only for ${dayOfWeek}`} 
-            iconClass={rowData.qty > 0 ? "pi pi-fw pi-times" : "pi pi-fw pi-info-circle"} 
-            iconColor={rowData.qty > 0 ? "#BF0404" : ""}
+            textStyle={{fontWeight: !!rowData.qty ? "bold" : ""}}
+            iconClass={"pi pi-fw pi-exclamation-triangle"} 
+            iconColor={!!rowData.qty ? "hsl(45, 96%, 35%)"  : ""}
           />
         }
         {!isAvailable &&
           <IconInfoMessage text={`Not available ${dayOfWeek}`} 
-            iconClass={rowData.qty > 0 ? "pi pi-fw pi-times" : "pi pi-fw pi-info-circle"}
-            iconColor={rowData.qty > 0 ? "#BF0404" : ""}
+            textStyle={{fontWeight: !!rowData.qty ? "bold" : ""}}
+            iconClass={"pi pi-fw pi-times"}
+            iconColor={!!rowData.qty ? "#BF0404" : ""}
           />
         }
         {showDetails && 
