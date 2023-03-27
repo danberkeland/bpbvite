@@ -37,6 +37,7 @@ const itemsAuth2 = [
     },
     
   },
+  /*
   {
     label: "Products",
     icon: "pi pi-fw pi-tags",
@@ -52,6 +53,7 @@ const itemsAuth2 = [
     icon: "pi pi-fw pi-cog",
    
   },
+  */
 ];
 
 const itemsAuth2b = [
