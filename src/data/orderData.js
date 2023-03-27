@@ -161,7 +161,7 @@ export const useCartOrderData = (locNick, delivDateJS, isWhole) => {
 
 
   // console.log(locNick, delivDate, isWhole, dayOfWeek)
-  console.log("L C S:", locationDetails?1:0, cartData?1:0, standingData?1:0)
+  // console.log("L C S:", locationDetails?1:0, cartData?1:0, standingData?1:0)
   // if (!!cartData) console.log(cartData)
 
   const makeCartOrder = () => {
