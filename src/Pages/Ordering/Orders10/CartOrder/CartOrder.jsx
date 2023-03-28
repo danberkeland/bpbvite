@@ -392,7 +392,7 @@ export const CartOrder = ({ locNick, setLocNick }) => {
     } // end for subItem of subItems...
     mutateCart()
     setIsLoading(false)
-    toast.current.show({ severity: 'success', summary: 'Confirmed', detail: 'Order received', life: 30000 })
+    toast.current.show({ severity: 'success', summary: 'Confirmed', detail: 'Order received', life: 3000 })
   }
   
   
