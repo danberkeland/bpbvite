@@ -54,8 +54,8 @@ export const CartOrder = ({ locNick, setLocNick }) => {
   const cartOrderData = useCartOrderData(locNick, delivDate, isWhole)
   const { mutate:mutateCart } = useOrdersByLocationByDate(locNick, null, !!cartOrderData)
 
-  const [headerChanges, setHeaderChanges] = useState({})
-  const [itemChanges, setItemChanges] = useState([])
+  const [headerChanges, setHeaderChanges] = useState()
+  const [itemChanges, setItemChanges] = useState()
   //console.log("CART ORDER DATA:", cartOrderData)
 
   const changeDetected = cartOrderData
@@ -63,7 +63,7 @@ export const CartOrder = ({ locNick, setLocNick }) => {
     : false
   const calculateRoutes = useCalculateRoutesByLocation(locNick, !!locNick)
 
-  const fulfillmentOptionIsValid = (!!Object.keys(headerChanges).length) 
+  const fulfillmentOptionIsValid = (typeof(headerChanges) === 'object' && (!!Object.keys(headerChanges).length))
     ? itemChanges.map(item => {
         let validRoutes = calculateRoutes(item.product.prodNick, getWeekday(delivDate), headerChanges.route)
 
@@ -86,6 +86,28 @@ export const CartOrder = ({ locNick, setLocNick }) => {
       setItemChanges([])
     }
   }, [cartOrderData])
+
+  // Alert for navigating away while changes are pending
+
+  // useEffect(() => {
+  //   // the handler for actually showing the prompt
+  //   // https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload
+  //   const handler = (event) => {
+  //     event.preventDefault();
+  //     event.returnValue = "";
+  //   };
+
+  //   // if the form is NOT unchanged, then set the onbeforeunload
+  //   if (changeDetected) {
+  //     window.addEventListener("beforeunload", handler);
+  //     // clean it up, if the dirty state changes
+  //     return () => {
+  //       window.removeEventListener("beforeunload", handler);
+  //     };
+  //   }
+  //   // since this is not dirty, don't do anything
+  //   return () => {};
+  // }, [changeDetected]);
 
   // Using 'handleCartLegacySubmit' while transitioning. NOT depreciated!
 
@@ -374,8 +396,10 @@ export const CartOrder = ({ locNick, setLocNick }) => {
       <div className="bpb-datatable-orders bpb-datatable-rounded-header bpb-datatable-rounded-footer" 
         style={{
           width: "100%",
-          padding: ".5rem", 
-          order: isMobile ? "3" : "5"
+          margin: ".5rem", 
+          order: isMobile ? "3" : "5",
+          boxShadow: changeDetected ? "0px 0px 20px 6px red" : "",
+          border: changeDetected ? "1px solid darkred" : "" 
         }}
       >
         <CartItemDisplay 
@@ -411,11 +435,17 @@ export const CartOrder = ({ locNick, setLocNick }) => {
         style={{
           width: isMobile ? "100%" : "18rem",
           padding: "0.5rem", 
-          order: isMobile ? "6" : "3"
+          order: isMobile ? "6" : "3",
+
         }}
       >
         <Button className="p-button-lg" 
           label={`Submit for ${delivDateString}`}
+          style={{
+            color: changeDetected ? "pink" : "",
+            boxShadow: changeDetected ? "0px 0px 20px 6px red" : "",
+            border: changeDetected ? "1px solid darkred" : "" 
+          }}
           onClick={() => {
             handleCartLegacySubmit()
           }}
@@ -491,6 +521,8 @@ const weekLetterDisplayModel = [
 
 
 const detectChanges = (baseHeader, headerChanges, baseItems, itemChanges) => {
+  if (!headerChanges || !itemChanges) return false
+
   if (headerChanges.route !== baseHeader.route || headerChanges.ItemNote !== baseHeader.ItemNote) return true
 
   for (let changeItem of itemChanges) {

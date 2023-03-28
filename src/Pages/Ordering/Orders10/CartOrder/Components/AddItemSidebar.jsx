@@ -38,6 +38,8 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
   
   const addInfoToProducts = () => {
     if (!customProductData || !cartItems || !cartItemChanges) return undefined
+    // console.log(cartItems)
+    // console.log(cartItemChanges)
 
     const enhancedData = customProductData.map(product => {
       const cartMatchItem = cartItemChanges.find(i => i.product.prodNick === product.prodNick)
@@ -58,6 +60,8 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
         : !sameDayUpdate ? (baseMatchItem.qty)
         : (baseMatchItem.sameDayMaxQty || 0)
 
+      console.log("BMI", baseMatchItem)
+      console.log("CMI", cartMatchItem)
       const info = { 
         inProduction: inProduction,
         isAvailable: isAvailable,
@@ -67,7 +71,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
         inCart: inCart,
         //maxQty: getMaxQty(user, selectedProduct, delivDate, cartMatchItem, isAvailable),
         maxQty: maxQty,
-        recentlyDeleted: baseMatchItem && getWorkingDate('NOW') === getWorkingDate(baseMatchItem.qtyUpdatedOn) && baseMatchItem.qty === 0 && cartMatchItem.qty === 0,
+        recentlyDeleted: (!!baseMatchItem && !!cartMatchItem) && sameDayUpdate && baseMatchItem.qty === 0 && cartMatchItem.qty === 0,
       }
 
       return({ ...product, info: info })
