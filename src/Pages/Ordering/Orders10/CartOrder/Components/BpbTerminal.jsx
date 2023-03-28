@@ -181,11 +181,11 @@ export const BpbTerminal = ({
       }
 
       if (!parsedFlag) {
-        let delivDateJS = parseDateCommand(args[i])
-        if (delivDateJS) {
+        let dateValue = parseDateCommand(args[i])
+        if (dateValue) {
           commands.push({ 
             commandType: 'setDelivDate',
-            value: delivDateJS
+            value: dateValue
           })
           parsedFlag = true
         }
@@ -381,7 +381,7 @@ const parseOrderCommand = (command) => {
 const parseDateCommand = (command) => {
   if (command.toUpperCase() === "TODAY") command = "T0"
   if (command.toUpperCase() === "TOMORROW") command = "T1"
-
+  // console.log(command)
   let delivDateJS
   let diff
 
