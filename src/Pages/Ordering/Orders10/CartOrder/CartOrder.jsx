@@ -8,6 +8,7 @@ import { CartCalendar } from "./Components/CartCalendar"
 import { CartItemDisplay } from "./Components/CartItemDisplay"
 import { FulfillmentDropdown } from "./Components/FulfillmentDropdown"
 import { ItemNoteInput } from "./Components/ItemNoteInput"
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 import { createOrder, updateOrder, useCartOrderData, useOrdersByLocationByDate } from "../../../../data/orderData"
 import { DateTime } from "luxon"
@@ -18,6 +19,9 @@ import { useCalculateRoutesByLocation } from "../../../../data/productionData"
 import { testProductAvailability } from "../_utils/testProductAvailability"
 import useWindowDimensions from "../_utils/useWindowDimensions"
 import { BpbTerminal } from "./Components/BpbTerminal"
+
+import "./cartOrder.css"
+import { reformatProdName } from "../_utils/reformatProdName"
 
 
 export const CartOrder = ({ locNick, setLocNick }) => {
@@ -36,6 +40,7 @@ export const CartOrder = ({ locNick, setLocNick }) => {
   const [isWhole, ] = useState(true) // for possible future extension to retail orders
   
   // cart::public state
+  const [showSubmitConfirm, setShowSubmitConfirm] = useState(false)
   const [delivDate, setDelivDate] = useState(
     new Date(getWorkingDateTime("NOW").plus({ days: 1 }).toISO())
   )
@@ -80,12 +85,65 @@ export const CartOrder = ({ locNick, setLocNick }) => {
     if (!!cartOrderData) {
       setHeaderChanges(JSON.parse(JSON.stringify(cartOrderData.header)))
       setItemChanges(JSON.parse(JSON.stringify(cartOrderData.items)))
-      console.log(cartOrderData)
+      // console.log(cartOrderData)
     } else {
       setHeaderChanges({})
       setItemChanges([])
     }
   }, [cartOrderData])
+
+  const confirmSubmit = () => {
+    confirmDialog({
+      message: () => {
+        return (
+          <div>
+              {/* <div style={{display: "flex", gap: ".5rem"}} >
+                <span style={{width: "fit-content"}}>
+                {itemChanges.map((item, idx) => <div key={`pn#${idx}`}>{item.product.prodName}: </div>)}
+                </span>
+                <span style={{width: "fit-content"}}>
+                {itemChanges.map((item, idx) => <div key={`qty#${idx}`}>{item.qty}</div>)}
+                </span>
+              </div> */}
+            
+            <div>
+              {itemChanges.map((item, idx) => {
+                return (
+                  <div key={idx} style={{display: "flex", gap: ".5rem", marginBottom: ".2rem"}} >
+                    <span style={{width: "2rem", textAlign: "end"}}>
+                      <div>{item.qty}</div>
+                    </span>
+                    <span style={{flex: "0 1 12rem"}}>
+                      <div>{reformatProdName(item.product.prodName, item.product.packSize)}</div>
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )
+      },
+      header: () => <>
+        <div style={{marginBottom: ".5rem"}}>{`${displayTextMap[headerChanges.route]}`}</div>
+        <div>{`${delivDateString}`}</div>
+      </>,
+      accept,
+      acceptLabel: "Confirm Order",
+      reject,
+      rejectLabel: "Go Back"
+    })
+  }
+
+  const accept = () => {
+    // toast.current.show({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted', life: 3000 });
+    handleCartLegacySubmit()
+    console.log("accepted")
+  }
+
+  const reject = () => {
+    // toast.current.show({ severity: 'warn', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
+    console.log("rejected")
+  }
 
   // Alert for navigating away while changes are pending
 
@@ -340,6 +398,28 @@ export const CartOrder = ({ locNick, setLocNick }) => {
 
   return(
     <>
+    {user.authClass === 'bpbfull' && !isMobile &&
+      <div style={{
+        padding: ".5rem .5rem .5rem .5rem", 
+        margin: "auto", 
+        width: "54.5rem", order: "5"
+      }}
+      className="bpb-terminal"
+      >
+        <BpbTerminal 
+          locNick={locNick}
+          setLocNick={setLocNick}
+          delivDate={delivDate}
+          setDelivDate={setDelivDate}
+          headerBase={cartOrderData?.header}
+          headerChanges={headerChanges}
+          setHeaderChanges={setHeaderChanges}
+          itemBase={cartOrderData?.items}
+          itemChanges={itemChanges}
+          setItemChanges={setItemChanges}
+        />
+      </div>
+    }
     <div style={{
       height: isMobile ? "" : "50rem",
       margin: "auto",
@@ -347,8 +427,8 @@ export const CartOrder = ({ locNick, setLocNick }) => {
       // width: isMobile ? "100%" : "",
       display: "flex", 
       flexDirection: isMobile ? "row" : "column" , 
-      alignItems: isMobile ? "flex-start" : "flex-end", 
-      justifyContent: isMobile ? "flex-start" : "flex-start",
+      alignItems: isMobile ? "" : "flex-end", 
+      justifyContent: isMobile ? "" : "flex-start",
       alignContent: isMobile ? "" : "center",
       flexWrap: "wrap"
     }}>
@@ -431,33 +511,62 @@ export const CartOrder = ({ locNick, setLocNick }) => {
 
       {!isMobile && <div style={{flexBasis: "100%", width: "0px", order: "5"}}/>}
 
-      <div 
-        style={{
-          width: isMobile ? "100%" : "18rem",
-          padding: "0.5rem", 
-          order: isMobile ? "6" : "3",
-
-        }}
-      >
-        <Button className="p-button-lg" 
-          label={`Submit for ${delivDateString}`}
+      {!isMobile &&
+        <div 
           style={{
-            color: changeDetected ? "pink" : "",
-            // boxShadow: changeDetected ? "0px 0px 20px 6px red" : "",
-            // border: changeDetected ? "1px solid darkred" : "" 
+            width: isMobile ? "100%" : "18rem",
+            padding: "0.5rem", 
+            order: isMobile ? "6" : "3",
+
           }}
-          onClick={() => {
-            handleCartLegacySubmit()
-          }}
-          disabled={
-            disableInputs 
-            || !fulfillmentOptionIsValid
-            || !itemsAreAllAvailable
-          }
-        />
-        {changeDetected && <div style={{margin: "0 .5rem .5rem .5rem"}}>Changes pending</div>}
-        {errorsExist && <div style={{margin: "0 .5rem .5rem .5rem"}}>Fix Errors to submit</div>}
-      </div>
+        >
+          <Button className="p-button-lg" 
+            label={`Submit for ${delivDateString}`}
+            style={{
+              // color: changeDetected ? "pink" : "",
+              // boxShadow: changeDetected ? "0px 0px 20px 6px red" : "",
+              // border: changeDetected ? "1px solid darkred" : "" 
+            }}
+            onClick={confirmSubmit}
+            disabled={
+              disableInputs 
+              || !fulfillmentOptionIsValid
+              || !itemsAreAllAvailable
+            }
+          />
+      
+          {changeDetected && <div style={{margin: "0 .5rem .5rem .5rem"}}>Changes pending</div>}
+          {errorsExist && <div style={{margin: "0 .5rem .5rem .5rem"}}>Fix Errors to submit</div>}
+        </div>
+      }
+
+      {/* {isMobile &&
+        <div className={`bpb-submit-button ${changeDetected ? 'extended' : ''}`}>
+          <Button
+            className="p-button-lg"
+            style={{
+              width: "6.5rem",
+              margin: ".5rem"
+            }}
+            label={`Submit`} //for ${delivDateString}
+          />
+        </div>
+      } */}
+
+      {isMobile &&
+        <div className={`bpb-submit-button-2 ${changeDetected ? 'extended' : ''}`}>
+          <Button
+            className="p-button-lg"
+            style={{
+              width: "7.5rem",
+              // margin: "1px"
+            }}
+            label={`Submit`} //for ${delivDateString}
+            onClick={confirmSubmit}
+          />
+        </div>
+      }
+      <ConfirmDialog />
 
       {/* <pre>{JSON.stringify(itemChanges?.map(i => i.product.prodNick))}</pre>
       <pre>{JSON.stringify(getWeekday(delivDate))}</pre>
@@ -469,22 +578,7 @@ export const CartOrder = ({ locNick, setLocNick }) => {
       {/* <pre>{"HEADER CHANGES" + JSON.stringify(headerChanges, null, 2)}</pre> */}
       {/* <pre>{"ITEM CHANGES" + JSON.stringify(itemChanges, null, 2)}</pre> */}
     </div>
-    {user.authClass === 'bpbfull' && !isMobile &&
-      <div style={{padding: "6rem .5rem .5rem .5rem", margin: "auto", width: "55rem", order: "5"}}>
-        <BpbTerminal 
-          locNick={locNick}
-          setLocNick={setLocNick}
-          delivDate={delivDate}
-          setDelivDate={setDelivDate}
-          headerBase={cartOrderData?.header}
-          headerChanges={headerChanges}
-          setHeaderChanges={setHeaderChanges}
-          itemBase={cartOrderData?.items}
-          itemChanges={itemChanges}
-          setItemChanges={setItemChanges}
-        />
-      </div>
-    }
+
     </>
   )
 
@@ -531,4 +625,10 @@ const detectChanges = (baseHeader, headerChanges, baseItems, itemChanges) => {
     if (!!baseItem && (baseItem.qty !== changeItem.qty)) return true
   }
 
+}
+
+const displayTextMap = {
+  deliv: "Delivery",
+  slopick: "SlO Pick Up",
+  atownpick: "Carlton Pick Up"
 }

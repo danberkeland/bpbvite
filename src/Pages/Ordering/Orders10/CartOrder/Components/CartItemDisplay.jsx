@@ -204,8 +204,11 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
             opacity: rowData.qty === 0 ? ".70" : "",
             backgroundColor: qtyChanged ? 'hsl(37, 67%, 95%)' :'',
           }}
-          tooltip={rowData.product.packSize > 1 ? `${rowData.qty || 0} pk = ${(rowData.qty || 0) * rowData.product.packSize} ea` : ''}
-          tooltipOptions={{ event: 'focus', position: 'left' }}
+          tooltip={rowData.product.packSize > 1 
+            ? `= ${(rowData.qty || 0) * rowData.product.packSize} ea` //${rowData.qty || 0} pk 
+            : ''
+          }
+          tooltipOptions={{ event: 'focus', position: 'left', autoZIndex: false, baseZIndex: "75" }}
           onClick={() => console.log(rowData)}
           readOnly={disableInput}
           //disabled={disableInput}
@@ -300,7 +303,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
         <Column header={() => <Button onClick={() => setShowSidebar(true)} disabled={disableInputs} style={{width: "62px"}}>Add</Button>}
           field="qty" 
           body={qtyColumnTemplate}
-          style={{flex: "0 0 90px"}}
+          style={{width: "90px", flex: "0 0 90px"}}
         />
       </DataTable>
 
