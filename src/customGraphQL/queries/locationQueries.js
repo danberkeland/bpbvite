@@ -67,6 +67,14 @@ export const listLocationsFull = /* GraphQL */ `
         createdAt
         updatedAt
         locationCreditAppId
+        templateProd {
+          items {
+            product {
+              prodName
+            }
+          }
+          nextToken
+        }
       }
       nextToken
     }

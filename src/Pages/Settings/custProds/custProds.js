@@ -19,7 +19,8 @@ import {
 import { API, graphqlOperation } from "aws-amplify";
 
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
-import { useLegacyFormatDatabase } from "../../../data/legacyData";
+import { useProductListFull } from "../../../data/productData";
+import { useLocationListFull } from "../../../data/locationData";
 
 const clonedeep = require("lodash.clonedeep");
 
@@ -30,12 +31,13 @@ const CustProds = () => {
   const chosen = useSettingsStore((state) => state.chosen);
   const setChosen = useSettingsStore((state) => state.setChosen);
 
-  const { data: database } = useLegacyFormatDatabase();
-  const [products, customers, routes, standing, orders, doughs, alt] = database
-    ? database
-    : [[], [], [], [], [], [], []];
-
+  const { data: products } = useProductListFull(true);
+  const { data: customers } = useLocationListFull(true);
+ 
   const [productList, setProductList] = useState(products);
+
+  console.log('products', products)
+  console.log('customers', customers)
 
   const [altPricing, setAltPricing] = useState([]);
 
@@ -43,6 +45,10 @@ const CustProds = () => {
   useEffect(() => {
     setChosen("");
   }, []);
+
+  useEffect(() => {
+    console.log('productLst', productList)
+  }, [productList])
 
   useEffect(() => {
     try {
@@ -58,23 +64,27 @@ const CustProds = () => {
           }
         }
         let customChecks =
-          customers[customers.findIndex((custo) => chosen === custo.custName)]
+          customers[customers.findIndex((custo) => chosen === custo.locName)]
             .customProd;
 
         let templateChecks =
-          customers[customers.findIndex((custo) => chosen === custo.custName)]
+          customers[customers.findIndex((custo) => chosen === custo.locName)]
             .templateProd;
+        console.log('templateChecks', templateChecks)
 
         prod.prePop = false;
-
+        /*
         for (let check of customChecks) {
+          console.log('check1', check)
           if (prod.prodName === check) {
             prod.defaultInclude = !prod.defaultInclude;
           }
         }
+        */
 
-        for (let check of templateChecks) {
-          if (prod.prodName === check) {
+        for (let check of templateChecks.items) {
+          console.log('check2', check.product.prodName)
+          if (prod.prodName === check.product.prodName) {
             prod.prePop = true;
           }
         }
@@ -85,7 +95,7 @@ const CustProds = () => {
     } catch {
       console.log("not ready yet");
     }
-  }, [database]);
+  }, [products, chosen]);
 
   const isIncluded = (data) => {
     return (
@@ -300,9 +310,9 @@ const CustProds = () => {
         id="customers"
         value={chosen}
         options={customerGroup}
-        optionLabel="custName"
+        optionLabel="locName"
         placeholder={chosen === "  " ? "Select a Customer ..." : chosen}
-        onChange={(e) => handleChosen(e.value.custName)}
+        onChange={(e) => handleChosen(e.value.locName)}
       />
       <Button
         label="Update Customer Products"
