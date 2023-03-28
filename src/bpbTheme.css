@@ -4505,7 +4505,8 @@ div.read-only-button > .p-disabled, .p-component:disabled {
 }
 .p-dialog .p-dialog-header {
   border-bottom: 0 none;
-  background: #ffffff;
+  /* background: #ffffff; */
+  background: var(--bpb-orange-vibrant-050);
   color: #495057;
   padding: 1.5rem;
   border-top-right-radius: 3px;
@@ -4539,7 +4540,8 @@ div.read-only-button > .p-disabled, .p-component:disabled {
   margin-right: 0;
 }
 .p-dialog .p-dialog-content {
-  background: #ffffff;
+  /* background: #ffffff; */
+  background: var(--bpb-orange-vibrant-050);
   color: #495057;
   padding: 0 1.5rem 2rem 1.5rem;
 }
@@ -4549,7 +4551,8 @@ div.read-only-button > .p-disabled, .p-component:disabled {
 }
 .p-dialog .p-dialog-footer {
   border-top: 0 none;
-  background: #ffffff;
+  /* background: #ffffff; */
+  background: var(--bpb-orange-vibrant-050);
   color: #495057;
   padding: 0 1.5rem 1.5rem 1.5rem;
   text-align: right;
@@ -6159,9 +6162,17 @@ div.read-only-button > .p-disabled, .p-component:disabled {
   border: 1px solid #dee2e6;
   padding: 1rem;
 }
+
+/* CUSTOM */
+.bpb-terminal .p-terminal {
+  height: 18rem;
+}
+
+
 .p-terminal .p-terminal-input {
   font-size: 1rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; */
+  font-family: monospace;
 }
 
 /* CUSTOM */
