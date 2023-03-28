@@ -431,7 +431,7 @@ export const useOrderSummary = (locNick, shouldFetch) => {
       days: standingByWeekday
     }
 
-    console.log(orderSummary)
+    // console.log(orderSummary)
     return orderSummary
   }
 
