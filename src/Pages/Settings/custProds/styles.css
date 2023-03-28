@@ -1,0 +1,17 @@
+/* DataTableDemo.css */
+
+
+.instock {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #d60505;
+}
+
+.not-included {
+    background-color: rgba(0, 0, 0, 0.10) !important;
+}
+
+.price-differ {
+    background-color: rgba(168, 26, 26, 0.3) !important;
+}
+                 
