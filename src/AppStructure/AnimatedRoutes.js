@@ -21,6 +21,7 @@ import ByRoute from "../Pages/Logistics/ByRoute/ByRoute";
 import Locations from "../Pages/Locations/Locations";
 import ManageCustomers from "../Pages/Settings/ManageCustomers/ManageCustomers";
 import ManageTraining from "../Pages/Settings/ManageTraining/ManageTraining";
+import CustProds from "../Pages/Settings/custProds/custProds";
 import { NavSide } from "./Nav";
 
 import { AnimatePresence } from "framer-motion";
@@ -62,6 +63,10 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             <Route
               path="/Settings/ManageTrainings"
               element={<ManageTraining />}
+            />
+            <Route
+              path="/Settings/custProds"
+              element={<CustProds />}
             />
           </React.Fragment>
         )}
