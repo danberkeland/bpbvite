@@ -334,6 +334,7 @@ export const CartOrder = ({ locNick, setLocNick }) => {
     if (legacyResponse.statusCode !== 200) {
       console.log("Submission error")
       setIsLoading(false)
+      toast.current.show({ severity: 'warn', summary: 'Error', detail: 'Submit failed', life: 6000 })
       return
     }
   
@@ -389,7 +390,7 @@ export const CartOrder = ({ locNick, setLocNick }) => {
         else console.log('ok')
   
       }
-    } // end for subItem of subItems...
+    } // end for (let subItem of subItems)...
     mutateCart()
     setIsLoading(false)
     toast.current.show({ severity: 'success', summary: 'Confirmed', detail: 'Order received', life: 3000 })
@@ -528,7 +529,10 @@ export const CartOrder = ({ locNick, setLocNick }) => {
               // boxShadow: changeDetected ? "0px 0px 20px 6px red" : "",
               // border: changeDetected ? "1px solid darkred" : "" 
             }}
-            onClick={confirmSubmit}
+            onClick={() => {
+              if (changeDetected) confirmSubmit()
+              else toast.current.show({ severity: 'info', summary: 'No Changes', detail: 'Nothing to submit.', life: 3000 })
+            }}
             disabled={
               disableInputs 
               || !fulfillmentOptionIsValid
@@ -563,8 +567,16 @@ export const CartOrder = ({ locNick, setLocNick }) => {
               // margin: "1px"
             }}
             label={`Submit`} //for ${delivDateString}
-            onClick={confirmSubmit}
+            onClick={() => {
+              if (changeDetected) confirmSubmit()
+              else toast.current.show({ severity: 'info', summary: '', detail: 'Nothing to submit', life: 3000 })
+            }}
             // onClick={() => toast.current.show({ severity: 'success', summary: 'Confirmed', detail: 'Order received', life: 3000 })}
+            disabled={
+              disableInputs 
+              || !fulfillmentOptionIsValid
+              || !itemsAreAllAvailable
+            }
           />
         </div>
       }
