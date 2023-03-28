@@ -259,7 +259,7 @@ type Location @model {
   currentBalance: String
   isActive: Boolean
   prodsNotAllowed: [ProdsNotAllowed]
-    @hasMany(indexName: "byProd", fields: ["locNick"])
+    @hasMany(indexName: "byLoc", fields: ["locNick"])
   customProd: [AltPricing] @hasMany(indexName: "byLoc", fields: ["locNick"])
   templateProd: [TemplateProd]
     @hasMany(indexName: "byLoc", fields: ["locNick"])

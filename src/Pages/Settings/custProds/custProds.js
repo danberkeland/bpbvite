@@ -6,7 +6,7 @@ import { Checkbox } from "primereact/checkbox";
 import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
 
-//import "./style.css";
+import "./styles.css";
 
 /*
 import {
@@ -58,14 +58,16 @@ const CustProds = () => {
           products[
             products.findIndex((up) => up.prodName === prod.prodName)
           ].wholePrice;
-        for (let alt of altPricing) {
-          if (alt.custName === chosen && alt.prodName === prod.prodName) {
-            prod.updatedRate = alt.wholePrice;
-          }
-        }
+
+        let includeChecks =
+          customers[customers.findIndex((custo) => chosen === custo.locName)].prodsNotAllowed
+           
+        console.log('includeChecks', includeChecks)  
+        
         let customChecks =
           customers[customers.findIndex((custo) => chosen === custo.locName)]
             .customProd;
+        console.log('customChecks', customChecks)
 
         let templateChecks =
           customers[customers.findIndex((custo) => chosen === custo.locName)]
@@ -73,19 +75,26 @@ const CustProds = () => {
         console.log('templateChecks', templateChecks)
 
         prod.prePop = false;
-        /*
-        for (let check of customChecks) {
+        
+        for (let check of customChecks.items) {
           console.log('check1', check)
-          if (prod.prodName === check) {
-            prod.defaultInclude = !prod.defaultInclude;
+          if (prod.prodName === check.product.prodName) {
+            prod.updatedRate = check.wholePrice;
           }
         }
-        */
+        
 
         for (let check of templateChecks.items) {
           console.log('check2', check.product.prodName)
           if (prod.prodName === check.product.prodName) {
             prod.prePop = true;
+          }
+        }
+
+        for (let check of includeChecks.items) {
+          console.log('check3', check)
+          if (prod.prodName === check.product.prodName) {
+            prod.defaultInclude = check.isAllowed;
           }
         }
 
