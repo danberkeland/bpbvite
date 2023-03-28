@@ -398,8 +398,8 @@ export const CartOrder = ({ locNick, setLocNick }) => {
           width: "100%",
           margin: ".5rem", 
           order: isMobile ? "3" : "5",
-          boxShadow: changeDetected ? "0px 0px 20px 6px red" : "",
-          border: changeDetected ? "1px solid darkred" : "" 
+          // boxShadow: changeDetected ? "0px 0px 20px 6px red" : "",
+          // border: changeDetected ? "1px solid darkred" : "" 
         }}
       >
         <CartItemDisplay 
@@ -443,8 +443,8 @@ export const CartOrder = ({ locNick, setLocNick }) => {
           label={`Submit for ${delivDateString}`}
           style={{
             color: changeDetected ? "pink" : "",
-            boxShadow: changeDetected ? "0px 0px 20px 6px red" : "",
-            border: changeDetected ? "1px solid darkred" : "" 
+            // boxShadow: changeDetected ? "0px 0px 20px 6px red" : "",
+            // border: changeDetected ? "1px solid darkred" : "" 
           }}
           onClick={() => {
             handleCartLegacySubmit()
