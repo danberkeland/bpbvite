@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 
 import { dateToYyyymmdd, getTtl, getWeekday, getWorkingDate, getWorkingDateTime, yyyymmddToWeekday } from "../../../../functions/dateAndTime"
 
@@ -9,6 +9,7 @@ import { CartItemDisplay } from "./Components/CartItemDisplay"
 import { FulfillmentDropdown } from "./Components/FulfillmentDropdown"
 import { ItemNoteInput } from "./Components/ItemNoteInput"
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { Toast } from "primereact/toast"
 
 import { createOrder, updateOrder, useCartOrderData, useOrdersByLocationByDate } from "../../../../data/orderData"
 import { DateTime } from "luxon"
@@ -110,7 +111,7 @@ export const CartOrder = ({ locNick, setLocNick }) => {
               {itemChanges.map((item, idx) => {
                 return (
                   <div key={idx} style={{display: "flex", gap: ".5rem", marginBottom: ".2rem"}} >
-                    <span style={{width: "2rem", textAlign: "end"}}>
+                    <span style={{width: "1.75rem", textAlign: "end"}}>
                       <div>{item.qty}</div>
                     </span>
                     <span style={{flex: "0 1 12rem"}}>
@@ -133,13 +134,12 @@ export const CartOrder = ({ locNick, setLocNick }) => {
       rejectLabel: "Go Back"
     })
   }
-
+  const toast = useRef(null);
   const accept = () => {
     // toast.current.show({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted', life: 3000 });
     handleCartLegacySubmit()
     console.log("accepted")
   }
-
   const reject = () => {
     // toast.current.show({ severity: 'warn', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
     console.log("rejected")
@@ -389,9 +389,10 @@ export const CartOrder = ({ locNick, setLocNick }) => {
         else console.log('ok')
   
       }
-      mutateCart()
-      setIsLoading(false)
-    }
+    } // end for subItem of subItems...
+    mutateCart()
+    setIsLoading(false)
+    toast.current.show({ severity: 'success', summary: 'Confirmed', detail: 'Order received', life: 30000 })
   }
   
   
@@ -563,11 +564,17 @@ export const CartOrder = ({ locNick, setLocNick }) => {
             }}
             label={`Submit`} //for ${delivDateString}
             onClick={confirmSubmit}
+            // onClick={() => toast.current.show({ severity: 'success', summary: 'Confirmed', detail: 'Order received', life: 3000 })}
           />
         </div>
       }
       <ConfirmDialog />
-
+      <Toast ref={toast} 
+        style={{
+          width: "15rem",
+          opacity: ".98"
+        }}
+      />
       {/* <pre>{JSON.stringify(itemChanges?.map(i => i.product.prodNick))}</pre>
       <pre>{JSON.stringify(getWeekday(delivDate))}</pre>
       <pre>{JSON.stringify(headerChanges?.route)}</pre>
