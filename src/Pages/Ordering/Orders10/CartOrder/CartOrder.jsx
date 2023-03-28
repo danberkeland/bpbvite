@@ -57,7 +57,10 @@ export const CartOrder = ({ locNick, setLocNick }) => {
   const [headerChanges, setHeaderChanges] = useState({})
   const [itemChanges, setItemChanges] = useState([])
   //console.log("CART ORDER DATA:", cartOrderData)
-  
+
+  const changeDetected = cartOrderData
+    ? detectChanges(cartOrderData.header, headerChanges, cartOrderData.items, itemChanges)
+    : false
   const calculateRoutes = useCalculateRoutesByLocation(locNick, !!locNick)
 
   const fulfillmentOptionIsValid = (!!Object.keys(headerChanges).length) 
@@ -422,10 +425,10 @@ export const CartOrder = ({ locNick, setLocNick }) => {
             || !itemsAreAllAvailable
           }
         />
+        {changeDetected && <div style={{margin: "0 .5rem .5rem .5rem"}}>Changes pending</div>}
+        {errorsExist && <div style={{margin: "0 .5rem .5rem .5rem"}}>Fix Errors to submit</div>}
       </div>
 
-
-      {errorsExist && <div style={{margin: "0 .5rem .5rem .5rem"}}>Fix Errors to submit</div>}
       {/* <pre>{JSON.stringify(itemChanges?.map(i => i.product.prodNick))}</pre>
       <pre>{JSON.stringify(getWeekday(delivDate))}</pre>
       <pre>{JSON.stringify(headerChanges?.route)}</pre>
@@ -437,7 +440,7 @@ export const CartOrder = ({ locNick, setLocNick }) => {
       {/* <pre>{"ITEM CHANGES" + JSON.stringify(itemChanges, null, 2)}</pre> */}
     </div>
     {user.authClass === 'bpbfull' && !isMobile &&
-      <div style={{padding: "6rem .5rem .5rem .5rem", margin: "auto", width: "50rem", order: "5"}}>
+      <div style={{padding: "6rem .5rem .5rem .5rem", margin: "auto", width: "55rem", order: "5"}}>
         <BpbTerminal 
           locNick={locNick}
           setLocNick={setLocNick}
@@ -485,3 +488,15 @@ const weekLetterDisplayModel = [
   {dayOfWeek: 'Fri', symbol: 'F'},
   {dayOfWeek: 'Sat', symbol: 'S'},
 ]
+
+
+const detectChanges = (baseHeader, headerChanges, baseItems, itemChanges) => {
+  if (headerChanges.route !== baseHeader.route || headerChanges.ItemNote !== baseHeader.ItemNote) return true
+
+  for (let changeItem of itemChanges) {
+    let baseItem = baseItems.find(b => b.product.prodNick === changeItem.product.prodNick)
+    if (!baseItem && changeItem.qty > 0) return true
+    if (!!baseItem && (baseItem.qty !== changeItem.qty)) return true
+  }
+
+}
