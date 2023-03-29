@@ -99,7 +99,10 @@ const CustProds = () => {
         }
 
         prod.prev = prod.updatedRate;
+        prod.includeClicks = false;
+        prod.defaultClicks = false;
       }
+
       setProductList(newProdList);
     } catch {
       console.log("not ready yet");
@@ -132,18 +135,18 @@ const CustProds = () => {
 
   const handleCheck = (e, prodName) => {
     let prodListToUpdate = clonedeep(productList);
-    prodListToUpdate[
-      productList.findIndex((prod) => prod.prodName === prodName)
-    ].defaultInclude = e.target.checked;
+    let ind = productList.findIndex((prod) => prod.prodName === prodName);
+    prodListToUpdate[ind].defaultInclude = e.target.checked;
+    prodListToUpdate[ind].includeClicks = !prodListToUpdate[ind].includeClicks;
     setProductList(prodListToUpdate);
     setModifications(true);
   };
 
   const handlePrePopCheck = (e, prodName) => {
     let prodListToUpdate = clonedeep(productList);
-    prodListToUpdate[
-      productList.findIndex((prod) => prod.prodName === prodName)
-    ].prePop = e.target.checked;
+    let ind = productList.findIndex((prod) => prod.prodName === prodName);
+    prodListToUpdate[ind].prePop = e.target.checked;
+    prodListToUpdate[ind].defaultClicks = !prodListToUpdate[ind].defaultClicks;
     setProductList(prodListToUpdate);
     setModifications(true);
   };
