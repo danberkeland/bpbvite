@@ -41,7 +41,7 @@ export const CartOrder = ({ locNick, setLocNick }) => {
   const [isWhole, ] = useState(true) // for possible future extension to retail orders
   
   // cart::public state
-  const [showSubmitConfirm, setShowSubmitConfirm] = useState(false)
+  // const [showSubmitConfirm, setShowSubmitConfirm] = useState(false)
   const [delivDate, setDelivDate] = useState(
     new Date(getWorkingDateTime("NOW").plus({ days: 1 }).toISO())
   )
@@ -87,6 +87,7 @@ export const CartOrder = ({ locNick, setLocNick }) => {
       setHeaderChanges(JSON.parse(JSON.stringify(cartOrderData.header)))
       setItemChanges(JSON.parse(JSON.stringify(cartOrderData.items)))
       // console.log(cartOrderData)
+      
     } else {
       setHeaderChanges({})
       setItemChanges([])
@@ -648,6 +649,6 @@ const detectChanges = (baseHeader, headerChanges, baseItems, itemChanges) => {
 
 const displayTextMap = {
   deliv: "Delivery",
-  slopick: "SlO Pick Up",
+  slopick: "SLO Pick Up",
   atownpick: "Carlton Pick Up"
 }
