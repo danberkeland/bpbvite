@@ -370,11 +370,30 @@ export const StandingOrder = ({ user, locNick }) => {
       <div style={{padding: ".5rem"}}>
         <Button label="Submit Changes" 
           className="p-button-lg" 
-          onClick={() => handleSubmit(locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, user.name, locationDetails, productData, setIsLoading)}
+          onClick={() => handleSubmit(locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, user.name, locationDetails, productData, setIsLoading, true, true)}
         />
 
         <div style={{color: "hsl(37, 100%, 5%)", margin: ".5rem"}}>Changes will not take effect until <b>{effectDate}</b>. Orders can still be edited from the Cart Order screen in the meantime.</div>
       </div>
+
+      {user.authClass === 'bpbfull' && 
+        <div style={{
+          padding: "3rem",
+          maxWidth: "20rem"
+        }}>
+          <Button label="Submit Changes (New system only, No placeholders)" 
+            className="p-button-lg" 
+            style={{
+              backgroundColor: "#282a39",
+              color: "hsl(37, 100%, 70%)"
+            }}
+            onClick={() => handleSubmit(locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, user.name, locationDetails, productData, setIsLoading, false, false)}
+          />
+          <div style={{color: "hsl(37, 100%, 5%)", margin: ".5rem"}}>
+            For fixing out-of-sync Standing Orders.
+          </div>
+        </div>
+      }
 
       <AddItemSidebar
         showAddItem={showAddItem}
@@ -696,7 +715,7 @@ const AddItemSidebar = ({showAddItem, setShowAddItem, locNick, standingChanges, 
 // detect which action is to be taken,
 // associate these directives with each submisison candidate
 
-const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, userName, locationDetails, productData, setIsLoading) => {
+const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, userName, locationDetails, productData, setIsLoading, shouldSubmitPlaceholders, shouldSubmitLegacy) => {
   setIsLoading(true)
   // Submission only handles the current category 
   // of standing order (according to isStand, isWhole values).
@@ -725,9 +744,9 @@ const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingCha
   // (i.e. route or ItemNote), we want to use those values 
   // for the placeholder items, or fall back to defaults.
 
-  const _cartOrders = await fetchTransitionOrders(locNick)
-  const cartOrders = _cartOrders.filter(item => item.isWhole === isWhole)
-  const cartHeaders = getCartHeaders(cartOrders, locationDetails)
+  const _cartOrders = shouldSubmitPlaceholders ? await fetchTransitionOrders(locNick) : []
+  const cartOrders = shouldSubmitPlaceholders ? _cartOrders.filter(item => item.isWhole === isWhole) : []
+  const cartHeaders = shouldSubmitPlaceholders ? getCartHeaders(cartOrders, locationDetails) : {}
 
   // console.log(transitionDates)
   // console.log("cart headers", cartHeaders)
@@ -739,82 +758,86 @@ const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingCha
 
   let cartPlaceHolderItems = []
 
-  for (let header of cartHeaders) {
+  if (shouldSubmitPlaceholders) {
+    for (let header of cartHeaders) {
 
-    let placeholderCandidatesByDate = placeholderCandidates.filter(item =>
-      item.dayOfWeek === header.dayOfWeek
-    )
-
-    for (let subItem of placeholderCandidatesByDate) {
-      let cartMatchItem = cartOrders.find(cartItem =>
-        cartItem.prodNick === subItem.product.prodNick
-        && cartItem.delivDate === header.delivDateISO  
+      let placeholderCandidatesByDate = placeholderCandidates.filter(item =>
+        item.dayOfWeek === header.dayOfWeek
       )
 
-      if (!cartMatchItem) {
-        let standingBaseItem = baseItems.find(b => 
-          b.product.prodNick === subItem.product.prodNick
-          && b.dayOfWeek === subItem.dayOfWeek  
+      for (let subItem of placeholderCandidatesByDate) {
+        let cartMatchItem = cartOrders.find(cartItem =>
+          cartItem.prodNick === subItem.product.prodNick
+          && cartItem.delivDate === header.delivDateISO  
         )
-        let placeholderQty = subItem.action === 'CREATE' ? 0 : standingBaseItem.qty
 
-        let placeholderItem = {
-          locNick: locNick,
-          isWhole: subItem.isWhole,
-          route: header.route,
-          delivDate: header.delivDateISO,
-          prodNick: subItem.product.prodNick,
-          qty: placeholderQty,
-          qtyUpdatedOn: new Date().toISOString(),
-          sameDayMaxQty: placeholderQty,
-          rate: subItem.isWhole ? subItem.product.wholePrice : subItem.product.retailPrice,
-          ItemNote: header.ItemNote,
-          isLate: 0,
-          updatedBy: 'standing_order',
-          ttl: header.ttl
+        if (!cartMatchItem) {
+          let standingBaseItem = baseItems.find(b => 
+            b.product.prodNick === subItem.product.prodNick
+            && b.dayOfWeek === subItem.dayOfWeek  
+          )
+          let placeholderQty = subItem.action === 'CREATE' ? 0 : standingBaseItem.qty
+
+          let placeholderItem = {
+            locNick: locNick,
+            isWhole: subItem.isWhole,
+            route: header.route,
+            delivDate: header.delivDateISO,
+            prodNick: subItem.product.prodNick,
+            qty: placeholderQty,
+            qtyUpdatedOn: new Date().toISOString(),
+            sameDayMaxQty: placeholderQty,
+            rate: subItem.isWhole ? subItem.product.wholePrice : subItem.product.retailPrice,
+            ItemNote: header.ItemNote,
+            isLate: 0,
+            updatedBy: 'standing_order',
+            ttl: header.ttl
+          }
+
+          cartPlaceHolderItems.push(placeholderItem)
         }
-
-        cartPlaceHolderItems.push(placeholderItem)
       }
     }
   }
-  
   // **************************************
   // * SUBMIT CART PLACEHOLDERS TO LEGACY *
   // **************************************
-  console.log("Cart placeholders:", cartPlaceHolderItems)
-  
-  const legacyCartSubmitBody = cartHeaders.map(header => {
-    const dateParts = header.delivDateISO.split('-')
-    const mmddyyyyDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`
 
-    const headerByDate = {
-      isWhole: isWhole,
-      custName: locationDetails.locName,
-      delivDate: mmddyyyyDate,
-      route: header.route,
-      PONote: header.ItemNote,
+  if (shouldSubmitPlaceholders && shouldSubmitLegacy) {
+    console.log("Cart placeholders:", cartPlaceHolderItems)
+    
+    const legacyCartSubmitBody = cartHeaders.map(header => {
+      const dateParts = header.delivDateISO.split('-')
+      const mmddyyyyDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`
+
+      const headerByDate = {
+        isWhole: isWhole,
+        custName: locationDetails.locName,
+        delivDate: mmddyyyyDate,
+        route: header.route,
+        PONote: header.ItemNote,
+      }
+      const itemsByDate = cartPlaceHolderItems.filter(item => 
+        item.delivDate === header.delivDateISO
+      ).map(item => ({
+        prodName: productData.find(p => p.prodNick === item.prodNick).prodName,
+        qty: item.qty,
+        rate: item.rate
+      }))
+
+      return ({
+        header: headerByDate,
+        items: itemsByDate
+      })
+
+    }).filter(order => order.items.length > 0)
+
+    console.log("Submitting cart placeholders to legacy system:", legacyCartSubmitBody)
+    let legacyCartResponse
+    if (legacyCartSubmitBody.length) {
+      legacyCartResponse = await APIGatewayFetcher('/orders/submitLegacyCart', {body: legacyCartSubmitBody})
+      console.log("Legacy cart response:", legacyCartResponse)
     }
-    const itemsByDate = cartPlaceHolderItems.filter(item => 
-      item.delivDate === header.delivDateISO
-    ).map(item => ({
-      prodName: productData.find(p => p.prodNick === item.prodNick).prodName,
-      qty: item.qty,
-      rate: item.rate
-    }))
-
-    return ({
-      header: headerByDate,
-      items: itemsByDate
-    })
-
-  }).filter(order => order.items.length > 0)
-
-  console.log("Submitting cart placeholders to legacy system:", legacyCartSubmitBody)
-  let legacyCartResponse
-  if (legacyCartSubmitBody.length) {
-    legacyCartResponse = await APIGatewayFetcher('/orders/submitLegacyCart', {body: legacyCartSubmitBody})
-    console.log("Legacy cart response:", legacyCartResponse)
   }
 
   // *****************************
@@ -830,25 +853,29 @@ const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingCha
   // Although code execution gets terminated earlier if there are
   // no submitItems, we will take this chance to assert the full
   // standing order from the new system onto the old system, 
-  console.log("Submit for new system: ", submitItems)
 
-  let legacyStandingResponse
-  if (isStand === true && isWhole === true) {
-    const legacyStandingSubmitBody = getLegacyStandingSubmitBody(submitItems, locationDetails, productData, submissionCandidates, isStand)
-    console.log("Submit for legacy system:", legacyStandingSubmitBody)
+  if (shouldSubmitLegacy) {
+    console.log("Submit for new system: ", submitItems)
 
-    legacyStandingResponse = await APIGatewayFetcher('/orders/submitLegacyStanding', {body: legacyStandingSubmitBody})
-    console.log("Legacy standing response:", legacyStandingResponse)
+    let legacyStandingResponse
+    if (isStand === true && isWhole === true) {
+      const legacyStandingSubmitBody = getLegacyStandingSubmitBody(submitItems, locationDetails, productData, submissionCandidates, isStand)
+      console.log("Submit for legacy system:", legacyStandingSubmitBody)
+
+      legacyStandingResponse = await APIGatewayFetcher('/orders/submitLegacyStanding', {body: legacyStandingSubmitBody})
+      console.log("Legacy standing response:", legacyStandingResponse)
+    }
   }
 
   // ***********************
   // * SUBMIT PLACEHOLDERS *
   // ***********************
 
-  
-  for (let placeholder of cartPlaceHolderItems) {
-    console.log("creating cart placeholder:")
-    createOrder(placeholder)
+  if (shouldSubmitPlaceholders) {
+    for (let placeholder of cartPlaceHolderItems) {
+      console.log("creating cart placeholder:")
+      createOrder(placeholder)
+    }
   }
   
   // ***************************
