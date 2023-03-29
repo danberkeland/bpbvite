@@ -33,11 +33,11 @@ const CustProds = () => {
 
   const { data: products } = useProductListFull(true);
   const { data: customers } = useLocationListFull(true);
- 
+
   const [productList, setProductList] = useState(products);
 
-  console.log('products', products)
-  console.log('customers', customers)
+  console.log("products", products);
+  console.log("customers", customers);
 
   const [altPricing, setAltPricing] = useState([]);
 
@@ -47,52 +47,45 @@ const CustProds = () => {
   }, []);
 
   useEffect(() => {
-    console.log('productLst', productList)
-  }, [productList])
+    console.log("productLst", productList);
+  }, [productList]);
 
   useEffect(() => {
     try {
       let newProdList = clonedeep(products);
       for (let prod of newProdList) {
-        prod.updatedRate =
-          products[
-            products.findIndex((up) => up.prodName === prod.prodName)
-          ].wholePrice;
+        let custId = customers.findIndex((custo) => chosen === custo.locName);
+        let prodId = products.findIndex((up) => up.prodName === prod.prodName);
+        prod.updatedRate = products[prodId].wholePrice;
 
-        let includeChecks =
-          customers[customers.findIndex((custo) => chosen === custo.locName)].prodsNotAllowed
-           
-        console.log('includeChecks', includeChecks)  
-        
-        let customChecks =
-          customers[customers.findIndex((custo) => chosen === custo.locName)]
-            .customProd;
-        console.log('customChecks', customChecks)
+        let includeChecks = customers[custId].prodsNotAllowed;
 
-        let templateChecks =
-          customers[customers.findIndex((custo) => chosen === custo.locName)]
-            .templateProd;
-        console.log('templateChecks', templateChecks)
+        console.log("includeChecks", includeChecks);
+
+        let customChecks = customers[custId].customProd;
+        console.log("customChecks", customChecks);
+
+        let templateChecks = customers[custId].templateProd;
+        console.log("templateChecks", templateChecks);
 
         prod.prePop = false;
-        
+
         for (let check of customChecks.items) {
-          console.log('check1', check)
+          console.log("check1", check);
           if (prod.prodName === check.product.prodName) {
             prod.updatedRate = check.wholePrice;
           }
         }
-        
 
         for (let check of templateChecks.items) {
-          console.log('check2', check.product.prodName)
+          console.log("check2", check.product.prodName);
           if (prod.prodName === check.product.prodName) {
             prod.prePop = true;
           }
         }
 
         for (let check of includeChecks.items) {
-          console.log('check3', check)
+          console.log("check3", check);
           if (prod.prodName === check.product.prodName) {
             prod.defaultInclude = check.isAllowed;
           }
@@ -101,6 +94,9 @@ const CustProds = () => {
         prod.prev = prod.updatedRate;
         prod.includeClicks = false;
         prod.defaultClicks = false;
+        prod.inc = includeChecks;
+        prod.temp = templateChecks;
+        prod.alt = customChecks;
       }
 
       setProductList(newProdList);
@@ -231,6 +227,65 @@ const CustProds = () => {
   };
 
   const updateCustProd = async () => {
+    for (let prod of productList) {
+      let incFlag = false
+      if (prod.includeClicks === true) {
+        for (let inc of prod.inc.items) {
+          if (prod.prodName === inc.product.prodName) {
+            console.log(
+              "Delete from includes",
+              inc.product.prodName + " " + inc.id
+            );
+            incFlag = true
+          }
+        }
+        !incFlag && console.log('add to includes', prod.prodName)
+        
+        
+      }
+      let tempFlag = false
+      if (prod.defaultClicks === true) {
+        for (let temp of prod.temp.items) {
+          if (prod.prodName === temp.product.prodName) {
+            console.log(
+              "Delete from temp",
+              temp.product.prodName + " " + temp.id
+            );
+            tempFlag = true
+          }
+        }
+        !tempFlag && console.log('add to temp', prod.prodName)
+      }
+
+      let altFlag = false
+      if (Number(prod.prev) !== Number(prod.updatedRate)) {
+        for (let alt of prod.alt.items) {
+          if (prod.prodName === alt.product.prodName) {
+            
+            if (prod.wholePrice === Number(prod.updatedRate)){
+              console.log(
+                "Delete from alt",
+                alt.product.prodName + " " + alt.id
+              );
+              altFlag = true
+            } else {
+              console.log(
+                "Update from alt",
+                alt.product.prodName + " " + alt.id
+              );
+              altFlag = true
+            }
+            
+          }
+        }
+        !altFlag && console.log('add to alt', prod.prodName)
+        
+      }
+    }
+  };
+
+  /*
+  const updateCustProd = async () => {
     let customProd = [];
     let templateProd = [];
 
@@ -260,13 +315,13 @@ const CustProds = () => {
             updateDetails["id"] = alt.id;
 
             try {
-              /*
+              
               const prodData = await API.graphql(
                 graphqlOperation(updateAltPricing, {
                   input: { ...updateDetails },
                 })
                 
-              );*/
+              );
             } catch (error) {
               console.log("error on fetching Prod List", error);
             }
@@ -275,12 +330,12 @@ const CustProds = () => {
         if (exists === false) {
           console.log("create altpricing");
           try {
-            /*
+            
             const prodData = await API.graphql(
               graphqlOperation(createAltPricing, {
                 input: { ...updateDetails },
               })
-            );*/
+            );
           } catch (error) {
             console.log("error on fetching Prod List", error);
           }
@@ -303,18 +358,19 @@ const CustProds = () => {
       templateProd: templateProd,
     };
     try {
-      /*
+      
       const prodData = await API.graphql(
         graphqlOperation(updateCustomer, {
           input: { ...updateDetails },
         })
-      );*/
+      );
     } catch (error) {
       console.log("error on updating Customer", error);
     }
 
     setModifications(false);
   };
+  */
 
   return (
     <React.Fragment>
