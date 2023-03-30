@@ -226,7 +226,7 @@ export const useCartOrderData = (locNick, delivDateJS, isWhole) => {
             packSize: fav.product.packSize
           },
           qty: 0,
-          orderType: "C",
+          orderType: "T",
           rate: altPriceItem ? altPriceItem.wholePrice : fav.product.wholePrice,
           action: "CREATE",
           isTemplate: true
