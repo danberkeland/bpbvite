@@ -198,7 +198,7 @@ export const useCartOrderData = (locNick, delivDateJS, isWhole) => {
         if (matchIndex === -1) prev.push(curr)
         return prev
 
-      }, _cart)
+      }, [..._cart])
       .sort((a, b) => a.product.prodName < b.product.prodName ? -1 
         : a.product.prodName > b.product.prodname ? 1
         : 0
@@ -257,10 +257,6 @@ export const useCartOrderData = (locNick, delivDateJS, isWhole) => {
       : 0
     )
     
-
-
-    
-
     // Make Header
     const defaultRoute = ['atownpick', 'slopick'].includes(locationDetails.zone.zoneNick) 
       ? locationDetails.zone.zoneNick
