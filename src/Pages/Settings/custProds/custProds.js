@@ -8,19 +8,27 @@ import { Dropdown } from "primereact/dropdown";
 
 import "./styles.css";
 
-/*
 import {
-  updateCustomer,
-  updateAltPricing,
+  deleteProdsNotAllowed,
+  createProdsNotAllowed,
+  deleteTemplateProd,
+  createTemplateProd,
+  deleteAltPricing,
   createAltPricing,
+  updateAltPricing,
 } from "../../../graphql/mutations";
-*/
 
 import { API, graphqlOperation } from "aws-amplify";
 
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
-import { useProductListFull } from "../../../data/productData";
-import { useLocationListFull } from "../../../data/locationData";
+import {
+  revalidateProductListFull,
+  useProductListFull,
+} from "../../../data/productData";
+import {
+  revalidateLocationListFull,
+  useLocationListFull,
+} from "../../../data/locationData";
 
 const clonedeep = require("lodash.clonedeep");
 
@@ -227,8 +235,12 @@ const CustProds = () => {
   };
 
   const updateCustProd = async () => {
+    setIsLoading(true);
+    console.log("chosen", chosen);
+    let custId = customers.findIndex((custo) => chosen === custo.locName);
+    let locNick = customers[custId].locNick;
     for (let prod of productList) {
-      let incFlag = false
+      let incFlag = false;
       if (prod.includeClicks === true) {
         for (let inc of prod.inc.items) {
           if (prod.prodName === inc.product.prodName) {
@@ -236,14 +248,45 @@ const CustProds = () => {
               "Delete from includes",
               inc.product.prodName + " " + inc.id
             );
-            incFlag = true
+            let updateDetails = {
+              id: inc.id,
+            };
+
+            try {
+              let update = await API.graphql(
+                graphqlOperation(deleteProdsNotAllowed, {
+                  input: { ...updateDetails },
+                })
+              );
+              console.log("Successful", update);
+            } catch (error) {
+              console.log("error on deleting prodsNotAllowed", error);
+            }
+
+            incFlag = true;
           }
         }
-        !incFlag && console.log('add to includes', prod.prodName)
-        
-        
+        if (!incFlag) {
+          console.log("add to includes", prod.prodName);
+          let updateDetails = {
+            prodNick: prod.prodNick,
+            locNick: locNick,
+            isAllowed: prod.defaultInclude,
+          };
+
+          try {
+            let update = await API.graphql(
+              graphqlOperation(createProdsNotAllowed, {
+                input: { ...updateDetails },
+              })
+            );
+            console.log("Successful", update);
+          } catch (error) {
+            console.log("error on creating prodsNotAllowed", error);
+          }
+        }
       }
-      let tempFlag = false
+      let tempFlag = false;
       if (prod.defaultClicks === true) {
         for (let temp of prod.temp.items) {
           if (prod.prodName === temp.product.prodName) {
@@ -251,37 +294,123 @@ const CustProds = () => {
               "Delete from temp",
               temp.product.prodName + " " + temp.id
             );
-            tempFlag = true
+            let updateDetails = {
+              id: temp.id,
+            };
+
+            try {
+              let update = await API.graphql(
+                graphqlOperation(deleteTemplateProd, {
+                  input: { ...updateDetails },
+                })
+              );
+              console.log("Successful", update);
+            } catch (error) {
+              console.log("error on deleting tempProd", error);
+            }
+            tempFlag = true;
           }
         }
-        !tempFlag && console.log('add to temp', prod.prodName)
+        if (!tempFlag) {
+          console.log("add to temp", prod.prodName);
+          let updateDetails = {
+            prodNick: prod.prodNick,
+            locNick: locNick,
+          };
+
+          try {
+            let update = await API.graphql(
+              graphqlOperation(createTemplateProd, {
+                input: { ...updateDetails },
+              })
+            );
+            console.log("Successful", update);
+          } catch (error) {
+            console.log("error on creating templateProd", error);
+          }
+        }
       }
 
-      let altFlag = false
+      let altFlag = false;
       if (Number(prod.prev) !== Number(prod.updatedRate)) {
         for (let alt of prod.alt.items) {
           if (prod.prodName === alt.product.prodName) {
-            
-            if (prod.wholePrice === Number(prod.updatedRate)){
+            if (prod.wholePrice === Number(prod.updatedRate)) {
               console.log(
                 "Delete from alt",
                 alt.product.prodName + " " + alt.id
               );
-              altFlag = true
+
+              let updateDetails = {
+                id: alt.id,
+              };
+
+              try {
+                let update = await API.graphql(
+                  graphqlOperation(deleteAltPricing, {
+                    input: { ...updateDetails },
+                  })
+                );
+                console.log("Successful", update);
+              } catch (error) {
+                console.log("error on deleting altPricing", error);
+              }
+
+              altFlag = true;
             } else {
               console.log(
                 "Update from alt",
                 alt.product.prodName + " " + alt.id
               );
-              altFlag = true
+
+              let updateDetails = {
+                id: alt.id,
+                prodNick: prod.prodNick,
+                locNick: locNick,
+                wholePrice: Number(prod.updatedRate),
+              };
+
+              try {
+                let update = await API.graphql(
+                  graphqlOperation(updateAltPricing, {
+                    input: { ...updateDetails },
+                  })
+                );
+                console.log("Successful", update);
+              } catch (error) {
+                console.log("error on updating altPricing", error);
+              }
+
+              altFlag = true;
             }
-            
           }
         }
-        !altFlag && console.log('add to alt', prod.prodName)
-        
+        if (!altFlag) {
+          console.log("add to alt", prod.prodName);
+
+          let updateDetails = {
+            prodNick: prod.prodNick,
+            locNick: locNick,
+            wholePrice: Number(prod.updatedRate),
+          };
+
+          try {
+            let update = await API.graphql(
+              graphqlOperation(createAltPricing, {
+                input: { ...updateDetails },
+              })
+            );
+            console.log("Successful", update);
+          } catch (error) {
+            console.log("error on creating altPricing", error);
+          }
+        }
       }
     }
+    setIsLoading(false);
+    setModifications(false);
+    revalidateProductListFull();
+    revalidateLocationListFull();
   };
 
   /*
