@@ -1,6 +1,10 @@
 import React, { useEffect } from "react";
 
-import AnimatedRoutes from "./AnimatedRoutes";
+// CogFix - return original import
+import AnimatedRoutes from "./CogFix";
+//import AnimatedRoutes from "./AnimatedRoutes";
+
+
 import { useSettingsStore } from "../Contexts/SettingsZustand";
 
 const bpbmgrItems = [
@@ -217,11 +221,14 @@ function Pages(props) {
   }, [authClass]);
 
   return (
-    <AnimatedRoutes
+    
+     <AnimatedRoutes
       Routes={props.Routes}
       Route={props.Route}
       useLocation={props.useLocation}
     />
+ 
+   
   );
 }
 
