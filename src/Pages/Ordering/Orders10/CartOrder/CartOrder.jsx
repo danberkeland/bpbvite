@@ -486,6 +486,7 @@ export const CartOrder = ({ locNick, setLocNick }) => {
         }}
       >
         <CartItemDisplay 
+          headerChanges={headerChanges}
           itemBase={cartOrderData?.items}
           itemChanges={itemChanges}  
           setItemChanges={setItemChanges}

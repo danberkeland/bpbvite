@@ -19,7 +19,7 @@ import { reformatProdName } from "../../_utils/reformatProdName"
 import { IconInfoMessage } from "../../_components/IconInfoMessage"
 import { useSettingsStore } from "../../../../../Contexts/SettingsZustand"
 
-export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick, delivDate, fulfillmentOption, calculateRoutes, isMobile }) => {
+export const CartItemDisplay = ({ headerChanges, itemBase, itemChanges, setItemChanges, locNick, delivDate, fulfillmentOption, calculateRoutes, isMobile }) => {
   const user = {
     name: useSettingsStore(state => state.user),
     sub: useSettingsStore(state => state.username),
@@ -287,7 +287,7 @@ export const CartItemDisplay = ({ itemBase, itemChanges, setItemChanges, locNick
                 justifyContent: "space-between", 
                 alignItems: "center"
               }}>
-                <span onClick={() => {console.log(itemChanges)}}>Products</span> 
+                <span onClick={() => {console.log(headerChanges); console.log(itemChanges)}}>Products</span> 
                 <Button 
                   icon={showDetails ? "pi pi-search-minus" : "pi pi-search-plus"}
                   className="p-button-rounded p-button-text" 
