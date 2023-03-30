@@ -11,7 +11,7 @@ import { DataTable } from "primereact/datatable"
 import { AddItemSidebar } from "./AddItemSidebar"
 
 import { getWeekday, getWorkingDate, getWorkingDateTime } from "../../../../../functions/dateAndTime"
-import { useLocationDetails } from "../../../../../data/locationData"
+//import { useLocationDetails } from "../../../../../data/locationData"
 import TimeAgo from "timeago-react"
 import { InputText } from "primereact/inputtext"
 import { testProductAvailability } from "../../_utils/testProductAvailability"
@@ -27,7 +27,7 @@ export const CartItemDisplay = ({ headerChanges, itemBase, itemChanges, setItemC
     locNick: useSettingsStore(state => state.currentLoc),
   }
   const dayOfWeek = getWeekday(delivDate)
-  const { altLeadTimes } = useLocationDetails(locNick, !!locNick)
+  // const { altLeadTimes } = useLocationDetails(locNick, !!locNick)
   const [rollbackQty, setRollbackQty] = useState(null)
   const [showDetails, setShowDetails] = useState(false)
   const [showSidebar, setShowSidebar] = useState(false)
@@ -174,7 +174,7 @@ export const CartItemDisplay = ({ headerChanges, itemBase, itemChanges, setItemC
   const qtyColumnTemplate = (rowData) => {
    
     const prodNick = rowData.product.prodNick
-    const { baseItem, baseQty, maxQty, qtyChanged } = rowData.info
+    const { baseQty, maxQty, qtyChanged } = rowData.info
     const disableInput = (user.authClass === 'bpbfull' && delivDate < getWorkingDateTime('NOW'))
       || (maxQty === 0 || (user.authClass !== 'bpbfull' && delivDate <= getWorkingDateTime('NOW')))
 

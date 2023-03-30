@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react"
 
-import { dateToYyyymmdd, getTtl, getWeekday, getWorkingDate, getWorkingDateTime, yyyymmddToWeekday } from "../../../../functions/dateAndTime"
+import { dateToYyyymmdd, getTtl, getWeekday, getWorkingDate, getWorkingDateTime } from "../../../../functions/dateAndTime"
 
 import { Button } from "primereact/button"
 
@@ -73,7 +73,7 @@ export const CartOrder = ({ locNick, setLocNick }) => {
     ? itemChanges.map(item => {
         let validRoutes = calculateRoutes(item.product.prodNick, getWeekday(delivDate), headerChanges.route)
 
-        return (!!validRoutes.length && validRoutes[0] !== 'NOT ASSIGNED' || item.qty === 0)
+        return (!!validRoutes.length && (validRoutes[0] !== 'NOT ASSIGNED' || item.qty === 0))
       }).every(item => item === true)
     : true
   const itemsAreAllAvailable = itemChanges?.map(item => {
@@ -623,16 +623,6 @@ const assignAction = (changeItem, baseItem, routeChanged, noteChanged) => {
 
   return action
 }
-
-const weekLetterDisplayModel = [
-  {dayOfWeek: 'Sun', symbol: 'S'},
-  {dayOfWeek: 'Mon', symbol: 'M'},
-  {dayOfWeek: 'Tue', symbol: 'T'},
-  {dayOfWeek: 'Wed', symbol: 'W'},
-  {dayOfWeek: 'Thu', symbol: 'Th'},
-  {dayOfWeek: 'Fri', symbol: 'F'},
-  {dayOfWeek: 'Sat', symbol: 'S'},
-]
 
 
 const detectChanges = (baseHeader, headerChanges, baseItems, itemChanges) => {

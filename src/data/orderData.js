@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import useSWR, { mutate } from "swr"
+import useSWR from "swr"
 import { defaultSwrOptions } from "./constants"
 
 // import { useMemo } from "react"
@@ -367,7 +367,7 @@ export const submitToLegacy = async (body) => {
 }
 
 export const useOrderSummary = (locNick, shouldFetch) => {
-  const { data:cartData, mutate:mutateCart } = useOrdersByLocationByDate(locNick, null, shouldFetch)
+  const { data:cartData } = useOrdersByLocationByDate(locNick, null, shouldFetch)
   const { data:standingData } = useStandingByLocation(locNick, shouldFetch)
 
   const transformData = () => {
