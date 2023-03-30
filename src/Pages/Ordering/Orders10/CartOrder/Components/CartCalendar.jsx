@@ -20,7 +20,15 @@ export const CartCalendar = ({ delivDate, setDelivDate, locNick, inline }) => {
 
     const style = { padding: "2rem", backgroundColor: backgroundColor }
 
-    return <div style={style} onClick={() => {console.log(date, calendarDate, dayOfWeek, hasCart, hasStanding)}}>{date.day}</div>
+    return (
+    <div 
+      style={style} 
+      // onClick={() => {console.log(date, calendarDate, dayOfWeek, hasCart, hasStanding)}}
+    >
+      {date.day}
+    </div>
+      
+      )
   }
 
 

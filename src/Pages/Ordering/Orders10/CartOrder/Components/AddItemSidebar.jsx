@@ -60,8 +60,8 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
         : !sameDayUpdate ? (baseMatchItem.qty)
         : (baseMatchItem.sameDayMaxQty || 0)
 
-      console.log("BMI", baseMatchItem)
-      console.log("CMI", cartMatchItem)
+      // console.log("BMI", baseMatchItem)
+      // console.log("CMI", cartMatchItem)
       const info = { 
         inProduction: inProduction,
         isAvailable: isAvailable,

@@ -36,7 +36,7 @@ const Orders10 = () => {
   }, [user.locNick])
 
   return (
-    <div id="ordering-page" className="ordering-page-container" style={{padding: ".5rem .5rem 9rem .5rem"}}>
+    <div id="ordering-page" className="ordering-page-container" style={{padding: ".5rem .5rem 11.75rem .5rem"}}>
       {user.authClass === 'bpbfull' &&
         <div className="custDrop p-fluid" style={{margin: "0.5rem"}}>
           <Dropdown

@@ -265,10 +265,13 @@ export const useCartOrderData = (locNick, delivDateJS, isWhole) => {
     const defaultRoute = ['atownpick', 'slopick'].includes(locationDetails.zone.zoneNick) 
       ? locationDetails.zone.zoneNick
       : 'deliv'
-    const cartRoute = cartData.length ? cartData[0].route : null
+
+    // const cartRoute = cartData.length ? cartData[0].route : null
+    const cartRoute = _cart.length ? _cart[0].route : null
     //const standingRoute = ... <-- for when we enable setting the attribute in standing orders
     
-    const cartNote = cartData.length ? cartData[0].ItemNote : null
+    // const cartNote = cartData.length ? cartData[0].ItemNote : null
+    const cartNote = _cart.length ? _cart[0].ItemNote : null
     //const standingNote = ... <-- for when we enable setting the attribute in standing orders
     
     const orderHeader = {
@@ -431,7 +434,7 @@ export const useOrderSummary = (locNick, shouldFetch) => {
       days: standingByWeekday
     }
 
-    console.log(orderSummary)
+    // console.log(orderSummary)
     return orderSummary
   }
 
