@@ -69,6 +69,7 @@ export const listLocationsFull = /* GraphQL */ `
         locationCreditAppId
         prodsNotAllowed {
           items {
+            id
             isAllowed
             product {
               prodNick
@@ -79,7 +80,9 @@ export const listLocationsFull = /* GraphQL */ `
           nextToken
         }
         customProd {
+          
           items {
+            id
             wholePrice
             product {
               prodNick
@@ -89,7 +92,9 @@ export const listLocationsFull = /* GraphQL */ `
           nextToken
         }
         templateProd {
+          
           items {
+            id
             product {
               prodName
             }

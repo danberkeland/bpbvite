@@ -8,19 +8,27 @@ import { Dropdown } from "primereact/dropdown";
 
 import "./styles.css";
 
-/*
 import {
-  updateCustomer,
-  updateAltPricing,
+  deleteProdsNotAllowed,
+  createProdsNotAllowed,
+  deleteTemplateProd,
+  createTemplateProd,
+  deleteAltPricing,
   createAltPricing,
+  updateAltPricing,
 } from "../../../graphql/mutations";
-*/
 
 import { API, graphqlOperation } from "aws-amplify";
 
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
-import { useProductListFull } from "../../../data/productData";
-import { useLocationListFull } from "../../../data/locationData";
+import {
+  revalidateProductListFull,
+  useProductListFull,
+} from "../../../data/productData";
+import {
+  revalidateLocationListFull,
+  useLocationListFull,
+} from "../../../data/locationData";
 
 const clonedeep = require("lodash.clonedeep");
 
@@ -33,11 +41,11 @@ const CustProds = () => {
 
   const { data: products } = useProductListFull(true);
   const { data: customers } = useLocationListFull(true);
- 
+
   const [productList, setProductList] = useState(products);
 
-  console.log('products', products)
-  console.log('customers', customers)
+  console.log("products", products);
+  console.log("customers", customers);
 
   const [altPricing, setAltPricing] = useState([]);
 
@@ -47,59 +55,58 @@ const CustProds = () => {
   }, []);
 
   useEffect(() => {
-    console.log('productLst', productList)
-  }, [productList])
+    console.log("productLst", productList);
+  }, [productList]);
 
   useEffect(() => {
     try {
       let newProdList = clonedeep(products);
       for (let prod of newProdList) {
-        prod.updatedRate =
-          products[
-            products.findIndex((up) => up.prodName === prod.prodName)
-          ].wholePrice;
+        let custId = customers.findIndex((custo) => chosen === custo.locName);
+        let prodId = products.findIndex((up) => up.prodName === prod.prodName);
+        prod.updatedRate = products[prodId].wholePrice;
 
-        let includeChecks =
-          customers[customers.findIndex((custo) => chosen === custo.locName)].prodsNotAllowed
-           
-        console.log('includeChecks', includeChecks)  
-        
-        let customChecks =
-          customers[customers.findIndex((custo) => chosen === custo.locName)]
-            .customProd;
-        console.log('customChecks', customChecks)
+        let includeChecks = customers[custId].prodsNotAllowed;
 
-        let templateChecks =
-          customers[customers.findIndex((custo) => chosen === custo.locName)]
-            .templateProd;
-        console.log('templateChecks', templateChecks)
+        console.log("includeChecks", includeChecks);
+
+        let customChecks = customers[custId].customProd;
+        console.log("customChecks", customChecks);
+
+        let templateChecks = customers[custId].templateProd;
+        console.log("templateChecks", templateChecks);
 
         prod.prePop = false;
-        
+
         for (let check of customChecks.items) {
-          console.log('check1', check)
+          console.log("check1", check);
           if (prod.prodName === check.product.prodName) {
             prod.updatedRate = check.wholePrice;
           }
         }
-        
 
         for (let check of templateChecks.items) {
-          console.log('check2', check.product.prodName)
+          console.log("check2", check.product.prodName);
           if (prod.prodName === check.product.prodName) {
             prod.prePop = true;
           }
         }
 
         for (let check of includeChecks.items) {
-          console.log('check3', check)
+          console.log("check3", check);
           if (prod.prodName === check.product.prodName) {
             prod.defaultInclude = check.isAllowed;
           }
         }
 
         prod.prev = prod.updatedRate;
+        prod.includeClicks = false;
+        prod.defaultClicks = false;
+        prod.inc = includeChecks;
+        prod.temp = templateChecks;
+        prod.alt = customChecks;
       }
+
       setProductList(newProdList);
     } catch {
       console.log("not ready yet");
@@ -132,18 +139,18 @@ const CustProds = () => {
 
   const handleCheck = (e, prodName) => {
     let prodListToUpdate = clonedeep(productList);
-    prodListToUpdate[
-      productList.findIndex((prod) => prod.prodName === prodName)
-    ].defaultInclude = e.target.checked;
+    let ind = productList.findIndex((prod) => prod.prodName === prodName);
+    prodListToUpdate[ind].defaultInclude = e.target.checked;
+    prodListToUpdate[ind].includeClicks = !prodListToUpdate[ind].includeClicks;
     setProductList(prodListToUpdate);
     setModifications(true);
   };
 
   const handlePrePopCheck = (e, prodName) => {
     let prodListToUpdate = clonedeep(productList);
-    prodListToUpdate[
-      productList.findIndex((prod) => prod.prodName === prodName)
-    ].prePop = e.target.checked;
+    let ind = productList.findIndex((prod) => prod.prodName === prodName);
+    prodListToUpdate[ind].prePop = e.target.checked;
+    prodListToUpdate[ind].defaultClicks = !prodListToUpdate[ind].defaultClicks;
     setProductList(prodListToUpdate);
     setModifications(true);
   };
@@ -228,89 +235,182 @@ const CustProds = () => {
   };
 
   const updateCustProd = async () => {
-    let customProd = [];
-    let templateProd = [];
-
+    setIsLoading(true);
+    console.log("chosen", chosen);
+    let custId = customers.findIndex((custo) => chosen === custo.locName);
+    let locNick = customers[custId].locNick;
     for (let prod of productList) {
-      let prodDefaultInclude = clonedeep(
-        products[products.findIndex((p) => p.prodName === prod.prodName)]
-          .defaultInclude
-      );
-
-      if (prod.prev !== prod.updatedRate) {
-        prod.prev = prod.updatedRate;
-        const updateDetails = {
-          custName: chosen,
-          prodName: prod.prodName,
-          wholePrice: prod.updatedRate,
-        };
-
-        let exists = false;
-        for (let alt of altPricing) {
-          if (
-            alt.custName === chosen &&
-            alt.prodName === prod.prodName &&
-            alt.wholePrice !== prod.updatedRate
-          ) {
-            console.log("update altpricing");
-            exists = true;
-            updateDetails["id"] = alt.id;
+      let incFlag = false;
+      if (prod.includeClicks === true) {
+        for (let inc of prod.inc.items) {
+          if (prod.prodName === inc.product.prodName) {
+            console.log(
+              "Delete from includes",
+              inc.product.prodName + " " + inc.id
+            );
+            let updateDetails = {
+              id: inc.id,
+            };
 
             try {
-              /*
-              const prodData = await API.graphql(
-                graphqlOperation(updateAltPricing, {
+              let update = await API.graphql(
+                graphqlOperation(deleteProdsNotAllowed, {
                   input: { ...updateDetails },
                 })
-                
-              );*/
+              );
+              console.log("Successful", update);
             } catch (error) {
-              console.log("error on fetching Prod List", error);
+              console.log("error on deleting prodsNotAllowed", error);
+            }
+
+            incFlag = true;
+          }
+        }
+        if (!incFlag) {
+          console.log("add to includes", prod.prodName);
+          let updateDetails = {
+            prodNick: prod.prodNick,
+            locNick: locNick,
+            isAllowed: prod.defaultInclude,
+          };
+
+          try {
+            let update = await API.graphql(
+              graphqlOperation(createProdsNotAllowed, {
+                input: { ...updateDetails },
+              })
+            );
+            console.log("Successful", update);
+          } catch (error) {
+            console.log("error on creating prodsNotAllowed", error);
+          }
+        }
+      }
+      let tempFlag = false;
+      if (prod.defaultClicks === true) {
+        for (let temp of prod.temp.items) {
+          if (prod.prodName === temp.product.prodName) {
+            console.log(
+              "Delete from temp",
+              temp.product.prodName + " " + temp.id
+            );
+            let updateDetails = {
+              id: temp.id,
+            };
+
+            try {
+              let update = await API.graphql(
+                graphqlOperation(deleteTemplateProd, {
+                  input: { ...updateDetails },
+                })
+              );
+              console.log("Successful", update);
+            } catch (error) {
+              console.log("error on deleting tempProd", error);
+            }
+            tempFlag = true;
+          }
+        }
+        if (!tempFlag) {
+          console.log("add to temp", prod.prodName);
+          let updateDetails = {
+            prodNick: prod.prodNick,
+            locNick: locNick,
+          };
+
+          try {
+            let update = await API.graphql(
+              graphqlOperation(createTemplateProd, {
+                input: { ...updateDetails },
+              })
+            );
+            console.log("Successful", update);
+          } catch (error) {
+            console.log("error on creating templateProd", error);
+          }
+        }
+      }
+
+      let altFlag = false;
+      if (Number(prod.prev) !== Number(prod.updatedRate)) {
+        for (let alt of prod.alt.items) {
+          if (prod.prodName === alt.product.prodName) {
+            if (prod.wholePrice === Number(prod.updatedRate)) {
+              console.log(
+                "Delete from alt",
+                alt.product.prodName + " " + alt.id
+              );
+
+              let updateDetails = {
+                id: alt.id,
+              };
+
+              try {
+                let update = await API.graphql(
+                  graphqlOperation(deleteAltPricing, {
+                    input: { ...updateDetails },
+                  })
+                );
+                console.log("Successful", update);
+              } catch (error) {
+                console.log("error on deleting altPricing", error);
+              }
+
+              altFlag = true;
+            } else {
+              console.log(
+                "Update from alt",
+                alt.product.prodName + " " + alt.id
+              );
+
+              let updateDetails = {
+                id: alt.id,
+                prodNick: prod.prodNick,
+                locNick: locNick,
+                wholePrice: Number(prod.updatedRate),
+              };
+
+              try {
+                let update = await API.graphql(
+                  graphqlOperation(updateAltPricing, {
+                    input: { ...updateDetails },
+                  })
+                );
+                console.log("Successful", update);
+              } catch (error) {
+                console.log("error on updating altPricing", error);
+              }
+
+              altFlag = true;
             }
           }
         }
-        if (exists === false) {
-          console.log("create altpricing");
+        if (!altFlag) {
+          console.log("add to alt", prod.prodName);
+
+          let updateDetails = {
+            prodNick: prod.prodNick,
+            locNick: locNick,
+            wholePrice: Number(prod.updatedRate),
+          };
+
           try {
-            /*
-            const prodData = await API.graphql(
+            let update = await API.graphql(
               graphqlOperation(createAltPricing, {
                 input: { ...updateDetails },
               })
-            );*/
+            );
+            console.log("Successful", update);
           } catch (error) {
-            console.log("error on fetching Prod List", error);
+            console.log("error on creating altPricing", error);
           }
         }
       }
-
-      if (prod.defaultInclude !== prodDefaultInclude) {
-        customProd.push(prod.prodName);
-      }
-      if (prod.prePop) {
-        templateProd.push(prod.prodName);
-      }
     }
-
-    let id =
-      customers[customers.findIndex((custo) => custo.custName === chosen)].id;
-    const updateDetails = {
-      id: id,
-      customProd: customProd,
-      templateProd: templateProd,
-    };
-    try {
-      /*
-      const prodData = await API.graphql(
-        graphqlOperation(updateCustomer, {
-          input: { ...updateDetails },
-        })
-      );*/
-    } catch (error) {
-      console.log("error on updating Customer", error);
-    }
-
+    setIsLoading(false);
     setModifications(false);
+    revalidateProductListFull();
+    revalidateLocationListFull();
   };
 
   return (
