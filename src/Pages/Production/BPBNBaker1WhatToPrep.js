@@ -6,25 +6,29 @@ import { Column } from "primereact/column";
 import { convertDatetoBPBDate, todayPlus } from "../../helpers/dateTimeHelpers";
 import ComposeWhatToPrep from "./Utils/composeWhatToPrep";
 
-import styled from "styled-components";
+// import styled from "styled-components";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
-const WholeBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 50%;
-  margin: auto;
-  padding: 0 0 100px 0;
-`;
+import { WholeBox, WholeBoxPhone, h1Style } from "./_styles"
 
-const WholeBoxPhone = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 90%;
-  margin: auto;
-  padding: 0 0 100px 0;
-`;
+// const WholeBox = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   width: 50%;
+//   margin: auto;
+//   padding: 0 0 100px 0;
+// `;
+
+// const WholeBoxPhone = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   width: 90%;
+//   margin: auto;
+//   padding: 0 0 100px 0;
+// `;
+
+// const h1Style = {fontWeight: "bold", marginBottom: "2rem"}
 
 const compose = new ComposeWhatToPrep();
 
@@ -70,7 +74,7 @@ function BPBNBaker1WhatToPrep({ whatToPrep, setWhatToPrep, deliv, doobieStuff })
 
   const innards = (
     <React.Fragment>
-      <h1>What To Prep {convertDatetoBPBDate(delivDate)}</h1>
+      <h1 style={h1Style}>What To Prep {convertDatetoBPBDate(delivDate)}</h1>
 
       <DataTable value={doobieStuff} className="p-datatable-sm">
         <Column field="Prod" header="Product"></Column>

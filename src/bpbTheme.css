@@ -1115,11 +1115,14 @@ div.read-only-button > .p-disabled, .p-component:disabled {
 }
 
 .p-inputgroup-addon {
-  background: #e9ecef;
-  color: #6c757d;
-  border-top: 1px solid #ced4da;
-  border-left: 1px solid #ced4da;
-  border-bottom: 1px solid #ced4da;
+  /* background: #e9ecef; */
+  background: #b6cdfd;
+  /* color: #6c757d; */
+  color: var(--bpb-text-color-secondary);
+  /* border-top: 1px solid #ced4da; */
+  /* border-left: 1px solid #ced4da; */
+  /* border-bottom: 1px solid #ced4da; */
+  border: 1px solid var(--bpb-border-input);
   padding: 0.5rem 0.5rem;
   min-width: 2.357rem;
 }

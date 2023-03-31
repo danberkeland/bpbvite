@@ -45,6 +45,7 @@ const Orders10 = () => {
             optionLabel="locName"
             optionValue="locNick"
             value={locNick}
+            itemTemplate={(option) => <><span>{`${option.locName} (${option.locNick})`}</span></>}
             onChange={e => setLocNick(e.value)}
             filter
             filterBy="locNick,locName"

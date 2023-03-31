@@ -13,36 +13,38 @@ import { convertDatetoBPBDate, todayPlus } from "../../helpers/dateTimeHelpers";
 
 import ComposeAllOrders from "./Utils/composeAllOrders";
 
-import styled from "styled-components";
+// import styled from "styled-components";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
 
-const WholeBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 50%;
-  margin: auto;
-  padding: 0 0 100px 0;
-`;
+import { WholeBox, ButtonContainer, ButtonWrapper, h1Style, h2Style } from "./_styles";
 
-const ButtonContainer = styled.div`
-  display: flex;
-  width: 100%;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-content: flex-start;
-`;
+// const WholeBox = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   width: 50%;
+//   margin: auto;
+//   padding: 0 0 100px 0;
+// `;
 
-const ButtonWrapper = styled.div`
-  font-family: "Montserrat", sans-serif;
-  display: flex;
-  width: 60%;
-  flex-direction: row;
-  justify-content: space-between;
-  align-content: left;
+// const ButtonContainer = styled.div`
+//   display: flex;
+//   width: 100%;
+//   flex-direction: row;
+//   justify-content: flex-start;
+//   align-content: flex-start;
+// `;
 
-  background: #ffffff;
-`;
+// const ButtonWrapper = styled.div`
+//   font-family: "Montserrat", sans-serif;
+//   display: flex;
+//   width: 60%;
+//   flex-direction: row;
+//   justify-content: space-between;
+//   align-content: left;
+
+//   background: #ffffff;
+// `;
 
 const compose = new ComposeAllOrders();
 
@@ -119,7 +121,7 @@ function WhoBake() {
         <Button
           type="button"
           onClick={exportWhoBakePdf}
-          className="p-button-success"
+          // className="p-button-success"
           data-pr-tooltip="PDF"
         >
           Print Who Bake
@@ -155,12 +157,12 @@ function WhoBake() {
   return (
     <React.Fragment>
       <WholeBox>
-        <h1>Who Bake {convertDatetoBPBDate(delivDate)}</h1>
+        <h1 style={h1Style}>Who Bake {convertDatetoBPBDate(delivDate)}</h1>
         <div>{header}</div>
         {allOrdersList &&
           allOrdersList.map((all) => (
             <React.Fragment>
-              <h3>{all}</h3>
+              <h2 style={h2Style}>{all}</h2>
               <DataTable
                 value={allOrders.filter((fil) => fil.forBake === all)}
                 className="p-datatable-sm"

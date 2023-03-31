@@ -37,6 +37,7 @@ export const CartCalendar = ({ delivDate, setDelivDate, locNick, inline }) => {
       id="calendar"
       touchUI={!inline}
       value={delivDate}
+      //viewDate={delivDate}
       placeholder={dateToMmddyyyy(delivDate)} // hacky workaround for buggy behavior when toggling inline property
       readOnlyInput={!inline} // prevent keyboard input of invalid date string
       minDate={getWorkingDateTime('NOW').minus({ days: 1}).toJSDate()}

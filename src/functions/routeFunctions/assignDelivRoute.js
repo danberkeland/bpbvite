@@ -54,7 +54,7 @@
  * @param {Object} routeMatrix - memoized route calculations built from the function 'buildRouteMatrix'. Make sure the matrix has the location/prodNick from the order included!
  * @returns 
  */
-export const assignDelivRoute = (order, locationZoneNick, dayOfWeek, routeMatrix) => {
+export const assignDelivRoute = ({ order, locationZoneNick, dayOfWeek, routeMatrix }) => {
   const { locNick, prodNick, route:fulfillmentOption } = order
 
   return ({

@@ -21,40 +21,44 @@ import { ExportPastryPrepPdf } from "./BPBNBaker1Parts/ExportPastryPrepPdf";
 import styled from "styled-components";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
-const WholeBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 50%;
-  margin: auto;
-  padding: 0 0 100px 0;
-`;
+import {WholeBox, WholeBoxPhone, ButtonContainer, ButtonWrapper, h1Style } from "./_styles"
 
-const WholeBoxPhone = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 90%;
-  margin: auto;
-  padding: 0 0 100px 0;
-`;
+// const WholeBox = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   width: 50%;
+//   margin: auto;
+//   padding: 0 0 100px 0;
+// `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  width: 100%;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-content: flex-start;
-`;
+// const WholeBoxPhone = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   width: 90%;
+//   margin: auto;
+//   padding: 0 0 100px 0;
+// `;
 
-const ButtonWrapper = styled.div`
-  font-family: "Montserrat", sans-serif;
-  display: flex;
-  width: 60%;
-  flex-direction: row;
-  justify-content: space-between;
-  align-content: left;
+// const ButtonContainer = styled.div`
+//   display: flex;
+//   width: 100%;
+//   flex-direction: row;
+//   justify-content: flex-start;
+//   align-content: flex-start;
+// `;
 
-  background: #ffffff;
-`;
+// const ButtonWrapper = styled.div`
+//   font-family: "Montserrat", sans-serif;
+//   display: flex;
+//   width: 60%;
+//   flex-direction: row;
+//   justify-content: space-between;
+//   align-content: left;
+
+//   //background: #ffffff;
+// `;
+
+// const h1Style = {fontWeight: "bold", marginBlock: "2rem"}
 
 const compose = new ComposeWhatToBake();
 
@@ -169,7 +173,7 @@ function BPBNBaker1() {
         <Button
           type="button"
           onClick={handlePrint}
-          className="p-button-success"
+          //className="p-button-success"
           data-pr-tooltip="PDF"
         >
           Print AM Bake List
@@ -180,7 +184,7 @@ function BPBNBaker1() {
 
   const innards = (
     <React.Fragment>
-      <h1>What To Bake {convertDatetoBPBDate(delivDate)}</h1>
+      <h1 style={h1Style}>What To Bake {convertDatetoBPBDate(delivDate)}</h1>
       <ToolBar delivDate={delivDate} setDelivDate={setDelivDate} />
       <div>{width > breakpoint ? header : ""}</div>
 

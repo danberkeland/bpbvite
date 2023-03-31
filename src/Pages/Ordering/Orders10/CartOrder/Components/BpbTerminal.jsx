@@ -108,9 +108,10 @@ export const BpbTerminal = ({
     helpLocation: () => [<pre>{helpTextLocation}</pre>],
     helpDate: () => [<pre>{helpTextDate}</pre>],
     helpItems: () => [<pre>{helpTextItems}</pre>],
-    display: () => {
+    displayOrder: () => {
       return [renderOrder(locNick, delivDate, headerChanges, itemChanges)]
     },
+    displayLocation: () => renderLocation(locationDetails),
     clear: (value) => {
       return 'clear'
     }
@@ -162,8 +163,18 @@ export const BpbTerminal = ({
       if (!parsedFlag) {
         if (['view', 'ds'].includes(args[i])) {
           commands.push({ 
-            commandType: 'display',
+            commandType: 'displayOrder',
             value: [locNick, delivDate]
+          })
+          parsedFlag = true
+        } 
+      }
+
+      if (!parsedFlag) {
+        if (['loc', 'location'].includes(args[i])) {
+          commands.push({ 
+            commandType: 'displayLocation',
+            value: null
           })
           parsedFlag = true
         } 
@@ -577,3 +588,27 @@ const helpTextItems = `COMMANDS:
     pl:   5
 
 `
+
+const renderLocation = (locationDetails) => {
+  const divContainer = document.createElement('div')
+  divContainer.innerHtml = locationDetails.specialInstructions
+  const output =
+    <div style={{display: "flex", gap: "2rem"}}>
+      <div style={{width: "fit-content"}}>
+        <div>locName: </div>
+        <div>zoneNick: </div>
+        <div>latestFrist: </div>
+        <div>latestFinal: </div>
+        <div>Notes: </div>
+      </div>   
+      <div style={{width: "fit-content"}}>
+        <div>{locationDetails.locName}</div>  
+        <div>{locationDetails.zoneNick}</div>
+        <div>{`${locationDetails.latestFirstDeliv}`}</div>
+        <div>{`${locationDetails.latestFinalDeliv}`}</div>
+        <div dangerouslySetInnerHTML={{__html: locationDetails.specialInstructions}}></div>
+      </div>   
+
+    </div>
+  return [output]
+}

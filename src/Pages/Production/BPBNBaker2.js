@@ -22,32 +22,34 @@ import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import styled from "styled-components";
 import { API, graphqlOperation } from "aws-amplify";
 
-const WholeBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 50%;
-  margin: auto;
-  padding: 0 0 100px 0;
-`;
+import { WholeBox, ButtonContainer, ButtonWrapper, h1Style, h2Style } from "./_styles"
 
-const ButtonContainer = styled.div`
-  display: flex;
-  width: 100%;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-content: flex-start;
-`;
+// const WholeBox = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   width: 50%;
+//   margin: auto;
+//   padding: 0 0 100px 0;
+// `;
 
-const ButtonWrapper = styled.div`
-  font-family: "Montserrat", sans-serif;
-  display: flex;
-  width: 60%;
-  flex-direction: row;
-  justify-content: space-between;
-  align-content: left;
+// const ButtonContainer = styled.div`
+//   display: flex;
+//   width: 100%;
+//   flex-direction: row;
+//   justify-content: flex-start;
+//   align-content: flex-start;
+// `;
 
-  background: #ffffff;
-`;
+// const ButtonWrapper = styled.div`
+//   font-family: "Montserrat", sans-serif;
+//   display: flex;
+//   width: 60%;
+//   flex-direction: row;
+//   justify-content: space-between;
+//   align-content: left;
+
+//   background: #ffffff;
+// `;
 
 const compose = new ComposeWhatToMake();
 const composePastry = new ComposePastryPrep();
@@ -277,9 +279,10 @@ function BPBNBaker2() {
     <ButtonContainer>
       <ButtonWrapper>
         <Button
+          
           type="button"
           onClick={(e) => exportPastryPrepPdf(infoWrap)}
-          className="p-button-success"
+          //className="p-button-success"
           data-pr-tooltip="PDF"
         >
           Print Prep List
@@ -292,11 +295,11 @@ function BPBNBaker2() {
     <React.Fragment>
       <ConfirmDialog />
       <WholeBox>
-        <h1>What To Shape {convertDatetoBPBDate(delivDate)}</h1>
+        <h1 style={h1Style}>What To Shape {convertDatetoBPBDate(delivDate)}</h1>
         <ToolBar delivDate={delivDate} setDelivDate={setDelivDate} />
         <div>{header}</div>
 
-        <h3>What To Shape</h3>
+        <h2 style={h2Style}>What To Shape</h2>
         <DataTable value={whatToMake} className="p-datatable-sm">
           <Column field="forBake" header="Product"></Column>
           <Column field="weight" header="Weight"></Column>

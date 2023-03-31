@@ -105,13 +105,17 @@ export const useLogisticsDataByDate = (delivDateJS, shouldFetch) => {
   const transformData = () => {
     if (!orderData || !dimensionData) return undefined
 
-    let { locations, products, routeMatrix } = dimensionData
+    let { locations, routeMatrix } = dimensionData
     let { cartOrders, standingOrders } = orderData
     
     const combinedRoutedOrders = combineOrdersByDate(cartOrders, standingOrders.filter(i => i.isStand))
       .filter(order => order.qty > 0)
-      .map(order => assignDelivRoute(order, locations[order.locNick], dayOfWeek, routeMatrix))
-
+      .map(order => assignDelivRoute({
+        order: order, 
+        locationZoneNick: locations[order.locNick]?.zoneNick, 
+        dayOfWeek : dayOfWeek, 
+        routeMatrix: routeMatrix
+      }))
     return combinedRoutedOrders
 
   } // end transformData
