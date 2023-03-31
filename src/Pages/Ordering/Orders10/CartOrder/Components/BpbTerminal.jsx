@@ -6,6 +6,7 @@ import { useLocationDetails, useLocationListSimple } from "../../../../../data/l
 import { dateToMmddyyyy, dateToYyyymmdd, getWorkingDate, getWorkingDateTime } from "../../../../../functions/dateAndTime"
 import { DateTime } from "luxon"
 import { handleAddCartProduct, handleAddCartProducts } from "../../_utils/handleAddProduct"
+import { useRouteListFull } from "../../../../../data/routeData"
 
 export const BpbTerminal = ({ 
   locNick, setLocNick, 
@@ -16,6 +17,7 @@ export const BpbTerminal = ({
   const { data:locationList, isValidating:locListIsValidating } = useLocationListSimple(true)
   const { data:locationDetails, isValidating:locIsValidating } = useLocationDetails(locNick, !!locNick)
   const { data:productData, isValidating:prodsAreValidating } = useProductDataWithLocationCustomization(locNick)
+  const { data:routeData } = useRouteListFull(!!locNick)
 
   const [commandQueue, setCommandQueue] = useState(null)
   const [isExecuting, setIsExecuting] = useState(false)
@@ -111,7 +113,7 @@ export const BpbTerminal = ({
     displayOrder: () => {
       return [renderOrder(locNick, delivDate, headerChanges, itemChanges)]
     },
-    displayLocation: () => renderLocation(locationDetails),
+    displayLocation: () => renderLocation(locationDetails, routeData),
     clear: (value) => {
       return 'clear'
     }
@@ -589,14 +591,21 @@ const helpTextItems = `COMMANDS:
 
 `
 
-const renderLocation = (locationDetails) => {
+const renderLocation = (locationDetails, routeData) => {
   const divContainer = document.createElement('div')
   divContainer.innerHtml = locationDetails.specialInstructions
+
+  const zoneRoutes = locationDetails.zone.zoneRoute.items
+  const routes = routeData.filter(route => zoneRoutes.findIndex(zr => zr.routeNick === route.routeNick) !== -1)
+
   const output =
-    <div style={{display: "flex", gap: "2rem"}}>
+    <div style={{display: "flex", gap: "1rem"}}>
       <div style={{width: "fit-content"}}>
         <div>locName: </div>
         <div>zoneNick: </div>
+        <div>Route Coverage</div>
+        {routes.map((r, idx) => <div key={idx} style={{marginLeft: "1rem"}}>{r.routeNick}: </div>)}
+        <br />
         <div>latestFrist: </div>
         <div>latestFinal: </div>
         <div>Notes: </div>
@@ -604,11 +613,49 @@ const renderLocation = (locationDetails) => {
       <div style={{width: "fit-content"}}>
         <div>{locationDetails.locName}</div>  
         <div>{locationDetails.zoneNick}</div>
-        <div>{`${locationDetails.latestFirstDeliv}`}</div>
-        <div>{`${locationDetails.latestFinalDeliv}`}</div>
-        <div dangerouslySetInnerHTML={{__html: locationDetails.specialInstructions}}></div>
+        <pre style={{margin: "0"}}>Sun Mon Tue Wed Thu Fri Sat    Start    End</pre>
+        {/* {routes.map((r, idx) => <div key={idx}>{`${sched2display(r.RouteSched)} -- ${(new Date(0, 0, 0, r.routeStart, 0, 0)).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit", hour12: false })} to ${(new Date(0, 0, 0, r.routeStart + r.routeTime, 0, 0)).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit", hour12: false })}`}</div>)} */}
+        {routes.map((r, idx) => <pre key={idx} style={{margin: "0"}}>{sched2display(r)}</pre>)}
+        <br />
+        <div>{`${(new Date(0,0,0, locationDetails.latestFirstDeliv,0,0)).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit", hour12: false })}`}</div>
+        <div>{`${(new Date(0,0,0, locationDetails.latestFinalDeliv,0,0)).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit", hour12: false })}`}</div>
+        {locationDetails.specialInstructions ? <div dangerouslySetInnerHTML={{__html: locationDetails.specialInstructions}}></div> : <div>N/A</div>}
       </div>   
 
     </div>
   return [output]
+}
+
+const sched2display = (route) => {
+  let { RouteSched, routeStart, routeTime } = route
+  let days = []
+  for (let dayNum of Object.keys(routeSchedToWeekdayMap)) {
+    if (RouteSched.includes(dayNum)) {
+      // days.push(routeSchedToWeekdayMap[dayNum])
+      days = days.concat([' X '])
+    } else {
+      //days.push('---')
+      days = days.concat(['   '])
+    }
+  }
+
+  days = days.join(' ')
+
+  let displayOptions =  { hour: "2-digit", minute: "2-digit", hour12: false }
+  let startString = (new Date(0, 0, 0, routeStart, 0, 0)).toLocaleTimeString('en-US', displayOptions)
+  let finishString = (new Date(0, 0, 0, routeStart + routeTime, 0, 0)).toLocaleTimeString('en-US', displayOptions)
+  let displayString = days.concat(`    ${startString} - ${finishString}`)
+  
+  return displayString
+
+}
+
+const routeSchedToWeekdayMap = {
+  '1': 'Sun',
+  '2': 'Mon',
+  '3': 'Tue',
+  '4': 'Wed',
+  '5': 'Thu',
+  '6': 'Fri',
+  '7': 'Sat'
 }
