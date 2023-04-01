@@ -13,7 +13,7 @@ const cognito = new AWS.CognitoIdentityServiceProvider({ region: "us-east-2" });
 const confirmCognitoEmail = async (event) => {
   console.log("sub",event.sub)
   const user = await cognito.adminGetUser({
-      UserPoolId: "us-east-2_pOTWtTfNg",
+      UserPoolId: "us-east-2_hYAKr3SwA",
       Username: event.sub
     }).promise()
     
