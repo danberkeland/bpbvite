@@ -175,6 +175,7 @@ type DoughComponentBackup @model @auth(rules: [{allow: public}]) {
 type User @model {
   name: String!
   email: String!
+  username: String
   phone: String
   authClass: String
   sub: String! @primaryKey
