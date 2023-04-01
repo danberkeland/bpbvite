@@ -66,3 +66,31 @@ export const transitionOrdersByLocByDelivDate = /* GraphQL */ `
     }
   }
 `;
+
+export const listCartOverview = /* GraphQL */ `
+  query ListOrders(
+    $filter: ModelOrderFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listOrders(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        # id
+        locNick
+        prodNick
+        qty
+        delivDate
+        updatedOn
+        updatedBy
+        # ItemNote
+        # isWhole
+        # rate
+        # route
+        # isLate
+        # createdOn
+        # ttl
+      }
+      nextToken
+    }
+  }
+`;

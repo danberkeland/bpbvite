@@ -18,6 +18,7 @@ import * as mutations from "../customGraphQL/mutations/orderMutations"
 import { useLocationDetails } from "./locationData"
 import { useStandingByLocation } from "./standingData"
 import dynamicSort from "../functions/dynamicSort"
+import { getDuplicates } from "../functions/detectDuplicates"
 
 
 /******************
@@ -74,8 +75,18 @@ export const useOrdersByLocationByDate = (locNick, delivDate, shouldFetch) => {
 
   // if (data) console.log("Cart Data response: ", data)
   // if (errors) console.log("Cart Data errors", errors)
-  
-  const _data = getNestedObject(data, ['data', 'getLocation', 'ordersByDate', 'items'])
+  const transformData = () => {
+    if (!data) return undefined
+
+    const _data = getNestedObject(data, ['data', 'getLocation', 'ordersByDate', 'items'])
+    const duplicates = getDuplicates(_data, ['locNick', 'delivDate', 'product.prodNick'])
+    if (duplicates.length) {
+      console.log("Warning: duplicate cart items detected")
+    }
+    return _data
+  }
+
+  const _data = useMemo(transformData, [data])
 
   return ({
     data: _data,
@@ -166,7 +177,6 @@ export const useCartOrderData = (locNick, delivDateJS, isWhole) => {
 
   const makeCartOrder = () => {
     if (!locationDetails || !cartData || !standingData) return undefined
-
     // console.log("building cart order from...", locNick, delivDate, isWhole, dayOfWeek)
     // console.log(cartData)
     // console.log(standingData)
@@ -441,6 +451,36 @@ export const useOrderSummary = (locNick, shouldFetch) => {
 
   return ({ 
     data: orderSummary 
+  })
+
+}
+
+
+/**
+ * Full Scan for now: if we put an index on UpdatedOn, we can 
+ * make te query leaner. Data to give visibility regarding
+ * What orders have been placed over a given time period.
+ * 
+ * we limit revalidation to prevent unnecessary data consumption.
+ */
+export const useCartOverview = (shouldFetch) => {
+  const query = queries.listCartOverview
+  const variables = { limit: 2000 }
+  const key = [query, variables]
+  const { data } = useSWR(
+    shouldFetch ? key : null, 
+    gqlFetcher,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false
+    }
+    )
+
+  console.log(data)
+
+  return ({
+    data: data ? getNestedObject(data, ['data', 'listOrders', 'items']) : undefined
   })
 
 }

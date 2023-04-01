@@ -7,6 +7,10 @@ import { dateToMmddyyyy, dateToYyyymmdd, getWorkingDate, getWorkingDateTime } fr
 import { DateTime } from "luxon"
 import { handleAddCartProduct, handleAddCartProducts } from "../../_utils/handleAddProduct"
 import { useRouteListFull } from "../../../../../data/routeData"
+import { useCartOverview } from "../../../../../data/orderData"
+import dynamicSort from "../../../../../functions/dynamicSort"
+import TimeAgo from "timeago-react"
+import "./bpbTerminal.css"
 
 export const BpbTerminal = ({ 
   locNick, setLocNick, 
@@ -18,6 +22,10 @@ export const BpbTerminal = ({
   const { data:locationDetails, isValidating:locIsValidating } = useLocationDetails(locNick, !!locNick)
   const { data:productData, isValidating:prodsAreValidating } = useProductDataWithLocationCustomization(locNick)
   const { data:routeData } = useRouteListFull(!!locNick)
+
+  // DATA for admin use
+  const [shouldLoadCartOverview, setShouldLoadCartOverview] = useState(false)
+  const { data:cartOverview } = useCartOverview(shouldLoadCartOverview)
 
   const [commandQueue, setCommandQueue] = useState(null)
   const [isExecuting, setIsExecuting] = useState(false)
@@ -114,6 +122,8 @@ export const BpbTerminal = ({
       return [renderOrder(locNick, delivDate, headerChanges, itemChanges)]
     },
     displayLocation: () => renderLocation(locationDetails, routeData),
+    loadReport: () => setShouldLoadCartOverview(true),
+    viewReport: () => displayCartOverview(cartOverview),
     clear: (value) => {
       return 'clear'
     }
@@ -146,6 +156,26 @@ export const BpbTerminal = ({
         if (helpType) {
           commands.push({ 
             commandType: helpType,
+            value: null
+          })
+          parsedFlag = true
+        } 
+      }
+
+      if (!parsedFlag) {
+        if (args[i] === 'load-report') {
+          commands.push({ 
+            commandType: 'loadReport',
+            value: null
+          })
+          parsedFlag = true
+        } 
+      }
+
+      if (!parsedFlag) {
+        if (args[i] === 'view-report') {
+          commands.push({ 
+            commandType: 'viewReport',
             value: null
           })
           parsedFlag = true
@@ -285,7 +315,7 @@ export const BpbTerminal = ({
     return () => {
         TerminalService.off('command', commandHandler);
     };
-  }, [locationList, locationDetails, productData, headerChanges, itemChanges, commandHandler]);
+  }, [locationList, locationDetails, productData, headerChanges, itemChanges, commandHandler, cartOverview]);
     
   useEffect(() => {
     // exit if no commands or data is still refreshing
@@ -314,6 +344,7 @@ export const BpbTerminal = ({
 
   return (
     <>
+      {/* <pre>{JSON.stringify(shouldLoadCartOverview)}</pre> */}
       {!!locationList &&
         <Terminal welcomeMessage={`Welcome. Type "help" for a list of commands.`}  prompt={prompt} />
       }
@@ -658,4 +689,53 @@ const routeSchedToWeekdayMap = {
   '5': 'Thu',
   '6': 'Fri',
   '7': 'Sat'
+}
+
+
+const displayCartOverview = (cartData) => {
+  if (!cartData) return ["Data needs to be manually fetched. try 'load-report'"]
+  
+  const cutoff = getWorkingDateTime('NOW').minus({ days: 1}).toISO()
+
+  let displayData = cartData
+    .filter(item => {
+      //const updateDT = getWorkingDateTime(item.updatedOn).startOf('day')
+      return item.updatedOn > cutoff//updateDT.toMillis === todayDT.toMillis // || updateDT.toMillis === todayDT.minus({ days: 1}).toMillis
+    })
+    .sort(dynamicSort("-updatedOn"))
+
+  console.log(displayData)
+  const output = <div style={{height: "11.3rem", width: "fit-content", overflowY: "auto"}}>
+    <table className="bpb-terminal-table">
+    <thead>
+      <tr>
+        <th> </th>
+        <th>delivDate</th>
+        <th>locNick</th>      
+        <th>prodNick</th>
+        <th>qty</th>
+        <th>Last Update</th>
+        <th>Updated By</th>
+      </tr>
+    </thead>
+    <tbody>
+    {displayData.map((item, idx) => {
+      return (
+        <tr>
+          <td>{idx}</td>
+          <td>{item.delivDate}</td>
+          <td>{item.locNick}</td>
+          <td>{item.prodNick}</td>
+          <td>{item.qty}</td>
+          <td><TimeAgo datetime={item.updatedOn} /></td>
+          <td>{item.updatedBy}</td>
+        </tr>
+      )
+    })}
+    </tbody>
+  </table>
+  </div>
+
+  return [output]
+
 }

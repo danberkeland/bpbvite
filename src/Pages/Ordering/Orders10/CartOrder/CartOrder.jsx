@@ -11,7 +11,7 @@ import { ItemNoteInput } from "./Components/ItemNoteInput"
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Toast } from "primereact/toast"
 
-import { createOrder, updateOrder, useCartOrderData, useOrdersByLocationByDate } from "../../../../data/orderData"
+import { createOrder, updateOrder, useCartOrderData, useCartOverview, useOrdersByLocationByDate } from "../../../../data/orderData"
 import { DateTime } from "luxon"
 import { useLocationDetails } from "../../../../data/locationData"
 import { APIGatewayFetcher } from "../../../../data/fetchers"
@@ -23,6 +23,7 @@ import { BpbTerminal } from "./Components/BpbTerminal"
 
 import "./cartOrder.css"
 import { reformatProdName } from "../_utils/reformatProdName"
+import { API } from "aws-amplify"
 
 
 export const CartOrder = ({ locNick, setLocNick }) => {
@@ -55,7 +56,7 @@ export const CartOrder = ({ locNick, setLocNick }) => {
 
   const disableInputs = isPastDeliv || (isDelivDate && user.authClass !== 'bpbfull') || isLoading
 
-  // data
+  // ***DATA***
   const { data:locationDetails } = useLocationDetails(locNick, !!locNick)
   const cartOrderData = useCartOrderData(locNick, delivDate, isWhole)
   const { mutate:mutateCart } = useOrdersByLocationByDate(locNick, null, !!cartOrderData)
@@ -392,6 +393,13 @@ export const CartOrder = ({ locNick, setLocNick }) => {
   
       }
     } // end for (let subItem of subItems)...
+
+    // ***Optional send Email***
+    if (locNick === 'bpbtest') {
+      sendEmail(locationDetails, headerChanges, delivDate)
+    }
+
+
     mutateCart()
     setIsLoading(false)
     toast.current.show({ severity: 'success', summary: 'Confirmed', detail: 'Order received', life: 3000 })
@@ -421,6 +429,14 @@ export const CartOrder = ({ locNick, setLocNick }) => {
           itemChanges={itemChanges}
           setItemChanges={setItemChanges}
         />
+        <Button label="Test Email"
+          style={{margin: "1rem", width: "fit-content"}}
+          onClick={() => {
+            const resp = sendEmail(locationDetails, headerChanges, itemChanges, delivDate)
+            
+          }}
+        />
+  
       </div>
     }
     <div style={{
@@ -643,3 +659,93 @@ const displayTextMap = {
   slopick: "SLO Pick Up",
   atownpick: "Carlton Pick Up"
 }
+
+
+
+const sendEmail = async (locationDetails, headerChanges, itemChanges, delivDate) => {
+
+  const body = {
+    params: {
+      Source: "backporchbakeryslo@gmail.com",
+      Destination: {
+        ToAddresses: [
+          "backporchbakeryslo@gmail.com"
+          //"danberkeland@gmail.com"
+        ]
+      },
+      Message: {
+        Subject: {
+          Data: `Your BPB Order for ${delivDate.toLocaleDateString('en-US')} at ${locationDetails.locName}`
+        },
+        Body: {
+          Html: {
+            //Data: "This message body contains HTML formatting. It can, for example, contain links like this one: <a class=\"ulink\" href=\"http://docs.aws.amazon.com/ses/latest/DeveloperGuide\" target=\"_blank\">Amazon SES Developer Guide</a>."
+            Data: `
+              <head>
+                <style>
+                  table {border-spacing: 1rem 0rem;}
+                  th {
+                    text-align: left;
+                    padding-block: .5rem;
+                  }
+                  .qty-column {text-align: center;}
+                </style>
+              </head>
+              
+              <body>
+                <h2>Order for ${delivDate.toLocaleDateString('en-US')}</h2>
+                <p>Your order has been set as follows: </p>
+                ${headerChanges.route === 'deliv' 
+                  ? `<p>${displayTextMap[headerChanges.route]} to ${locationDetails.locName}</p>`
+                  : `<p>${displayTextMap[headerChanges.route]}</p>`
+                }
+                ${headerChanges.ItemNote ? `<p>Note: ${headerChanges.ItemNote}</p>` : ''}
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Qty</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${itemChanges.map(item => `
+                      <tr>
+                        <td>${item.product.prodName}</td>
+                        <td class="qty-column">${item.qty}</td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </body>
+            `
+          }
+        }
+      }
+    }
+  }
+  // const body = {
+  //   params: {
+  //     Source: "backporchbakeryslo@gmail.com",
+  //     Destination: {
+  //       ToAddresses: ["backporchbakeryslo@gmail.com"],
+  //     },
+  //     Message: {
+  //       Subject: { Data: "Test Email" },
+  //       Body: {
+  //         Text: { Data: "Test" },
+  //       }
+  //     }
+  //   }
+  // };
+
+  console.log(JSON.stringify(body, null, 2))
+  const emailResp = await API.post('bpbGateway', '/ses', {body: body})
+  console.log(emailResp)
+
+}
+
+
+// ${headerChanges.route === 'deliv' 
+// ? `<h2>${displayTextMap[headerChanges.route]} to ${locationDetails.locName}</h2>`
+// : `<h2>For ${displayTextMap[headerChanges.route]}</h2>`
+// }

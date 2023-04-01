@@ -6,15 +6,15 @@ import { Column } from "primereact/column"
 import { DataTable } from "primereact/datatable"
 import { Sidebar } from "primereact/sidebar"
 import { Dropdown } from "primereact/dropdown"
-import { InputNumber } from "primereact/inputnumber"
+//import { InputNumber } from "primereact/inputnumber"
 import { ListBox } from "primereact/listbox"
 
 import { createStanding, deleteStanding, updateStanding, useStandingByLocation } from "../../../../data/standingData"
-import { createOrder, fetchTransitionOrders } from "../../../../data/orderData"
+import { createOrder, fetchTransitionOrders, useOrdersByLocationByDate } from "../../../../data/orderData"
 import { useLocationDetails } from "../../../../data/locationData"
 import { useProductDataWithLocationCustomization } from "../../../../data/productData"
 
-import { mutate } from "swr"
+//import { mutate } from "swr"
 
 
 import dynamicSort from "../../../../functions/dynamicSort"
@@ -30,6 +30,7 @@ import { IconInfoMessage } from "../_components/IconInfoMessage"
 import { reformatProdName } from "../_utils/reformatProdName"
 import { wrapText } from "../_utils/wrapText"
 import { toggleFav } from "../_utils/toggleFavorite"
+import { getDuplicates } from "../../../../functions/detectDuplicates"
 
 const standOptions = [
   {label: "Standing", value: true},
@@ -83,6 +84,7 @@ export const StandingOrder = ({ user, locNick }) => {
   const { data:locationDetails, mutate:mutateLocation, locationIsValidating } = useLocationDetails(locNick, !!locNick)
   const { data:routeData } = useRouteListFull(true)
   const { data:standingData, mutate:mutateStanding } = useStandingByLocation(locNick, !!locNick)
+  const { mutate:mutateCart } = useOrdersByLocationByDate(locNick, null, true)
 
   const availableRouteScheds = (!!locationDetails && !!routeData) 
     ? locationDetails.zone.zoneRoute.items.map(zr => zr.routeNick)
@@ -109,13 +111,22 @@ export const StandingOrder = ({ user, locNick }) => {
 
   useEffect(() => {
     if (!!standingData && !!productData) {
+      // check incoming data for duplicates
+      const dupes = getDuplicates(standingData, ['product.prodNick', 'dayOfWeek', 'isStand', 'isWhole'])
+      if (dupes.length) {
+        console.log("Warning: duplicate items found:", dupes)
+        if (user.authClass === "bpbfull") {alert("Duplicate standing orders found (see console logs)")}
+        // Then handle duplicates by deciding which to keep and deleting the rest...
+        // Then revalidate standing data.
+      }
+
       const baseItems = makeStandingBase(standingData, productData, locNick)
 
       setStandingBase(JSON.parse(JSON.stringify(baseItems)))
       setStandingChanges(JSON.parse(JSON.stringify(baseItems)))
       //console.log(baseItems)
     }
-  }, [standingData, productData, locNick])
+  }, [standingData, productData, locNick, user.authClass])
 
   const makeProductOptions = () => {
     if (!standingChanges) return []
@@ -370,7 +381,7 @@ export const StandingOrder = ({ user, locNick }) => {
       <div style={{padding: ".5rem"}}>
         <Button label="Submit Changes" 
           className="p-button-lg" 
-          onClick={() => handleSubmit(locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, user.name, locationDetails, productData, setIsLoading, true, true)}
+          onClick={() => handleSubmit(locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, mutateCart, user.name, locationDetails, productData, setIsLoading, true, true)}
         />
 
         <div style={{color: "hsl(37, 100%, 5%)", margin: ".5rem"}}>Changes will not take effect until <b>{effectDate}</b>. Orders can still be edited from the Cart Order screen in the meantime.</div>
@@ -387,7 +398,21 @@ export const StandingOrder = ({ user, locNick }) => {
               backgroundColor: "#282a39",
               color: "hsl(37, 100%, 70%)"
             }}
-            onClick={() => handleSubmit(locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, user.name, locationDetails, productData, setIsLoading, false, false)}
+            onClick={() => handleSubmit(
+              locNick, 
+              isWhole, 
+              isStand, 
+              standingBase, 
+              standingChanges, 
+              mutateStanding, 
+              mutateCart, 
+              user.name, 
+              locationDetails, 
+              productData, 
+              setIsLoading, 
+              false, 
+              false
+            )}
           />
           <div style={{color: "hsl(37, 100%, 5%)", margin: ".5rem"}}>
             For fixing out-of-sync Standing Orders.
@@ -715,7 +740,21 @@ const AddItemSidebar = ({showAddItem, setShowAddItem, locNick, standingChanges, 
 // detect which action is to be taken,
 // associate these directives with each submisison candidate
 
-const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingChanges, mutateStanding, userName, locationDetails, productData, setIsLoading, shouldSubmitPlaceholders, shouldSubmitLegacy) => {
+const handleSubmit = async (
+  locNick, 
+  isWhole, 
+  isStand, 
+  standingBase, 
+  standingChanges, 
+  mutateStanding, 
+  mutateCart, 
+  userName, 
+  locationDetails, 
+  productData, 
+  setIsLoading, 
+  shouldSubmitPlaceholders, 
+  shouldSubmitLegacy
+) => {
   setIsLoading(true)
   // Submission only handles the current category 
   // of standing order (according to isStand, isWhole values).
@@ -914,14 +953,15 @@ const handleSubmit = async (locNick, isWhole, isStand, standingBase, standingCha
   // revailidate SWR data
 
   if (cartPlaceHolderItems.length) {
-    for (let header of cartHeaders) {
-      let variables = {
-        locNick: locNick,
-        delivDate: header.delivDateISO
-      }
-      let key = [listOrdersByLocationByDate, variables]
-      mutate(key, undefined, {revalidate: true})
-    }
+    // for (let header of cartHeaders) {
+    //   let variables = {
+    //     locNick: locNick,
+    //     delivDate: header.delivDateISO
+    //   }
+    //   //let key = [listOrdersByLocationByDate, variables]
+    //   // mutate(key, undefined, {revalidate: true})
+    // }
+    mutateCart()
   }
 
   console.log("start mutate")
