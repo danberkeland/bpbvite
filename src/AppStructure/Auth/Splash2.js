@@ -26,7 +26,9 @@ const testPush = null
 export const Splash = () => {
   const setFormType = useSettingsStore((state) => state.setFormType);
   const setIsEdit = useSettingsStore((state) => state.setIsEdit);
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
   const [showMessage, setShowMessage] = useState(false);
+  const [resetPassword, setResetPassword] = useState(false);
 
   const dialogFooter = (
     <div className="flex justify-content-center">
@@ -34,7 +36,11 @@ export const Splash = () => {
         label="OK"
         className="p-button-text"
         autoFocus
-        onClick={() => setShowMessage(false)}
+        onClick={() => {
+          setShowMessage(false)
+          setResetPassword(false)
+          setIsLoading(false)}
+        }
       />
     </div>
   );
@@ -92,6 +98,35 @@ export const Splash = () => {
           onClick={e => handleForgotPassword(props)}
         />
         <Dialog
+          visible={resetPassword}
+          onHide={() => setResetPassword(false)}
+          position="top"
+          footer={dialogFooter}
+          showHeader={false}
+          breakpoints={{ "960px": "80vw" }}
+          
+        >
+          <div className="flex align-items-center flex-column pt-6 px-3">
+            <i
+              className="pi pi-exclamation-circle"
+              style={{ fontSize: "5rem", color: "var(--red-500)" }}
+            ></i>
+            <h5>Please reset password</h5>
+            <p style={{ lineHeight: 1.5, textIndent: "1rem" }}>
+              We have made some changes to our authentication process and need you to please reset your password.
+            </p>
+            <p style={{ lineHeight: 1.5, textIndent: "1rem" }}>
+              Please login with the temporary password:
+            </p>
+            <p style={{ lineHeight: 1.5, textIndent: "1rem" }}>
+              admin123!
+            </p>
+            <p style={{ lineHeight: 1.5, textIndent: "1rem" }}>
+              and then reset your password to what it was, or use a new one if you want.  Sorry for the inconvenience.  Thanks!
+            </p>
+          </div>
+        </Dialog>
+        <Dialog
           visible={showMessage}
           onHide={() => setShowMessage(false)}
           position="top"
@@ -122,6 +157,7 @@ export const Splash = () => {
       initialState={initialState}
       update={submitAuth}
       setShowMessage={setShowMessage}
+      setResetPassword={setResetPassword}
     />
   );
 };
