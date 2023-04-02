@@ -13,16 +13,12 @@ const cognito = new AWS.CognitoIdentityServiceProvider({ region: "us-east-2" });
 const createUser = async (event) => {
   
   console.log("createevent", event);
-  const { email, custName, authClass, defLoc, username } = event;
+  const { email, custName, authClass, defLoc } = event;
   return await new Promise((resolve, reject) => {
     const params = {
-      UserPoolId: "us-east-2_hYAKr3SwA",
-      Username: username,
+      UserPoolId: "us-east-2_pOTWtTfNg",
+      Username: email,
       UserAttributes: [
-        {
-          Name: "email",
-          Value: email,
-        },
         {
           Name: "custom:name",
           Value: custName,

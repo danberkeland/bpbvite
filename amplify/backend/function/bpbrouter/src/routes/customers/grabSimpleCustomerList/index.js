@@ -5,7 +5,6 @@ query MyQuery {
     listUsers {
       items {
         name
-        username
         phone
         authClass
         sub
