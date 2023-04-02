@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 
 import AnimatedRoutes from "./AnimatedRoutes";
+
+
 import { useSettingsStore } from "../Contexts/SettingsZustand";
 
 const bpbmgrItems = [
@@ -112,13 +114,7 @@ const itemsAuth1 = itemsAuth2b.concat([
               window.location = "/Production/WhoShape";
             },
           },
-          {
-            label: "Set out",
-            icon: "pi pi-fw pi-home",
-            command: () => {
-              window.location = "/Production/BPBNSetout";
-            },
-          },
+          
         ],
       },
       
@@ -217,11 +213,14 @@ function Pages(props) {
   }, [authClass]);
 
   return (
-    <AnimatedRoutes
+    
+     <AnimatedRoutes
       Routes={props.Routes}
       Route={props.Route}
       useLocation={props.useLocation}
     />
+ 
+   
   );
 }
 

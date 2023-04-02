@@ -23,7 +23,7 @@ import Pages from "./AppStructure/Pages";
 
 import "./index.css";
 // import "primereact/resources/themes/saga-blue/theme.css";
-import './bpbTheme.css'
+import "./bpbTheme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 
@@ -78,9 +78,9 @@ export function App() {
         break;
     }
   });
-  
+
   useEffect(() => {
-    console.log("check user useEffect")
+    console.log("check user useEffect");
     setIsLoading(true);
     checkUser().then((use) => {
       use && setAccess(use.signInUserSession.accessToken.jwtToken);
@@ -91,24 +91,21 @@ export function App() {
       setFormType(use ? "signedIn" : "onNoUser");
       setIsLoading(false);
     });
-  }, [setAccess, setAuthClass, setCurrentLoc, setFormType, setIsLoading, setUser, setUserObject]);
-
-
+  }, [
+    setAccess,
+    setAuthClass,
+    setCurrentLoc,
+    setFormType,
+    setIsLoading,
+    setUser,
+    setUserObject,
+  ]);
 
   return (
     <React.Fragment>
       {isLoading && <Loader />}
-      <div className="headerBlock">
-      </div>
-      
-      {/*{user && (
-        <React.Fragment>
-          <h4>
-            Welcome {user}. Auth Class: {authClass}{" "}
-          </h4>
-          <h4>Current Location: {currentLoc}</h4>
-        </React.Fragment>
-      )}*/}
+      <div className="headerBlock"></div>
+
       <Router>
         {formType === "signedIn" && (
           <React.Fragment>

@@ -14,6 +14,21 @@ export const CenteredContainer = styled.div`
   transform: translateX(-50%) translateY(-50%);
 `;
 
+
+export const CenteredContainer2 = styled.div`
+  display: flex;
+  flex-direction: column;
+  border: 1px solid lightblue;
+  padding: 5px 5px;
+  box-sizing: border-box;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%);
+`;
+
 export const MainWrapper = styled.div`
   float: left;
   width: 100%;

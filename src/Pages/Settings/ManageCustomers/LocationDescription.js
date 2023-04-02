@@ -59,7 +59,7 @@ function LocationDescription(props) {
 
     arrayHelpers.push({ custName: name, sub: e.value, authType: 1 });
     const newLocUser = {
-      authType: 3,
+      authType: 1,
       locNick: props.values.locNick,
       sub: sub,
       locName: props.values.locName,
