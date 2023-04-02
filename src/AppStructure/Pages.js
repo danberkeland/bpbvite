@@ -116,13 +116,7 @@ const itemsAuth1 = itemsAuth2b.concat([
               window.location = "/Production/WhoShape";
             },
           },
-          {
-            label: "Set out",
-            icon: "pi pi-fw pi-home",
-            command: () => {
-              window.location = "/Production/BPBNSetout";
-            },
-          },
+          
         ],
       },
       
