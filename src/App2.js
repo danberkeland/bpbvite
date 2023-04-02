@@ -103,17 +103,9 @@ export function App() {
 
   return (
     <React.Fragment>
-      {/* CogFix - remove line below */}
-      <Router>
-        <Pages Routes={Routes} Route={Route} useLocation={useLocation} />
-      </Router>
-
-      {/* CogFix - reinstate code below
-
       {isLoading && <Loader />}
-      <div className="headerBlock">
-      </div>
-      
+      <div className="headerBlock"></div>
+
       <Router>
         {formType === "signedIn" && (
           <React.Fragment>
@@ -128,7 +120,6 @@ export function App() {
         {formType === "forgotPassword" && <ForgotPassword />}
         {formType === "Thankyou" && <UserApplyThanks />}
       </Router>
-        */}
     </React.Fragment>
   );
 }

@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
 
-// CogFix - return original import
-import AnimatedRoutes from "./CogFix";
-//import AnimatedRoutes from "./AnimatedRoutes";
+import AnimatedRoutes from "./AnimatedRoutes";
 
 
 import { useSettingsStore } from "../Contexts/SettingsZustand";
