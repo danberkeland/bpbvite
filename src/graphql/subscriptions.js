@@ -706,6 +706,7 @@ export const onCreateUser = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -832,6 +833,7 @@ export const onUpdateUser = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -958,6 +960,7 @@ export const onDeleteUser = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -1271,6 +1274,7 @@ export const onCreateLocation = /* GraphQL */ `
       city
       zip
       email
+      orderCnfEmail
       phone
       firstName
       lastName
@@ -1474,6 +1478,7 @@ export const onUpdateLocation = /* GraphQL */ `
       city
       zip
       email
+      orderCnfEmail
       phone
       firstName
       lastName
@@ -1677,6 +1682,7 @@ export const onDeleteLocation = /* GraphQL */ `
       city
       zip
       email
+      orderCnfEmail
       phone
       firstName
       lastName
@@ -3428,6 +3434,7 @@ export const onCreateOrder = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -3666,6 +3673,7 @@ export const onUpdateOrder = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -3904,6 +3912,7 @@ export const onDeleteOrder = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -4023,6 +4032,7 @@ export const onCreateStanding = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -4257,6 +4267,7 @@ export const onUpdateStanding = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -4491,6 +4502,7 @@ export const onDeleteStanding = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -7132,6 +7144,7 @@ export const onCreateEventLog = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -7189,6 +7202,7 @@ export const onUpdateEventLog = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -7246,6 +7260,7 @@ export const onDeleteEventLog = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -7353,6 +7368,7 @@ export const onCreateTemplateProd = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -7580,6 +7596,7 @@ export const onUpdateTemplateProd = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -7807,6 +7824,7 @@ export const onDeleteTemplateProd = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -8035,6 +8053,7 @@ export const onCreateProdsNotAllowed = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -8263,6 +8282,7 @@ export const onUpdateProdsNotAllowed = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -8491,6 +8511,7 @@ export const onDeleteProdsNotAllowed = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -9563,6 +9584,7 @@ export const onCreateLocationUser = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -9614,6 +9636,7 @@ export const onCreateLocationUser = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -9723,6 +9746,7 @@ export const onUpdateLocationUser = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -9774,6 +9798,7 @@ export const onUpdateLocationUser = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -9883,6 +9908,7 @@ export const onDeleteLocationUser = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -9934,6 +9960,7 @@ export const onDeleteLocationUser = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -10041,6 +10068,7 @@ export const onCreateAltPricing = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -10269,6 +10297,7 @@ export const onUpdateAltPricing = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -10497,6 +10526,7 @@ export const onDeleteAltPricing = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -10725,6 +10755,7 @@ export const onCreateAltLeadTime = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -10953,6 +10984,7 @@ export const onUpdateAltLeadTime = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -11181,6 +11213,7 @@ export const onDeleteAltLeadTime = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName

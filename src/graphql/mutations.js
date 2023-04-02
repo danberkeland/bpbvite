@@ -733,6 +733,7 @@ export const createUser = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -862,6 +863,7 @@ export const updateUser = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -991,6 +993,7 @@ export const deleteUser = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -1310,6 +1313,7 @@ export const createLocation = /* GraphQL */ `
       city
       zip
       email
+      orderCnfEmail
       phone
       firstName
       lastName
@@ -1516,6 +1520,7 @@ export const updateLocation = /* GraphQL */ `
       city
       zip
       email
+      orderCnfEmail
       phone
       firstName
       lastName
@@ -1722,6 +1727,7 @@ export const deleteLocation = /* GraphQL */ `
       city
       zip
       email
+      orderCnfEmail
       phone
       firstName
       lastName
@@ -3491,6 +3497,7 @@ export const createOrder = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -3732,6 +3739,7 @@ export const updateOrder = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -3973,6 +3981,7 @@ export const deleteOrder = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -4095,6 +4104,7 @@ export const createStanding = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -4332,6 +4342,7 @@ export const updateStanding = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -4569,6 +4580,7 @@ export const deleteStanding = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -7321,6 +7333,7 @@ export const createEventLog = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -7381,6 +7394,7 @@ export const updateEventLog = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -7441,6 +7455,7 @@ export const deleteEventLog = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -7549,6 +7564,7 @@ export const createTemplateProd = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -7777,6 +7793,7 @@ export const updateTemplateProd = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -8005,6 +8022,7 @@ export const deleteTemplateProd = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -8234,6 +8252,7 @@ export const createProdsNotAllowed = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -8463,6 +8482,7 @@ export const updateProdsNotAllowed = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -8692,6 +8712,7 @@ export const deleteProdsNotAllowed = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -9771,6 +9792,7 @@ export const createLocationUser = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -9822,6 +9844,7 @@ export const createLocationUser = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -9932,6 +9955,7 @@ export const updateLocationUser = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -9983,6 +10007,7 @@ export const updateLocationUser = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -10093,6 +10118,7 @@ export const deleteLocationUser = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -10144,6 +10170,7 @@ export const deleteLocationUser = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -10252,6 +10279,7 @@ export const createAltPricing = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -10481,6 +10509,7 @@ export const updateAltPricing = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -10710,6 +10739,7 @@ export const deleteAltPricing = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -10939,6 +10969,7 @@ export const createAltLeadTime = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -11168,6 +11199,7 @@ export const updateAltLeadTime = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -11397,6 +11429,7 @@ export const deleteAltLeadTime = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName

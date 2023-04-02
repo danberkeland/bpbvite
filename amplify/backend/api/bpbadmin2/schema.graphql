@@ -240,6 +240,7 @@ type Location @model {
   city: String
   zip: String
   email: String
+  orderCnfEmail: String
   phone: String
   firstName: String
   lastName: String

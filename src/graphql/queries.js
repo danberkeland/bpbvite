@@ -524,6 +524,7 @@ export const getUser = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -607,6 +608,7 @@ export const listUsers = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -862,6 +864,7 @@ export const getLocation = /* GraphQL */ `
       city
       zip
       email
+      orderCnfEmail
       phone
       firstName
       lastName
@@ -1010,6 +1013,7 @@ export const listLocations = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -1973,6 +1977,7 @@ export const getOrder = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -2103,6 +2108,7 @@ export const listOrders = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -2212,6 +2218,7 @@ export const getStanding = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -2395,6 +2402,7 @@ export const listStandings = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -4029,6 +4037,7 @@ export const getEventLog = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -4163,6 +4172,7 @@ export const getTemplateProd = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -4337,6 +4347,7 @@ export const listTemplateProds = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -4496,6 +4507,7 @@ export const getProdsNotAllowed = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -4675,6 +4687,7 @@ export const listProdsNotAlloweds = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -5283,6 +5296,7 @@ export const getLocationUser = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -5334,6 +5348,7 @@ export const getLocationUser = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -5390,6 +5405,7 @@ export const listLocationUsers = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -5501,6 +5517,7 @@ export const getAltPricing = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -5676,6 +5693,7 @@ export const listAltPricings = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -5835,6 +5853,7 @@ export const getAltLeadTime = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -6010,6 +6029,7 @@ export const listAltLeadTimes = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -6213,6 +6233,7 @@ export const locSortAZ = /* GraphQL */ `
         city
         zip
         email
+        orderCnfEmail
         phone
         firstName
         lastName
@@ -6478,6 +6499,7 @@ export const orderByLocByDelivDate = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -6606,6 +6628,7 @@ export const orderByDelivDate = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -6674,6 +6697,7 @@ export const standingByLocByStartDate = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -6800,6 +6824,7 @@ export const standingByLocByEndDate = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -6926,6 +6951,7 @@ export const standingByLocByDayOfWeek = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -7050,6 +7076,7 @@ export const standingByDayOfWeek = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
@@ -7205,6 +7232,7 @@ export const locUsersByAuthType = /* GraphQL */ `
           city
           zip
           email
+          orderCnfEmail
           phone
           firstName
           lastName
