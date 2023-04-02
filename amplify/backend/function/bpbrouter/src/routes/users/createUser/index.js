@@ -5,7 +5,6 @@ const query = /* GraphQL */ `
     $authClass: String
     $email: String!
     $locNick: String
-    $username: String
     $name: String!
     $phone: String
     $sub: String!
@@ -15,7 +14,6 @@ const query = /* GraphQL */ `
         authClass: $authClass
         email: $email
         locNick: $locNick
-        username: username
         name: $name
         phone: $phone
         sub: $sub
@@ -25,7 +23,6 @@ const query = /* GraphQL */ `
       createdAt
       email
       locNick
-      username
       name
       phone
       sub
