@@ -77,7 +77,6 @@ const grabDetailedCustomerList = async (event) => {
         let newSub = {
           sub: sub.sub,
           custName: sub.user.name,
-          username: sub.user.username,
           authType: sub.authType,
           id: sub.id
         };
@@ -86,7 +85,6 @@ const grabDetailedCustomerList = async (event) => {
 
       let newItem = {
         custName: item.user.name,
-        username: item.user.username,
         authClass: item.user.authClass,
         email: item.user.email,
         phone: item.user.phone,

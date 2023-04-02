@@ -444,6 +444,10 @@ type Dough @model {
   batchSize: Float
   mixedWhere: String
   buckets: [BucketInfo] @hasMany
+  bucketSets: Int
+  preBucketSets: Int
+  updatePreBucket: String
+  
   isBakeReady: Boolean
   buffer: Float
   saltInDry: Boolean

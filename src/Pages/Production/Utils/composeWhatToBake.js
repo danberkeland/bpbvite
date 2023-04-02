@@ -18,17 +18,16 @@ export default class ComposeWhatToMake {
     console.log('delivDate', delivDate)
     console.log('database', database)
     let whatToMakeList = getOrdersList(delivDate, database);
-    console.log('whatToMakeList', whatToMakeList)
+   
     let whatToMakeToday = whatToMakeList.filter((set) => DayOneFilter(set));
-    console.log('whatToMakeToday', whatToMakeToday)
-
+   
     let whatToMakeTomList = getOrdersList(tomorrow, database);
     let whatToMakeTomorrow = whatToMakeTomList.filter((set) =>
       DayTwoFilter(set)
     );
    
     let MakeList = whatToMakeToday.concat(whatToMakeTomorrow);
-    console.log('MakeList', MakeList)
+    
     let whatToMake = this.makeAddQty(MakeList);
 
     return whatToMake;

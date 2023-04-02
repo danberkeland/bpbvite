@@ -127,7 +127,7 @@ import {
         }
         setOut.pans = Math.floor(setOut.qty/pans)
         setOut.pansextra = (setOut.qty%pans)
-        console.log(setOut)
+       
       }
       return setOutToday;
     };

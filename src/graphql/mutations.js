@@ -663,6 +663,7 @@ export const createUser = /* GraphQL */ `
     createUser(input: $input, condition: $condition) {
       name
       email
+      username
       phone
       authClass
       sub
@@ -793,6 +794,7 @@ export const updateUser = /* GraphQL */ `
     updateUser(input: $input, condition: $condition) {
       name
       email
+      username
       phone
       authClass
       sub
@@ -923,6 +925,7 @@ export const deleteUser = /* GraphQL */ `
     deleteUser(input: $input, condition: $condition) {
       name
       email
+      username
       phone
       authClass
       sub
@@ -1816,6 +1819,9 @@ export const createProduct = /* GraphQL */ `
         buckets {
           nextToken
         }
+        bucketSets
+        preBucketSets
+        updatePreBucket
         isBakeReady
         buffer
         saltInDry
@@ -2147,6 +2153,9 @@ export const updateProduct = /* GraphQL */ `
         buckets {
           nextToken
         }
+        bucketSets
+        preBucketSets
+        updatePreBucket
         isBakeReady
         buffer
         saltInDry
@@ -2478,6 +2487,9 @@ export const deleteProduct = /* GraphQL */ `
         buckets {
           nextToken
         }
+        bucketSets
+        preBucketSets
+        updatePreBucket
         isBakeReady
         buffer
         saltInDry
@@ -2901,6 +2913,9 @@ export const createRetailProdLoc = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -3044,6 +3059,9 @@ export const updateRetailProdLoc = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -3187,6 +3205,9 @@ export const deleteRetailProdLoc = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -3329,6 +3350,9 @@ export const createOrder = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -3571,6 +3595,9 @@ export const updateOrder = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -3813,6 +3840,9 @@ export const deleteOrder = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -4157,6 +4187,9 @@ export const createStanding = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -4395,6 +4428,9 @@ export const updateStanding = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -4633,6 +4669,9 @@ export const deleteStanding = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -4975,6 +5014,9 @@ export const createDough = /* GraphQL */ `
         }
         nextToken
       }
+      bucketSets
+      preBucketSets
+      updatePreBucket
       isBakeReady
       buffer
       saltInDry
@@ -5010,6 +5052,9 @@ export const updateDough = /* GraphQL */ `
         }
         nextToken
       }
+      bucketSets
+      preBucketSets
+      updatePreBucket
       isBakeReady
       buffer
       saltInDry
@@ -5045,6 +5090,9 @@ export const deleteDough = /* GraphQL */ `
         }
         nextToken
       }
+      bucketSets
+      preBucketSets
+      updatePreBucket
       isBakeReady
       buffer
       saltInDry
@@ -5109,6 +5157,9 @@ export const createBucketInfo = /* GraphQL */ `
         buckets {
           nextToken
         }
+        bucketSets
+        preBucketSets
+        updatePreBucket
         isBakeReady
         buffer
         saltInDry
@@ -5187,6 +5238,9 @@ export const updateBucketInfo = /* GraphQL */ `
         buckets {
           nextToken
         }
+        bucketSets
+        preBucketSets
+        updatePreBucket
         isBakeReady
         buffer
         saltInDry
@@ -5265,6 +5319,9 @@ export const deleteBucketInfo = /* GraphQL */ `
         buckets {
           nextToken
         }
+        bucketSets
+        preBucketSets
+        updatePreBucket
         isBakeReady
         buffer
         saltInDry
@@ -5303,6 +5360,9 @@ export const createPocketCount = /* GraphQL */ `
         buckets {
           nextToken
         }
+        bucketSets
+        preBucketSets
+        updatePreBucket
         isBakeReady
         buffer
         saltInDry
@@ -5333,6 +5393,9 @@ export const updatePocketCount = /* GraphQL */ `
         buckets {
           nextToken
         }
+        bucketSets
+        preBucketSets
+        updatePreBucket
         isBakeReady
         buffer
         saltInDry
@@ -5363,6 +5426,9 @@ export const deletePocketCount = /* GraphQL */ `
         buckets {
           nextToken
         }
+        bucketSets
+        preBucketSets
+        updatePreBucket
         isBakeReady
         buffer
         saltInDry
@@ -5915,6 +5981,9 @@ export const createProductVendor = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -6053,6 +6122,9 @@ export const updateProductVendor = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -6191,6 +6263,9 @@ export const deleteProductVendor = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -6369,6 +6444,9 @@ export const createEODCount = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -6500,6 +6578,9 @@ export const updateEODCount = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -6631,6 +6712,9 @@ export const deleteEODCount = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -6762,6 +6846,9 @@ export const createActualSetOut = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -6891,6 +6978,9 @@ export const updateActualSetOut = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -7020,6 +7110,9 @@ export const deleteActualSetOut = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -7188,6 +7281,9 @@ export const createOldDough = /* GraphQL */ `
         buckets {
           nextToken
         }
+        bucketSets
+        preBucketSets
+        updatePreBucket
         isBakeReady
         buffer
         saltInDry
@@ -7217,6 +7313,9 @@ export const updateOldDough = /* GraphQL */ `
         buckets {
           nextToken
         }
+        bucketSets
+        preBucketSets
+        updatePreBucket
         isBakeReady
         buffer
         saltInDry
@@ -7246,6 +7345,9 @@ export const deleteOldDough = /* GraphQL */ `
         buckets {
           nextToken
         }
+        bucketSets
+        preBucketSets
+        updatePreBucket
         isBakeReady
         buffer
         saltInDry
@@ -7319,6 +7421,7 @@ export const createEventLog = /* GraphQL */ `
       user {
         name
         email
+        username
         phone
         authClass
         sub
@@ -7380,6 +7483,7 @@ export const updateEventLog = /* GraphQL */ `
       user {
         name
         email
+        username
         phone
         authClass
         sub
@@ -7441,6 +7545,7 @@ export const deleteEventLog = /* GraphQL */ `
       user {
         name
         email
+        username
         phone
         authClass
         sub
@@ -7612,6 +7717,9 @@ export const createTemplateProd = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -7841,6 +7949,9 @@ export const updateTemplateProd = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -8070,6 +8181,9 @@ export const deleteTemplateProd = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -8300,6 +8414,9 @@ export const createProdsNotAllowed = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -8530,6 +8647,9 @@ export const updateProdsNotAllowed = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -8760,6 +8880,9 @@ export const deleteProdsNotAllowed = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -8887,6 +9010,9 @@ export const createProductDepend = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -9002,6 +9128,9 @@ export const createProductDepend = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -9129,6 +9258,9 @@ export const updateProductDepend = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -9244,6 +9376,9 @@ export const updateProductDepend = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -9371,6 +9506,9 @@ export const deleteProductDepend = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -9486,6 +9624,9 @@ export const deleteProductDepend = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -9830,6 +9971,7 @@ export const createLocationUser = /* GraphQL */ `
       user {
         name
         email
+        username
         phone
         authClass
         sub
@@ -9993,6 +10135,7 @@ export const updateLocationUser = /* GraphQL */ `
       user {
         name
         email
+        username
         phone
         authClass
         sub
@@ -10156,6 +10299,7 @@ export const deleteLocationUser = /* GraphQL */ `
       user {
         name
         email
+        username
         phone
         authClass
         sub
@@ -10328,6 +10472,9 @@ export const createAltPricing = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -10558,6 +10705,9 @@ export const updateAltPricing = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -10788,6 +10938,9 @@ export const deleteAltPricing = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -11018,6 +11171,9 @@ export const createAltLeadTime = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -11248,6 +11404,9 @@ export const updateAltLeadTime = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
@@ -11478,6 +11637,9 @@ export const deleteAltLeadTime = /* GraphQL */ `
           hydration
           batchSize
           mixedWhere
+          bucketSets
+          preBucketSets
+          updatePreBucket
           isBakeReady
           buffer
           saltInDry
