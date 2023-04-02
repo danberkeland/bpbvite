@@ -3,12 +3,13 @@ import React, { useEffect, useState, useContext } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import ToolBar from "../Production/BPBNBaker1Parts/Toolbar"
+import ToolBar from "../Production/BPBNBaker1Parts/Toolbar";
 
 import {
   convertDatetoBPBDate,
   todayPlus,
 } from "../../functions/legacyFunctions/helpers/dateTimeHelpers";
+import { checkForUpdates } from "../../helpers/databaseFetchers";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
 
 import ComposeWhatToBake from "./Utils/composeWhatToBake";
@@ -21,7 +22,13 @@ import { ExportPastryPrepPdf } from "./BPBNBaker1Parts/ExportPastryPrepPdf";
 import styled from "styled-components";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
-import {WholeBox, WholeBoxPhone, ButtonContainer, ButtonWrapper, h1Style } from "./_styles"
+import {
+  WholeBox,
+  WholeBoxPhone,
+  ButtonContainer,
+  ButtonWrapper,
+  h1Style,
+} from "./_styles";
 
 // const WholeBox = styled.div`
 //   display: flex;
@@ -117,6 +124,12 @@ function BPBNBaker1() {
   const breakpoint = 620;
 
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
+  const ordersHasBeenChanged = useSettingsStore(
+    (state) => state.ordersHasBeenChanged
+  );
+  const setOrdersHasBeenChanged = useSettingsStore(
+    (state) => state.setOrdersHasBeenChanged
+  );
   const { data: database } = useLegacyFormatDatabase();
 
   useEffect(() => {
@@ -149,19 +162,26 @@ function BPBNBaker1() {
     bagAndEpiCount,
   ]);
 
-  useEffect(() => {
-    gatherWhatToMakeInfo(database);
-  }, [delivDate, database]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const gatherWhatToMakeInfo = (database) => {
-    setIsLoading(true)
-    try{
-      let whatToMakeData = compose.returnWhatToMakeBreakDown(delivDate, database);
-    setWhatToMake(whatToMakeData.whatToMake);
-    setIsLoading(false)
+  const gatherWhatToMakeInfo = (db) => {
+    setIsLoading(true);
+    try {
+      let whatToMakeData = compose.returnWhatToMakeBreakDown(delivDate, db);
+      setWhatToMake(whatToMakeData.whatToMake);
+      setIsLoading(false);
     } catch {}
-    
   };
+
+  useEffect(() => {
+    console.log("databaseTest", database);
+    database &&
+      checkForUpdates(
+        database,
+        ordersHasBeenChanged,
+        setOrdersHasBeenChanged,
+        delivDate,
+        setIsLoading
+      ).then((db) => gatherWhatToMakeInfo(db));
+  }, [database]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handlePrint = () => {
     ExportPastryPrepPdf(delivDate, doughs, infoWrap, doobieStuff);
