@@ -96,13 +96,6 @@
         },
         {
           "attributes": [
-            "UserPoolId"
-          ],
-          "category": "auth",
-          "resourceName": "bpbadmin2db0d25d4"
-        },
-        {
-          "attributes": [
             "Arn"
           ],
           "category": "function",
