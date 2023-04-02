@@ -19,6 +19,7 @@ query MyQuery {
           authClass
           email
           locNick
+          username
           phone
           sub
         }
@@ -76,6 +77,7 @@ const grabDetailedCustomerList = async (event) => {
       for (let sub of item.location.subs.items) {
         let newSub = {
           sub: sub.sub,
+          username: sub.user.username,
           custName: sub.user.name,
           authType: sub.authType,
           id: sub.id
