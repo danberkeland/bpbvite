@@ -394,15 +394,17 @@ export const CartOrder = ({ locNick, setLocNick }) => {
       }
     } // end for (let subItem of subItems)...
 
-    // ***Optional send Email***
-    if (locNick === 'bpbtest') {
-      sendEmail(locationDetails, headerChanges, delivDate)
+   
+
+    let emailSent = false
+    if (!!locationDetails.orderCnfEmail) {
+      emailSent = await sendEmail(locationDetails, headerChanges, itemChanges, delivDate)
     }
 
 
     mutateCart()
     setIsLoading(false)
-    toast.current.show({ severity: 'success', summary: 'Confirmed', detail: 'Order received', life: 3000 })
+    toast.current.show({ severity: 'success', summary: 'Confirmed', detail: emailSent ? 'Email confirmation sent' : 'Order received', life: 3000 })
   }
   
   
@@ -663,15 +665,14 @@ const displayTextMap = {
 
 
 const sendEmail = async (locationDetails, headerChanges, itemChanges, delivDate) => {
+  const toAddr = locationDetails.orderCnfEmail.split(',').map(email => email.trim()).filter(email => email !== '')
+  console.log(toAddr)
 
   const body = {
     params: {
       Source: "backporchbakeryslo@gmail.com",
       Destination: {
-        ToAddresses: [
-          "backporchbakeryslo@gmail.com"
-          //"danberkeland@gmail.com"
-        ]
+        ToAddresses: toAddr,
       },
       Message: {
         Subject: {
@@ -708,7 +709,7 @@ const sendEmail = async (locationDetails, headerChanges, itemChanges, delivDate)
                     </tr>
                   </thead>
                   <tbody>
-                    ${itemChanges.map(item => `
+                    ${itemChanges.filter(item => item.qty > 0).map(item => `
                       <tr>
                         <td>${item.product.prodName}</td>
                         <td class="qty-column">${item.qty}</td>
@@ -738,9 +739,11 @@ const sendEmail = async (locationDetails, headerChanges, itemChanges, delivDate)
   //   }
   // };
 
-  console.log(JSON.stringify(body, null, 2))
+  //console.log(JSON.stringify(body, null, 2))
   const emailResp = await API.post('bpbGateway', '/ses', {body: body})
   console.log(emailResp)
+
+  return true
 
 }
 

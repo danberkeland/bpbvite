@@ -629,6 +629,7 @@ const renderLocation = (locationDetails, routeData) => {
   const zoneRoutes = locationDetails.zone.zoneRoute.items
   const routes = routeData.filter(route => zoneRoutes.findIndex(zr => zr.routeNick === route.routeNick) !== -1)
 
+  console.log(locationDetails)
   const output =
     <div style={{display: "flex", gap: "1rem"}}>
       <div style={{width: "fit-content"}}>

@@ -179,6 +179,7 @@ export const getLocationDetails = /* GraphQL */ `
       city
       zip
       email
+      orderCnfEmail
       phone
       firstName
       lastName
