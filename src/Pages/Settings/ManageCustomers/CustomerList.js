@@ -14,6 +14,7 @@ const initialState = {
   custName: "",
   authClass: "",
   email: "",
+  username: "",
   phone: "",
   sub: "",
   defLoc: "",

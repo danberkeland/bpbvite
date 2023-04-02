@@ -163,7 +163,26 @@ export const getOrder = (event) => {
 export const submitAuth = async (props, fns) => {
   
   const { email, password } = props
-  const { setIsLoading, setFormType, setShowMessage, setUserObject } = fns
+  const { setIsLoading, setFormType, setShowMessage, setUserObject, setResetPassword } = fns
+
+  
+  const emailCheck = [
+    "danberkeland@gmail.com",
+    "eat@highstdeli.com",
+    "osos@highstdeli.com",
+    "slo@highstdeli.com",
+    "kreuzberg.mgr@poorbutsexy.biz",
+    "kraken.avila.mgr@poorbutsexy.biz",
+    "kraken.bonetti.mgr@poorbutsexy.biz",
+    "kraken.pismo.mgr@poorbutsexy.biz",
+    "loshel@live.com",
+    "reneerose11@gmail.com",
+    "tara@scoutcoffeeco.com",
+    "ryan@scoutcoffeeco.com",
+    "peter@sloprovisions.com",
+    "trixybliss@att.net",
+    "james@poorbutsexy.biz",
+  ];
 
   console.log("submitProps", props);
 
@@ -187,6 +206,10 @@ export const submitAuth = async (props, fns) => {
     })
     .catch((error) => {
       if (error) {
+        if (emailCheck.includes(email)){
+          setResetPassword(true)
+          return
+        }
         setShowMessage(true);
         setIsLoading(false);
       }
