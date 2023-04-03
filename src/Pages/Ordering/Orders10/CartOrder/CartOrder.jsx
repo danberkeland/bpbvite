@@ -11,7 +11,7 @@ import { ItemNoteInput } from "./Components/ItemNoteInput"
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Toast } from "primereact/toast"
 
-import { createOrder, updateOrder, useCartOrderData, useCartOverview, useOrdersByLocationByDate } from "../../../../data/orderData"
+import { createOrder, updateOrder, useCartOrderData, useOrdersByLocationByDateV2 } from "../../../../data/orderData"
 import { DateTime } from "luxon"
 import { useLocationDetails } from "../../../../data/locationData"
 import { APIGatewayFetcher } from "../../../../data/fetchers"
@@ -24,9 +24,10 @@ import { BpbTerminal } from "./Components/BpbTerminal"
 import "./cartOrder.css"
 import { reformatProdName } from "../_utils/reformatProdName"
 import { API } from "aws-amplify"
+import { InputText } from "primereact/inputtext"
 
 
-export const CartOrder = ({ locNick, setLocNick }) => {
+export const CartOrder = ({ locNick, setLocNick, isWhole }) => {
   const user = {
     name: useSettingsStore(state => state.user),
     sub: useSettingsStore(state => state.username),
@@ -39,7 +40,10 @@ export const CartOrder = ({ locNick, setLocNick }) => {
   const isMobile = windowSize.width < 768
 
   // cart::admin state
-  const [isWhole, ] = useState(true) // for possible future extension to retail orders
+
+  //is whole lifted to Orders10
+  //const [isWhole, setIsWhole] = useState(true) // for possible future extension to retail orders
+  const [retailName, setRetailName] = useState()
   
   // cart::public state
   // const [showSubmitConfirm, setShowSubmitConfirm] = useState(false)
@@ -59,7 +63,7 @@ export const CartOrder = ({ locNick, setLocNick }) => {
   // ***DATA***
   const { data:locationDetails } = useLocationDetails(locNick, !!locNick)
   const cartOrderData = useCartOrderData(locNick, delivDate, isWhole)
-  const { mutate:mutateCart } = useOrdersByLocationByDate(locNick, null, !!cartOrderData)
+  const { mutate:mutateCart } = useOrdersByLocationByDateV2(locNick, null, !!cartOrderData)
 
   const [headerChanges, setHeaderChanges] = useState()
   const [itemChanges, setItemChanges] = useState()
@@ -411,6 +415,23 @@ export const CartOrder = ({ locNick, setLocNick }) => {
 
   return(
     <>
+    {isWhole === false && 
+      <>
+        <InputText placeholder="Enter a name" 
+          value={retailName}
+          onChange={e => setRetailName(e.value)}
+        />
+        {/* <Button label="Create temp location"
+          style={{width: "fit-content"}}
+          onClick={()=> {
+            let newLocation = {
+              locNick: retailName,
+              ttl: getTtl(delivDate)
+            }
+          }}
+        /> */}
+      </>
+    }
     {user.authClass === 'bpbfull' && !isMobile &&
       <div style={{
         padding: ".5rem .5rem .5rem .5rem", 
@@ -422,6 +443,7 @@ export const CartOrder = ({ locNick, setLocNick }) => {
         <BpbTerminal 
           locNick={locNick}
           setLocNick={setLocNick}
+          isWhole={isWhole}
           delivDate={delivDate}
           setDelivDate={setDelivDate}
           headerBase={cartOrderData?.header}
@@ -431,13 +453,13 @@ export const CartOrder = ({ locNick, setLocNick }) => {
           itemChanges={itemChanges}
           setItemChanges={setItemChanges}
         />
-        <Button label="Test Email"
+        {/* <Button label="Test Email"
           style={{margin: "1rem", width: "fit-content"}}
           onClick={() => {
             const resp = sendEmail(locationDetails, headerChanges, itemChanges, delivDate)
             
           }}
-        />
+        /> */}
   
       </div>
     }
@@ -470,6 +492,7 @@ export const CartOrder = ({ locNick, setLocNick }) => {
             headerChanges={headerChanges}
             setHeaderChanges={setHeaderChanges}
             disabled={disableInputs}
+            isWhole={isWhole}
           />
         </div>
         <div style={{
