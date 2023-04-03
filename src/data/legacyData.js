@@ -31,9 +31,11 @@ export const useLegacyFormatDatabase = () => {
   )
 
   const transformData = () => {
-    console.log('errors', errors)
-    console.log('data', data)
+    if (errors) console.log('errors', errors)
+    
     if (!data) return undefined
+
+    console.log('data', data)
 
     for (let table of Object.keys(data.data)) {
       console.log('table', table)
@@ -42,11 +44,15 @@ export const useLegacyFormatDatabase = () => {
       }
     }
 
-    const products = mapProductsToLegacy(data.data.listProducts.items)
-    const customers = mapLocationsToLegacy(data.data.listLocations.items)
+    const _products = data.data.listProducts.items
+    const _locations = data.data.listLocations.items
+    const _orders = data.data.listOrders.items
+
+    const products = mapProductsToLegacy(_products)
+    const customers = mapLocationsToLegacy(_locations, _orders)
     const routes = mapRoutesToLegacy(data.data.listRoutes.items)
-    const standing = mapStandingItemsToLegacy(data.data.listStandings.items)
-    const orders = mapOrdersToLegacy(data.data.listOrders.items)
+    const standing = mapStandingItemsToLegacy(data.data.listStandings.items, _products, _locations)
+    const orders = mapOrdersToLegacy(_orders, _products, _locations)
     const doughs = mapDoughsToLegacy(data.data.listDoughBackups.items)
     const doughComponents = mapDoughComponentsToLegacy(data.data.listDoughComponentBackups.items)
 
@@ -54,7 +60,7 @@ export const useLegacyFormatDatabase = () => {
   }
 
   const _data = useMemo(transformData, [data])
-  console.log('errors', errors)
+  if (errors) console.log('errors', errors)
 
   return ({
     data: _data,
@@ -79,17 +85,36 @@ export const useLegacyFormatDatabase = () => {
 // We return an object with the correct key names
 // and/or adjusted value formats.
 
-const mapLocationsToLegacy = (locations) => locations.map(location => {
-  const { locNick, locName, subs, zoneNick, ...unchangedAttributes } = location
+const mapLocationsToLegacy = (locations, orders) => {
+  const legacyLocations = locations.map(location => {
+    const { locNick, locName, subs, zoneNick, ...unchangedAttributes } = location
   
-  return ({
-    ...unchangedAttributes,
-    nickName: locNick,
-    custName: locName,
-    userSubs: subs.items.map(s => s.sub),
-    zoneName: zoneNick
+    return ({
+      ...unchangedAttributes,
+      nickName: locNick,
+      custName: locName,
+      userSubs: subs.items.map(s => s.sub),
+      zoneName: zoneNick
+    })
   })
-})
+
+  const retailOrders = orders.filter(order => order.isWhole === false)
+  const locNicks = [...new Set(retailOrders.map(order => order.locNick))]
+
+  const retailLocations = locNicks.map(locNick => {
+    const matchOrder = retailOrders.find(order => order.locNick === locNick)
+    const template = Object.create(blankLegacyLocation)
+    return({
+      ...template,
+      nickName: locNick,
+      custName: locNick,
+      zoneName: matchOrder.route
+    })
+  })
+  
+  console.log("retail locs:", retailLocations)
+  return legacyLocations.concat(retailLocations)
+}
 
 
 const mapProductsToLegacy = (products) => products.map(product => {
@@ -122,13 +147,19 @@ const yyyymmddToMmddyyyy = (yyyymmddDateString) => {
   return `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`
 }
 
-const mapOrdersToLegacy = (orders) => orders.map(order => {
-  const { product, location, ItemNote, delivDate, updatedOn, ...unchangedAttributes } = order
+const mapOrdersToLegacy = (orders, products, locations) => orders.map(order => {
+  const { prodNick, locNick, ItemNote, delivDate, updatedOn, ...unchangedAttributes } = order
+
+  const matchLocation = locations.find(location => location.locNick === locNick)
+  const matchProduct = products.find(product => product.prodNick === prodNick)
+
+  // if (!matchLocation) console.log(order)
+  // if (!matchProduct) console.log(order)
 
   return ({
     ...unchangedAttributes,
-    prodName: product.prodName,
-    custName: location.locName,
+    prodName: matchProduct.prodName,
+    custName: order.isWhole ? matchLocation.locName : locNick,
     SO: order.qty,
     delivDate: yyyymmddToMmddyyyy(delivDate),
     PONote: ItemNote,
@@ -153,7 +184,9 @@ const mapOrdersToLegacy = (orders) => orders.map(order => {
 // and detect possible duplicates when a value is written to the same
 // weekday qty attribute more than once.
 
-const mapStandingItemsToLegacy = (standingItems) => {
+const mapStandingItemsToLegacy = (standingItems, products, locations) => {
+  const productDict = Object.fromEntries(products.map(P => [P.prodNick, P]))
+  const locationDict = Object.fromEntries(locations.map(L => [L.locNick, L]))
 
   let init = {
     items: {},
@@ -163,8 +196,10 @@ const mapStandingItemsToLegacy = (standingItems) => {
     .filter(item => item.isWhole)
     .reduce((prev, curr) => {
       let next = {...prev}
-      let locName = curr.location.locName
-      let prodName = curr.product.prodName
+      // let locName = curr.location.locName
+      // let prodName = curr.product.prodName
+      let prodName = productDict[curr.prodNick].prodName
+      let locName = locationDict[curr.locNick].locName
       let isStand = curr.isStand
       let dataKey = `${locName}#${prodName}#${isStand}#`
       if (dataKey in prev.items) {
@@ -227,3 +262,33 @@ const mapDoughComponentsToLegacy = (doughs) => doughs.map(dough => {
   })
   
 })
+
+
+const blankLegacyLocation = {
+  nickName: null,
+  custName: null,
+  userSubs: [],
+  zoneName: null,
+  addr1: null,
+  addr2: null,
+  city: null,
+  zip: null,
+  email: null,
+  phone: null,
+  firstName: null,
+  lastName: null,
+  toBePrinted: null,
+  toBeEmailed: null,
+  printDuplicate: null,
+  terms: null,
+  invoicing: null,
+  latestFirstDeliv: 7,
+  latestFinalDeliv: 13,
+  webpageURL: null,
+  picURL: null,
+  gMap: null,
+  specialInstructions: null,
+  delivOrder: null,
+  qbID: null,
+  currentBalance: null,
+}
