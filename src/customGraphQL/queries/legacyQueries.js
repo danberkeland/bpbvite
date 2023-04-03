@@ -200,14 +200,14 @@ export const orderQuery = /* GraphQL */ `
       qty
       # qtyUpdatedOn
       # sameDayMaxQty
-      # prodNick
-      product {
-        prodName
-      }
-      # locNick
-      location {
-        locName
-      }
+      prodNick
+      # product {
+      #   prodName
+      # }
+      locNick
+      # location {
+      #   locName
+      # }
       ItemNote
       SO
       isWhole
@@ -227,18 +227,18 @@ export const standingQuery = /* GraphQL */ `
     listStandings(limit: $limit) {
       items {
         # id
-        # locNick
-        location {
-          locName
-        }
+        locNick
+        # location {
+        #   locName
+        # }
         isWhole
         isStand
         dayOfWeek
         route
-        # prodNick
-        product {
-          prodName
-        }
+        prodNick
+        # product {
+        #   prodName
+        # }
         qty
         # ItemNote
         # startDate
