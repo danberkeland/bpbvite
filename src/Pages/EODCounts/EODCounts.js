@@ -5,16 +5,19 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 
+import { updateProduct } from "../../graphql/mutations";
+
+import { API, graphqlOperation } from "aws-amplify";
+
 import TimeAgo from "timeago-react"; // var TimeAgo = require('timeago-react');
 import us from "timeago.js/lib/lang/en_US";
 
-import swal from "@sweetalert/with-react";
+import swal from "sweetalert";
 
 import styled from "styled-components";
 import { sortAtoZDataByIndex } from "../../helpers/sortDataHelpers";
 import { useProductListFull } from "../../data/productData";
-import { useSettingsStore } from "../../Contexts/SettingsZustand";
-import { useLegacyFormatDatabase } from "../../data/legacyData";
+
 
 const BasicContainer = styled.div`
   display: flex;
@@ -117,7 +120,7 @@ function EODCounts({ loc }) {
       [attr]: val,
       whoCountedLast: signedIn,
     };
-    /*
+    
     try {
       await API.graphql(
         graphqlOperation(updateProduct, { input: { ...addDetails } })
@@ -126,7 +129,7 @@ function EODCounts({ loc }) {
     } catch (error) {
       console.log("error on updating product", error);
      
-    }*/
+    }
   };
 
   const updateItem = (value, itemToUpdate) => {
@@ -198,7 +201,7 @@ function EODCounts({ loc }) {
           id: prod.id,
           prepreshaped: Number(e.target.value),
           whoCountedLast: signedIn,
-        }; /*
+        }; 
        try {
         await API.graphql(
           graphqlOperation(updateProduct, { input: { ...itemUpdate } })
@@ -207,7 +210,7 @@ function EODCounts({ loc }) {
       } catch (error) {
         console.log("error on updating product", error);
        
-      }  */
+      }  
       }
     }
     //setProducts(prodsToMod)
