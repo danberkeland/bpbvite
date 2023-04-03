@@ -52,6 +52,7 @@ export const RetailOrder = () => {
   const forSubmit = items.map(item => ({ ...item, ...header })).filter(item => !!item.id || item.qty > 0)
   
   const locNickIsValid = !!selectedLocNick || !retailList.includes(retailName)
+  const routeIsValid = !!route
 
   return(
     <>
@@ -67,15 +68,15 @@ export const RetailOrder = () => {
             if (matchItem) {
               const { delivDate, route } = matchItem
               setDelivDate(yyyymmddToJSDate(delivDate))
+              setRoute(route)
             }
-            setRoute(route)
-            setLocNick(null)
+            setLocNick('')
           }}
         />
       </div>
 
       <div>
-        <InputText placeholder="name for order" 
+        <InputText placeholder="Name for new order" 
           value={locNick} 
           onChange={e => {
             setLocNick(e.target.value)
@@ -156,8 +157,8 @@ export const RetailOrder = () => {
       <h2>For submission:</h2>
       <pre>items</pre>
       <pre>{JSON.stringify(forSubmit, null, 2)}</pre>
-      <pre>temp location</pre>
-      <pre>{JSON.stringify(tempLocation, null, 2)}</pre>
+      {/* <pre>temp location</pre>
+      <pre>{JSON.stringify(tempLocation, null, 2)}</pre> */}
 
     <Button label={selectedLocNick ? "Submit update" : "Create"} 
       style={{width: "fit-content"}}
@@ -184,9 +185,11 @@ export const RetailOrder = () => {
         }
         mutateOrders()
       }}
-      disabled={!forSubmit.length || !locNickIsValid}
+      disabled={!forSubmit.length || !locNickIsValid || !routeIsValid || !delivDate}
     />
     {!locNickIsValid && <pre>Name already in use</pre>}
+    {!routeIsValid && <pre>Select a pick up location</pre>}
+    {!delivDate && <pre>Select an order date</pre>}
     
     </>
   )
