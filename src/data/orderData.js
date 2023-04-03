@@ -54,13 +54,7 @@ import { getDuplicates } from "../functions/detectDuplicates"
 //   })
 // }
 
-/**
- * Produces a list of cart order items for the given location & delivery date.
- * @param {String} locNick Location ID attribute.
- * @param {String} delivDate Date string in ISO yyyy-mm-dd format.
- * @param {Boolean} shouldFetch Fetches data only when true.
- * @return {{data: Array<Object>, errors: Object}}
- */
+/**Depreciated. Try useOrdersByLocationByDateV2 */
 export const useOrdersByLocationByDate = (locNick, delivDate, shouldFetch) => {
   const variables = shouldFetch ? {
     locNick: locNick,
@@ -79,6 +73,49 @@ export const useOrdersByLocationByDate = (locNick, delivDate, shouldFetch) => {
     if (!data) return undefined
 
     const _data = getNestedObject(data, ['data', 'getLocation', 'ordersByDate', 'items'])
+    const duplicates = getDuplicates(_data, ['locNick', 'delivDate', 'product.prodNick'])
+    if (duplicates.length) {
+      console.log("Warning: duplicate cart items detected")
+    }
+    return _data
+  }
+
+  const _data = useMemo(transformData, [data])
+
+  return ({
+    data: _data,
+    errors: errors,
+    mutate: mutate
+  })
+}
+
+
+/**
+ * Produces a list of cart order items for the given location & delivery date.
+ * @param {String} locNick Location ID attribute.
+ * @param {String} delivDate Date string in ISO yyyy-mm-dd format.
+ * @param {Boolean} shouldFetch Fetches data only when true.
+ * @return {{data: Array<Object>, errors: Object}}
+ */
+export const useOrdersByLocationByDateV2 = (locNick, delivDate, shouldFetch) => {
+  const variables = shouldFetch ? {
+    locNick: locNick,
+    delivDate: delivDate,
+    limit: 2000
+  } : null
+  // if (shouldFetch) console.log("Fetching cart data...")
+  const { data, errors, mutate } = useSWR(
+    shouldFetch ? [queries.listOrdersByLocationByDateV2, variables] : null, 
+    gqlFetcher, 
+    defaultSwrOptions
+  )
+
+  // if (data) console.log("Cart Data response: ", data)
+  // if (errors) console.log("Cart Data errors", errors)
+  const transformData = () => {
+    if (!data) return undefined
+
+    const _data = getNestedObject(data, ['data', 'orderByLocByDelivDate', 'items'])
     const duplicates = getDuplicates(_data, ['locNick', 'delivDate', 'product.prodNick'])
     if (duplicates.length) {
       console.log("Warning: duplicate cart items detected")
@@ -168,7 +205,7 @@ export const useCartOrderData = (locNick, delivDateJS, isWhole) => {
   const { data:locationDetails } = useLocationDetails(locNick, !!locNick)
   const { data:standingData } = useStandingByLocation(locNick, !!locNick)
   // const { data:cartData, mutate:mutateCart } = useOrdersByLocationByDate(locNick, delivDate, !!locNick && !!delivDate)
-  const { data:cartData, mutate:mutateCart } = useOrdersByLocationByDate(locNick, null, !!locNick)
+  const { data:cartData, mutate:mutateCart } = useOrdersByLocationByDateV2(locNick, null, !!locNick)
 
 
   // console.log(locNick, delivDate, isWhole, dayOfWeek)
@@ -377,7 +414,7 @@ export const submitToLegacy = async (body) => {
 }
 
 export const useOrderSummary = (locNick, shouldFetch) => {
-  const { data:cartData } = useOrdersByLocationByDate(locNick, null, shouldFetch)
+  const { data:cartData } = useOrdersByLocationByDateV2(locNick, null, shouldFetch)
   const { data:standingData } = useStandingByLocation(locNick, shouldFetch)
 
   const transformData = () => {
@@ -467,7 +504,7 @@ export const useCartOverview = (shouldFetch) => {
   const query = queries.listCartOverview
   const variables = { limit: 2000 }
   const key = [query, variables]
-  const { data } = useSWR(
+  const { data, mutate } = useSWR(
     shouldFetch ? key : null, 
     gqlFetcher,
     {
@@ -477,10 +514,11 @@ export const useCartOverview = (shouldFetch) => {
     }
     )
 
-  console.log(data)
+  //console.log(data)
 
   return ({
-    data: data ? getNestedObject(data, ['data', 'listOrders', 'items']) : undefined
+    data: data ? getNestedObject(data, ['data', 'listOrders', 'items']) : undefined,
+    mutate: mutate
   })
 
 }

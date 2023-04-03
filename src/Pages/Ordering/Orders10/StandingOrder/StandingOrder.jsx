@@ -10,7 +10,7 @@ import { Dropdown } from "primereact/dropdown"
 import { ListBox } from "primereact/listbox"
 
 import { createStanding, deleteStanding, updateStanding, useStandingByLocation } from "../../../../data/standingData"
-import { createOrder, fetchTransitionOrders, useOrdersByLocationByDate } from "../../../../data/orderData"
+import { createOrder, fetchTransitionOrders, useOrdersByLocationByDateV2 } from "../../../../data/orderData"
 import { useLocationDetails } from "../../../../data/locationData"
 import { useProductDataWithLocationCustomization } from "../../../../data/productData"
 
@@ -20,7 +20,7 @@ import { useProductDataWithLocationCustomization } from "../../../../data/produc
 import dynamicSort from "../../../../functions/dynamicSort"
 import { getTransitionDates, getTtl, getWeekday, getWorkingDate, getWorkingDateJS, getWorkingDateTime } from "../../../../functions/dateAndTime"
 import { DateTime } from "luxon"
-import { listOrdersByLocationByDate } from "../../../../customGraphQL/queries/orderQueries"
+// import { listOrdersByLocationByDate } from "../../../../customGraphQL/queries/orderQueries"
 import { APIGatewayFetcher } from "../../../../data/fetchers"
 import { InputText } from "primereact/inputtext"
 import { useSettingsStore } from "../../../../Contexts/SettingsZustand"
@@ -84,7 +84,7 @@ export const StandingOrder = ({ user, locNick }) => {
   const { data:locationDetails, mutate:mutateLocation, locationIsValidating } = useLocationDetails(locNick, !!locNick)
   const { data:routeData } = useRouteListFull(true)
   const { data:standingData, mutate:mutateStanding } = useStandingByLocation(locNick, !!locNick)
-  const { mutate:mutateCart } = useOrdersByLocationByDate(locNick, null, true)
+  const { mutate:mutateCart } = useOrdersByLocationByDateV2(locNick, null, true)
 
   const availableRouteScheds = (!!locationDetails && !!routeData) 
     ? locationDetails.zone.zoneRoute.items.map(zr => zr.routeNick)

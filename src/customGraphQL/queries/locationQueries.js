@@ -16,6 +16,7 @@ export const listLocationsSimple = /* GraphQL */ `
       items {
         locNick
         locName
+        ttl
       }
     }
   }
@@ -198,6 +199,7 @@ export const getLocationDetails = /* GraphQL */ `
       qbID
       currentBalance
       isActive
+      ttl
       prodsNotAllowed {
         items {
           id

@@ -9,10 +9,10 @@ const pickupOptions = [
   {label: 'Carlton Pickup', value: 'atownpick'}
 ]
 
-export const FulfillmentDropdown = ({ headerChanges, setHeaderChanges, disabled }) => {
+export const FulfillmentDropdown = ({ headerChanges, setHeaderChanges, disabled, isWhole }) => {
 
   let dropdownModel = headerChanges
-    ? headerChanges.defaultRoute === 'deliv' 
+    ? headerChanges.defaultRoute === 'deliv' && !!isWhole
         ? delivOptions.concat(pickupOptions) 
         : pickupOptions
     : []

@@ -122,3 +122,9 @@ export function getWeekday(date) {
 export function getTtl(delivDate) {
   return getWorkingDateTime(delivDate.toISOString()).plus({ days: 1}).plus({ hours: CUTOFF_TIME}).toSeconds()
 }
+
+export function yyyymmddToJSDate(isoDate) {
+  const dateParts = isoDate.split('-')
+  const DT = DateTime.fromObject({ year: dateParts[0], month: dateParts[1], day: dateParts[2]}, { zone: 'America/Los_Angeles' })
+  return DT.toJSDate()
+}

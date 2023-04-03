@@ -726,6 +726,7 @@ export const onCreateUser = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -854,6 +855,7 @@ export const onUpdateUser = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -982,6 +984,7 @@ export const onDeleteUser = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -1296,6 +1299,7 @@ export const onCreateLocation = /* GraphQL */ `
       qbID
       currentBalance
       isActive
+      ttl
       prodsNotAllowed {
         items {
           id
@@ -1500,6 +1504,7 @@ export const onUpdateLocation = /* GraphQL */ `
       qbID
       currentBalance
       isActive
+      ttl
       prodsNotAllowed {
         items {
           id
@@ -1704,6 +1709,7 @@ export const onDeleteLocation = /* GraphQL */ `
       qbID
       currentBalance
       isActive
+      ttl
       prodsNotAllowed {
         items {
           id
@@ -3477,6 +3483,7 @@ export const onCreateOrder = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -3719,6 +3726,7 @@ export const onUpdateOrder = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -3961,6 +3969,7 @@ export const onDeleteOrder = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -4081,6 +4090,7 @@ export const onCreateStanding = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -4319,6 +4329,7 @@ export const onUpdateStanding = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -4557,6 +4568,7 @@ export const onDeleteStanding = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -7266,6 +7278,7 @@ export const onCreateEventLog = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
@@ -7325,6 +7338,7 @@ export const onUpdateEventLog = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
@@ -7384,6 +7398,7 @@ export const onDeleteEventLog = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
@@ -7492,6 +7507,7 @@ export const onCreateTemplateProd = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -7723,6 +7739,7 @@ export const onUpdateTemplateProd = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -7954,6 +7971,7 @@ export const onDeleteTemplateProd = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -8186,6 +8204,7 @@ export const onCreateProdsNotAllowed = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -8418,6 +8437,7 @@ export const onUpdateProdsNotAllowed = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -8650,6 +8670,7 @@ export const onDeleteProdsNotAllowed = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -9744,6 +9765,7 @@ export const onCreateLocationUser = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -9797,6 +9819,7 @@ export const onCreateLocationUser = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
@@ -9907,6 +9930,7 @@ export const onUpdateLocationUser = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -9960,6 +9984,7 @@ export const onUpdateLocationUser = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
@@ -10070,6 +10095,7 @@ export const onDeleteLocationUser = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -10123,6 +10149,7 @@ export const onDeleteLocationUser = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
@@ -10231,6 +10258,7 @@ export const onCreateAltPricing = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -10463,6 +10491,7 @@ export const onUpdateAltPricing = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -10695,6 +10724,7 @@ export const onDeleteAltPricing = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -10927,6 +10957,7 @@ export const onCreateAltLeadTime = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -11159,6 +11190,7 @@ export const onUpdateAltLeadTime = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -11391,6 +11423,7 @@ export const onDeleteAltLeadTime = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }

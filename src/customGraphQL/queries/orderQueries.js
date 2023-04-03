@@ -35,6 +35,53 @@ export const listOrdersByLocationByDate = /* GraphQL */ `
   }
 `;
 
+export const listOrdersByLocationByDateV2 = /* GraphQL */ `
+  query OrderByLocByDelivDate(
+    $locNick: String!
+    $delivDate: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelOrderFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    orderByLocByDelivDate(
+      locNick: $locNick
+      delivDate: $delivDate
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        product {
+          prodNick
+          prodName
+          wholePrice
+          retailPrice
+          leadTime
+          packSize
+        } 
+        qty
+        qtyUpdatedOn
+        sameDayMaxQty
+        delivDate
+        ItemNote
+        isWhole
+        SO
+        rate
+        route
+        isLate
+        createdOn
+        updatedOn
+        updatedBy
+        ttl
+      }
+      nextToken
+    }
+  }
+`;
+
 export const transitionOrdersByLocByDelivDate = /* GraphQL */ `
   query OrderByLocByDelivDate(
     $locNick: String!
@@ -75,9 +122,12 @@ export const listCartOverview = /* GraphQL */ `
   ) {
     listOrders(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        # id
+        id
         locNick
         prodNick
+        isWhole
+        route
+        ItemNote
         qty
         delivDate
         updatedOn

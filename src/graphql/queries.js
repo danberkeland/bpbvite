@@ -544,6 +544,7 @@ export const getUser = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -629,6 +630,7 @@ export const listUsers = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
@@ -885,6 +887,7 @@ export const getLocation = /* GraphQL */ `
       qbID
       currentBalance
       isActive
+      ttl
       prodsNotAllowed {
         items {
           id
@@ -1034,6 +1037,7 @@ export const listLocations = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -2010,6 +2014,7 @@ export const getOrder = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -2141,6 +2146,7 @@ export const listOrders = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
@@ -2251,6 +2257,7 @@ export const getStanding = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -2438,6 +2445,7 @@ export const listStandings = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
@@ -4107,6 +4115,7 @@ export const getEventLog = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
@@ -4243,6 +4252,7 @@ export const getTemplateProd = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -4421,6 +4431,7 @@ export const listTemplateProds = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
@@ -4581,6 +4592,7 @@ export const getProdsNotAllowed = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -4764,6 +4776,7 @@ export const listProdsNotAlloweds = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
@@ -5379,6 +5392,7 @@ export const getLocationUser = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -5432,6 +5446,7 @@ export const getLocationUser = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
@@ -5489,6 +5504,7 @@ export const listLocationUsers = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
@@ -5602,6 +5618,7 @@ export const getAltPricing = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -5781,6 +5798,7 @@ export const listAltPricings = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
@@ -5941,6 +5959,7 @@ export const getAltLeadTime = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -6120,6 +6139,7 @@ export const listAltLeadTimes = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
@@ -6324,6 +6344,7 @@ export const locSortAZ = /* GraphQL */ `
         qbID
         currentBalance
         isActive
+        ttl
         prodsNotAllowed {
           nextToken
         }
@@ -6593,6 +6614,7 @@ export const orderByLocByDelivDate = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
@@ -6722,6 +6744,7 @@ export const orderByDelivDate = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
@@ -6791,6 +6814,7 @@ export const standingByLocByStartDate = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
@@ -6918,6 +6942,7 @@ export const standingByLocByEndDate = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
@@ -7045,6 +7070,7 @@ export const standingByLocByDayOfWeek = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
@@ -7170,6 +7196,7 @@ export const standingByDayOfWeek = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
@@ -7326,6 +7353,7 @@ export const locUsersByAuthType = /* GraphQL */ `
           qbID
           currentBalance
           isActive
+          ttl
           createdAt
           updatedAt
           locationCreditAppId
