@@ -260,6 +260,7 @@ type Location @model {
   qbID: String
   currentBalance: String
   isActive: Boolean
+  ttl: Int
   prodsNotAllowed: [ProdsNotAllowed]
     @hasMany(indexName: "byLoc", fields: ["locNick"])
   customProd: [AltPricing] @hasMany(indexName: "byLoc", fields: ["locNick"])

@@ -16,6 +16,7 @@ mutation MyMutation(
   $guarantee: String
   $isWhole: Boolean
   $isRetail: Boolean
+  $isEOD: Boolean
   $leadTime: Int
   $packGroup: String
   $packGroupOrder: Int
@@ -50,6 +51,7 @@ mutation MyMutation(
       freezerThaw: $freezerThaw
       guarantee: $guarantee
       isWhole: $isWhole
+      isEOD: $isEOD
       leadTime: $leadTime
       packGroup: $packGroup
       packGroupOrder: $packGroupOrder
@@ -94,6 +96,7 @@ mutation MyMutation(
     prodNick
     qbID
     isRetail
+    isEOD
     retailName
     retailDescrip
     readyTime

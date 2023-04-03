@@ -31,9 +31,12 @@ export const useLegacyFormatDatabase = () => {
   )
 
   const transformData = () => {
+    console.log('errors', errors)
+    console.log('data', data)
     if (!data) return undefined
 
     for (let table of Object.keys(data.data)) {
+      console.log('table', table)
       if (data.data[table].items.length >= LIMIT) {
         console.log(`warning: ${table} has reached query limit of ${LIMIT}.`)
       }
@@ -51,6 +54,7 @@ export const useLegacyFormatDatabase = () => {
   }
 
   const _data = useMemo(transformData, [data])
+  console.log('errors', errors)
 
   return ({
     data: _data,

@@ -16,6 +16,7 @@ const query = /* GraphQL */ `
     $guarantee: String
     $inventoryProductId: ID
     $isWhole: Boolean
+    $isEOD: Boolean
     $leadTime: Int
     $packGroup: String
     $packGroupOrder: Int
@@ -52,6 +53,7 @@ const query = /* GraphQL */ `
         guarantee: $guarantee
         inventoryProductId: $inventoryProductId
         isWhole: $isWhole
+        isEOD: $isEOD
         leadTime: $leadTime
         packGroup: $packGroup
         packGroupOrder: $packGroupOrder
@@ -88,6 +90,7 @@ const query = /* GraphQL */ `
       guarantee
       inventoryProductId
       isWhole
+      isEOD
       leadTime
       packGroup
       packGroupOrder

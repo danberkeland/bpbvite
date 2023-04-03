@@ -35,6 +35,7 @@ const initialState = {
   prodNick: "",
   qbID: "",
   isRetail: false,
+  isEOD: false,
   retailName: "",
   retailDescrip: "",
   readyTime: 6,

@@ -52,7 +52,10 @@ function ByRoute() {
       let prodGridData = compose.returnProdGrid(data, delivDate);
       setOrderList(prodGridData.prodGrid);
       setIsLoading(false);
-    } catch {}
+    } catch(error) {
+
+      console.log('error', error)
+    }
   };
 
   return (

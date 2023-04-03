@@ -1,15 +1,16 @@
 import { API } from "aws-amplify"
 
 const gqlFetcher = async (query, variables) => {
-  return (
-    await API.graphql({
-      query: query,
-      variables: variables 
-    })
-  )
-}
+ 
+  const data = await API.graphql({
+    query: query,
+    variables: variables,
+  });
+ 
+  return data;
+};
 
-export default gqlFetcher
+export default gqlFetcher;
 
 
 

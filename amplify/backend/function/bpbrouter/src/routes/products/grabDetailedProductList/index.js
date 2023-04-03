@@ -34,6 +34,7 @@ const query = /* GraphQL */ `
         leadTime
         qbID
         isRetail
+        isEOD
         retailName
         retailDescrip
         inventoryProductId
