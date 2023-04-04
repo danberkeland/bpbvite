@@ -206,11 +206,13 @@ export const submitAuth = async (props, fns) => {
     })
     .catch((error) => {
       if (error) {
+        /*
         if (emailCheck.includes(email)){
           setResetPassword(true)
           return
         }
         setShowMessage(true);
+        */
         setIsLoading(false);
       }
     });
