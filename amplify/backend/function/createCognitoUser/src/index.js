@@ -17,12 +17,9 @@ const createUser = async (event) => {
   return await new Promise((resolve, reject) => {
     const params = {
       UserPoolId: "us-east-2_hYAKr3SwA",
-      Username: username,
+      Username: email,
       UserAttributes: [
-        {
-          Name: "email",
-          Value: email,
-        },
+       
         {
           Name: "custom:name",
           Value: custName,
