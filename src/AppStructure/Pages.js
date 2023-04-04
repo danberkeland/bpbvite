@@ -97,7 +97,7 @@ const itemsAuth1 = itemsAuth2b.concat([
             label: "BPBN Setout",
             icon: "pi pi-fw pi-home",
             command: () => {
-              window.location = "/Production/BPBNSetout";
+              window.location = "/Production/BPBNSetOut";
             },
           },
           {
@@ -114,6 +114,52 @@ const itemsAuth1 = itemsAuth2b.concat([
               window.location = "/Production/WhoShape";
             },
           },
+          
+          
+        ],
+      },
+      
+      
+      {
+        label: "BPBS",
+        icon: "pi pi-fw pi-home",
+        items: [
+          {
+            label: "What To Make",
+            icon: "pi pi-fw pi-home",
+            command: () => {
+              window.location = "/Production/BPBSWhatToMake";
+            },
+          },
+          {
+            label: "Mix Pocket",
+            icon: "pi pi-fw pi-home",
+            command: () => {
+              window.location = "/Production/BPBSMixPocket";
+            },
+          },
+          {
+            label: "BPBS Setout",
+            icon: "pi pi-fw pi-home",
+            command: () => {
+              window.location = "/Production/BPBSSetOut";
+            },
+          },
+          {
+            label: "Croix Count",
+            icon: "pi pi-fw pi-home",
+            command: () => {
+              window.location = "/Production/CroixCount";
+            },
+          },
+          {
+            label: "Croix To Make",
+            icon: "pi pi-fw pi-home",
+            command: () => {
+              window.location = "/Production/CroixToMake";
+            },
+          },
+          
           
         ],
       },

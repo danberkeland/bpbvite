@@ -10,7 +10,7 @@ import BPBNBaker1 from "../Pages/Production/BPBNBaker1";
 import BPBNBaker2 from "../Pages/Production/BPBNBaker2";
 import WhoBake from "../Pages/Production/WhoBake";
 import WhoShape from "../Pages/Production/WhoShape";
-import BPBNSetout from "../Pages/Production/BPBNSetout";
+import BPBNSetOut from "../Pages/Production/BPBNSetOut";
 import Production from "../Pages/Production/Production";
 import Products from "../Pages/Products/Products";
 import Settings from "../Pages/Settings/Settings";
@@ -27,6 +27,10 @@ import { NavSide } from "./Nav";
 import { AnimatePresence } from "framer-motion";
 import { useSettingsStore } from "../Contexts/SettingsZustand";
 import { UserHeaderMenu } from "./UserHeaderMenu";
+import BPBSWhatToMake from "../Pages/Production/BPBSWhatToMake";
+import BPBSMixPocket from "../Pages/Production/BPBSMixPocket";
+import CroixCount from "../Pages/Production/CroixCount"
+import CroixToMake from "../Pages/Production/CroixToMake";
 
 function AnimatedRoutes({ Routes, Route, useLocation }) {
   const authClass = useSettingsStore((state) => state.authClass);
@@ -48,7 +52,12 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             <Route path="/Production/Production" element={<Production />} />
             <Route path="/Production/WhoBake" element={<WhoBake />} />
             <Route path="/Production/WhoShape" element={<WhoShape />} />
-            <Route path="/Production/BPBNSetout" element={<BPBNSetout />} />
+            <Route path="/Production/BPBNSetOut" element={<BPBNSetOut loc={'Carlton'} />} />
+            <Route path="/Production/BPBSSetOut" element={<BPBNSetOut loc={'Prado'} />} />
+            <Route path="/Production/BPBSWhatToMake" element={<BPBSWhatToMake />} />
+            <Route path="/Production/BPBSMixPocket" element={<BPBSMixPocket />} />
+            <Route path="/Production/CroixCount" element={<CroixCount />} />
+            <Route path="/Production/CroixToMake" element={<CroixToMake />} />
             <Route path="/Products" element={<Products />} />
             <Route path="/Settings" element={<Settings />} />
             <Route path="/Billing" element={<Billing />} />
