@@ -38,8 +38,8 @@ function ProductDetails({ initialState }) {
   ];
 
   const bakedWhere = [
-    { label: "Prado", value: "prado" },
-    { label: "Carlton", value: "carlton" },
+    { label: "Prado", value: "Prado" },
+    { label: "Carlton", value: "Carlton" },
   ];
 
   const BPBProductForm = compose(
