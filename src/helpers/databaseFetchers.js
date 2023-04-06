@@ -87,7 +87,7 @@
       try {
         let bakedOrdersList = getOrdersList(tomBasedOnDelivDate(today), db);
         
-        bakedOrdersList = bakedOrdersList.filter((frz) =>
+        bakedOrdersList = prodsToUpdate.filter((frz) =>
           NorthCroixBakeFilter(frz)
         );
         console.log('bakedOrdersList', bakedOrdersList)
@@ -142,7 +142,7 @@
   
             prod.freezerNorthFlag = tomorrow;
             let prodToUpdate = {
-              prodNick: prod.prodNick,
+              prodNick: prod.nickName,
               freezerNorth: prod.freezerNorth,
               freezerCount: prod.freezerClosing,
               freezerNorthClosing: prod.freezerNorthClosing,

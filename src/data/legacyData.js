@@ -119,6 +119,7 @@ const mapLocationsToLegacy = (locations, orders) => {
 
 const mapProductsToLegacy = (products) => products.map(product => {
   const { prodNick, doughNick, isEOD, ...unchangedAttributes } = product
+  console.log('looks like we are remapping again')
   
   return ({
     ...unchangedAttributes,

@@ -90,15 +90,15 @@
         },
         "createCognitoUser": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
-          "s3Key": "amplify-builds/createCognitoUser-32346436456833664334-build.zip"
+          "s3Key": "amplify-builds/createCognitoUser-5a783853713836624531-build.zip"
         },
         "deleteCognitoUser": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
-          "s3Key": "amplify-builds/deleteCognitoUser-372f3976505a5156432f-build.zip"
+          "s3Key": "amplify-builds/deleteCognitoUser-4853474a435071657a58-build.zip"
         },
         "updateCognitoUser": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
-          "s3Key": "amplify-builds/updateCognitoUser-496b3330702b35776e44-build.zip"
+          "s3Key": "amplify-builds/updateCognitoUser-69687074654772344941-build.zip"
         }
       },
       "api": {

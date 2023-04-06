@@ -239,8 +239,7 @@ export default class ComposeDough {
   };
 
   getDoughAmt = (doughName, orders) => {
-    console.log("bagOrders",orders)
-    console.log(doughName+"orders1",orders)
+   
     let qtyAccToday = 0;
     let qtyArray = orders
       .filter((ord) => ord.doughType === doughName)
