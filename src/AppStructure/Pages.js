@@ -165,8 +165,8 @@ const itemsAuth1 = itemsAuth2b.concat([
       },
       
       {
-        label: "Test Production Grid",
-        icon: "pi pi-fw pi-home",
+        label: "Test New Production Pages",
+        //icon: "pi pi-fw pi-wrench",
         command: () => {
           window.location = "/Production/Production";
         },
