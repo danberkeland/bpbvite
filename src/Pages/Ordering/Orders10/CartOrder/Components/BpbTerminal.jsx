@@ -33,69 +33,6 @@ export const BpbTerminal = ({
 
   const prompt=`bpbadmin/ordering$`
 
-//   const commandHandler = (text) => {
-//     let response;
-//     let command = text.trim()
-//     let hasExecuted = false
-
-//     if (!locationList) {
-//       TerminalService.emit('response', "Location Data not loaded.")
-//       hasExecuted = true
-//     }
-    
-//     if (command.startsWith('view')) {
-//       if (command === 'view') {
-//         response = <>
-//           <div>{`${locNick}:`}</div>
-//           <div>{`${headerChanges.route} ${dateToMmddyyyy(delivDate)}`}</div>
-//           <div style={{display: "flex", gap: ".5rem", paddingLeft: "2rem"}} >
-//             <span style={{width: "fit-content"}}>
-//               {itemChanges.map(item => <div key={`${item.product.prodNick}#pn`}>{item.product.prodNick}: </div>)}
-//             </span>
-//             <span style={{width: "fit-content"}}>
-//               {itemChanges.map(item => <div key={`${item.product.prodNick}#qty`}>{item.qty}</div>)}
-//             </span>
-//           </div>
-//         </>
-//       }
-//       else {
-//         command = command.split(' ').filter(i => i !== '').map(i => i.trim())
-//         let orderItem = itemChanges.find(item => item.product.prodNick === command[1])
-//         response = !!orderItem ? orderItem.product.prodName : "not found."
-
-//       }
-
-//       TerminalService.emit('response', response)
-//       hasExecuted = true
-//     }
-
-//     if (!hasExecuted) {
-//       let delivDateJS = parseDateCommand(command)
-//       if (delivDateJS) setDelivDate(delivDateJS)
-//       hasExecuted = true
-//     }
-
-//     if (!hasExecuted) {
-      
-//     }
-//     // if (isOrderCommand(command)) {
-//     //   TerminalService.emit('response', "order command detected")
-//     //   hasExecuted = true
-//     // }
-
-//     if (!hasExecuted) {
-//       let locMatch = locationList.find(item => item.locNick === command)
-//       if (locMatch) {
-//         response = `Location set to ${locMatch.locNick}`
-//         setLocNick(locMatch.locNick)
-//         TerminalService.emit('response', response)
-//         hasExecuted = true
-//       }
-//       else if (command === 'clear') TerminalService.emit('clear')
-//       else TerminalService.emit('response', `Error: command "${command}" not recognized.`)
-//     }
-
-// };
   const readyForExecution = !!locationList && !locListIsValidating 
     && !!locationDetails && !locIsValidating
     && !!productData && !prodsAreValidating
@@ -722,7 +659,7 @@ const displayCartOverview = (cartData) => {
     <tbody>
     {displayData.map((item, idx) => {
       return (
-        <tr>
+        <tr key={`report-${idx}`}>
           <td>{idx}</td>
           <td>{item.delivDate}</td>
           <td>{item.locNick}</td>

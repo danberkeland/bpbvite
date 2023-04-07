@@ -13,7 +13,7 @@ const ddbRouteSchedMap = {
  * 
  * Big assumption: Timing info for delivery route/location availability/product availability
  * Is constant throughout the week, EXCEPT for days where a route doesn't run.  We can imagine
- * a changing this model to allow customer availability to vary by day, or to allow product
+ * changing this model to allow customer availability to vary by day, or to allow product
  * timing/availability to vary by day.
  *  
  * We look at the assumed static location/product/route parameters and see if that works. If it does

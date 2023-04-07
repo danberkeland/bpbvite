@@ -33,15 +33,17 @@
 // falls back to the default matrix logic if exceptions are not applicable.
 //
 // Our workflow for deciding which route to apply to a given order item is:
-// 1. construct a suitable routeMatrix
-//    useLogisticsDimensionData returns this matrix
-//    in addition to the data itself.
+// 1. construct a suitable routeMatrix.
 //
-// 2. Compile a list of car/standing orders to add routes to.
+//    'useLogisticsDimensionData' returns this matrix
+//    in addition to the dimension data itself.
 //
-// 3. Call assignDelivRoute on each order along with other parameters 
+// 2. Compile a list of cart/standing orders to add routes to.
+//
+// 3. Call assignDelivRoute on each order, along with other parameters 
 //    described by the function.
-//      The function will add a routeNick attribute to each order item.
+//
+//    The function will add a routeNick attribute to each order item.
 
 
 
@@ -85,6 +87,7 @@ export const calculateValidRoutes = (locNick, prodNick, fulfillmentOption, locat
   if (fulfillmentOption === 'slopick' || fulfillmentOption === 'Prado Retail') validRoutes = ["Pick up SLO"]
   if (fulfillmentOption === 'atownpick' || fulfillmentOption === 'Carlton Retail') validRoutes = ["Pick up Carlton"]
 
+  // ***MATRIX LOOKUP***
   if (!validRoutes) {
     let key = `${locNick}#${prodNick}#${dayOfWeek}`
     validRoutes = routeMatrix[key] || ["NOT ASSIGNED"]
