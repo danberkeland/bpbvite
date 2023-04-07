@@ -561,6 +561,7 @@ const productQuery = /* GraphQL */ `
       packSize
       doughNick
       bakeNick
+      forBake
       guarantee
       readyTime
       bakedWhere
@@ -665,7 +666,7 @@ const standingQuery = /* GraphQL */ `
 
 const zoneRouteQuery = /* GraphQL */ `
     listZoneRoutes(
-      limit: $limit, 
+      limit: $limit
     ) {
       items {
         routeNick
@@ -673,6 +674,26 @@ const zoneRouteQuery = /* GraphQL */ `
       }
     }
 `;
+
+// const doughQuery = /* GraphQL */ `
+//   listDoughs(limit: $limit) {
+//     items {
+//       doughNick
+//       doughName
+//       hydration
+//       batchSize
+//       mixedWhere
+//       bucketSets
+//       preBucketSets
+//       updatePreBucket
+//       isBakeReady
+//       buffer
+//       saltInDry
+//       createdAt
+//       updatedAt
+//     }
+//   }
+// `;
 
 // *********************
 // * Depreciated Query *

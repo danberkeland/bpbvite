@@ -13,6 +13,7 @@ import { assignDelivRoute, calculateValidRoutes } from "../functions/routeFuncti
 import { useLocationDetails } from "./locationData"
 import { useProductListFull } from "./productData"
 import { useRouteListFull } from "./routeData"
+import { getDuplicates } from "../functions/detectDuplicates"
 
 const LIMIT = 2000
 
@@ -65,6 +66,7 @@ export const useLogisticsDimensionData = (shouldFetch) => {
 
 } 
 
+// depreciating for the below 'useCombinedOrdersByDate'
 export const useOrderDataByDate = (delivDateISO, dayOfWeek, shouldFetch) => {
   const query = queries.getAllOrdersByDate
   const variables = {
@@ -89,6 +91,89 @@ export const useOrderDataByDate = (delivDateISO, dayOfWeek, shouldFetch) => {
   return ({
     data: useMemo(transformData, [data])
   })
+}
+
+// state of the art hook for fetching and compiling cart/standing orders for production/logistics reports.
+/** 
+ * Most up-to-date hook for gathering and combining orders for production/logistics reports.
+ * 
+ * Filters to nonzero order qtys
+ */
+export const useCombinedOrdersByDate = ({ delivDateJS, includeHolding=true, shouldFetch=false }) => {
+  const delivDateISO = dateToYyyymmdd(delivDateJS)
+  const dayOfWeek = getWeekday(delivDateJS)
+
+  const query = queries.getAllOrdersByDate
+  const variables = {
+    delivDate: delivDateISO,
+    dayOfWeek: dayOfWeek,
+    limit: LIMIT
+  }
+  const { data } = useSWR(
+    shouldFetch ? [query, variables] : null, 
+    gqlFetcher, 
+    defaultSwrOptions
+  )
+
+  const transformData = () => {
+    if (!data) return undefined
+
+    const cartOrders = data.data.orderByDelivDate.items
+    const standingOrders = data.data.standingByDayOfWeek.items
+    const standingOnly = standingOrders.filter(order => order.isStand === true)
+    const holdingOnly = standingOrders.filter(order => order.isStand === false)
+
+    // Check for standing orders for simultaneous items for a given loc/prod
+    // but with different isWhole, isStand values -- currently the UI doesn't
+    // guard against this, but we have yet to implement a logic designed to
+    // handle this case. In the future we may discard these checks.
+
+    let dupes = getDuplicates(standingOrders, ['locNick', 'prodNick'])
+    let sDupes = getDuplicates(standingOnly, ['locNick', 'prodNick'])
+    let hDupes = getDuplicates(holdingOnly, ['locNick', 'prodNick'])
+
+    if (sDupes.length) console.log("Warning: standing order duplicates")
+    if (hDupes.length) console.log("warning: holding order duplicates")
+
+    // duplication of this type is bad, too, but it should be extremely 
+    // rare to observe. We still check to rule it out for certain.
+    if (!dupes.length && (sDupes.length || hDupes.length)) {
+      alert (
+        `warning: duplicate standing/holding orders found:
+        ${JSON.stringify(sDupes, null, 2)}
+        ${JSON.stringify(hDupes, null, 2)}`
+      )
+    }
+
+    // this is the type of "duplication" we need to watch out for (for now).
+    // danger is more relevant when holding orders are included.
+    if (dupes.length && (!sDupes.length && !hDupes.length)) {
+      alert(
+        `warning: overlapping standing/holding orders found. 
+        May cause problems with current logic.
+        ${JSON.stringify(dupes, null, 2)}`
+      )
+    }
+
+    // Assuming the data isn't contaminated with duplicates, we can 
+    // apply cart overrides with a simpler Object.fromEntries approach. 
+
+    const cartDict = Object.fromEntries(cartOrders.map(C => [`${C.locNick}#${C.prodNick}`, C]))
+    const standDict = includeHolding 
+      ? Object.fromEntries(standingOrders.map(S => [`${S.locNick}#${S.prodNick}`, S]))
+      : Object.fromEntries(standingOnly.map(S => [`${S.locNick}#${S.prodNick}`, S]))
+
+    return (Object.values({
+      ...standDict, 
+      ...cartDict
+    })).filter(item => item.qty !== 0)
+
+  } // end transformData
+
+  return({
+    data: useMemo(transformData, [data, includeHolding])
+  })
+
 }
 
 // *******************
@@ -123,6 +208,51 @@ export const useLogisticsDataByDate = (delivDateJS, shouldFetch) => {
   return ({
     dimensionData: dimensionData,
     routedOrderData: useMemo(transformData, [orderData, dimensionData, dayOfWeek])
+  })
+}
+
+// successor to the above 'useLogisticsDataByDate'
+//  - Updates method for combining cart/standing orders.
+//  - Allows inclusion/exclusion of holdingOrders
+
+/**  
+ * Most up-to-date hook for producing order records for production/logistics reports.
+ * Assigns routes and joins location, product, and route dimension data to records.
+*/
+export const useOrderReportByDate = ({ delivDateJS, includeHolding, shouldFetch }) => {
+  //const delivDate = dateToYyyymmdd(delivDateJS)
+  const dayOfWeek = getWeekday(delivDateJS)
+  const { data:combinedOrders } = useCombinedOrdersByDate({ delivDateJS, includeHolding, shouldFetch })
+  const { data:dimensionData } = useLogisticsDimensionData(shouldFetch)
+
+  const transformData = () => {
+    if (!combinedOrders || !dimensionData) return undefined
+
+    const { locations, products, routes, routeMatrix } = dimensionData
+    
+    // Assign routes to each order
+    const combinedRoutedOrders = combinedOrders.map(order => assignDelivRoute({
+        order: order, 
+        locationZoneNick: locations[order.locNick]?.zoneNick, 
+        dayOfWeek : dayOfWeek, 
+        routeMatrix: routeMatrix
+      }))
+
+    // Join dimension data to orders
+    const combinedRoutedOrdersWithDimensionData = combinedRoutedOrders.map(order => ({
+      ...order,
+      location: locations[order.locNick],
+      product: products[order.prodNick],
+      route: routes[order.routeNick]
+    }))
+
+    return combinedRoutedOrdersWithDimensionData
+
+  } // end transformData
+  
+  return ({
+    dimensionData: dimensionData,
+    routedOrderData: useMemo(transformData, [combinedOrders, dimensionData, dayOfWeek])
   })
 }
 
@@ -164,6 +294,7 @@ export const useCalculateRoutesByLocation = (locNick, shouldFetch) => {
   const locationZoneNick = memo ? memo[1] : undefined
 
   const calculateRoute = (prodNick, dayOfWeek, fulfillmentOption) => 
+    // imported function combines override logic and routeMatrix lookup.
     calculateValidRoutes(locNick, prodNick, fulfillmentOption, locationZoneNick, dayOfWeek, routeMatrix)
   
   // console.log("route matrix:",routeMatrix)

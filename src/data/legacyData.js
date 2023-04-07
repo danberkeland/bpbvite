@@ -38,7 +38,7 @@ export const useLegacyFormatDatabase = () => {
     console.log('data', data)
 
     for (let table of Object.keys(data.data)) {
-      console.log('table', table)
+      //console.log('table', table)
       if (data.data[table].items.length >= LIMIT) {
         console.log(`warning: ${table} has reached query limit of ${LIMIT}.`)
       }
@@ -117,14 +117,20 @@ const mapLocationsToLegacy = (locations, orders) => {
 }
 
 
+
+
 const mapProductsToLegacy = (products) => products.map(product => {
-  const { prodNick, doughNick, isEOD, ...unchangedAttributes } = product
+  const { prodNick, doughNick, isEOD, bakedWhere, ...unchangedAttributes } = product
+
+  let _bakedWhere = bakedWhere.map(str => str[0].toUpperCase() + str.slice(1))
+  let legacyBakedWhere = _bakedWhere.includes('Mixed') || _bakedWhere.length > 1 ? ['Mixed'] : _bakedWhere
   
   return ({
     ...unchangedAttributes,
     nickName: prodNick,
     doughType: doughNick,
-    eodCount: isEOD
+    eodCount: isEOD,
+    bakedWhere: legacyBakedWhere
   })
 })
 
