@@ -329,20 +329,26 @@ export const CartOrder = ({ locNick, setLocNick, isWhole }) => {
 
     console.log("submitting:", body)
 
-    let legacyResponse = await APIGatewayFetcher('/orders/submitLegacyCart', {body: [body]})
-    console.log("bpbGateway response:", legacyResponse)
-    //const legacyItems = response.body.data
-      
-    //****************************
-    //* Submit to current system *
-    //****************************
-  
-    if (legacyResponse.statusCode !== 200) {
-      console.log("Submission error")
+    try {
+      let legacyResponse = await APIGatewayFetcher('/orders/submitLegacyCart', {body: [body]})
+      console.log("bpbGateway response:", legacyResponse)
+      //const legacyItems = response.body.data
+    } catch (error) {
+      console.log("Submission error:", error)
       setIsLoading(false)
       toast.current.show({ severity: 'warn', summary: 'Error', detail: 'Submit failed', life: 6000 })
       return
     }
+    //****************************
+    //* Submit to current system *
+    //****************************
+  
+    // if (legacyResponse.statusCode !== 200) {
+    //   console.log("Submission error")
+    //   setIsLoading(false)
+    //   toast.current.show({ severity: 'warn', summary: 'Error', detail: 'Submit failed', life: 6000 })
+    //   return
+    // }
   
     for (let submitItem of submitItems) {
       const baseItem = cartOrderData.items.find(b => b.product.prodNick === submitItem.product.prodNick)
