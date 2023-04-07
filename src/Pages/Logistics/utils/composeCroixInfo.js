@@ -477,7 +477,7 @@ export default class ComposeCroixInfo {
       prodArray.push(newItem);
     }
     prodArray = sortAtoZDataByIndex(prodArray, "prod");
-
+    
     prodArray = addToCroix(prodArray, database, today, "today")
     prodArray = addToCroix(prodArray, database, tom, "tom");
     prodArray = addToCroix(prodArray, database, twoDay, "2day");

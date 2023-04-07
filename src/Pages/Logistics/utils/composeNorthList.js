@@ -406,7 +406,7 @@ import {
     getFrozensLeavingCarlton = (delivDate, database) => {
       let frozenToday = getOrdersList(delivDate, database);
       let fr = clonedeep(frozenToday);
-      console.log("clonefr", fr);
+      
       frozenToday = Array.from(
         new Set(frozenToday.filter((frz) => this.frzNorthFilter(frz)))
       );
@@ -460,7 +460,7 @@ import {
         tomBasedOnDelivDate(delivDate),
         database
       );
-      console.log("bakedCarlton", bakedOrdersList)
+      
       let bakedTomorrow = bakedOrdersList.filter((frz) =>
         this.NorthCroixBakeFilter(frz)
       );
