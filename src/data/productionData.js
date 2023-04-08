@@ -93,11 +93,10 @@ export const useOrderDataByDate = (delivDateISO, dayOfWeek, shouldFetch) => {
   })
 }
 
-// state of the art hook for fetching and compiling cart/standing orders for production/logistics reports.
 /** 
  * Most up-to-date hook for gathering and combining orders for production/logistics reports.
  * 
- * Filters to nonzero order qtys
+ * Filters to nonzero order qtys.
  */
 export const useCombinedOrdersByDate = ({ delivDateJS, includeHolding=true, shouldFetch=false }) => {
   const delivDateISO = dateToYyyymmdd(delivDateJS)
@@ -180,6 +179,8 @@ export const useCombinedOrdersByDate = ({ delivDateJS, includeHolding=true, shou
 // * Main Data Cache *
 // *******************
 
+
+/**depreciating. Can use 'useOrderReportByDate with option includeHolding: false */
 export const useLogisticsDataByDate = (delivDateJS, shouldFetch) => {
   const delivDate = dateToYyyymmdd(delivDateJS)
   const dayOfWeek = getWeekday(delivDateJS)
@@ -231,17 +232,27 @@ export const useOrderReportByDate = ({ delivDateJS, includeHolding, shouldFetch 
     const { locations, products, routes, routeMatrix } = dimensionData
     
     // Assign routes to each order
+    //
+    // Retail orders will not have a location to look up, but
+    // the pickup route/fulfillment values of 'slopick' or 'atownpick'
+    // are compatible values for route lookup.
     const combinedRoutedOrders = combinedOrders.map(order => assignDelivRoute({
         order: order, 
-        locationZoneNick: locations[order.locNick]?.zoneNick, 
+        locationZoneNick: order.isWhole ? locations[order.locNick]?.zoneNick : order.route, 
         dayOfWeek : dayOfWeek, 
         routeMatrix: routeMatrix
       }))
 
     // Join dimension data to orders
+    // rename the order's route attribute to 'fulfillment'
+    //   to avoid conflict with the joined 'route' object
+    //
+    // In the event of a retail order we 'join' a fake location
+    // to keep the production algorithms from breaking.
     const combinedRoutedOrdersWithDimensionData = combinedRoutedOrders.map(order => ({
       ...order,
-      location: locations[order.locNick],
+      fulfillment: order.route,
+      location: order.isWhole ? locations[order.locNick] : { locNick: order.locNick, locName: order.locNick, latestFirstDeliv: 7, latestFinalDeliv: 13 },
       product: products[order.prodNick],
       route: routes[order.routeNick]
     }))
