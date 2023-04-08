@@ -11,7 +11,7 @@ import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column";
 import { sumBy } from "lodash";
 
-const REPORT_DATE = DateTime.now().setZone('America/Los_Angeles')
+const REPORT_DATE = DateTime.now().setZone('America/Los_Angeles').startOf('day')
 
 /** i.e. is a rustic bread shaped at the carlton */
 const isCarltonRustic = (product) => {
@@ -88,7 +88,7 @@ export const WhoShape = () => {
         </div>
       )
     })}
-    {/* <pre>{JSON.stringify(groupedWhoShapeData.length, null, 2)}</pre>
-    <pre>{JSON.stringify(groupedWhoShapeData, null, 2)}</pre> */}
+    <pre>{JSON.stringify(groupedWhoShapeData.length, null, 2)}</pre>
+    <pre>{JSON.stringify(groupedWhoShapeData, null, 2)}</pre>
   </>)
 }

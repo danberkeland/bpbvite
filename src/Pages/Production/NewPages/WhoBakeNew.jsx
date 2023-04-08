@@ -6,7 +6,7 @@ import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column";
 import { sumBy } from "lodash";
 
-const REPORT_DATE = DateTime.now().setZone('America/Los_Angeles')
+const REPORT_DATE = DateTime.now().setZone('America/Los_Angeles').startOf('day')
 
 /** i.e. is a rustic bread shaped at the carlton */
 const isCarltonRustic = (product) => {
@@ -40,10 +40,13 @@ export const WhoBake = () => {
     shouldFetch: true 
   })
 
-  const T0WhoBakeItems = T0ProdOrders?.filter(order =>
-    isCarltonRustic(order.product)
-    && (canBakeAndDeliverCarltonProductSameDay(order.route) === true)  
-  ) ?? []
+  const T0WhoBakeItems = T0ProdOrders?.filter(order => {
+    // console.log(order)
+    return (
+      isCarltonRustic(order.product)
+      && (canBakeAndDeliverCarltonProductSameDay(order.route) === true)  
+    )
+  }) ?? []
   const T1WhoBakeItems = T1ProdOrders?.filter(order =>
     isCarltonRustic(order.product)
     && (canBakeAndDeliverCarltonProductSameDay(order.route) === false)  
@@ -70,7 +73,6 @@ export const WhoBake = () => {
           <DataTable value={orderGroup}
             size="small"
             footer={() => <span>{`Total: ${total}`}</span>}
-            
           >
             <Column header="Customer" field="location.locName" />
             <Column header="Qty" field="qty" />
