@@ -9,12 +9,15 @@
   import {
     updateProduct, updateDough, updateDoughBackup
   } from "../graphql/mutations"
+
+  import { createOrder, updateOrder, useCartOverview } from "../data/orderData"
   
   import { API, graphqlOperation } from "aws-amplify";
   
   import { getOrdersList } from "../Pages/Production/Utils/utils"
   import ComposeNorthList from "../Pages/Logistics/utils/composeNorthList";
   import ComposeCroixInfo from "../Pages/Logistics/utils/composeCroixInfo";
+import { getTtl } from "../functions/dateAndTime";
   
   const clonedeep = require("lodash.clonedeep");
   const { DateTime } = require("luxon");
@@ -219,7 +222,7 @@
           }
         }
       }
-      /*
+      
       console.log("Yes they have!  Loading new Square Orders in DB");
   
       let ord = await fetchSq(db);
@@ -228,51 +231,62 @@
           console.log("newSqOrd", newOrd)
           let qty = Number(newOrd["qty"]);
           let dt = new Date().toISOString();
-          let delivDate = newOrd["delivDate"].split("T")[0];
-          delivDate = delivDate.split("-");
-          delivDate = delivDate[1] + "/" + delivDate[2] + "/" + delivDate[0];
-  
+          console.log('dt', dt)
+          let deliv = newOrd["delivDate"]
+          let delivISO = new Date(deliv)
+          let delivDate = deliv.split("T")[0]
+          
           let locIDBPBN = "16VS30T9E7CM9";
   
           let rt = "slopick";
-          let custName = newOrd["custName"]+"__"+newOrd["id"];
+          let locNick = newOrd["custName"]+"__"+newOrd["id"];
+          let prodNick;
           let prodName;
           try {
-            prodName =
+            prodNick =
+              products[
+                products.findIndex((prod) =>
+                  newOrd["item"].includes(prod.squareID)
+                )
+              ]["nickName"];
+              prodName =
               products[
                 products.findIndex((prod) =>
                   newOrd["item"].includes(prod.squareID)
                 )
               ]["prodName"];
           } catch {
-            prodName = "Brownie";
+            prodNick = "brn";
           }
   
           if (newOrd.location === locIDBPBN) {
             rt = "atownpick";
           }
+
   
           let itemToAdd = {
-            SO: qty,
             qty: qty,
-            timeStamp: dt,
+            updatedOn: dt,
             isWhole: false,
-            PONote: "paid",
+            ItemNote: "paid",
             delivDate: delivDate,
-            custName: custName,
-            prodName: prodName,
+            locNick: locNick,
+            prodNick: prodNick,
             route: rt,
+            ttl: delivDate ? getTtl(delivISO) : null,
+            updatedBy: "bpb_admin"
           };
+
+          console.log('orders', orders)
   
           let ind = orders.findIndex(
-            (ord) => ord["custName"] === custName && ord["prodName"] === prodName
+            (ord) => ord["custName"] === locNick && ord["prodName"] === prodName
           );
   
           if (ind === -1) {
             try {
-              await API.graphql(
-                graphqlOperation(createOrder, { input: { ...itemToAdd } })
-              );
+              createOrder(itemToAdd)
+              
   
               ordersToUpdate.push(itemToAdd);
             } catch (error) {
@@ -282,7 +296,7 @@
         }
       } else {
         console.log("Square orders did not load");
-      }*/
+      }
     }
     let DBToMod = clonedeep(db);
     DBToMod[4] = ordersToUpdate;

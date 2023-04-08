@@ -120,6 +120,8 @@ export function getWeekday(date) {
  * 
  */
 export function getTtl(delivDate) {
+  console.log('delivDateTtl', delivDate)
+
   return getWorkingDateTime(delivDate.toISOString()).plus({ days: 1}).plus({ hours: CUTOFF_TIME}).toSeconds()
 }
 
