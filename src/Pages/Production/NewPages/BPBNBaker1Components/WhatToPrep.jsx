@@ -16,6 +16,18 @@ import { groupBy } from "../../../../functions/groupBy";
  * Would it make more sense to give these products a category we can look for,
  * so that we don't have to obtain them by excluding everything else?
  */
+
+
+const isExclusiveCarltonItem = (product) => {
+  return product.bakedWhere.includes("Carlton") 
+    && product.bakedWhere.length === 1
+}
+
+const isNonexclusiveCarltonItem = (product) => {
+  return product.bakedWhere.includes("Carlton") 
+    && product.bakedWhere.length > 1
+}
+
 const isPrepItem = (product) => {
   const { packGroup, doughNick } = product
 
@@ -23,6 +35,10 @@ const isPrepItem = (product) => {
     && doughNick !== "Croissant"
     && packGroup !== "retail"
     && packGroup !== "cafe menu"
+}
+
+const isFulfilledFromCarlton = (route) => {
+  return route.RouteDepart === "Carlton" || route.routeNick === "Pick up Carlton"
 }
 
 
@@ -41,18 +57,22 @@ export const WhatToPrep = ({ reportDate }) => {
   })
 
   const T0ordersToPrep = T0orders?.filter(order => {
-    const { product } = order
+    const { product, route } = order
 
-    return product.bakedWhere.includes("Carlton") // Not exclusive; can be baked at Prado as well
-      && product.readyTime < 14 && isPrepItem(product)
+    return product.readyTime < 14 && isPrepItem(product) && (
+      (isNonexclusiveCarltonItem(product) && isFulfilledFromCarlton(route))
+      || isExclusiveCarltonItem(product)
+    )
 
   }) ?? []
 
   const T1ordersToPrep = T1orders?.filter(order => {
-    const { product } = order
+    const { product, route } = order
 
-    return product.bakedWhere.includes("Carlton") // Not exclusive; can be baked at Prado as well
-      && product.readyTime > 14 && isPrepItem(product)
+    return product.readyTime > 14 && isPrepItem(product) && (
+      (isNonexclusiveCarltonItem(product) && isFulfilledFromCarlton(route))
+      || isExclusiveCarltonItem(product)
+    )
 
   }) ?? []
 

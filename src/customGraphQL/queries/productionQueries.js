@@ -675,25 +675,62 @@ const zoneRouteQuery = /* GraphQL */ `
     }
 `;
 
-// const doughQuery = /* GraphQL */ `
-//   listDoughs(limit: $limit) {
-//     items {
-//       doughNick
-//       doughName
-//       hydration
-//       batchSize
-//       mixedWhere
-//       bucketSets
-//       preBucketSets
-//       updatePreBucket
-//       isBakeReady
-//       buffer
-//       saltInDry
-//       createdAt
-//       updatedAt
-//     }
-//   }
-// `;
+const doughQuery = /* GraphQL */ `
+  listDoughs(limit: $limit) {
+    items {
+      doughNick
+      doughName
+      hydration
+      batchSize
+      mixedWhere
+      bucketSets
+      preBucketSets
+      updatePreBucket
+      isBakeReady
+      buffer
+      saltInDry
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const doughBackupQuery = /* GraphQL */ `
+  listDoughBackups(limit: $limit) {
+    items {
+      batchSize
+      bucketSets
+      buffer
+      components
+      createdAt
+      doughName
+      hydration
+      id
+      isBakeReady
+      mixedWhere
+      oldDough
+      preBucketSets
+      process
+      saltInDry
+      updatePreBucket
+      updatedAt
+    }
+  }
+`;
+
+const doughComponentQuery = /* GraphQL */ `
+  listDoughComponentBackups(limit: $limit) {
+    items {
+      id
+      dough
+      componentType
+      componentName
+      amount
+      createdAt
+      updatedAt
+    }
+  }
+`;
 
 // *********************
 // * Depreciated Query *
@@ -711,6 +748,7 @@ export const getProductionDataByDate = /* GraphQL */ `
     ${zoneRouteQuery}
     ${orderQuery}
     ${standingQuery}
+    ${doughComponentQuery}
   }
 `;
 
@@ -738,5 +776,9 @@ export const getDimensionData = /* GraphQL */ `
     ${zoneQuery}
     ${routeQuery}
     ${zoneRouteQuery}
+    ${doughBackupQuery}
+    ${doughComponentQuery}
   }
 `;
+
+

@@ -494,6 +494,8 @@ export const useOrderSummary = (locNick, shouldFetch) => {
 
 
 /**
+ * For Admin use.
+ * 
  * Full Scan for now: if we put an index on UpdatedOn, we can 
  * make te query leaner. Data to give visibility regarding
  * What orders have been placed over a given time period.

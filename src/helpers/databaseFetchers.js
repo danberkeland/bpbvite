@@ -96,7 +96,7 @@ import { getTtl } from "../functions/dateAndTime";
         console.log('bakedOrdersList', bakedOrdersList)
         
         for (let prod of bakedOrdersList) {
-          console.log('prod', prod)
+          //console.log('prod', prod)
           if (prod.freezerNorthFlag !== tomorrow) {
             prod.freezerNorthFlag = today;
           }
@@ -168,7 +168,7 @@ import { getTtl } from "../functions/dateAndTime";
       console.log("Yes they have!  Updating preshaped numbers");
   
       for (let prod of prodsToUpdate) {
-        console.log('prodpreshaped', prod)
+        //console.log('prodpreshaped', prod)
         if (prod.updatePreDate !== tomorrow) {
           prod.updatePreDate = today;
         }

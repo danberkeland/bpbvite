@@ -31,12 +31,12 @@ const canBakeAndDeliverCarltonProductSameDay = (route) => {
 export const WhoBake = () => {
   const { routedOrderData:T0ProdOrders } = useOrderReportByDate({
     delivDateJS: REPORT_DATE.plus({ days: 0 }).toJSDate(), 
-    includeHolding: true, 
+    includeHolding: false, 
     shouldFetch: true 
   })
   const { routedOrderData:T1ProdOrders } = useOrderReportByDate({
     delivDateJS: REPORT_DATE.plus({ days: 1 }).toJSDate(), 
-    includeHolding: true, 
+    includeHolding: false, 
     shouldFetch: true 
   })
 

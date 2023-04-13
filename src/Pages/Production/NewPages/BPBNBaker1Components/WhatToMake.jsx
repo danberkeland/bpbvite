@@ -69,7 +69,7 @@ export const WhatToMake = ({ reportDate }) => {
   })
 
   const T0ordersToBake = T0orders?.filter(order => {
-    //console.log(order)
+    // console.log(order)
     return (
       isCarltonRustic(order.product)
       && canBakeAndDeliverCarltonProductSameDay(order.route)
@@ -90,19 +90,26 @@ export const WhatToMake = ({ reportDate }) => {
         : 0
     })
 
-  const bakeTotals = GroupedBakeList.map(productGroup => {
-    const bakeQty = sumBy(productGroup, order => order.qty * order.product.packSize)
+  const bakeTotals = GroupedBakeList.map(forBakeGroup => {
+    const bakeQty = sumBy(forBakeGroup, order => order.qty * order.product.packSize)
 
     // the following targets one of potentially several products belonging to 
     // a forBake category -- do all products in the category get assigned the
     // same preshaped qty?
-    const pocketCount = productGroup[0].product.preshaped
+    //
+    // ...nope, only one of them does, so we need to search for it within the group
+    // const pocketCount = forBakeGroup[0].product.preshaped <<< doesn't always work
+    //
+    // if something were to write a preshaped value to one of the non-representative items
+    // of the forBake group, this value will get thrown off until the change is undone (dangerous!)
+    const productWithPreshapedQty = forBakeGroup.find(order => order.product.preshaped !== null)
+    const pocketCount = productWithPreshapedQty ? productWithPreshapedQty.product.preshaped : 0
     const surplus = pocketCount - bakeQty
     const shortText = surplus > 0 ? `Over ${surplus}`
       : surplus < 0 ? `Short ${surplus * -1}`
       : ''
 
-    const ordersNeededEarly = productGroup.filter(order => {
+    const ordersNeededEarly = forBakeGroup.filter(order => {
       const { route, location, fulfillment } = order
 
       return isNorthRoute(route) && isNotCarltonPickup(location, fulfillment) 
@@ -110,13 +117,15 @@ export const WhatToMake = ({ reportDate }) => {
     const qtyNeededEarly = sumBy(ordersNeededEarly, order => order.qty * order.product.packSize)
 
     return({
-      forBake: productGroup[0].product.forBake,
+      forBake: forBakeGroup[0].product.forBake,
       qty: bakeQty,
       shaped: pocketCount,
       shortText: shortText,
       needEarly: qtyNeededEarly
     })
-  })
+
+  }) // end const bakeTotals = ...
+  console.log("Bake Totals:", bakeTotals)
 
   return (<>
     <h2>{`What to Bake ${reportDate.toLocaleString()}`}</h2>
@@ -131,6 +140,8 @@ export const WhatToMake = ({ reportDate }) => {
       <Column header="Short" field="shortText"/>
       <Column header="Need Early" field="needEarly"/>
     </DataTable>
+
+    {/* <pre>{JSON.stringify(bakeList.filter(order => order.isStand !== true), null, 2)}</pre> */}
   </>)
 
 }

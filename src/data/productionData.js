@@ -14,6 +14,7 @@ import { useLocationDetails } from "./locationData"
 import { useProductListFull } from "./productData"
 import { useRouteListFull } from "./routeData"
 import { getDuplicates } from "../functions/detectDuplicates"
+import { groupBy } from "../functions/groupBy"
 
 const LIMIT = 2000
 
@@ -24,7 +25,7 @@ const LIMIT = 2000
 export const useLogisticsDimensionData = (shouldFetch) => {
   const query = queries.getDimensionData
   const variables = { limit: LIMIT }
-  const { data } = useSWR(
+  const { data, errors } = useSWR(
     shouldFetch ? [query, variables] : null, 
     gqlFetcher, 
     defaultSwrOptions
@@ -37,6 +38,8 @@ export const useLogisticsDimensionData = (shouldFetch) => {
     const zones = Object.fromEntries(data.data.listZones.items.map(i => [i.zoneNick, i]))
     const routes = Object.fromEntries(data.data.listRoutes.items.map(i => [i.routeNick, i]))
     const zoneRoutes = data.data.listZoneRoutes.items.sort((zrA, zrB) => routes[zrA.routeNick].routeStart - routes[zrB.routeNick].routeStart)
+    const doughs = Object.fromEntries(data.data.listDoughBackups.items.map(i => [i.doughName, i]))
+    const doughComponents = groupBy(data.data.listDoughComponentBackups.items, ['dough'])
 
     // zoneRoutes contains all routes that serve the location's zone, ordered by start time.
     const locations = Object.fromEntries(
@@ -55,13 +58,17 @@ export const useLogisticsDimensionData = (shouldFetch) => {
       zones: zones,
       routes: routes,
       zoneRoutes: zoneRoutes,
+      doughs: doughs,
+      doughComponents: doughComponents,
       routeMatrix: buildRouteMatrix(locations, products, routes)
     })
 
   } // end transformData
 
+  const _data = useMemo(transformData, [data])
+
   return ({
-    data: useMemo(transformData, [data])
+    data: _data
   })
 
 } 

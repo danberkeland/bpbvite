@@ -633,13 +633,14 @@ const routeSchedToWeekdayMap = {
 const displayCartOverview = (cartData) => {
   if (!cartData) return ["Data needs to be manually fetched. try 'load-report'"]
   
-  const cutoff = getWorkingDateTime('NOW').minus({ days: 1}).toISO()
+  const cutoff = getWorkingDateTime('NOW').minus({ days: 7}).toISO()
 
   let displayData = cartData
     .filter(item => {
       //const updateDT = getWorkingDateTime(item.updatedOn).startOf('day')
       return item.updatedOn > cutoff//updateDT.toMillis === todayDT.toMillis // || updateDT.toMillis === todayDT.minus({ days: 1}).toMillis
     })
+    .filter(item => item.updatedBy !== "Dan Berkeland" && item.updatedBy !== "bpb_admin")
     .sort(dynamicSort("-updatedOn"))
 
   console.log(displayData)

@@ -14,6 +14,8 @@ const h2Style = {
 
 export const BagMixesScreen = ({ mixes, doughs, infoWrap, deliv }) => {
 
+  console.log("BAG MIX DATA:", mixes, doughs, infoWrap, deliv )
+
   return (
     <React.Fragment>
       <h2 style={h2Style}>Baguette Mix #1</h2>

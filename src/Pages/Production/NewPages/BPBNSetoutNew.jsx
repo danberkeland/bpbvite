@@ -1,3 +1,14 @@
+// Notes:
+//
+// Data transformations were getting runtime errors because of Wild Field's 'NOT ASSIGNED' standing order.
+// 'NOT ASSIGNED' orders do not get a route object attached to them, thus the filters here were not able
+// to look up the route's 'RouteDepart' attribute.
+//
+// This has been addressed by using optional chaining (e.g. route?.RouteDepart), which will cause conditional
+// checks like 'PROD_LOCATION === route?.RouteDepart' to *fail* (but not crash!). While this shouldn't be an 
+// issue for BPBN pages, we may need a better solution for BPBS, especially when dealing with pretzel prep 
+// specifically.
+
 import { ceil, set, sumBy } from "lodash";
 import { DateTime } from "luxon";
 import { Column } from "primereact/column";
@@ -39,8 +50,10 @@ export const BPBNSetout = () => {
 
   // T0: Setout @ PROD_LOCATION
   // T1: Bake and deliver from PROD_LOCATION
+  //console.log(T1ProdOrders.filter(item => item.route === undefined))
   const T1CroixOrdersNoAlmonds = T1ProdOrders?.filter(order => {
-    const { prodNick, product: { packGroup, doughNick }, routeNick, route: { RouteDepart }, locNick } = order
+    const { prodNick, product: { packGroup, doughNick }, routeNick, route, locNick } = order
+    const RouteDepart = route?.RouteDepart
 
     let isPickupAtProdLocation = (PROD_LOCATION === "Carlton" && routeNick === "Pick Up Carlton")
       || (PROD_LOCATION === "Prado" && routeNick === "Pick Up SLO")
@@ -56,7 +69,8 @@ export const BPBNSetout = () => {
 
   // Pastry Prep
   const T1PastryPrep = T1ProdOrders?.filter(order => {
-    const { product: { bakedWhere, packGroup, doughNick }, routeNick, route: { RouteDepart } } = order
+    const { product: { bakedWhere, packGroup, doughNick }, routeNick, route } = order
+    const RouteDepart = route?.RouteDepart
     const isNonCroixPastry = (packGroup === "baked pastries" && doughNick !== "Croissant")
     const isBakedExclusivelyAtProdLocation = bakedWhere.includes(PROD_LOCATION) && bakedWhere.length === 1
     const isBakedAtProdLocation = bakedWhere.includes(PROD_LOCATION) && bakedWhere.length > 1
@@ -65,7 +79,7 @@ export const BPBNSetout = () => {
       || isBakedAtProdLocation && (RouteDepart === PROD_LOCATION || routeNick === "Pick Up SLO") // Not sure how to interpret this part
     )
 
-  })
+  }) ?? []
 
   // temp reference for above filter -- filter function for the compose pastry method
 
