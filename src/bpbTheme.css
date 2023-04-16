@@ -5331,7 +5331,7 @@ div.read-only-button > .p-disabled, .p-component:disabled {
   box-shadow: 0 0 0 0.2rem #a6d5fa;
 }
 .p-panelmenu .p-panelmenu-header:not(.p-highlight):not(.p-disabled) > a:hover {
-  background: #e9ecef;
+  background: var(--bpb-background-3);;
   border-color: #dee2e6;
   color: #495057;
 }
@@ -5347,13 +5347,13 @@ div.read-only-button > .p-disabled, .p-component:disabled {
 }
 .p-panelmenu .p-panelmenu-header.p-highlight:not(.p-disabled) > a:hover {
   border-color: #dee2e6;
-  background: #e9ecef;
+  background: var(--bpb-background-4);;
   color: #495057;
 }
 .p-panelmenu .p-panelmenu-content {
   padding: 0.25rem 0;
   border: 1px solid #dee2e6;
-  background: #ffffff;
+  background: var(--bpb-background-6);
   color: #495057;
   border-top: 0;
   border-top-right-radius: 0;
@@ -5379,10 +5379,10 @@ div.read-only-button > .p-disabled, .p-component:disabled {
   color: #6c757d;
 }
 .p-panelmenu .p-panelmenu-content .p-menuitem .p-menuitem-link:not(.p-disabled):hover {
-  background: #e9ecef;
+  background: var(--bpb-background-4);;
 }
 .p-panelmenu .p-panelmenu-content .p-menuitem .p-menuitem-link:not(.p-disabled):hover .p-menuitem-text {
-  color: #495057;
+  color: #ffffff;
 }
 .p-panelmenu .p-panelmenu-content .p-menuitem .p-menuitem-link:not(.p-disabled):hover .p-menuitem-icon {
   color: #6c757d;
