@@ -32,6 +32,7 @@ import BPBSMixPocket from "../Pages/Production/BPBSMixPocket";
 import CroixCount from "../Pages/Production/CroixCount"
 import CroixToMake from "../Pages/Production/CroixToMake";
 import { Database } from "../Pages/Settings/Database";
+import BPBNBuckets from "../Pages/Production/BPBNBuckets";
 
 function AnimatedRoutes({ Routes, Route, useLocation }) {
   const authClass = useSettingsStore((state) => state.authClass);
@@ -53,6 +54,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             <Route path="/Production/Production" element={<Production />} />
             <Route path="/Production/WhoBake" element={<WhoBake />} />
             <Route path="/Production/WhoShape" element={<WhoShape />} />
+            <Route path="/Production/BPBNBuckets" element={<BPBNBuckets loc={'Carlton'}/>} />
             <Route path="/Production/BPBNSetOut" element={<BPBNSetOut loc={'Carlton'} />} />
             <Route path="/Production/BPBSSetOut" element={<BPBNSetOut loc={'Prado'} />} />
             <Route path="/Production/BPBSWhatToMake" element={<BPBSWhatToMake />} />

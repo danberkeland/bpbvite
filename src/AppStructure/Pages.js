@@ -101,6 +101,13 @@ const itemsAuth1 = itemsAuth2b.concat([
             },
           },
           {
+            label: "BPBN Buckets",
+            icon: "pi pi-fw pi-home",
+            command: () => {
+              window.location = "/Production/BPBNBuckets";
+            },
+          },
+          {
             label: "Who Bake",
             icon: "pi pi-fw pi-home",
             command: () => {

@@ -53,7 +53,7 @@ function TopNav() {
             {
               label: "BPBN Buckets",
               command: () => {
-                window.location = "/Production/Buckets";
+                window.location = "/Production/BPBNBuckets";
               },
             },
             {
@@ -88,7 +88,7 @@ function TopNav() {
             {
               label: "BPBS Set Out",
               command: () => {
-                window.location = "/Prodution/BPBNSetOut";
+                window.location = "/Production/BPBSSetOut";
               },
             },
             {

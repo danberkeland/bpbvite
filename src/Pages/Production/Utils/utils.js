@@ -237,6 +237,7 @@ export const qtyCalc = (whatToMake) => {
 };
 
 export const doughListComp = (doughs, filt, loc) => {
+  console.log('doughsDougList', doughs)
   return Array.from(
     new Set(doughs.filter((set) => filt(set, loc)).map((dgh) => dgh.doughName))
   ).map((dgh) => ({
