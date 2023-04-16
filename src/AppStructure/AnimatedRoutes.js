@@ -55,6 +55,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             <Route path="/Production/WhoBake" element={<WhoBake />} />
             <Route path="/Production/WhoShape" element={<WhoShape />} />
             <Route path="/Production/BPBNBuckets" element={<BPBNBuckets loc={'Carlton'}/>} />
+            <Route path="/Production/BPBSBuckets" element={<BPBNBuckets loc={'Prado'}/>} />
             <Route path="/Production/BPBNSetOut" element={<BPBNSetOut loc={'Carlton'} />} />
             <Route path="/Production/BPBSSetOut" element={<BPBNSetOut loc={'Prado'} />} />
             <Route path="/Production/BPBSWhatToMake" element={<BPBSWhatToMake />} />

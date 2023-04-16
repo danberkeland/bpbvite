@@ -133,7 +133,7 @@ function BPBSMixPocket() {
         setOrdersHasBeenChanged,
         delivDate,
         setIsLoading
-      ).then((db) => gatherDoughInfo(db));
+      ).then((db) => gatherDoughInfo(db, delivDate));
   }, [database]); // eslint-disable-line react-hooks/exhaustive-deps
 
   

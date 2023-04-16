@@ -94,21 +94,10 @@ function TopNav() {
             {
               label: "BPBS Buckets",
               command: () => {
-                window.location = "/Production/Buckets";
+                window.location = "/Production/BPBSBuckets";
               },
             },
-            {
-              label: "Croix To Make",
-              command: () => {
-                window.location = "/Production/CroixToMake";
-              },
-            },
-            {
-              label: "BPBS EOD Count",
-              command: () => {
-                window.location = "/EODCounts/EODCounts";
-              },
-            },
+            
             
           ],
         },

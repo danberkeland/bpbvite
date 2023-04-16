@@ -109,7 +109,7 @@ export function App() {
       <Router>
         {formType === "signedIn" && (
           <React.Fragment>
-            <NavBottom />
+            {authClass !== "bpbfull" && <NavBottom />}
             <Pages Routes={Routes} Route={Route} useLocation={useLocation} />
           </React.Fragment>
         )}
