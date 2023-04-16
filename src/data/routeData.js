@@ -9,6 +9,7 @@ import getNestedObject from "../functions/getNestedObject"
 import gqlFetcher from "./fetchers"
 
 import * as queries from "../customGraphQL/queries/routeQueries"
+import { listZoneRoutes } from "../customGraphQL/queries/zoneRouteQueries"
 
 // import * as yup from "yup"
 
@@ -35,6 +36,22 @@ export const useRouteListFull = (shouldFetch) => {
     data: getNestedObject(data, ['data', 'listRoutes', 'items']),
     errors: errors
   })
+ 
+}
 
-  
+export const useZoneRouteListFull = ({ shouldFetch }) => {
+  let query = listZoneRoutes
+  let variables = { limit: 1000 }
+
+  const { data, errors } = useSWR(
+    shouldFetch ? [query, variables] : null, 
+    gqlFetcher, 
+    defaultSwrOptions
+  )
+
+  return({
+    data: getNestedObject(data, ['data', 'listZoneRoutes', 'items']),
+    errors: errors
+  })
+
 }

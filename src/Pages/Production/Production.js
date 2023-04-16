@@ -3,8 +3,10 @@ import React, { useState } from "react";
 import { BPBNBaker1 } from "./NewPages/BPBNBaker1New";
 import { BPBNBaker2 } from "./NewPages/BPBNBaker2New";
 import { BPBNSetout } from "./NewPages/BPBNSetoutNew";
+import { BPBTerminal } from "./NewPages/BPBTerminal2";
 import { WhoBake } from "./NewPages/WhoBakeNew";
 import { WhoShape } from "./NewPages/WhoShapeNew";
+import { SevenDayList } from "./NewPages/SevenDayList";
 
 const bpbnPages = [
   {name: "BPBNBaker1", component: <BPBNBaker1 />},
@@ -12,6 +14,8 @@ const bpbnPages = [
   {name: "BPBNSetout", component: <BPBNSetout />},
   {name: "WhoBake", component: <WhoBake />},
   {name: "WhoShape", component: <WhoShape />},
+  {name: "Terminal", component: <BPBTerminal />},
+  {name: "Seven Day List", component: <SevenDayList />}
 ]
 
 const Production = () => {
@@ -20,7 +24,7 @@ const Production = () => {
   return(
     <div className="production-page-container"
       style={{
-        maxWidth: "50rem",
+        maxWidth: "70rem",
         margin: "auto",
         marginBottom: "5rem"
       }}
@@ -44,7 +48,7 @@ const Production = () => {
         style={{
           margin: "auto",
           padding: "2rem",
-          maxWidth: "40rem",
+          maxWidth: "65rem",
           //border: "solid 1px black"
         }}
       >

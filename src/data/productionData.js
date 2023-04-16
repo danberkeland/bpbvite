@@ -16,7 +16,7 @@ import { useRouteListFull } from "./routeData"
 import { getDuplicates } from "../functions/detectDuplicates"
 import { groupBy } from "../functions/groupBy"
 
-const LIMIT = 2000
+const LIMIT = 5000
 
 // **************************
 // * Supporting Data Caches *
