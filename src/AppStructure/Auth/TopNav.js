@@ -18,7 +18,7 @@ const BackGround = styled.div`
 const TopBar = styled.div`
   display: grid;
   grid-template-columns: 10fr 1fr;
-  background-color: white;
+  background-color: var(--bpb-background-5);
 `;
 
 function TopNav() {
@@ -222,10 +222,10 @@ function TopNav() {
       },
     },
     {
-      label: "Customers",
+      label: "Locations",
       icon: "pi pi-fw pi-users",
       command: () => {
-        window.location = "/Customers";
+        window.location = "/Locations";
       },
     },
     {
