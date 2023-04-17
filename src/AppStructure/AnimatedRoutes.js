@@ -33,6 +33,12 @@ import CroixCount from "../Pages/Production/CroixCount"
 import CroixToMake from "../Pages/Production/CroixToMake";
 import { Database } from "../Pages/Settings/Database";
 import BPBNBuckets from "../Pages/Production/BPBNBuckets";
+import ByProduct from "../Pages/Logistics/ByProduct/ByProduct";
+import NorthList from "../Pages/Logistics/NorthLists";
+import AMPastry from "../Pages/Logistics/AMPastry";
+import RetailBags from "../Pages/Logistics/RetailBags";
+import SpecialOrders from "../Pages/Logistics/SpecialOrders";
+import FreezerThaw from "../Pages/Logistics/FreezerThaw";
 
 function AnimatedRoutes({ Routes, Route, useLocation }) {
   const authClass = useSettingsStore((state) => state.authClass);
@@ -68,6 +74,12 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             <Route path="/EODCounts" element={<EODCounts />} />
             <Route path="/Logistics" element={<Logistics />} />
             <Route path="/Logistics/ByRoute" element={<ByRoute />} />
+            <Route path="/Logistics/ByProduct" element={<ByProduct />} />
+            <Route path="/Logistics/NorthLists" element={<NorthList />} />
+            <Route path="/Logistics/AMPastry" element={<AMPastry />} />
+            <Route path="/Logistics/RetailBags" element={<RetailBags />} />
+            <Route path="/Logistics/SpecialOrders" element={<SpecialOrders />} />
+            <Route path="/Logistics/FreezerThaw" element={<FreezerThaw />} />
             <Route path="/Locations" element={<Locations />} />
             <Route path="/Database" element={<Database />} />
             <Route
