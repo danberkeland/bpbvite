@@ -180,16 +180,11 @@ function TopNav() {
       label: "EOD Counts",
       icon: "pi pi-fw pi-map",
       items: [
-        {
-          label: "BPBN",
-          command: () => {
-            window.location = "/EODCounts/BPBNCounts";
-          },
-        },
+       
         {
           label: "BPBS",
           command: () => {
-            window.location = "/EODCounts/BPBSCounts";
+            window.location = "/EODCounts";
           },
         },
       ],
