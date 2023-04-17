@@ -21,43 +21,7 @@ import { useLegacyFormatDatabase } from "../../data/legacyData";
 // import styled from "styled-components";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
-import { WholeBox, WholeBoxPhone, TwoColumnGrid, h1Style, h2Style, h3Style } from "./_styles"
-
-// const WholeBox = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   width: 50%;
-//   margin: auto;
-//   padding: 0 0 100px 0;
-// `;
-
-// const WholeBoxPhone = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   width: 90%;
-//   margin: auto;
-//   padding: 0 0 100px 0;
-// `;
-
-// const TwoColumnGrid = styled.div`
-//   display: grid;
-//   grid-template-columns: 1fr 1fr;
-//   column-gap: 10px;
-//   row-gap: 10px;
-//   padding: 5px;
-// `;
-
-// const h2Style = {
-//   margin: "1rem 0 .25rem 0",
-//   fontWeight: "bold",
-// }
-
-// const h3Style = {
-//   fontWeight: "bold",
-//   color: 'hsl(37, 100%, 10%)',
-// }
-
-// const h1Style = {fontWeight: "bold", marginBottom: "2rem"}
+import { TwoColumnGrid, WholeBox, WholeBoxPhone } from "./_styles"
 
 const clonedeep = require("lodash.clonedeep");
 const compose = new ComposeDough();
@@ -184,12 +148,13 @@ function BPBNBaker1Dough({
     return (
       <React.Fragment key={dough.id + "_firstFrag"}>
         <div style={{
+          paddingInline: "1rem",
           backgroundColor: "hsl(37, 100%, 80%)",
           paddingBlock: ".5rem",
           border: "solid 1px hsl(37, 67%, 60%)",
           borderRadius: "3px",
         }}>
-        <h3 style={h3Style}>
+        <h3>
           {doughName}: (need {doughNeeded} lb.) TOTAL:
           {doughTotal} SHORT: {doughShort}
         </h3>
@@ -245,22 +210,22 @@ function BPBNBaker1Dough({
 
   const innards = (
     <React.Fragment>
-      <h1 style={h1Style}>BPBN Baguette Mix</h1>
+      <h1>BPBN Baguette Mix</h1>
       {doughs[0] && doughMixList(doughs[0])}
 
-      <h2 style={h2Style}>Bins</h2>
+      <h2>Bins</h2>
       <DataTable value={bin} className="p-datatable-sm">
         <Column field="title" header="Product"></Column>
         <Column field="amount" header="Amount"></Column>
       </DataTable>
 
-      <h2 style={h2Style}>Pocket Pans</h2>
+      <h2>Pocket Pans</h2>
       <DataTable value={pans} className="p-datatable-sm">
         <Column field="title" header="Pan"></Column>
         <Column field="amount" header="Amount"></Column>
       </DataTable>
 
-      <h2 style={h2Style}>Bucket Sets</h2>
+      <h2>Bucket Sets</h2>
       <DataTable value={buckets} className="p-datatable-sm">
         <Column field="title" header="Bucket Sets"></Column>
         <Column field="amount" header="Amount"></Column>

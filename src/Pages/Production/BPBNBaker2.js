@@ -19,37 +19,9 @@ import { updateProduct, updateInfoQBAuth } from "../../graphql/mutations";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
-import styled from "styled-components";
 import { API, graphqlOperation } from "aws-amplify";
 
-import { WholeBox, ButtonContainer, ButtonWrapper, h1Style, h2Style } from "./_styles"
-
-// const WholeBox = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   width: 50%;
-//   margin: auto;
-//   padding: 0 0 100px 0;
-// `;
-
-// const ButtonContainer = styled.div`
-//   display: flex;
-//   width: 100%;
-//   flex-direction: row;
-//   justify-content: flex-start;
-//   align-content: flex-start;
-// `;
-
-// const ButtonWrapper = styled.div`
-//   font-family: "Montserrat", sans-serif;
-//   display: flex;
-//   width: 60%;
-//   flex-direction: row;
-//   justify-content: space-between;
-//   align-content: left;
-
-//   background: #ffffff;
-// `;
+import { WholeBox } from "./_styles"
 
 const compose = new ComposeWhatToMake();
 const composePastry = new ComposePastryPrep();
@@ -275,31 +247,22 @@ function BPBNBaker2() {
     setIsLoading(false);
   };
 
-  const header = (
-    <ButtonContainer>
-      <ButtonWrapper>
-        <Button
-          
-          type="button"
-          onClick={(e) => exportPastryPrepPdf(infoWrap)}
-          //className="p-button-success"
-          data-pr-tooltip="PDF"
-        >
-          Print Prep List
-        </Button>
-      </ButtonWrapper>
-    </ButtonContainer>
-  );
 
   return (
     <React.Fragment>
       <ConfirmDialog />
       <WholeBox>
-        <h1 style={h1Style}>What To Shape {convertDatetoBPBDate(delivDate)}</h1>
+        <h1>What To Shape {convertDatetoBPBDate(delivDate)}</h1>
         <ToolBar delivDate={delivDate} setDelivDate={setDelivDate} />
-        <div>{header}</div>
+        <Button
+          label="Print Prep List"
+          type="button"
+          onClick={(e) => exportPastryPrepPdf(infoWrap)}
+          data-pr-tooltip="PDF"
+          style={{width: "fit-content", marginBlock: "1rem"}}
+        />
 
-        <h2 style={h2Style}>What To Shape</h2>
+        <h2>What To Shape</h2>
         <DataTable value={whatToMake} className="p-datatable-sm">
           <Column field="forBake" header="Product"></Column>
           <Column field="weight" header="Weight"></Column>

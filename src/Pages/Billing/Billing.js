@@ -13,11 +13,17 @@ const BasicContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 70%;
-  border: 1px solid lightgray;
+  border: 1px solid hsl(37, 100%, 30%);
   padding: 5px 10px;
   margin: 0px auto;
   box-sizing: border-box;
 `;
+
+const printButtonStyle = {
+  backgroundColor: "hsl(97.26, 51.67%, 40%)",
+  border: "solid 1px hsl(97.26, 51.67%, 35%)",
+  fontSize: "1.25rem",
+}
 
 function Billing() {
  

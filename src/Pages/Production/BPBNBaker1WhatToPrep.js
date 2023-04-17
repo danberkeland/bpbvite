@@ -10,25 +10,7 @@ import ComposeWhatToPrep from "./Utils/composeWhatToPrep";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
-import { WholeBox, WholeBoxPhone, h1Style } from "./_styles"
-
-// const WholeBox = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   width: 50%;
-//   margin: auto;
-//   padding: 0 0 100px 0;
-// `;
-
-// const WholeBoxPhone = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   width: 90%;
-//   margin: auto;
-//   padding: 0 0 100px 0;
-// `;
-
-// const h1Style = {fontWeight: "bold", marginBottom: "2rem"}
+import { WholeBox, WholeBoxPhone } from "./_styles"
 
 const compose = new ComposeWhatToPrep();
 
@@ -66,15 +48,9 @@ function BPBNBaker1WhatToPrep({ whatToPrep, setWhatToPrep, deliv, doobieStuff })
 
 
 
-
-
-
-
-
-
   const innards = (
     <React.Fragment>
-      <h1 style={h1Style}>What To Prep {convertDatetoBPBDate(delivDate)}</h1>
+      <h1>What To Prep {convertDatetoBPBDate(delivDate)}</h1>
 
       <DataTable value={doobieStuff} className="p-datatable-sm">
         <Column field="Prod" header="Product"></Column>
@@ -94,9 +70,7 @@ function BPBNBaker1WhatToPrep({ whatToPrep, setWhatToPrep, deliv, doobieStuff })
   return (
     <React.Fragment>
       {width > breakpoint ? (
-        <WholeBox>
-
-          {innards}</WholeBox>
+        <WholeBox>{innards}</WholeBox>
       ) : (
         <WholeBoxPhone>{innards}</WholeBoxPhone>
       )}

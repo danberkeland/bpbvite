@@ -26,10 +26,17 @@ const { DateTime } = require("luxon");
 const BasicContainer = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
   width: 100%;
   justify-content: space-around;
   box-sizing: border-box;
 `;
+
+const printButtonStyle = {
+  backgroundColor: "hsl(97.26, 51.67%, 40%)",
+  border: "solid 1px hsl(97.26, 51.67%, 35%)",
+  fontSize: "1.25rem",
+}
 
 let today = todayPlus()[0];
 let Sunday = daysOfTheWeek()[0];
@@ -322,20 +329,16 @@ const SelectDate = ({ database, dailyInvoices }) => {
           />
         </div>
 
-        <Button
-          className="p-button-success"
+        <Button label="EXPORT CSV"
           onClick={() => exportCSV(dailyInvoices, false)}
-        >
-          EXPORT CSV
-        </Button>
-        <Button
-          className="p-button-success"
+          style={printButtonStyle}
+        />
+        <Button label="Email Invoices"
           onClick={(e) => {
             confirm();
           }}
-        >
-          Email Invoices
-        </Button>
+          style={printButtonStyle}
+        />
       </BasicContainer>
     </React.Fragment>
   );

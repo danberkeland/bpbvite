@@ -4,16 +4,16 @@ import styled from "styled-components";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { ScrollPanel } from "primereact/scrollpanel";
+// import { ScrollPanel } from "primereact/scrollpanel";
 import { sortAtoZDataByIndex } from "../../../../helpers/sortDataHelpers";
 
-const ListWrapper = styled.div`
-  font-family: "Montserrat", sans-serif;
-  margin: auto;
-  width: 100%;
-  height: 100vh;
-  background: #ffffff;
-`;
+// const ListWrapper = styled.div`
+//   font-family: "Montserrat", sans-serif;
+//   /* margin: auto; */
+//   width: 100%;
+//   height: 100vh;
+//   /* background: #ffffff; */
+// `;
 
 const RouteList = ({ orderList, setRouteList, setRoute, routeList, database }) => {
   const [products, customers, routes, standing, orders] = database;
@@ -46,19 +46,25 @@ const RouteList = ({ orderList, setRouteList, setRoute, routeList, database }) =
   };
 
   return (
-    <ListWrapper>
-      <ScrollPanel style={{ width: "100%", height: "100vh" }}>
+    // <ListWrapper>
+    //   <ScrollPanel>
         <DataTable
           value={routeList}
           className="p-datatable-striped"
           selectionMode="single"
           onSelectionChange={handleSelection}
           dataKey="id"
+          scrollable
+          scrollHeight="60rem"
+          style={{
+            margin: "1rem 1rem 1rem 0",
+            minWidth: "12rem"
+          }}
         >
           <Column field="route" header="Routes"></Column>
         </DataTable>
-      </ScrollPanel>
-    </ListWrapper>
+    //   </ScrollPanel>
+    // </ListWrapper>
   );
 };
 

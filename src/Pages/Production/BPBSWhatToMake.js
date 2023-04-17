@@ -273,20 +273,20 @@ function BPBSWhatToMake() {
     doc.save(`WhatToMake${delivDate}.pdf`);
   };
 
-  const header = (
-    <ButtonContainer>
-      <ButtonWrapper>
-        <Button
-          type="button"
-          onClick={(e) => checkDateAlert(delivDate)}
-          className="p-button-success"
-          data-pr-tooltip="PDF"
-        >
-          Print What To Make List
-        </Button>
-      </ButtonWrapper>
-    </ButtonContainer>
-  );
+  // const header = (
+  //   <ButtonContainer>
+  //     <ButtonWrapper>
+  //       <Button
+  //         type="button"
+  //         onClick={(e) => checkDateAlert(delivDate)}
+  //         className="p-button-success"
+  //         data-pr-tooltip="PDF"
+  //       >
+  //         Print What To Make List
+  //       </Button>
+  //     </ButtonWrapper>
+  //   </ButtonContainer>
+  // );
 
   const handlePockChange = async (e2, e) => {
     let prodsToMod = clonedeep(products);
@@ -345,7 +345,17 @@ function BPBSWhatToMake() {
       <WholeBox>
         <h1>BPBS What To Make {convertDatetoBPBDate(delivDate)}</h1>
         <ToolBar delivDate={delivDate} setDelivDate={setDelivDate} />
-        <div>{header}</div>
+
+        <Button
+          type="button"
+          onClick={(e) => checkDateAlert(delivDate)}
+          //className="p-button-success"
+          data-pr-tooltip="PDF"
+          style={{marginBlock: "1rem", width: "fit-content"}}
+        >
+          Print What To Make List
+        </Button>
+
 
         <React.Fragment>
           <h1>What To Prep {convertDatetoBPBDate(delivDate)}</h1>

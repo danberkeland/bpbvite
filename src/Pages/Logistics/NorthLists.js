@@ -25,13 +25,13 @@ const WholeBox = styled.div`
   padding: 0 0 100px 0;
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  width: 100%;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-content: flex-start;
-`;
+// const ButtonContainer = styled.div`
+//   display: flex;
+//   width: 100%;
+//   flex-direction: row;
+//   justify-content: flex-start;
+//   align-content: flex-start;
+// `;
 
 const ButtonWrapper = styled.div`
   font-family: "Montserrat", sans-serif;
@@ -40,9 +40,16 @@ const ButtonWrapper = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-content: left;
+  gap: 1rem;
 
-  background: #ffffff;
+  //background: #ffffff;
 `;
+
+const printButtonStyle = {
+  backgroundColor: "hsl(97.26, 51.67%, 40%)",
+  border: "solid 1px hsl(97.26, 51.67%, 35%)",
+  fontSize: "1.25rem",
+}
 
 const compose = new ComposeNorthList();
 
@@ -350,34 +357,25 @@ function NorthList() {
     doc.save(`LongDriverSouth${delivDate}.pdf`);
   };
 
-  const header = (
-    <ButtonContainer>
-      <ButtonWrapper>
-        <Button
-          type="button"
-          onClick={exportNorthListPdf}
-          className="p-button-success"
-          data-pr-tooltip="PDF"
-        >
-          Print Long Driver North List
-        </Button>
-        <Button
-          type="button"
-          onClick={exportSouthListPdf}
-          className="p-button-success"
-          data-pr-tooltip="PDF"
-        >
-          Print Long Driver South List
-        </Button>
-      </ButtonWrapper>
-    </ButtonContainer>
-  );
-
   return (
     <React.Fragment>
       <WholeBox>
         <h1>LONG DRIVER</h1>
-        <div>{header}</div>
+        <ButtonWrapper>
+          <Button label="Print Long Driver North List"
+            type="button"
+            onClick={exportNorthListPdf}
+            data-pr-tooltip="PDF"
+            style={printButtonStyle}
+          />
+          <Button label="Print Long Driver South List"
+            type="button"
+            onClick={exportSouthListPdf}
+            data-pr-tooltip="PDF"
+            style={printButtonStyle}
+          />
+        </ButtonWrapper>
+
         <h1>AM North Run {convertDatetoBPBDate(delivDate)}</h1>
         <h3>Driver Notes</h3>
         <DataTable value={notes} className="p-datatable-sm">

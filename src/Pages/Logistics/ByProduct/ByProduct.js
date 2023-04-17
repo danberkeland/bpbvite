@@ -25,7 +25,7 @@ const DescripWrapper = styled.div`
   justify-items: start;
   align-content: flex-start;
 
-  background: #ffffff;
+  //background: #ffffff;
 `;
 
 const compose = new ComposeProductGrid();

@@ -24,24 +24,13 @@ const WholeBox = styled.div`
   padding: 0 0 100px 0;
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  width: 100%;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-content: flex-start;
-`;
-
-const ButtonWrapper = styled.div`
-  font-family: "Montserrat", sans-serif;
-  display: flex;
-  width: 40%;
-  flex-direction: row;
-  justify-content: space-between;
-  align-content: center;
-
-  background: #ffffff;
-`;
+const printButtonStyle = {
+  width: "fit-content",
+  marginBlock: "1rem",
+  backgroundColor: "hsl(97.26, 51.67%, 40%)",
+  border: "solid 1px hsl(97.26, 51.67%, 35%)",
+  fontSize: "1.25rem",
+}
 
 const compose = new ComposeSpecialOrders();
 
@@ -176,42 +165,20 @@ function SpecialOrders() {
     doc.save(`BPBSSpecial${delivDate}.pdf`);
   };
 
-  const headerNorth = (
-    <ButtonContainer>
-      <ButtonWrapper>
-        <Button
-          type="button"
-          onClick={exportListPdfNorth}
-          className="p-button-success"
-          data-pr-tooltip="PDF"
-        >
-          Print BPBN Special Orders List
-        </Button>
-      </ButtonWrapper>
-    </ButtonContainer>
-  );
-
-  const headerSouth = (
-    <ButtonContainer>
-      <ButtonWrapper>
-        <Button
-          type="button"
-          onClick={exportListPdfSouth}
-          className="p-button-success"
-          data-pr-tooltip="PDF"
-        >
-          Print BPBS Special Orders List
-        </Button>
-      </ButtonWrapper>
-    </ButtonContainer>
-  );
-
   return (
     <React.Fragment>
+
       <WholeBox>
         <h1>Carlton Special Orders for {convertDatetoBPBDate(delivDate)}</h1>
         <ToolBar delivDate={delivDate} setDelivDate={setDelivDate} />
-        <div>{headerNorth}</div>
+        <Button label ="Print BPBN Special Orders List"
+          type="button"
+          onClick={exportListPdfNorth}
+          data-pr-tooltip="PDF"
+          style={printButtonStyle}
+        />
+
+
         <DataTable
           className="p-datatable-gridlines p-datatable-sm p-datatable-striped"
           value={BPBNSpecialOrders}
@@ -219,10 +186,17 @@ function SpecialOrders() {
           {dynamicColumnsNorth}
         </DataTable>
       </WholeBox>
+
       <WholeBox>
         <h1>Prado Special Orders for {convertDatetoBPBDate(delivDate)}</h1>
         <ToolBar delivDate={delivDate} setDelivDate={setDelivDate} />
-        <div>{headerSouth}</div>
+        <Button label="Print BPBS Special Orders List"
+          type="button"
+          onClick={exportListPdfSouth}
+          data-pr-tooltip="PDF"
+          style={printButtonStyle}
+        />
+
         <DataTable
           className="p-datatable-gridlines p-datatable-sm p-datatable-striped"
           value={BPBSSpecialOrders}
@@ -230,6 +204,7 @@ function SpecialOrders() {
           {dynamicColumnsSouth}
         </DataTable>
       </WholeBox>
+
     </React.Fragment>
   );
 }

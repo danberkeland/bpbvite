@@ -46,19 +46,19 @@ const ThreeColumnGrid = styled.div`
   padding: 5px;
 `;
 
-const ButtonStyle = styled.button`
-  border: 0;
-  background-color: #4CAF50;
+const ButtonStyle = styled.button`  /* background-color: #4CAF50; */
+  background-color: hsl(97.26, 51.67%, 40%);
   color: white;
   font-size: 20px;
+  border: solid 1px hsl(97.26, 51.67%, 35%);
   border-radius: 15px;
-  box-shadow: 0 9px #999;
+  box-shadow: 3px 6px 3px hsla(97.26, 10%, 52.94%, .8);
   &:hover {
-    background-color: #3E8E41;
+    background-color: hsl(97.26, 51.67%, 35%);
   }
   &:active {
     background-color: #3E8E41;
-    box-shadow: 0 5px #666;
+    box-shadow: 1px 1px 3px hsla(97.26, 10%, 52.94%, .8);
     transform: translateY(4px);
   }
   `
@@ -501,7 +501,8 @@ function BPBSMixPocket() {
         key={e.weight}
         style={{
           width: "50px",
-          backgroundColor: "#E3F2FD",
+          //backgroundColor: "#E3F2FD",
+          color: "hsl(37, 100%, 5%)",
           fontWeight: "bold",
         }}
         placeholder="0"
@@ -533,7 +534,8 @@ function BPBSMixPocket() {
         key={e.weight+"2"}
         style={{
           width: "50px",
-          backgroundColor: "#E3F2FD",
+          //backgroundColor: "#E3F2FD",
+          color: "hsl(37, 100%, 5%)",
           fontWeight: "bold",
         }}
         placeholder ={e.late}
@@ -614,6 +616,7 @@ function BPBSMixPocket() {
                       placeholder={shortWeight}
                       onChange={handleShortChange}
                       onBlur={handleShortBlur}
+                      style={{color: "hsl(37, 100%, 5%)"}}
                     />
                     <span className="p-inputgroup-addon">lb.</span>
                   </div>
@@ -627,6 +630,7 @@ function BPBSMixPocket() {
                       placeholder={dough.oldDough}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      style={{color: "hsl(37, 100%, 5%)"}}
                     />
                     <span className="p-inputgroup-addon">lb.</span>
                   </div>
@@ -640,6 +644,7 @@ function BPBSMixPocket() {
                       placeholder={dough.buffer}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      style={{color: "hsl(37, 100%, 5%)"}}
                     />
                     <span className="p-inputgroup-addon">lb.</span>
                   </div>

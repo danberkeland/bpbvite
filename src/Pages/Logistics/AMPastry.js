@@ -23,24 +23,18 @@ const WholeBox = styled.div`
   padding: 0 0 100px 0;
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  width: 100%;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-content: flex-start;
-`;
-
 const ButtonWrapper = styled.div`
   font-family: "Montserrat", sans-serif;
   display: flex;
-  width: 60%;
   flex-direction: row;
-  justify-content: space-between;
-  align-content: left;
-
-  background: #ffffff;
+  gap: 1rem;
 `;
+
+const printButtonStyle = {
+  backgroundColor: "hsl(97.26, 51.67%, 40%)",
+  border: "solid 1px hsl(97.26, 51.67%, 35%)",
+  fontSize: "1.25rem",
+}
 
 const compose = new ComposeAMPastry();
 
@@ -226,13 +220,14 @@ function AMPastry() {
   };
 
   const header = (
-    <ButtonContainer>
+
       <ButtonWrapper>
         <Button
           type="button"
           onClick={exportAMPastryStickers}
           className="p-button-success"
           data-pr-tooltip="PDF"
+          style={printButtonStyle}
         >
           Print AM Pastry Stickers
         </Button>
@@ -241,11 +236,12 @@ function AMPastry() {
           onClick={exportAMPastryPDF}
           className="p-button-success"
           data-pr-tooltip="PDF"
+          style={printButtonStyle}
         >
           Print AM Pastry List
         </Button>
       </ButtonWrapper>
-    </ButtonContainer>
+
   );
 
   return (

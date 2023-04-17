@@ -174,7 +174,7 @@ function EODCounts({ loc }) {
         id={e.id}
         style={{
           width: "50px",
-          backgroundColor: "#E3F2FD",
+          // backgroundColor: "#E3F2FD",
           fontWeight: "bold",
         }}
         placeholder={e.currentStock}
@@ -222,7 +222,7 @@ function EODCounts({ loc }) {
         id={e.weight}
         style={{
           width: "50px",
-          backgroundColor: "#E3F2FD",
+          //backgroundColor: "#E3F2FD",
           fontWeight: "bold",
         }}
         placeholder={e.currentStock}

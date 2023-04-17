@@ -30,24 +30,21 @@ import { useSettingsStore } from "../../../../Contexts/SettingsZustand";
 
 const axios = require("axios").default;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  width: 100%;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-content: flex-end;
-`;
-
 const ButtonWrapper = styled.div`
   font-family: "Montserrat", sans-serif;
   display: flex;
-  width: 40%;
+  min-width: 40%;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-content: center;
-
-  background: #ffffff;
+  gap: .5rem;
 `;
+
+const printButtonStyle = {
+  backgroundColor: "hsl(97.26, 51.67%, 40%)",
+  border: "solid 1px hsl(97.26, 51.67%, 35%)",
+  fontSize: "1.25rem",
+}
 
 let today = todayPlus()[0];
 
@@ -355,51 +352,46 @@ const RouteGrid = ({ route, orderList, altPricing, database, delivDate }) => {
   };
 
   const header = (
-    <ButtonContainer>
+    <>
       <Toast ref={toast} />
       <ButtonWrapper>
-        <Button
+        <Button label="Current Route"
           type="button"
           onClick={(e) => checkDateAlert("current", delivDate)}
           className="p-button-success"
-          data-pr-tooltip="PDF"
-        >
-          Current Route
-        </Button>
-        <Button
+          style={printButtonStyle}
+        />
+        <Button label="Print All Routes"
           type="button"
           onClick={(e) => checkDateAlert("allRoutes", delivDate)}
           className="p-button-success"
           data-pr-tooltip="PDF"
+          style={printButtonStyle}
         >
-          Print All Routes
         </Button>
-        <Button
+        <Button label="Driver 1 (Long Driver)"
           type="button"
           onClick={(e) => checkDateAlert("LongDriver", delivDate)}
           className="p-button-success"
           data-pr-tooltip="PDF"
-        >
-          Driver 1 (Long Driver)
-        </Button>
-        <Button
+          style={printButtonStyle}
+        />
+        <Button label="Driver 2 (Pastry)"
           type="button"
           onClick={(e) => checkDateAlert("AMPastry", delivDate)}
           className="p-button-success"
           data-pr-tooltip="PDF"
-        >
-          Driver 2 (Pastry)
-        </Button>
-        <Button
+          style={printButtonStyle}
+        />
+        <Button label="Driver 3 (South Driver)"
           type="button"
           onClick={(e) => checkDateAlert("AMSouth", delivDate)}
           className="p-button-success"
           data-pr-tooltip="PDF"
-        >
-          Driver 3 (South Driver)
-        </Button>
+          style={printButtonStyle}
+        />
       </ButtonWrapper>
-    </ButtonContainer>
+    </>
   );
 
   const onRowReorder = (e) => {

@@ -23,24 +23,20 @@ const WholeBox = styled.div`
   padding: 0 0 100px 0;
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  width: 100%;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-content: flex-start;
-`;
-
 const ButtonWrapper = styled.div`
   font-family: "Montserrat", sans-serif;
   display: flex;
   width: 40%;
   flex-direction: row;
-  justify-content: space-between;
   align-content: center;
 
-  background: #ffffff;
 `;
+
+const printButtonStyle = {
+  backgroundColor: "hsl(97.26, 51.67%, 40%)",
+  border: "solid 1px hsl(97.26, 51.67%, 35%)",
+  fontSize: "1.25rem",
+}
 
 const compose = new ComposeRetailBags();
 
@@ -112,27 +108,21 @@ function RetailBags() {
     doc.save(`RetailBags${delivDate}.pdf`);
   };
 
-  const header = (
-    <ButtonContainer>
-      <ButtonWrapper>
-        <Button
-          type="button"
-          onClick={exportListPdf}
-          className="p-button-success"
-          data-pr-tooltip="PDF"
-        >
-          Print Retail Bag List
-        </Button>
-      </ButtonWrapper>
-    </ButtonContainer>
-  );
-
   return (
     <React.Fragment>
       <WholeBox>
         <h1>Retail Bags for {convertDatetoBPBDate(delivDate)}</h1>
-
-        <div>{header}</div>
+        <ButtonWrapper>
+          <Button
+            type="button"
+            onClick={exportListPdf}
+            className="p-button-success"
+            data-pr-tooltip="PDF"
+            style={printButtonStyle}
+          >
+            Print Retail Bag List
+          </Button>
+        </ButtonWrapper>
 
         <h2>Prep Date: {convertDatetoBPBDate(tomorrow)}</h2>
         <DataTable value={retailBags} className="p-datatable-sm">

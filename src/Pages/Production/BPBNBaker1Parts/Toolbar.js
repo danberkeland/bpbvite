@@ -14,7 +14,7 @@ const ToolBar = ({ delivDate, setDelivDate }) => {
   return (
     <React.Fragment>
       <div className="p-field p-col-12 p-md-4"
-        style={{display: "flex", flexWrap: "wrap", alignItems: "center", gap: ".5rem"}}
+        style={{display: "flex", flexWrap: "wrap", alignItems: "center", gap: "1rem"}}
       >
         <label htmlFor="delivDate">Pick Delivery Date: </label>
         <Calendar

@@ -16,7 +16,7 @@ const ToolBar = ({ delivDate, setDelivDate }) => {
   return (
     <React.Fragment>
       <div className="p-field p-col-12 p-md-4">
-        <label htmlFor="delivDate">Pick Delivery Date: </label>
+        <label htmlFor="delivDate" style={{paddingInline: ".5rem"}}>Pick Delivery Date:</label>
         <Calendar
           id="delivDate"
           placeholder={convertDatetoBPBDate(delivDate)}

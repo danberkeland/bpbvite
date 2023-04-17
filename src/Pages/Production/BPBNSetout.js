@@ -25,34 +25,6 @@ import { API, graphqlOperation } from "aws-amplify";
 
 import { WholeBox, ButtonContainer, ButtonWrapper, h1Style, h2Style } from "./_styles";
 
-// import styled from "styled-components";
-
-// const WholeBox = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   width: 50%;
-//   margin: auto;
-//   padding: 0 0 100px 0;
-// `;
-
-// const ButtonContainer = styled.div`
-//   display: flex;
-//   width: 100%;
-//   flex-direction: row;
-//   justify-content: flex-start;
-//   align-content: flex-start;
-// `;
-
-// const ButtonWrapper = styled.div`
-//   font-family: "Montserrat", sans-serif;
-//   display: flex;
-//   width: 60%;
-//   flex-direction: row;
-//   justify-content: space-between;
-//   align-content: left;
-
-//   //background: #ffffff;
-// `;
 
 let today = todayPlus()[0];
 
@@ -224,32 +196,22 @@ function BPBNSetOut({ loc }) {
     doc.save(`SetOut${loc}${delivDate}.pdf`);
   };
 
-  const header = (
-    <ButtonContainer>
-      <ButtonWrapper>
-        <Button
-          type="button"
-          onClick={(e) => checkDateAlert(delivDate)}
-          // className="p-button-success"
-          data-pr-tooltip="PDF"
-        >
-          Print {loc} Prep List
-        </Button>
-      </ButtonWrapper>
-    </ButtonContainer>
-  );
-
   return (
     <React.Fragment>
       <ConfirmDialog />
       <WholeBox>
-        <h1 style={h1Style}>
+        <h1>
           {loc} PASTRY PREP {convertDatetoBPBDate(delivDate)}
         </h1>
         <ToolBar delivDate={delivDate} setDelivDate={setDelivDate} />
-        <div>{header}</div>
+        <Button type="button"
+          label={`Print ${loc} Prep List`}
+          onClick={(e) => checkDateAlert(delivDate)}
+          data-pr-tooltip="PDF"
+          style={{width: "fit-content", marginBlock: "1rem"}}
+        />
 
-        <h2 style={h2Style}>Set Out</h2>
+        <h2>Set Out</h2>
         <DataTable value={setOut} className="p-datatable-sm">
           <Column field="prodNick" header="Product"></Column>
           <Column field="qty" header="Qty"></Column>
@@ -257,7 +219,7 @@ function BPBNSetOut({ loc }) {
           <Column field="pansextra" header="+"></Column>
         </DataTable>
 
-        <h2 style={h2Style}>Pastry Prep</h2>
+        <h2>Pastry Prep</h2>
         <DataTable value={pastryPrep} className="p-datatable-sm">
           <Column field="prodNick" header="Product"></Column>
           <Column field="qty" header="Qty"></Column>

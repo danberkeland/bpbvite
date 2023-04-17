@@ -14,7 +14,7 @@ import ComposeProductGrid from "./Parts/utils/composeProductGrid";
 const MainWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 5fr;
-  height: 100vh;
+  //height: 100vh;
 `;
 
 const DescripWrapper = styled.div`
@@ -26,7 +26,7 @@ const DescripWrapper = styled.div`
   justify-items: start;
   align-content: flex-start;
 
-  background: #ffffff;
+  //background: #ffffff;
 `;
 
 const compose = new ComposeProductGrid();
@@ -69,7 +69,14 @@ function ByRoute() {
           database={database}
         />}
         <DescripWrapper>
-          <Toolbar delivDate={delivDate} setDelivDate={setDelivDate} />
+          <div style={{
+            width: "fit-content",
+            borderRadius: "3px",
+            marginBlock: ".5rem",
+            backgroundColor: "hsl(37, 100%, 80%)",
+          }}>
+            <Toolbar delivDate={delivDate} setDelivDate={setDelivDate} />
+          </div>
           {database && <RouteGrid
             route={route}
             orderList={orderList}

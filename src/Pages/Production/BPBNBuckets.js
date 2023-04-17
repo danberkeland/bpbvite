@@ -42,22 +42,22 @@ const ThreeColumnGrid = styled.div`
   padding: 5px;
 `;
 
-const ButtonStyle = styled.button`
-  border: 0;
-  background-color: #4caf50;
+const ButtonStyle = styled.button`  /* background-color: #4CAF50; */
+  background-color: hsl(97.26, 51.67%, 40%);
   color: white;
   font-size: 20px;
+  border: solid 1px hsl(97.26, 51.67%, 35%);
   border-radius: 15px;
-  box-shadow: 0 9px #999;
+  box-shadow: 3px 6px 3px hsla(97.26, 10%, 52.94%, .8);
   &:hover {
-    background-color: #3e8e41;
+    background-color: hsl(97.26, 51.67%, 35%);
   }
   &:active {
-    background-color: #3e8e41;
-    box-shadow: 0 5px #666;
+    background-color: #3E8E41;
+    box-shadow: 1px 1px 3px hsla(97.26, 10%, 52.94%, .8);
     transform: translateY(4px);
   }
-`;
+  `
 
 const addUp = (acc, val) => {
   return acc + val;
@@ -486,7 +486,6 @@ function BPBNBuckets({ loc }) {
               <ButtonStyle
                 id="printBagStickers"
                 onClick={handleBagClick}
-                label="Print Bag Sticker Set"
                 className="p-button-rounded p-button-lg"
                 icon="pi pi-print"
               >
