@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 
 import styled from "styled-components";
 //import swal from "@sweetalert/with-react";
@@ -13,7 +13,9 @@ import {
 import { Button } from "primereact/button";
 
 import { API, graphqlOperation } from "aws-amplify";
-import { confirmDialog } from "primereact/confirmdialog";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { Toast } from "primereact/toast";
+import { InputText } from "primereact/inputtext";
 
 const ButtonBox = styled.div`
   display: flex;
@@ -25,24 +27,23 @@ const ButtonBox = styled.div`
 `;
 
 const Buttons = ({ selectedRoute, setSelectedRoute }) => {
+  const [value, setValue] = useState();
+  const toast = useRef(null);
+
   const handleAddRoute = () => {
-    let routeName;
-    /*
-    swal("Enter Route Name:", {
-      content: "input",
-    }).then((value) => {
-      routeName = value;
-      const addDetails = {
-        routeName: routeName,
-        routeStart: 0,
-        routeTime: 0,
-        RouteDepart: "",
-        RouteArrive: "",
-        RouteServe: [],
-        RouteSched: [],
-      };
-      createRte(addDetails, routeName);
-    });*/
+    let zoneName;
+
+    zoneName = value;
+    const addDetails = {
+      routeNick: zoneName,
+      routeName: zoneName,
+      routeStart: 0,
+      routeTime: 0,
+      RouteDepart: "",
+      RouteArrive: "",
+      RouteSched: [],
+    };
+    createRte(addDetails);
   };
 
   const createRte = async (addDetails) => {
@@ -58,7 +59,7 @@ const Buttons = ({ selectedRoute, setSelectedRoute }) => {
 
   const updateRte = async () => {
     const updateDetails = {
-      id: selectedRoute["id"],
+      routeNick: selectedRoute["routeNick"],
       routeName: selectedRoute["routeName"],
       routeStart: selectedRoute["routeStart"],
       routeTime: selectedRoute["routeTime"],
@@ -69,19 +70,128 @@ const Buttons = ({ selectedRoute, setSelectedRoute }) => {
       _version: selectedRoute["_version"],
     };
 
+    updateRteBatch(
+      selectedRoute["routeName"],
+      updateDetails,
+      selectedRoute["RouteServe"]
+    );
+  };
+
+  const updateRteBatch = async (routeNick, updateDetails, routeServeData) => {
     try {
-      const routeData = await API.graphql(
-        graphqlOperation(updateRoute, { input: { ...updateDetails } })
+      const mutations = [];
+
+      // Remove the RouteServe attribute from the updateDetails object
+      const { RouteServe, ...updateDetailsWithoutRouteServe } = updateDetails;
+      const {
+        routeNick,
+        routeName,
+        routeStart,
+        routeTime,
+        RouteDepart,
+        RouteArrive,
+        RouteSched,
+        _version,
+      } = updateDetails;
+
+      // Add a mutation for updating the item in Route table
+      const updateRouteMutation = graphqlOperation(
+        `
+        mutation updateRoute(
+          $routeNick: String!
+          $routeName: String,
+            $routeStart: Float,
+            $routeTime: Float,
+            $RouteDepart: String,
+            $RouteArrive: String,
+            $RouteSched: [String]
+          ) {
+          updateRoute(input: { 
+            routeNick: $routeNick, 
+            routeName: $routeName,
+            routeStart: $routeStart,
+            routeTime: $routeTime,
+            RouteDepart: $RouteDepart,
+            RouteArrive: $RouteArrive,
+            RouteSched: $RouteSched
+           }) {
+            routeNick
+            routeName
+            routeStart
+            routeTime
+            RouteDepart
+            RouteArrive
+            RouteSched
+          }
+        }
+      `,
+        {
+          routeNick,
+          routeName,
+          routeStart,
+          routeTime,
+          RouteDepart,
+          RouteArrive,
+          RouteSched,
+        }
       );
-      /*
-      swal({
-        text: `${routeData.data.updateRoute.routeName} has been updated.`,
-        icon: "success",
-        buttons: false,
-        timer: 2000,
-      });*/
+      mutations.push(updateRouteMutation);
+
+      // Get all items from ZoneRoute table that are associated with the item we are updating in Route table
+      const queryZoneRouteItems = graphqlOperation(
+        `
+        query listZoneRoutes($routeNick: String!) {
+          listZoneRoutes(filter: { routeNick: { eq: $routeNick } }) {
+            items {
+              id
+            }
+          }
+        }
+      `,
+        { routeNick }
+      );
+      const queryZoneRouteResult = await API.graphql(queryZoneRouteItems);
+
+      // Loop through all associated items in ZoneRoute table and add mutations for deleting them
+      queryZoneRouteResult.data.listZoneRoutes.items.forEach((item) => {
+        const deleteZoneRouteMutation = graphqlOperation(
+          `
+          mutation deleteZoneRoute($id: ID!) {
+            deleteZoneRoute(input: { id: $id }) {
+              id
+            }
+          }
+        `,
+          { id: item.id }
+        );
+        mutations.push(deleteZoneRouteMutation);
+      });
+
+      // Loop through all items in the RouteServe array and add mutations for creating them in ZoneRoute table
+      routeServeData.forEach((data) => {
+        
+        const createZoneRouteMutation = graphqlOperation(
+          `
+          mutation createZoneRoute($data: String, $routeNick: String!) {
+            createZoneRoute(input: { zoneNick: $data, routeNick: $routeNick }) {
+              id
+              zoneNick
+              routeNick
+            }
+          }
+        `,
+          { data, routeNick }
+        );
+        mutations.push(createZoneRouteMutation);
+      });
+
+      // Execute the mutations
+      await Promise.all(mutations.map((mutation) => API.graphql(mutation)));
+
+      return true;
     } catch (error) {
-      console.log("error on fetching Route List", error);
+      console.log(error);
+      return false;
     }
   };
 
@@ -149,38 +259,43 @@ const Buttons = ({ selectedRoute, setSelectedRoute }) => {
   };
 
   return (
-    <ButtonBox>
-      <Button
-        label="Add a Route"
-        icon="pi pi-plus"
-        onClick={handleAddRoute}
-        className={"p-button-raised p-button-rounded"}
-      />
-      <br />
-      {selectedRoute && (
-        <React.Fragment>
-          <Button
-            label="Update Route"
-            icon="pi pi-user-edit"
-            onClick={updateRte}
-            className={"p-button-raised p-button-rounded p-button-success"}
-          />
-          <br />
-        </React.Fragment>
-      )}
-      {selectedRoute && (
-        <React.Fragment>
-          <Button
-            label="Delete Route"
-            icon="pi pi-user-minus"
-            onClick={deleteRouteWarn}
-            className={"p-button-raised p-button-rounded p-button-warning"}
-          />
-          <br />
-          <br />
-        </React.Fragment>
-      )}
-    </ButtonBox>
+    <React.Fragment>
+      <Toast ref={toast} />
+      <ConfirmDialog />
+      <ButtonBox>
+        <InputText value={value} onChange={(e) => setValue(e.target.value)} />
+        <Button
+          label="Add a Route"
+          icon="pi pi-plus"
+          onClick={handleAddRoute}
+          className={"p-button-raised p-button-rounded"}
+        />
+        <br />
+        {selectedRoute && (
+          <React.Fragment>
+            <Button
+              label="Update Route"
+              icon="pi pi-user-edit"
+              onClick={updateRte}
+              className={"p-button-raised p-button-rounded p-button-success"}
+            />
+            <br />
+          </React.Fragment>
+        )}
+        {selectedRoute && (
+          <React.Fragment>
+            <Button
+              label="Delete Route"
+              icon="pi pi-user-minus"
+              onClick={deleteRouteWarn}
+              className={"p-button-raised p-button-rounded p-button-warning"}
+            />
+            <br />
+            <br />
+          </React.Fragment>
+        )}
+      </ButtonBox>
+    </React.Fragment>
   );
 };
 
