@@ -5,23 +5,16 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 
-import { updateProduct } from "../../graphql/mutations";
-
-import { API, graphqlOperation } from "aws-amplify";
-
-import TimeAgo from "timeago-react"; // var TimeAgo = require('timeago-react');
-import us from "timeago.js/lib/lang/en_US";
-
-import swal from "sweetalert";
+import TimeAgo from "timeago-react"
+import us from "timeago.js/lib/lang/en_US"
 
 import styled from "styled-components";
 import { useProductListFull } from "../../data/productData";
 import dynamicSort from "../../functions/dynamicSort";
 
-import { DateTime } from "luxon";
-import { cloneDeep } from "lodash";
 import gqlFetcher from "../../data/fetchers";
 
+import swal from "sweetalert";
 
 const updateProductQuery = /* GraphQL */ `
   mutation UpdateProduct(
@@ -55,11 +48,6 @@ const WholeBox = styled.div`
   padding: 0 0 100px 0;
 `;
 
-const IngDetails = styled.div`
-  font-size: 0.8em;
-`;
-
-
 // **************************************************************
 // Currently configured for Prado ONLY -- input 'loc' is not used
 // **************************************************************
@@ -79,7 +67,7 @@ function EODCounts({ loc }) {
 
     const pocketsToMap = products.filter(p => 
       p.bakedWhere.includes(PROD_LOCATION) && p.doughNick === "French"
-    ).sort(dynamicSort("prodNick")).sort(dynamicSort("weight"))
+    ).sort(dynamicSort("prodName")).sort(dynamicSort("weight"))
     const pocketItems = [...new Set(pocketsToMap.map(p => p.weight))].map(weight => 
       pocketsToMap.find(product => product.weight === weight)
     )
