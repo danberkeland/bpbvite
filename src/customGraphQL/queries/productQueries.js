@@ -113,7 +113,26 @@ export const listProductsFull = /* GraphQL */ `
         batchSize
         defaultInclude
         leadTime
+        daysAvailable
         qbID
+        currentStock
+        whoCountedLast
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
         createdAt
         updatedAt
         inventoryProductId
