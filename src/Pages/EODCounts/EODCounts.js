@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useMemo } from "react";
 
 import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
@@ -15,9 +15,26 @@ import us from "timeago.js/lib/lang/en_US";
 import swal from "sweetalert";
 
 import styled from "styled-components";
-import { sortAtoZDataByIndex } from "../../helpers/sortDataHelpers";
 import { useProductListFull } from "../../data/productData";
+import dynamicSort from "../../functions/dynamicSort";
 
+import { DateTime } from "luxon";
+import { cloneDeep } from "lodash";
+import gqlFetcher from "../../data/fetchers";
+
+
+const updateProductQuery = /* GraphQL */ `
+  mutation UpdateProduct(
+    $input: UpdateProductInput!
+  ) {
+    updateProduct(input: $input) {
+      prodNick
+      currentStock
+      updatedAt
+      whoCountedLast
+    }
+  }
+`;
 
 const BasicContainer = styled.div`
   display: flex;
@@ -41,78 +58,54 @@ const IngDetails = styled.div`
   font-size: 0.8em;
 `;
 
-const clonedeep = require("lodash.clonedeep");
 
-const { DateTime } = require("luxon");
 
 function EODCounts({ loc }) {
   
-    const {data: products, errors: productListErrors} = useProductListFull(true);
+  const { data:products, errors:productListErrors, mutate:mutateProducts } = useProductListFull(true);
+  console.log("products", products)
     
   const [signedIn, setSignedIn] = useState("null");
-  const [eodProds, setEODProds] = useState();
-  const [pocketsToMap, setPocketsToMap] = useState();
-  const [shelfBag, setShelfBag] = useState(false);
-  const [shelfEa, setShelfEa] = useState(false);
-  const [freezerBag, setFreezerBag] = useState(false);
-  const [freezerEa, setFreezerEa] = useState(false);
-  const [pocketCount, setPocketCount] = useState(true);
+  // const [pocketsToMap, setPocketsToMap] = useState();
+  
+  // const [eodProds, setEODProds] = useState();
+  // useEffect(() => {
+  //   try {
+  //     let prodsToMap = products.filter(
+  //       (prod) =>
+  //         (prod.bakedWhere.includes("Prado")) &&
+  //         prod.isEOD === true
+  //     );
+  //     console.log('prodsToMap', prodsToMap)
+  //     setEODProds(prodsToMap);
+  //   } catch {}
+  // }, [products]);
 
-  useEffect(() => {
-    try {
-      let prodsToMap = products.filter(
-        (prod) =>
-          (prod.bakedWhere.includes("Prado")) &&
-          prod.isEOD === true
-      );
-      console.log('prodsToMap', prodsToMap)
-      setEODProds(prodsToMap);
-    } catch {}
-  }, [products]);
+  const prepData = () => {
+    if (!products) return []
 
-  useEffect(() => {
-    try {
-      let pocketsToMap = products.filter(
-        (prod) => prod.bakedWhere[0] === loc && prod.doughType === "French"
-      );
-      pocketsToMap = sortAtoZDataByIndex(pocketsToMap, "weight");
+    console.log("prep products", products)
 
-      setPocketsToMap(pocketsToMap);
-    } catch {}
-  }, [products]);
+    const eodProds = products?.filter(p => 
+      p.bakedWhere.includes("Prado") && p.isEOD === true
+    )
 
-  useEffect(() => {
-    if (eodProds) {
-      if (
-        eodProds.filter(
-          (prods) => prods.freezerThaw !== true && Number(prods.packSize) > 1
-        ).length > 0
-      ) {
-        setShelfBag(true);
-      }
-      if (
-        eodProds.filter(
-          (prods) => prods.freezerThaw !== true && Number(prods.packSize) === 1
-        ).length > 0
-      ) {
-        setShelfEa(true);
-      }
-      if (
-        eodProds.filter(
-          (prods) => prods.freezerThaw !== false && Number(prods.packSize) > 1
-        ).length > 0
-      ) {
-        setFreezerBag(true);
-      }
-      if (
-        eodProds.filter(
-          (prods) => prods.freezerThaw !== false && Number(prods.packSize) === 1
-        ).length > 0
-      ) {
-        setFreezerEa(true);
-      }
-    }
-  }, [eodProds]);
+    const pocketsToMap = products.filter(p => 
+      p.bakedWhere.includes("Prado") && p.doughNick === "French"
+    ).sort(dynamicSort("prodNick")).sort(dynamicSort("weight"))
+
+    const pocketItems = [...new Set(pocketsToMap.map(p => p.weight))].map(weight => 
+      pocketsToMap.find(product => product.weight === weight)
+    )
+
+    return [eodProds, pocketItems]
+  }
+  
+  const [eodProds, pocketItems] = useMemo(prepData, [products])
+  console.log("eodProds", eodProds)
+  console.log("pocketItems", pocketItems)
+
+
 
   const updateDBattr = async (id, attr, val) => {
     let addDetails = {
@@ -150,7 +143,7 @@ function EODCounts({ loc }) {
 
   const handleChange = (value) => {
     if (value.code === "Enter") {
-      let itemToUpdate = clonedeep(products);
+      let itemToUpdate = cloneDeep(products);
       updateItem(value, itemToUpdate);
       document.getElementById(value.target.id).value = "";
 
@@ -159,7 +152,7 @@ function EODCounts({ loc }) {
   };
 
   const handleBlur = (value) => {
-    let itemToUpdate = clonedeep(products);
+    let itemToUpdate = cloneDeep(products);
     if (value.target.value !== "") {
       updateItem(value, itemToUpdate);
     }
@@ -167,6 +160,45 @@ function EODCounts({ loc }) {
 
     return itemToUpdate;
   };
+
+  const inputTemplate = (rowData) => {
+    return(
+      <InputText 
+        inputMode="numeric"
+        style={{width: "50px", fontWeight: "bold"}}
+        placeholder={rowData.currentStock}
+        onKeyUp={e => {if (e.code === "Enter") e.target.blur()}}
+        onBlur={async e => {
+          if (!e.target.value) return
+
+          const submitItem = {
+            prodNick: rowData.prodNick,
+            currentStock: Number(e.target.value),
+            updatedAt: new Date().toISOString(),
+            whoCountedLast: signedIn,
+          }
+          console.log("submitItem", submitItem)
+          const responseItem = await gqlFetcher(updateProductQuery, { input: submitItem })
+
+          const i = products.findIndex(p => 
+            p.prodNick === rowData.prodNick
+          )
+          const newItem = { 
+            ...products[i],
+            ...responseItem
+          }   
+          const _products = [...products.slice(0, i), newItem, ...products.slice(i + 1)]
+
+          const newData = { data: { listProducts: { items: _products }}}
+
+          mutateProducts(newData, {
+            revalidate: false
+          })
+        }}
+      />
+    )
+
+  }
 
   const handleInput = (e) => {
     return (
@@ -178,14 +210,14 @@ function EODCounts({ loc }) {
           fontWeight: "bold",
         }}
         placeholder={e.currentStock}
-        //onKeyUp={(e) => e.code === "Enter" && setProducts(handleChange(e))}
-        //onBlur={(e) => setProducts(handleBlur(e))}
+        // onKeyUp={(e) => e.code === "Enter" && setProducts(handleChange(e))}
+        // onBlur={(e) => setProducts(handleBlur(e))}
       />
     );
   };
 
   const handlePockChange = async (e) => {
-    let prodsToMod = clonedeep(products);
+    let prodsToMod = cloneDeep(products);
     for (let prod of prodsToMod) {
       let weight = e.target.id.split(" ")[0];
       // Account for doughtype
@@ -216,18 +248,14 @@ function EODCounts({ loc }) {
     //setProducts(prodsToMod)
   };
 
-  const handlePocketInput = (e) => {
+  const pocketInputTemplate = (rowData) => {
     return (
       <InputText
-        id={e.weight}
-        style={{
-          width: "50px",
-          //backgroundColor: "#E3F2FD",
-          fontWeight: "bold",
-        }}
-        placeholder={e.currentStock}
-        onKeyUp={(e) => (e.code === "Enter" ? handlePockChange(e) : "")}
-        onBlur={(e) => handlePockChange(e)}
+        id={rowData.weight}
+        style={{ width: "50px", fontWeight: "bold" }}
+        placeholder={rowData.currentStock}
+        onKeyUp={e => {if (e.code === "Enter") e.target.blur()}}
+        onBlur={e => handlePockChange(e)}
       />
     );
   };
@@ -243,58 +271,56 @@ function EODCounts({ loc }) {
     });
   };
 
-  const eaCount = (e) => {
-    return <React.Fragment>{e.currentStock * e.packSize}</React.Fragment>;
-  };
+  // const pocketValues = () => {
+  //   let pocks = pocketItems.map((pock) => pock.weight);
+  //   pocks = sortAtoZDataByIndex(pocks, "weight");
+  //   console.log("pocks", pocks);
+  //   let newArray = Array.from(
+  //     new Set(
+  //       sortAtoZDataByIndex(
+  //         pocketItems.map((pock) => pock.weight),
+  //         "weight"
+  //       )
+  //     )
+  //   ).map((arr) => ({
+  //     weight: arr + " lb.",
+  //     currentStock:
+  //       products[
+  //         products.findIndex(
+  //           (prod) => prod.weight === arr && prod.doughType === "French"
+  //         )
+  //       ].prepreshaped,
+  //     updatedAt:
+  //       products[
+  //         products.findIndex(
+  //           (prod) => prod.weight === arr && prod.doughType === "French"
+  //         )
+  //       ].updatedAt,
+  //     whoCountedLast:
+  //       products[
+  //         products.findIndex(
+  //           (prod) => prod.weight === arr && prod.doughType === "French"
+  //         )
+  //       ].whoCountedLast,
+  //   }));
+  //   return [];
+  // };
 
-  const pocketValues = () => {
-    let pocks = pocketsToMap.map((pock) => pock.weight);
-    pocks = sortAtoZDataByIndex(pocks, "weight");
-    console.log("pocks", pocks);
-    let newArray = Array.from(
-      new Set(
-        sortAtoZDataByIndex(
-          pocketsToMap.map((pock) => pock.weight),
-          "weight"
-        )
-      )
-    ).map((arr) => ({
-      weight: arr + " lb.",
-      currentStock:
-        products[
-          products.findIndex(
-            (prod) => prod.weight === arr && prod.doughType === "French"
-          )
-        ].prepreshaped,
-      updatedAt:
-        products[
-          products.findIndex(
-            (prod) => prod.weight === arr && prod.doughType === "French"
-          )
-        ].updatedAt,
-      whoCountedLast:
-        products[
-          products.findIndex(
-            (prod) => prod.weight === arr && prod.doughType === "French"
-          )
-        ].whoCountedLast,
-    }));
-    return [];
-  };
-
-  const lastCount = (e) => {
-    let updated = e.updatedAt;
+  const lastCountTemplate = (rowData) => {
+    const { updatedAt, whoCountedLast } = rowData
     return (
-      <IngDetails>
-        <div>
-          Counted &nbsp;
-          <TimeAgo key={e.id + "time"} datetime={updated} locale={us} />
-          &nbsp;by {e.whoCountedLast}
-        </div>
-      </IngDetails>
-    );
-  };
+      <div style={{fontSize: ".8rem"}}>
+        Counted {
+          <TimeAgo
+            datetime={updatedAt} 
+            locale={us} 
+          />
+        } by {whoCountedLast}
+      </div>
+    )
+  }
 
+  if (!products || !pocketItems) return <div>Loading...</div>
   return (
     <React.Fragment>
       <WholeBox>
@@ -314,154 +340,114 @@ function EODCounts({ loc }) {
         {signedIn !== "null" ? (
           <React.Fragment>
             <h2>On Shelf</h2>
-            {shelfBag && (
-              <DataTable
-                value={eodProds.filter(
-                  (prods) =>
-                    prods.freezerThaw !== true && Number(prods.packSize) > 1
-                )}
-                className="p-datatable-sm"
-              >
-                <Column field="prodName" header="By Bag"></Column>
-                <Column
-                  className="p-text-center"
-                  header="# of bags"
-                  body={(e) => handleInput(e)}
-                ></Column>
-                <Column
-                  className="p-text-center"
-                  header="ea"
-                  body={eaCount}
-                ></Column>
-                <Column
-                  className="p-text-center"
-                  header="Who Counted Last"
-                  body={lastCount}
-                ></Column>
-              </DataTable>
-            )}
-            {shelfEa && (
-              <DataTable
-                value={eodProds.filter(
-                  (prods) =>
-                    prods.freezerThaw !== true && Number(prods.packSize) === 1
-                )}
-                className="p-datatable-sm"
-              >
-                <Column field="prodName" header="Each"></Column>
-                <Column></Column>
-                <Column
-                  className="p-text-center"
-                  header="ea"
-                  body={(e) => handleInput(e)}
-                ></Column>
-                <Column
-                  className="p-text-center"
-                  header="Who Counted Last"
-                  body={lastCount}
-                ></Column>
-              </DataTable>
-            )}
+            <DataTable
+              value={eodProds.filter(prod =>
+                prod.freezerThaw !== true && prod.packSize > 1
+              )}
+              className="p-datatable-sm"
+            >
+              <Column field="prodName" header="By Bag" />
+              <Column header="# of bags"
+                body={rowData => inputTemplate(rowData)}
+                //body={(e) => handleInput(e)}
+                className="p-text-center"
+              />
+              <Column header="ea"
+                body={rowData => `${rowData.currentStock * rowData.packSize}`}
+                className="p-text-center"
+                bodyClassName="p-text-center"
+              />
+              <Column header="Who Counted Last"
+                body={lastCountTemplate}
+                className="p-text-center"
+                bodyClassName="p-text-center"
+              />
+            </DataTable>
 
+            <DataTable
+              value={eodProds.filter(prod =>
+                prod.freezerThaw !== true && prod.packSize === 1
+              )}
+              className="p-datatable-sm"
+            >
+              <Column field="prodName" header="Each" />
+              <Column />
+              <Column
+                className="p-text-center"
+                header="ea"
+                body={inputTemplate}
+              />
+              <Column
+                className="p-text-center"
+                header="Who Counted Last"
+                body={lastCountTemplate}
+              />
+            </DataTable>
+   
             <h2>In Freezer</h2>
+            <DataTable
+              value={eodProds.filter(prod =>
+                prod.freezerThaw !== false && prod.packSize > 1
+              )}
+              className="p-datatable-sm"
+            >
+              <Column field="prodName" header="In Freezer"/>
 
-            {freezerBag && (
-              <DataTable
-                value={eodProds.filter(
-                  (prods) =>
-                    prods.freezerThaw !== false && Number(prods.packSize) > 1
-                )}
-                className="p-datatable-sm"
-              >
-                <Column field="prodName" header="In Freezer"></Column>
+              <Column
+                className="p-text-center"
+                header="# of bags"
+                body={inputTemplate}
+              />
+              <Column
+                className="p-text-center"
+                header="ea"
+                body={rowData => `${rowData.currentStock * rowData.packSize}`}
+              />
+              <Column
+                className="p-text-center"
+                header="Who Counted Last"
+                body={lastCountTemplate}
+              />
+            </DataTable>
 
-                <Column
-                  className="p-text-center"
-                  header="# of bags"
-                  body={(e) => handleInput(e)}
-                ></Column>
-                <Column
-                  className="p-text-center"
-                  header="ea"
-                  body={eaCount}
-                ></Column>
-                <Column
-                  className="p-text-center"
-                  header="Who Counted Last"
-                  body={lastCount}
-                ></Column>
-              </DataTable>
-            )}
-
-            {freezerEa && (
-              <DataTable
-                value={eodProds.filter(
-                  (prods) =>
-                    prods.freezerThaw !== false && Number(prods.packSize) === 1
-                )}
-                className="p-datatable-sm"
-              >
-                <Column field="prodName" header="Each"></Column>
-                <Column></Column>
-                <Column
-                  className="p-text-center"
-                  header="ea"
-                  body={(e) => handleInput(e)}
-                ></Column>
-                <Column
-                  className="p-text-center"
-                  header="Who Counted Last"
-                  body={lastCount}
-                ></Column>
-              </DataTable>
-            )}
-
+            <DataTable
+              value={eodProds.filter(prod =>
+                  prod.freezerThaw !== false && prod.packSize === 1
+              )}
+              className="p-datatable-sm"
+            >
+              <Column field="prodName" header="Each" />
+              <Column />
+              <Column
+                className="p-text-center"
+                header="ea"
+                body={inputTemplate}
+              />
+              <Column
+                className="p-text-center"
+                header="Who Counted Last"
+                body={lastCountTemplate}
+              />
+            </DataTable>
+     
             <h2>Pocket Count</h2>
-
-            {pocketCount && (
-              <DataTable
-                value={Array.from(
-                  new Set(pocketsToMap.map((pock) => pock.weight))
-                ).map((arr) => ({
-                  weight: arr + " lb.",
-                  currentStock:
-                    products[
-                      products.findIndex(
-                        (prod) =>
-                          prod.weight === arr && prod.doughType === "French"
-                      )
-                    ].prepreshaped,
-                  updatedAt:
-                    products[
-                      products.findIndex(
-                        (prod) =>
-                          prod.weight === arr && prod.doughType === "French"
-                      )
-                    ].updatedAt,
-                  whoCountedLast:
-                    products[
-                      products.findIndex(
-                        (prod) =>
-                          prod.weight === arr && prod.doughType === "French"
-                      )
-                    ].whoCountedLast,
-                }))}
-                className="p-datatable-sm"
-              >
-                <Column field="weight" header="Pocket Weight"></Column>
-                <Column></Column>
-                <Column
-                  className="p-text-center"
-                  header="ea"
-                  body={(e) => handlePocketInput(e)}
-                ></Column>
-                <Column
-                  className="p-text-center"
-                  header="Who Counted Last"
-                  body={lastCount}
-                ></Column>
-              </DataTable>
-            )}
+            <DataTable value={pocketItems}
+              className="p-datatable-sm"
+            >
+              <Column header="Pocket Weight" body={rowData => `${rowData.weight} lb.`}/>
+              {/* <Column></Column> */}
+              <Column
+                className="p-text-center"
+                header="ea"
+                body={rowData => pocketInputTemplate(rowData)}
+              />
+              <Column
+                className="p-text-center"
+                header="Who Counted Last"
+                body={lastCountTemplate}
+              />
+            </DataTable>
+           
           </React.Fragment>
         ) : (
           <div></div>

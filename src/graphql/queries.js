@@ -1295,8 +1295,8 @@ export const getProduct = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         shelfOrFreezer
@@ -1362,8 +1362,8 @@ export const getProduct = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         qty
@@ -1383,8 +1383,8 @@ export const getProduct = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
       updatedAt
+      createdAt
       inventoryProductId
     }
   }
@@ -1517,8 +1517,8 @@ export const listProducts = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       nextToken
@@ -1695,8 +1695,8 @@ export const getRetailProdLoc = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       locSquareId
@@ -1783,8 +1783,8 @@ export const listRetailProdLocs = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         locSquareId
@@ -1924,8 +1924,8 @@ export const getOrder = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       locNick
@@ -2112,8 +2112,8 @@ export const listOrders = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         locNick
@@ -2392,8 +2392,8 @@ export const getStanding = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       qty
@@ -2508,8 +2508,8 @@ export const listStandings = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         qty
@@ -3031,8 +3031,8 @@ export const getInventory = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         nextToken
@@ -3383,8 +3383,8 @@ export const getProductVendor = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       vendor {
@@ -3466,8 +3466,8 @@ export const listProductVendors = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         vendor {
@@ -3630,8 +3630,8 @@ export const getEODCount = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       shelfOrFreezer
@@ -3714,8 +3714,8 @@ export const listEODCounts = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         shelfOrFreezer
@@ -3847,8 +3847,8 @@ export const getActualSetOut = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       qty
@@ -3929,8 +3929,8 @@ export const listActualSetOuts = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         qty
@@ -4382,8 +4382,8 @@ export const getTemplateProd = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       createdAt
@@ -4489,8 +4489,8 @@ export const listTemplateProds = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         createdAt
@@ -4722,8 +4722,8 @@ export const getProdsNotAllowed = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       createdAt
@@ -4834,8 +4834,8 @@ export const listProdsNotAlloweds = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         createdAt
@@ -4963,8 +4963,8 @@ export const getProductDepend = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       prod2Nick
@@ -5081,8 +5081,8 @@ export const getProductDepend = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       createdAt
@@ -5153,8 +5153,8 @@ export const listProductDepends = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         prod2Nick
@@ -5211,8 +5211,8 @@ export const listProductDepends = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         createdAt
@@ -5749,8 +5749,8 @@ export const getAltPricing = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       createdAt
@@ -5857,8 +5857,8 @@ export const listAltPricings = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         createdAt
@@ -6090,8 +6090,8 @@ export const getAltLeadTime = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       createdAt
@@ -6198,8 +6198,8 @@ export const listAltLeadTimes = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         createdAt
@@ -6495,8 +6495,8 @@ export const prodSortAZ = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       nextToken
@@ -6580,8 +6580,8 @@ export const orderByLocByDelivDate = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         locNick
@@ -6710,8 +6710,8 @@ export const orderByDelivDate = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         locNick
@@ -6877,8 +6877,8 @@ export const standingByLocByStartDate = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         qty
@@ -7005,8 +7005,8 @@ export const standingByLocByEndDate = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         qty
@@ -7133,8 +7133,8 @@ export const standingByLocByDayOfWeek = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         qty
@@ -7259,8 +7259,8 @@ export const standingByDayOfWeek = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         qty

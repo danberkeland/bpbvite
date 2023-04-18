@@ -63,7 +63,7 @@ export const revalidateProductListSimple = () => {
  * @returns {{ data: Array<{ locNick: string, locName: string }>, errors: object }} A list of locNick ID's and locName text labels.
  */
 export const useProductListFull = (shouldFetch) => {
-  const { data, errors, isValidating } = useSWR(
+  const { data, errors, mutate, isValidating } = useSWR(
     shouldFetch ? [queries.listProductsFull, { limit: 1000 }] : null, 
     gqlFetcher, 
     defaultSwrOptions
@@ -71,6 +71,8 @@ export const useProductListFull = (shouldFetch) => {
 
   const transformData = () => {
     if (!data) return undefined
+
+    console.log("data", data)
     return getNestedObject(data, ['data', 'listProducts', 'items']).sort(dynamicSort("locName"))
   }
   const _data = useMemo(transformData, [data])
@@ -78,6 +80,7 @@ export const useProductListFull = (shouldFetch) => {
   return({
     data: _data,
     errors: errors,
+    mutate: mutate, 
     isValidating: isValidating,
   })
 
