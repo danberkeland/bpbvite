@@ -2,7 +2,6 @@ import React, { useEffect, useState, useContext, useRef } from "react";
 
 import styled from "styled-components";
 
-
 import { InputText } from "primereact/inputtext";
 import { PickList } from "primereact/picklist";
 import { Dropdown } from "primereact/dropdown";
@@ -42,15 +41,38 @@ const hubDepart = [{ RouteDepart: "Prado" }, { RouteDepart: "Carlton" }];
 const hubArrive = [{ RouteArrive: "Prado" }, { RouteArrive: "Carlton" }];
 
 const Info = ({ selectedRoute, setSelectedRoute }) => {
-  
-    const setIsLoading = useSettingsStore((state) => state.setIsLoading);
-   
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
+
   const [source, setSource] = useState([]);
   const [target, setTarget] = useState([]);
 
   const fullZones = useRef();
 
   const [days, setDays] = useState([]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetchZones();
+    setIsLoading(false);
+  }, []);
+
+  const fetchZones = async () => {
+    try {
+      const zoneData = await API.graphql(
+        graphqlOperation(listZones, {
+          limit: "50",
+        })
+      );
+      const zoneList = zoneData.data.listZones.items;
+      sortAtoZDataByIndex(zoneList, "zoneNum");
+      let noDelete = zoneList.filter((zone) => zone["_deleted"] !== true);
+      let mappedNoDelete = noDelete.map((item) => item["zoneName"]);
+      fullZones.current = mappedNoDelete;
+      setSource(mappedNoDelete);
+    } catch (error) {
+      console.log("error on fetching Cust List", error);
+    }
+  };
 
   const onDayChange = (e) => {
     let selectedDays = [...days];
@@ -63,8 +85,7 @@ const Info = ({ selectedRoute, setSelectedRoute }) => {
     setDays(selectedDays);
   };
 
-  const { data:routes } = useRouteListFull({shouldFetch: true });
- 
+  const { data: routes } = useRouteListFull({ shouldFetch: true });
 
   useEffect(() => {
     setTarget(selectedRoute["RouteServe"]);
@@ -76,8 +97,8 @@ const Info = ({ selectedRoute, setSelectedRoute }) => {
 
   useEffect(() => {
     let parsedZones = [];
-    console.log('selectedRoute', selectedRoute)
-    console.log('target', target)
+    console.log("selectedRoute", selectedRoute);
+    console.log("target", target);
     if (fullZones.current) {
       parsedZones = fullZones.current.filter(
         (full) => !selectedRoute["RouteServe"]?.includes(full)

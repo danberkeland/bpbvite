@@ -13,6 +13,7 @@ import {
 import { Button } from "primereact/button";
 
 import { API, graphqlOperation } from "aws-amplify";
+import { confirmDialog } from "primereact/confirmdialog";
 
 const ButtonBox = styled.div`
   display: flex;
@@ -72,7 +73,7 @@ const Buttons = ({ selectedRoute, setSelectedRoute }) => {
       const routeData = await API.graphql(
         graphqlOperation(updateRoute, { input: { ...updateDetails } })
       );
-        /*
+      /*
       swal({
         text: `${routeData.data.updateRoute.routeName} has been updated.`,
         icon: "success",
@@ -84,35 +85,66 @@ const Buttons = ({ selectedRoute, setSelectedRoute }) => {
     }
   };
 
-  const deleteRouteWarn = async () => {/*
-    swal({
-      text:
-        " Are you sure that you would like to permanently delete this route?",
-      icon: "warning",
-      buttons: ["Yes", "Don't do it!"],
-      dangerMode: true,
-    }).then((willDelete) => {
-      if (!willDelete) {
-        deleteRte();
-      } else {
-        return;
-      }
-    });*/
+  const deleteRouteWarn = async () => {
+    confirmDialog({
+      message: "Are you sure you want to proceed?",
+      header: "Confirmation",
+      icon: "pi pi-exclamation-triangle",
+      accept: () => deleteRte(),
+    });
   };
 
   const deleteRte = async () => {
-    const deleteDetails = {
-      id: selectedRoute["id"],
-      _version: selectedRoute["_version"],
-    };
-
     try {
-      await API.graphql(
-        graphqlOperation(deleteRoute, { input: { ...deleteDetails } })
+      // Delete the Route
+      const deleteRouteItem = graphqlOperation(
+        `
+        mutation deleteRoute($routeNick: String!) {
+          deleteRoute(input: { routeNick: $routeNick }) {
+            routeNick
+          }
+        }
+      `,
+        { routeNick: selectedRoute.routeNick }
       );
-      setSelectedRoute();
+      await API.graphql(deleteRouteItem);
+
+      // Get all items from ZoneRoute that are associated with the item we just deleted from Routes
+      const queryZoneRoutes = graphqlOperation(
+        `
+        query listZoneRoutes($routeNick: String!) {
+          listZoneRoutes(filter: { routeNick: { eq: $routeNick } }) {
+            items {
+              id
+            }
+          }
+        }
+      `,
+        selectedRoute.routeNick
+      );
+      const queryZoneRouteResult = await API.graphql(queryZoneRoutes);
+
+      // Delete all associated items from ZoneRoute
+      const deleteZoneRouteItems = graphqlOperation(
+        `
+        mutation deleteZoneRouteItems($ids: [ID!]!) {
+          batchDeleteZoneRouteItems(input: { ids: $ids }) {
+            ids
+          }
+        }
+      `,
+        {
+          ids: queryZoneRouteResult.data.listZoneRoutes.items.map(
+            (item) => item.id
+          ),
+        }
+      );
+      await API.graphql(deleteZoneRouteItems);
+
+      return { success: true };
     } catch (error) {
-      console.log("error on fetching Route List", error);
+      console.error(error);
+      return { success: false, error: error };
     }
   };
 
