@@ -233,25 +233,25 @@ function TopNav() {
         {
           label: "Edit Zones",
           command: () => {
-            window.location = "/settings/editZones";
+            window.location = "/Settings/editZones";
           },
         },
         {
           label: "Edit Routes",
           command: () => {
-            window.location = "/settings/editRoutes";
+            window.location = "/Settings/editRoutes";
           },
         },
         {
           label: "Edit Doughs",
           command: () => {
-            window.location = "/settings/editDough";
+            window.location = "/Settings/editDough";
           },
         },
         {
           label: "Notes",
           command: () => {
-            window.location = "/settings/Notes";
+            window.location = "/Settings/Notes";
           },
         },
         {
@@ -263,13 +263,13 @@ function TopNav() {
         {
           label: "Customer Product Setup",
           command: () => {
-            window.location = "/settings/CustProd";
+            window.location = "/Settings/custProds";
           },
         },
         {
           label: "Manage Users",
           command: () => {
-            window.location = "/settings/manageUsers";
+            window.location = "/Settings/ManageCustomers";
           },
         },
         {

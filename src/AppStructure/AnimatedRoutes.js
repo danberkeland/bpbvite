@@ -29,7 +29,7 @@ import { useSettingsStore } from "../Contexts/SettingsZustand";
 import { UserHeaderMenu } from "./UserHeaderMenu";
 import BPBSWhatToMake from "../Pages/Production/BPBSWhatToMake";
 import BPBSMixPocket from "../Pages/Production/BPBSMixPocket";
-import CroixCount from "../Pages/Production/CroixCount"
+import CroixCount from "../Pages/Production/CroixCount";
 import CroixToMake from "../Pages/Production/CroixToMake";
 import { Database } from "../Pages/Settings/Database";
 import BPBNBuckets from "../Pages/Production/BPBNBuckets";
@@ -39,6 +39,11 @@ import AMPastry from "../Pages/Logistics/AMPastry";
 import RetailBags from "../Pages/Logistics/RetailBags";
 import SpecialOrders from "../Pages/Logistics/SpecialOrders";
 import FreezerThaw from "../Pages/Logistics/FreezerThaw";
+import DelivOrder from "../Pages/Settings/delivOrder/delivOrder";
+import EditDoughs from "../Pages/Settings/editDough/editDough";
+import EditZones from "../Pages/Settings/editZones/editZones";
+import EditRoutes from "../Pages/Settings/editRoutes/editRoutes";
+import Notes from "../Pages/Settings/editRoutes/notes/Notes";
 
 function AnimatedRoutes({ Routes, Route, useLocation }) {
   const authClass = useSettingsStore((state) => state.authClass);
@@ -60,16 +65,35 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             <Route path="/Production/Production" element={<Production />} />
             <Route path="/Production/WhoBake" element={<WhoBake />} />
             <Route path="/Production/WhoShape" element={<WhoShape />} />
-            <Route path="/Production/BPBNBuckets" element={<BPBNBuckets loc={'Carlton'}/>} />
-            <Route path="/Production/BPBSBuckets" element={<BPBNBuckets loc={'Prado'}/>} />
-            <Route path="/Production/BPBNSetOut" element={<BPBNSetOut loc={'Carlton'} />} />
-            <Route path="/Production/BPBSSetOut" element={<BPBNSetOut loc={'Prado'} />} />
-            <Route path="/Production/BPBSWhatToMake" element={<BPBSWhatToMake />} />
-            <Route path="/Production/BPBSMixPocket" element={<BPBSMixPocket />} />
+            <Route
+              path="/Production/BPBNBuckets"
+              element={<BPBNBuckets loc={"Carlton"} />}
+            />
+            <Route
+              path="/Production/BPBSBuckets"
+              element={<BPBNBuckets loc={"Prado"} />}
+            />
+            <Route
+              path="/Production/BPBNSetOut"
+              element={<BPBNSetOut loc={"Carlton"} />}
+            />
+            <Route
+              path="/Production/BPBSSetOut"
+              element={<BPBNSetOut loc={"Prado"} />}
+            />
+            <Route
+              path="/Production/BPBSWhatToMake"
+              element={<BPBSWhatToMake />}
+            />
+            <Route
+              path="/Production/BPBSMixPocket"
+              element={<BPBSMixPocket />}
+            />
             <Route path="/Production/CroixCount" element={<CroixCount />} />
             <Route path="/Production/CroixToMake" element={<CroixToMake />} />
             <Route path="/Products" element={<Products />} />
             <Route path="/Settings" element={<Settings />} />
+
             <Route path="/Billing" element={<Billing />} />
             <Route path="/EODCounts" element={<EODCounts />} />
             <Route path="/Logistics" element={<Logistics />} />
@@ -78,7 +102,10 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             <Route path="/Logistics/NorthLists" element={<NorthList />} />
             <Route path="/Logistics/AMPastry" element={<AMPastry />} />
             <Route path="/Logistics/RetailBags" element={<RetailBags />} />
-            <Route path="/Logistics/SpecialOrders" element={<SpecialOrders />} />
+            <Route
+              path="/Logistics/SpecialOrders"
+              element={<SpecialOrders />}
+            />
             <Route path="/Logistics/FreezerThaw" element={<FreezerThaw />} />
             <Route path="/Locations" element={<Locations />} />
             <Route path="/Database" element={<Database />} />
@@ -90,10 +117,12 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
               path="/Settings/ManageTrainings"
               element={<ManageTraining />}
             />
-            <Route
-              path="/Settings/custProds"
-              element={<CustProds />}
-            />
+            <Route path="/Settings/custProds" element={<CustProds />} />
+            <Route path="/Settings/DelivOrder" element={<DelivOrder />} />
+            <Route path="/Settings/editDough" element={<EditDoughs />} />
+            <Route path="/Settings/editRoutes" element={<EditRoutes />} />
+            <Route path="/Settings/editZones" element={<EditZones />} />
+            <Route path="/Settings/Notes" element={<Notes />} />
           </React.Fragment>
         )}
 
@@ -104,7 +133,3 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
 }
 
 export default AnimatedRoutes;
-
-
-
-
