@@ -79,13 +79,6 @@ const submitCartByDate = async (order, cloudwatchLog) => {
     itemChanges: diff.map(i => `${i.prodName}: ${i.dQty}`).join(", "),
     routeChanged: false,
     noteChanged: false
-    //currentItems: Object.fromEntries(legacyItems.map(i => [i.prodName, i.qty])),
-    //submitItems: Object.fromEntries(newItems.map(i => [i.prodName, i.qty])),
-    //itemChanges: Object.fromEntries(diff.map(i => [i.prodName, i.dQty])),
-    // headerChanges: {
-    //   route: null,
-    //   PONote: null
-    // }
   }
   
   for (let newItem of newItems) {

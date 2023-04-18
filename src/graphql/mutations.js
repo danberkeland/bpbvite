@@ -2044,8 +2044,8 @@ export const createProduct = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         shelfOrFreezer
@@ -2111,8 +2111,8 @@ export const createProduct = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         qty
@@ -2132,8 +2132,8 @@ export const createProduct = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
       updatedAt
+      createdAt
       inventoryProductId
     }
   }
@@ -2378,8 +2378,8 @@ export const updateProduct = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         shelfOrFreezer
@@ -2445,8 +2445,8 @@ export const updateProduct = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         qty
@@ -2466,8 +2466,8 @@ export const updateProduct = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
       updatedAt
+      createdAt
       inventoryProductId
     }
   }
@@ -2712,8 +2712,8 @@ export const deleteProduct = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         shelfOrFreezer
@@ -2779,8 +2779,8 @@ export const deleteProduct = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         qty
@@ -2800,8 +2800,8 @@ export const deleteProduct = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
       updatedAt
+      createdAt
       inventoryProductId
     }
   }
@@ -3019,8 +3019,8 @@ export const createRetailProdLoc = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       locSquareId
@@ -3165,8 +3165,8 @@ export const updateRetailProdLoc = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       locSquareId
@@ -3311,8 +3311,8 @@ export const deleteRetailProdLoc = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       locSquareId
@@ -3456,8 +3456,8 @@ export const createOrder = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       locNick
@@ -3702,8 +3702,8 @@ export const updateOrder = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       locNick
@@ -3948,8 +3948,8 @@ export const deleteOrder = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       locNick
@@ -4297,8 +4297,8 @@ export const createStanding = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       qty
@@ -4539,8 +4539,8 @@ export const updateStanding = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       qty
@@ -4781,8 +4781,8 @@ export const deleteStanding = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       qty
@@ -5535,8 +5535,8 @@ export const createInventory = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         nextToken
@@ -5643,8 +5643,8 @@ export const updateInventory = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         nextToken
@@ -5751,8 +5751,8 @@ export const deleteInventory = /* GraphQL */ `
           bpbssetoutpre
           bpbssetout
           sheetMake
-          createdAt
           updatedAt
+          createdAt
           inventoryProductId
         }
         nextToken
@@ -6093,8 +6093,8 @@ export const createProductVendor = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       vendor {
@@ -6234,8 +6234,8 @@ export const updateProductVendor = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       vendor {
@@ -6375,8 +6375,8 @@ export const deleteProductVendor = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       vendor {
@@ -6556,8 +6556,8 @@ export const createEODCount = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       shelfOrFreezer
@@ -6690,8 +6690,8 @@ export const updateEODCount = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       shelfOrFreezer
@@ -6824,8 +6824,8 @@ export const deleteEODCount = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       shelfOrFreezer
@@ -6958,8 +6958,8 @@ export const createActualSetOut = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       qty
@@ -7090,8 +7090,8 @@ export const updateActualSetOut = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       qty
@@ -7222,8 +7222,8 @@ export const deleteActualSetOut = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       qty
@@ -7833,8 +7833,8 @@ export const createTemplateProd = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       createdAt
@@ -8066,8 +8066,8 @@ export const updateTemplateProd = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       createdAt
@@ -8299,8 +8299,8 @@ export const deleteTemplateProd = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       createdAt
@@ -8533,8 +8533,8 @@ export const createProdsNotAllowed = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       createdAt
@@ -8767,8 +8767,8 @@ export const updateProdsNotAllowed = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       createdAt
@@ -9001,8 +9001,8 @@ export const deleteProdsNotAllowed = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       createdAt
@@ -9131,8 +9131,8 @@ export const createProductDepend = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       prod2Nick
@@ -9249,8 +9249,8 @@ export const createProductDepend = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       createdAt
@@ -9379,8 +9379,8 @@ export const updateProductDepend = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       prod2Nick
@@ -9497,8 +9497,8 @@ export const updateProductDepend = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       createdAt
@@ -9627,8 +9627,8 @@ export const deleteProductDepend = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       prod2Nick
@@ -9745,8 +9745,8 @@ export const deleteProductDepend = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       createdAt
@@ -10600,8 +10600,8 @@ export const createAltPricing = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       createdAt
@@ -10834,8 +10834,8 @@ export const updateAltPricing = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       createdAt
@@ -11068,8 +11068,8 @@ export const deleteAltPricing = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       createdAt
@@ -11302,8 +11302,8 @@ export const createAltLeadTime = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       createdAt
@@ -11536,8 +11536,8 @@ export const updateAltLeadTime = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       createdAt
@@ -11770,8 +11770,8 @@ export const deleteAltLeadTime = /* GraphQL */ `
         altLeadTimeByLocation {
           nextToken
         }
-        createdAt
         updatedAt
+        createdAt
         inventoryProductId
       }
       createdAt

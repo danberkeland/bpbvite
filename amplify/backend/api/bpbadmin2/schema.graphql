@@ -343,6 +343,7 @@ type Product @model {
   EODCount: EODCount @hasOne(fields: ["prodNick"])
   ActualSetOut: ActualSetOut @hasOne(fields: ["prodNick"])
   altLeadTimeByLocation: [AltLeadTime] @hasMany(indexName: "byProdByLoc", fields: ["prodNick"])
+  updatedAt: AWSDateTime
 }
 
 type RetailLoc @model {
