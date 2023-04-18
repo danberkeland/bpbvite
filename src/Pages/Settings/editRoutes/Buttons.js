@@ -1,14 +1,10 @@
 import React, { useRef, useState } from "react";
 
 import styled from "styled-components";
-//import swal from "@sweetalert/with-react";
+
 import "primereact/resources/themes/saga-blue/theme.css";
 
-import {
-  updateRoute,
-  deleteRoute,
-  createRoute,
-} from "../../../graphql/mutations";
+import { createRoute } from "../../../graphql/mutations";
 
 import { Button } from "primereact/button";
 
@@ -67,7 +63,6 @@ const Buttons = ({ selectedRoute, setSelectedRoute }) => {
       RouteArrive: selectedRoute["RouteArrive"],
       RouteServe: selectedRoute["RouteServe"],
       RouteSched: selectedRoute["RouteSched"],
-      _version: selectedRoute["_version"],
     };
 
     updateRteBatch(
@@ -83,29 +78,19 @@ const Buttons = ({ selectedRoute, setSelectedRoute }) => {
 
       // Remove the RouteServe attribute from the updateDetails object
       const { RouteServe, ...updateDetailsWithoutRouteServe } = updateDetails;
-      const {
-        routeNick,
-        routeName,
-        routeStart,
-        routeTime,
-        RouteDepart,
-        RouteArrive,
-        RouteSched,
-        _version,
-      } = updateDetails;
 
       // Add a mutation for updating the item in Route table
       const updateRouteMutation = graphqlOperation(
         `
         mutation updateRoute(
-          $routeNick: String!
+          $routeNick: String!,
           $routeName: String,
-            $routeStart: Float,
-            $routeTime: Float,
-            $RouteDepart: String,
-            $RouteArrive: String,
-            $RouteSched: [String]
-          ) {
+          $routeStart: Float,
+          $routeTime: Float,
+          $RouteDepart: String,
+          $RouteArrive: String,
+          $RouteSched: [String]
+        ) {
           updateRoute(input: { 
             routeNick: $routeNick, 
             routeName: $routeName,
@@ -114,7 +99,7 @@ const Buttons = ({ selectedRoute, setSelectedRoute }) => {
             RouteDepart: $RouteDepart,
             RouteArrive: $RouteArrive,
             RouteSched: $RouteSched
-           }) {
+          }) {
             routeNick
             routeName
             routeStart
@@ -127,14 +112,15 @@ const Buttons = ({ selectedRoute, setSelectedRoute }) => {
       `,
         {
           routeNick,
-          routeName,
-          routeStart,
-          routeTime,
-          RouteDepart,
-          RouteArrive,
-          RouteSched,
+          routeName: updateDetails.routeName,
+          routeStart: updateDetails.routeStart,
+          routeTime: updateDetails.routeTime,
+          RouteDepart: updateDetails.RouteDepart,
+          RouteArrive: updateDetails.RouteArrive,
+          RouteSched: updateDetails.RouteSched,
         }
       );
+
       mutations.push(updateRouteMutation);
 
       // Get all items from ZoneRoute table that are associated with the item we are updating in Route table
@@ -169,7 +155,6 @@ const Buttons = ({ selectedRoute, setSelectedRoute }) => {
 
       // Loop through all items in the RouteServe array and add mutations for creating them in ZoneRoute table
       routeServeData.forEach((data) => {
-        
         const createZoneRouteMutation = graphqlOperation(
           `
           mutation createZoneRoute($data: String, $routeNick: String!) {
@@ -200,11 +185,11 @@ const Buttons = ({ selectedRoute, setSelectedRoute }) => {
       message: "Are you sure you want to proceed?",
       header: "Confirmation",
       icon: "pi pi-exclamation-triangle",
-      accept: () => deleteRte(),
+      accept: () => deleteRte(selectedRoute.routeNick),
     });
   };
 
-  const deleteRte = async () => {
+  const deleteRte = async (routeNick) => {
     try {
       // Delete the Route
       const deleteRouteItem = graphqlOperation(
@@ -230,26 +215,26 @@ const Buttons = ({ selectedRoute, setSelectedRoute }) => {
           }
         }
       `,
-        selectedRoute.routeNick
+        { routeNick }
       );
       const queryZoneRouteResult = await API.graphql(queryZoneRoutes);
+      console.log("queryZoneRouteResult", queryZoneRouteResult);
 
-      // Delete all associated items from ZoneRoute
-      const deleteZoneRouteItems = graphqlOperation(
-        `
-        mutation deleteZoneRouteItems($ids: [ID!]!) {
-          batchDeleteZoneRouteItems(input: { ids: $ids }) {
-            ids
+      // Delete each associated item from ZoneRoute
+      for (const item of queryZoneRouteResult.data.listZoneRoutes.items) {
+        const deleteZoneRoute = graphqlOperation(
+          `
+          mutation deleteZoneRoute($id: ID!) {
+            deleteZoneRoute(input: { id: $id }) {
+              id
+            }
           }
-        }
-      `,
-        {
-          ids: queryZoneRouteResult.data.listZoneRoutes.items.map(
-            (item) => item.id
-          ),
-        }
-      );
-      await API.graphql(deleteZoneRouteItems);
+        `,
+          { id: item.id }
+        );
+        console.log("Deleting ZoneRoute item with id:", item.id);
+        await API.graphql(deleteZoneRoute);
+      }
 
       return { success: true };
     } catch (error) {

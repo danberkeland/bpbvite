@@ -82,7 +82,7 @@
         },
         "bpbrouter": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
-          "s3Key": "amplify-builds/bpbrouter-335a522b4c5254712b46-build.zip"
+          "s3Key": "amplify-builds/bpbrouter-342b735178744d6e2b67-build.zip"
         },
         "confirmCognitoEmail": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",

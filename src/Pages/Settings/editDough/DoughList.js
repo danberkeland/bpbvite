@@ -1,7 +1,6 @@
 import React, { useEffect, useContext } from "react";
 
-
-import { fetchDoughs, fetchDoughComponents } from "./InfoParts/utils"
+import { fetchDoughs, fetchDoughComponents } from "./InfoParts/utils";
 
 import styled from "styled-components";
 
@@ -28,25 +27,19 @@ const DoughList = ({
   setDoughComponents,
   isReload,
   setIsReload,
-  setIsModified
+  setIsModified,
 }) => {
- 
   useEffect(() => {
-    
     fetchDoughs(setDoughs);
-   
   }, [isReload]);
 
   useEffect(() => {
-   
     fetchDoughComponents(setDoughComponents);
-   
   }, [isReload]);
-
 
   const handleSelection = (e) => {
     setSelectedDough(e.value);
-    setIsModified(false)
+    setIsModified(false);
   };
 
   return (

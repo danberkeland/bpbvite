@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 
 import styled from "styled-components";
 
-
 import DoughList from "./DoughList";
 import Info from "./Info";
 import Buttons from "./Buttons";
@@ -39,9 +38,7 @@ function EditDoughs() {
   const [selectedDough, setSelectedDough] = useState();
   const [doughs, setDoughs] = useState(null);
   const [doughComponents, setDoughComponents] = useState(null);
-  
-  
-  
+
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
   const ordersHasBeenChanged = useSettingsStore(
     (state) => state.ordersHasBeenChanged
@@ -50,8 +47,14 @@ function EditDoughs() {
     (state) => state.setOrdersHasBeenChanged
   );
   const { data: database } = useLegacyFormatDatabase();
-  
-  const [products = [], customers = [], routes = [], standing = [], orders = []] = database || [];
+
+  const [
+    products = [],
+    customers = [],
+    routes = [],
+    standing = [],
+    orders = [],
+  ] = database || [];
 
   return (
     <React.Fragment>
@@ -63,7 +66,6 @@ function EditDoughs() {
           setDoughs={setDoughs}
           doughComponents={doughComponents}
           setDoughComponents={setDoughComponents}
-        
           setIsModified={setOrdersHasBeenChanged}
         />
         {selectedDough && (
@@ -92,7 +94,6 @@ function EditDoughs() {
             setDoughComponents={setDoughComponents}
             isModified={ordersHasBeenChanged}
             setIsModified={setOrdersHasBeenChanged}
-            
           />
         </DescripWrapper>
       </MainWrapper>

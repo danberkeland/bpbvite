@@ -8,12 +8,10 @@ import { updateZone, deleteZone, createZone } from "../../../graphql/mutations";
 
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
-import { Toast } from "primereact/toast"; 
+import { Toast } from "primereact/toast";
 
-
-import { ConfirmDialog } from 'primereact/confirmdialog'; 
-import { confirmDialog } from 'primereact/confirmdialog'; 
-
+import { ConfirmDialog } from "primereact/confirmdialog";
+import { confirmDialog } from "primereact/confirmdialog";
 
 import { API, graphqlOperation } from "aws-amplify";
 import { useRef } from "react";
@@ -74,7 +72,6 @@ const Buttons = ({ selectedZone, setSelectedZone }) => {
         });
       };
       showSuccess();
-      
     } catch (error) {
       console.log("error on fetching Zone List", error);
     }
@@ -82,12 +79,11 @@ const Buttons = ({ selectedZone, setSelectedZone }) => {
 
   const deleteZoneWarn = async () => {
     confirmDialog({
-      message: 'Are you sure you want to proceed?',
-      header: 'Confirmation',
-      icon: 'pi pi-exclamation-triangle',
+      message: "Are you sure you want to proceed?",
+      header: "Confirmation",
+      icon: "pi pi-exclamation-triangle",
       accept: () => deleteZne(),
-      
-  });
+    });
     /*
     swal({
       text:

@@ -79,13 +79,6 @@ const submitCartByDate = async (order, cloudwatchLog) => {
     itemChanges: diff.map(i => `${i.prodName}: ${i.dQty}`).join(", "),
     routeChanged: false,
     noteChanged: false
-    //currentItems: Object.fromEntries(legacyItems.map(i => [i.prodName, i.qty])),
-    //submitItems: Object.fromEntries(newItems.map(i => [i.prodName, i.qty])),
-    //itemChanges: Object.fromEntries(diff.map(i => [i.prodName, i.dQty])),
-    // headerChanges: {
-    //   route: null,
-    //   PONote: null
-    // }
   }
   
   for (let newItem of newItems) {
@@ -100,8 +93,8 @@ const submitCartByDate = async (order, cloudwatchLog) => {
         let resp = await updateItem(order.header, newItem, legacyItem)
         //returnData.push(resp)
       }
-      if (dRoute) cloudwatchLog.headerChanges.route = order.header.route
-      if (dPONote) cloudwatchLog.headerChanges.PONote = order.header.PONote
+      if (dRoute) cloudwatchLog.routeChanged = true
+      if (dPONote) cloudwatchLog.noteChanged = true
       
     } else {
       let resp = await createItem(order.header, newItem)

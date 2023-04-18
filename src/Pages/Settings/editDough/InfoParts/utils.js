@@ -153,7 +153,7 @@ export const fetchDoughs = async (setDoughs) => {
         limit: "500",
       })
     );
-    const doughList = doughData.data.listDoughs.items;
+    const doughList = doughData.data.listDoughBackups.items;
     sortAtoZDataByIndex(doughList, "doughName");
     let noDelete = doughList.filter((dough) => dough["_deleted"] !== true);
 
@@ -170,7 +170,7 @@ export const fetchDoughComponents = async (setDoughComponents) => {
         limit: "500",
       })
     );
-    const doughList = doughData.data.listDoughComponents.items;
+    const doughList = doughData.data.listDoughComponentBackups.items;
     sortAtoZDataByIndex(doughList, "doughName");
     let noDelete = doughList.filter((dough) => dough["_deleted"] !== true);
 

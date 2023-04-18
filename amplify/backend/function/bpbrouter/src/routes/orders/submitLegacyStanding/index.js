@@ -25,7 +25,7 @@ const submitLegacyStanding = async (event) => {
     
     if (!!legacyItem) {
       console.log("UPDATE", newItem.prodName)
-      let resp = await updateStandingItem(newItem, legacyItem)
+      let resp = await updateStandingItem(requestData.header, newItem, legacyItem)
       returnData.push(resp)
       
     } else {
@@ -57,15 +57,15 @@ const submitLegacyStanding = async (event) => {
 export default submitLegacyStanding
 
 
-
+// update: want legacy submit to overrwrite standing or holding order.
 const getLegacyStanding = async (cust, isStand) => {
   const params = {
     TableName: "Standing-huppwy3hefgohh6ur7yuz5vkcm-newone",
     ExpressionAttributeValues: {
-      ":cust": cust,
-      ":isStand": isStand
+      ":cust": cust
+      // ":isStand": isStand
     },
-    FilterExpression: "custName = :cust AND isStand = :isStand",
+    FilterExpression: "custName = :cust", // AND isStand = :isStand",
     ProjectionExpression: "id, prodName",
   }
 
@@ -73,11 +73,12 @@ const getLegacyStanding = async (cust, isStand) => {
 }
 
 
-function updateStandingItem(newItem, oldItem) {
+function updateStandingItem(header, newItem, oldItem) {
   const params = {
     TableName: "Standing-huppwy3hefgohh6ur7yuz5vkcm-newone",
     Key: { id: oldItem.id },
     ExpressionAttributeNames: {
+      "#stand": "isStand",
       "#sun": "Sun",
       "#mon": "Mon",
       "#tue": "Tue",
@@ -87,6 +88,7 @@ function updateStandingItem(newItem, oldItem) {
       "#sat": "Sat",
     },
     ExpressionAttributeValues: {
+      ":stand": header.isStand,
       ":sun": Number(newItem.Sun),
       ":mon": Number(newItem.Mon),
       ":tue": Number(newItem.Tue),
@@ -95,7 +97,7 @@ function updateStandingItem(newItem, oldItem) {
       ":fri": Number(newItem.Fri),
       ":sat": Number(newItem.Sat)
     },
-    UpdateExpression: "set #sun = :sun, #mon = :mon, #tue = :tue, #wed = :wed, #thu = :thu, #fri = :fri, #sat = :sat",
+    UpdateExpression: "set #stand = :stand, #sun = :sun, #mon = :mon, #tue = :tue, #wed = :wed, #thu = :thu, #fri = :fri, #sat = :sat",
   };
   return dynamo.update(params).promise()
 }
