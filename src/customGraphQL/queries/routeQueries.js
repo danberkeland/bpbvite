@@ -23,9 +23,15 @@ export const listRoutesFull = /* GraphQL */ `
         RouteSched
         printOrder
         driver
-        # zoneRoute {
-        #   nextToken
-        # }
+        zoneRoute {
+          items {
+            zone {
+              zoneName
+              zoneNick
+            }
+          }
+        }
+
         createdAt
         updatedAt
       }
