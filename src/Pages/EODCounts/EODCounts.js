@@ -30,6 +30,7 @@ const updateProductQuery = /* GraphQL */ `
     updateProduct(input: $input) {
       prodNick
       currentStock
+      prepreshaped
       updatedAt
       whoCountedLast
     }
@@ -59,41 +60,26 @@ const IngDetails = styled.div`
 `;
 
 
+// **************************************************************
+// Currently configured for Prado ONLY -- input 'loc' is not used
+// **************************************************************
+const PROD_LOCATION = "Prado"
 
 function EODCounts({ loc }) {
-  
-  const { data:products, errors:productListErrors, mutate:mutateProducts } = useProductListFull(true);
-  console.log("products", products)
-    
   const [signedIn, setSignedIn] = useState("null");
-  // const [pocketsToMap, setPocketsToMap] = useState();
-  
-  // const [eodProds, setEODProds] = useState();
-  // useEffect(() => {
-  //   try {
-  //     let prodsToMap = products.filter(
-  //       (prod) =>
-  //         (prod.bakedWhere.includes("Prado")) &&
-  //         prod.isEOD === true
-  //     );
-  //     console.log('prodsToMap', prodsToMap)
-  //     setEODProds(prodsToMap);
-  //   } catch {}
-  // }, [products]);
-
+  const { data:products, mutate:mutateProducts } = useProductListFull(true);
+    
   const prepData = () => {
     if (!products) return []
-
-    console.log("prep products", products)
+    // console.log("prep products", products)
 
     const eodProds = products?.filter(p => 
-      p.bakedWhere.includes("Prado") && p.isEOD === true
+      p.bakedWhere.includes(PROD_LOCATION) && p.isEOD === true
     )
 
     const pocketsToMap = products.filter(p => 
-      p.bakedWhere.includes("Prado") && p.doughNick === "French"
+      p.bakedWhere.includes(PROD_LOCATION) && p.doughNick === "French"
     ).sort(dynamicSort("prodNick")).sort(dynamicSort("weight"))
-
     const pocketItems = [...new Set(pocketsToMap.map(p => p.weight))].map(weight => 
       pocketsToMap.find(product => product.weight === weight)
     )
@@ -107,85 +93,44 @@ function EODCounts({ loc }) {
 
 
 
-  const updateDBattr = async (id, attr, val) => {
-    let addDetails = {
-      id: id,
-      [attr]: val,
-      whoCountedLast: signedIn,
-    };
-    
-    try {
-      await API.graphql(
-        graphqlOperation(updateProduct, { input: { ...addDetails } })
-      );
-     
-    } catch (error) {
-      console.log("error on updating product", error);
-     
-    }
+  const handleSignIn = () => {
+    let signIn;
+
+    swal("Please Sign In:", {
+      content: "input",
+    }).then(async (value) => {
+      signIn = value;
+      setSignedIn(signIn);
+    });
   };
 
-  const updateItem = (value, itemToUpdate) => {
-    let ind = itemToUpdate.findIndex((item) => item.id === value.target.id);
-
-    itemToUpdate[ind].currentStock = value.target.value;
-    itemToUpdate[ind].updatedAt = DateTime.now().setZone("America/Los_Angeles");
-    itemToUpdate[ind].whoCountedLast = signedIn;
-
-    try {
-      let id = value.target.id;
-      let val = Number(value.target.value);
-      updateDBattr(id, "currentStock", val);
-    } catch {
-      console.log("error updating attribute.");
-    }
-  };
-
-  const handleChange = (value) => {
-    if (value.code === "Enter") {
-      let itemToUpdate = cloneDeep(products);
-      updateItem(value, itemToUpdate);
-      document.getElementById(value.target.id).value = "";
-
-      return itemToUpdate;
-    }
-  };
-
-  const handleBlur = (value) => {
-    let itemToUpdate = cloneDeep(products);
-    if (value.target.value !== "") {
-      updateItem(value, itemToUpdate);
-    }
-    document.getElementById(value.target.id).value = "";
-
-    return itemToUpdate;
-  };
-
-  const inputTemplate = (rowData) => {
+  const inputTemplate = ({ rowData, qtyAttribute }) => {
     return(
       <InputText 
         inputMode="numeric"
         style={{width: "50px", fontWeight: "bold"}}
-        placeholder={rowData.currentStock}
+        placeholder={rowData[qtyAttribute]}
+        onFocus={e => e.target.select()}
         onKeyUp={e => {if (e.code === "Enter") e.target.blur()}}
         onBlur={async e => {
           if (!e.target.value) return
 
           const submitItem = {
             prodNick: rowData.prodNick,
-            currentStock: Number(e.target.value),
+            [qtyAttribute]: Number(e.target.value),
             updatedAt: new Date().toISOString(),
             whoCountedLast: signedIn,
           }
           console.log("submitItem", submitItem)
           const responseItem = await gqlFetcher(updateProductQuery, { input: submitItem })
 
+          console.log("RESPONSE", responseItem.data.updateProduct)
           const i = products.findIndex(p => 
             p.prodNick === rowData.prodNick
           )
           const newItem = { 
             ...products[i],
-            ...responseItem
+            ...responseItem.data.updateProduct
           }   
           const _products = [...products.slice(0, i), newItem, ...products.slice(i + 1)]
 
@@ -200,111 +145,12 @@ function EODCounts({ loc }) {
 
   }
 
-  const handleInput = (e) => {
-    return (
-      <InputText
-        id={e.id}
-        style={{
-          width: "50px",
-          // backgroundColor: "#E3F2FD",
-          fontWeight: "bold",
-        }}
-        placeholder={e.currentStock}
-        // onKeyUp={(e) => e.code === "Enter" && setProducts(handleChange(e))}
-        // onBlur={(e) => setProducts(handleBlur(e))}
-      />
-    );
-  };
-
-  const handlePockChange = async (e) => {
-    let prodsToMod = cloneDeep(products);
-    for (let prod of prodsToMod) {
-      let weight = e.target.id.split(" ")[0];
-      // Account for doughtype
-
-      if (
-        Number(prod.weight) === Number(weight) &&
-        prod.doughType === "French"
-      ) {
-        prod.prepreshaped = e.target.value;
-        prod.whoCountedLast = signedIn;
-        prod.updatedAt = DateTime.now().setZone("America/Los_Angeles");
-        let itemUpdate = {
-          id: prod.id,
-          prepreshaped: Number(e.target.value),
-          whoCountedLast: signedIn,
-        }; 
-       try {
-        await API.graphql(
-          graphqlOperation(updateProduct, { input: { ...itemUpdate } })
-        );
-       
-      } catch (error) {
-        console.log("error on updating product", error);
-       
-      }  
-      }
-    }
-    //setProducts(prodsToMod)
-  };
-
-  const pocketInputTemplate = (rowData) => {
-    return (
-      <InputText
-        id={rowData.weight}
-        style={{ width: "50px", fontWeight: "bold" }}
-        placeholder={rowData.currentStock}
-        onKeyUp={e => {if (e.code === "Enter") e.target.blur()}}
-        onBlur={e => handlePockChange(e)}
-      />
-    );
-  };
-
-  const handleSignIn = () => {
-    let signIn;
-
-    swal("Please Sign In:", {
-      content: "input",
-    }).then(async (value) => {
-      signIn = value;
-      setSignedIn(signIn);
-    });
-  };
-
-  // const pocketValues = () => {
-  //   let pocks = pocketItems.map((pock) => pock.weight);
-  //   pocks = sortAtoZDataByIndex(pocks, "weight");
-  //   console.log("pocks", pocks);
-  //   let newArray = Array.from(
-  //     new Set(
-  //       sortAtoZDataByIndex(
-  //         pocketItems.map((pock) => pock.weight),
-  //         "weight"
-  //       )
-  //     )
-  //   ).map((arr) => ({
-  //     weight: arr + " lb.",
-  //     currentStock:
-  //       products[
-  //         products.findIndex(
-  //           (prod) => prod.weight === arr && prod.doughType === "French"
-  //         )
-  //       ].prepreshaped,
-  //     updatedAt:
-  //       products[
-  //         products.findIndex(
-  //           (prod) => prod.weight === arr && prod.doughType === "French"
-  //         )
-  //       ].updatedAt,
-  //     whoCountedLast:
-  //       products[
-  //         products.findIndex(
-  //           (prod) => prod.weight === arr && prod.doughType === "French"
-  //         )
-  //       ].whoCountedLast,
-  //   }));
-  //   return [];
-  // };
+  const currentStockInputTemplate = (rowData) => {
+    return inputTemplate({ rowData, qtyAttribute: "currentStock"})
+  }
+  const prepreshapedInputTemplate = (rowData) => {
+    return inputTemplate({ rowData, qtyAttribute: "prepreshaped" })
+  }
 
   const lastCountTemplate = (rowData) => {
     const { updatedAt, whoCountedLast } = rowData
@@ -324,7 +170,7 @@ function EODCounts({ loc }) {
   return (
     <React.Fragment>
       <WholeBox>
-        {loc === "Prado" ? <h1>BPBS EOD Counts</h1> : <h1>BPBN EOD Counts</h1>}
+        {PROD_LOCATION === "Prado" ? <h1>BPBS EOD Counts</h1> : <h1>BPBN EOD Counts</h1>}
         {signedIn === "null" ? (
           <BasicContainer>
             <Button
@@ -348,7 +194,7 @@ function EODCounts({ loc }) {
             >
               <Column field="prodName" header="By Bag" />
               <Column header="# of bags"
-                body={rowData => inputTemplate(rowData)}
+                body={currentStockInputTemplate}
                 //body={(e) => handleInput(e)}
                 className="p-text-center"
               />
@@ -375,7 +221,7 @@ function EODCounts({ loc }) {
               <Column
                 className="p-text-center"
                 header="ea"
-                body={inputTemplate}
+                body={currentStockInputTemplate}
               />
               <Column
                 className="p-text-center"
@@ -396,7 +242,7 @@ function EODCounts({ loc }) {
               <Column
                 className="p-text-center"
                 header="# of bags"
-                body={inputTemplate}
+                body={currentStockInputTemplate}
               />
               <Column
                 className="p-text-center"
@@ -421,7 +267,7 @@ function EODCounts({ loc }) {
               <Column
                 className="p-text-center"
                 header="ea"
-                body={inputTemplate}
+                body={currentStockInputTemplate}
               />
               <Column
                 className="p-text-center"
@@ -439,7 +285,7 @@ function EODCounts({ loc }) {
               <Column
                 className="p-text-center"
                 header="ea"
-                body={rowData => pocketInputTemplate(rowData)}
+                body={prepreshapedInputTemplate}
               />
               <Column
                 className="p-text-center"
