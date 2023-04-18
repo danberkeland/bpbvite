@@ -93,8 +93,8 @@ const submitCartByDate = async (order, cloudwatchLog) => {
         let resp = await updateItem(order.header, newItem, legacyItem)
         //returnData.push(resp)
       }
-      if (dRoute) cloudwatchLog.headerChanges.route = order.header.route
-      if (dPONote) cloudwatchLog.headerChanges.PONote = order.header.PONote
+      if (dRoute) cloudwatchLog.routeChanged = true
+      if (dPONote) cloudwatchLog.noteChanged = true
       
     } else {
       let resp = await createItem(order.header, newItem)
