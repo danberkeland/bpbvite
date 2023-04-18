@@ -3,7 +3,7 @@ import React from "react";
 import { InputTextarea } from "primereact/inputtextarea";
 import { InputText } from "primereact/inputtext";
 
-import { setValue, fixValue } from "../../../../../helpers/formHelpers";
+import { setValue, fixValue } from "../../../../helpers/formHelpers";
 
 const Note = ({ selectedNote, setSelectedNote }) => {
   return (

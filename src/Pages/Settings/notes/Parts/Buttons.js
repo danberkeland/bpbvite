@@ -1,14 +1,14 @@
 import React from "react";
 
 import styled from "styled-components";
-//import swal from "@sweetalert/with-react";
+import swal from "@sweetalert/with-react";
 import "primereact/resources/themes/saga-blue/theme.css";
 
 import {
   updateNotes,
   deleteNotes,
   createNotes,
-} from "../../../../../graphql/mutations";
+} from "../../../../graphql/mutations";
 
 import { Button } from "primereact/button";
 
@@ -27,7 +27,7 @@ const Buttons = ({ selectedNote, setSelectedNote }) => {
   const handleAddNote = () => {
     let when;
     let note;
-    /*
+    
     swal("Enter Note Date (mm/dd/yyyy):", {
       content: "input",
     }).then((value) => {
@@ -43,7 +43,7 @@ const Buttons = ({ selectedNote, setSelectedNote }) => {
         };
         createNote(addDetails);
       });
-    });*/
+    });
   };
 
   const createNote = async (addDetails) => {
