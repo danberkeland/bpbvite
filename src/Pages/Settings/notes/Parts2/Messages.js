@@ -13,7 +13,6 @@ import { createNotes } from "../../../../graphql/mutations";
 import { revalidateNotes } from "../../../../data/notesData";
 
 const Messages = ({ notes, delivDate }) => {
-  
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [editDialogVisible, setEditDialogVisible] = useState(false);
   const [editedMessage, setEditedMessage] = useState("");
@@ -23,6 +22,13 @@ const Messages = ({ notes, delivDate }) => {
   const date = new Date(delivDate);
   const dateString = date.toISOString().slice(0, 10);
 
+  const options = {
+    weekday: "short",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  };
+  const local = date.toLocaleDateString("en-US", options);
 
   const handleEdit = (rowData) => {
     setSelectedMessage(rowData);
@@ -69,7 +75,7 @@ const Messages = ({ notes, delivDate }) => {
     const updatedMessages = notes.filter(
       (message) => message !== selectedMessageToDelete
     );
-    
+
     setConfirmDialogVisible(false);
   };
 
@@ -103,10 +109,12 @@ const Messages = ({ notes, delivDate }) => {
     );
   };
 
+  const header = "Create Note for " + local;
+
   return (
     <>
       <Button
-        label="Add Message"
+        label="CREATE A NOTE"
         icon="pi pi-plus"
         className="p-button-rounded p-button-success p-mb-3"
         onClick={handleAdd}
@@ -116,7 +124,7 @@ const Messages = ({ notes, delivDate }) => {
         <Column header="Actions" body={actionTemplate} />
       </DataTable>
       <Dialog
-        header="Edit Message"
+        header={header}
         visible={editDialogVisible}
         style={{ width: "50%" }}
         onHide={() => setEditDialogVisible(false)}
