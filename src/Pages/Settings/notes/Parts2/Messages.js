@@ -7,9 +7,10 @@ import { InputText } from "primereact/inputtext";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { getWorkingDateTime } from "../../../../functions/dateAndTime";
 import { DummyMessages } from "./DummyMessages";
+import { useEffect } from "react";
 
-const Messages = () => {
-  const [messages, setMessages] = useState(DummyMessages);
+const Messages = ({ notes }) => {
+  const [messages, setMessages] = useState();
 
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [editDialogVisible, setEditDialogVisible] = useState(false);
@@ -17,9 +18,13 @@ const Messages = () => {
   const [confirmDialogVisible, setConfirmDialogVisible] = useState(false);
   const [selectedMessageToDelete, setSelectedMessageToDelete] = useState(null);
 
+  useEffect(() => {
+    setMessages(notes)
+  },[notes])
+
   const handleEdit = (rowData) => {
     setSelectedMessage(rowData);
-    setEditedMessage(rowData.message);
+    setEditedMessage(rowData.note);
     setEditDialogVisible(true);
   };
 
@@ -37,7 +42,7 @@ const Messages = () => {
   };
 
   const handleCancel = () => {
-    setEditedMessage(selectedMessage.message);
+    setEditedMessage(selectedMessage.note);
     setEditDialogVisible(false);
   };
 
@@ -66,8 +71,8 @@ const Messages = () => {
   const messageTemplate = (rowData) => {
     return (
       <div>
-        <div>{rowData.message}</div>
-        <div>{rowData.date.toLocaleDateString()}</div>
+        <div>{rowData.note}</div>
+        <div>{rowData.when}</div>
       </div>
     );
   };
