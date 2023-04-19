@@ -26,7 +26,7 @@ function Notes2() {
           <NotesCalendar delivDate={delivDate} setDelivDate={setDelivDate} notes={notes} />
         </div>
         <div className="datatable-container">
-          <Messages notes={notes}/>
+          <Messages notes={notes} delivDate={delivDate}/>
         </div>
       </div>
     </div>

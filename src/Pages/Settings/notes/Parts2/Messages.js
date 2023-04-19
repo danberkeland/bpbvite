@@ -8,8 +8,11 @@ import { ConfirmDialog } from "primereact/confirmdialog";
 import { getWorkingDateTime } from "../../../../functions/dateAndTime";
 import { DummyMessages } from "./DummyMessages";
 import { useEffect } from "react";
+import { API, graphqlOperation } from "aws-amplify";
+import { createNotes } from "../../../../graphql/mutations";
+import { revalidateNotes } from "../../../../data/notesData";
 
-const Messages = ({ notes }) => {
+const Messages = ({ notes, delivDate }) => {
   const [messages, setMessages] = useState();
 
   const [selectedMessage, setSelectedMessage] = useState(null);
@@ -18,9 +21,12 @@ const Messages = ({ notes }) => {
   const [confirmDialogVisible, setConfirmDialogVisible] = useState(false);
   const [selectedMessageToDelete, setSelectedMessageToDelete] = useState(null);
 
+  const date = new Date(delivDate);
+  const dateString = date.toISOString().slice(0, 10);
+
   useEffect(() => {
-    setMessages(notes)
-  },[notes])
+    setMessages(notes);
+  }, [notes]);
 
   const handleEdit = (rowData) => {
     setSelectedMessage(rowData);
@@ -29,16 +35,23 @@ const Messages = ({ notes }) => {
   };
 
   const handleSave = () => {
-    const updatedMessages = messages.map((message) => {
-      if (message === selectedMessage) {
-        return { ...message, message: editedMessage };
-      } else {
-        return message;
-      }
-    });
-
-    setMessages(updatedMessages);
+    const addDetails = {
+      note: editedMessage,
+      when: dateString,
+    };
+    createNote(addDetails);
     setEditDialogVisible(false);
+  };
+
+  const createNote = async (addDetails) => {
+    try {
+      await API.graphql(
+        graphqlOperation(createNotes, { input: { ...addDetails } })
+      );
+    } catch (error) {
+      console.log("error on creating Note", error);
+    }
+    revalidateNotes();
   };
 
   const handleCancel = () => {

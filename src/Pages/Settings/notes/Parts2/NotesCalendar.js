@@ -38,7 +38,7 @@ export const NotesCalendar = ({ delivDate, setDelivDate }) => {
       //showOtherMonths={false}
       //showMinMaxRange={true}
       //dateTemplate={dateTemplate}
-      //onChange={(e) => setDelivDate(e.value)}
+      onChange={(e) => setDelivDate(e.value)}
       inline={true}
     />
   );

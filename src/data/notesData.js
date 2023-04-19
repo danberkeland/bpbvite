@@ -47,6 +47,6 @@ export const useNotesList = () => {
  * Can be called whenever locationListSimple data is affected by a mutation.
  * Revalidation can be called anywhere, even when useLocationListSimple is not present.
  */
-export const revalidateLocationListSimple = () => {
+export const revalidateNotes = () => {
   mutate([queries.listNotes, { limit: 1000 }], null, { revalidate: true });
 };
