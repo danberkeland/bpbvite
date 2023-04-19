@@ -63,7 +63,9 @@ export const BpbTerminal = ({
     viewReport: () => displayCartOverview(cartOverview),
     clear: (value) => {
       return 'clear'
-    }
+    },
+    copy: () => copyOrder(itemChanges),
+    cancel: () => clearQtys(itemChanges, setItemChanges)
   }
 
 
@@ -113,6 +115,26 @@ export const BpbTerminal = ({
         if (args[i] === 'view-report') {
           commands.push({ 
             commandType: 'viewReport',
+            value: null
+          })
+          parsedFlag = true
+        } 
+      }
+
+      if (!parsedFlag) {
+        if (args[i] === 'copy') {
+          commands.push({ 
+            commandType: 'copy',
+            value: null
+          })
+          parsedFlag = true
+        } 
+      }
+
+      if (!parsedFlag) {
+        if (args[i] === 'cancel') {
+          commands.push({ 
+            commandType: 'cancel',
             value: null
           })
           parsedFlag = true
@@ -676,5 +698,27 @@ const displayCartOverview = (cartData) => {
   </div>
 
   return [output]
+
+}
+
+const copyOrder = (itemChanges) => {
+  let copyString = "set"
+  
+  for (let item of itemChanges) {
+    copyString = copyString + ` ${item.qty} ${item.product.prodNick}`
+  }
+
+  navigator.clipboard.writeText(copyString)
+    .then(string => {console.log(string)})
+
+    return [<div>{`"${copyString}" copied to clipboard`}</div>]
+
+}
+
+const clearQtys = (itemChanges, setItemChanges) => {
+  const items = itemChanges.map(item => ({ product: item.product, qty: 0}))
+  handleAddCartProducts(items, itemChanges, setItemChanges)
+
+  return(['Item qtys cleared.'])
 
 }
