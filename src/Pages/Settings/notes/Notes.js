@@ -38,7 +38,7 @@ const GroupBox = styled.div`
 function Notes() {
   const [selectedNote, setSelectedNote] = useState(null);
   const [notes, setNotes] = useState([]);
-
+  
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
   useEffect(() => {

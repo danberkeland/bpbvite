@@ -43,7 +43,7 @@ import DelivOrder from "../Pages/Settings/delivOrder/delivOrder";
 import EditDoughs from "../Pages/Settings/editDough/editDough";
 import EditZones from "../Pages/Settings/editZones/editZones";
 import EditRoutes from "../Pages/Settings/editRoutes/editRoutes";
-import Notes from "../Pages/Settings/notes/Notes";
+import Notes2 from "../Pages/Settings/notes/Notes2";
 
 function AnimatedRoutes({ Routes, Route, useLocation }) {
   const authClass = useSettingsStore((state) => state.authClass);
@@ -122,7 +122,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             <Route path="/Settings/editDough" element={<EditDoughs />} />
             <Route path="/Settings/editRoutes" element={<EditRoutes />} />
             <Route path="/Settings/editZones" element={<EditZones />} />
-            <Route path="/Settings/Notes" element={<Notes />} />
+            <Route path="/Settings/Notes" element={<Notes2 />} />
           </React.Fragment>
         )}
 
