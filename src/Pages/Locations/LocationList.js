@@ -9,6 +9,7 @@ import LocationDetails from "./LocationDetails";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { withFadeIn } from "../../hoc/withFadeIn";
 import { useLocationListFull } from "../../data/locationData";
+import { Button } from "primereact/button";
 
 const initialState = {
   Type: "Location",
@@ -67,25 +68,26 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
     return (
       <div className="bpbDataTable">
         <DataTable
-        className="datatable"
-        value={tableData}
-        selectionMode="single"
-        metaKeySelection={false}
-        selection={selectedLocation}
-        onSelectionChange={(e) => 
-          setSelectedLocation({ ...initialState, ...e.value })
-        }
-        sortField="locName"
-        sortOrder={1}
-        responsiveLayout="scroll"
-        filterDisplay="row"
-        filters={filter}
-      >
-        <Column field="locName" filterPlaceholder="Search Locations" filter />
+          className="datatable"
+          value={tableData}
+          selectionMode="single"
+          metaKeySelection={false}
+          selection={selectedLocation}
+          onSelectionChange={(e) => 
+            setSelectedLocation({ ...initialState, ...e.value })
+          }
+          sortField="locName"
+          sortOrder={1}
+          responsiveLayout="scroll"
+          filterDisplay="row"
+          filters={filter}
+          scrollable
+          scrollHeight="60rem"
+        >
+        <Column field="locName" filterPlaceholder="Search Locations" filter/>
         <Column field="locNick"  />
       </DataTable>
       </div>
-      
     );
   });
 
@@ -93,7 +95,11 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
     <React.Fragment>
       {isCreate ? (
         <React.Fragment>
-          <button onClick={handleClick}>+ LOCATION LIST</button>
+          <Button label="LOCATION LIST" 
+            icon="pi pi-fw pi-chevron-left"
+            onClick={handleClick}
+            style={{margin: ".5rem"}}
+          />
           <LocationDetails
             initialState={initialState}
             locationList={locationList.data}
@@ -101,7 +107,11 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <button onClick={handleClick}>+ CREATE LOCATION</button>
+          <Button label="CREATE LOCATION" 
+            icon="pi pi-fw pi-plus"
+            onClick={handleClick} 
+            style={{margin: ".5rem"}}
+          />
           {(!locationList && !locationListErrors) ? setIsLoading(true) : setIsLoading(false)}
 
           {locationListErrors && <div>Table Failed to load</div>}

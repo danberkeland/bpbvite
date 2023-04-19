@@ -4,6 +4,7 @@ import LocationList from "./LocationList";
 import LocationDetails from "./LocationDetails";
 import { withFadeIn } from "../../hoc/withFadeIn";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
+import { Button } from "primereact/button";
 
 function Locations() {
   const [selectedLocation, setSelectedLocation] = useState("");
@@ -17,24 +18,31 @@ function Locations() {
 
   const FadeLocationList = withFadeIn(() => {
     return (
-      <LocationList
-        selectedLocation={selectedLocation}
-        setSelectedLocation={setSelectedLocation}
-      />
+      <div style={{width: "60rem", display: "flex", flexDirection: "column"}}>
+        <LocationList
+          selectedLocation={selectedLocation}
+          setSelectedLocation={setSelectedLocation}
+        />
+      </div>
     );
   });
 
   return (
-    <React.Fragment>
+    <div style={{display: "flex", justifyContent: "center"}}>
       {selectedLocation === "" ? (
         <FadeLocationList />
       ) : (
-        <React.Fragment>
-          <button className="fullButton" onClick={handleLocClick}>LOCATION LIST</button>
+        <div style={{flex: "0 1 60rem"}}>
+          <Button label="LOCATION LIST"
+            icon="pi pi-fw pi-chevron-left"
+            iconPos="left"
+            className="fullButton" 
+            style={{margin: ".5rem"}}
+            onClick={handleLocClick}/>
           <LocationDetails initialState={selectedLocation} />
-        </React.Fragment>
+        </div>
       )}
-    </React.Fragment>
+    </div>
   );
 }
 
