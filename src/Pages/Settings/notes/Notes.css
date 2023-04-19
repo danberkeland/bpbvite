@@ -29,7 +29,7 @@
 @media only screen and (min-width: 768px) {
   .calendar-datatable-container {
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: flex-start;
   }
 
@@ -39,7 +39,7 @@
   }
 
   .datatable-container {
-    width: calc(70% - 20px);
+    width: calc(60% - 20px);
     overflow-x: auto;
   }
 }

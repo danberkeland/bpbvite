@@ -7,9 +7,7 @@ import {
   yyyymmddToWeekday,
 } from "../../../../functions/dateAndTime";
 
-export const NotesCalendar = ({ delivDate, setDelivDate }) => {
-  //console.log("order Summary", orderSummary)
-
+export const NotesCalendar = ({ delivDate, setDelivDate, notes }) => {
   const dateTemplate = (date) => {
     const calendarDate = `${date.year}-${
       "0" + String(date.month + 1).slice(-2)
@@ -17,6 +15,12 @@ export const NotesCalendar = ({ delivDate, setDelivDate }) => {
     const dayOfWeek = yyyymmddToWeekday(calendarDate);
 
     const style = { padding: "2rem", backgroundColor: "white", color: "black" };
+    
+    if (notes && notes.some((note) => note.when === calendarDate)) {
+      style.backgroundColor = "gray";
+      style.color = "white";
+    }
+   
 
     return <div style={style}>{date.day}</div>;
   };
@@ -24,20 +28,17 @@ export const NotesCalendar = ({ delivDate, setDelivDate }) => {
   return (
     <Calendar
       id="calendar"
-      //touchUI={true}
-      //value={delivDate}
-      //viewDate={delivDate}
-      //placeholder={dateToMmddyyyy(delivDate)} // hacky workaround for buggy behavior when toggling inline property
-      readOnlyInput={false} // prevent keyboard input of invalid date string
+      value={delivDate}
+      viewDate={delivDate}
+      placeholder={dateToMmddyyyy(delivDate)}
+      readOnlyInput={false}
       minDate={getWorkingDateTime("NOW").minus({ days: 1 }).toJSDate()}
       maxDate={getWorkingDateTime("NOW")
         .plus({ months: 2 })
         .endOf("month")
         .minus({ hours: 1 })
         .toJSDate()}
-      //showOtherMonths={false}
-      //showMinMaxRange={true}
-      //dateTemplate={dateTemplate}
+      dateTemplate={dateTemplate}
       onChange={(e) => setDelivDate(e.value)}
       inline={true}
     />

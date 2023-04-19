@@ -5,11 +5,9 @@ import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { ConfirmDialog } from "primereact/confirmdialog";
-import { getWorkingDateTime } from "../../../../functions/dateAndTime";
-import { DummyMessages } from "./DummyMessages";
-import { useEffect } from "react";
+
 import { API, graphqlOperation } from "aws-amplify";
-import { createNotes } from "../../../../graphql/mutations";
+import { createNotes, deleteNotes, updateNotes } from "../../../../graphql/mutations";
 import { revalidateNotes } from "../../../../data/notesData";
 
 const Messages = ({ notes, delivDate }) => {
@@ -18,9 +16,18 @@ const Messages = ({ notes, delivDate }) => {
   const [editedMessage, setEditedMessage] = useState("");
   const [confirmDialogVisible, setConfirmDialogVisible] = useState(false);
   const [selectedMessageToDelete, setSelectedMessageToDelete] = useState(null);
+  const [showAllDates, setShowAllDates] = useState(true);
+
 
   const date = new Date(delivDate);
   const dateString = date.toISOString().slice(0, 10);
+
+  console.log('notes', notes)
+
+  const filteredNotes = showAllDates
+  ? notes
+  : notes.filter((note) => note.when === dateString);
+
 
   const options = {
     weekday: "short",
@@ -30,6 +37,11 @@ const Messages = ({ notes, delivDate }) => {
   };
   const local = date.toLocaleDateString("en-US", options);
 
+  const handleToggleFilter = () => {
+    setShowAllDates(!showAllDates);
+  };
+  
+
   const handleEdit = (rowData) => {
     setSelectedMessage(rowData);
     setEditedMessage(rowData.note);
@@ -37,11 +49,21 @@ const Messages = ({ notes, delivDate }) => {
   };
 
   const handleSave = () => {
-    const addDetails = {
-      note: editedMessage,
-      when: dateString,
-    };
-    createNote(addDetails);
+    if (selectedMessage.id){
+      const addDetails = {
+        id: selectedMessage.id,
+        note: editedMessage,
+        when: dateString,
+      };
+      updateNote(addDetails);
+    } else {
+      const addDetails = {
+        note: editedMessage,
+        when: dateString,
+      };
+      createNote(addDetails);
+    }
+    
     setEditDialogVisible(false);
   };
 
@@ -56,6 +78,28 @@ const Messages = ({ notes, delivDate }) => {
     }
   };
 
+  const updateNote = async (addDetails) => {
+    try {
+      await API.graphql(
+        graphqlOperation(updateNotes, { input: { ...addDetails } })
+      );
+      revalidateNotes();
+    } catch (error) {
+      console.log("error on updating Note", error);
+    }
+  };
+
+  const deleteNote = async (addDetails) => {
+    try {
+      await API.graphql(
+        graphqlOperation(deleteNotes, { input: { ...addDetails } })
+      );
+      revalidateNotes();
+    } catch (error) {
+      console.log("error on deleting Note", error);
+    }
+  };
+
   const handleCancel = () => {
     setEditedMessage(selectedMessage.note);
     setEditDialogVisible(false);
@@ -63,6 +107,7 @@ const Messages = ({ notes, delivDate }) => {
 
   const handleAdd = () => {
     setEditedMessage("");
+    setSelectedMessage("")
     setEditDialogVisible(true);
   };
 
@@ -72,9 +117,10 @@ const Messages = ({ notes, delivDate }) => {
   };
 
   const handleDeleteConfirmed = () => {
-    const updatedMessages = notes.filter(
-      (message) => message !== selectedMessageToDelete
-    );
+    const addDetails = {
+      id: selectedMessageToDelete.id,
+    };
+    deleteNote(addDetails);
 
     setConfirmDialogVisible(false);
   };
@@ -119,7 +165,14 @@ const Messages = ({ notes, delivDate }) => {
         className="p-button-rounded p-button-success p-mb-3"
         onClick={handleAdd}
       />
-      <DataTable value={notes} className="p-datatable-striped">
+      <Button
+  label={showAllDates ? "Filter by date" : "Show all dates"}
+  icon="pi pi-filter"
+  className="p-button-rounded p-button-secondary p-mr-2"
+  onClick={handleToggleFilter}
+/>
+
+      <DataTable value={filteredNotes} className="p-datatable-striped">
         <Column header="Message" body={messageTemplate} />
         <Column header="Actions" body={actionTemplate} />
       </DataTable>
