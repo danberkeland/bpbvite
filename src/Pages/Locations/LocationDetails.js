@@ -88,25 +88,28 @@ function LocationDetails({ initialState }) {
             />
             <BPB.CustomTextInput label="City" name="city" converter={props} />
             <BPB.CustomTextInput label="Zip" name="zip" converter={props} />
+            <BPB.CustomFloatInput 
+              label="Earliest Delivery (0-24)" 
+              name="latestFirstDeliv"
+              converter={props}
+            />
+            <BPB.CustomFloatInput 
+              label="Need All Before (0-24)" 
+              name="latestFinalDeliv"
+              converter={props}
+            />
+
             <BPB.CustomTextInput
               label="Google Maps Link"
               name="gMap"
               converter={props}
             />
-            {!isEdit ? (
-              <BPB.CustomEditor
+            <BPB.CustomEditor
               label="Special Instructions"
               name="specialInstructions"
-              readOnly
+              readOnly={!isEdit}
               converter={props}
             />
-            ) : (
-              <BPB.CustomEditor
-                label="Special Instructions"
-                name="specialInstructions"
-                converter={props}
-              />
-            )}
           </GroupBox>
 
           <GroupBox>
