@@ -1,0 +1,108 @@
+.long-driver-notes-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.title {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.calendar-datatable-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.calendar-container {
+  margin-bottom: 20px;
+}
+
+.datatable-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+@media only screen and (min-width: 768px) {
+  .calendar-datatable-container {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .calendar-container {
+    margin-right: 20px;
+    margin-bottom: 0;
+  }
+
+  .datatable-container {
+    width: calc(70% - 20px);
+    overflow-x: auto;
+  }
+}
+
+.p-datatable {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.p-datatable thead {
+  background-color: #f2f2f2;
+}
+
+.p-datatable th {
+  text-align: left;
+}
+
+.p-datatable td,
+.p-datatable td > div {
+  word-break: break-all;
+  padding: 10px;
+}
+
+.p-datatable tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.p-calendar {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.p-calendar .p-datepicker {
+  width: 100%;
+  height: 100%;
+}
+
+.p-calendar .p-inputtext {
+  width: 100%;
+  border: none;
+  border-radius: 0;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: #f2f2f2;
+  cursor: pointer;
+}
+
+.p-calendar .p-datepicker-trigger {
+  border: none;
+  border-radius: 0;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: #f2f2f2;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 767px) {
+  .p-datatable td,
+  .p-datatable td > div {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
