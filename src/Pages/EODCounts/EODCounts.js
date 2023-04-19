@@ -62,11 +62,13 @@ function EODCounts({ loc }) {
     // console.log("prep products", products)
 
     const eodProds = products?.filter(p => 
-      p.bakedWhere.includes(PROD_LOCATION) && p.isEOD === true
-    )
+      p.bakedWhere.includes(PROD_LOCATION) && p.bakedWhere.length === 1 
+        && p.isEOD === true
+    ).sort(dynamicSort("prodName"))
 
     const pocketsToMap = products.filter(p => 
-      p.bakedWhere.includes(PROD_LOCATION) && p.doughNick === "French"
+      p.bakedWhere.includes("Prado") && p.bakedWhere.length === 1
+        && p.doughNick === "French"
     ).sort(dynamicSort("prodName")).sort(dynamicSort("weight"))
     const pocketItems = [...new Set(pocketsToMap.map(p => p.weight))].map(weight => 
       pocketsToMap.find(product => product.weight === weight)
