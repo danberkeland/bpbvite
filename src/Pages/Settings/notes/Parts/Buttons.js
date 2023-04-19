@@ -8,7 +8,7 @@ import {
   updateNotes,
   deleteNotes,
   createNotes,
-} from "../../../../../graphql/mutations";
+} from "../../../../graphql/mutations";
 
 import { Button } from "primereact/button";
 

@@ -17,7 +17,7 @@ export const useRouteListFull = (shouldFetch) => {
   let query = queries.listRoutesFull;
   let variables = { limit: 1000 };
 
-  const { data, errors } = useSWR(
+  const { data, errors, mutate } = useSWR(
     shouldFetch ? [query, variables] : null,
     gqlFetcher,
     defaultSwrOptions
@@ -38,6 +38,7 @@ export const useRouteListFull = (shouldFetch) => {
   return {
     data: transformedData,
     errors: errors,
+    revalidate: () => mutate(),
   };
 };
 
@@ -45,7 +46,7 @@ export const useZoneRouteListFull = ({ shouldFetch }) => {
   let query = listZoneRoutes;
   let variables = { limit: 1000 };
 
-  const { data, errors } = useSWR(
+  const { data, errors, mutate } = useSWR(
     shouldFetch ? [query, variables] : null,
     gqlFetcher,
     defaultSwrOptions
@@ -54,5 +55,7 @@ export const useZoneRouteListFull = ({ shouldFetch }) => {
   return {
     data: getNestedObject(data, ["data", "listZoneRoutes", "items"]),
     errors: errors,
+    revalidate: () => mutate()
   };
 };
+

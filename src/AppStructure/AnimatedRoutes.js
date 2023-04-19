@@ -43,7 +43,7 @@ import DelivOrder from "../Pages/Settings/delivOrder/delivOrder";
 import EditDoughs from "../Pages/Settings/editDough/editDough";
 import EditZones from "../Pages/Settings/editZones/editZones";
 import EditRoutes from "../Pages/Settings/editRoutes/editRoutes";
-import Notes from "../Pages/Settings/editRoutes/notes/Notes";
+import Notes from "../Pages/Settings/notes/Notes";
 
 function AnimatedRoutes({ Routes, Route, useLocation }) {
   const authClass = useSettingsStore((state) => state.authClass);

@@ -2,12 +2,12 @@ import React, { useState, useEffect, useContext } from "react";
 
 import styled from "styled-components";
 
-import { notesData } from "../../../../helpers/databaseFetchers";
+import { notesData } from "../../../helpers/databaseFetchers";
 
 import NoteList from "./Parts/NoteList";
 import Note from "./Parts/Note";
 import Buttons from "./Parts/Buttons";
-import { useSettingsStore } from "../../../../Contexts/SettingsZustand";
+import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 
 const MainWrapper = styled.div`
   display: grid;

@@ -30,6 +30,7 @@ const DelivOrder = () => {
 
 
   useEffect(() => {
+    console.log('customers', customers)
     let custFilt;
     custFilt = customers.filter(
       (cust) =>
@@ -54,6 +55,7 @@ const DelivOrder = () => {
   
 
   const onRowReorder = (e) => {
+    console.log('e', e)
     setCustomerList(e.value);
     setOrdersHasBeenChanged(true);
   };
@@ -64,7 +66,7 @@ const DelivOrder = () => {
     for (let cust of customerList) {
       ind=ind+1
       const updateDetails = {
-        id: cust.id,
+        locNick: cust.nickName,
         delivOrder: ind,
       };
 
@@ -72,6 +74,7 @@ const DelivOrder = () => {
         await API.graphql(
           graphqlOperation(updateLocation, { input: { ...updateDetails } })
         );
+        console.log("success")
         
       } catch (error) {
         console.log("error on creating Orders", error);
@@ -98,7 +101,7 @@ const DelivOrder = () => {
       />
       <div>
         <div className="card">
-          <DataTable value={customerList} onRowReorder={onRowReorder}>
+          <DataTable value={customerList} reorderableRows onRowReorder={onRowReorder}>
             <Column rowReorder style={{ width: "3em" }} />
 
             <Column field="custName" header="customer"></Column>
