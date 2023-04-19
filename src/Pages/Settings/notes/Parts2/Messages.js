@@ -9,6 +9,7 @@ import { ConfirmDialog } from "primereact/confirmdialog";
 import { API, graphqlOperation } from "aws-amplify";
 import { createNotes, deleteNotes, updateNotes } from "../../../../graphql/mutations";
 import { revalidateNotes } from "../../../../data/notesData";
+import { sortAtoZDataByIndex } from "../../../../helpers/sortDataHelpers";
 
 const Messages = ({ notes, delivDate }) => {
   const [selectedMessage, setSelectedMessage] = useState(null);
@@ -53,7 +54,7 @@ const Messages = ({ notes, delivDate }) => {
       const addDetails = {
         id: selectedMessage.id,
         note: editedMessage,
-        when: dateString,
+        when: selectedMessage.when,
       };
       updateNote(addDetails);
     } else {
@@ -155,7 +156,7 @@ const Messages = ({ notes, delivDate }) => {
     );
   };
 
-  const header = "Create Note for " + local;
+  const header = selectedMessage?.when ? "Create Note for " + selectedMessage?.when : "Create Note for " + dateString
 
   return (
     <>
