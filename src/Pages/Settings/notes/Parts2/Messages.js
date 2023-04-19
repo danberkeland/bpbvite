@@ -13,8 +13,7 @@ import { createNotes } from "../../../../graphql/mutations";
 import { revalidateNotes } from "../../../../data/notesData";
 
 const Messages = ({ notes, delivDate }) => {
-  const [messages, setMessages] = useState();
-
+  
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [editDialogVisible, setEditDialogVisible] = useState(false);
   const [editedMessage, setEditedMessage] = useState("");
@@ -24,9 +23,6 @@ const Messages = ({ notes, delivDate }) => {
   const date = new Date(delivDate);
   const dateString = date.toISOString().slice(0, 10);
 
-  useEffect(() => {
-    setMessages(notes);
-  }, [notes]);
 
   const handleEdit = (rowData) => {
     setSelectedMessage(rowData);
@@ -48,10 +44,10 @@ const Messages = ({ notes, delivDate }) => {
       await API.graphql(
         graphqlOperation(createNotes, { input: { ...addDetails } })
       );
+      revalidateNotes();
     } catch (error) {
       console.log("error on creating Note", error);
     }
-    revalidateNotes();
   };
 
   const handleCancel = () => {
@@ -70,10 +66,10 @@ const Messages = ({ notes, delivDate }) => {
   };
 
   const handleDeleteConfirmed = () => {
-    const updatedMessages = messages.filter(
+    const updatedMessages = notes.filter(
       (message) => message !== selectedMessageToDelete
     );
-    setMessages(updatedMessages);
+    
     setConfirmDialogVisible(false);
   };
 
@@ -115,7 +111,7 @@ const Messages = ({ notes, delivDate }) => {
         className="p-button-rounded p-button-success p-mb-3"
         onClick={handleAdd}
       />
-      <DataTable value={messages} className="p-datatable-striped">
+      <DataTable value={notes} className="p-datatable-striped">
         <Column header="Message" body={messageTemplate} />
         <Column header="Actions" body={actionTemplate} />
       </DataTable>

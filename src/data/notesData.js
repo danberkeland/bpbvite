@@ -8,28 +8,27 @@ import getNestedObject from "../functions/getNestedObject";
 
 import gqlFetcher from "./fetchers";
 
-import * as queries from "../graphql/queries";
+const query = `query MyQuery {
+  listNotes {
+    items {
+      id
+      note
+      when
+    }
+  }
+}`;
 
 export const useNotesList = () => {
   const { data, errors, isValidating } = useSWR(
-    [`query MyQuery {
-      listNotes {
-        items {
-          id
-          note
-          when
-        }
-      }
-    }`
-    , { limit: 1000 }],
+    [query, { limit: 1000 }],
     gqlFetcher,
     defaultSwrOptions
   );
-  console.log('data', data)
+  console.log("data", data);
 
   const transformData = () => {
     if (!data) return undefined;
-    console.log('data', data)
+    console.log("data", data);
     return getNestedObject(data, ["data", "listNotes", "items"]).sort(
       dynamicSort("when")
     );
@@ -48,5 +47,5 @@ export const useNotesList = () => {
  * Revalidation can be called anywhere, even when useLocationListSimple is not present.
  */
 export const revalidateNotes = () => {
-  mutate([queries.listNotes, { limit: 1000 }], null, { revalidate: true });
+  mutate([query, { limit: 1000 }], null, { revalidate: true });
 };
