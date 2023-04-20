@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { CustomInputs } from "../../../FormComponents/CustomInputs";
 
 import { Button } from "primereact/button";
-import { confirmDialog } from "primereact/confirmdialog";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { OverlayPanel } from "primereact/overlaypanel";
 
 import {
@@ -119,6 +119,7 @@ function CustomerDescription(props) {
     : [];
   return (
     <GroupBox>
+      <ConfirmDialog />
       <FlexSpaceBetween>
         <h2>
           <i className="pi pi-user"></i> Customer Description{" "}
