@@ -36,9 +36,14 @@ const GroupBox = styled.div`
 function EditDoughs() {
   const [selectedDough, setSelectedDough] = useState();
   const [isModified, setIsModified] = useState(null);
+  const [doughComponents, setDoughComponents ] = useState([])
 
   const { data: doughs } = useDoughFull({ shouldFetch: true });
-  const { data: doughComponents } = useDoughComponents({ shouldFetch: true });
+  const { data: doughComps } = useDoughComponents({ shouldFetch: true });
+
+  useEffect(() => {
+    setDoughComponents(doughComps)
+  }, [doughComps])
 
   return (
     <React.Fragment>
@@ -48,6 +53,7 @@ function EditDoughs() {
           setSelectedDough={setSelectedDough}
           doughs={doughs}
           doughComponents={doughComponents}
+          setDoughComponents={setDoughComponents}
           setIsModified={setIsModified}
         />
         {selectedDough && (
@@ -58,6 +64,7 @@ function EditDoughs() {
                   selectedDough={selectedDough}
                   setSelectedDough={setSelectedDough}
                   doughComponents={doughComponents}
+                  setDoughComponents={setDoughComponents}
                   isModified={isModified}
                   setIsModified={setIsModified}
                 />
@@ -71,6 +78,7 @@ function EditDoughs() {
             setSelectedDough={setSelectedDough}
             doughs={doughs}
             doughComponents={doughComponents}
+            setDoughComponents={setDoughComponents}
             isModified={isModified}
             setIsModified={setIsModified}
           />
