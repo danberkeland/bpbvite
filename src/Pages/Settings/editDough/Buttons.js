@@ -35,7 +35,8 @@ const Buttons = ({
   selectedDough,
   setSelectedDough,
   doughComponents,
-  isModified
+  isModified,
+  setIsModified
 }) => {
   const [value, setValue] = useState();
   const toast = useRef(null);
@@ -193,7 +194,10 @@ const Buttons = ({
           life: 3000,
         });
       };
+      revalidateDough()
+      setIsModified(false)
       showSuccess();
+      
     } catch (error) {
       console.log("error on fetching Dough List", error);
     }
