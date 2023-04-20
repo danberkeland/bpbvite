@@ -41,7 +41,7 @@ import SpecialOrders from "../Pages/Logistics/SpecialOrders";
 import FreezerThaw from "../Pages/Logistics/FreezerThaw";
 import DelivOrder from "../Pages/Settings/delivOrder/delivOrder";
 import EditDoughs from "../Pages/Settings/editDough/editDough";
-import EditZones from "../Pages/Settings/editZones/editZones";
+import EditZones2 from "../Pages/Settings/editZones/editZones2";
 import EditRoutes from "../Pages/Settings/editRoutes/editRoutes";
 import Notes2 from "../Pages/Settings/notes/Notes2";
 
@@ -121,7 +121,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             <Route path="/Settings/DelivOrder" element={<DelivOrder />} />
             <Route path="/Settings/editDough" element={<EditDoughs />} />
             <Route path="/Settings/editRoutes" element={<EditRoutes />} />
-            <Route path="/Settings/editZones" element={<EditZones />} />
+            <Route path="/Settings/editZones" element={<EditZones2 />} />
             <Route path="/Settings/Notes" element={<Notes2 />} />
           </React.Fragment>
         )}
