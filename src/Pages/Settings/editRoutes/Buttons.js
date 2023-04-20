@@ -9,9 +9,12 @@ import { createRoute } from "../../../graphql/mutations";
 import { Button } from "primereact/button";
 
 import { API, graphqlOperation } from "aws-amplify";
+
+import { Dialog } from "primereact/dialog";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 import { InputText } from "primereact/inputtext";
+import { revalidateRouteList } from "../../../data/routeData";
 
 const ButtonBox = styled.div`
   display: flex;
@@ -26,20 +29,43 @@ const Buttons = ({ selectedRoute, setSelectedRoute }) => {
   const [value, setValue] = useState();
   const toast = useRef(null);
 
-  const handleAddRoute = () => {
-    let zoneName;
+  
+  const [visible, setVisible] = useState(false);
 
-    zoneName = value;
-    const addDetails = {
-      routeNick: zoneName,
-      routeName: zoneName,
+  const showDialog = () => {
+    setVisible(true);
+  };
+
+  const hideDialog = () => {
+    setVisible(false);
+  };
+
+  const handleAddRoute = async () => {
+    
+
+    const commonDetails = {
+      routeNick: value,
+      routeName: value,
       routeStart: 0,
       routeTime: 0,
       RouteDepart: "",
       RouteArrive: "",
       RouteSched: [],
     };
-    createRte(addDetails);
+    
+    const addDetails = {
+      ...commonDetails
+    };
+    
+    const select = {
+      ...commonDetails,
+      RouteServe: []
+    };
+    
+    await createRte(addDetails);
+    setSelectedRoute(select);
+    
+    hideDialog();
   };
 
   const createRte = async (addDetails) => {
@@ -48,6 +74,7 @@ const Buttons = ({ selectedRoute, setSelectedRoute }) => {
         graphqlOperation(createRoute, { input: { ...addDetails } })
       );
       setSelectedRoute();
+      revalidateRouteList();
     } catch (error) {
       console.log("error on fetching Route List", error);
     }
@@ -172,7 +199,15 @@ const Buttons = ({ selectedRoute, setSelectedRoute }) => {
 
       // Execute the mutations
       await Promise.all(mutations.map((mutation) => API.graphql(mutation)));
-
+      const showSuccess = () => {
+        toast.current.show({
+          severity: "success",
+          summary: "Route Updated",
+          detail: `Route has been updated.`,
+          life: 3000,
+        });
+      };
+      showSuccess();
       return true;
     } catch (error) {
       console.log(error);
@@ -203,6 +238,8 @@ const Buttons = ({ selectedRoute, setSelectedRoute }) => {
         { routeNick: selectedRoute.routeNick }
       );
       await API.graphql(deleteRouteItem);
+      revalidateRouteList();
+      setSelectedRoute()
 
       // Get all items from ZoneRoute that are associated with the item we just deleted from Routes
       const queryZoneRoutes = graphqlOperation(
@@ -248,13 +285,26 @@ const Buttons = ({ selectedRoute, setSelectedRoute }) => {
       <Toast ref={toast} />
       <ConfirmDialog />
       <ButtonBox>
-        <InputText value={value} onChange={(e) => setValue(e.target.value)} />
+        
         <Button
           label="Add a Route"
           icon="pi pi-plus"
-          onClick={handleAddRoute}
+          onClick={showDialog}
           className={"p-button-raised p-button-rounded"}
         />
+        <Dialog
+          visible={visible}
+          onHide={hideDialog}
+          header="Enter Route Name"
+          footer={
+            <div>
+              <Button label="Cancel" onClick={hideDialog} />
+              <Button label="Add" onClick={handleAddRoute} />
+            </div>
+          }
+        >
+          <InputText value={value} onChange={(e) => setValue(e.target.value)} />
+        </Dialog>
         <br />
         {selectedRoute && (
           <React.Fragment>
