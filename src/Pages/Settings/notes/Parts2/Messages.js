@@ -156,7 +156,7 @@ const Messages = ({ notes, delivDate }) => {
     );
   };
 
-  const header = selectedMessage?.when ? "Create Note for " + selectedMessage?.when : "Create Note for " + dateString
+  const header = selectedMessage?.when ? "Create Note for " + selectedMessage?.when : "Create Note for " + local
 
   return (
     <>
