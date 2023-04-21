@@ -31,6 +31,9 @@ const RouteList = ({ selectedRoute, setSelectedRoute }) => {
   const { data:routes } = useRouteListFull({shouldFetch: true });
   console.log('routes', routes)
   
+  useEffect(() => {
+    console.log('routes', routes)
+  },[routes])
   
 
   const handleSelection = (e) => {

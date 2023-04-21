@@ -55,6 +55,8 @@ const store = persist(
     setFormType: (formType) => set(() => ({ formType: formType })),
     isLoading: false,
     setIsLoading: (isLoading) => set(() => ({ isLoading: isLoading })),
+    isModified: false,
+    setIsModified: (setIsModified) => set(() => ({ setIsModified: setIsModified })),
     ordersHasBeenChanged: true,
     setOrdersHasBeenChanged: (setOrdersHasBeenChanged) => set(() => ({ setOrdersHasBeenChanged: setOrdersHasBeenChanged })),
     delivDate: today,

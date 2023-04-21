@@ -5,10 +5,7 @@ import styled from "styled-components";
 import ZoneList from "./ZoneList";
 import Info from "./Info";
 import Buttons from "./Buttons";
-import {
-  useRouteListFull,
-  useZoneRouteListFull,
-} from "../../../data/routeData";
+
 
 const MainWrapper = styled.div`
   display: grid;
@@ -23,7 +20,8 @@ const DescripWrapper = styled.div`
   justify-items: start;
   align-content: flex-start;
   width: 100%;
-  background: #ffffff;
+  
+  
 `;
 
 const GroupBox = styled.div`
@@ -34,6 +32,7 @@ const GroupBox = styled.div`
   width: 95%;
   margin: 5px 10px;
   padding: 5px 20px;
+  background: var(--bpb-orange-vibrant-100);
 `;
 
 function EditZones() {

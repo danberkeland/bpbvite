@@ -42,6 +42,12 @@ export const useRouteListFull = (shouldFetch) => {
   };
 };
 
+export const revalidateRouteList = () => {
+  let query = queries.listRoutesFull;
+  mutate([query, { limit: 1000 }], null, { revalidate: true });
+};
+
+
 export const useZoneRouteListFull = ({ shouldFetch }) => {
   let query = listZoneRoutes;
   let variables = { limit: 1000 };

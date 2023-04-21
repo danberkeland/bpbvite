@@ -66,6 +66,7 @@ const PreMix = ({
     };
 
     listToMod.push(newItem);
+    setPre(getCompList("lev", listToMod, selectedDough))
     setDoughComponents(listToMod);
   };
 

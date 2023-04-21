@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { ScrollPanel } from "primereact/scrollpanel";
+import { useDoughComponents, useDoughFull } from "../../../data/doughData";
 
 const ListWrapper = styled.div`
   font-family: "Montserrat", sans-serif;
@@ -21,21 +22,12 @@ const ListWrapper = styled.div`
 const DoughList = ({
   selectedDough,
   setSelectedDough,
-  doughs,
-  setDoughs,
-  doughComponents,
-  setDoughComponents,
-  isReload,
-  setIsReload,
   setIsModified,
+  doughs, 
+  doughComponents
 }) => {
-  useEffect(() => {
-    fetchDoughs(setDoughs);
-  }, [isReload]);
 
-  useEffect(() => {
-    fetchDoughComponents(setDoughComponents);
-  }, [isReload]);
+ 
 
   const handleSelection = (e) => {
     setSelectedDough(e.value);

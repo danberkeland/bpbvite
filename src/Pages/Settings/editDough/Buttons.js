@@ -19,6 +19,8 @@ import { API, graphqlOperation } from "aws-amplify";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { InputText } from "primereact/inputtext";
+import { Dialog } from "primereact/dialog";
+import { revalidateDough, revalidateDoughComponents } from "../../../data/doughData";
 
 const ButtonBox = styled.div`
   display: flex;
@@ -32,17 +34,22 @@ const ButtonBox = styled.div`
 const Buttons = ({
   selectedDough,
   setSelectedDough,
-  doughs,
-  setDoughs,
   doughComponents,
-  setDoughComponents,
   isModified,
-  setIsModified,
-  isReload,
-  setIsReload,
+  setIsModified
 }) => {
   const [value, setValue] = useState();
   const toast = useRef(null);
+
+  const [visible, setVisible] = useState(false);
+
+  const showDialog = () => {
+    setVisible(true);
+  };
+
+  const hideDialog = () => {
+    setVisible(false);
+  };
 
   const handleAddDough = async () => {
     let doughName;
@@ -107,7 +114,8 @@ const Buttons = ({
     await createDghComp(wetComponent);
     await createDghComp(saltComponent);
     await createDghComp(yeastComponent);
-    setIsReload(!isReload);
+   
+    hideDialog();
   };
 
   const createDgh = async (addDetails) => {
@@ -115,6 +123,7 @@ const Buttons = ({
       await API.graphql(
         graphqlOperation(createDoughBackup, { input: { ...addDetails } })
       );
+      revalidateDough()
     } catch (error) {
       console.log("error on creating Dough", error);
     }
@@ -127,6 +136,8 @@ const Buttons = ({
           input: { ...addDetails },
         })
       );
+      
+    revalidateDoughComponents()
     } catch (error) {
       console.log("error on creating Dough Component", error);
     }
@@ -148,6 +159,7 @@ const Buttons = ({
             input: { ...deleteDetails },
           })
         );
+        revalidateDoughComponents()
       } catch (error) {
         console.log("error on deleting DoughComponent List", error);
       }
@@ -182,7 +194,10 @@ const Buttons = ({
           life: 3000,
         });
       };
+      revalidateDough()
+      setIsModified(false)
       showSuccess();
+      
     } catch (error) {
       console.log("error on fetching Dough List", error);
     }
@@ -264,7 +279,7 @@ const Buttons = ({
       }
     }
 
-    setIsReload(!isReload);
+   
   };
 
   const deleteDoughWarn = async () => {
@@ -290,9 +305,9 @@ const Buttons = ({
       console.log("error on fetching Dough List", error);
     }
     deleteComps();
-
+    revalidateDough()
     setSelectedDough();
-    setIsReload(!isReload);
+   
   };
 
   return (
@@ -300,13 +315,25 @@ const Buttons = ({
       <Toast ref={toast} />
       <ConfirmDialog />
       <ButtonBox>
-        <InputText value={value} onChange={(e) => setValue(e.target.value)} />
         <Button
           label="Add a Dough"
           icon="pi pi-plus"
-          onClick={handleAddDough}
+          onClick={showDialog}
           className={"p-button-raised p-button-rounded"}
         />
+        <Dialog
+          visible={visible}
+          onHide={hideDialog}
+          header="Enter Zone Name"
+          footer={
+            <div>
+              <Button label="Cancel" onClick={hideDialog} />
+              <Button label="Add" onClick={handleAddDough} />
+            </div>
+          }
+        >
+          <InputText value={value} onChange={(e) => setValue(e.target.value)} />
+        </Dialog>
         <br />
         {selectedDough && (
           <React.Fragment>
@@ -320,6 +347,7 @@ const Buttons = ({
                   : "p-button-raised p-button-rounded p-button-success"
               }
             />
+
             <br />
           </React.Fragment>
         )}

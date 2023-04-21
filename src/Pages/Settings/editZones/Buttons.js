@@ -15,6 +15,7 @@ import { confirmDialog } from "primereact/confirmdialog";
 
 import { API, graphqlOperation } from "aws-amplify";
 import { useRef } from "react";
+import { Dialog } from "primereact/dialog";
 
 const ButtonBox = styled.div`
   display: flex;
@@ -29,16 +30,25 @@ const Buttons = ({ selectedZone, setSelectedZone }) => {
   const [value, setValue] = useState();
   const toast = useRef(null);
 
-  const handleAddZone = () => {
-    let zoneName;
+  const [visible, setVisible] = useState(false);
 
-    zoneName = value;
+  const showDialog = () => {
+    setVisible(true);
+  };
+
+  const hideDialog = () => {
+    setVisible(false);
+  };
+
+  const handleAddZone = async () => {
+    const zoneName = value;
     const addDetails = {
       zoneNick: zoneName,
       zoneName: zoneName,
       zoneFee: 0,
     };
-    createZne(addDetails, zoneName);
+    await createZne(addDetails, zoneName);
+    hideDialog();
   };
 
   const createZne = async (addDetails) => {
@@ -84,20 +94,6 @@ const Buttons = ({ selectedZone, setSelectedZone }) => {
       icon: "pi pi-exclamation-triangle",
       accept: () => deleteZne(),
     });
-    /*
-    swal({
-      text:
-        " Are you sure that you would like to permanently delete this zone?",
-      icon: "warning",
-      buttons: ["Yes", "Don't do it!"],
-      dangerMode: true,
-    }).then((willDelete) => {
-      if (!willDelete) {
-        deleteZne();
-      } else {
-        return;
-      }
-    });*/
   };
 
   const deleteZne = async () => {
@@ -121,13 +117,28 @@ const Buttons = ({ selectedZone, setSelectedZone }) => {
       <Toast ref={toast} />
       <ConfirmDialog />
       <ButtonBox>
-        <InputText value={value} onChange={(e) => setValue(e.target.value)} />
         <Button
           label="Add a Zone"
           icon="pi pi-plus"
-          onClick={handleAddZone}
+          onClick={showDialog}
           className={"p-button-raised p-button-rounded"}
         />
+        
+        <Dialog
+          visible={visible}
+          onHide={hideDialog}
+          header="Enter Zone Name"
+          footer={
+            <div>
+              <Button label="Cancel" onClick={hideDialog} />
+              <Button label="Add" onClick={handleAddZone} />
+            </div>
+          }
+        >
+          <InputText value={value} onChange={(e) => setValue(e.target.value)} />
+        </Dialog>
+       
+        
         <br />
         {selectedZone && (
           <React.Fragment>

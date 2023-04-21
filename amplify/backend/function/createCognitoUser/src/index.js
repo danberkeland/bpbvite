@@ -64,7 +64,7 @@ exports.handler = async (event) => {
     };
 
     let newLocUser = {
-      authType: 3,
+      authType: 1,
       locNick: event.defLoc,
       sub: data.User.Username,
       Type: "LocationUser",

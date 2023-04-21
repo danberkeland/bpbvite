@@ -48,12 +48,12 @@ function CustomerList({
   };
 
 
-  const decideList = (list) => {
+  const decideList = () => {
     console.log("activeIndex", activeIndex);
     let newArray = [];
     let filtArray = [];
     let filtTab = activeIndex === 0 ? "custName" : "locName";
-    for (let li of list) {
+    for (let li of customerList.data) {
       if (!filtArray.includes(li[filtTab])) {
         newArray.push(li);
         filtArray.push(li[filtTab]);
@@ -62,11 +62,11 @@ function CustomerList({
     return newArray;
   };
 
-  const FadeCustomerDataTable = withFadeIn(() => {
-    return (
+  const CustomerDataTable = () => {
+   return(
       <DataTable
         className="dataTable"
-        value={decideList(customerList.data)}
+        value={decideList()}
         selectionMode="single"
         metaKeySelection={false}
         selection={selectedCustomer}
@@ -97,7 +97,7 @@ function CustomerList({
         )}
       </DataTable>
     );
-  });
+  }
 
   return (
     <React.Fragment>
@@ -117,7 +117,7 @@ function CustomerList({
           {customerList.isLoading ? setIsLoading(true) : setIsLoading(false)}
 
           {customerList.isError && <div>Table Failed to load</div>}
-          {customerList.data && <FadeCustomerDataTable />}
+          {customerList.data && <CustomerDataTable />}
           <div className="bottomSpace"></div>
         </React.Fragment>
       )}

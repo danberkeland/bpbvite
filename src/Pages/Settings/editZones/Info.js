@@ -1,10 +1,25 @@
-import React from "react";
-
+import React, { useEffect, useState } from "react";
 import { InputText } from "primereact/inputtext";
 
 import { setValue, fixValue } from "../../../helpers/formHelpers";
 
 const Info = ({ selectedZone, setSelectedZone }) => {
+  const [value1, setValue1] = useState();
+  const [value2, setValue2] = useState();
+
+  useEffect(() => {
+    setValue1(selectedZone.Num);
+    setValue2(selectedZone.zoneFee);
+  }, [selectedZone]);
+
+  const handleChange1 = (event) => {
+    setValue1(event.target.value);
+  };
+
+  const handleChange2 = (event) => {
+    setValue2(event.target.value);
+  };
+
   return (
     <React.Fragment>
       <h2>
@@ -17,15 +32,7 @@ const Info = ({ selectedZone, setSelectedZone }) => {
           <br />
         </span>
 
-        <InputText
-          id="zoneName"
-          placeholder={selectedZone.zoneName}
-          disabled
-          onKeyUp={(e) =>
-            e.code === "Enter" && setSelectedZone(setValue(e, selectedZone))
-          }
-          onBlur={(e) => setSelectedZone(fixValue(e, selectedZone))}
-        />
+        <InputText id="zoneName" value={selectedZone.zoneName} disabled />
       </div>
       <br />
 
@@ -35,14 +42,7 @@ const Info = ({ selectedZone, setSelectedZone }) => {
           <br />
         </span>
 
-        <InputText
-          id="zoneNum"
-          placeholder={selectedZone.zoneNum}
-          onKeyUp={(e) =>
-            e.code === "Enter" && setSelectedZone(setValue(e, selectedZone))
-          }
-          onBlur={(e) => setSelectedZone(fixValue(e, selectedZone))}
-        />
+        <InputText id="zoneNum" value={value1} onChange={handleChange1} />
       </div>
       <br />
 
@@ -52,14 +52,7 @@ const Info = ({ selectedZone, setSelectedZone }) => {
           <br />
         </span>
 
-        <InputText
-          id="zoneFee"
-          placeholder={selectedZone.zoneFee}
-          onKeyUp={(e) =>
-            e.code === "Enter" && setSelectedZone(setValue(e, selectedZone))
-          }
-          onBlur={(e) => setSelectedZone(fixValue(e, selectedZone))}
-        />
+        <InputText id="zoneFee" value={value2} onChange={handleChange2} />
       </div>
       <br />
     </React.Fragment>
