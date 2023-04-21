@@ -67,6 +67,7 @@ export const deleteLocation = (event) => {
 };
 
 export const createUser = async (event) => {
+  console.log('eventCreateUser', event)
   await createCognitoUser(event)
     .then((newEvent) => {
       console.log('newEvent', newEvent)
@@ -86,9 +87,9 @@ export const updateUser = async (event) => {
       fetcher(newEvent.newerEvent, "/users/updateUser", "route");
       return newEvent.newLocUser;
     })
-    .then((newLocUsers) => {
-      console.log('newLocUsers', newLocUsers)
-      return updateLocationUsers(newLocUsers);
+    .then(() => {
+      console.log('newLocUsers', event.locations)
+      return updateLocationUsers(event.locations);
     });
 };
 

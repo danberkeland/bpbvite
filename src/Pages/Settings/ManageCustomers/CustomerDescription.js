@@ -141,11 +141,6 @@ function CustomerDescription(props) {
         converter={props}
       />
       <BPB.CustomTextInput
-        label="Username"
-        name="username"
-        converter={props}
-      />
-      <BPB.CustomTextInput
         label="Email"
         name="email"
         converter={props}

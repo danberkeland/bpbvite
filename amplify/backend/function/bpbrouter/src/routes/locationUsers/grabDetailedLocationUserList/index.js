@@ -9,6 +9,8 @@ query MyQuery {
           locs {
             items {
               locNick
+              Type
+              sub
               authType
               location {
                 locName
@@ -69,6 +71,8 @@ const grabDetailedCustomerList = async (event) => {
           locNick: loc.locNick,
           locName: loc.location.locName,
           authType: loc.authType,
+          sub: loc.sub,
+          Type: loc.Type,
           id: loc.id
         };
         locations.push(newLoc);

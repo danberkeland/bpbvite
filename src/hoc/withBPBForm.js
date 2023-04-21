@@ -69,6 +69,7 @@ export const withBPBForm = (Component) => (props) => {
   },[]);
 
   const handleEdit = () => {
+    console.log('Doing something?')
     window.scrollTo(0, 0);
     setIsEdit(true);
   };
@@ -95,6 +96,7 @@ export const withBPBForm = (Component) => (props) => {
             // fns.update({ ...fns, ...props }).then(() => {
             //fns.update(props).then(() => {     // TESTING CHANGE
             fns.update(props, {...fns}).then(() => {
+              console.log('Doing the update')
               //console.log("Formprops", props);
               formType === "signedIn" ? (window.location = path) : <div></div>
             });
