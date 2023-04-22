@@ -10,7 +10,7 @@ import { sumBy } from "lodash"
 import { set } from "lodash"
 import { sum } from "lodash"
 import { flattenDeep } from "lodash"
-import { useT0T7orders } from "./CroixToMake/dataHooks"
+import { useT0T7orders } from "./_hooks/dataHooks"
 
 const TODAY = DateTime.now().setZone("America/Los_Angeles").startOf("day")
 
@@ -23,12 +23,10 @@ export const CroixToMake = () => {
   const composeData = () => {
     if (!T0T7data) return undefined
 
-    const { timestamp, dimensionData, ...TNorders } = T0T7data
+    const { timestamp, dimensionData } = T0T7data
 
-    // clunky, but we need to ensure the array ordered by date
-    // const { T0orders, T1orders, T2orders, T3orders, T4orders, T5orders, T6orders, T7orders } = TNorders
-    // const T0T7array = [T0orders, T1orders, T2orders, T3orders, T4orders, T5orders, T6orders, T7orders]
-    const T0T7array = ['T0', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'].map(TN => T0T7data[`${TN}orders`])
+    const T0T7array = [0, 1, 2, 3, 4, 5, 6, 7]
+      .map(N => T0T7data[`T${N}orders`])
 
     // **************************************
     // * Get Qts Pulled From Freezer By Day *
@@ -303,11 +301,13 @@ const cumulativeColumnTemplate = (rowData, dayIdx) => {
     .map(TN => rowData[TN])
     .slice(0, dayIdx + 1)
 
-  // break down the nested structure and sum on qty values
-  // 'byRelDate' has 'TN' attributes which hold all qty inc/dec info
-  // 'type' has 'make/pull/stock' attributes
-  // 'qtyItems' have 'frozenDeliv/setoutPrado/setoutCarlton' attributes;
-  //    their values are the qtys we're after
+  // break down the nested structure and sum on qty values.
+  // 'byRelDate' ('TN' attributes) have 'type' object-values.
+  // 'type' ('make/pull/stock' attributes) have 'qtyItem' object values.
+  // 'qtyItems' are simple key/value pairs with
+  // 'frozenDeliv/setoutPrado/setoutCarlton' attributes and qty values.
+  //
+  // These qtys are what we're ultimately after and want to sum up.
   const qtys = flattenDeep(Object.values(byRelDate).map(type => 
     Object.values(type).map(qtyItem => 
       Object.values(qtyItem)
