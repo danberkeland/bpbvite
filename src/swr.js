@@ -101,7 +101,7 @@ export function useCustomerList() {
     { url: "/locationUsers/grabDetailedLocationUserList" },
     fetcher,
     {
-      revalidateIfStale: true,
+      revalidateIfStale: false,
       revalidateOnFocus: true,
       revalidateOnReconnect: true,
     }
