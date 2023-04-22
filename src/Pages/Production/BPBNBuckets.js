@@ -4,7 +4,7 @@ import { InputText } from "primereact/inputtext";
 
 import ComposeDough from "./Utils/composeDough";
 
-import { updateDough } from "../../graphql/mutations";
+import { updateDough, updateDoughBackup } from "../../graphql/mutations";
 
 import { API, graphqlOperation } from "aws-amplify";
 
@@ -141,7 +141,7 @@ function BPBNBuckets({ loc }) {
 
     try {
       await API.graphql(
-        graphqlOperation(updateDough, { input: { ...updateDetails } })
+        graphqlOperation(updateDoughBackup, { input: { ...updateDetails } })
       );
     } catch (error) {
       console.log("error on fetching Dough List", error);
