@@ -334,7 +334,7 @@ export const checkForUpdates = async (
   DBToMod[4] = ordersToUpdate;
   DBToMod[5] = doughsToUpdate;
   DBToMod[0] = prodsToUpdate;
-  setOrdersHasBeenChanged(false);
+  
   setIsLoading(false);
   return DBToMod;
 };

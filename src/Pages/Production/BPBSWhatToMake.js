@@ -307,8 +307,10 @@ function BPBSWhatToMake() {
         Number(prod.weight) === Number(weight) &&
         prod.doughType === "French"
       ) {
+        console.log('prod', prod)
         let itemUpdate = {
-          id: prod.id,
+          prodNick: prod.nickName,
+          prodName: prod.prodName,
           preshaped: YoullBeCopy[ind].preshaped,
         };
 

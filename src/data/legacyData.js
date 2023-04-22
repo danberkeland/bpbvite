@@ -70,7 +70,9 @@ export const useLegacyFormatDatabase = () => {
 
 }
 
-
+export const revalidateLegacyDatabase = () => {
+  mutate([legacyQueries.getLegacyDatabase, { limit: LIMIT }], null, { revalidate: true });
+};
 
 // *****MAPPING FUNCTIONS******
 //
