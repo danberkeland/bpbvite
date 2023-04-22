@@ -146,6 +146,7 @@ function CroixToMake() {
     console.log("prj",makeData.projectionCount)
     setProjectionCount(makeData.projectionCount);
     setProducts(makeData.products);
+    console.log("makeData.openingCount", makeData.openingCount)
   };
 
   const openingHeader = <div>Opening Freezer</div>;

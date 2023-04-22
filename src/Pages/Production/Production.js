@@ -6,6 +6,7 @@ import { BPBNSetout } from "./NewPages/BPBNSetoutNew";
 import { BPBTerminal } from "./NewPages/BPBTerminal2";
 import { WhoBake } from "./NewPages/WhoBakeNew";
 import { WhoShape } from "./NewPages/WhoShapeNew";
+import { CroixToMake } from "./NewPages/CroixToMake";
 import { SevenDayList } from "./NewPages/SevenDayList";
 
 const bpbnPages = [
@@ -14,8 +15,9 @@ const bpbnPages = [
   {name: "BPBNSetout", component: <BPBNSetout />},
   {name: "WhoBake", component: <WhoBake />},
   {name: "WhoShape", component: <WhoShape />},
+  {name: "Croix To Make", component: <CroixToMake />},
   {name: "Terminal", component: <BPBTerminal />},
-  {name: "Seven Day List", component: <SevenDayList />}
+  {name: "Seven Day List", component: <SevenDayList />},
 ]
 
 const Production = () => {
