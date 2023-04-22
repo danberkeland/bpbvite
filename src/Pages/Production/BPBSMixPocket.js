@@ -10,7 +10,7 @@ import ComposeDough from "./Utils/composeDough";
 import ComposeWhatToMake from "./BPBSWhatToMakeUtils/composeWhatToMake"
 import { todayPlus } from "../../helpers/dateTimeHelpers";
 import { convertDatetoBPBDate } from "../../helpers/dateTimeHelpers";
-import { updateDough } from "../../graphql/mutations";
+import { updateDough, updateDoughBackup } from "../../graphql/mutations";
 
 import { API, graphqlOperation } from "aws-amplify";
 
@@ -181,7 +181,7 @@ function BPBSMixPocket() {
 
     try {
       await API.graphql(
-        graphqlOperation(updateDough, { input: { ...updateDetails } })
+        graphqlOperation(updateDoughBackup, { input: { ...updateDetails } })
       );
     } catch (error) {
       console.log("error on fetching Dough List", error);
