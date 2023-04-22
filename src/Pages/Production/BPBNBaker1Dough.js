@@ -16,12 +16,14 @@ import { panAmount } from "./BPBNBaker1Parts/PanAmount";
 import { bucketAmount } from "./BPBNBaker1Parts/BucketAmount";
 
 import { BagMixesScreen } from "./BPBNBaker1Parts/BagMixesScreen";
-import { useLegacyFormatDatabase } from "../../data/legacyData";
+import { revalidateLegacyDatabase, useLegacyFormatDatabase } from "../../data/legacyData";
 
 // import styled from "styled-components";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
 import { TwoColumnGrid, WholeBox, WholeBoxPhone } from "./_styles"
+import { API, graphqlOperation } from "aws-amplify";
+import { updateDoughBackup } from "../../graphql/mutations";
 
 const clonedeep = require("lodash.clonedeep");
 const compose = new ComposeDough();
@@ -85,29 +87,7 @@ function BPBNBaker1Dough({
   }, [doughs, infoWrap]);
 
   
-  const handleChange = (e) => {
-    if (e.code === "Enter") {
-      updateDoughDB(e);
-      confirmDialog({
-        message:
-        "You will need to refresh page to fully recalculate dough.  Got it?",
-      header: "Confirmation",
-        icon: "pi pi-exclamation-triangle",
-       
-      });
-    }
-  };
 
-  const handleBlur = (e) => {
-    updateDoughDB(e);
-    confirmDialog({
-      message:
-        "You will need to refresh page to fully recalculate dough.  Got it?",
-      header: "Confirmation",
-      icon: "pi pi-exclamation-triangle",
-      
-    });
-  };
 
   const updateDoughDB = async (e) => {
     let id = e.target.id.split("_")[0];
@@ -122,15 +102,16 @@ function BPBNBaker1Dough({
       id: id,
       [attr]: qty,
     };
-    /*
+    
     try {
       await API.graphql(
-        graphqlOperation(updateDough, { input: { ...updateDetails } })
+        graphqlOperation(updateDoughBackup, { input: { ...updateDetails } })
       );
+      revalidateLegacyDatabase()
     } catch (error) {
       console.log("error on fetching Dough List", error);
     }
-    */
+    
   };
 
   const doughMixList = (dough) => {
@@ -167,8 +148,8 @@ function BPBNBaker1Dough({
                   key={dough.id + "_oldDough"}
                   id={dough.id + "_oldDough"}
                   placeholder={dough.oldDough}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
+                  onChange={updateDoughDB}
+                  onBlur={updateDoughDB}
                 />
                 <span className="p-inputgroup-addon">lb.</span>
               </div>
@@ -180,8 +161,8 @@ function BPBNBaker1Dough({
                   key={dough.id + "_buffer"}
                   id={dough.id + "_buffer"}
                   placeholder={dough.buffer}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
+                  onChange={updateDoughDB}
+                  onBlur={updateDoughDB}
                 />
                 <span className="p-inputgroup-addon">lb.</span>
               </div>
@@ -193,8 +174,8 @@ function BPBNBaker1Dough({
                   key={dough.id + "_bucketSets"}
                   id={dough.id + "_bucketSets"}
                   placeholder={dough.bucketSets}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
+                  onChange={updateDoughDB}
+                  onBlur={updateDoughDB}
                 />
                 <span className="p-inputgroup-addon">sets</span>
               </div>

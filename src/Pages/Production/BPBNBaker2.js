@@ -15,13 +15,13 @@ import ComposeWhatToMake from "./Utils/composeWhatToMake";
 import ComposePastryPrep from "./Utils/composePastryPrep";
 import ComposeWhatToPrep from "./Utils/composeWhatToPrep";
 
-import { updateProduct, updateInfoQBAuth } from "../../graphql/mutations";
+import { updateProduct } from "../../graphql/mutations";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
 import { API, graphqlOperation } from "aws-amplify";
 
-import { WholeBox } from "./_styles"
+import { WholeBox } from "./_styles";
 
 const compose = new ComposeWhatToMake();
 const composePastry = new ComposePastryPrep();
@@ -85,15 +85,6 @@ function BPBNBaker2() {
   };
 
   useEffect(() => {
-    confirmDialog({
-      message: "Click YES to confirm these setout numbers will be used.",
-      header: "Confirmation",
-      icon: "pi pi-exclamation-triangle",
-      /*accept: () => setoutTimeInStone(),*/
-    });
-  }, []);
-
-  useEffect(() => {
     setInfoWrap({
       whatToPrep: whatToPrep,
     });
@@ -106,28 +97,11 @@ function BPBNBaker2() {
         database,
         delivDate
       );
-      console.log("WHAT TO MAKE:", whatToMakeData)
+      console.log("WHAT TO MAKE:", whatToMakeData);
       setWhatToMake(whatToMakeData.whatToMake);
       setIsLoading(false);
     } catch {}
   };
-
-  // DEBUGGING
-  const setoutTimeInStone = async () => {
-    let addDetails = {
-      id: "CarltonsetoutTime",
-      infoContent: "updated",
-      infoName: "CarltonsetoutTime",
-    };
-    try {
-      await API.graphql(
-        graphqlOperation(updateInfoQBAuth, { input: { ...addDetails } })
-      );
-    } catch (error) {
-      console.log("error on updating info", error);
-    }
-  };
-  // END DEBUGGING
 
   const gatherPastryPrepInfo = (database) => {
     setIsLoading(true);
@@ -147,16 +121,15 @@ function BPBNBaker2() {
     setIsLoading(true);
 
     for (let set of setOut) {
-        console.log('set', set)
-      
+      console.log("set", set);
+
       let addDetails = {
         prodNick: set.prodNick,
         prepreshaped: set.qty,
       };
 
-      console.log('addDetails', addDetails)
-      
-      
+      console.log("addDetails", addDetails);
+
       try {
         await API.graphql(
           graphqlOperation(updateProduct, { input: { ...addDetails } })
@@ -165,15 +138,13 @@ function BPBNBaker2() {
         console.log("error on updating product", error);
       }
     }
-    
 
     for (let make of whatToMake) {
-        
       let addDetails = {
         prodNick: make.prodNick,
         prepreshaped: make.qty,
       };
-      
+
       try {
         await API.graphql(
           graphqlOperation(updateProduct, { input: { ...addDetails } })
@@ -247,7 +218,6 @@ function BPBNBaker2() {
     setIsLoading(false);
   };
 
-
   return (
     <React.Fragment>
       <ConfirmDialog />
@@ -259,7 +229,7 @@ function BPBNBaker2() {
           type="button"
           onClick={(e) => exportPastryPrepPdf(infoWrap)}
           data-pr-tooltip="PDF"
-          style={{width: "fit-content", marginBlock: "1rem"}}
+          style={{ width: "fit-content", marginBlock: "1rem" }}
         />
 
         <h2>What To Shape</h2>

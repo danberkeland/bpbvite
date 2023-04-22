@@ -72,11 +72,13 @@ function BPBNSetOut({ loc }) {
       await API.graphql(
         graphqlOperation(updateInfoQBAuth, { input: { ...addDetails } })
       );
+      console.log('QBInfo Updated')
     } catch (error) {
       try {
         await API.graphql(
           graphqlOperation(createInfoQBAuth, { input: { ...addDetails } })
         );
+        console.log('QBInfo Created')
       } catch (error) {
         console.log("error on updating info", error);
       }
