@@ -290,6 +290,7 @@ export const checkForUpdates = async (
               )
             ]["prodName"];
         } catch {
+          prodName="Brownie"
           prodNick = "brn";
         }
 
@@ -313,7 +314,7 @@ export const checkForUpdates = async (
         console.log("orders", orders);
 
         let ind = orders.findIndex(
-          (ord) => ord["custName"] === locNick && (ord["prodName"] === prodName || ord["prodName"] === "brn")
+          (ord) => locNick.includes(ord["custName"]) && (ord["prodName"] === prodName || ord["prodName"] === "Brownie")
         );
 
         if (ind === -1) {
