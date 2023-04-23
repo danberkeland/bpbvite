@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import styled from "styled-components";
 
 import ZoneList from "./ZoneList";
 import Info from "./Info";
 import Buttons from "./Buttons";
+import { useListData } from "../../../data/_listData";
+import { sortBy } from "lodash";
+import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 
 
 const MainWrapper = styled.div`
@@ -36,32 +39,45 @@ const GroupBox = styled.div`
 `;
 
 function EditZones() {
-  const [selectedZone, setSelectedZone] = useState(1);
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
+  const [selectedZone, setSelectedZone] = useState();
   const [zones, setZones] = useState(null);
+
+  const zoneCache = useListData({ tableName:"Zone", shouldFetch: "true"})
+  const displayData = useMemo(() => {
+    if (zoneCache.data) return sortBy(zoneCache.data, ["zoneNick"])
+  }, [zoneCache.data])
+
+  useEffect(() => {
+    console.log(!!zoneCache.data)
+    setIsLoading(!zoneCache.data)
+  }, [zoneCache.data])
+
 
   return (
     <React.Fragment>
       <MainWrapper>
+
         <ZoneList
           selectedZone={selectedZone}
           setSelectedZone={setSelectedZone}
-          zones={zones}
-          setZones={setZones}
+          zones={displayData || []}
+          //setZones={setZones}
         />
-        {selectedZone && (
-          <React.Fragment>
-            <DescripWrapper>
-              <GroupBox id="Info">
-                <Info
-                  selectedZone={selectedZone}
-                  setSelectedZone={setSelectedZone}
-                  zones={zones}
-                  setZones={setZones}
-                />
-              </GroupBox>
-            </DescripWrapper>
-          </React.Fragment>
-        )}
+        
+        <React.Fragment>
+          <DescripWrapper>
+            <GroupBox id="Info">
+              <Info
+                selectedZone={selectedZone}
+                setSelectedZone={setSelectedZone}
+                zones={zones}
+                setZones={setZones}
+              />
+            </GroupBox>
+          </DescripWrapper>
+        </React.Fragment>
+
         <DescripWrapper>
           <Buttons
             selectedZone={selectedZone}
@@ -71,6 +87,7 @@ function EditZones() {
           />
         </DescripWrapper>
       </MainWrapper>
+      <pre>{JSON.stringify(displayData, null, 2)}</pre>
     </React.Fragment>
   );
 }

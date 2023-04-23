@@ -1,60 +1,49 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { InputText } from "primereact/inputtext";
 
-import { setValue, fixValue } from "../../../helpers/formHelpers";
+//import { setValue, fixValue } from "../../../helpers/formHelpers";
 
 const Info = ({ selectedZone, setSelectedZone }) => {
-  const [value1, setValue1] = useState();
-  const [value2, setValue2] = useState();
-
-  useEffect(() => {
-    setValue1(selectedZone.Num);
-    setValue2(selectedZone.zoneFee);
-  }, [selectedZone]);
-
-  const handleChange1 = (event) => {
-    setValue1(event.target.value);
-  };
-
-  const handleChange2 = (event) => {
-    setValue2(event.target.value);
-  };
 
   return (
     <React.Fragment>
-      <h2>
-        <i className="pi pi-map"></i> Zone Info
-      </h2>
+      <h2><i className="pi pi-map"></i> Zone Info</h2>
 
       <div className="p-inputgroup">
         <span className="p-inputgroup-addon">
-          <label htmlFor="zoneName"> Zone Name</label>
+          <label htmlFor="zoneName">Zone Name</label>
           <br />
         </span>
 
-        <InputText id="zoneName" value={selectedZone.zoneName} disabled />
+        <InputText id="zoneName" value={selectedZone?.zoneName ?? ""} disabled />
       </div>
       <br />
 
       <div className="p-inputgroup">
         <span className="p-inputgroup-addon">
-          <label htmlFor="zoneNum"> Zone Number</label>
+          <label htmlFor="zoneNum">Zone Number</label>
           <br />
         </span>
-
-        <InputText id="zoneNum" value={value1} onChange={handleChange1} />
+        {/* No zoneNum attribute exists? */}
+        <InputText disabled id="zoneNum" value={""} onChange={e => console.log("foo")} />
       </div>
       <br />
 
       <div className="p-inputgroup">
         <span className="p-inputgroup-addon">
-          <label htmlFor="zoneFee"> Zone Fee</label>
+          <label htmlFor="zoneFee">Zone Fee</label>
           <br />
         </span>
-
-        <InputText id="zoneFee" value={value2} onChange={handleChange2} />
+        <InputText id="zoneFee" 
+          value={selectedZone?.zoneFee ?? ""} 
+          onChange={e => setSelectedZone({
+            ...selectedZone, 
+            zoneFee: e.target.value})
+          } 
+        />
       </div>
       <br />
+      {/* <pre>{JSON.stringify(selectedZone, null, 2)}</pre> */}
     </React.Fragment>
   );
 };

@@ -16,6 +16,7 @@ import { confirmDialog } from "primereact/confirmdialog";
 import { API, graphqlOperation } from "aws-amplify";
 import { useRef } from "react";
 import { Dialog } from "primereact/dialog";
+import { useListData } from "../../../data/_listData";
 
 const ButtonBox = styled.div`
   display: flex;
@@ -32,6 +33,8 @@ const Buttons = ({ selectedZone, setSelectedZone }) => {
 
   const [visible, setVisible] = useState(false);
 
+  const { data:zoneData, createItem, updateItem, deleteItem } = useListData({ tableName: "Zone", shouldFetch: true })
+
   const showDialog = () => {
     setVisible(true);
   };
@@ -47,37 +50,34 @@ const Buttons = ({ selectedZone, setSelectedZone }) => {
       zoneName: zoneName,
       zoneFee: 0,
     };
-    await createZne(addDetails, zoneName);
+    await createItem(addDetails)
     hideDialog();
   };
 
-  const createZne = async (addDetails) => {
-    try {
-      await API.graphql(
-        graphqlOperation(createZone, { input: { ...addDetails } })
-      );
-    } catch (error) {
-      console.log("error on fetching Zone List", error);
-    }
-  };
+  // const createZne = async (addDetails) => {
+  //   try {
+  //     await API.graphql(
+  //       graphqlOperation(createZone, { input: { ...addDetails } })
+  //     );
+  //   } catch (error) {
+  //     console.log("error on fetching Zone List", error);
+  //   }
+  // };
 
   const updateZne = async () => {
     const updateDetails = {
       zoneName: selectedZone["zoneName"],
       zoneNick: selectedZone["zoneName"],
       zoneFee: selectedZone["zoneFee"],
-      _version: selectedZone["_version"],
     };
 
     try {
-      const zoneData = await API.graphql(
-        graphqlOperation(updateZone, { input: { ...updateDetails } })
-      );
+      const responseItem = await updateItem(updateDetails)
       const showSuccess = () => {
         toast.current.show({
           severity: "success",
           summary: "Zone Updated",
-          detail: `${zoneData.data.updateZone.zoneName} has been updated.`,
+          detail: `${responseItem.zoneName} has been updated.`,
           life: 3000,
         });
       };
@@ -99,17 +99,10 @@ const Buttons = ({ selectedZone, setSelectedZone }) => {
   const deleteZne = async () => {
     const deleteDetails = {
       zoneNick: selectedZone["zoneName"],
-      _version: selectedZone["_version"],
+      // _version: selectedZone["_version"],
     };
-
-    try {
-      await API.graphql(
-        graphqlOperation(deleteZone, { input: { ...deleteDetails } })
-      );
-      setSelectedZone();
-    } catch (error) {
-      console.log("error on fetching Zone List", error);
-    }
+    try {await deleteItem(deleteDetails)}
+    catch (error) {console.log("error on fetching Zone List", error)}
   };
 
   return (

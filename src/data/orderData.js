@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 import useSWR from "swr"
-import { defaultSwrOptions } from "./constants"
+import { defaultSwrOptions } from "./_constants"
 
 // import { useMemo } from "react"
 
@@ -8,7 +8,7 @@ import { defaultSwrOptions } from "./constants"
 import getNestedObject from "../functions/getNestedObject"
 import { getWeekday, dateToYyyymmdd, getTransitionDates, yyyymmddToWeekday } from "../functions/dateAndTime"
 
-import gqlFetcher, { APIGatewayFetcher } from "./fetchers"
+import gqlFetcher, { APIGatewayFetcher } from "./_fetchers"
 
 import * as queries from "../customGraphQL/queries/orderQueries"
 import * as mutations from "../customGraphQL/mutations/orderMutations"
@@ -493,34 +493,20 @@ export const useOrderSummary = (locNick, shouldFetch) => {
 }
 
 
-/**
- * For Admin use.
- * 
- * Full Scan for now: if we put an index on UpdatedOn, we can 
- * make te query leaner. Data to give visibility regarding
- * What orders have been placed over a given time period.
- * 
- * we limit revalidation to prevent unnecessary data consumption.
- */
-export const useCartOverview = (shouldFetch) => {
-  const query = queries.listCartOverview
-  const variables = { limit: 2000 }
-  const key = [query, variables]
-  const { data, mutate } = useSWR(
-    shouldFetch ? key : null, 
+
+
+
+export const useCartListFull = (shouldFetch) => {
+  const query = queries.listCartFull
+  const { data, ...otherReturns } = useSWR(
+    shouldFetch ? [query, { limit: 2000 }] : null, 
     gqlFetcher,
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false
-    }
+    defaultSwrOptions
     )
 
-  //console.log(data)
-
   return ({
-    data: data ? getNestedObject(data, ['data', 'listOrders', 'items']) : undefined,
-    mutate: mutate
+    data: data?.data.listOrders.items ?? undefined,
+    ...otherReturns
   })
 
 }

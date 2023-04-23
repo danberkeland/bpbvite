@@ -1,17 +1,18 @@
 import useSWR, { mutate } from "swr"
-import { defaultSwrOptions } from "./constants"
+import { defaultSwrOptions } from "./_constants"
 
 import { useMemo } from "react"
 
 import dynamicSort from "../functions/dynamicSort"
 import getNestedObject from "../functions/getNestedObject"
 
-import gqlFetcher from "./fetchers"
+import gqlFetcher from "./_fetchers"
 
 import * as queries from "../customGraphQL/queries/locationQueries"
 import * as mutations from "../customGraphQL/mutations/locationMutations"
 
 import * as yup from "yup"
+import { sortBy } from "lodash"
 
 
 /******************
@@ -66,24 +67,19 @@ export const revalidateLocationListSimple = () => {
  * @returns {{ data: Array<Object>, errors: Object }}
  */
 export const useLocationListFull = (shouldFetch) => {
-  const { data, errors } = useSWR(
+  const { data, ...otherReturns } = useSWR(
     shouldFetch ? [queries.listLocationsFull, { limit: 1000 }] : null, 
     gqlFetcher, 
     defaultSwrOptions
   )
 
   const transformData = () => {
-    if (!data) return undefined
-    return getNestedObject(data, ['data', 'listLocations', 'items']).sort(dynamicSort("locName"))
+    if (data) return sortBy(data.data.listLocations.items, ['locName'])
   }
-  const _data = useMemo(transformData, [data])
-
-  // const _data = getNestedObject(data, ['data', 'listLocations', 'items'])
-  // _data?.sort(dynamicSort("locName"))
 
   return({
-    data: _data,
-    errors: errors
+    data: useMemo(transformData, [data]),
+    ...otherReturns
   })
 
 }

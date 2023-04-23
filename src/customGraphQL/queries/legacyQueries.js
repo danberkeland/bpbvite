@@ -201,13 +201,7 @@ export const orderQuery = /* GraphQL */ `
       # qtyUpdatedOn
       # sameDayMaxQty
       prodNick
-      # product {
-      #   prodName
-      # }
       locNick
-      # location {
-      #   locName
-      # }
       ItemNote
       SO
       isWhole
@@ -228,17 +222,11 @@ export const standingQuery = /* GraphQL */ `
       items {
         # id
         locNick
-        # location {
-        #   locName
-        # }
         isWhole
         isStand
         dayOfWeek
         route
         prodNick
-        # product {
-        #   prodName
-        # }
         qty
         # ItemNote
         # startDate
@@ -303,7 +291,5 @@ export const getLegacyDatabase = /* GraphQL */ `
     ${standingQuery}
     ${doughBackupsQuery}
     ${doughComponentsBackupsQuery}
-    
-    
   }
 `;

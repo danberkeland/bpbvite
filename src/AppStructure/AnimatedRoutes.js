@@ -31,7 +31,6 @@ import BPBSWhatToMake from "../Pages/Production/BPBSWhatToMake";
 import BPBSMixPocket from "../Pages/Production/BPBSMixPocket";
 import CroixCount from "../Pages/Production/CroixCount";
 import CroixToMake from "../Pages/Production/CroixToMake";
-import { Database } from "../Pages/Settings/Database";
 import BPBNBuckets from "../Pages/Production/BPBNBuckets";
 import ByProduct from "../Pages/Logistics/ByProduct/ByProduct";
 import NorthList from "../Pages/Logistics/NorthLists";
@@ -108,7 +107,6 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             />
             <Route path="/Logistics/FreezerThaw" element={<FreezerThaw />} />
             <Route path="/Locations" element={<Locations />} />
-            <Route path="/Database" element={<Database />} />
             <Route
               path="/Settings/ManageCustomers"
               element={<ManageCustomers />}

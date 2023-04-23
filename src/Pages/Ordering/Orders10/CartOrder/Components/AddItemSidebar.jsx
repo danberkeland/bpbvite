@@ -10,7 +10,7 @@ import { getWeekday, getWorkingDate, getWorkingDateTime } from "../../../../../f
 //import dynamicSort from "../../../../../functions/dynamicSort"
 import { DateTime } from "luxon"
 
-import gqlFetcher from "../../../../../data/fetchers"
+import gqlFetcher from "../../../../../data/_fetchers"
 import { createTemplateProd, deleteTemplateProd } from "../../../../../customGraphQL/mutations/locationMutations"
 import { useLocationDetails } from "../../../../../data/locationData"
 import { testProductAvailability } from "../../_utils/testProductAvailability"

@@ -12,7 +12,7 @@ const LOCAL_STORAGE_KEY = "sevenDayOrders"
 export const useT0T7orders = ({ shouldFetch, useLocal, manualRefresh }) => {
 
   const localData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY))
-  const dataDate = DateTime.fromISO(localData.timestamp).startOf("day")
+  const dataDate = localData ? DateTime.fromISO(localData.timestamp).startOf("day") : null
 
   const shouldUseLocal = useLocal
     && !manualRefresh
@@ -109,7 +109,7 @@ export const useT0T7orders = ({ shouldFetch, useLocal, manualRefresh }) => {
 
     return undefined
   }
-  const _data = useMemo(transformData, [shouldUseLocal, allOrders, dimensionData])
+  const _data = useMemo(transformData, [shouldUseLocal, allOrders, dimensionData, localData])
 
   return ({ data: _data })
 }

@@ -1,35 +1,28 @@
-import useSWR from "swr"
 import { useMemo } from "react"
-import { defaultSwrOptions } from "./constants"
 
-import gqlFetcher from "./fetchers"
+import useSWR from "swr"
+import { defaultSwrOptions } from "./_constants"
+
+import gqlFetcher from "./_fetchers"
 
 import * as queries from "../customGraphQL/queries/zoneQueries"
-//import * as mutations from "../customGraphQL/mutations/zoneMutations"
+import { sortBy } from "lodash"
 
-import dynamicSort from "../functions/dynamicSort"
-import getNestedObject from "../functions/getNestedObject"
-
-//import * as yup from "yup"
-
-export const useZoneListFull = (shouldFetch) => {
-  const { data, errors } = useSWR(
+export const useZoneListFull = ({ shouldFetch }) => {
+  const { data, errors, mutate } = useSWR(
     shouldFetch ? [queries.listZonesFull, { limit: 1000 }] : null, 
     gqlFetcher, 
     defaultSwrOptions
   )
   
   const transformData = () => {
-    if (!data) return undefined
-    return getNestedObject(data, ['data', 'listZones', 'items']).sort(dynamicSort("zoneName"))
+    if (data) return sortBy(data.data.listZones.items, ["zoneName"])
   }
-  const _data = useMemo(transformData, [data])
-
-  //console.log("zoneData:", _data)
 
   return ({
-    data: _data,
-    errors: errors
+    data: useMemo(transformData, [data]),
+    errors,
+    mutate
   })
 
 }

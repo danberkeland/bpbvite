@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useRouteListFull, useZoneRouteListFull } from "../../data/routeData";
+import { useRouteListFull, useZoneRouteListFull } from "../../../data/routeData";
 import * as yup from "yup"
-import { useZoneListFull } from "../../data/zoneData";
+import { useZoneListFull } from "../../../data/zoneData";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
@@ -11,8 +11,11 @@ import { Checkbox } from "primereact/checkbox";
 import { MultiSelect } from "primereact/multiselect"
 import { Dropdown } from "primereact/dropdown";
 import { isEqual } from "lodash";
-import { useLocationListFull } from "../../data/locationData";
-import { useProductListFull } from "../../data/productData";
+import { useLocationListFull } from "../../../data/locationData";
+import { useProductListFull } from "../../../data/productData";
+import { useLegacyFormatDatabase } from "../../../data/legacyData";
+
+
 
 
 
@@ -45,11 +48,13 @@ export const Database = () => {
   // ********
 
   const { data:locationData } = useLocationListFull(tableName === 'location')
-  const { data:zoneData } = useZoneListFull(tableName === 'location') // for schema validaiton
+  const { data:zoneData } = useZoneListFull({
+    shouldFetch: tableName === 'location' 
+  }) 
   
   const { data:productData } = useProductListFull(tableName === 'product')
 
-  const { data:routes } = useRouteListFull(tableName === 'route')
+  const { data:routes } = useRouteListFull({ shouldFetch: tableName === 'route' })
   const { data:zoneRoutes } = useZoneRouteListFull({ shouldFetch: tableName === 'route' })
   const joinData = () => {
     if (!routes || !zoneRoutes) return []
@@ -59,7 +64,7 @@ export const Database = () => {
 
       return ({ ...route, zoneRoutes: _zr })
     })
-      
+    console.log(routeData)
     return routeData
   }
   const routeData = useMemo(joinData, [routes, zoneRoutes])

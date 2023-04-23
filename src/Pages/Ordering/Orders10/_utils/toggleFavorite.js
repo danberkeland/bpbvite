@@ -1,4 +1,4 @@
-import gqlFetcher from "../../../../data/fetchers"
+import gqlFetcher from "../../../../data/_fetchers"
 import { createTemplateProd, deleteTemplateProd } from "../../../../customGraphQL/mutations/locationMutations"
 
 export const toggleFav = async (locNick, prodNick, id, mutateLocation) => {

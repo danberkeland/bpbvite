@@ -1,12 +1,12 @@
 import useSWR, { mutate } from "swr";
-import { defaultSwrOptions } from "./constants";
+import { defaultSwrOptions } from "./_constants";
 
 import { useMemo } from "react";
 
 import dynamicSort from "../functions/dynamicSort";
 import getNestedObject from "../functions/getNestedObject";
 
-import gqlFetcher from "./fetchers";
+import gqlFetcher from "./_fetchers";
 
 import * as queries from "../customGraphQL/queries/trainingQueries";
 import * as mutations from "../customGraphQL/mutations/trainingMutations";

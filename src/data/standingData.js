@@ -1,12 +1,12 @@
 import useSWR, { mutate } from "swr"
-import { defaultSwrOptions } from "./constants"
+import { defaultSwrOptions } from "./_constants"
 
 import { useMemo } from "react"
 
 //import dynamicSort from "../functions/dynamicSort"
 import getNestedObject from "../functions/getNestedObject"
 
-import gqlFetcher from "./fetchers"
+import gqlFetcher from "./_fetchers"
 
 import * as queries from "../customGraphQL/queries/standingQueries"
 import * as mutations from "../customGraphQL/mutations/standingMutations"
@@ -96,5 +96,22 @@ export const deleteStanding = async (deleteStandingInput) => {
     { input: deleteStandingInput }
   )
   if (LOGGING) console.log("Delete standing response: ", response)
+
+}
+
+
+export const useStandingListFull = ({ shouldFetch }) => {
+  const query = queries.listStandingsFull
+
+  const { data, ...otherReturns } = useSWR(
+    shouldFetch ? [query, { limit: 5000 }] : null,
+    gqlFetcher, 
+    defaultSwrOptions
+  )
+
+  return ({
+    data: data?.data.listStandings.items ?? undefined,
+    ...otherReturns
+  })
 
 }

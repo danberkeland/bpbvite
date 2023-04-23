@@ -1,9 +1,9 @@
 import { useMemo } from "react"
 
 import useSWR, { mutate } from "swr"
-import { defaultSwrOptions } from "./constants"
+import { defaultSwrOptions } from "./_constants"
 
-import gqlFetcher from "./fetchers"
+import gqlFetcher from "./_fetchers"
 import * as queries from "../customGraphQL/queries/productionQueries"
 
 import { dateToYyyymmdd, getWeekday } from "../functions/dateAndTime"
@@ -133,13 +133,15 @@ export const useCombinedOrdersByDate = ({ delivDateJS, includeHolding=true, shou
     // but with different isWhole, isStand values -- currently the UI doesn't
     // guard against this, but we have yet to implement a logic designed to
     // handle this case. In the future we may discard these checks.
+    const cDupes = getDuplicates(cartOrders, ['locNick', 'prodNick'])
 
     let dupes = getDuplicates(standingOrders, ['locNick', 'prodNick'])
     let sDupes = getDuplicates(standingOnly, ['locNick', 'prodNick'])
     let hDupes = getDuplicates(holdingOnly, ['locNick', 'prodNick'])
 
-    if (sDupes.length) console.log("Warning: standing order duplicates")
-    if (hDupes.length) console.log("warning: holding order duplicates")
+    if (cDupes.length) console.log("Warning: cart order duplicates:", cDupes)
+    if (sDupes.length) console.log("Warning: standing order duplicates:", sDupes)
+    if (hDupes.length) console.log("warning: holding order duplicates:", hDupes)
 
     // duplication of this type is bad, too, but it should be extremely 
     // rare to observe. We still check to rule it out for certain.

@@ -22,7 +22,9 @@ const BPB = new CustomInputs();
 
 function LocationDetails({ initialState }) {
   //const { simpleZoneList } = useSimpleZoneList();
-  const { data: simpleZoneList } = useZoneListFull(true);
+  const { data: simpleZoneList } = useZoneListFull({
+    shouldFetch: true
+  })
 
   const isEdit = useSettingsStore((state) => state.isEdit);
 

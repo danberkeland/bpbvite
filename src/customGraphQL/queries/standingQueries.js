@@ -65,3 +65,32 @@ export const standingByLocByDayOfWeek = /* GraphQL */ `
     }
   }
 `;
+
+
+export const listStandingsFull = /* GraphQL */ `
+  query ListStandings(
+    $filter: ModelStandingFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listStandings(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        locNick
+        isWhole
+        isStand
+        dayOfWeek
+        route
+        prodNick
+        qty
+        ItemNote
+        startDate
+        endDate
+        createdAt
+        updatedAt
+        updatedBy
+      }
+      nextToken
+    }
+  }
+`;

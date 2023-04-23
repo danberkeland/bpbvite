@@ -30,7 +30,9 @@ function Logistics() {
     user.authClass === "bpbmgr" || user.authClass === "bpbfull";
 
   const { data: locationData } = useLocationListFull(readAuthorized);
-  const { data: zoneData } = useZoneListFull(readAuthorized);
+  const { data: zoneData } = useZoneListFull({
+    shouldFetch: readAuthorized
+  })
 
   const [zone, setZone] = useState(null);
   const [loc, setLoc] = useState(null);

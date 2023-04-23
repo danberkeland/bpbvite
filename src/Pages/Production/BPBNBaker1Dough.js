@@ -16,7 +16,7 @@ import { panAmount } from "./BPBNBaker1Parts/PanAmount";
 import { bucketAmount } from "./BPBNBaker1Parts/BucketAmount";
 
 import { BagMixesScreen } from "./BPBNBaker1Parts/BagMixesScreen";
-import { revalidateLegacyDatabase, useLegacyFormatDatabase } from "../../data/legacyData";
+import { useLegacyFormatDatabase } from "../../data/legacyData";
 
 // import styled from "styled-components";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
@@ -24,6 +24,7 @@ import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { TwoColumnGrid, WholeBox, WholeBoxPhone } from "./_styles"
 import { API, graphqlOperation } from "aws-amplify";
 import { updateDoughBackup } from "../../graphql/mutations";
+import { useDoughFull } from "../../data/doughData";
 
 const clonedeep = require("lodash.clonedeep");
 const compose = new ComposeDough();
@@ -39,22 +40,22 @@ function BPBNBaker1Dough({
   setBagDoughTwoDays,
   deliv
 }) {
-
   const [mixes, setMixes] = useState([]);
   const [bin, setBin] = useState([]);
   const [pans, setPans] = useState([]);
   const [buckets, setBuckets] = useState([]);
 
-  const [width, setWidth] = useState(window.innerWidth);
-  const breakpoint = 620;
+  // const [width, setWidth] = useState(window.innerWidth);
+  // const breakpoint = 620;
 
-  useEffect(() => {
-    window.addEventListener("resize", () => setWidth(window.innerWidth));
-  });
+  // useEffect(() => {
+  //   window.addEventListener("resize", () => setWidth(window.innerWidth));
+  // });
 
   
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
   const { data: database } = useLegacyFormatDatabase();
+  const { mutate:mutateDoughs } = useDoughFull(false)
 
   
   useEffect(() => {
@@ -88,7 +89,6 @@ function BPBNBaker1Dough({
 
   
 
-
   const updateDoughDB = async (e) => {
     let id = e.target.id.split("_")[0];
     let attr = e.target.id.split("_")[1];
@@ -107,7 +107,7 @@ function BPBNBaker1Dough({
       await API.graphql(
         graphqlOperation(updateDoughBackup, { input: { ...updateDetails } })
       );
-      revalidateLegacyDatabase()
+      mutateDoughs()
     } catch (error) {
       console.log("error on fetching Dough List", error);
     }
@@ -192,7 +192,7 @@ function BPBNBaker1Dough({
   const innards = (
     <React.Fragment>
       <h1>BPBN Baguette Mix</h1>
-      {doughs[0] && doughMixList(doughs[0])}
+      {doughs[0] && DoughMixList({ dough:doughs[0] })}
 
       <h2>Bins</h2>
       <DataTable value={bin} className="p-datatable-sm">
@@ -215,13 +215,68 @@ function BPBNBaker1Dough({
   );
   return (
     <React.Fragment>
-      {width > breakpoint ? (
+      {/* {width > breakpoint ? ( */}
         <WholeBox>{innards}</WholeBox>
-      ) : (
-        <WholeBoxPhone>{innards}</WholeBoxPhone>
-      )}
+      {/* ) : ( */}
+        {/* <WholeBoxPhone>{innards}</WholeBoxPhone> */}
+      {/* )} */}
     </React.Fragment>
   );
 }
 
 export default BPBNBaker1Dough;
+
+
+
+const DoughMixList = ({ dough }) => {
+  const { doughName, needed, short, buffer } = dough
+
+  // const [oldDough, setOldDough] = useState(dough.oldDough)
+  // const [buffer, setBuffer] = useState(dough.buffer)
+  // const [bucketSets, setBucketSets] = useState(dough.bucketSets)
+
+
+  return(
+    <div style={{
+      paddingInline: "1rem",
+      backgroundColor: "hsl(37, 100%, 80%)",
+      paddingBlock: ".5rem",
+      border: "solid 1px hsl(37, 67%, 60%)",
+      borderRadius: "3px",
+    }}>
+      <h3>{doughName}: (need {needed} lb.)</h3>
+      <h3>TOTAL: {Number(needed + buffer + short).toFixed(1)} </h3>
+      <h3>SHORT: {short}</h3>
+
+      {/* <div >
+        <div style={{display:"flex", gap: "1rem", alignItems: "center"}}>
+          <span style={{minWidth: "9rem"}}>Old Dough: </span>
+          <div style={{width: "7rem"}} className="p-inputgroup">
+            <InputText value={oldDough} />
+            <span style={{width: "3rem"}} className="p-inputgroup-addon">lb.</span>
+          </div>
+        </div>
+        <div style={{display:"flex", gap: "1rem", alignItems: "center"}}>
+          <span style={{minWidth: "9rem"}}>Buffer Dough:</span>
+          <div style={{width: "7rem"}} className="p-inputgroup">
+            <InputText value={buffer} />
+            <span style={{width: "3rem"}} className="p-inputgroup-addon">lb.</span>
+          </div>
+        </div>
+        <div style={{display:"flex", gap: "1rem", alignItems: "center"}}>
+          <span style={{minWidth: "9rem"}}>Actual Bucket Sets:</span>
+          <div style={{width: "7rem"}} className="p-inputgroup">
+            <InputText value={bucketSets} />
+            <span style={{width: "3rem"}} className="p-inputgroup-addon">Sets</span>
+          </div>
+        </div>
+      </div> */}
+     
+      <pre>{JSON.stringify(dough, null, 2)}</pre>
+
+    </div>
+  )
+
+
+
+}

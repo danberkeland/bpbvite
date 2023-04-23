@@ -1,46 +1,38 @@
-import useSWR, { mutate } from "swr";
-import { defaultSwrOptions } from "./constants";
+import useSWR, { mutate } from "swr"
+import { defaultSwrOptions } from "./_constants"
+import gqlFetcher from "./_fetchers"
+import { listDoughBackups, listDoughComponentBackups } from "../graphql/queries"
 
-import { useMemo } from "react";
-
-// import dynamicSort from "../functions/dynamicSort"
-import getNestedObject from "../functions/getNestedObject";
-
-import gqlFetcher from "./fetchers";
-
-import * as queries from "../graphql/queries";
-import { sortAtoZDataByIndex } from "../helpers/sortDataHelpers";
-import { listDoughComponentBackups } from "../graphql/queries";
-
-// import * as yup from "yup"
+import { useMemo } from "react"
+import { sortBy } from "lodash"
 
 export const useDoughFull = (shouldFetch) => {
-  let query = queries.listDoughBackups;
-  let variables = { limit: 500 };
+  let query = listDoughBackups;
+  let variables = { limit: 500 }
 
-  const { data, errors, mutate } = useSWR(
+  const { data, ...otherReturns } = useSWR(
     shouldFetch ? [query, variables] : null,
     gqlFetcher,
     defaultSwrOptions
-  );
+  )
 
   const transformedData = useMemo(() => {
-    if (!data) return undefined;
-    let final = getNestedObject(data, ["data", "listDoughBackups", "items"]);
-    sortAtoZDataByIndex(final, "doughName");
-    let noDelete = final.filter((dough) => dough["_deleted"] !== true);
-    return noDelete
-  }, [data]);
+    if (!data) return undefined
+
+    const items = data.data.listDoughBackups.items
+    return sortBy(items, ["doughName"])
+      .filter(item => item["_deleted"] !== true)
+
+  }, [data])
 
   return {
     data: transformedData,
-    errors: errors,
-    revalidate: () => mutate(),
-  };
-};
+    ...otherReturns
+  }
+}
 
 export const revalidateDough = () => {
-    let query = queries.listDoughBackups;
+    let query = listDoughBackups;
   mutate([query, { limit: 500 }], null, { revalidate: true });
 };
 
@@ -49,30 +41,29 @@ export const useDoughComponents = ({ shouldFetch }) => {
   let query = listDoughComponentBackups;
   let variables = { limit: 1000 };
 
-  const { data, errors, mutate } = useSWR(
+  const { data, ...otherReturns } = useSWR(
     shouldFetch ? [query, variables] : null,
     gqlFetcher,
     defaultSwrOptions
   );
 
-  
   const transformedData = useMemo(() => {
-    if (!data) return undefined;
-    let final = getNestedObject(data, ["data", "listDoughComponentBackups", "items"]);
-    sortAtoZDataByIndex(final, "doughName");
-    let noDelete = final.filter((dough) => dough["_deleted"] !== true);
-    return noDelete
+    if (!data) return undefined
+
+    const items = data.data.listDoughComponentBackups.items
+    return sortBy(items, ["doughName"])
+      .filter(item => item["_deleted"] !== true)
+
   }, [data]);
 
   return {
     data: transformedData,
-    errors: errors,
-    revalidate: () => mutate()
+    ...otherReturns
   };
 };
 
 export const revalidateDoughComponents = () => {
-    let query = queries.listDoughComponentBackups;
+    let query = listDoughComponentBackups;
   mutate([query, { limit: 1000 }], null, { revalidate: true });
 };
 

@@ -3,21 +3,19 @@ import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { InputNumber} from "primereact/inputnumber"
 import React, { useMemo, useState, useEffect } from "react";
-import { useLocationListSimple } from "../../../../data/locationData";
-import { useProductListForOrders } from "../../../../data/productData";
+import { useProductListFull } from "../../../../data/productData";
 import { Button } from "primereact/button";
 import { dateToYyyymmdd, getTtl, yyyymmddToJSDate } from "../../../../functions/dateAndTime";
 import dynamicSort from "../../../../functions/dynamicSort";
-import { createOrder, updateOrder, useCartOverview } from "../../../../data/orderData";
-import { DateTime } from "luxon";
+import { createOrder, updateOrder, useCartListFull } from "../../../../data/orderData";
 
 
 
 
 export const RetailOrder = () => {
   // const { data:locationList } = useLocationListSimple(true)
-  const { data:productList } = useProductListForOrders(true)
-  const { data:orders, mutate:mutateOrders } = useCartOverview(true)
+  const { data:productList } = useProductListFull(true)
+  const { data:orders, mutate:mutateOrders } = useCartListFull()
 
   const retailItems = orders?.filter(i => i.isWhole === false) ?? []
   const retailList = [...new Set(retailItems.map(i => i.locNick))]

@@ -1,10 +1,5 @@
 import { useMemo } from "react"
-import useSWR, { mutate } from "swr"
-import { defaultSwrOptions } from "./constants"
-
-import gqlFetcher from "./fetchers"
-import * as legacyQueries from "../customGraphQL/queries/legacyQueries"
-
+import { useListData } from "./_listData"
 
 /**
  * Fetches data from the current database and transforms it to
@@ -15,64 +10,59 @@ import * as legacyQueries from "../customGraphQL/queries/legacyQueries"
  * Those functions are housed in legacyDataFunctions.js
  */
 
-const LIMIT = 5000
 
+/**
+ * Data is now broken up into separate SWR sources, so updating values
+ * and revalidating can happen through one of the primary hooks, which
+ * is less costly.
+ */
 export const useLegacyFormatDatabase = () => {
-
-  const query = legacyQueries.getLegacyDatabase
-  const variables = {
-    limit: LIMIT
-  }
-
-  const { data, errors } = useSWR(
-    [query, variables], 
-    gqlFetcher, 
-    defaultSwrOptions
-  )
+  const { data:_products } = useListData({ tableName: "Product", shouldFetch: true})
+  const { data:_locations } = useListData({ tableName: "Location", shouldFetch: true})
+  const { data:_locationUsers } = useListData({ tableName: "LocationUser", shouldFetch: true})
+  const { data:_routes } = useListData({ tableName: "Route", shouldFetch: true})
+  const { data:_zoneRoutes } = useListData({ tableName: "ZoneRoute", shouldFetch: true})
+  const { data:_standing } = useListData({ tableName: "Standing", shouldFetch: true})
+  const { data:_orders } = useListData({ tableName: "Order", shouldFetch: true})
+  const { data:_doughs } = useListData({ tableName: "DoughBackup", shouldFetch: true})
+  const { data:_doughComponents } = useListData({ tableName: "DoughComponentBackup", shouldFetch: true})
 
   const transformData = () => {
-    if (errors) console.log('errors', errors)
-    
-    if (!data) return undefined
-
-    console.log('data', data)
-
-    for (let table of Object.keys(data.data)) {
-      //console.log('table', table)
-      if (data.data[table].items.length >= LIMIT) {
-        console.log(`warning: ${table} has reached query limit of ${LIMIT}.`)
-      }
-    }
-
-    const _products = data.data.listProducts.items
-    const _locations = data.data.listLocations.items
-    const _orders = data.data.listOrders.items
+    if ([
+      _products, _locations, _locationUsers, 
+      _routes, _zoneRoutes, _standing, 
+      _orders, _doughs, _doughComponents
+    ].some(data => !data)) return undefined
 
     const products = mapProductsToLegacy(_products)
-    const customers = mapLocationsToLegacy(_locations, _orders)
-    const routes = mapRoutesToLegacy(data.data.listRoutes.items)
-    const standing = mapStandingItemsToLegacy(data.data.listStandings.items, _products, _locations)
+    const customers = mapLocationsToLegacy(_locations, _orders, _locationUsers)
+    const routes = mapRoutesToLegacy(_routes, _zoneRoutes)
+    const standing = mapStandingItemsToLegacy(_standing, _products, _locations)
     const orders = mapOrdersToLegacy(_orders, _products, _locations)
-    const doughs = mapDoughsToLegacy(data.data.listDoughBackups.items)
-    const doughComponents = mapDoughComponentsToLegacy(data.data.listDoughComponentBackups.items)
+    const doughs = mapDoughsToLegacy(_doughs)
+    const doughComponents = mapDoughComponentsToLegacy(_doughComponents)
 
     return ([products, customers, routes, standing, orders, doughs, doughComponents])
   }
 
-  const _data = useMemo(transformData, [data])
-  if (errors) console.log('errors', errors)
+  const transformedData = useMemo(
+    transformData, 
+    [
+      _products, _locations, _locationUsers, 
+      _routes, _zoneRoutes, , _standing, 
+      _orders, _doughs, _doughComponents
+    ]
+  )
 
   return ({
-    data: _data,
-    errors: errors
+    data: transformedData
   })
-
 
 }
 
-export const revalidateLegacyDatabase = () => {
-  mutate([legacyQueries.getLegacyDatabase, { limit: LIMIT }], null, { revalidate: true });
-};
+// export const revalidateLegacyDatabases = () => {
+//   mutate([legacyQueries.getLegacyDatabase, { limit: LIMIT }], null, { revalidate: true });
+// };
 
 // *****MAPPING FUNCTIONS******
 //
@@ -87,15 +77,15 @@ export const revalidateLegacyDatabase = () => {
 // We return an object with the correct key names
 // and/or adjusted value formats.
 
-const mapLocationsToLegacy = (locations, orders) => {
+const mapLocationsToLegacy = (locations, orders, locationUsers) => {
   const legacyLocations = locations.map(location => {
-    const { locNick, locName, subs, zoneNick, ...unchangedAttributes } = location
+    const { locNick, locName, zoneNick, ...unchangedAttributes } = location
   
     return ({
       ...unchangedAttributes,
       nickName: locNick,
       custName: locName,
-      userSubs: subs.items.map(s => s.sub),
+      userSubs: locationUsers.filter(lu => lu.locNick === locNick).map(lu => lu.sub),
       zoneName: zoneNick
     })
   })
@@ -120,7 +110,6 @@ const mapLocationsToLegacy = (locations, orders) => {
 
 
 
-
 const mapProductsToLegacy = (products) => products.map(product => {
   const { prodNick, doughNick, isEOD, bakedWhere, ...unchangedAttributes } = product
 
@@ -137,13 +126,14 @@ const mapProductsToLegacy = (products) => products.map(product => {
 })
 
 
-const mapRoutesToLegacy = (routes) => routes.map(route => {
-  const { routeNick, zoneRoute, ...unchangedAttributes } = route
+
+const mapRoutesToLegacy = (routes, zoneRoutes) => routes.map(route => {
+  const { routeNick, ...unchangedAttributes } = route
   
   return ({
     ...unchangedAttributes,
     routeName: routeNick,
-    RouteServe: zoneRoute.items.map(zr => zr.zoneNick)
+    RouteServe: zoneRoutes.filter(zr => zr.routeNick === routeNick).map(zr => zr.zoneNick)
   })
   
 })
@@ -156,7 +146,7 @@ const yyyymmddToMmddyyyy = (yyyymmddDateString) => {
 }
 
 const mapOrdersToLegacy = (orders, products, locations) => orders.map(order => {
-  const { prodNick, locNick, ItemNote, delivDate, updatedOn, ...unchangedAttributes } = order
+  const { prodNick, locNick, ItemNote, delivDate, updatedOn, updatedBy, ...unchangedAttributes } = order
 
   const matchLocation = locations.find(location => location.locNick === locNick)
   const matchProduct = products.find(product => product.prodNick === prodNick)
@@ -175,6 +165,8 @@ const mapOrdersToLegacy = (orders, products, locations) => orders.map(order => {
   })
 
 })
+
+
 
 // legacy standing Attributes:
 // prodName: String
@@ -250,6 +242,7 @@ const mapStandingItemsToLegacy = (standingItems, products, locations) => {
 }
 
 
+
 const mapDoughsToLegacy = (doughs) => doughs.map(dough => {
   const { ...unchangedAttributes } = dough
   
@@ -259,6 +252,7 @@ const mapDoughsToLegacy = (doughs) => doughs.map(dough => {
   })
   
 })
+
 
 
 const mapDoughComponentsToLegacy = (doughs) => doughs.map(dough => {

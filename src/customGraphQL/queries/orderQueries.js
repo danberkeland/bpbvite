@@ -114,7 +114,7 @@ export const transitionOrdersByLocByDelivDate = /* GraphQL */ `
   }
 `;
 
-export const listCartOverview = /* GraphQL */ `
+export const listCartFull = /* GraphQL */ `
   query ListOrders(
     $filter: ModelOrderFilterInput
     $limit: Int
@@ -123,19 +123,17 @@ export const listCartOverview = /* GraphQL */ `
     listOrders(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        isWhole
         locNick
         prodNick
-        isWhole
+        delivDate
         route
         ItemNote
         qty
-        delivDate
+        rate
         updatedOn
         updatedBy
         # ItemNote
-        # isWhole
-        # rate
-        # route
         # isLate
         # createdOn
         # ttl

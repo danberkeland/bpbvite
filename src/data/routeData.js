@@ -1,44 +1,27 @@
 import useSWR, { mutate } from "swr";
-import { defaultSwrOptions } from "./constants";
+import { defaultSwrOptions } from "./_constants";
 
-import { useMemo } from "react";
-
-// import dynamicSort from "../functions/dynamicSort"
-import getNestedObject from "../functions/getNestedObject";
-
-import gqlFetcher from "./fetchers";
+import gqlFetcher from "./_fetchers";
 
 import * as queries from "../customGraphQL/queries/routeQueries";
 import { listZoneRoutes } from "../customGraphQL/queries/zoneRouteQueries";
 
-// import * as yup from "yup"
 
-export const useRouteListFull = (shouldFetch) => {
+// actually joins zoneRoute data to each route item, so the below
+// useZoneRouteListFull hook is not strictly necessary
+export const useRouteListFull = ({ shouldFetch }) => {
   let query = queries.listRoutesFull;
   let variables = { limit: 1000 };
 
-  const { data, errors, mutate } = useSWR(
+  const { data, ...otherReturns } = useSWR(
     shouldFetch ? [query, variables] : null,
     gqlFetcher,
     defaultSwrOptions
   );
 
-  const transformedData = useMemo(() => {
-    if (!data) return undefined;
-    let final = getNestedObject(data, ["data", "listRoutes", "items"]);
-    
-    const transformedRouteServe = final.map((route) => ({
-      ...route,
-      RouteServe: route.zoneRoute.items.map((item) => item.zone.zoneName)
-    }));
-    console.log('transformedRouteServe', transformedRouteServe)
-    return transformedRouteServe
-  }, [data]);
-
   return {
-    data: transformedData,
-    errors: errors,
-    revalidate: () => mutate(),
+    data: data?.data.listRoutes.items ?? undefined,
+    ...otherReturns
   };
 };
 
@@ -52,16 +35,15 @@ export const useZoneRouteListFull = ({ shouldFetch }) => {
   let query = listZoneRoutes;
   let variables = { limit: 1000 };
 
-  const { data, errors, mutate } = useSWR(
+  const { data, ...otherReturns } = useSWR(
     shouldFetch ? [query, variables] : null,
     gqlFetcher,
     defaultSwrOptions
   );
 
   return {
-    data: getNestedObject(data, ["data", "listZoneRoutes", "items"]),
-    errors: errors,
-    revalidate: () => mutate()
+    data: data?.data.listZoneRoutes.items ?? undefined,
+    ...otherReturns
   };
 };
 

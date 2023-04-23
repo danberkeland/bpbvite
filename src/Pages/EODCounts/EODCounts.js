@@ -12,7 +12,7 @@ import styled from "styled-components";
 import { useProductListFull } from "../../data/productData";
 import dynamicSort from "../../functions/dynamicSort";
 
-import gqlFetcher from "../../data/fetchers";
+import gqlFetcher from "../../data/_fetchers";
 
 import swal from "sweetalert";
 

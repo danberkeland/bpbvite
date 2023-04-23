@@ -17,6 +17,3 @@ export default gqlFetcher;
 export const APIGatewayFetcher = async (path, body) => {
   return await API.post('bpbGateway', path, body)
 }
-
-
-

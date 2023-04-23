@@ -11,6 +11,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Terminal } from "primereact/terminal"
 import { TerminalService } from 'primereact/terminalservice'
+import { useListData } from "../../../data/_listData"
 
 export const BPBTerminal = () => {
   const [prompt, setPrompt] = useState("bpb $")
@@ -25,6 +26,10 @@ export const BPBTerminal = () => {
   const [isExecuting, setIsExecuting] = useState(false)
 
   const [tResponse, setTResponse] = useState('')
+
+  const {data:locationList} = useListData({ shouldFetch: true, tableName: "Location" })
+
+  console.log("locationList", locationList)
 
 
   const executeCommand = (commandObj) => {

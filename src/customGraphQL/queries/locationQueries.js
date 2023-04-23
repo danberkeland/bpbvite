@@ -41,6 +41,11 @@ export const listLocationsFull = /* GraphQL */ `
         Type
         locNick
         locName
+        subs {
+          items {
+            sub
+          }
+        }
         zoneNick
         addr1
         addr2

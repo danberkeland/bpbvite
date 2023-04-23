@@ -7,7 +7,7 @@ import { dateToMmddyyyy, dateToYyyymmdd, getWorkingDate, getWorkingDateTime } fr
 import { DateTime } from "luxon"
 import { handleAddCartProduct, handleAddCartProducts } from "../../_utils/handleAddProduct"
 import { useRouteListFull } from "../../../../../data/routeData"
-import { useCartOverview } from "../../../../../data/orderData"
+import { useCartListFull } from "../../../../../data/orderData"
 import dynamicSort from "../../../../../functions/dynamicSort"
 import TimeAgo from "timeago-react"
 import "./bpbTerminal.css"
@@ -21,11 +21,11 @@ export const BpbTerminal = ({
   const { data:locationList, isValidating:locListIsValidating } = useLocationListSimple(true)
   const { data:locationDetails, isValidating:locIsValidating } = useLocationDetails(locNick, !!locNick)
   const { data:productData, isValidating:prodsAreValidating } = useProductDataWithLocationCustomization(locNick)
-  const { data:routeData } = useRouteListFull(!!locNick)
+  const { data:routeData } = useRouteListFull({ shouldFetch:!!locNick })
 
   // DATA for admin use
   const [shouldLoadCartOverview, setShouldLoadCartOverview] = useState(false)
-  const { data:cartOverview } = useCartOverview(shouldLoadCartOverview)
+  const { data:cartOverview } = useCartListFull(shouldLoadCartOverview)
 
   const [commandQueue, setCommandQueue] = useState(null)
   const [isExecuting, setIsExecuting] = useState(false)
