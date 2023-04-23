@@ -5,9 +5,11 @@ import styled from "styled-components";
 import BillingGrid from "./Parts/BillingGrid";
 import SelectDate from "./Parts/SelectDate";
 
-// import { fetchZones } from "../helpers/databaseFetchers";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
+import { API, graphqlOperation } from "aws-amplify";
+import { listZones } from "../../graphql/queries";
+import { sortAtoZDataByIndex } from "../../helpers/sortDataHelpers";
 
 const BasicContainer = styled.div`
   display: flex;
@@ -42,12 +44,30 @@ function Billing() {
   const { data: database } = useLegacyFormatDatabase();
 
 
-  /*
+  
   useEffect(() => {
     setIsLoading(true);
-    fetchZones().then((getZones) => setZones(getZones));
+    fetchZones()
   }, []);
-  */
+
+  const fetchZones = async () => {
+    try {
+      const zoneData = await API.graphql(
+        graphqlOperation(listZones, {
+          limit: "50",
+        })
+      );
+      const zoneList = zoneData.data.listZones.items;
+      sortAtoZDataByIndex(zoneList, "zoneNick");
+      let noDelete = zoneList.filter((zone) => zone["_deleted"] !== true);
+
+      setZones(noDelete);
+      setIsLoading(false);
+    } catch (error) {
+      console.log("error on fetching Cust List", error);
+    }
+  };
+  
 
   return (
     <React.Fragment>

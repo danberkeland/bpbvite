@@ -27,12 +27,6 @@ const BillingGrid = ({
   const delivDate = useSettingsStore((state) => state.delivDate);
  
   
-  
-  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
-  const isChange = useSettingsStore((state) => state.isChange);
-  const setIsChange = useSettingsStore((state) => state.setIsChange);
-
-
   useEffect(() => {
     if (standing && orders && customers && products && altPricing && zones) {
       createDailyInvoices(

@@ -102,9 +102,7 @@ export const attachInvoiceOrders = (
             (cust) => cust["custName"] === orderClip[0]["custName"]
           )
         ]["zoneName"];
-      let rate
-      /*
-        zones[zones.findIndex((zn) => zn["zoneName"] === zone)].zoneFee;
+      let rate = zones[zones.findIndex((zn) => zn["zoneName"] === zone)].zoneFee;
       if (Number(rate) > 0 && rateTotal > 0) {
         inv.orders.push({
           prodName: "DELIVERY",
@@ -112,7 +110,7 @@ export const attachInvoiceOrders = (
           rate: rate,
         });
       }
-      */
+      
     }
   }
 
