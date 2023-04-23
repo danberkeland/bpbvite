@@ -46,8 +46,10 @@ const remapProduct = (custList, prodList) => {
         checkExistsNewProd(old.nickName).then((exists) => {
           console.log("exists",exists)
           if (exists) {
+            console.log('updating', old)
             updateNewProd(old, custList);
           } else {
+            console.log('creating', old)
             createNewProd(old, prodList);
           }
         });
@@ -127,7 +129,7 @@ const remapStanding = (custList, prodList) => {
 };
 
 
-function EODCounts() {
+function Remap() {
 
   let custList = useLocationListSimple(true)
   let prodList = useProductListSimple(true)
@@ -154,4 +156,4 @@ function EODCounts() {
   </React.Fragment>;
 }
 
-export default EODCounts;
+export default Remap;

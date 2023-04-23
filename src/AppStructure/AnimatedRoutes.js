@@ -44,6 +44,7 @@ import EditDoughs from "../Pages/Settings/editDough/editDough";
 import EditZones2 from "../Pages/Settings/editZones/editZones2";
 import EditRoutes from "../Pages/Settings/editRoutes/editRoutes";
 import Notes2 from "../Pages/Settings/notes/Notes2";
+import Remap from "../Pages/EODCounts/EODCountsRempas";
 
 function AnimatedRoutes({ Routes, Route, useLocation }) {
   const authClass = useSettingsStore((state) => state.authClass);
@@ -58,6 +59,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
         <Route path="/CustomerBilling" element={<CustomerBilling />} />
         <Route path="/CustomerSettings" element={<CustomerSettings />} />
         <Route path="/CustomerProducts" element={<CustomerProducts />} />
+        <Route path="/remap" element={<Remap />} />
         {authClass !== "customer" && (
           <React.Fragment>
             <Route path="/Production/BPBNBaker1" element={<BPBNBaker1 />} />
