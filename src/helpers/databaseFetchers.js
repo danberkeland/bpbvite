@@ -313,7 +313,7 @@ export const checkForUpdates = async (
         console.log("orders", orders);
 
         let ind = orders.findIndex(
-          (ord) => ord["custName"] === locNick && ord["prodName"] === prodName
+          (ord) => ord["custName"] === locNick && (ord["prodName"] === prodName || ord["prodName"] === "brn")
         );
 
         if (ind === -1) {
