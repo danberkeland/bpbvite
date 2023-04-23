@@ -21,30 +21,30 @@ import { sortBy } from "lodash"
  * QUERIES/CACHES *
  ******************/
 
-// /**
-//  * Produces a full list of prodNick/prodName items.
-//  * @param {boolean} shouldFetch Fetches data only when true.
-//  * @returns {{ data: Array<{ locNick: string, locName: string }>, errors: object }} A list of locNick ID's and locName text labels.
-//  */
-// export const useProductListSimple = (shouldFetch) => {
-//   const { data, errors } = useSWR(
-//     shouldFetch ? [queries.listProductsSimple, { limit: 1000 }] : null, 
-//     gqlFetcher, 
-//     defaultSwrOptions
-//   )
+/**
+ * Produces a full list of prodNick/prodName items.
+ * @param {boolean} shouldFetch Fetches data only when true.
+ * @returns {{ data: Array<{ locNick: string, locName: string }>, errors: object }} A list of locNick ID's and locName text labels.
+ */
+export const useProductListSimple = (shouldFetch) => {
+  const { data, errors } = useSWR(
+    shouldFetch ? [queries.listProductsSimple, { limit: 1000 }] : null, 
+    gqlFetcher, 
+    defaultSwrOptions
+  )
 
-//   const transformData = () => {
-//     if (!data) return undefined
-//     return getNestedObject(data, ['data', 'listProducts', 'items']).sort(dynamicSort("locName"))
-//   }
-//   const _data = useMemo(transformData, [data])
+  const transformData = () => {
+    if (!data) return undefined
+    return getNestedObject(data, ['data', 'listProducts', 'items']).sort(dynamicSort("locName"))
+  }
+  const _data = useMemo(transformData, [data])
 
-//   return({
-//     data: _data,
-//     errors: errors
-//   })
+  return({
+    data: _data,
+    errors: errors
+  })
 
-// }
+}
 
 // /** 
 //  * Can be called whenever productListSimple data is affected by a mutation.
