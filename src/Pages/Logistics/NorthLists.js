@@ -16,6 +16,8 @@ import styled from "styled-components";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
 import { checkForUpdates } from "../../helpers/databaseFetchers";
+import { API, graphqlOperation } from "aws-amplify";
+import { listNotes } from "../../graphql/queries";
 
 const WholeBox = styled.div`
   display: flex;
@@ -53,8 +55,46 @@ const printButtonStyle = {
 
 const compose = new ComposeNorthList();
 
+
+export const notesData = (setIsLoading) => {
+  const all = new Promise((resolve, reject) => {
+    resolve(fetchNotesData(setIsLoading));
+  });
+
+  return all;
+};
+
+const fetchNotesData = async (setIsLoading) => {
+  let notes = await fetchNotes();
+
+  if (!notes) {
+    return [];
+  } else {
+    return notes;
+  }
+};
+
+
+export const fetchNotes = async () => {
+  let notes = await fetchFromDataBase(listNotes, "listNotes", "1000");
+  return notes;
+};
+
+const fetchFromDataBase = async (baseFunc, base, limit) => {
+  try {
+    const data = await API.graphql(
+      graphqlOperation(baseFunc, { limit: limit })
+    );
+
+    const list = data.data[base].items;
+    return list;
+  } catch (error) {
+    console.log(`error on fetching ${base} data`, error);
+  }
+};
+
+
 function NorthList() {
-  
   const [croixNorth, setCroixNorth] = useState([]);
   const [shelfProdsNorth, setShelfProdsNorth] = useState([]);
   const [pocketsNorth, setPocketsNorth] = useState([]);
@@ -70,8 +110,8 @@ function NorthList() {
   const [columnsOtherRustics, setColumnsOtherRustics] = useState([]);
   const [columnsRetailStuff, setColumnsRetailStuff] = useState([]);
   const [columnsEarlyDeliveries, setColumnsEarlyDeliveries] = useState([]);
-  
-  const [notes, setNotes] = useState([])
+
+  const [notes, setNotes] = useState([]);
 
   let delivDate = todayPlus()[0];
 
@@ -98,7 +138,6 @@ function NorthList() {
   const dynamicColumnsRetailStuff = createDynamic(columnsRetailStuff);
   const dynamicColumnsEarlyDeliveries = createDynamic(columnsEarlyDeliveries);
 
-  
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
   const ordersHasBeenChanged = useSettingsStore(
     (state) => state.ordersHasBeenChanged
@@ -108,7 +147,6 @@ function NorthList() {
   );
   const { data: database } = useLegacyFormatDatabase();
 
-  
   useEffect(() => {
     console.log("databaseTest", database);
     database &&
@@ -121,18 +159,17 @@ function NorthList() {
       ).then((db) => gatherMakeInfo(db, delivDate));
   }, [database]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  /*
   useEffect(() => {
-    notesData().then((notes) =>
-      setNotes(notes.filter(note => note.when === convertDatetoBPBDate(delivDate)))
-    );
+    notesData().then((notes) => {
+      console.log("notes", notes);
+      console.log('NotesdelivDate', delivDate)
+      setNotes(
+        notes.filter((note) => note.when === delivDate)
+      );
+    });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  */
-  
-  
 
   const gatherMakeInfo = (database) => {
-    
     let northData = compose.returnNorthBreakDown(delivDate, database);
     setCroixNorth(northData.croixNorth);
     setShelfProdsNorth(northData.shelfProdsNorth);
@@ -170,50 +207,45 @@ function NorthList() {
 
     doc.autoTable({
       body: notes,
-      theme: 'grid',
-      headStyles: {fillColor: "#dddddd", textColor: "#111111"},
-        margin: {
-          left: 100,
-          right: 20,
-        },
-      columns: [
-        
-        { header: "Note", dataKey: "note" }
-      ],
+      theme: "grid",
+      headStyles: { fillColor: "#dddddd", textColor: "#111111" },
+      margin: {
+        left: 100,
+        right: 20,
+      },
+      columns: [{ header: "Note", dataKey: "note" }],
       startY: finalY + titleToNextTable,
       styles: { fontSize: tableFont },
     });
 
-      doc.setFontSize(titleFont);
-      doc.text(pageMargin, 43, `Pockets North`);
+    doc.setFontSize(titleFont);
+    doc.text(pageMargin, 43, `Pockets North`);
 
-      doc.autoTable({
-        body: pocketsNorth,
-        theme: 'grid',
-        headStyles: {fillColor: "#dddddd", textColor: "#111111"},
-        margin: {
-          left: 20,
-          right: 120,
-        },
-        columns: columnsPocketsNorth,
-        startY: finalY + titleToNextTable,
-        styles: { fontSize: tableFont },
-      });
-    
-    
-    
+    doc.autoTable({
+      body: pocketsNorth,
+      theme: "grid",
+      headStyles: { fillColor: "#dddddd", textColor: "#111111" },
+      margin: {
+        left: 20,
+        right: 120,
+      },
+      columns: columnsPocketsNorth,
+      startY: finalY + titleToNextTable,
+      styles: { fontSize: tableFont },
+    });
+
     finalY = doc.previousAutoTable.finalY;
     doc.setFontSize(titleFont);
     doc.text(pageMargin, finalY + tableToNextTitle, `Frozen and Baked Croix`);
 
     doc.autoTable({
       body: croixNorth,
-      theme: 'grid',
-      headStyles: {fillColor: "#dddddd", textColor: "#111111"},
-        margin: {
-          left: 20,
-          right: 120,
-        },
+      theme: "grid",
+      headStyles: { fillColor: "#dddddd", textColor: "#111111" },
+      margin: {
+        left: 20,
+        right: 120,
+      },
       columns: [
         { header: "Product", dataKey: "prod" },
         { header: "Frozen", dataKey: "frozenQty" },
@@ -222,42 +254,37 @@ function NorthList() {
       startY: finalY + titleToNextTable,
       styles: { fontSize: tableFont },
     });
-  
+
     if (columnsShelfProdsNorth.length > 0) {
       finalY = doc.previousAutoTable.finalY;
 
       doc.setFontSize(titleFont);
       doc.text(pageMargin, finalY + tableToNextTitle, `Shelf Products`);
 
-     console.log("columnsShelf",columnsShelfProdsNorth)
-     console.log("shelfProds",shelfProdsNorth)
-      let footStyle = ['TOTAL']
-      for (let prod of columnsShelfProdsNorth){
-        let comp = prod.field
-        console.log("comp",comp)
-        let tot=0
-        for (let sh of shelfProdsNorth){
-          if (sh[comp] && sh[comp]!=='customer'){
-            console.log(sh[comp])
-            tot = tot + Number(sh[comp])
-
+      console.log("columnsShelf", columnsShelfProdsNorth);
+      console.log("shelfProds", shelfProdsNorth);
+      let footStyle = ["TOTAL"];
+      for (let prod of columnsShelfProdsNorth) {
+        let comp = prod.field;
+        console.log("comp", comp);
+        let tot = 0;
+        for (let sh of shelfProdsNorth) {
+          if (sh[comp] && sh[comp] !== "customer") {
+            console.log(sh[comp]);
+            tot = tot + Number(sh[comp]);
           }
-          
         }
-      if (prod.field!=="customer" && prod.field!=="customerShort"){
-        footStyle.push(tot)
+        if (prod.field !== "customer" && prod.field !== "customerShort") {
+          footStyle.push(tot);
+        }
       }
-      
-      }
-      
-
 
       doc.autoTable({
         body: shelfProdsNorth,
-        theme: 'grid',
-        headStyles: {fillColor: "#dddddd", textColor: "#111111"},
+        theme: "grid",
+        headStyles: { fillColor: "#dddddd", textColor: "#111111" },
         foot: [footStyle],
-        footStyles: {fillColor: "#dddddd", textColor: "#111111"},
+        footStyles: { fillColor: "#dddddd", textColor: "#111111" },
 
         margin: {
           left: 20,
@@ -277,14 +304,14 @@ function NorthList() {
 
       doc.autoTable({
         body: CarltonToPrado,
-        theme: 'grid',
-        headStyles: {fillColor: "#dddddd", textColor: "#111111"},
+        theme: "grid",
+        headStyles: { fillColor: "#dddddd", textColor: "#111111" },
         columns: columnsCarltonToPrado,
         startY: finalY + titleToNextTable,
         styles: { fontSize: tableFont },
       });
     }
-    
+
     doc.save(`LongDriverNorth${delivDate}.pdf`);
   };
 
@@ -307,8 +334,8 @@ function NorthList() {
           left: pageMargin,
           right: 100,
         },
-        theme: 'grid',
-        headStyles: {fillColor: "#dddddd", textColor: "#111111"},
+        theme: "grid",
+        headStyles: { fillColor: "#dddddd", textColor: "#111111" },
         columns: columnsBaguettes,
         startY: finalY + titleToNextTable,
         styles: { fontSize: tableFont },
@@ -319,8 +346,8 @@ function NorthList() {
 
       doc.autoTable({
         pageBreak: "avoid",
-        theme: 'grid',
-        headStyles: {fillColor: "#dddddd", textColor: "#111111"},
+        theme: "grid",
+        headStyles: { fillColor: "#dddddd", textColor: "#111111" },
         body: otherRustics,
         columns: columnsOtherRustics,
         startY: finalY + titleToNextTable,
@@ -332,8 +359,8 @@ function NorthList() {
 
       doc.autoTable({
         body: retailStuff,
-        theme: 'grid',
-        headStyles: {fillColor: "#dddddd", textColor: "#111111"},
+        theme: "grid",
+        headStyles: { fillColor: "#dddddd", textColor: "#111111" },
         columns: columnsRetailStuff,
         startY: finalY + titleToNextTable,
         styles: { fontSize: tableFont },
@@ -344,8 +371,8 @@ function NorthList() {
 
       doc.autoTable({
         body: earlyDeliveries,
-        theme: 'grid',
-        headStyles: {fillColor: "#dddddd", textColor: "#111111"},
+        theme: "grid",
+        headStyles: { fillColor: "#dddddd", textColor: "#111111" },
         columns: columnsEarlyDeliveries,
         startY: finalY + titleToNextTable,
         styles: { fontSize: tableFont },
@@ -353,7 +380,7 @@ function NorthList() {
     }
 
     finalY = doc.previousAutoTable.finalY;
-    
+
     doc.save(`LongDriverSouth${delivDate}.pdf`);
   };
 
@@ -362,13 +389,15 @@ function NorthList() {
       <WholeBox>
         <h1>LONG DRIVER</h1>
         <ButtonWrapper>
-          <Button label="Print Long Driver North List"
+          <Button
+            label="Print Long Driver North List"
             type="button"
             onClick={exportNorthListPdf}
             data-pr-tooltip="PDF"
             style={printButtonStyle}
           />
-          <Button label="Print Long Driver South List"
+          <Button
+            label="Print Long Driver South List"
             type="button"
             onClick={exportSouthListPdf}
             data-pr-tooltip="PDF"
@@ -381,14 +410,12 @@ function NorthList() {
         <DataTable value={notes} className="p-datatable-sm">
           <Column field="when" header="Date"></Column>
           <Column field="note" header="Note"></Column>
-         
         </DataTable>
         <h3>Frozen and Baked Croix</h3>
         <DataTable value={croixNorth} className="p-datatable-sm">
           <Column field="prod" header="Product"></Column>
           <Column field="frozenQty" header="Frozen"></Column>
           <Column field="bakedQty" header="Baked"></Column>
-         
         </DataTable>
 
         {pocketsNorth.length > 0 && (
