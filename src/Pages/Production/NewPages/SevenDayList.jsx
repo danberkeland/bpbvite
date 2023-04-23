@@ -9,89 +9,23 @@ import dynamicSort from "../../../functions/dynamicSort";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { dateToMmddyyyy } from "../../../functions/dateAndTime";
+import { useT0T7orders } from "./_hooks/dataHooks";
 
 
 const TODAY = DateTime.now().setZone("America/Los_Angeles").startOf("day")
-console.log(dateToMmddyyyy(TODAY.toJSDate()))
-const LOCAL_STORAGE_KEY = "sevenDayOrders"
 
 export const SevenDayList = () => {
-  const [shouldFetch, setShouldFetch] = useState(false)
-  const { data:T0orders } = useCombinedOrdersByDate({
-    delivDateJS: TODAY.plus({ days: 0 }).toJSDate(),
-    includeHolding: true,
-    shouldFetch: shouldFetch
+  const [shouldRefresh, setShouldRefresh] = useState(false)
+  const { data:T0T7data } = useT0T7orders({ 
+    shouldFetch: true, 
+    useLocal: true,
+    manualRefresh: shouldRefresh
   })
-  const { data:T1orders } = useCombinedOrdersByDate({
-    delivDateJS: TODAY.plus({ days: 1 }).toJSDate(),
-    includeHolding: true,
-    shouldFetch: shouldFetch
-  })
-  const { data:T2orders } = useCombinedOrdersByDate({
-    delivDateJS: TODAY.plus({ days: 2 }).toJSDate(),
-    includeHolding: true,
-    shouldFetch: shouldFetch
-  })
-  const { data:T3orders } = useCombinedOrdersByDate({
-    delivDateJS: TODAY.plus({ days: 3 }).toJSDate(),
-    includeHolding: true,
-    shouldFetch: shouldFetch
-  })
-  const { data:T4orders } = useCombinedOrdersByDate({
-    delivDateJS: TODAY.plus({ days: 4 }).toJSDate(),
-    includeHolding: true,
-    shouldFetch: shouldFetch
-  })
-  const { data:T5orders } = useCombinedOrdersByDate({
-    delivDateJS: TODAY.plus({ days: 5 }).toJSDate(),
-    includeHolding: true,
-    shouldFetch: shouldFetch
-  })
-  const { data:T6orders } = useCombinedOrdersByDate({
-    delivDateJS: TODAY.plus({ days: 6 }).toJSDate(),
-    includeHolding: true,
-    shouldFetch: shouldFetch
-  })
-
-  const { data:dimensionData } = useLogisticsDimensionData(shouldFetch)
-
-  const [orderData, setOrderData] = useState(
-    JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY))
-  )
-
-  // if no localStorage, or if it's too old, fetch new data
-  useEffect(() =>  {
-    if (!orderData) { 
-      console.log("no data, need to fetch")
-    } else if (DateTime.fromISO(orderData.timestamp).startOf("day").toMillis() !== TODAY.toMillis()) {
-      console.log("data is stale")
-      setShouldFetch(true)
-    } else {
-      console.log("using locally stored data")
-    }
-  }, [orderData])
-
-  console.log("T0", T0orders)
-  // if data is fetched, save as state & localStorage
-  useEffect(() => {
-    if (T0orders && T1orders && T2orders && T3orders && T4orders && T5orders && T6orders && dimensionData) {
-      console.log("fetched data")
-      const _orderData = {
-        timestamp: new Date().toISOString(),
-        dimensionData,
-        T0orders, T1orders, T2orders, T3orders, T4orders, T5orders, T6orders,
-      }
-
-      setOrderData(_orderData)
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(_orderData));
-    }
-    
-  }, [T0orders, T1orders, T2orders, T3orders, T4orders, T5orders, T6orders])
-
+  
   const prepareData = () => {
-    if (!orderData) return []
+    if (!T0T7data) return []
 
-    const { timestamp, dimensionData, ...ordersByDate } = orderData
+    const { timestamp, dimensionData, ...ordersByDate } = T0T7data
     const { products } = dimensionData
     
     const _withTimestamp = flatten(Object.values(ordersByDate).map((dateGroup, idx) => {
@@ -111,13 +45,14 @@ export const SevenDayList = () => {
         T4: _byProdNick[prodNick].filter(order => order.relativeDate === 4),
         T5: _byProdNick[prodNick].filter(order => order.relativeDate === 5),
         T6: _byProdNick[prodNick].filter(order => order.relativeDate === 6),
+        T7: _byProdNick[prodNick].filter(order => order.relativeDate === 7),
       })
     })
     console.log("_byProdNickByDate", _byProdNickByDate)
 
     return _byProdNickByDate.sort(dynamicSort('packGroup'))
   }
-  const reportData = useMemo(prepareData, [orderData]) ?? []
+  const reportData = useMemo(prepareData, [T0T7data]) ?? []
   const [expandedRows, setExpandedRows] = useState()
   const rowExpansionTemplate = (rowData) => {
     // console.log(data)
@@ -134,6 +69,7 @@ export const SevenDayList = () => {
         T4: rowByLocNick[locNick].filter(order => order.relativeDate === 4),
         T5: rowByLocNick[locNick].filter(order => order.relativeDate === 5),
         T6: rowByLocNick[locNick].filter(order => order.relativeDate === 6),
+        T7: rowByLocNick[locNick].filter(order => order.relativeDate === 7),
       })
     })
     console.log(rowByLocNickByDate)
@@ -148,13 +84,14 @@ export const SevenDayList = () => {
       <Column header="T4" body={rowData => sumBy(rowData.T4, order => order.qty) || ""} />
       <Column header="T5" body={rowData => sumBy(rowData.T5, order => order.qty) || ""} />
       <Column header="T6" body={rowData => sumBy(rowData.T6, order => order.qty) || ""} />
+      <Column header="T7" body={rowData => sumBy(rowData.T7, order => order.qty) || ""} />
     </DataTable>
   }
   
   return(<>
     <h1>7 Day List</h1>
-    <Button label="Fetch" onClick={() => setShouldFetch(true)} />
-    <p>Data fetched & saved in local storage <TimeAgo datetime={orderData?.timestamp}/>.</p>
+    <Button label="Fetch" onClick={() => setShouldRefresh(true)} />
+    <p>Data fetched & saved in local storage <TimeAgo datetime={T0T7data?.timestamp}/>.</p>
     <p>Each new day, data will be considered stale and refetched on page load. Use the button to refresh more frequently if needed.</p>
 
     <DataTable 
@@ -179,6 +116,7 @@ export const SevenDayList = () => {
       <Column header="T4" body={rowData => sumBy(rowData.T4, order => order.qty)}/>
       <Column header="T5" body={rowData => sumBy(rowData.T5, order => order.qty)}/>
       <Column header="T6" body={rowData => sumBy(rowData.T6, order => order.qty)}/>
+      <Column header="T7" body={rowData => sumBy(rowData.T7, order => order.qty)}/>
     </DataTable>
   
   </>)

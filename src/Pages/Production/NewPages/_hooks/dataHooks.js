@@ -9,13 +9,14 @@ import { useLogisticsDimensionData } from "../../../../data/productionData"
 const TODAY = DateTime.now().setZone("America/Los_Angeles").startOf("day")
 const LOCAL_STORAGE_KEY = "sevenDayOrders"
 
-export const useT0T7orders = ({ shouldFetch, useLocal }) => {
+export const useT0T7orders = ({ shouldFetch, useLocal, manualRefresh }) => {
 
   const localData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY))
   const dataDate = DateTime.fromISO(localData.timestamp).startOf("day")
 
-  const shouldUseLocal = useLocal 
-    && !!localData 
+  const shouldUseLocal = useLocal
+    && !manualRefresh
+    && !!localData
     && dataDate.toMillis() === TODAY.toMillis()
 
   const { data:T0orders } = useCombinedOrdersByDate({
@@ -54,7 +55,7 @@ export const useT0T7orders = ({ shouldFetch, useLocal }) => {
     shouldFetch: shouldFetch && !shouldUseLocal
   })
   const { data:T7orders } = useCombinedOrdersByDate({
-    delivDateJS: TODAY.plus({ days: 6 }).toJSDate(),
+    delivDateJS: TODAY.plus({ days: 7 }).toJSDate(),
     includeHolding: true,
     shouldFetch: shouldFetch && !shouldUseLocal
   })
@@ -99,7 +100,7 @@ export const useT0T7orders = ({ shouldFetch, useLocal }) => {
         T4orders: allRoutedOrders[4], 
         T5orders: allRoutedOrders[5], 
         T6orders: allRoutedOrders[6], 
-        T7orders: allRoutedOrders[6], 
+        T7orders: allRoutedOrders[7], 
       }
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(_orderData))
       return _orderData
