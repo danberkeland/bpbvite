@@ -101,7 +101,7 @@ export const CartItemDisplay = ({ headerChanges, itemBase, itemChanges, setItemC
             fontStyle: qtyChanged && rowData.qty > 0 ? "italic" : "normal", 
             fontWeight: "bold"
           }}>
-              {displayProdName}
+              {user.authClass === 'bpbfull' && <span style={{fontSize: "2rem", marginRight: ".25rem"}}>{getEmoji(rowData.product.prodName)}</span>}<span>{displayProdName}</span>
           </span>
         </div>
         {/* {rowData.action === 'CREATE' && rowData.qty === 0 && !rowData.isTemplate && 
@@ -339,3 +339,22 @@ export const CartItemDisplay = ({ headerChanges, itemBase, itemChanges, setItemC
 //   deliv: { text: "Delivery date reached", iconClass: "pi pi-times", iconColor:"#BF0404" },
 //   past: { text: "Past delivery date", iconClass: "pi pi-times", iconColor:"#BF0404" }
 // }
+
+const getEmoji = (prodName) => {
+  const text = prodName.toLowerCase()
+  let emoji = ''
+  if (text.includes('croissant') || text.includes('morning bun')) emoji = '🥐'
+  else if (text.includes('loaf')) emoji = '🍞'
+  else if (text.includes('stick') || text === 'baguette' || text === 'baguette (retail)') emoji = '🥖'
+  else if (text.includes('hot dog')) emoji = '🌭'
+  else if (text.includes('torp')) emoji = '🥪'
+  else if (text.includes('pretzel')) emoji = '🥨'
+  else if (text.includes('bun')) emoji = '🍔'
+  else if (text.includes('muffin') || text.includes('brownie')) emoji = '🧁'
+
+  if (text.includes('frozen')) {
+    emoji = emoji + '🧊'
+  }
+
+  return emoji
+}
