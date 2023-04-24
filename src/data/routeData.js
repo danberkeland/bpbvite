@@ -9,7 +9,7 @@ import { listZoneRoutes } from "../customGraphQL/queries/zoneRouteQueries";
 
 // actually joins zoneRoute data to each route item, so the below
 // useZoneRouteListFull hook is not strictly necessary
-export const useRouteListFull = ({ shouldFetch }) => {
+export const useRouteListFull = (shouldFetch) => {
   let query = queries.listRoutesFull;
   let variables = { limit: 1000 };
 
