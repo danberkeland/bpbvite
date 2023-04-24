@@ -21,21 +21,8 @@ const DescripWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-items: start;
-  align-content: flex-start;
+  align-content: center;
   width: 100%;
-  
-  
-`;
-
-const GroupBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-content: flex-start;
-  border: 1px solid lightgrey;
-  width: 95%;
-  margin: 5px 10px;
-  padding: 5px 20px;
-  background: var(--bpb-orange-vibrant-100);
 `;
 
 function EditZones() {
@@ -50,39 +37,31 @@ function EditZones() {
   useEffect(() => {
     console.log(!!zoneCache.data)
     setIsLoading(!zoneCache.data)
-  }, [zoneCache.data])
+  }, [zoneCache.data, setIsLoading])
 
 
   return (
-    <React.Fragment>
-      <MainWrapper>
-
-        <ZoneList
+    <MainWrapper>
+      <ZoneList
+        selectedZone={selectedZone}
+        setSelectedZone={setSelectedZone}
+        zones={displayData || []}
+      />
+      
+      <DescripWrapper>
+        <Info
           selectedZone={selectedZone}
           setSelectedZone={setSelectedZone}
-          zones={displayData || []}
         />
-        
-        <React.Fragment>
-          <DescripWrapper>
-            <GroupBox id="Info">
-              <Info
-                selectedZone={selectedZone}
-                setSelectedZone={setSelectedZone}
-              />
-            </GroupBox>
-          </DescripWrapper>
-        </React.Fragment>
+      </DescripWrapper>
 
-        <DescripWrapper>
-          <Buttons
-            selectedZone={selectedZone}
-            setSelectedZone={setSelectedZone}
-          />
-        </DescripWrapper>
-      </MainWrapper>
-      <pre>{JSON.stringify(displayData, null, 2)}</pre>
-    </React.Fragment>
+      <DescripWrapper>
+        <Buttons
+          selectedZone={selectedZone}
+          setSelectedZone={setSelectedZone}
+        />
+      </DescripWrapper>
+    </MainWrapper>
   );
 }
 export default EditZones;

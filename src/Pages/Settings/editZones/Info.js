@@ -1,50 +1,64 @@
 import React from "react";
 import { InputText } from "primereact/inputtext";
 
+import styled from "styled-components";
+
 //import { setValue, fixValue } from "../../../helpers/formHelpers";
+
+const GroupBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-content: flex-start;
+  width: fit-content;
+  margin: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--bpb-orange-vibrant-500);
+  background: var(--bpb-orange-vibrant-100);
+`;
 
 const Info = ({ selectedZone, setSelectedZone }) => {
 
   return (
-    <React.Fragment>
+    <GroupBox id="Info" style={{gap: "1rem"}}>
       <h2><i className="pi pi-map"></i> Zone Info</h2>
 
-      <div className="p-inputgroup">
-        <span className="p-inputgroup-addon">
+      <div className="p-inputgroup" style={{width: "20rem"}}>
+        <span className="p-inputgroup-addon" style={{justifyContent: "flex-start", width: "7.5rem"}}>
           <label htmlFor="zoneName">Zone Name</label>
-          <br />
         </span>
 
-        <InputText id="zoneName" value={selectedZone?.zoneName ?? ""} disabled />
+        <InputText id="zoneName" 
+          value={selectedZone?.zoneName ?? ""} 
+          readOnly 
+          disabled={!selectedZone}
+        />
       </div>
-      <br />
 
-      <div className="p-inputgroup">
-        <span className="p-inputgroup-addon">
+      <div className="p-inputgroup" style={{width: "12rem"}}>
+        <span className="p-inputgroup-addon" style={{justifyContent: "flex-start", width: "7.5rem"}}>
           <label htmlFor="zoneNum">Zone Number</label>
-          <br />
         </span>
-        {/* No zoneNum attribute exists? */}
+        {/* No zoneNum attribute exists */}
         <InputText disabled id="zoneNum" value={""} onChange={e => console.log("foo")} />
       </div>
-      <br />
 
-      <div className="p-inputgroup">
-        <span className="p-inputgroup-addon">
+      <div className="p-inputgroup" style={{width: "12rem"}}>
+        <span className="p-inputgroup-addon" style={{justifyContent: "flex-start", width: "7.5rem"}}>
           <label htmlFor="zoneFee">Zone Fee</label>
-          <br />
         </span>
         <InputText id="zoneFee" 
           value={selectedZone?.zoneFee ?? ""} 
           onChange={e => setSelectedZone({
             ...selectedZone, 
             zoneFee: e.target.value})
-          } 
+          }
+          disabled={!selectedZone}
         />
       </div>
-      <br />
+
       {/* <pre>{JSON.stringify(selectedZone, null, 2)}</pre> */}
-    </React.Fragment>
+    </GroupBox>
   );
 };
 
