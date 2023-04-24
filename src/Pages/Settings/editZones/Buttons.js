@@ -33,7 +33,7 @@ const Buttons = ({ selectedZone, setSelectedZone }) => {
 
   const [visible, setVisible] = useState(false);
 
-  const { data:zoneData, createItem, updateItem, deleteItem } = useListData({ tableName: "Zone", shouldFetch: true })
+  const { createItem, updateItem, deleteItem } = useListData({ tableName: "Zone", shouldFetch: true })
 
   const showDialog = () => {
     setVisible(true);
@@ -54,15 +54,6 @@ const Buttons = ({ selectedZone, setSelectedZone }) => {
     hideDialog();
   };
 
-  // const createZne = async (addDetails) => {
-  //   try {
-  //     await API.graphql(
-  //       graphqlOperation(createZone, { input: { ...addDetails } })
-  //     );
-  //   } catch (error) {
-  //     console.log("error on fetching Zone List", error);
-  //   }
-  // };
 
   const updateZne = async () => {
     const updateDetails = {

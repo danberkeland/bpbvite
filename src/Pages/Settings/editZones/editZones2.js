@@ -41,7 +41,6 @@ const GroupBox = styled.div`
 function EditZones() {
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
   const [selectedZone, setSelectedZone] = useState();
-  const [zones, setZones] = useState(null);
 
   const zoneCache = useListData({ tableName:"Zone", shouldFetch: "true"})
   const displayData = useMemo(() => {
@@ -62,7 +61,6 @@ function EditZones() {
           selectedZone={selectedZone}
           setSelectedZone={setSelectedZone}
           zones={displayData || []}
-          //setZones={setZones}
         />
         
         <React.Fragment>
@@ -71,8 +69,6 @@ function EditZones() {
               <Info
                 selectedZone={selectedZone}
                 setSelectedZone={setSelectedZone}
-                zones={zones}
-                setZones={setZones}
               />
             </GroupBox>
           </DescripWrapper>
@@ -82,8 +78,6 @@ function EditZones() {
           <Buttons
             selectedZone={selectedZone}
             setSelectedZone={setSelectedZone}
-            zones={zones}
-            setZones={setZones}
           />
         </DescripWrapper>
       </MainWrapper>
