@@ -1,7 +1,7 @@
 // Attempting to reduce boilerplate.
 //
 // We use a lot of list-type hooks. Lately I'm of the opinion that
-// fetching full lists (including all non-joined attributes) is the
+// fetching full lists (ie with all non-joined attributes) is the
 // best approach for most situations. Scanning tables has the same
 // DDB/AppSync cost whether or not we return all attributes or project
 // to just a few, so unless we specifically *need* to restrict content
@@ -17,7 +17,7 @@ import useSWR from 'swr'
 import gqlFetcher from './_fetchers'
 import { defaultSwrOptions, LIMIT, LIST_TABLES, TABLE_PKS } from './_constants'
 import * as listQueries from '../customGraphQL/queries/_listQueries'
-import * as mutations from '../graphql/mutations'
+import * as mutations from '../customGraphQL/mutations'
 import getNestedObject from '../functions/getNestedObject'
 
 /**
@@ -138,14 +138,27 @@ const mutateItem = async ({ input, pkAttName, mutationType, tableName, mutate, l
       }
       mutate({ data: {[`list${tableName}s`]: { items: newData } } }, false)
 
-      return newItem
+      return ({ 
+        data: newItem,
+        errors: null
+      })
 
     } else {
       console.error(response.errors) // malformed query
+      return ({
+        data: null,
+        errors: response.errors
+      })
+
     }
 
   } catch (err) {
     console.error(err) // probably a network error
+    return ({
+      data: null,
+      errors: err
+    })
+
   }
 
 }
