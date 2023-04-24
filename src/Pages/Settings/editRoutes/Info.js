@@ -14,167 +14,83 @@ import {
   setDropDownValue,
 } from "../../../helpers/formHelpers";
 
-import { listZones } from "../../../graphql/queries";
-
-import { API, graphqlOperation } from "aws-amplify";
-
-import { sortAtoZDataByIndex } from "../../../helpers/sortDataHelpers";
-import { useSettingsStore } from "../../../Contexts/SettingsZustand";
-import { useRouteListFull } from "../../../data/routeData";
-
 const clonedeep = require("lodash.clonedeep");
 
 const DuoWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  margin: 0 0 20px 0;
+  /* margin: 0 0 20px 0; */
 `;
 
 const WeekWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  margin: 0 0 30px 0;
+  margin: 0 0 1rem 0;
 `;
 
 const hubDepart = [{ RouteDepart: "Prado" }, { RouteDepart: "Carlton" }];
-
 const hubArrive = [{ RouteArrive: "Prado" }, { RouteArrive: "Carlton" }];
 
-const Info = ({ selectedRoute, setSelectedRoute }) => {
-  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
+const dayNumberStringMap = {
+  "1": "Sun",
+  "2": "Mon",
+  "3": "Tue",
+  "4": "Wed",
+  "5": "Thu",
+  "6": "Fri",
+  "7": "Sat"
+}
 
-  const [source, setSource] = useState([]);
-  const [target, setTarget] = useState([]);
-
-  const fullZones = useRef();
-
-  const [days, setDays] = useState([]);
-
+const Info = ({ selectedRoute, setSelectedRoute, zoneList }) => {
+  const [source, setSource] = useState()
+  
   useEffect(() => {
-    setIsLoading(true);
-    fetchZones();
-    setIsLoading(false);
-  }, []);
+    setSource(zoneList.filter(z => !selectedRoute.zones.includes(z)))
+  }, [zoneList, selectedRoute])
 
-  const fetchZones = async () => {
-    try {
-      const zoneData = await API.graphql(
-        graphqlOperation(listZones, {
-          limit: "50",
-        })
-      );
-      const zoneList = zoneData.data.listZones.items;
-      sortAtoZDataByIndex(zoneList, "zoneNum");
-      let noDelete = zoneList.filter((zone) => zone["_deleted"] !== true);
-      let mappedNoDelete = noDelete.map((item) => item["zoneName"]);
-      fullZones.current = mappedNoDelete;
-      setSource(mappedNoDelete);
-    } catch (error) {
-      console.log("error on fetching Cust List", error);
-    }
-  };
-
-  const onDayChange = (e) => {
-    let selectedDays = [...days];
-    if (e.checked) selectedDays.push(e.value);
-    else selectedDays.splice(selectedDays.indexOf(e.value), 1);
-
-    let itemToUpdate = clonedeep(selectedRoute);
-    itemToUpdate["RouteSched"] = selectedDays;
-    setSelectedRoute(itemToUpdate);
-    setDays(selectedDays);
-  };
-
-  const { data: routes } = useRouteListFull({ shouldFetch: true });
-
-  useEffect(() => {
-    setTarget(selectedRoute["RouteServe"]);
-  }, [selectedRoute]);
-
-  useEffect(() => {
-    setDays(selectedRoute["RouteSched"]);
-  }, [selectedRoute]);
-
-  useEffect(() => {
-    let parsedZones = [];
-    console.log("selectedRoute", selectedRoute);
-    console.log("target", target);
-    if (fullZones.current) {
-      parsedZones = fullZones.current.filter(
-        (full) => !selectedRoute["RouteServe"]?.includes(full)
-      );
-    }
-    setSource(parsedZones);
-  }, [selectedRoute]);
-
-  const itemTemplate = (item) => {
-    return <div>{item}</div>;
-  };
+  console.log(selectedRoute)
 
   const onChange = (event) => {
     setSource(event.source);
-    setSelectedRoute(setPickValue(event, selectedRoute));
+    setSelectedRoute({
+      ...selectedRoute,
+      zones: event.target
+    })
   };
+
+
+
 
   return (
     <React.Fragment>
-      <h2>
-        <i className="pi pi-map"></i> Route Info
-      </h2>
+      <h2><i className="pi pi-map"></i> Route Info</h2>
 
-      <div className="p-inputgroup">
-        <span className="p-inputgroup-addon">
-          <label htmlFor="zoneName"> Route Name</label>
-          <br />
-        </span>
-
-        <InputText
+      <InputGroupLabel attribute="routeStart" labelText="Route Name">
+        <InputText attribute="routeStart"
           id="routeName"
           placeholder={selectedRoute.routeName}
           disabled
-          onKeyUp={(e) =>
-            e.code === "Enter" && setSelectedRoute(setValue(e, selectedRoute))
-          }
-          onBlur={(e) => setSelectedRoute(fixValue(e, selectedRoute))}
         />
-      </div>
-      <br />
+      </InputGroupLabel>
+
       <DuoWrapper>
-        <div className="p-inputgroup">
-          <span className="p-inputgroup-addon">
-            <label htmlFor="zoneName"> Route Start Time (0-24)</label>
-          </span>
-
-          <InputText
-            id="routeStart"
-            placeholder={selectedRoute.routeStart}
-            onKeyUp={(e) =>
-              e.code === "Enter" && setSelectedRoute(setValue(e, selectedRoute))
-            }
-            onBlur={(e) => setSelectedRoute(fixValue(e, selectedRoute))}
+        <InputGroupLabel attribute="routeStart" labelText="Route Start Time (0-24)">
+          <NumericInput attribute="routeStart"
+            item={selectedRoute}
+            setItem={setSelectedRoute}
           />
-        </div>
+        </InputGroupLabel>
 
-        <div className="p-inputgroup">
-          <span className="p-inputgroup-addon">
-            <label htmlFor="zoneName"> Route Duration (in hours)</label>
-          </span>
-
-          <InputText
-            id="routeTime"
-            placeholder={selectedRoute.routeTime}
-            onKeyUp={(e) =>
-              e.code === "Enter" && setSelectedRoute(setValue(e, selectedRoute))
-            }
-            onBlur={(e) => setSelectedRoute(fixValue(e, selectedRoute))}
+        <InputGroupLabel attribute="routeTime" labelText="Route Duration (in hours)">
+          <NumericInput 
+            item={selectedRoute}
+            setItem={setSelectedRoute}
           />
-        </div>
+        </InputGroupLabel>
       </DuoWrapper>
+
       <DuoWrapper>
-        <div className="p-inputgroup">
-          <span className="p-inputgroup-addon">
-            <label htmlFor="RouteDepart">Depart Hub</label>
-          </span>
+        <InputGroupLabel attribute="RouteDepart" labelText="Depart Hub">
           <Dropdown
             id="RouteDepart"
             optionLabel="RouteDepart"
@@ -186,12 +102,8 @@ const Info = ({ selectedRoute, setSelectedRoute }) => {
               selectedRoute ? selectedRoute.RouteDepart : "Departure Hub"
             }
           />
-        </div>
-
-        <div className="p-inputgroup">
-          <span className="p-inputgroup-addon">
-            <label htmlFor="RouteArrive">Arrival Hub</label>
-          </span>
+        </InputGroupLabel>
+        <InputGroupLabel attribute="RouteDepart" labelText="Arrival Hub">
           <Dropdown
             id="RouteArrive"
             optionLabel="RouteArrive"
@@ -203,93 +115,39 @@ const Info = ({ selectedRoute, setSelectedRoute }) => {
               selectedRoute ? selectedRoute.RouteArrive : "Arrival Hub"
             }
           />
-        </div>
+        </InputGroupLabel>
       </DuoWrapper>
+
       <WeekWrapper>
-        <div className="p-col-12">
-          <Checkbox
-            inputId="cb1"
-            value="1"
-            onChange={onDayChange}
-            checked={days.includes("1")}
-          ></Checkbox>
-          <label htmlFor="cb1" className="p-checkbox-label">
-            Sun
-          </label>
-        </div>
-        <div className="p-col-12">
-          <Checkbox
-            inputId="cb2"
-            value="2"
-            onChange={onDayChange}
-            checked={days.includes("2")}
-          ></Checkbox>
-          <label htmlFor="cb2" className="p-checkbox-label">
-            Mon
-          </label>
-        </div>
-        <div className="p-col-12">
-          <Checkbox
-            inputId="cb3"
-            value="3"
-            onChange={onDayChange}
-            checked={days.includes("3")}
-          ></Checkbox>
-          <label htmlFor="cb3" className="p-checkbox-label">
-            Tues
-          </label>
-        </div>
-        <div className="p-col-12">
-          <Checkbox
-            inputId="cb3"
-            value="4"
-            onChange={onDayChange}
-            checked={days.includes("4")}
-          ></Checkbox>
-          <label htmlFor="cb3" className="p-checkbox-label">
-            Wed
-          </label>
-        </div>
-        <div className="p-col-12">
-          <Checkbox
-            inputId="cb3"
-            value="5"
-            onChange={onDayChange}
-            checked={days.includes("5")}
-          ></Checkbox>
-          <label htmlFor="cb3" className="p-checkbox-label">
-            Thurs
-          </label>
-        </div>
-        <div className="p-col-12">
-          <Checkbox
-            inputId="cb3"
-            value="6"
-            onChange={onDayChange}
-            checked={days.includes("6")}
-          ></Checkbox>
-          <label htmlFor="cb3" className="p-checkbox-label">
-            Fri
-          </label>
-        </div>
-        <div className="p-col-12">
-          <Checkbox
-            inputId="cb3"
-            value="7"
-            onChange={onDayChange}
-            checked={days.includes("7")}
-          ></Checkbox>
-          <label htmlFor="cb3" className="p-checkbox-label">
-            Sat
-          </label>
-        </div>
+        {Object.keys(dayNumberStringMap).map(dns => {
+          const { RouteSched } = selectedRoute
+          return(
+            <div className="p-col-12" key={`checkbox-${dns}`}>
+              <Checkbox
+                inputId={dns}
+                onChange={e => setSelectedRoute({
+                  ...selectedRoute,
+                  RouteSched: e.checked 
+                    ? RouteSched.concat([dns]).sort()
+                    : RouteSched.filter(item => item !== dns)
+                })}
+                checked={RouteSched.includes(dns)}
+              />
+              <label htmlFor={dns} 
+                className="p-checkbox-label"
+                style={{marginInline: ".5rem"}}
+              >
+                {dayNumberStringMap[dns]}
+              </label>
+            </div>
+          )
+        })}
       </WeekWrapper>
       <PickList
         sourceHeader="All Zones"
         targetHeader="Served By This Route"
         source={source}
-        target={selectedRoute["RouteServe"]}
-        itemTemplate={itemTemplate}
+        target={selectedRoute.zones}
         onChange={onChange}
         sourceStyle={{ height: "250px" }}
         targetStyle={{ height: "250px" }}
@@ -299,3 +157,44 @@ const Info = ({ selectedRoute, setSelectedRoute }) => {
 };
 
 export default Info;
+
+
+
+const NumericInput = ({ attribute, item, setItem }) => <InputText
+  id={attribute}
+  inputMode="numeric"
+  value={item[attribute]}
+  onFocus={e => e.target.select()}
+  onChange={e => {
+    if (/^\d{0,2}$|^\d{0,2}\.\d{0,2}$/.test(e.target.value)) {
+      setItem({
+        ...item, 
+        [attribute]: e.target.value
+      })
+    }
+  }}
+  onKeyUp={e => e.code === "Enter" && e.target.blur()}
+  onBlur={() => setItem({
+      ...item, 
+      [attribute]: Number(item[attribute])
+    })
+  }
+/>
+
+
+// clumsy attempt an using props.children for nested components.
+// Manages to clean up some of the jsx in the main component, but
+// probably can be rewritten better.
+const InputGroupLabel = ({ attribute, labelText, children }) => {
+  const childWithProps = React.cloneElement(children, { attribute });
+
+  return (
+    <div className="p-inputgroup">
+      <span className="p-inputgroup-addon">
+        <label htmlFor={attribute}>{labelText}</label>
+      </span>
+      {childWithProps}
+    </div>
+  )
+
+}

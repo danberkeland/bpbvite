@@ -22,23 +22,7 @@ const ListWrapper = styled.div`
   height: 100vh;
 `;
 
-const RouteList = ({ selectedRoute, setSelectedRoute }) => {
-
-    
-  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
-  
-  const { data:routes } = useRouteListFull({shouldFetch: true });
-  console.log('routes', routes)
-  
-  useEffect(() => {
-    console.log('routes', routes)
-  },[routes])
-  
-
-  const handleSelection = (e) => {
-    setSelectedRoute(e.value);
-  };
-
+const RouteList = ({ selectedRoute, setSelectedRoute, routes }) => {
   return (
     <ListWrapper>
       <ScrollPanel style={{ width: "100%", height: "100vh" }}>
@@ -47,7 +31,10 @@ const RouteList = ({ selectedRoute, setSelectedRoute }) => {
             value={routes}
             className="p-datatable-striped"
             selection={selectedRoute}
-            onSelectionChange={handleSelection}
+            onSelectionChange={(e) => {
+              setSelectedRoute(e.value)
+              console.log(e.value)
+            }}
             selectionMode="single"
             dataKey="routeName"
           >
@@ -57,7 +44,7 @@ const RouteList = ({ selectedRoute, setSelectedRoute }) => {
               sortable
               filter
               filterPlaceholder="Search by name"
-            ></Column>
+            />
           </DataTable>
         )}
       </ScrollPanel>

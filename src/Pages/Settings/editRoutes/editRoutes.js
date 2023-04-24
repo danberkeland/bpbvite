@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState, useMemo } from "react";
 
 import styled from "styled-components";
 
@@ -6,6 +6,8 @@ import styled from "styled-components";
 import RouteList from "./RouteList";
 import Info from "./Info";
 import Buttons from "./Buttons";
+import { useListData } from "../../../data/_listData";
+import { sortBy } from "lodash";
 
 const MainWrapper = styled.div`
   display: grid;
@@ -28,8 +30,8 @@ const GroupBox = styled.div`
   align-content: flex-start;
   border: 1px solid lightgrey;
   width: 95%;
-  margin: 5px 10px;
-  padding: 5px 20px;
+  margin: 1rem;
+  padding: 1rem 1.5rem;
   background: var(--bpb-orange-vibrant-100);
 `;
 
@@ -37,30 +39,59 @@ function EditRoutes() {
   const [selectedRoute, setSelectedRoute] = useState();
   const [routes, setRoutes] = useState(null);
 
+  const routeCache = useListData({ 
+    tableName: "Route", 
+    shouldFetch: true 
+  })
 
+  const zoneRouteCache = useListData({
+    tableName: "ZoneRoute",
+    shouldFetch: true
+  })
+
+  const zoneCache = useListData({
+    tableName: "Zone",
+    shouldFetch: true
+  })
+
+  const tableData = useMemo(() => {
+    if (!routeCache.data || !zoneRouteCache.data || !zoneCache.data) return undefined
+
+    let joinedData = routeCache.data.map(route => {
+      const zones = zoneRouteCache.data.filter(zr => 
+        zr.routeNick === route.routeNick
+      ).map(zr => zr.zoneNick)
+
+      return { ...route, zones }
+    })
+
+    return sortBy(joinedData, ['routeNick'])
+
+  }, [routeCache.data, zoneRouteCache.data, zoneCache.data])
+
+  const zoneList = useMemo(() => {
+    if (zoneCache.data) return sortBy(zoneCache.data, ["zoneName"])
+  }, [zoneCache.data])
 
   return (
-    <React.Fragment>
       <MainWrapper>
         <RouteList
           selectedRoute={selectedRoute}
           setSelectedRoute={setSelectedRoute}
-          routes={routes}
-          setRoutes={setRoutes}
+          routes={tableData || []}
         />
         {selectedRoute && (
-          <React.Fragment>
-            <DescripWrapper>
-              <GroupBox id="Info">
-                <Info
-                  selectedRoute={selectedRoute}
-                  setSelectedRoute={setSelectedRoute}
-                  routes={routes}
-                  setRoutes={setRoutes}
-                />
-              </GroupBox>
-            </DescripWrapper>
-          </React.Fragment>
+          <DescripWrapper>
+            <GroupBox id="Info" style={{gap: "1rem"}}>
+              <Info
+                selectedRoute={selectedRoute}
+                setSelectedRoute={setSelectedRoute}
+                routes={routes}
+                setRoutes={setRoutes}
+                zoneList={zoneList.map(z => z.zoneNick) || []}
+              />
+            </GroupBox>
+          </DescripWrapper>
         )}
         <DescripWrapper>
           <Buttons
@@ -71,7 +102,6 @@ function EditRoutes() {
           />
         </DescripWrapper>
       </MainWrapper>
-    </React.Fragment>
   );
 }
 export default EditRoutes;
