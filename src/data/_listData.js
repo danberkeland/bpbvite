@@ -37,11 +37,12 @@ export const useListData = ({
 }) => {
 
   if (!LIST_TABLES.includes(tableName)) {
-    console.error("tableName not supported. Try one of the following instead:", JSON.stringify(LIST_TABLES))
+    console.error(`tableName '${tableName}' not supported. Try one of the following instead:`, JSON.stringify(LIST_TABLES))
   }
 
   const queryName = `list${tableName}s`
   const query = listQueries[queryName]
+  const pkAtt = TABLE_PKS[tableName]
   
   const { data, error, isLoading, isValidating, mutate } = useSWR(
     shouldFetch ? [query, variables] : null,
@@ -56,10 +57,34 @@ export const useListData = ({
     console.warn("WARNING: item limit reached")
   }
 
-  const createItem = (input) => mutateItem({ input, pkAttName: TABLE_PKS[tableName], mutationType: "create", tableName, mutate: mutate, listData: _data })
-  const updateItem = (input) => mutateItem({ input, pkAttName: TABLE_PKS[tableName], mutationType: "update", tableName, mutate: mutate, listData: _data })
-  const deleteItem = (input) => mutateItem({ input, pkAttName: TABLE_PKS[tableName], mutationType: "delete", tableName, mutate: mutate, listData: _data })
+  const createItem = (input) => submitMutation({ input, mutationType: "create", tableName, pkAtt })
+  const updateItem = (input) => submitMutation({ input, mutationType: "update", tableName, pkAtt })
+  const deleteItem = (input) => submitMutation({ input, mutationType: "delete", tableName, pkAtt })
+  
+  const mutateLocal = ({ createdItems=[], updatedItems=[], deletedItems=[] }) => {
+    if (!_data) {
+      console.error("ERROR: cache data not found. Refresh page before trying again")
+      return
+    }
+    
+    const _create = coerceInput(createdItems)
+    const _update = coerceInput(updatedItems)
+    const _delete = coerceInput(deletedItems)
 
+    const newData = _data
+      .concat(_create)
+      .filter(item => {
+        const matchIdx = _delete.findIndex(_d => _d[pkAtt] === item[pkAtt])
+        return matchIdx === -1
+      })
+      .map(item => {
+        const matchUpdateItem = _update.find(_u => _u[pkAtt] === item[pkAtt])
+        return matchUpdateItem ? matchUpdateItem : item
+      })
+
+    mutate({ data: {[`list${tableName}s`]: { items: newData } } }, false)
+  }
+  
   return ({
     data: _data,
     error,
@@ -68,11 +93,10 @@ export const useListData = ({
     mutate,
     createItem,
     updateItem,
-    deleteItem
+    deleteItem,
+    mutateLocal
   })
 }
-
-// const foo = useListData({ tableName: })
 
 // List Mutations
 // 
@@ -93,72 +117,118 @@ export const useListData = ({
 // will be necessary. Since the local cache mutation will be a relatively cheap,
 // synchronous action, batch mutations will not need to be handled specially.
 
-const mutateItem = async ({ input, pkAttName, mutationType, tableName, mutate, listData }) => {
+// const mutateItem = async ({ input, pkAttName, mutationType, tableName, mutate, listData, shouldMutateLocal }) => {
+//   const mutationName = `${mutationType}${tableName}`
+//   const mutation = mutations[mutationName]
+
+//   console.log(input, pkAttName, mutationType, tableName, listData)
+
+//   if (!listData) {
+//     console.log("list data not found: try setting shouldFetch: true?")
+//     return
+//   }
+//   if (mutationType !== 'create' && pkAttName !== 'id' &&!input[pkAttName]) console.error("ERROR: primary Key is required.")
+
+//   try {
+//     const response = await gqlFetcher(mutation, { input })
+//     // console.log("listData", listData)
+//     // console.log("MUATION RESP:", response.data[mutationName])
+//     if (!!response.data) {
+//       const newItem = response.data[mutationName]
+
+//       let newData
+//       switch (mutationType) {
+//         case 'create':
+//           newData = listData.concat([newItem])
+//           console.log("newData", newData)
+//           break
+          
+//         case 'update':
+//           newData = listData.map(item => 
+//             item[pkAttName] === newItem[pkAttName] 
+//               ? newItem 
+//               : item
+//           )
+//           break
+
+//         case 'delete':
+//           newData = listData.filter(item => 
+//             item[pkAttName] !== newItem[pkAttName]
+//           )
+//           break
+
+//         default:
+//           console.log(`mutation type '${mutationType}' not recognized.`);
+//       }
+
+//       if (shouldMutateLocal) {
+//         mutate({ data: {[`list${tableName}s`]: { items: newData } } }, false)
+//       }
+
+//       return ({ 
+//         data: newItem,
+//         errors: null
+//       })
+
+//     } else {
+//       console.error(response.errors) // malformed query
+//       return ({
+//         data: null,
+//         errors: response.errors
+//       })
+
+//     }
+
+//   } catch (err) {
+//     console.error(err) // probably a network error
+//     return ({
+//       data: null,
+//       errors: err
+//     })
+
+//   }
+
+// }
+
+const submitMutation = async ({ input, mutationType, tableName, pkAtt }) => {
   const mutationName = `${mutationType}${tableName}`
   const mutation = mutations[mutationName]
+  //console.log(input, pkAtt, mutationType, tableName, listData)
 
-  console.log(input, pkAttName, mutationType, tableName, listData)
-
-  if (!listData) {
-    console.log("list data not found")
-    return
+  if (mutationType !== 'create' && pkAtt !== 'id' &&!input[pkAtt]) {
+    console.warn(`Primary Key '${pkAtt}' not found. Mutation request may fail.`)
   }
-  if (!input[pkAttName]) console.error("ERROR: primary Key is required.")
 
   try {
     const response = await gqlFetcher(mutation, { input })
-    console.log("listData", listData)
-    console.log("MUATION RESP:", response.data[mutationName])
-    if (!!response.data) {
-      const newItem = response.data[mutationName]
+    if (response.data ) return ({ data: response.data[mutationName], errors: null })
+    else return ({ data: null, errors: response.errors }) // probably a malformed query
 
-      let newData
-      switch (mutationType) {
-        case 'create':
-          newData = listData.concat([newItem])
-          console.log("newData", newData)
-          break
-          
-        case 'update':
-          newData = listData.map(item => 
-            item[pkAttName] === newItem[pkAttName] 
-              ? newItem 
-              : item
-          )
-          break
-
-        case 'delete':
-          newData = listData.filter(item => 
-            item[pkAttName] !== newItem[pkAttName]
-          )
-          break
-
-        default:
-          console.log(`mutation type '${mutationType}' not recognized.`);
-      }
-      mutate({ data: {[`list${tableName}s`]: { items: newData } } }, false)
-
-      return ({ 
-        data: newItem,
-        errors: null
-      })
-
-    } else {
-      console.error(response.errors) // malformed query
-      return ({
-        data: null,
-        errors: response.errors
-      })
-
-    }
-
-  } catch (err) {
-    console.error(err) // probably a network error
-    return ({
-      data: null,
-      errors: err
-    })
-
+  } catch (error) {
+    return ({ data: null, errors: error }) // probably a network error
   }
 
 }
+
+const coerceInput = (input) => input.constructor === Array ? input
+: input.constructor === Object ? [input] // coerce to array of objects
+: null // signals an error
+
+// const submitMutations = async ({ createInputs=[], updateInputs=[], deleteInputs=[], createItem, updateItem, deleteItem }) => {
+//   const _create = coerceInput(createInputs)
+//   const _update = coerceInput(updateInputs)
+//   const _delete = coerceInput(deleteInputs)
+
+//   const cResps = await Promise.all(
+//     _create.map(C => createItem(C))
+//   )
+
+//   const uResps = await Promise.all(
+//     _update.map(U => updateItem(U))
+//   )
+
+//   const dResps = await Promise.all(
+//     _delete.map(D => updateItem(D))
+//   )
+
+// }
