@@ -19,10 +19,10 @@ const ButtonBox = styled.div`
   width: 80%;
   margin: 5px 10px;
   padding: 5px 20px;
-`;
+`
 
 const Buttons = ({ baseRoute, selectedRoute, setSelectedRoute }) => {
-  const [newRouteNick, setNewRouteNick] = useState();
+  const [newRouteNick, setNewRouteNick] = useState('')
   const { 
     submitMutations: submitRoutes,
     updateLocalData: updateRouteCache
@@ -34,17 +34,17 @@ const Buttons = ({ baseRoute, selectedRoute, setSelectedRoute }) => {
     updateLocalData: updateZoneRouteCache
   } = useListData({ tableName: "ZoneRoute", shouldFetch: true })
   
-  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [showCreateDialog, setShowCreateDialog] = useState(false)
 
-  const toast = useRef(null);
+  const toast = useRef(null)
   const showUpdateSuccess = () => {
     toast.current.show({
       severity: "success",
       summary: "Route Updated",
       detail: `Route has been updated.`,
       life: 3000,
-    });
-  };
+    })
+  }
 
   const handleCreate = async () => {
 
@@ -56,16 +56,20 @@ const Buttons = ({ baseRoute, selectedRoute, setSelectedRoute }) => {
       RouteDepart: "",
       RouteArrive: "",
       RouteSched: [],
-    };
+    }
     
     const select = {
       ...addDetails,
       zones: []
     }
-    updateRouteCache(await submitRoutes({ createInputs: [addDetails] }))
 
-    setSelectedRoute(select);
-    setShowCreateDialog(false);
+    if (newRouteNick.length > 0) {
+      updateRouteCache(await submitRoutes({ createInputs: [addDetails] }))
+      setSelectedRoute(select)
+      setNewRouteNick('')
+      setShowCreateDialog(false)
+    }
+
   }
 
 
@@ -112,7 +116,7 @@ const Buttons = ({ baseRoute, selectedRoute, setSelectedRoute }) => {
 
     showUpdateSuccess()
     setSelectedRoute(selectedRoute)
-  };
+  }
 
   
 
@@ -122,8 +126,8 @@ const Buttons = ({ baseRoute, selectedRoute, setSelectedRoute }) => {
       header: "Confirmation",
       icon: "pi pi-exclamation-triangle",
       accept: () => handleDelete(),
-    });
-  };
+    })
+  }
 
   const handleDelete = async () => {
     const { routeNick, zones } = baseRoute
@@ -197,10 +201,10 @@ const Buttons = ({ baseRoute, selectedRoute, setSelectedRoute }) => {
         )}
       </ButtonBox>
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default Buttons;
+export default Buttons
 
 
 

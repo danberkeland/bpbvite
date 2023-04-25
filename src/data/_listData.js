@@ -19,13 +19,92 @@ import * as listQueries from '../customGraphQL/queries/_listQueries'
 import * as mutations from '../customGraphQL/mutations'
 import getNestedObject from '../functions/getNestedObject'
 
+
+
+const coerceInput = (input) => input.constructor === Array ? input
+  : input.constructor === Object ? [input] // coerce to array of objects
+  : null // signals an error
+
+
+
+// GraphQL queries/mutations are named nicely enough that they can be inferred
+// from the table name, allowing us to make a generic mutator for the given
+// table.
+const submitMutation = async ({ input, mutationType, tableName, pkAtt }) => {
+  const mutationName = `${mutationType}${tableName}`
+  const mutation = mutations[mutationName]
+
+  if (mutationType !== 'create' && pkAtt !== 'id' &&!input[pkAtt]) {
+    console.warn(`Primary Key '${pkAtt}' not found. Mutation may fail.`)
+  }
+
+  try {
+    const { data, errors } = await gqlFetcher(mutation, { input })
+    if (data ) return ({ data: data[mutationName], errors: null })
+    else return ({ data: null, errors: errors }) // probably a malformed query
+
+  } catch (error) {
+    return ({ data: null, errors: error }) // probably a network error
+  }
+
+}
+
+
+
+const batchMutate = async ({ 
+  createInputs=[], updateInputs=[], deleteInputs=[], 
+  createItem, updateItem, deleteItem 
+}) => {
+  const _create = coerceInput(createInputs)
+  const _update = coerceInput(updateInputs)
+  const _delete = coerceInput(deleteInputs)
+  if (!_create || !_update || !_delete) {
+    console.error(
+      "ERROR: Invalid input: " 
+      + "expecting an object item or array of object items."
+    )
+    return
+  }
+
+  try {
+    const cResps = await Promise.all(
+      _create.map(C => createItem(C))
+    )
+
+    const uResps = await Promise.all(
+      _update.map(U => updateItem(U))
+    )
+
+    const dResps = await Promise.all(
+      _delete.map(D => deleteItem(D))
+    )
+
+    return ({
+      createdItems: cResps.map(r => r.data),
+      updatedItems: uResps.map(r => r.data),
+      deletedItems: dResps.map(r => r.data)
+    })
+
+  } catch (err) {
+    console.err("async mutation failed; should use async revalidation")
+    console.error(err)
+    return undefined
+
+  }
+
+}
+
+
+
 /**
- * Custom mutate functions require shouldFetch: true in order to read/update local data.
+ * Custom mutate functions require shouldFetch: true in order to read/update 
+ * local data.
+ * @function
  * @param {Object} input
  * @param {typeof LIST_TABLES[number]} input.tableName
  * @param {boolean} input.shouldFetch External control for when data should be fetched
- * @param {Object} input.variables - Part of SWR cache key; changing this changes the cache.
- *  @param {number} input.variables.limit - Integer; default 5000. 
+ * @param {Object} input.variables Part of SWR cache key; changing this changes the cache.
+ *  @param {number} input.variables.limit Integer; default 5000. 
  * @returns {}
  */
 export const useListData = ({ 
@@ -78,6 +157,18 @@ export const useListData = ({
     pkAtt 
   })
 
+  /**
+   * On success, returns an object of created/updated/deleted items that can be
+   * used directly to update the cache locally with 'updateLocalData'.
+   * @function
+   * @param {Object} input
+   * @param {Object | Object[]} input.createInputs items to submit to GQL 
+   * create mutation.
+   * @param {Object | Object[]} input.updateInputs items to submit to GQL 
+   * update mutation.
+   * @param {Object | Object[]} input.deleteInputs items to submit to GQL 
+   * delete mutation.
+   */
   const submitMutations = ({ 
     createInputs=[], updateInputs=[], deleteInputs=[] 
   }) => batchMutate({ 
@@ -85,6 +176,18 @@ export const useListData = ({
     createItem, updateItem, deleteItem 
   })
   
+  /**
+   * Use data returned from GraphQL mutations to update the cache locally 
+   * without async revalidation.
+   * @function
+   * @param {Object} input
+   * @param {Object | Object[]} input.createdItems items returned from GQL
+   * create mutation.
+   * @param {Object | Object[]} input.updatedItems items returned from GQL
+   * update mutation.
+   * @param {Object | Object[]} input.deletedItems items returned from GQL
+   * delete mutation. 
+   */
   const updateLocalData = ({ 
     createdItems=[], 
     updatedItems=[], 
@@ -96,7 +199,7 @@ export const useListData = ({
       )
       return
     }
-    
+
     const _create = coerceInput(createdItems)
     const _update = coerceInput(updatedItems)
     const _delete = coerceInput(deletedItems)
@@ -121,86 +224,17 @@ export const useListData = ({
     isLoading,
     isValidating,
     mutate,
-    createItem,
-    updateItem,
-    deleteItem,
+    // createItem,
+    // updateItem,
+    // deleteItem,
     submitMutations,
-    updateLocalData
+    updateLocalData: updateLocalData
   })
 }
 
 
 
-const coerceInput = (input) => input.constructor === Array ? input
-: input.constructor === Object ? [input] // coerce to array of objects
-: null // signals an error
 
-
-// GraphQL queries/mutations are named nicely enough that they can be inferred
-// from the table name -- thus we can factor out all the boilerplate setup for 
-// create/update/delete actions.
-
-const submitMutation = async ({ input, mutationType, tableName, pkAtt }) => {
-  const mutationName = `${mutationType}${tableName}`
-  const mutation = mutations[mutationName]
-
-  if (mutationType !== 'create' && pkAtt !== 'id' &&!input[pkAtt]) {
-    console.warn(`Primary Key '${pkAtt}' not found. Mutation may fail.`)
-  }
-
-  try {
-    const { data, errors } = await gqlFetcher(mutation, { input })
-    if (data ) return ({ data: data[mutationName], errors: null })
-    else return ({ data: null, errors: errors }) // probably a malformed query
-
-  } catch (error) {
-    return ({ data: null, errors: error }) // probably a network error
-  }
-
-}
-
-const batchMutate = async ({ 
-  createInputs=[], updateInputs=[], deleteInputs=[], 
-  createItem, updateItem, deleteItem 
-}) => {
-  const _create = coerceInput(createInputs)
-  const _update = coerceInput(updateInputs)
-  const _delete = coerceInput(deleteInputs)
-  if (!_create || !_update || !_delete) {
-    console.error(
-      "ERROR: Invalid input: " 
-      + "expecting an object item or array of object items."
-    )
-    return
-  }
-
-  try {
-    const cResps = await Promise.all(
-      _create.map(C => createItem(C))
-    )
-
-    const uResps = await Promise.all(
-      _update.map(U => updateItem(U))
-    )
-
-    const dResps = await Promise.all(
-      _delete.map(D => deleteItem(D))
-    )
-
-    return ({
-      createdItems: cResps.map(r => r.data),
-      updatedItems: uResps.map(r => r.data),
-      deletedItems: dResps.map(r => r.data)
-    })
-
-  } catch (err) {
-    console.err("async mutation failed; should use async revalidation")
-    console.error(err)
-    return undefined
-
-  }
-
-}
 
 
 
