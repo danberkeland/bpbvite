@@ -7,7 +7,7 @@ import RouteList from "./RouteList";
 import Info from "./Info";
 import Buttons from "./Buttons";
 import { useListData } from "../../../data/_listData";
-import { sortBy } from "lodash";
+import { cloneDeep, sortBy } from "lodash";
 
 const MainWrapper = styled.div`
   display: grid;
@@ -36,9 +36,9 @@ const GroupBox = styled.div`
 `;
 
 function EditRoutes() {
-  const [selectedRoute, setSelectedRoute] = useState();
   const [routes, setRoutes] = useState(null);
-
+  const [selectedRoute, setSelectedRoute] = useState()
+ 
   const routeCache = useListData({ 
     tableName: "Route", 
     shouldFetch: true 
@@ -73,6 +73,11 @@ function EditRoutes() {
     if (zoneCache.data) return sortBy(zoneCache.data, ["zoneName"])
   }, [zoneCache.data])
 
+  const baseRoute = (selectedRoute && tableData)
+    ? cloneDeep(tableData.find(r => r.routeNick === selectedRoute.routeNick))
+    : []
+
+
   return (
       <MainWrapper>
         <RouteList
@@ -95,6 +100,7 @@ function EditRoutes() {
         )}
         <DescripWrapper>
           <Buttons
+            baseRoute={baseRoute}
             selectedRoute={selectedRoute}
             setSelectedRoute={setSelectedRoute}
             routes={routes}

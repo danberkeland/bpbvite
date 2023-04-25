@@ -48,7 +48,7 @@ const Info = ({ selectedRoute, setSelectedRoute, zoneList }) => {
     setSource(zoneList.filter(z => !selectedRoute.zones.includes(z)))
   }, [zoneList, selectedRoute])
 
-  console.log(selectedRoute)
+  // console.log(selectedRoute)
 
   const onChange = (event) => {
     setSource(event.source);

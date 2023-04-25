@@ -26,7 +26,7 @@ const Buttons = ({ selectedZone, setSelectedZone }) => {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   console.log(selectedZone)
   console.log(zoneNickInput)
-  const { createItem, updateItem, deleteItem } = useListData({ 
+  const { createItem, updateItem, deleteItem, mutateLocal } = useListData({ 
     tableName: "Zone", 
     shouldFetch: true 
   })
@@ -47,7 +47,8 @@ const Buttons = ({ selectedZone, setSelectedZone }) => {
       zoneName: zoneNickInput,
       zoneFee: 0,
     };
-    await createItem(addDetails)
+    const { data } = await createItem(addDetails)
+    if (data) mutateLocal({ createdItems: [data] })
     setZoneNickInput()
     setShowCreateDialog(false)
   };
@@ -59,8 +60,11 @@ const Buttons = ({ selectedZone, setSelectedZone }) => {
       // zoneName: selectedZone["zoneName"], << not editable, must be same as zoneNick
       //zoneNumber: ??? << attribute does not exist in appsync schema
     }
-    const resp = await updateItem(updateDetails)
-    resp.data && showUpdateSuccess(resp.data.zoneName)
+    const { data } = await updateItem(updateDetails)
+    if (data) {
+      mutateLocal({ updatedItems: [data] })
+      showUpdateSuccess(data.zoneName)
+    }
   }
 
   const deleteZoneDialog = () => {
@@ -75,7 +79,8 @@ const Buttons = ({ selectedZone, setSelectedZone }) => {
     const deleteDetails = {
       zoneNick: selectedZone.zoneNick,
     }
-    await deleteItem(deleteDetails)
+    const { data } = await deleteItem(deleteDetails)
+    if (data) mutateLocal({ deletedItems: [data] })
     setSelectedZone()
   }
 
