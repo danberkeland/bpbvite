@@ -24,17 +24,14 @@ const ButtonBox = styled.div`
 const Buttons = ({ baseRoute, selectedRoute, setSelectedRoute }) => {
   const [newRouteNick, setNewRouteNick] = useState();
   const { 
-    createItem:createRoute, 
-    updateItem:updateRoute, 
-    deleteItem:deleteRoute,
-    mutateLocal:mutateLocalRoutes
+    submitMutations: submitRoutes,
+    updateLocalData: updateRouteCache
   } = useListData({ tableName: "Route", shouldFetch: true })
 
   const { 
     data:zoneRouteData,
-    createItem:createZoneRoute, 
-    deleteItem:deleteZoneRoute,
-    mutateLocal:mutateLocalZoneRoutes
+    submitMutations: submitZoneRoutes,
+    updateLocalData: updateZoneRouteCache
   } = useListData({ tableName: "ZoneRoute", shouldFetch: true })
   
   const [showCreateDialog, setShowCreateDialog] = useState(false);
@@ -50,6 +47,7 @@ const Buttons = ({ baseRoute, selectedRoute, setSelectedRoute }) => {
   };
 
   const handleCreate = async () => {
+
     const addDetails = {
       routeNick: newRouteNick,
       routeName: newRouteNick,
@@ -63,18 +61,12 @@ const Buttons = ({ baseRoute, selectedRoute, setSelectedRoute }) => {
     const select = {
       ...addDetails,
       zones: []
-    };
-    
-    const { data, errors } = await createRoute(addDetails);
-    if (errors) {
-      console.error(errors)
-      return
     }
-    else if (data) mutateLocalRoutes({ createdItems: [data] })
+    updateRouteCache(await submitRoutes({ createInputs: [addDetails] }))
 
     setSelectedRoute(select);
     setShowCreateDialog(false);
-  };
+  }
 
 
 
@@ -98,50 +90,28 @@ const Buttons = ({ baseRoute, selectedRoute, setSelectedRoute }) => {
     const { routeNick } = selectedRoute
     const createZoneRouteItems = zones.filter(z => !_zones.includes(z))
       .map(zoneNick => ({ routeNick, zoneNick }))
-    console.log("createZoneRouteItems", createZoneRouteItems)
     
     const deletedZones = _zones.filter(z => !zones.includes(z))
     const deleteZoneRouteItems = zoneRouteData.filter(zr => 
       deletedZones.includes(zr.zoneNick) && zr.routeNick === routeNick
     ).map(zr => ({ id: zr.id }))
-    
-    let updatedRoutes = []
-    if (!isEqual(_routeUpdateAtts, routeUpdateAtts)) {
-      let { data, errors } = await updateRoute(routeUpdateAtts)
-      if (errors) {
-        console.log(errors)
-        return
-      }
-      updatedRoutes.push(data)
-    }
-    let createdZoneRoutes = []
-    for (let createItem of createZoneRouteItems) {
-      const { data, errors } = await createZoneRoute(createItem)
-      if (errors) {
-        console.log(errors)
-        return
-      }
-      createdZoneRoutes.push(data)
-    }
-    let deletedZoneRoutes = []
-    for (let deleteItem of deleteZoneRouteItems) {
-      const { data, errors } = await deleteZoneRoute(deleteItem)
-      if (errors) {
-        console.log(errors)
-        return
-      }
-      deletedZoneRoutes.push(data)
-    }
-    
-    mutateLocalRoutes({ 
-      updatedItems: updatedRoutes 
-    })
-    mutateLocalZoneRoutes({ 
-      createdItems: createdZoneRoutes, 
-      deletedItems: deletedZoneRoutes
-    })
-    showUpdateSuccess()
 
+    const mutatedRoutes = !isEqual(_routeUpdateAtts, routeUpdateAtts)
+      ? await submitRoutes({ updateInputs: [routeUpdateAtts] })
+      : []
+
+    const mutatedZoneRoutes = await submitZoneRoutes({ 
+      createInputs: createZoneRouteItems, 
+      deleteInputs: deleteZoneRouteItems
+    })
+
+    if (mutatedRoutes && mutatedZoneRoutes) {
+      updateRouteCache(mutatedRoutes)
+      updateZoneRouteCache(mutatedZoneRoutes)
+    }
+
+    showUpdateSuccess()
+    setSelectedRoute(selectedRoute)
   };
 
   
@@ -158,28 +128,23 @@ const Buttons = ({ baseRoute, selectedRoute, setSelectedRoute }) => {
   const handleDelete = async () => {
     const { routeNick, zones } = baseRoute
 
-    const deleteZoneRouteItems = zoneRouteData.filter(zr => 
+    const deleteZoneRouteInputs = zoneRouteData.filter(zr => 
       zones.includes(zr.zoneNick) && zr.routeNick === routeNick
     ).map(zr => ({ id: zr.id }))
 
-    let deletedZoneRoutes = []
-    for (let deleteItem of deleteZoneRouteItems) {
-      const { data, errors } = await deleteZoneRoute(deleteItem)
-      if (errors) {
-        console.log(errors)
-        return
-      }
-      deletedZoneRoutes.push(data)
-    }
+    const mutatedZoneRoutes = await submitZoneRoutes({ 
+      deleteInputs: deleteZoneRouteInputs 
+    })
 
-    const { data:deletedRoute, errors } = await deleteRoute({ routeNick: routeNick })
-    if (errors) {
-      console.log(errors)
-      return
-    }
+    const mutatedRoutes = await submitRoutes({ 
+      deleteInputs: [{ routeNick: routeNick }] 
+    })
 
-    mutateLocalZoneRoutes({ deletedItems: deletedZoneRoutes })
-    mutateLocalRoutes({ deletedItems: [deletedRoute] })
+    if (mutatedRoutes && mutatedZoneRoutes) {
+      updateRouteCache(mutatedRoutes)
+      updateZoneRouteCache(mutatedZoneRoutes)
+    }
+    
     setSelectedRoute()
   }
 
@@ -200,33 +165,35 @@ const Buttons = ({ baseRoute, selectedRoute, setSelectedRoute }) => {
           header="Enter Route Name"
           footer={
             <div>
-              <Button label="Cancel" onClick={() => setShowCreateDialog(false)} />
-              <Button label="Add" onClick={handleCreate} />
+              <Button label="Cancel" 
+                onClick={() => setShowCreateDialog(false)} 
+              />
+              <Button label="Add" 
+                onClick={handleCreate} 
+              />
             </div>
           }
         >
-          <InputText value={newRouteNick} onChange={(e) => setNewRouteNick(e.target.value)} />
+          <InputText value={newRouteNick} 
+            onChange={(e) => setNewRouteNick(e.target.value)}
+          />
         </Dialog>
         {selectedRoute && (
-          <React.Fragment>
-            <Button
-              label="Update Route"
-              icon="pi pi-user-edit"
-              onClick={handleUpdate}
-              className={"p-button-raised p-button-rounded p-button-success"}
-              disabled={selectedRoute && isEqual(selectedRoute, baseRoute)}
-            />
-          </React.Fragment>
+          <Button
+            label="Update Route"
+            icon="pi pi-user-edit"
+            onClick={handleUpdate}
+            className={"p-button-raised p-button-rounded p-button-success"}
+            disabled={selectedRoute && isEqual(selectedRoute, baseRoute)}
+          />
         )}
         {selectedRoute && (
-          <React.Fragment>
-            <Button
-              label="Delete Route"
-              icon="pi pi-user-minus"
-              onClick={deleteRouteWarn}
-              className={"p-button-raised p-button-rounded p-button-warning"}
-            />
-          </React.Fragment>
+          <Button
+            label="Delete Route"
+            icon="pi pi-user-minus"
+            onClick={deleteRouteWarn}
+            className={"p-button-raised p-button-rounded p-button-warning"}
+          />
         )}
       </ButtonBox>
     </React.Fragment>
@@ -251,9 +218,6 @@ export default Buttons;
   //     console.log("error on fetching Route List", error);
   //   }
   // };
-
-
-
 
 
 

@@ -1,17 +1,16 @@
 // Attempting to reduce boilerplate.
 //
-// We use a lot of list-type hooks. Lately I'm of the opinion that
-// fetching full lists (ie with all non-joined attributes) is the
-// best approach for most situations. Scanning tables has the same
-// DDB/AppSync cost whether or not we return all attributes or project
-// to just a few, so unless we specifically *need* to restrict content
-// from users or we only need a small fraction of items in a large 
-// table (like a location's subset of orders), a full table scan will
-// will work best.
+// We use a lot of list-type hooks. Lately I'm of the opinion that fetching 
+// full lists (ie with all non-joined attributes) is the best approach for 
+// most situations. Scanning tables has the same DDB/AppSync cost whether or 
+// not we return all attributes or project to just a few, so unless we 
+// specifically *need* to restrict content from users or we only need a small 
+// fraction of items in a large table (like a location's subset of orders), a
+// full table scan will will work best.
 //
-// Basic fetching is a repeatable pattern that can be factored out.
-// Custom hooks that transform/memoize imported data in any way can
-// be built on top of these 'primitive' hooks.
+// Basic fetching is a repeatable pattern that can be factored out. Custom 
+// hooks that transform/memoize imported data in any way can be built on top
+// of these 'primitive' hooks.
 
 import useSWR from 'swr'
 import gqlFetcher from './_fetchers'
@@ -37,7 +36,10 @@ export const useListData = ({
 }) => {
 
   if (!LIST_TABLES.includes(tableName)) {
-    console.error(`tableName '${tableName}' not supported. Try one of the following instead:`, JSON.stringify(LIST_TABLES))
+    console.error(
+      `tableName '${tableName}' not supported. Valid names:`,
+      JSON.stringify(LIST_TABLES)
+    )
   }
 
   const queryName = `list${tableName}s`
@@ -57,13 +59,41 @@ export const useListData = ({
     console.warn("WARNING: item limit reached")
   }
 
-  const createItem = (input) => submitMutation({ input, mutationType: "create", tableName, pkAtt })
-  const updateItem = (input) => submitMutation({ input, mutationType: "update", tableName, pkAtt })
-  const deleteItem = (input) => submitMutation({ input, mutationType: "delete", tableName, pkAtt })
+  const createItem = (input) => submitMutation({ 
+    input, 
+    mutationType: "create", 
+    tableName, 
+    pkAtt 
+  })
+  const updateItem = (input) => submitMutation({ 
+    input, 
+    mutationType: "update", 
+    tableName, 
+    pkAtt 
+  })
+  const deleteItem = (input) => submitMutation({ 
+    input, 
+    mutationType: "delete",
+    tableName, 
+    pkAtt 
+  })
+
+  const submitMutations = ({ 
+    createInputs=[], updateInputs=[], deleteInputs=[] 
+  }) => batchMutate({ 
+    createInputs, updateInputs, deleteInputs, 
+    createItem, updateItem, deleteItem 
+  })
   
-  const mutateLocal = ({ createdItems=[], updatedItems=[], deletedItems=[] }) => {
+  const updateLocalData = ({ 
+    createdItems=[], 
+    updatedItems=[], 
+    deletedItems=[] 
+  }) => {
     if (!_data) {
-      console.error("ERROR: cache data not found. Refresh page before trying again")
+      console.error(
+        "ERROR: cache data not found. Refresh page before trying again"
+      )
       return
     }
     
@@ -94,28 +124,87 @@ export const useListData = ({
     createItem,
     updateItem,
     deleteItem,
-    mutateLocal
+    submitMutations,
+    updateLocalData
   })
 }
 
-// List Mutations
-// 
-// A common use case is to fetch a detailed list, then mutate one item at a time
-// revalidate involves calling a simple mutate() which invalidates the cache
-// and refetches the entire list.  While relatively inefficient, it is simple
-// and, most importantly, guarantees that the rendered information reflects
-// the current state of the database (ie the mutation was successful).
-//
-// An alternate strategy would be to sidestep revalidation on the entire list.
-// We can confirm the database is updated by looking at the response data from
-// our mutation. We can use that object to update just the single item in the 
-// list cache. For create, we simply push/concatenate the item. For update, we
-// find/replace. For delete, we remove the item.
-//
-// these generic hooks & mutations will retrieve the full set of non-joined 
-// attributes, so they will always match up exactly -- no surgery within an item
-// will be necessary. Since the local cache mutation will be a relatively cheap,
-// synchronous action, batch mutations will not need to be handled specially.
+
+
+const coerceInput = (input) => input.constructor === Array ? input
+: input.constructor === Object ? [input] // coerce to array of objects
+: null // signals an error
+
+
+// GraphQL queries/mutations are named nicely enough that they can be inferred
+// from the table name -- thus we can factor out all the boilerplate setup for 
+// create/update/delete actions.
+
+const submitMutation = async ({ input, mutationType, tableName, pkAtt }) => {
+  const mutationName = `${mutationType}${tableName}`
+  const mutation = mutations[mutationName]
+
+  if (mutationType !== 'create' && pkAtt !== 'id' &&!input[pkAtt]) {
+    console.warn(`Primary Key '${pkAtt}' not found. Mutation may fail.`)
+  }
+
+  try {
+    const { data, errors } = await gqlFetcher(mutation, { input })
+    if (data ) return ({ data: data[mutationName], errors: null })
+    else return ({ data: null, errors: errors }) // probably a malformed query
+
+  } catch (error) {
+    return ({ data: null, errors: error }) // probably a network error
+  }
+
+}
+
+const batchMutate = async ({ 
+  createInputs=[], updateInputs=[], deleteInputs=[], 
+  createItem, updateItem, deleteItem 
+}) => {
+  const _create = coerceInput(createInputs)
+  const _update = coerceInput(updateInputs)
+  const _delete = coerceInput(deleteInputs)
+  if (!_create || !_update || !_delete) {
+    console.error(
+      "ERROR: Invalid input: " 
+      + "expecting an object item or array of object items."
+    )
+    return
+  }
+
+  try {
+    const cResps = await Promise.all(
+      _create.map(C => createItem(C))
+    )
+
+    const uResps = await Promise.all(
+      _update.map(U => updateItem(U))
+    )
+
+    const dResps = await Promise.all(
+      _delete.map(D => deleteItem(D))
+    )
+
+    return ({
+      createdItems: cResps.map(r => r.data),
+      updatedItems: uResps.map(r => r.data),
+      deletedItems: dResps.map(r => r.data)
+    })
+
+  } catch (err) {
+    console.err("async mutation failed; should use async revalidation")
+    console.error(err)
+    return undefined
+
+  }
+
+}
+
+
+
+// ***OBSOLETE***
 
 // const mutateItem = async ({ input, pkAttName, mutationType, tableName, mutate, listData, shouldMutateLocal }) => {
 //   const mutationName = `${mutationType}${tableName}`
@@ -187,48 +276,5 @@ export const useListData = ({
 //     })
 
 //   }
-
-// }
-
-const submitMutation = async ({ input, mutationType, tableName, pkAtt }) => {
-  const mutationName = `${mutationType}${tableName}`
-  const mutation = mutations[mutationName]
-  //console.log(input, pkAtt, mutationType, tableName, listData)
-
-  if (mutationType !== 'create' && pkAtt !== 'id' &&!input[pkAtt]) {
-    console.warn(`Primary Key '${pkAtt}' not found. Mutation request may fail.`)
-  }
-
-  try {
-    const response = await gqlFetcher(mutation, { input })
-    if (response.data ) return ({ data: response.data[mutationName], errors: null })
-    else return ({ data: null, errors: response.errors }) // probably a malformed query
-
-  } catch (error) {
-    return ({ data: null, errors: error }) // probably a network error
-  }
-
-}
-
-const coerceInput = (input) => input.constructor === Array ? input
-: input.constructor === Object ? [input] // coerce to array of objects
-: null // signals an error
-
-// const submitMutations = async ({ createInputs=[], updateInputs=[], deleteInputs=[], createItem, updateItem, deleteItem }) => {
-//   const _create = coerceInput(createInputs)
-//   const _update = coerceInput(updateInputs)
-//   const _delete = coerceInput(deleteInputs)
-
-//   const cResps = await Promise.all(
-//     _create.map(C => createItem(C))
-//   )
-
-//   const uResps = await Promise.all(
-//     _update.map(U => updateItem(U))
-//   )
-
-//   const dResps = await Promise.all(
-//     _delete.map(D => updateItem(D))
-//   )
 
 // }
