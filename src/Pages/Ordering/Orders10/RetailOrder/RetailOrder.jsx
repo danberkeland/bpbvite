@@ -15,7 +15,7 @@ import { createOrder, updateOrder, useCartListFull } from "../../../../data/orde
 export const RetailOrder = () => {
   // const { data:locationList } = useLocationListSimple(true)
   const { data:productList } = useProductListFull(true)
-  const { data:orders, mutate:mutateOrders } = useCartListFull()
+  const { data:orders, mutate:mutateOrders } = useCartListFull(true)
 
   const retailItems = orders?.filter(i => i.isWhole === false) ?? []
   const retailList = [...new Set(retailItems.map(i => i.locNick))]
