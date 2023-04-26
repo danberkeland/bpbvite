@@ -82,7 +82,10 @@ const batchMutate = async ({
     return ({
       createdItems: cResps.map(r => r.data),
       updatedItems: uResps.map(r => r.data),
-      deletedItems: dResps.map(r => r.data)
+      deletedItems: dResps.map(r => r.data),
+      errors: cResps.map(r => r.errors)
+        .concat(uResps.map(r => r.errors))
+        .concat(dResps.map(r => r.errors))
     })
 
   } catch (err) {
@@ -104,8 +107,8 @@ const batchMutate = async ({
  * @param {typeof LIST_TABLES[number]} input.tableName
  * @param {boolean} input.shouldFetch External control for when data should be fetched
  * @param {Object} input.variables Part of SWR cache key; changing this changes the cache.
- *  @param {number} input.variables.limit Integer; default 5000. 
- * @returns {}
+ * @param {number} input.variables.limit Integer; default 5000. 
+ * @returns {Object}
  */
 export const useListData = ({ 
   tableName, 
@@ -161,6 +164,8 @@ export const useListData = ({
    * On success, returns an object of created/updated/deleted items that can be
    * used directly to update the cache locally with 'updateLocalData'.
    * @function
+   * @name submitMutations
+   * @memberof useListData
    * @param {Object} input
    * @param {Object | Object[]} input.createInputs items to submit to GQL 
    * create mutation.
@@ -180,6 +185,8 @@ export const useListData = ({
    * Use data returned from GraphQL mutations to update the cache locally 
    * without async revalidation.
    * @function
+   * @name updateLocalData
+   * @memberof useListData
    * @param {Object} input
    * @param {Object | Object[]} input.createdItems items returned from GQL
    * create mutation.
@@ -228,7 +235,7 @@ export const useListData = ({
     // updateItem,
     // deleteItem,
     submitMutations,
-    updateLocalData: updateLocalData
+    updateLocalData
   })
 }
 

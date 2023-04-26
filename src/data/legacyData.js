@@ -49,7 +49,7 @@ export const useLegacyFormatDatabase = () => {
     transformData, 
     [
       _products, _locations, _locationUsers, 
-      _routes, _zoneRoutes, , _standing, 
+      _routes, _zoneRoutes, _standing, 
       _orders, _doughs, _doughComponents
     ]
   )

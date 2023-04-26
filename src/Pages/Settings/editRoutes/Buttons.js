@@ -17,21 +17,21 @@ const ButtonBox = styled.div`
   flex-direction: column;
   align-content: flex-start;
   width: 80%;
-  margin: 5px 10px;
+  margin: 1rem;
   padding: 5px 20px;
 `
 
 const Buttons = ({ baseRoute, selectedRoute, setSelectedRoute }) => {
   const [newRouteNick, setNewRouteNick] = useState('')
   const { 
-    submitMutations: submitRoutes,
-    updateLocalData: updateRouteCache
+    submitMutations:submitRoutes,
+    updateLocalData:updateRouteCache
   } = useListData({ tableName: "Route", shouldFetch: true })
 
   const { 
     data:zoneRouteData,
-    submitMutations: submitZoneRoutes,
-    updateLocalData: updateZoneRouteCache
+    submitMutations:submitZoneRoutes,
+    updateLocalData:updateZoneRouteCache
   } = useListData({ tableName: "ZoneRoute", shouldFetch: true })
   
   const [showCreateDialog, setShowCreateDialog] = useState(false)
@@ -47,7 +47,6 @@ const Buttons = ({ baseRoute, selectedRoute, setSelectedRoute }) => {
   }
 
   const handleCreate = async () => {
-
     const addDetails = {
       routeNick: newRouteNick,
       routeName: newRouteNick,
@@ -70,9 +69,7 @@ const Buttons = ({ baseRoute, selectedRoute, setSelectedRoute }) => {
       setShowCreateDialog(false)
     }
 
-  }
-
-
+  } // end handleCreate
 
   const handleUpdate = async () => {
     if (!selectedRoute) {console.log("no route"); return}
@@ -116,13 +113,14 @@ const Buttons = ({ baseRoute, selectedRoute, setSelectedRoute }) => {
 
     showUpdateSuccess()
     setSelectedRoute(selectedRoute)
-  }
+
+  } // end handleUpdate
 
   
 
-  const deleteRouteWarn = async () => {
+  const deleteRouteWarn = async (routeNick) => {
     confirmDialog({
-      message: "Are you sure you want to proceed?",
+      message: `Delete ${routeNick}?`,
       header: "Confirmation",
       icon: "pi pi-exclamation-triangle",
       accept: () => handleDelete(),
@@ -150,7 +148,8 @@ const Buttons = ({ baseRoute, selectedRoute, setSelectedRoute }) => {
     }
     
     setSelectedRoute()
-  }
+
+  } // end handleDelete
 
   return (
     <React.Fragment>
@@ -195,7 +194,7 @@ const Buttons = ({ baseRoute, selectedRoute, setSelectedRoute }) => {
           <Button
             label="Delete Route"
             icon="pi pi-user-minus"
-            onClick={deleteRouteWarn}
+            onClick={() => deleteRouteWarn(selectedRoute.routeNick)}
             className={"p-button-raised p-button-rounded p-button-warning"}
           />
         )}
