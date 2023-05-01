@@ -463,7 +463,7 @@ export const deleteRoute = /* GraphQL */ `
   }
 `;
 
-const InfoQBAuthAttributes =/* GraphQL */ `
+const infoQBAuthAttributes =/* GraphQL */ `
   id
   infoName
   infoContent
@@ -476,7 +476,7 @@ export const createInfoQBAuth = /* GraphQL */ `
     $condition: ModelInfoQBAuthConditionInput
   ) {
     createInfoQBAuth(input: $input, condition: $condition) {
-      ${InfoQBAuthAttributes}
+      ${infoQBAuthAttributes}
     }
   }
 `;
@@ -486,7 +486,7 @@ export const updateInfoQBAuth = /* GraphQL */ `
     $condition: ModelInfoQBAuthConditionInput
   ) {
     updateInfoQBAuth(input: $input, condition: $condition) {
-      ${InfoQBAuthAttributes}
+      ${infoQBAuthAttributes}
     }
   }
 `;
@@ -496,7 +496,7 @@ export const deleteInfoQBAuth = /* GraphQL */ `
     $condition: ModelInfoQBAuthConditionInput
   ) {
     deleteInfoQBAuth(input: $input, condition: $condition) {
-      ${InfoQBAuthAttributes}
+      ${infoQBAuthAttributes}
     }
   }
 `;

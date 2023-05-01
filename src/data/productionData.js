@@ -1,20 +1,27 @@
 import { useMemo } from "react"
 
-import useSWR, { mutate } from "swr"
+import useSWR from "swr"
 import { defaultSwrOptions } from "./_constants"
 
 import gqlFetcher from "./_fetchers"
 import * as queries from "../customGraphQL/queries/productionQueries"
 
 import { dateToYyyymmdd, getWeekday } from "../functions/dateAndTime"
-import { combineOrdersByDate } from "../functions/orderingFunctions/combineOrders"
+import { 
+  combineOrdersByDate 
+} from "../functions/orderingFunctions/combineOrders"
 import { buildRouteMatrix } from "../functions/routeFunctions/buildRouteMatrix"
-import { assignDelivRoute, calculateValidRoutes } from "../functions/routeFunctions/assignDelivRoute"
+import { 
+  assignDelivRoute, 
+  calculateValidRoutes 
+} from "../functions/routeFunctions/assignDelivRoute"
 import { useLocationDetails } from "./locationData"
 import { useProductListFull } from "./productData"
 import { useRouteListFull } from "./routeData"
 import { getDuplicates } from "../functions/detectDuplicates"
 import { groupBy } from "../functions/groupBy"
+import { useListData } from "./_listData"
+import { sortBy } from "lodash"
 
 const LIMIT = 5000
 
@@ -22,10 +29,55 @@ const LIMIT = 5000
 // * Supporting Data Caches *
 // **************************
 
+const useDimensionData = ({ shouldFetch=true }) => {
+  const { data:LOC } = useListData({ tableName:"Location", shouldFetch })
+  const { data:PRD } = useListData({ tableName:"Product", shouldFetch })
+  const { data:ZNE } = useListData({ tableName:"Zone", shouldFetch })
+  const { data:RTE } = useListData({ tableName:"Route", shouldFetch })
+  const { data:ZRT } = useListData({ tableName:"ZoneRoute", shouldFetch })
+  const { data:DGH } = useListData({ tableName:"DoughBackup", shouldFetch})
+  const { data:DCP } = useListData({ 
+    tableName: "DoughComponentBackup", shouldFetch 
+  })
+
+  const composeData = () => {
+    if (!PRD || !ZNE || !RTE || !ZRT || !DGH || !DCP || !LOC) return undefined
+
+    const products = Object.fromEntries(PRD.map(P => [P.prodNick, P]))
+    const zones = Object.fromEntries(ZNE.map(Z => [Z.zoneNick, Z]))
+    const routes =  Object.fromEntries(RTE.map(R => [R.routeNick, R]))
+    const zoneRoutes = sortBy(ZRT, ['routeStart'])
+    const doughs = Object.fromEntries(DGH.map(D => [D.doughName, D]))
+    const doughComponents = Object.fromEntries(DCP.map(D => [D.dough, D]))
+    const locations = Object.fromEntries(
+      LOC.map(L => {
+        const _zoneRoutes = zoneRoutes.filter(zr => 
+          zr.zoneNick === L.zoneNick
+        ).map(zr => zr.routeNick)
+        const newValue = { ...L, zoneRoutes: _zoneRoutes }
+        
+        return [L.locNick, newValue]
+      })
+    )
+
+    return({
+      products, locations, zones, routes,
+      zoneRoutes, doughs, doughComponents,
+      routeMatrix: buildRouteMatrix(locations, products, routes)
+    })
+
+  } // end composeData
+
+  return ({
+    data: useMemo(composeData, [PRD, ZNE, RTE, ZRT, DGH, DCP, LOC])
+  })
+
+}
+
 export const useLogisticsDimensionData = (shouldFetch) => {
   const query = queries.getDimensionData
   const variables = { limit: LIMIT }
-  const { data, errors } = useSWR(
+  const { data } = useSWR(
     shouldFetch ? [query, variables] : null, 
     gqlFetcher, 
     defaultSwrOptions
@@ -33,6 +85,7 @@ export const useLogisticsDimensionData = (shouldFetch) => {
 
   const transformData = () => {
     if (!data) return undefined
+    console.log("Depreciated. consider calling useDimensionData instead")
 
     const products = Object.fromEntries(data.data.listProducts.items.map(i => [i.prodNick, i]))
     const zones = Object.fromEntries(data.data.listZones.items.map(i => [i.zoneNick, i]))
@@ -175,11 +228,12 @@ export const useCombinedOrdersByDate = ({ delivDateJS, includeHolding=true, shou
       ...standDict, 
       ...cartDict
     })).filter(item => item.qty !== 0)
+    .map(item => ({ ...item, delivDate: delivDateISO }))
 
   } // end transformData
 
   return({
-    data: useMemo(transformData, [data, includeHolding])
+    data: useMemo(transformData, [data, includeHolding, delivDateISO])
   })
 
 }
@@ -233,7 +287,7 @@ export const useOrderReportByDate = ({ delivDateJS, includeHolding, shouldFetch 
   //const delivDate = dateToYyyymmdd(delivDateJS)
   const dayOfWeek = getWeekday(delivDateJS)
   const { data:combinedOrders } = useCombinedOrdersByDate({ delivDateJS, includeHolding, shouldFetch })
-  const { data:dimensionData } = useLogisticsDimensionData(shouldFetch)
+  const { data:dimensionData } = useDimensionData(shouldFetch)
 
   const transformData = () => {
     if (!combinedOrders || !dimensionData) return undefined

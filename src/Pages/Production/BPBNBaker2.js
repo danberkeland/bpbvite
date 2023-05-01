@@ -130,13 +130,13 @@ function BPBNBaker2() {
 
       console.log("addDetails", addDetails);
 
-      try {
-        await API.graphql(
-          graphqlOperation(updateProduct, { input: { ...addDetails } })
-        );
-      } catch (error) {
-        console.log("error on updating product", error);
-      }
+      // try {
+      //   await API.graphql(
+      //     graphqlOperation(updateProduct, { input: { ...addDetails } })
+      //   );
+      // } catch (error) {
+      //   console.log("error on updating product", error);
+      // }
     }
 
     for (let make of whatToMake) {
@@ -145,13 +145,13 @@ function BPBNBaker2() {
         prepreshaped: make.qty,
       };
 
-      try {
-        await API.graphql(
-          graphqlOperation(updateProduct, { input: { ...addDetails } })
-        );
-      } catch (error) {
-        console.log("error on updating product", error);
-      }
+      // try {
+      //   await API.graphql(
+      //     graphqlOperation(updateProduct, { input: { ...addDetails } })
+      //   );
+      // } catch (error) {
+      //   console.log("error on updating product", error);
+      // }
     }
 
     const doc = new jsPDF("p", "mm", "a4");

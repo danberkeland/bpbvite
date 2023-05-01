@@ -52,7 +52,7 @@ const submitMutation = async ({ input, mutationType, tableName, pkAtt }) => {
 
 
 const batchMutate = async ({ 
-  createInputs=[], updateInputs=[], deleteInputs=[], 
+  createInputs=[], updateInputs=[], deleteInputs=[], errors=[],
   createItem, updateItem, deleteItem 
 }) => {
   const _create = coerceInput(createInputs)
@@ -63,6 +63,12 @@ const batchMutate = async ({
       "ERROR: Invalid input: " 
       + "expecting an object item or array of object items."
     )
+    return
+  }
+
+  if (errors.length) {
+    console.error("Errors detected among mutation responses.")
+    console.error("Refresh page before continuing.")
     return
   }
 
@@ -86,6 +92,7 @@ const batchMutate = async ({
       errors: cResps.map(r => r.errors)
         .concat(uResps.map(r => r.errors))
         .concat(dResps.map(r => r.errors))
+        .filter(e => e !== null)
     })
 
   } catch (err) {
@@ -175,9 +182,9 @@ export const useListData = ({
    * delete mutation.
    */
   const submitMutations = ({ 
-    createInputs=[], updateInputs=[], deleteInputs=[] 
+    createInputs=[], updateInputs=[], deleteInputs=[], errors=[]
   }) => batchMutate({ 
-    createInputs, updateInputs, deleteInputs, 
+    createInputs, updateInputs, deleteInputs, errors,
     createItem, updateItem, deleteItem 
   })
   
@@ -186,7 +193,7 @@ export const useListData = ({
    * without async revalidation.
    * @function
    * @name updateLocalData
-   * @memberof useListData
+   * @memberOf useListData
    * @param {Object} input
    * @param {Object | Object[]} input.createdItems items returned from GQL
    * create mutation.
@@ -234,8 +241,8 @@ export const useListData = ({
     // createItem,
     // updateItem,
     // deleteItem,
-    submitMutations,
-    updateLocalData
+    submitMutations: submitMutations,
+    updateLocalData: updateLocalData
   })
 }
 

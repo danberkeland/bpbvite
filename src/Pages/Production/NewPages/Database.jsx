@@ -115,8 +115,10 @@ export const Database = () => {
         }
       </div>
     } 
+
   </div>) // end return
-}
+
+} // end Database component
 
 const dropdownOptions = [
   { label: "Location", value: "location" },

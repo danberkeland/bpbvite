@@ -358,3 +358,41 @@ const getEmoji = (prodName) => {
 
   return emoji
 }
+
+{/* <div style={{position: "relative", height: "3rem", width: "3rem"}}>
+<div style={{position: "absolute", top: "0.00rem", left: "0.00rem", fontSize:"1.5rem"}}>🥖</div>
+<div style={{position: "absolute", top: "0.66rem", left: "0.00rem", fontSize:"1.5rem"}}>🥖</div>
+<div style={{position: "absolute", top: "1.33rem", left: "0.00rem", fontSize:"1.5rem"}}>🥖</div>
+<div style={{position: "absolute", top: "0.00rem", left: "1.00rem", fontSize:"1.5rem"}}>🥖</div>
+<div style={{position: "absolute", top: "0.66rem", left: "1.00rem", fontSize:"1.5rem"}}>🥖</div>
+<div style={{position: "absolute", top: "1.33rem", left: "1.00rem", fontSize:"1.5rem"}}>🥖</div>
+</div>
+
+<div style={{position: "relative", height: "3rem", width: "3rem", margin: ".25rem", borderRadius: "1.5rem", backgroundColor: "lightblue"}}>
+<div style={{position: "absolute", top: ".25rem", left: ".25rem", fontSize:"2.0rem"}}>🥐</div>
+</div>
+
+<div style={{position: "relative", height: "3rem", width: "3rem"}}>
+<div style={{position: "absolute", fontSize:"1.75rem"}}>🥐</div>
+</div>
+
+<div style={{position: "relative", height: "3rem", width: "3rem"}}>
+<div style={{position: "absolute", fontSize:"2rem"}}>🥐</div>
+<div style={{position: "absolute", top: ".75rem", left: "1.5rem", fontSize:"1.25rem"}}>🍫</div>
+</div>
+
+<div style={{position: "relative", height: "3rem", width: "3rem"}}>
+<div style={{position: "absolute", fontSize:"2rem"}}>🥐</div>
+<div style={{position: "absolute", top: ".75rem", left: "1.5rem", fontSize:"1.25rem"}}>🥬</div>
+</div>
+
+<div style={{position: "relative", height: "3rem", width: "3rem"}}>
+<div style={{position: "absolute", fontSize:"2rem"}}>🥐</div>
+<div style={{position: "absolute", top: ".75rem", left: "1.5rem", fontSize:"1.25rem"}}>🥩</div>
+</div>
+
+<div style={{position: "relative", height: "3rem", width: "3rem"}}>
+<div style={{position: "absolute", fontSize:"2rem"}}>🥐</div>
+<div style={{position: "absolute", top: ".75rem", left: "1.5rem", fontSize:"1.25rem"}}></div>
+</div>
+</div>) // end return */}

@@ -386,3 +386,21 @@ export const listTrainings = /* GraphQL */ `
     }
   }
 `;
+export const listInfoQBAuths = /* GraphQL */ `
+  query ListInfoQBAuths(
+    $filter: ModelInfoQBAuthFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listInfoQBAuths(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        infoName
+        infoContent
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

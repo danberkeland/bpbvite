@@ -1,191 +1,108 @@
 // Notes:
 //
-// Data transformations were getting runtime errors because of Wild Field's 'NOT ASSIGNED' standing order.
-// 'NOT ASSIGNED' orders do not get a route object attached to them, thus the filters here were not able
-// to look up the route's 'RouteDepart' attribute.
+// Data transformations were getting runtime errors because of Wild Field's 
+// 'NOT ASSIGNED' standing order. 'NOT ASSIGNED' orders do not get a route 
+// object attached to them, in which case the filters here will fail to look up 
+// the route's 'RouteDepart' attribute.
 //
-// This has been addressed by using optional chaining (e.g. route?.RouteDepart), which will cause conditional
-// checks like 'PROD_LOCATION === route?.RouteDepart' to *fail* (but not crash!). While this shouldn't be an 
-// issue for BPBN pages, we may need a better solution for BPBS, especially when dealing with pretzel prep 
-// specifically.
-
-import { ceil, set, sumBy } from "lodash";
-import { DateTime } from "luxon";
-import { Column } from "primereact/column";
-import { DataTable } from "primereact/datatable";
+// This has been addressed by using optional chaining (e.g. route?.RouteDepart),
+// which will cause conditional checks like "route?.RouteDepart === 'Carlton'" 
+// to *fail* (but not crash!). While this shouldn't be an issue for BPBN pages, 
+// we may need a better solution for BPBS, especially when dealing with pretzel 
+// prep specifically.
 import React from "react";
-import { useOrderReportByDate } from "../../../data/productionData";
-import { groupBy } from "../../../functions/groupBy";
 
+import { Button } from "primereact/button"
+import { Column } from "primereact/column"
+import { DataTable } from "primereact/datatable"
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog"
 
-const REPORT_DATE = DateTime.now().setZone('America/Los_Angeles')
-const PROD_LOCATION = "Carlton"
+import { 
+  useBPBNcroixSetoutList, 
+  useBPBNpastryPrepList 
+} from "./_hooks/BPBNhooks"
 
-const unitsPerPan = {
-  pl: 12,
-  ch: 12,
-  pg: 12,
-  sf: 12,
-  al: 12,
-  mini: 15,
-  mb: 6
-}
-const convertToPans = (prodNick, qty) => ({
-  pans: Math.trunc(qty/unitsPerPan[prodNick]),
-  remainder: qty % unitsPerPan[prodNick]
+import jsPDF from "jspdf"
+import "jspdf-autotable"
+import { DateTime } from "luxon"
+import { useListData } from "../../../data/_listData";
+
+const TODAY = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+const dateDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+const displayDate = dateDT.toLocaleString({
+  month: '2-digit', day: '2-digit', year: 'numeric'
 })
 
 export const BPBNSetout = () => {
-  // ****************
-  // * DATA SOURCES *
-  // ****************
-
-  // ***PRADO and CARLTON: Count non-almond croix***
-
-  const { routedOrderData:T1ProdOrders } = useOrderReportByDate({
-    delivDateJS: REPORT_DATE.plus({ days: 1}).toJSDate(),
-    includeHolding: true,
-    shouldFetch: true
+  const setoutTotals = useBPBNcroixSetoutList({ 
+    dateDT, format: 'prodNickTotals'
   })
 
-  // T0: Setout @ PROD_LOCATION
-  // T1: Bake and deliver from PROD_LOCATION
-  //console.log(T1ProdOrders.filter(item => item.route === undefined))
-  const T1CroixOrdersNoAlmonds = T1ProdOrders?.filter(order => {
-    const { prodNick, product: { packGroup, doughNick }, routeNick, route, locNick } = order
-    const RouteDepart = route?.RouteDepart
-
-    let isPickupAtProdLocation = (PROD_LOCATION === "Carlton" && routeNick === "Pick Up Carlton")
-      || (PROD_LOCATION === "Prado" && routeNick === "Pick Up SLO")
-
-    return (
-      (RouteDepart === PROD_LOCATION || isPickupAtProdLocation || locNick === "backporch") &&
-      locNick !== "bpbextras" &&
-      packGroup === "baked pastries" &&
-      doughNick === "Croissant" &&
-      prodNick !== "al"
-    );
-  }).map(order => order.prodNick === "unmb" ? { ...order, prodNick: "mb" } : order) ?? [] // unmb and mb are counted as just mb
-
-  // Pastry Prep
-  const T1PastryPrep = T1ProdOrders?.filter(order => {
-    const { product: { bakedWhere, packGroup, doughNick }, routeNick, route } = order
-    const RouteDepart = route?.RouteDepart
-    const isNonCroixPastry = (packGroup === "baked pastries" && doughNick !== "Croissant")
-    const isBakedExclusivelyAtProdLocation = bakedWhere.includes(PROD_LOCATION) && bakedWhere.length === 1
-    const isBakedAtProdLocation = bakedWhere.includes(PROD_LOCATION) && bakedWhere.length > 1
-
-    return isNonCroixPastry && (isBakedExclusivelyAtProdLocation
-      || isBakedAtProdLocation && (RouteDepart === PROD_LOCATION || routeNick === "Pick Up SLO") // Not sure how to interpret this part
-    )
-
-  }) ?? []
-
-  // temp reference for above filter -- filter function for the compose pastry method
-
-  // export const pastryPrepFilter = (ord, loc) => {
-  //   return (
-  //     (ord.where.includes(loc) &&                     <<< in the past this implied the item is ONLY baked at that location...
-  //       ord.packGroup === "baked pastries" &&
-  //       ord.doughType !== "Croissant") ||
-  //     (ord.where.includes("Mixed") &&
-  //     (ord.routeDepart === loc || ord.route === "Pick up SLO") && <<<
-  //       ord.packGroup === "baked pastries" &&
-  //       ord.doughType !== "Croissant")
-  //   );
-  // };
-
-
-  // ***PRADO ONLY: Count pl to prep for future al, fral Orders***
-  // T2 and T3 queries get filtered to prodNick 'al' only. can optimize with
-  // a better targeted query in the future (might require index on prodNick).
-  const { routedOrderData:T2ProdOrders } = useOrderReportByDate({
-    delivDateJS: REPORT_DATE.plus({ days: 2}).toJSDate(),
-    includeHolding: true,
-    shouldFetch: PROD_LOCATION === "Prado" // these lists not counted @ Carlton
-  })
-  const { routedOrderData:T3ProdOrders } = useOrderReportByDate({
-    delivDateJS: REPORT_DATE.plus({ days: 3}).toJSDate(),
-    includeHolding: true,
-    shouldFetch: PROD_LOCATION === "Prado" // these lists not counted @ Carlton
+  const pastryPrepTotals = useBPBNpastryPrepList({
+    dateDT, format: 'prodNickTotals'
   })
 
-  // (Note: Indeed, this par is only counted for Prado Set out...)
-  // T0: Setout 'pl' @ Prado(? or at the given PROD_LOCATION?)
-  // T1: Bake pl >> prep fral @ Prado
-  // T2: ??? -- Seems like this only works if PROD_LOCATION is Prado.
-  //     Does this logic work for routes departing from the Carlton?
-  const T2AlmondOrders = T2ProdOrders?.filter(order => {
-    let { locNick, prodNick, route: { RouteDepart } } = order
-    return prodNick === "al"
-      && (RouteDepart === PROD_LOCATION || locNick === "backporch")
-      && locNick !== "bpbextras"
+  const { submitMutations, updateLocalData } = useListData({ 
+    tableName: "InfoQBAuth", 
+    shouldFetch: true 
   })
-  .map(order => ({ ...order, prodNick: "pl" })) ?? [] // will be counted as pl
 
-  // (Note: Indeed, this par is only counted for Prado Set out...)
-  // T0: Setout 'pl'
-  // T1: Bake pl >> prep fral @ Prado
-  // T2: deliver fral anywhere
-  const T2FrozenAlmondOrders = T2ProdOrders?.filter(order => 
-    order.prodNick === "fral" && order.locNick !== "bpbextras"
-  )
-  .map(order => ({ ...order, prodNick: "pl" })) ?? [] // will be counted as pl
+  // try both updating and creating the record
+  const commitSetoutTime = async () => {
+    let addDetails = {
+      id: dateDT.toISODate() + "Carlton" + "setoutTime",
+      infoContent: "updated",
+      infoName: "Carlton" + "setoutTime",
+    }
 
-  // (Note: Indeed, this par is only counted for Prado Set out...)
-  // T0: Setout pl @ Prado
-  // T1: Bake pl >> prep fral @ Prado 
-  // T2: Transfer Prado to Carlton >> Setout @ Carlton
-  // T3: Bake and deliver from Carlton (or PU at Carlton)
-  const T3AlmondOrders = T3ProdOrders?.filter(order => {
-    let { locNick, prodNick, routeNick, route: { RouteDepart } } = order
-    return prodNick === "al"
-      && (RouteDepart === "Carlton" || routeNick === "Pick up Carlton")
-      && locNick !== "bpbextras"
-  })
-  .map(order => ({ ...order, prodNick: "pl" })) ?? [] // will be counted as pl
+    const uResp = await submitMutations({ updateInputs: [addDetails] })
+    if (uResp.errors.length) {
+      console.log("Update failed", uResp.errors)
+      const cResp = await submitMutations({ createInputs: [addDetails] })
 
-  const croixSetoutOrders = T1CroixOrdersNoAlmonds
-    .concat(T2AlmondOrders)
-    .concat(T2FrozenAlmondOrders)
-    .concat(T3AlmondOrders)
-    .map(order => order.locNick === "backporch" 
-      ? {...order, qty: ceil(order.qty /2)} 
-      : order
-    )
+      if (cResp.errors.length) {
+        console.error("Create Failed", cResp.errors)
+      }
+      else {
+        updateLocalData(cResp)
+        console.log("created")
+      }
+    } else {
+      updateLocalData(uResp)
+      console.log("updated")
+    }
 
-  
-  const setoutProductGroups = groupBy(croixSetoutOrders, ["prodNick"])
+  }
 
-  const setoutTotals = Object.values(setoutProductGroups).map(pGroup => {
-    const prodNick = pGroup[0].prodNick
-    const total = sumBy(pGroup, order => order.qty)
-    const { pans, remainder } = convertToPans(prodNick, total)
-
-    return({
-      prodNick: pGroup[0].prodNick,
-      qty: total,
-      pans,
-      remainder
+  const confirmExport = () => {
+    confirmDialog({
+      message:
+        "This is not the list for TODAY. "
+        + "Are you sure this is the one you want to print?",
+      header: "Confirmation",
+      icon: "pi pi-exclamation-triangle",
+      accept: () => {
+        commitSetoutTime()
+        exportPastryPrepPDF(displayDate, setoutTotals, pastryPrepTotals)
+      }
     })
-  })
-
-  const pastryPrepGroups = groupBy(T1PastryPrep, ['prodNick'])
-  const pastryPrepTotals = Object.values(pastryPrepGroups).map(pGroup => {
-    const prodNick = pGroup[0].prodNick
-    const total = sumBy(pGroup, order => order.qty)
-
-    return({
-      prodNick: pGroup[0].prodNick,
-      qty: total
-    })
-  })
-
-
+  }
   return (<>
-    <h1>{`BPBN Set Out ${REPORT_DATE.toLocaleString()}`}</h1>
+    <h1>{`BPBN Set Out ${displayDate}`}</h1>
 
     <h2>Set Out</h2>
+    <Button type="button"
+      label={`Print Carlton Prep List`}
+      onClick={() => {
+        if (TODAY.toMillis() !== dateDT.toMillis()) confirmExport()
+        else {
+          commitSetoutTime()
+          exportPastryPrepPDF(displayDate, setoutTotals, pastryPrepTotals)
+        }
+      }}
+      data-pr-tooltip="PDF"
+      style={{width: "fit-content", marginBlock: "1rem"}}
+    />
     <DataTable 
       size="small"
       value={setoutTotals}
@@ -193,7 +110,7 @@ export const BPBNSetout = () => {
       <Column header="Product" field="prodNick" />
       <Column header="Qty" field="qty" />
       <Column header="Pans" field="pans" />
-      <Column header="+" field="remainder" />
+      <Column header="+" field="panRemainder" />
     </DataTable>
 
     <h2>Pastry Prep</h2>
@@ -205,5 +122,62 @@ export const BPBNSetout = () => {
       <Column header="Qty" field="qty" />
     </DataTable>
 
+    <ConfirmDialog />
   </>)
+
 }
+
+
+const exportPastryPrepPDF = (displayDate, setoutTotals, pastryPrepTotals) => {
+  let finalY;
+  let pageMargin = 60;
+  let tableToNextTitle = 12;
+  let titleToNextTable = tableToNextTitle + 4;
+  let tableFont = 11;
+  let titleFont = 14;
+
+  const doc = new jsPDF("p", "mm", "a4");
+  doc.setFontSize(20);
+  doc.text(
+    pageMargin,
+    20,
+    `Carlton Pastry Prep ${displayDate}`
+  );
+
+  finalY = 20;
+
+  doc.setFontSize(titleFont);
+  doc.text(pageMargin, finalY + tableToNextTitle, `Set Out`);
+
+  doc.autoTable({
+    body: setoutTotals,
+    margin: pageMargin,
+    columns: [
+      { header: "Frozen Croissants", dataKey: "prodNick" },
+      { header: "Qty", dataKey: "qty" },
+      { header: "Pans", dataKey: "pans" },
+      { header: "+", dataKey: "panRemainder" },
+    ],
+    startY: finalY + titleToNextTable,
+    styles: { fontSize: tableFont },
+    theme: "grid",
+    headStyles: { fillColor: "#dddddd", textColor: "#111111" },
+  });
+
+  finalY = doc.previousAutoTable.finalY;
+
+  doc.autoTable({
+    body: pastryPrepTotals,
+    margin: pageMargin,
+    columns: [
+      { header: "Pastry Prep", dataKey: "prodNick" },
+      { header: "Qty", dataKey: "qty" },
+    ],
+    startY: finalY + titleToNextTable,
+    styles: { fontSize: tableFont },
+    theme: "grid",
+    headStyles: { fillColor: "#dddddd", textColor: "#111111" },
+  });
+
+  doc.save(`SetOutCarlton${displayDate}.pdf`);
+};

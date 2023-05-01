@@ -22,6 +22,7 @@ export const TABLE_PKS = /** @type {const} */ ({
   Route: "routeNick",
   ZoneRoute: "id",
   Training: "id",
+  InfoQBAuth: "id",
 })
 
 export const LIST_TABLES = /** @type {const} */ ([
@@ -37,6 +38,7 @@ export const LIST_TABLES = /** @type {const} */ ([
   "Route",
   "ZoneRoute",
   "Training",
+  "InfoQBAuth"
 ])
 
 // ***Tables that have been set up so far***
