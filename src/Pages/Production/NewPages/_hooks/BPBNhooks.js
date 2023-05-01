@@ -101,7 +101,7 @@ const useRusticList = ({
     if (format === "list") return shapeList 
 
     const _goupedByForBake = groupBy(shapeList, order => order.product.forBake)
-    if (format === "groupByForBake") return _goupedByForBake
+    if (format === "groupedByForBake") return _goupedByForBake
 
     if (format === "forBakeTotals") {
       const _totaledByQty = Object.values(_goupedByForBake).map(fbGroup => {
@@ -143,7 +143,7 @@ const useRusticList = ({
 // Emulates 'composeWhatToMake'
 /**
  * @typedef {Object} DateTime Luxon DateTime object
- * @typedef {'list' | 'groupByForBake' | 'forBakeTotals'} FormatOption
+ * @typedef {'list' | 'groupedByForBake' | 'forBakeTotals'} FormatOption
  */
 
 /**

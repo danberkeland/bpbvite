@@ -1,76 +1,45 @@
-import React from "react";
-import { DateTime } from "luxon";
-import { useOrderReportByDate } from "../../../data/productionData";
-import { groupBy } from "../../../functions/groupBy"
+import React from "react"
+
+import { Button } from "primereact/button"
 import { DataTable } from "primereact/datatable"
-import { Column } from "primereact/column";
-import { sumBy } from "lodash";
+import { Column } from "primereact/column"
 
-const REPORT_DATE = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+import { useBPBNbakeList } from "./_hooks/BPBNhooks"
 
-/** i.e. is a rustic bread shaped at the carlton */
-const isCarltonRustic = (product) => {
-  const { bakedWhere, packGroup } = product
-  return (
-    bakedWhere.includes("Carlton")
-    && ["rustic breads", "retail"].includes(packGroup)
-  )
-}
+import jsPDF from "jspdf"
+import "jspdf-autotable"
+import { DateTime } from "luxon"
+import { sortBy, sumBy } from "lodash"
 
-const canBakeAndDeliverCarltonProductSameDay = (route) => {
-  const { routeStart, RouteDepart, routeNick } = route
-
-  return (
-    (RouteDepart === "Carlton" || ["Pick up Carlton", "Pick up SLO"].includes(routeNick))
-    || (RouteDepart === "Prado" && routeStart >= 8)
-  )
-}
-
-
+const dateDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+const displayDate = dateDT.toLocaleString({
+  month: '2-digit', day: '2-digit', year: 'numeric'
+})
 
 export const WhoBake = () => {
-  const { routedOrderData:T0ProdOrders } = useOrderReportByDate({
-    delivDateJS: REPORT_DATE.plus({ days: 0 }).toJSDate(), 
-    includeHolding: false, 
-    shouldFetch: true 
-  })
-  const { routedOrderData:T1ProdOrders } = useOrderReportByDate({
-    delivDateJS: REPORT_DATE.plus({ days: 1 }).toJSDate(), 
-    includeHolding: false, 
-    shouldFetch: true 
+  const bakeListByForBake = useBPBNbakeList({ 
+    dateDT, format: 'groupedByForBake'
   })
 
-  const T0WhoBakeItems = T0ProdOrders?.filter(order => {
-    // console.log(order)
-    return (
-      isCarltonRustic(order.product)
-      && (canBakeAndDeliverCarltonProductSameDay(order.route) === true)  
-    )
-  }) ?? []
-  const T1WhoBakeItems = T1ProdOrders?.filter(order =>
-    isCarltonRustic(order.product)
-    && (canBakeAndDeliverCarltonProductSameDay(order.route) === false)  
-  ) ?? []
-  const whoBakeData = T0WhoBakeItems.concat(T1WhoBakeItems)
-  
-  const groupedWhoBakeData = Object.values(groupBy(whoBakeData, ['product.forBake'])).sort((grpA, grpB) => {
-    let forBakeA = grpA[0].product.forBake
-    let forBakeB = grpB[0].product.forBake
-    return forBakeA > forBakeB ? -1
-      : forBakeA < forBakeB ? 1
-      : 0
-  })
+  const groupedBakeList = bakeListByForBake
+    ? sortBy(Object.values(bakeListByForBake), grp => grp[0].product.forBake)
+    : []
 
   return (<>
-    <h1>{`Who Bake ${REPORT_DATE.toLocaleString()}`}</h1>
+    <h1>{`Who Bake ${displayDate}`}</h1>
 
-    {groupedWhoBakeData.length && groupedWhoBakeData.map((orderGroup, idx) => {
+    <Button 
+      label="Print Who Bake"
+      onClick={() => exportWhoBakePDF(displayDate, groupedBakeList)}
+    />
+
+    {groupedBakeList.length && groupedBakeList.map((orderGroup, idx) => {
       const forBake = orderGroup[0].product.forBake
       const total = sumBy(orderGroup, order => order.qty)
       return(
         <div key={idx} style={{margin:"2rem"}}>
           <h2>{forBake}</h2>
-          <DataTable value={orderGroup}
+          <DataTable value={sortBy(orderGroup, ['location.locName'])}
             size="small"
             footer={() => <span>{`Total: ${total}`}</span>}
           >
@@ -82,4 +51,51 @@ export const WhoBake = () => {
       )
     })}
   </>)
+}
+
+
+
+const exportWhoBakePDF = (displayDate, groupedBakeList) => {
+  let finalY;
+  let pageMargin = 20;
+  let tableToNextTitle = 5;
+  let titleToNextTable = tableToNextTitle + 3;
+  let tableFont = 11;
+  let titleFont = 14;
+
+  const doc = new jsPDF("p", "mm", "a4");
+  doc.setFontSize(20);
+  doc.text(pageMargin, 20, `Who Bake ${displayDate}`);
+
+  finalY = 20;
+
+  doc.setFontSize(titleFont);
+  doc.text(pageMargin, finalY + tableToNextTitle, `Set Out`);
+
+  for (let group of groupedBakeList) {
+    const forBake = group[0].product.forBake
+    const total = sumBy(group, order => order.qty)
+
+    const tableData = group.map(order => ({
+      locName: order.location.locName,
+      qty: order.qty
+    }))
+
+    doc.autoTable({
+      theme: "grid",
+      body: tableData,
+      margin: pageMargin,
+      columns: [
+        { header: forBake, dataKey: "locName" },
+        { header: "Qty", dataKey: "qty" },
+      ],
+      startY: finalY + titleToNextTable,
+      styles: { fontSize: tableFont },
+    });
+
+    finalY = doc.previousAutoTable.finalY;
+    doc.text(pageMargin + 100, finalY + 8, `Total: ${total}`)
+    finalY = finalY + 10;
+  }
+  doc.save(`WhoBake${displayDate}.pdf`)
 }

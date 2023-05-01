@@ -2,93 +2,105 @@
 // Equal to rustics delivered on T+1 that can be baked same day
 //    + rustics to be delivered on T+2 that need to be baked the day before.
 
+import React from "react"
 
-import { DateTime } from "luxon";
-import React from "react";
-import { useOrderReportByDate } from "../../../data/productionData";
-import { groupBy } from "../../../functions/groupBy"
+import { Button } from "primereact/button"
 import { DataTable } from "primereact/datatable"
-import { Column } from "primereact/column";
-import { sumBy } from "lodash";
+import { Column } from "primereact/column"
 
-const REPORT_DATE = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+import { useBPBNshapeList } from "./_hooks/BPBNhooks"
 
-/** i.e. is a rustic bread shaped at the carlton */
-const isCarltonRustic = (product) => {
-  const { bakedWhere, packGroup } = product
-  return (
-    bakedWhere.includes("Carlton")
-    && ["rustic breads", "retail"].includes(packGroup)
-  )
-}
+import jsPDF from "jspdf"
+import "jspdf-autotable"
+import { DateTime } from "luxon"
+import { sortBy, sumBy } from "lodash"
 
-const canBakeAndDeliverCarltonProductSameDay = (route) => {
-  const { routeStart, RouteDepart, routeNick } = route
-
-  return (
-    (RouteDepart === "Carlton" || ["Pick up Carlton", "Pick up SLO"].includes(routeNick))
-    || (RouteDepart === "Prado" && routeStart >= 8)
-  )
-}
+const dateDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+const displayDate = dateDT.toLocaleString({
+  month: '2-digit', day: '2-digit', year: 'numeric'
+})
 
 export const WhoShape = () => {
-
-  const { routedOrderData:T1ProdOrders } = useOrderReportByDate({
-    delivDateJS: REPORT_DATE.plus({ days: 1 }).toJSDate(), 
-    includeHolding: true, 
-    shouldFetch: true 
-  })
-  const { routedOrderData:T2ProdOrders } = useOrderReportByDate({
-    delivDateJS: REPORT_DATE.plus({ days: 2 }).toJSDate(), 
-    includeHolding: true, 
-    shouldFetch: true 
+  const shapeListByForBake = useBPBNshapeList({ 
+    dateDT, format: 'groupedByForBake'
   })
 
-  const T1WhoShapeItems = T1ProdOrders?.filter(order => 
-    isCarltonRustic(order.product)
-    && (canBakeAndDeliverCarltonProductSameDay(order.route) === true)
-  ).map(order => ({...order, sameDay: String(canBakeAndDeliverCarltonProductSameDay(order.route)) })) ?? []
-
-  const T2WhoShapeItems = T2ProdOrders?.filter(order =>
-    isCarltonRustic(order.product)
-    && (canBakeAndDeliverCarltonProductSameDay(order.route) === false)
-  ).map(order => ({...order, sameDay: String(canBakeAndDeliverCarltonProductSameDay(order.route)) })) ?? []
-
-  const whoShapeData = T1WhoShapeItems.concat(T2WhoShapeItems)
-  
-  const groupedWhoShapeData = Object.values(groupBy(whoShapeData, ['product.forBake'])).sort((grpA, grpB) => {
-    let forBakeA = grpA[0].product.forBake
-    let forBakeB = grpB[0].product.forBake
-    return forBakeA > forBakeB ? -1
-      : forBakeA < forBakeB ? 1
-      : 0
-  })
+  const groupedShapeList = shapeListByForBake
+    ? sortBy(Object.values(shapeListByForBake), grp => grp[0].product.forBake)
+    : []
 
   return (<>
-    <h1>{`Who Shape ${REPORT_DATE.toLocaleString()}`}</h1>
+    <h1>{`Who Shape ${displayDate}`}</h1>
 
-    {groupedWhoShapeData.length && groupedWhoShapeData.map((orderGroup, idx) => {
+    <Button 
+      label="Print Who Shape"
+      onClick={() => exportWhoShapePDF(displayDate, groupedShapeList)}
+    />
+
+    {groupedShapeList.length && groupedShapeList.map((orderGroup, idx) => {
       const forBake = orderGroup[0].product.forBake
       const total = sumBy(orderGroup, order => order.qty)
       return(
         <div key={idx} style={{margin:"2rem"}}>
           <h2>{forBake}</h2>
-          <DataTable value={orderGroup}
+          <DataTable value={sortBy(orderGroup, ['location.locName'])}
             size="small"
             footer={() => <span>{`Total: ${total}`}</span>}
             
           >
             <Column header="Customer" field="location.locName" />
-            {/* <Column header="sameDay" field="sameDay" />
-            <Column header="start" field="route.routeStart" />
-            <Column header="depart" field="route.RouteDepart" /> */}
             <Column header="Qty" field="qty" />
           </DataTable>
 
         </div>
       )
     })}
-    <pre>{JSON.stringify(groupedWhoShapeData.length, null, 2)}</pre>
-    <pre>{JSON.stringify(groupedWhoShapeData, null, 2)}</pre>
   </>)
+}
+
+
+
+const exportWhoShapePDF = (displayDate, groupedShapeList) => {
+  let finalY;
+  let pageMargin = 20;
+  let tableToNextTitle = 5;
+  let titleToNextTable = tableToNextTitle + 3;
+  let tableFont = 11;
+  let titleFont = 14;
+
+  const doc = new jsPDF("p", "mm", "a4");
+  doc.setFontSize(20);
+  doc.text(pageMargin, 20, `Who Shape ${displayDate}`);
+
+  finalY = 20;
+
+  doc.setFontSize(titleFont);
+  doc.text(pageMargin, finalY + tableToNextTitle, `Set Out`);
+
+  for (let group of groupedShapeList) {
+    const forBake = group[0].product.forBake
+    const total = sumBy(group, order => order.qty)
+
+    const tableData = group.map(order => ({
+      locName: order.location.locName,
+      qty: order.qty
+    }))
+
+    doc.autoTable({
+      theme: "grid",
+      body: tableData,
+      margin: pageMargin,
+      columns: [
+        { header: forBake, dataKey: "locName" },
+        { header: "Qty", dataKey: "qty" },
+      ],
+      startY: finalY + titleToNextTable,
+      styles: { fontSize: tableFont },
+    });
+
+    finalY = doc.previousAutoTable.finalY;
+    doc.text(pageMargin + 100, finalY + 8, `Total: ${total}`)
+    finalY = finalY + 10;
+  }
+  doc.save(`WhoShape${displayDate}.pdf`)
 }
