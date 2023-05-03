@@ -256,7 +256,7 @@ export const useCartOrderData = (locNick, delivDateJS, isWhole) => {
     const favItems = locationDetails.templateProd.items
     if (!shouldHideTemplates) for (let fav of favItems) {
       let orderMatchItem = combinedOrder.find(order => order.product.prodNick === fav.prodNick)
-      let inCart = !!orderMatchItem && orderMatchItem.orderType === 'C' && orderMatchItem.updatedBy !== 'standing_order'
+      let inCart = !!orderMatchItem && orderMatchItem.orderType === 'C' && (orderMatchItem.updatedBy !== 'standing_order' || orderMatchItem.qty === 0)
       let shouldTakeId = orderMatchItem?.orderType === 'C' && orderMatchItem.updatedBy === 'standing_order' && orderMatchItem.qty === 0
       
       let shouldAppend = !orderMatchItem
