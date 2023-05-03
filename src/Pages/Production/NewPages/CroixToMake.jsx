@@ -28,9 +28,9 @@ export const CroixToMake = () => {
     const T0T7array = [0, 1, 2, 3, 4, 5, 6, 7]
       .map(N => T0T7data[`T${N}orders`])
 
-    // **************************************
-    // * Get Qts Pulled From Freezer By Day *
-    // **************************************
+    // ***************************************
+    // * Get Qtys Pulled From Freezer By Day *
+    // ***************************************
 
     // the final data structure will preserve the sources 
     // of qtys pulled, eg for north/south setout or
@@ -97,7 +97,7 @@ export const CroixToMake = () => {
     // * Get opening/make qtys *
     // *************************
 
-    // These are just product attributes. 
+    // These qtys are just product attributes. 
     // freezerCount represents the start of day qty
     // sheetMake is multiplied by batchSize to get the qty shaped
     // the end of day count is a total of 

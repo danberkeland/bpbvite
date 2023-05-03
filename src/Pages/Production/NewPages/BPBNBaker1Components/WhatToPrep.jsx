@@ -3,15 +3,10 @@ import React from "react"
 import { Column } from "primereact/column"
 import { DataTable } from "primereact/datatable"
 
-import { useBPBNprepList } from "../_hooks/BPBNhooks"
-
-export const WhatToPrep = ({ dateDT, displayDate, doobieStuff }) => {
-  const prepTotals = useBPBNprepList({ dateDT, format: 'forBakeTotals' })
-
+export const WhatToPrep = ({ prepTotals, doobieStuff }) => {
+  
   return (
     <div style={{marginTop: "2rem"}}>
-      <h2>{`What to Prep ${displayDate}`}</h2>
-
       <DataTable 
         value={doobieStuff} 
         size="small"

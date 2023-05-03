@@ -4,19 +4,13 @@ import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 import { DoughInputs } from "./BaguetteMixComponents/DoughInputs"
 
-import { useBPBNbaguetteDoughSummary } from "../_hooks/BPBNhooks"
+//import { DateTime } from "luxon"
+//const TODAY = DateTime.now().setZone('America/Los_Angeles').startOf('day')
 
-import { DateTime } from "luxon"
-
-
-const TODAY = DateTime.now().setZone('America/Los_Angeles').startOf('day')
-
-export const BaguetteMix = ({ dateDT, displayDate }) => {
-  const bagSummary = useBPBNbaguetteDoughSummary({ dateDT })
-
+export const BaguetteMix = ({ bagSummary }) => {
+  
   return (
     <div style={{marginTop: "2rem"}}>
-      <h2>{`Baguette Mix ${displayDate}`}</h2>
       <div 
         style={{
           width: "100%", 
@@ -39,24 +33,20 @@ export const BaguetteMix = ({ dateDT, displayDate }) => {
         <DoughInputs />
       </div>
 
-      {bagSummary && 
-        bagSummary.mixes.filter(item => item.nParts > 0).map((mix, idx) => {
-          return (
-            <div key={`mix-formula-${idx}`}>
-              <h2>{`Baguette Mix #${mix.mixNumber}`}</h2>
-              <DataTable
-                value={mix.components}
-                size="small"
-              >
-                <Column header='Ingredient' field="label" />
-                <Column header='Amount' field="amount" />
-              </DataTable>
-            </div>
-
-          )
-
-        }
-      )}
+      {bagSummary && bagSummary.mixes.map((mix, idx) => {
+        return (
+          <div key={`mix-formula-${idx}`}>
+            <h2>{`Baguette Mix #${mix.mixNumber}`}</h2>
+            <DataTable
+              value={mix.components}
+              size="small"
+            >
+              <Column header='Ingredient' field="label" />
+              <Column header='Amount' field="amount" />
+            </DataTable>
+          </div>
+        )
+      })}
 
       <h2>Bins</h2>
       <DataTable value={bagSummary?.bins ?? []} className="p-datatable-sm">

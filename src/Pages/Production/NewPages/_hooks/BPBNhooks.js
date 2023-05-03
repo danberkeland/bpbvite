@@ -112,6 +112,13 @@ const useRusticList = ({
           return isNorthRoute(route) 
             && isNotCarltonPickup(location, fulfillment) 
         })
+
+        const qty = sumBy(fbGroup, order => order.qty * order.product.packSize)
+        const preshaped = product.preshaped || 0 
+        const surplus = preshaped - qty
+        const shortText = surplus > 0 ? `Over ${surplus}`
+          : surplus < 0 ? `Short ${surplus * -1}`
+          : ''
         const qtyNeededEarly = sumBy(
           ordersNeededEarly, 
           order => order.qty * order.product.packSize
@@ -122,9 +129,10 @@ const useRusticList = ({
           forBake: product.forBake,
           weight: product.weight,
           doughNick: product.doughNick,
-          qty: sumBy(fbGroup, order => order.qty * order.product.packSize),
-          preshaped: product.preshaped || 0, // intended for bakeList,
-          needEarly: qtyNeededEarly          // intendef for bakeList
+          qty,
+          preshaped,                      // intended for bakeList
+          shortText,                      // intended for bakeList
+          needEarly: qtyNeededEarly || '' // intended for bakeList
         })
       })
 
@@ -805,8 +813,6 @@ const getMixes = (doughSummary, dateDT) => {
     const proportion = nParts/totalParts
     
     const nSets = round(proportion * nBucketSets)
-    console.log("nParts", nParts)
-    console.log("nSets", nSets)
 
     const freshDoughWeight = stickerTotal * proportion
     
@@ -847,7 +853,7 @@ const getMixes = (doughSummary, dateDT) => {
     
   })
   
-  return mixSummary
+  return mixSummary.filter(M => M.nParts > 0)
 
 }
 

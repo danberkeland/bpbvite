@@ -66,6 +66,7 @@ export const BPBNBaker2 = () => {
           value={selectedDate}
           onChange={e => setSelectedDate(e.value)}
           style={{ width: "6.75rem" }}
+          readOnlyInput
         />
       </CalendarLabel>
 
