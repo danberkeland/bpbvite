@@ -9,11 +9,13 @@ import { WhoShape } from "./NewPages/WhoShapeNew";
 import { CroixToMake } from "./NewPages/CroixToMake";
 import { SevenDayList } from "./NewPages/SevenDayList";
 import { Database } from "./NewPages/Database";
+import { BPBNBuckets } from "./NewPages/BPBNBucketsNew";
 
 const bpbnPages = [
   {name: "BPBNBaker1", component: <BPBNBaker1 />},
   {name: "BPBNBaker2", component: <BPBNBaker2 />},
   {name: "BPBNSetout", component: <BPBNSetout />},
+  {name: "BPBNBuckets", component: <BPBNBuckets />},
   {name: "WhoBake", component: <WhoBake />},
   {name: "WhoShape", component: <WhoShape />},
   {name: "Croix To Make", component: <CroixToMake />},
