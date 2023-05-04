@@ -41,7 +41,7 @@ export const ExportPastryPrepPdf = async (delivDate, doughs, infoWrap, doobieStu
       id: dgh.id,
       preBucketSets: bucketAmount(doughs, infoWrap)[0].amount,
     };
-    /*
+
     try {
       await API.graphql(
         graphqlOperation(updateDough, { input: { ...addDetails } })
@@ -49,7 +49,7 @@ export const ExportPastryPrepPdf = async (delivDate, doughs, infoWrap, doobieStu
     } catch (error) {
       console.log("error on updating product", error);
     }
-    */
+
   }
 
   let mixes = getMixInfo(doughs, infoWrap)[4];

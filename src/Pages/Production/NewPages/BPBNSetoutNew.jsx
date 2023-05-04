@@ -103,10 +103,7 @@ export const BPBNSetout = () => {
       data-pr-tooltip="PDF"
       style={{width: "fit-content", marginBlock: "1rem"}}
     />
-    <DataTable 
-      size="small"
-      value={setoutTotals}
-    >
+    <DataTable size="small" value={setoutTotals}>
       <Column header="Product" field="prodNick" />
       <Column header="Qty" field="qty" />
       <Column header="Pans" field="pans" />
@@ -114,10 +111,7 @@ export const BPBNSetout = () => {
     </DataTable>
 
     <h2>Pastry Prep</h2>
-    <DataTable 
-      size="small"
-      value={pastryPrepTotals}
-    >
+    <DataTable size="small" value={pastryPrepTotals}>
       <Column header="Product" field="prodNick" />
       <Column header="Qty" field="qty" />
     </DataTable>
