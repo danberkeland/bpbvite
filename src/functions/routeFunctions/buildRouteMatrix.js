@@ -17,7 +17,7 @@ const ddbRouteSchedMap = {
  * timing/availability to vary by day.
  *  
  * We look at the assumed static location/product/route parameters and see if that works. If it does
- * we mark the route as valid for every day the route runs, otehrwise we mark the route as invalid
+ * we mark the route as valid for every day the route runs, otherwise we mark the route as invalid
  * for all days of the week.
  * 
  * @param {Object} location 
@@ -29,49 +29,67 @@ const testRoute = (route, product, location, transitRoutes) => {
   let { latestFirstDeliv, latestFinalDeliv } = location
   let { readyTime, bakedWhere } = product
   let { routeStart, routeTime, RouteDepart, RouteSched } = route
-  let routeEnd = Number(routeStart) + Number(routeTime)
 
+  // *** Change: We can verify that attributes from new data sources are not
+  //     converted to strings, so coercing with 'Number()' isn't necessary.
+  // let routeEnd = Number(routeStart) + Number(routeTime)
+  let routeEnd = routeStart + routeTime
 
   let validTransitRoutes = []
   for (let transit of transitRoutes) {
-    let transitEnd = Number(transit.routeStart) + Number(transit.routeTime)
+    // *** Change: removing 'Number()'
+    // let transitEnd = Number(transit.routeStart) + Number(transit.routeTime)
+    let transitEnd = transit.routeStart + transit.routeTime
+
 
     let transitRouteIsValid = 
       bakedWhere.includes(transit.RouteDepart)
       && transit.RouteArrive === RouteDepart
       && (
-        transitEnd < Number(routeStart) 
+        // *** Change: removing 'Number()'
+        //transitEnd < Number(routeStart) 
+        transitEnd < routeStart
         || transitEnd > latestFinalDeliv // does this have something to do with orders rolling over to the next day?
       )
 
     if (transitRouteIsValid) validTransitRoutes.push(transit.routeNick)
   }
   
-  let needTransit = !(bakedWhere.includes("Mixed") || bakedWhere.includes(RouteDepart))
-  let productCanBeInPlace = bakedWhere.includes("Mixed") 
-    || bakedWhere.includes(RouteDepart)
-    || (!!validTransitRoutes.length)
+
+  // *** Change: 
+  // bakedWhere now lists all individual locations instead of using "Mixed".
+  // let needTransit = !( 
+  //   bakedWhere.includes("Mixed") 
+  //   || bakedWhere.includes(RouteDepart) 
+  // )
+  let needTransit = !bakedWhere.includes(RouteDepart)
+
+  // * Change: reuse logic for readability
+  // let productCanBeInPlace = bakedWhere.includes("Mixed") 
+  //   || bakedWhere.includes(RouteDepart)
+  //   || (!!validTransitRoutes.length)
+  let productCanBeInPlace = !needTransit || !!validTransitRoutes.length
 
   let productReadyBeforeRouteStarts = readyTime < routeStart
     || readyTime > latestFinalDeliv
 
-  let customerIsOpen = latestFirstDeliv < routeEnd
+    let customerIsOpen = latestFirstDeliv < routeEnd
+  // *** Pending Change: extra condition to weed out late routes. The delivery
+  //     window should overlap with the customer's avavilability window.
+  // let customerIsOpen = latestFirstDeliv < routeEnd || routeStart < latestFinalDeliv
+  
 
   const routeIsValid = productCanBeInPlace
     && productReadyBeforeRouteStarts
     && customerIsOpen
 
-  
-  const routeSummary =  ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => {
-    return ({
+  return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => ({
       dayOfWeek: day,
       isValid: routeIsValid && RouteSched.includes(ddbRouteSchedMap[day]),
       needTransit: needTransit,
       transitRoutes: transitRoutes
-    })
-  })
+    }))
 
-  return routeSummary
 }
 
 /**
@@ -81,13 +99,16 @@ const testRoute = (route, product, location, transitRoutes) => {
  * 
  * Result: An array of valid routeNicks ordered by start time. 
  * 
- * We need the routeDict to contain all routes for the routeMatrix to work correctly.
- * locations and products may be partial lists as long as they are in the same format (keyed on their ---Nick primary key).
- * This allows us to build a route matrix in more specific contexts, e.g. for a single location on the ordering page.
- * locations are modified client-side with a zoneRoute attribute containing an array of routeNicks that serve the location's zone.
+ * We need the routeDict to contain all routes for the routeMatrix to work 
+ * correctly. Locations and products may be partial lists as long as they are 
+ * in the same format (keyed on their ---Nick primary key). This allows us to 
+ * build a route matrix in more specific contexts, e.g. for a single location 
+ * on the ordering page. Locations are modified client-side with a zoneRoute 
+ * attribute containing an array of routeNicks that serve the location's zone.
  * 
- * This function iterates over the different applicable combinations of location/product/route. 
- * The core testing logic which determines validity is housed in the function 'testRoute'.
+ * This function iterates over the different applicable combinations of 
+ * location/product/route. The core testing logic which determines validity is 
+ * housed in the function 'testRoute'.
  * 
  * @param {Object} locationDict - List of location objects keyed on locNick
  * @param {Object} productDict - List of product objects keyed on prodNick
@@ -96,7 +117,9 @@ const testRoute = (route, product, location, transitRoutes) => {
 export const buildRouteMatrix = (locationDict, productDict, routeDict) => {
   const locationList = Object.keys(locationDict)
   const productList = Object.keys(productDict)
-  const transitRoutes = Object.values(routeDict).filter(r => r.RouteDepart !== r.RouteArrive)
+  const transitRoutes = Object.values(routeDict).filter(r => 
+    r.RouteDepart !== r.RouteArrive
+  )
 
   let routeMatrix = {}
   for (let locNick of locationList) {
@@ -114,7 +137,9 @@ export const buildRouteMatrix = (locationDict, productDict, routeDict) => {
 
           let key = `${locNick}#${prodNick}#${item.dayOfWeek}`
           let prevItem = routeMatrix[key]
-          routeMatrix[key] = prevItem ? prevItem.concat([routeNick]) : [routeNick]
+          routeMatrix[key] = prevItem 
+            ? prevItem.concat([routeNick]) 
+            : [routeNick]
         }
 
       }
