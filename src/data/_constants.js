@@ -23,6 +23,10 @@ export const TABLE_PKS = /** @type {const} */ ({
   ZoneRoute: "id",
   Training: "id",
   InfoQBAuth: "id",
+  TemplateProd: "id",
+  ProdsNotAllowed: "id",
+  AltPricing: "id",
+  AltLeadTime: "id",
 })
 
 export const LIST_TABLES = /** @type {const} */ ([
@@ -38,7 +42,11 @@ export const LIST_TABLES = /** @type {const} */ ([
   "Route",
   "ZoneRoute",
   "Training",
-  "InfoQBAuth"
+  "InfoQBAuth",
+  "TemplateProd",
+  "ProdsNotAllowed",
+  "AltPricing",
+  "AltLeadTime",
 ])
 
 // ***Tables that have been set up so far***

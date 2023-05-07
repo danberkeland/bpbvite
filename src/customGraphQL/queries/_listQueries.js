@@ -404,3 +404,82 @@ export const listInfoQBAuths = /* GraphQL */ `
     }
   }
 `;
+export const listTemplateProds = /* GraphQL */ `
+  query ListTemplateProds(
+    $filter: ModelTemplateProdFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listTemplateProds(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        locNick
+        prodNick
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const listProdsNotAlloweds = /* GraphQL */ `
+  query ListProdsNotAlloweds(
+    $filter: ModelProdsNotAllowedFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listProdsNotAlloweds(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        isAllowed
+        locNick
+        prodNick
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const listAltPricings = /* GraphQL */ `
+  query ListAltPricings(
+    $filter: ModelAltPricingFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAltPricings(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        wholePrice
+        locNick
+        prodNick
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const listAltLeadTimes = /* GraphQL */ `
+  query ListAltLeadTimes(
+    $filter: ModelAltLeadTimeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAltLeadTimes(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        leadTime
+        locNick
+        prodNick
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
