@@ -179,7 +179,7 @@ function CroixToMake() {
           let itemUpdate;
           if (op.prod === prod.forBake) {
             itemUpdate = {
-              id: prod.id,
+              prodNick: prod.nickName,
               freezerCount: op.qty,
             };
 
@@ -210,7 +210,7 @@ function CroixToMake() {
             // set freezerClosing to proj.today
 
             itemUpdate = {
-              id: prod.id,
+              prodNick: prod.nickName,
               sheetMake: op.qty,
               freezerClosing: freezerClosing
             };
@@ -235,7 +235,7 @@ function CroixToMake() {
           let itemUpdate;
           if (op.prod === prod.forBake) {
             itemUpdate = {
-              id: prod.id,
+              prodNick: prod.nickName,
               freezerCount: op.qty,
             };
 

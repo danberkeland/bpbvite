@@ -184,6 +184,8 @@ function CroixCount() {
             setOpeningCount(cloneOpeningCount)
             setClosingCount(cloneClosingCount)
 
+
+
             itemUpdate = {
               prodNick: prod.nickName,
               freezerCount: op.qty,
