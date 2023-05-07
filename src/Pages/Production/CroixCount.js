@@ -184,8 +184,10 @@ function CroixCount() {
             setOpeningCount(cloneOpeningCount)
             setClosingCount(cloneClosingCount)
 
+
+
             itemUpdate = {
-              id: prod.id,
+              prodNick: prod.nickName,
               freezerCount: op.qty,
             };
 
@@ -221,7 +223,7 @@ function CroixCount() {
             setClosingCount(cloneClosingCount)
 
             itemUpdate = {
-              id: prod.id,
+              prodNick: prod.nickName,
               freezerCount: op.qty,
             };
 
@@ -248,7 +250,7 @@ function CroixCount() {
           let itemUpdate;
           if (op.prod === prod.forBake) {
             itemUpdate = {
-              id: prod.id,
+              prodNick: prod.nickName,
               freezerNorth: op.qty,
             };
 
@@ -272,7 +274,7 @@ function CroixCount() {
           let itemUpdate;
           if (op.prod === prod.forBake) {
             itemUpdate = {
-              id: prod.id,
+              prodNick: prod.nickName,
               freezerNorthClosing: op.qty,
             };
 
