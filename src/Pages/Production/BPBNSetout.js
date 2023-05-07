@@ -117,7 +117,7 @@ function BPBNSetOut({ loc }) {
   const exportPastryPrepPdf = async () => {
     for (let set of setOut) {
       let addDetails = {
-        id: set.id,
+        prodNick: set.prodNick,
         prepreshaped: set.qty,
       };
       try {

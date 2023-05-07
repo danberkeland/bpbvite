@@ -185,7 +185,7 @@ function CroixCount() {
             setClosingCount(cloneClosingCount)
 
             itemUpdate = {
-              id: prod.id,
+              prodNick: prod.nickName,
               freezerCount: op.qty,
             };
 
@@ -209,6 +209,7 @@ function CroixCount() {
       for (let op of openingCount) {
         for (let prod of prodToMod) {
           let itemUpdate;
+          console.log(prod)
           if (op.prod === prod.forBake) {
 
             let openId = cloneOpeningCount.findIndex(open => op.prod === open.prod)
@@ -221,7 +222,7 @@ function CroixCount() {
             setClosingCount(cloneClosingCount)
 
             itemUpdate = {
-              id: prod.id,
+              prodNick: prod.nickName,
               freezerCount: op.qty,
             };
 
@@ -248,7 +249,7 @@ function CroixCount() {
           let itemUpdate;
           if (op.prod === prod.forBake) {
             itemUpdate = {
-              id: prod.id,
+              prodNick: prod.nickName,
               freezerNorth: op.qty,
             };
 
@@ -272,7 +273,7 @@ function CroixCount() {
           let itemUpdate;
           if (op.prod === prod.forBake) {
             itemUpdate = {
-              id: prod.id,
+              prodNick: prod.nickName,
               freezerNorthClosing: op.qty,
             };
 
