@@ -10,6 +10,7 @@ import { CroixToMake } from "./NewPages/CroixToMake";
 import { SevenDayList } from "./NewPages/SevenDayList";
 import { Database } from "./NewPages/Database";
 import { BPBNBuckets } from "./NewPages/BPBNBucketsNew";
+import { Routing } from "./NewPages/Routing";
 
 const bpbnPages = [
   {name: "BPBNBaker1", component: <BPBNBaker1 />},
@@ -22,6 +23,7 @@ const bpbnPages = [
   {name: "Terminal", component: <BPBTerminal />},
   {name: "Database", component: <Database />},
   {name: "Seven Day List", component: <SevenDayList />},
+  {name: "Order Routing", component: <Routing />},
 ]
 
 const Production = () => {
