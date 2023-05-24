@@ -5,9 +5,6 @@ import { getTimeToLive } from "../../../../functions/dateAndTime"
 
 
 
-
-
-
 export const submitStandingOrder = async ({
   standingData,              // header + item data straight from the database
   standingHeader,            // future: header data might be editable?
@@ -191,26 +188,29 @@ export const submitStandingOrder = async ({
 
     })
 
-    let legacyCartResponse
     if (legacySubmitBody.length) {
       console.log(
         "Submitting Placeholders to Legacy System:", 
         legacySubmitBody
       )
 
-      legacyCartResponse = await APIGatewayFetcher(
-        '/orders/submitLegacyCart', 
-        {body: legacySubmitBody
-      })
-
-      console.log(
-        "Legacy Cart Response:", 
-        legacyCartResponse
-      )
+      try {
+        const legacyCartResponse = await APIGatewayFetcher(
+          '/orders/submitLegacyCart', 
+          {body: legacySubmitBody}
+        )
+        console.log(
+          "Legacy Cart Response:", 
+          legacyCartResponse
+        )
+  
+      } catch (err) {
+        console.log("Error submitting placeholders to legacy system:", err)
+        return 'error'
+      }
 
     }
 
-    
   } // End if (submitPlaceholders...
 
 
@@ -279,33 +279,47 @@ export const submitStandingOrder = async ({
 
     console.log("Submit Standing to Legacy System:", legacyStandingSubmitBody)
 
-    const legacyStandingResponse = await APIGatewayFetcher(
-      '/orders/submitLegacyStanding', 
-      { body: legacyStandingSubmitBody }
-    )
-    console.log("Legacy standing response:", legacyStandingResponse)
+    try {
+      const legacyStandingResponse = await APIGatewayFetcher(
+        '/orders/submitLegacyStanding', 
+        { body: legacyStandingSubmitBody }
+      )
+      console.log("Legacy standing response:", legacyStandingResponse)
+
+    } catch (err) {
+      console.log(err)
+      return 'error'
+    }
     
   } // end if (shouldSubmitLegacy...
 
 
 
-  // ***********************
-  // * SUBMIT PLACEHOLDERS *
-  // ***********************
+  // **********************************
+  // * Submit Placeholders 
+  // **********************************
 
   if (submitPlaceholders) {
     console.log("Submit Placeholders:", placeholders)
 
     const placeholderResp = await submitCart({ createInputs: placeholders })
+    if (placeholderResp.errors.length) {
+      console.log(
+        "Errors submitting placeholders to new system:", 
+        placeholderResp.errors
+      )
+    } else {
+      updateLocalCart(placeholderResp)
 
-    updateLocalCart(placeholderResp)
+    }
 
   }
 
   
-  // // ***************************
-  // // * SUBMIT STANDING CHANGES *
-  // // ***************************
+
+  // **********************************
+  // * Submit Standing Changes
+  // **********************************
 
   const createInputs = submitItems.filter(
     item => !item.id
@@ -325,12 +339,12 @@ export const submitStandingOrder = async ({
     updatedBy: user.name
   }))
 
-  // Tweaked to clean up 0 qty items that were somehow created.
+  // Tweaked to clean up non-functional 0 qty items.
   // These have an id value, but will not register as a submit 
   // item because baseQty === qty.
   // Catching them here means cleanup is only triggered on a
-  // nontrivial update, but that keeps the cleanup safr from
-  // interfereing with placeholder logic.
+  // nontrivial update, but that keeps placeholder logic safe
+  // from interference.
   const deleteInputs = Object.values(standingItems).filter(item => 
     !!item.id && item.qty === 0
   ).map(item => ({ id: item.id }))
@@ -343,24 +357,19 @@ export const submitStandingOrder = async ({
   const standingResp = 
     await submitStanding({ createInputs, updateInputs, deleteInputs })
     
-  updateLocalStanding(standingResp)
+  
+  if (standingResp.errors.length) {
+    console.log(
+      "Errors submitting standing items to new system:", 
+      standingResp.errors
+    )
+    return 'error'
 
-
-  // // revailidate SWR data
-
-  // if (cartPlaceHolderItems.length) {
-  //   // for (let header of cartHeaders) {
-  //   //   let variables = {
-  //   //     locNick: locNick,
-  //   //     delivDate: header.delivDateISO
-  //   //   }
-  //   //   //let key = [listOrdersByLocationByDate, variables]
-  //   //   // mutate(key, undefined, {revalidate: true})
-  //   // }
-  //   mutateCart()
-  // }
-
-
+  } else {
+    updateLocalStanding(standingResp)
+    return 'success'
+    
+  }
 
 } // end handle standing submit
 

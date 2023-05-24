@@ -89,12 +89,11 @@ export const CartSubmitButton = ({
 
 
   const handleSubmit = async () => {
-    setIsLoading(true)
     if (!navigator.onLine) {
-      setIsLoading(false)
       setShowNoConnectionDialog(true)
       return
     }
+    setIsLoading(true)
     const result = await submitCartOrder({ 
       location,
       products,
