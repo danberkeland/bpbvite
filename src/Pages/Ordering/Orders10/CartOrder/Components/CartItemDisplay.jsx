@@ -41,9 +41,16 @@ export const CartItemDisplay = ({ headerChanges, itemBase, itemChanges, setItemC
       const baseItem = itemBase.find(i => i.product.prodNick === item.product.prodNick)
       
       const validRoutes = calculateRoutes(item.product.prodNick, getWeekday(delivDate), fulfillmentOption)
-      const canFulfill = (!!validRoutes.length) && validRoutes[0] !== 'NOT ASSIGNED'
-      const isAvailable = testProductAvailability(item.product.prodNick, dayOfWeek)
-      const inProduction = delivDate < getWorkingDateTime('NOW').plus({ days: item.product.leadTime })
+      const canFulfill = (!!validRoutes.length) && validRoutes[0]?.routeNick !== 'NOT ASSIGNED'
+      const adjustedLeadTime = validRoutes[0]?.adjustedLeadTime ?? item.product.leadTime
+      const delay = adjustedLeadTime - item.product.leadTime
+      
+      const defaultDaysAvailable = item.product.daysAvailable ?? [1, 1, 1, 1, 1, 1, 1]
+      const daysAvailable = defaultDaysAvailable.slice(7 - delay)
+        .concat(defaultDaysAvailable.slice(0, 7 - delay))
+      const isAvailable = !!daysAvailable[delivDate.getDay()]
+      // const isAvailable = testProductAvailability(item.product.prodNick, dayOfWeek)
+      const inProduction = delivDate < getWorkingDateTime('NOW').plus({ days: adjustedLeadTime })
       
       const lastAction = (baseItem?.orderType) === 'C' ? (
         baseItem.createdOn === baseItem.updatedOn ? "Created" 
@@ -62,6 +69,8 @@ export const CartItemDisplay = ({ headerChanges, itemBase, itemChanges, setItemC
       const info = {
         validRoutes: validRoutes,
         canFulfill: canFulfill,
+        delay,
+        daysAvailable,
         isAvailable: isAvailable,
         inProduction: inProduction,
         lastAction: lastAction,
@@ -141,7 +150,21 @@ export const CartItemDisplay = ({ headerChanges, itemBase, itemChanges, setItemC
           />
         }
         {(fulfillmentOption === 'deliv' && !canFulfill) &&
-          <IconInfoMessage text={`Pick up only for ${dayOfWeek}`} 
+          <IconInfoMessage text={`Delivery not available for ${dayOfWeek}`} 
+            textStyle={{fontWeight: !!rowData.qty ? "bold" : ""}}
+            iconClass={"pi pi-fw pi-exclamation-triangle"} 
+            iconColor={!!rowData.qty ? "hsl(45, 96%, 35%)"  : ""}
+          />
+        }
+        {(fulfillmentOption === 'slopick' && !canFulfill) &&
+          <IconInfoMessage text={`SLO Pickup not available for ${dayOfWeek}`} 
+            textStyle={{fontWeight: !!rowData.qty ? "bold" : ""}}
+            iconClass={"pi pi-fw pi-exclamation-triangle"} 
+            iconColor={!!rowData.qty ? "hsl(45, 96%, 35%)"  : ""}
+          />
+        }
+        {(fulfillmentOption === 'atownpick' && !canFulfill) &&
+          <IconInfoMessage text={`Carlton Pickup not available for ${dayOfWeek}`} 
             textStyle={{fontWeight: !!rowData.qty ? "bold" : ""}}
             iconClass={"pi pi-fw pi-exclamation-triangle"} 
             iconColor={!!rowData.qty ? "hsl(45, 96%, 35%)"  : ""}

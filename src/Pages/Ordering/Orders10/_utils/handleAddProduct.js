@@ -22,7 +22,8 @@ export const handleAddCartProduct = (product, qty, cartItemChanges, setCartItemC
         prodNick: product.prodNick,
         prodName: product.prodName,
         leadTime: product.leadTime,
-        packSize: product.packSize
+        daysAvailable: product.daysAvailable,
+        packSize: product.packSize,
       },
       qty: qty,
       orderType: "C",
@@ -67,6 +68,7 @@ export const handleAddCartProducts = (items, cartItemChanges, setCartItemChanges
           prodNick: product.prodNick,
           prodName: product.prodName,
           leadTime: product.leadTime,
+          daysAvailable: product.daysAvailable,
           packSize: product.packSize
         },
         qty: qty,

@@ -44,16 +44,23 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
     const enhancedData = customProductData.map(product => {
       const cartMatchItem = cartItemChanges.find(i => i.product.prodNick === product.prodNick)
       const baseMatchItem = cartItems.find(i => i.product.prodNick === product.prodNick)
-
-      const inProduction = delivDate < orderSubmitDate.plus({ days: product.leadTime })
-      const isAvailable = testProductAvailability(product.prodNick, dayOfWeek)
-      const earliestDate = orderSubmitDate.plus({ days: product.leadTime })
-        .toLocaleString({ weekday: 'short', month: 'short', day: 'numeric' })  
+      
       const validRoutes = calculateRoutes(product.prodNick, dayOfWeek, fulfillmentOption)
+      const adjustedLeadTime = validRoutes[0]?.adjustedLeadTime ?? product.leadTime
+      const delay = adjustedLeadTime - product.leadTime
+      
+      const defaultDaysAvailable = product.daysAvailable || [1, 1, 1, 1, 1, 1, 1]
+      const daysAvailable = defaultDaysAvailable.slice(delay, 7 - delay)
+        .concat(defaultDaysAvailable.slice(0, delay))
+      const isAvailable = !!daysAvailable[delivDate.getDay()]
+
+      const earliestDate = orderSubmitDate.plus({ days: adjustedLeadTime })
+      .toLocaleString({ weekday: 'short', month: 'short', day: 'numeric' })  
       const inCart = !!baseMatchItem && (baseMatchItem.qty > 0 
         || (cartMatchItem?.action === 'CREATE' && (!cartMatchItem.isTemplate || !!cartMatchItem.qty)))
-      const sameDayUpdate = !!baseMatchItem && getWorkingDate('NOW') === getWorkingDate(baseMatchItem.qtyUpdatedOn)
-
+        const sameDayUpdate = !!baseMatchItem && getWorkingDate('NOW') === getWorkingDate(baseMatchItem.qtyUpdatedOn)
+        
+      const inProduction = delivDate < orderSubmitDate.plus({ days: adjustedLeadTime })
       const maxQty = (!inProduction && isAvailable) || user.authClass === 'bpbfull' ? 999
       //const maxQty = (!inProduction && isAvailable) ? 999  
         : !baseMatchItem ? 0        
@@ -63,14 +70,15 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
       // console.log("BMI", baseMatchItem)
       // console.log("CMI", cartMatchItem)
       const info = { 
-        inProduction: inProduction,
-        isAvailable: isAvailable,
+        inProduction,
+        isAvailable,
+        adjustedLeadTime,
         earliestDateString: earliestDate,
-        validRoutes: validRoutes,
-        canFulfill: validRoutes[0] !== null && validRoutes[0] !== 'NOT ASSIGNED',
-        inCart: inCart,
+        validRoutes,
+        canFulfill: validRoutes[0] !== null && validRoutes[0]?.routeNick !== 'NOT ASSIGNED',
+        inCart,
         //maxQty: getMaxQty(user, selectedProduct, delivDate, cartMatchItem, isAvailable),
-        maxQty: maxQty,
+        maxQty,
         recentlyDeleted: (!!baseMatchItem && !!cartMatchItem) && sameDayUpdate && baseMatchItem.qty === 0 && cartMatchItem.qty === 0,
       }
 
@@ -92,7 +100,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
   
   
   const DropdownItemTemplate = (option) => {
-    const { inProduction, inCart, recentlyDeleted, canFulfill, isAvailable } = option.info
+    const { inProduction, inCart, recentlyDeleted, canFulfill, isAvailable, adjustedLeadTime} = option.info
     const prodNameDisplayText = wrapText(reformatProdName(option.prodName, option.packSize), 25).split('\n')
     const icon = !!option.templateProd ? "pi pi-star-fill" : "pi pi-star"
 
@@ -108,7 +116,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
             {(recentlyDeleted && inProduction) && <div style={{fontSize: ".9rem"}}>Recently Deleted</div>}
             {/* <div style={{fontSize: ".9rem", marginTop: ".1rem" }}>{`${option.leadTime} day lead`}</div> */}
             {/* {inCart && <IconInfoMessage text="In cart" iconClass="pi pi-fw pi-shopping-cart" />} */}
-            <div style={{fontSize: ".9rem"}}>{`${inCart ? "In cart; " : ""}${option.leadTime} day lead`}</div>
+            <div style={{fontSize: ".9rem"}}>{`${inCart ? "In cart; " : ""}${adjustedLeadTime} day lead`}</div>
           </div>
           <i className={errorFlag ? "pi pi-times" : (warnFlag ? "pi pi-exclamation-triangle" : "")} 
             style={{
@@ -192,7 +200,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
                 />
               }
               {fulfillmentOption === 'deliv' && !selectedProduct.info.canFulfill && 
-                <IconInfoMessage text={`Pick up only for ${dayOfWeek}`} 
+                <IconInfoMessage text={`Delivery not available for ${dayOfWeek}`} 
                   iconClass="pi pi-fw pi-exclamation-triangle" iconColor="hsl(45, 96%, 35%)"
                 />
               }

@@ -10,10 +10,11 @@ import { dateToYyyymmdd, getWeekday } from "../functions/dateAndTime"
 import { 
   combineOrdersByDate 
 } from "../functions/orderingFunctions/combineOrders"
-import { buildRouteMatrix } from "../functions/routeFunctions/buildRouteMatrix"
+import { buildRouteMatrix, buildRouteMatrix_test } from "../functions/routeFunctions/buildRouteMatrix"
 import { 
   assignDelivRoute, 
-  calculateValidRoutes 
+  calculateValidRoutes, 
+  calculateValidRoutes_test
 } from "../functions/routeFunctions/assignDelivRoute"
 import { useLocationDetails } from "./locationData"
 import { useProductListFull } from "./productData"
@@ -29,7 +30,7 @@ const LIMIT = 5000
 // * Supporting Data Caches *
 // **************************
 
-const useDimensionData = ({ shouldFetch=true }) => {
+export const useDimensionData = ({ shouldFetch=true }) => {
   const { data:LOC } = useListData({ tableName:"Location", shouldFetch })
   const { data:PRD } = useListData({ tableName:"Product", shouldFetch })
   const { data:ZNE } = useListData({ tableName:"Zone", shouldFetch })
@@ -345,7 +346,7 @@ export const useOrderReportByDate = ({ delivDateJS, includeHolding, shouldFetch 
  * is not supplied with all arguments, or if the data has not been fetched, the
  * function will return null.
  */
-export const useCalculateRoutesByLocation = (locNick, shouldFetch) => {
+export const useCalculateRoutesByLocation = (locNick, shouldFetch, useTest=false) => {
   const { data:locationData } = useLocationDetails(locNick, shouldFetch)
   const { data:productData } = useProductListFull(shouldFetch)
   const { data:routeData } = useRouteListFull(shouldFetch)
@@ -358,22 +359,37 @@ export const useCalculateRoutesByLocation = (locNick, shouldFetch) => {
     const locationDict = { [locationData.locNick] : { ...locationData, zoneRoutes: [...zoneRoutes] } }
     const productDict = Object.fromEntries(productData.map(p => [p.prodNick, p]))
     const routeDict = Object.fromEntries(routeData.map(r => [r.routeNick, r]))
-    const routeMatrix = buildRouteMatrix(locationDict, productDict, routeDict)
+    const routeMatrix = useTest
+      ? buildRouteMatrix_test(locationDict, productDict, routeDict)
+      : buildRouteMatrix(locationDict, productDict, routeDict)
 
-    return [routeMatrix, locationData.zoneNick]
-  }
+    const pickupMatrix = useTest
+      ? buildRouteMatrix_test(pickupLocationDict, productDict, routeDict)
+      : null
 
-  const memo = useMemo(transformData, [locationData, productData, routeData])
+    return [routeMatrix, locationData.zoneNick, pickupMatrix]
+
+  } // end transformData
+
+  const memo = useMemo(transformData, [locationData, productData, routeData, useTest])
   const routeMatrix = memo ? memo[0] : undefined 
   const locationZoneNick = memo ? memo[1] : undefined
+  const pickupMatrix = memo ? memo[2]: undefined
 
   const calculateRoute = (prodNick, dayOfWeek, fulfillmentOption) => 
     // imported function combines override logic and routeMatrix lookup.
-    calculateValidRoutes(locNick, prodNick, fulfillmentOption, locationZoneNick, dayOfWeek, routeMatrix)
+    useTest 
+      ? calculateValidRoutes_test(locNick, prodNick, fulfillmentOption, locationZoneNick, dayOfWeek, routeMatrix, pickupMatrix)
+      : calculateValidRoutes(locNick, prodNick, fulfillmentOption, locationZoneNick, dayOfWeek, routeMatrix)
   
   // console.log("route matrix:",routeMatrix)
 
   // calculateValidRoutes({locNick: locNick, prodNick: prodNick, route: fulfillmentOption}, locationZoneNick, dayOfWeek, routeMatrix)
   
   return calculateRoute
+}
+
+const pickupLocationDict = {
+  "slopick" : { locNick: "slopick", latestFirstDeliv: 5, latestFinalDeliv: 12, zoneRoutes: ['Pick up SLO']},
+  "atownpick" :  { locNick: "atownpick", latestFirstDeliv: 5, latestFinalDeliv: 12, zoneRoutes: ['Pick up Carlton']}
 }
