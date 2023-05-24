@@ -106,10 +106,10 @@ export const AddItemInfoMessages = ({
         minHeight: "3rem",
         margin: "1rem .5rem", 
         fontSize: ".9rem",
-        display: "flex",
-        gap: ".25rem",
-        flexWrap: "wrap",
-        alignItems: "flex-start"
+        // display: "flex",
+        // gap: ".25rem",
+        // flexWrap: "wrap",
+        // alignItems: "flex-start"
       }}
     >
       {/* {inCart && maxQty > 0 && 
