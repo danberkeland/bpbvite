@@ -254,8 +254,14 @@ export const sendForgottenPasswordEmail = async (email) => {
     .catch((err) => console.log(err));
 };
 
-export const resetPassword = async (props) => {
-  const { email, code, passwordNew, setFormType, setIsLoading } = props;
+export const resetPassword = async (props, fns) => {
+  const { email, code, passwordNew } = props;
+  const { setIsLoading, setFormType, userObject } = fns;
+  console.log('fns', fns)
+  console.log('props', props)
+  console.log('code', code)
+  console.log('email', email)
+  console.log('passwordNew', passwordNew)
   Auth.forgotPasswordSubmit(email, code, passwordNew)
     .then((data) => console.log(data))
     .catch((err) => console.log(err))

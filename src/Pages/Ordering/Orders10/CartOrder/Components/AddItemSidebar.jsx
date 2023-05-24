@@ -86,8 +86,7 @@ export const AddItemSidebar = ({ locNick, delivDate, visible, setVisible, cartIt
     addInfoToProducts, 
     [customProductData, delivDate, dayOfWeek, fulfillmentOption, orderSubmitDate, user, cartItems, cartItemChanges]
   )
-  
-  
+
   
   
   
