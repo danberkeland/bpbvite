@@ -203,6 +203,17 @@ div.read-only-button > .p-disabled, .p-component:disabled {
 
 /* END CUSTOM datatable rounded corners */
 
+/* CUSTOM inline Calendar */
+
+/* .bpb-cart-calendar-container .p-calendar {
+  display: block;
+} */
+
+/* .p-datepicker td>span {
+  overflow: visible;
+} */
+/* END CUSTOM inline Calendar */
+
 ::-moz-selection { /* Code for Firefox */
   color: var(--bpb-text-color-heavy);
   background: #d0e8fb;
@@ -488,7 +499,9 @@ div.read-only-button > .p-disabled, .p-component:disabled {
   padding: 0.5rem;
   background: var(--bpb-surface-content);
   color: var(--bpb-text-color);
-  border: 1px solid var(--bpb-border-input);
+  /* border: 1px solid var(--bpb-border-input); */
+  border: none;
+  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12);
   border-radius: 3px;
 }
 .p-datepicker:not(.p-datepicker-inline) {
@@ -568,30 +581,70 @@ div.read-only-button > .p-disabled, .p-component:disabled {
   height: 2.5rem;
   border-radius: 50%;
   transition: box-shadow 0.2s;
-  border: 1px solid transparent;
+  /* border: 1px solid transparent; */
+  border:none;
 }
 .p-datepicker table td > span.p-highlight {
   color: var(--bpb-text-color-heavy);
-  background: var(--bpb-orange-tone-400);
+  background: none;
+  /* border: 3px solid var(--bpb-orange-vibrant-500); */
+  box-shadow: 0 0 0 .2rem var(--bpb-orange-vibrant-500);
 }
 .p-datepicker table td > span:focus {
   outline: 0 none;
   outline-offset: 0;
-  box-shadow: var(--focus-ring);
+  /* box-shadow: var(--focus-ring); */
+  /* box-shadow: none; */
 }
 .p-datepicker table td.p-datepicker-today > span {
+  color: hsl(37, 100%, 95%);
   background: var(--bpb-background-1);
-  color: #ffffff;
-  border-color: transparent;
+  border-color: none;
 }
 .p-datepicker table td.p-datepicker-today > span.p-highlight {
-  color: #495057;
-  background: #E3F2FD;
+  /* color: #495057; */
+  /* background: #E3F2FD; */
+  /* border: 3px solid var(--bpb-orange-vibrant-500); */
+  /* color: none; */
+  /* background: none; */
+
+  color: hsl(37, 100%, 95%);
+  background: var(--bpb-background-1);
+  box-shadow: 0 0 0 .2rem var(--bpb-orange-vibrant-500);
+  border-color: none;
 }
 .p-datepicker .p-datepicker-buttonbar {
   padding: 1rem 0;
   border-top: 1px solid #dee2e6;
 }
+
+
+/* CUSTOM TODAY************************************************************** */
+#bpb-date-cell-none {
+  color: var(--bpb-text-color);
+  background: var(--bpb-surface-content);
+  padding: 2rem;
+}
+#bpb-date-cell-cart {
+  color: var(--bpb-text-color);
+  background: hsl(37, 9%, 65%);
+  padding: 2rem;
+}
+#bpb-date-cell-standing {
+  color: var(--bpb-text-color);
+  background: hsl(37, 9%, 80%);
+  padding: 2rem;
+}
+#bpb-date-cell-custom-today {
+  background: var(--bpb-background-1);
+  color: hsl(37, 100%, 95%);
+  border-color: none;
+  padding: 2rem;
+}
+
+/* END CUSTOM TODAY ********************************************************* */
+
+
 .p-datepicker .p-datepicker-buttonbar .p-button {
   width: auto;
 }
@@ -669,7 +722,11 @@ div.read-only-button > .p-disabled, .p-component:disabled {
   border-left: 0 none;
 }
 .p-datepicker:not(.p-disabled) table td span:not(.p-highlight):not(.p-disabled):hover {
-  background: #e9ecef;
+  /* background: #e9ecef; */
+  /* background: var(--bpb-background-1); */
+  /* background: var(--bpb-hilight-color); */
+  background: hsla(214, 75%, 75%, 0.7);
+  border: 2px solid hsl(214, 75%, 75%);
 }
 .p-datepicker:not(.p-disabled) table td span:not(.p-highlight):not(.p-disabled):focus {
   outline: 0 none;
@@ -695,7 +752,8 @@ div.read-only-button > .p-disabled, .p-component:disabled {
 
 @media screen and (max-width: 769px) {
   .p-datepicker table th, .p-datepicker table td {
-    padding: 0;
+    /* padding: 0; */
+    padding: 3px;
   }
 }
 .p-cascadeselect {
@@ -3265,10 +3323,10 @@ div.read-only-button > .p-disabled, .p-component:disabled {
   padding: 1rem;
 }
 
-.fc {
+/* .fc { */
   /* FullCalendar 4 */
   /* FullCalendar 5 */
-}
+/* } */
 .fc.fc-unthemed .fc-view-container th {
   background: #f8f9fa;
   border: 1px solid #dee2e6;
@@ -4228,8 +4286,10 @@ div.read-only-button > .p-disabled, .p-component:disabled {
 }
 
 .p-card {
-  background: #ffffff;
-  color: #495057;
+  /* background: #ffffff; */
+  background: var(--bpb-surface-content);
+  /* color: #495057; */
+  color: var(--bpb-text-color);
   box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12);
   border-radius: 3px;
 }
@@ -4247,7 +4307,8 @@ div.read-only-button > .p-disabled, .p-component:disabled {
   color: #6c757d;
 }
 .p-card .p-card-content {
-  padding: 1rem 0;
+  /* padding: 1rem 0; */
+  padding: 0 0 .5rem 0;
 }
 .p-card .p-card-footer {
   padding: 1rem 0 0 0;
@@ -5554,19 +5615,25 @@ div.read-only-button > .p-disabled, .p-component:disabled {
 }
 
 .p-tabmenu .p-tabmenu-nav {
-  background: #ffffff;
-  border: 1px solid #dee2e6;
+  /* background: #ffffff; */
+  background: var(--bpb-background-3);
+  /* border: 1px solid #dee2e6; */
+  border: 1px solid var(--bpb-orange-tone-500);
   border-width: 0 0 2px 0;
 }
 .p-tabmenu .p-tabmenu-nav .p-tabmenuitem {
   margin-right: 0;
 }
 .p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link {
-  border: solid #dee2e6;
+  /* border: solid #dee2e6; */
+  border: solid var(--bpb-orange-tone-500);
   border-width: 0 0 2px 0;
-  border-color: transparent transparent #dee2e6 transparent;
-  background: #ffffff;
-  color: #6c757d;
+  /* border-color: transparent transparent #dee2e6 transparent; */
+  border-color: transparent transparent var(--bpb-orange-tone-500) transparent;
+  /* background: #ffffff; */
+  background: var(--bpb-orange-tone-300);
+  /* color: #6c757d; */
+  color: hsla(37, 30%, 20%, 0.80);
   padding: 1rem;
   font-weight: 600;
   border-top-right-radius: 3px;
@@ -5582,6 +5649,8 @@ div.read-only-button > .p-disabled, .p-component:disabled {
   outline: 0 none;
   outline-offset: 0;
   box-shadow: inset 0 0 0 0.2rem #a6d5fa;
+  /* custom */
+  background: var(--bpb-surface-content-header);
 }
 .p-tabmenu .p-tabmenu-nav .p-tabmenuitem:not(.p-highlight):not(.p-disabled):hover .p-menuitem-link {
   background: var(--bpb-background-0);
@@ -5589,9 +5658,13 @@ div.read-only-button > .p-disabled, .p-component:disabled {
   color: var(--bpb-background-6);
 }
 .p-tabmenu .p-tabmenu-nav .p-tabmenuitem.p-highlight .p-menuitem-link {
-  background: #ffffff;
-  border-color: #2196F3;
-  color: #2196F3;
+  /* background: #ffffff; */
+  background: var(--bpb-surface-content-header);
+  /* border-color: #2196F3; */
+  /* color: #2196F3; */
+  border-color: var(--bpb-background-0);
+  /* color: var(--bpb-contrast-color); */
+  color: var(--bpb-background-0);
 }
 
 .p-tieredmenu {
