@@ -10,7 +10,9 @@ import {
   updateDoughBackup,
 } from "../graphql/mutations";
 
-import { createOrder, updateOrder, useCartOverview } from "../data/orderData";
+import { createOrder } from "../customGraphQL/mutations"
+
+//import { createOrder, updateOrder, useCartOverview } from "../data/orderData";
 
 import { API, graphqlOperation } from "aws-amplify";
 
@@ -130,6 +132,7 @@ export const checkForUpdates = async (
       );
       console.log("bakedOrdersList", bakedOrdersList);
 
+      let promises = []
       for (let prod of bakedOrdersList) {
         //console.log('prod', prod)
         if (prod.freezerNorthFlag !== tomorrow) {
@@ -188,22 +191,37 @@ export const checkForUpdates = async (
             sheetMake: 0,
           };
 
-          try {
-            await API.graphql(
-              graphqlOperation(updateProduct, { input: { ...prodToUpdate } })
-            );
-            console.log("update good");
-          } catch (error) {
-            console.log("error on updating product", error);
-          }
+          // try {
+          //   await API.graphql(
+          //     graphqlOperation(updateProduct, { input: { ...prodToUpdate } })
+          //   );
+          //   console.log("update good");
+          // } catch (error) {
+          //   console.log("error on updating product", error);
+          // }
+          promises.push(API.graphql(
+            graphqlOperation(updateProduct, { input: { ...prodToUpdate } })
+          ))
         }
       }
+      await Promise.all(promises)
+        .then(results => {
+          if (results.some(res => !!res.errors)) {
+            console.log(
+              "error on creating Orders:", 
+              results.filter(r => !!r.errors)
+            )
+          } else {console.log("update good")}
+        })
+        .catch(error => console.error("error on creating Orders", error))
     } catch {}
 
     console.log("Yes they have!  Updating preshaped numbers");
 
+    let promises = []
     for (let prod of prodsToUpdate) {
       //console.log('prodpreshaped', prod)
+      
       if (prod.updatePreDate !== tomorrow) {
         prod.updatePreDate = today;
       }
@@ -217,19 +235,33 @@ export const checkForUpdates = async (
           updatePreDate: prod.updatePreDate,
         };
 
-        try {
-          await API.graphql(
-            graphqlOperation(updateProduct, { input: { ...prodToUpdate } })
-          );
-          console.log("update good");
-        } catch (error) {
-          console.log("error on creating Orders", error);
-        }
+        // try {
+        //   await API.graphql(
+        //     graphqlOperation(updateProduct, { input: { ...prodToUpdate } })
+        //   );
+        //   console.log("update good");
+        // } catch (error) {
+        //   console.log("error on creating Orders", error);
+        // }
+        promises.push(API.graphql(
+          graphqlOperation(updateProduct, { input: { ...prodToUpdate } })
+        ))
       }
     }
+    await Promise.all(promises)
+      .then(results => {
+        if (results.some(res => !!res.errors)) {
+          console.log(
+            "error on creating Orders:", 
+            results.filter(r => !!r.errors)
+          )
+        } else {console.log("update good")}
+      })
+      .catch(error => console.error("error on creating Orders", error))
 
-    console.log("Yes they have!  Updating prepped bucket numbers");
+    console.log("Yes they have! Updating prepped bucket numbers");
 
+    let dghPromises = []
     for (let dgh of doughsToUpdate) {
       console.log("dgh", dgh);
       if (dgh.updatePreBucket !== tomorrow) {
@@ -246,21 +278,35 @@ export const checkForUpdates = async (
           updatePreBucket: dgh.updatePreBucket,
         };
 
-        try {
-          await API.graphql(
-            graphqlOperation(updateDoughBackup, { input: { ...doughToUpdate } })
-          );
-          console.log("update good");
-        } catch (error) {
-          console.log("error on creating Orders", error);
-        }
+        // try {
+        //   await API.graphql(
+        //     graphqlOperation(updateDoughBackup, { input: { ...doughToUpdate } })
+        //   );
+        //   console.log("update good");
+        // } catch (error) {
+        //   console.log("error on creating Orders", error);
+        // }
+        dghPromises.push(API.graphql(
+          graphqlOperation(updateDoughBackup, { input: { ...doughToUpdate } })
+        ))
       }
     }
+    await Promise.all(dghPromises)
+      .then(results => {
+        if (results.some(res => !!res.errors)) {
+          console.log(
+            "error on creating Orders:", 
+            results.filter(r => !!r.errors)
+          )
+        } else {console.log("update good")}
+      })
+      .catch(error => console.error("error on creating Orders", error))
 
     console.log("Yes they have!  Loading new Square Orders in DB");
 
     let ord = await fetchSq(db);
     if (ord) {
+      let promises = []
       for (let newOrd of ord) {
         console.log("newSqOrd", newOrd);
         let qty = Number(newOrd["qty"]);
@@ -318,15 +364,28 @@ export const checkForUpdates = async (
         );
 
         if (ind === -1) {
-          try {
-            createOrder(itemToAdd);
-
-            ordersToUpdate.push(itemToAdd);
-          } catch (error) {
-            console.log("error on creating Orders", error);
-          }
+          promises.push(API.graphql(
+            graphqlOperation(createOrder, { input: { ...itemToAdd } })
+          ))
+          ordersToUpdate.push(itemToAdd)
+          // try {
+          //   createOrder(itemToAdd);
+          //   ordersToUpdate.push(itemToAdd);
+          // } catch (error) {
+          //   console.log("error on creating Orders", error);
+          // }
         }
       }
+      await Promise.all(promises)
+        .then(results => {
+          if (results.some(res => !!res.errors)) {
+            console.log(
+              "error on creating Orders:", 
+              results.filter(r => !!r.errors)
+            )
+          } else {console.log("update good")}
+        })
+        .catch(error => console.error("error on creating Orders", error))
     } else {
       console.log("Square orders did not load");
     }

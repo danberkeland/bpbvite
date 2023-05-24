@@ -1,198 +1,198 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { useRouteListFull, useZoneRouteListFull } from "../../../data/routeData";
-import * as yup from "yup"
-import { useZoneListFull } from "../../../data/zoneData";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
+// import React, { useState, useEffect, useMemo } from "react";
+// import { useRouteListFull, useZoneRouteListFull } from "../../../data/routeData";
+// import * as yup from "yup"
+// import { useZoneListFull } from "../../../data/zoneData";
+// import { DataTable } from "primereact/datatable";
+// import { Column } from "primereact/column";
 
-import { InputText } from "primereact/inputtext";
-import { InputNumber } from "primereact/inputnumber"
-import { Checkbox } from "primereact/checkbox";
-import { MultiSelect } from "primereact/multiselect"
-import { Dropdown } from "primereact/dropdown";
-import { isEqual } from "lodash";
-import { useLocationListFull } from "../../../data/locationData";
-import { useProductListFull } from "../../../data/productData";
-import { useLegacyFormatDatabase } from "../../../data/legacyData";
-
-
+// import { InputText } from "primereact/inputtext";
+// import { InputNumber } from "primereact/inputnumber"
+// import { Checkbox } from "primereact/checkbox";
+// import { MultiSelect } from "primereact/multiselect"
+// import { Dropdown } from "primereact/dropdown";
+// import { isEqual } from "lodash";
+// import { useLocationListFull } from "../../../data/locationData";
+// import { useProductListFull } from "../../../data/productData";
+// import { useLegacyFormatDatabase } from "../../../data/legacyData";
 
 
 
 
-export const Database = () => {
-  const [tableName, setTableName] = useState()
-  const [tableBase, setTableBase] = useState()
-  const [tableData, setTableData] = useState()
-  const [schema, setSchema] = useState()
-  const description = schema?.describe() ?? null
-  const groups = description?.meta.groups ?? []
-  const [selectedGroup, setSelectedGroup] = useState()
-  const fields = selectedGroup 
-    ? Object.keys( description.fields ).filter(f => {
-        const field = description.fields[f]
-        console.log(field)
-        return field.meta.group === selectedGroup && !("isPK" in field.meta)
-      })
-    : []
-  const pkField = selectedGroup 
-    ? Object.keys( description.fields ).filter(f => {
-        const field = description.fields[f]
-        console.log(field)
-        return "isPK" in field.meta
-      })
-    : []
 
-  // ********
-  // * DATA *
-  // ********
 
-  const { data:locationData } = useLocationListFull(tableName === 'location')
-  const { data:zoneData } = useZoneListFull({
-    shouldFetch: tableName === 'location' 
-  }) 
+// export const Database = () => {
+//   const [tableName, setTableName] = useState()
+//   const [tableBase, setTableBase] = useState()
+//   const [tableData, setTableData] = useState()
+//   const [schema, setSchema] = useState()
+//   const description = schema?.describe() ?? null
+//   const groups = description?.meta.groups ?? []
+//   const [selectedGroup, setSelectedGroup] = useState()
+//   const fields = selectedGroup 
+//     ? Object.keys( description.fields ).filter(f => {
+//         const field = description.fields[f]
+//         console.log(field)
+//         return field.meta.group === selectedGroup && !("isPK" in field.meta)
+//       })
+//     : []
+//   const pkField = selectedGroup 
+//     ? Object.keys( description.fields ).filter(f => {
+//         const field = description.fields[f]
+//         console.log(field)
+//         return "isPK" in field.meta
+//       })
+//     : []
+
+//   // ********
+//   // * DATA *
+//   // ********
+
+//   const { data:locationData } = useLocationListFull(tableName === 'location')
+//   const { data:zoneData } = useZoneListFull({
+//     shouldFetch: tableName === 'location' 
+//   }) 
   
-  const { data:productData } = useProductListFull(tableName === 'product')
+//   const { data:productData } = useProductListFull(tableName === 'product')
 
-  const { data:routes } = useRouteListFull({ shouldFetch: tableName === 'route' })
-  const { data:zoneRoutes } = useZoneRouteListFull({ shouldFetch: tableName === 'route' })
-  const joinData = () => {
-    if (!routes || !zoneRoutes) return []
-    const routeData = routes.map(route => {
-      const _zr = zoneRoutes.filter(zr => zr.routeNick === route.routeNick)
-        .map(zr => zr.zoneNick)
+//   const { data:routes } = useRouteListFull({ shouldFetch: tableName === 'route' })
+//   const { data:zoneRoutes } = useZoneRouteListFull({ shouldFetch: tableName === 'route' })
+//   const joinData = () => {
+//     if (!routes || !zoneRoutes) return []
+//     const routeData = routes.map(route => {
+//       const _zr = zoneRoutes.filter(zr => zr.routeNick === route.routeNick)
+//         .map(zr => zr.zoneNick)
 
-      return ({ ...route, zoneRoutes: _zr })
-    })
-    console.log(routeData)
-    return routeData
-  }
-  const routeData = useMemo(joinData, [routes, zoneRoutes])
+//       return ({ ...route, zoneRoutes: _zr })
+//     })
+//     console.log(routeData)
+//     return routeData
+//   }
+//   const routeData = useMemo(joinData, [routes, zoneRoutes])
 
-  // ***********
-  // * SCHEMAS *
-  // ***********
+//   // ***********
+//   // * SCHEMAS *
+//   // ***********
 
-  useEffect(() => {
-    if (tableName === 'location' && locationData && zoneData) {
-      setTableBase([...locationData])
-      setTableData([...locationData])
-      setSchema(getLocationSchema(zoneData.map(z => z.zoneNick)))
-    }
-  }, [tableName, locationData, zoneData])
+//   useEffect(() => {
+//     if (tableName === 'location' && locationData && zoneData) {
+//       setTableBase([...locationData])
+//       setTableData([...locationData])
+//       setSchema(getLocationSchema(zoneData.map(z => z.zoneNick)))
+//     }
+//   }, [tableName, locationData, zoneData])
   
-  // const tableOptions = {
-  //   location: locationData,
-  //   product: productData,
-  //   route: routeData
-  // }
-  console.log("schema", description)
-  return (<div style={{margin: "1rem"}}>
+//   // const tableOptions = {
+//   //   location: locationData,
+//   //   product: productData,
+//   //   route: routeData
+//   // }
+//   console.log("schema", description)
+//   return (<div style={{margin: "1rem"}}>
     
-    <Dropdown placeholder="Select a Table"
-      options={dropdownOptions}
-      onChange={e => setTableName(e.value)}
-    />
+//     <Dropdown placeholder="Select a Table"
+//       options={dropdownOptions}
+//       onChange={e => setTableName(e.value)}
+//     />
 
-    {tableData && schema && 
-      <div style={{margin: "1rem"}}>
-        <Dropdown options={groups} value={selectedGroup} onChange={e => setSelectedGroup(e.value)} />
-        {!!fields &&
-        <DataTable value={tableData}
-          size="small"
-          //paginator rows={10}
-          editMode="row"
-        >
-          <Column rowEditor />
-          <Column field={pkField} header={pkField} />
-          {fields.map((field, cIdx) => <Column key={`col-${cIdx}`} 
-            header={field} 
-            body={rowData => <span>{JSON.stringify(rowData[field])}</span>} 
-            sortable 
-          />)}
+//     {tableData && schema && 
+//       <div style={{margin: "1rem"}}>
+//         <Dropdown options={groups} value={selectedGroup} onChange={e => setSelectedGroup(e.value)} />
+//         {!!fields &&
+//         <DataTable value={tableData}
+//           size="small"
+//           //paginator rows={10}
+//           editMode="row"
+//         >
+//           <Column rowEditor />
+//           <Column field={pkField} header={pkField} />
+//           {fields.map((field, cIdx) => <Column key={`col-${cIdx}`} 
+//             header={field} 
+//             body={rowData => <span>{JSON.stringify(rowData[field])}</span>} 
+//             sortable 
+//           />)}
 
-        </DataTable>
-        }
-      </div>
-    } 
+//         </DataTable>
+//         }
+//       </div>
+//     } 
 
-  </div>) // end return
+//   </div>) // end return
 
-} // end Database component
+// } // end Database component
 
-const dropdownOptions = [
-  { label: "Location", value: "location" },
-  { label: "Product", value: "product" },
-  { label: "Route", value: "route" },
-]
+// const dropdownOptions = [
+//   { label: "Location", value: "location" },
+//   { label: "Product", value: "product" },
+//   { label: "Route", value: "route" },
+// ]
 
 
-// ***Schema constructors***
-// schemas may use existing data as part of validation
-// For example, foreign keys need to be 'oneOf' some value
-// list that needs to be fetched and cannot be hardcoded here.
+// // ***Schema constructors***
+// // schemas may use existing data as part of validation
+// // For example, foreign keys need to be 'oneOf' some value
+// // list that needs to be fetched and cannot be hardcoded here.
 
-const getLocationSchema = (zoneNicks) => {
+// const getLocationSchema = (zoneNicks) => {
   
-  const nameMeta = { group: "Name" }
-  const nameSchema = yup.object({
-    locNick: yup.string().meta({ ...nameMeta, isPK: true }), // primary key
-    locName: yup.string().required().meta(nameMeta),
-    isActive: yup.boolean().meta(nameMeta)
-  })
+//   const nameMeta = { group: "Name" }
+//   const nameSchema = yup.object({
+//     locNick: yup.string().meta({ ...nameMeta, isPK: true }), // primary key
+//     locName: yup.string().required().meta(nameMeta),
+//     isActive: yup.boolean().meta(nameMeta)
+//   })
 
-  const contactMeta = { group: "Contact"}
-  const contactSchema = yup.object({
-    phone: yup.string().meta(contactMeta),
-    email: yup.string().email().meta(contactMeta),
-    firstName: yup.string().meta(contactMeta),
-    lastName: yup.string().meta(contactMeta),
-  })
+//   const contactMeta = { group: "Contact"}
+//   const contactSchema = yup.object({
+//     phone: yup.string().meta(contactMeta),
+//     email: yup.string().email().meta(contactMeta),
+//     firstName: yup.string().meta(contactMeta),
+//     lastName: yup.string().meta(contactMeta),
+//   })
   
-  const addressMeta = { group : "Address" }
-  const addressSchema = yup.object({
-    addr1: yup.string().meta(addressMeta),
-    addr2: yup.string().meta(addressMeta),
-    city: yup.string().meta(addressMeta),
-    zip: yup.string().meta(addressMeta),
-    webpageURL: yup.string().meta(addressMeta),
-    gMap: yup.string().meta(addressMeta)
-  })
+//   const addressMeta = { group : "Address" }
+//   const addressSchema = yup.object({
+//     addr1: yup.string().meta(addressMeta),
+//     addr2: yup.string().meta(addressMeta),
+//     city: yup.string().meta(addressMeta),
+//     zip: yup.string().meta(addressMeta),
+//     webpageURL: yup.string().meta(addressMeta),
+//     gMap: yup.string().meta(addressMeta)
+//   })
 
-  const deliveryMeta = { group : "Delivery" }
-  const deliverySchema = yup.object({
-    zoneNick: yup.string().oneOf(zoneNicks).meta(deliveryMeta),
-    latestFirstDeliv: yup.number().lessThan(24).meta(deliveryMeta),
-    latestFinalDeliv: yup.number().lessThan(24).meta(deliveryMeta),
-    delivOrder: yup.number().integer().meta(deliveryMeta),
-    specialInstructions: yup.string().meta(deliveryMeta),
-    orderCnfEmail: yup.string().email().meta(deliveryMeta),
+//   const deliveryMeta = { group : "Delivery" }
+//   const deliverySchema = yup.object({
+//     zoneNick: yup.string().oneOf(zoneNicks).meta(deliveryMeta),
+//     latestFirstDeliv: yup.number().lessThan(24).meta(deliveryMeta),
+//     latestFinalDeliv: yup.number().lessThan(24).meta(deliveryMeta),
+//     delivOrder: yup.number().integer().meta(deliveryMeta),
+//     specialInstructions: yup.string().meta(deliveryMeta),
+//     orderCnfEmail: yup.string().email().meta(deliveryMeta),
     
-  })
+//   })
 
-  const billingMeta = { group: "Billing" }
-  const billingSchema = yup.object({
-    qbID: yup.string().meta(billingMeta),
-    toBePrinted: yup.boolean().meta(billingMeta),
-    toBeEmailed: yup.boolean().meta(billingMeta),
-    printDuplicate: yup.boolean().meta(billingMeta),
-    terms: yup.string().oneOf(["0", "15", "30"]).meta(billingMeta),
-    invoicing: yup.string().oneOf(["daily", "weekly"]).meta(billingMeta),
-  })
+//   const billingMeta = { group: "Billing" }
+//   const billingSchema = yup.object({
+//     qbID: yup.string().meta(billingMeta),
+//     toBePrinted: yup.boolean().meta(billingMeta),
+//     toBeEmailed: yup.boolean().meta(billingMeta),
+//     printDuplicate: yup.boolean().meta(billingMeta),
+//     terms: yup.string().oneOf(["0", "15", "30"]).meta(billingMeta),
+//     invoicing: yup.string().oneOf(["daily", "weekly"]).meta(billingMeta),
+//   })
 
-  const hiddenSchema = yup.object({
-    Type: yup.string().default("Location")
-  })  
+//   const hiddenSchema = yup.object({
+//     Type: yup.string().default("Location")
+//   })  
 
-  const fullSchema = nameSchema
-    .concat(contactSchema)
-    .concat(addressSchema)
-    .concat(deliverySchema)
-    .concat(billingSchema)
-    .meta({ groups: ["Name", "Contact", "Address", "Delivery", "Billing"] })
+//   const fullSchema = nameSchema
+//     .concat(contactSchema)
+//     .concat(addressSchema)
+//     .concat(deliverySchema)
+//     .concat(billingSchema)
+//     .meta({ groups: ["Name", "Contact", "Address", "Delivery", "Billing"] })
 
-  return fullSchema
-}
+//   return fullSchema
+// }
 
 
 
@@ -621,5 +621,74 @@ const getLocationSchema = (zoneNicks) => {
 
 // }
 
+import { Dropdown } from "primereact/dropdown"
+import { LIST_TABLES } from "../../../data/_constants"
+import { DataTable } from "primereact/datatable"
+import { Column } from "primereact/column"
+import { MultiSelect } from "primereact/multiselect"
+import { useEffect, useState } from "react"
+import { useListData } from "../../../data/_listData"
+
+export const Database = () => {
+  const [selectedTable, setSelectedTable] = useState()
+  const [visibleColumns, setVisibleColumns] = useState([])
+  const { data } = useListData({ 
+    tableName: selectedTable, shouldFetch: !!selectedTable
+  })
+  const columns = data 
+    ? Object.keys(data[0])
+    : []
+
+  useEffect(() => {setVisibleColumns([])}, [data])
+
+  return(
+    <div>
+      <div style={{marginBlock: "1rem"}}>
+        <Dropdown placeholder="Select Table"
+          options={LIST_TABLES.sort()}
+          value={selectedTable}
+          onChange={e => setSelectedTable(e.value)}
+          style={{width: "15rem"}}
+        />
+      </div>      
+      
+      <div style={{marginBlock: "1rem"}}>
+        <MultiSelect placeholder={selectedTable ? "Select Columns" : ""}
+          disabled={!columns.length}
+          value={visibleColumns} 
+          options={columns} 
+          onChange={e => setVisibleColumns(e.value)}
+          display="chip" 
+        />
+      </div>
 
 
+      
+      {data && columns.length &&
+      <DataTable
+        value={data || []}
+        paginator rows={20}
+        size="small"
+        responsiveLayout="scroll"
+        resizableColumns
+      >
+        {visibleColumns.map((attributeName, idx) => {
+          return(
+            <Column 
+              key={`table-column-${idx}`}
+              header={attributeName}
+              field={attributeName}
+              body={rowData => JSON.stringify(rowData[attributeName])}
+              sortable
+            />
+          )
+        })}
+      </DataTable>
+      }
+
+      
+    </div>
+  )
+
+
+}

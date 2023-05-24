@@ -237,6 +237,7 @@ export const getLocationDetails = /* GraphQL */ `
             prodName
             wholePrice
             retailPrice
+            daysAvailable
             leadTime
             packSize
           }

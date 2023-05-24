@@ -483,3 +483,87 @@ export const listAltLeadTimes = /* GraphQL */ `
     }
   }
 `;
+
+// *****************************************************************************
+// Special queries -- by index
+// *****************************************************************************
+
+export const orderByLocByDelivDate = /* GraphQL */ `
+  query OrderByLocByDelivDate(
+    $locNick: String!
+    $delivDate: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelOrderFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    orderByLocByDelivDate(
+      locNick: $locNick
+      delivDate: $delivDate
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        Type
+        id
+        qty
+        qtyUpdatedOn
+        sameDayMaxQty
+        prodNick
+        locNick
+        ItemNote
+        SO
+        isWhole
+        delivDate
+        rate
+        route
+        isLate
+        createdOn
+        updatedOn
+        updatedBy
+        ttl
+      }
+      nextToken
+    }
+  }
+`;
+
+export const standingByLocByDayOfWeek = /* GraphQL */ `
+  query StandingByLocByDayOfWeek(
+    $locNick: String!
+    $dayOfWeek: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelStandingFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    standingByLocByDayOfWeek(
+      locNick: $locNick
+      dayOfWeek: $dayOfWeek
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        locNick
+        isWhole
+        isStand
+        dayOfWeek
+        route
+        prodNick
+        qty
+        ItemNote
+        startDate
+        endDate
+        createdAt
+        updatedAt
+        updatedBy
+      }
+      nextToken
+    }
+  }
+`;

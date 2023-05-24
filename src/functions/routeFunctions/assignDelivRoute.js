@@ -95,3 +95,41 @@ export const calculateValidRoutes = (locNick, prodNick, fulfillmentOption, locat
 
   return validRoutes
 }
+
+export const calculateValidRoutes_test = (locNick, prodNick, fulfillmentOption, locationZoneNick, dayOfWeek, routeMatrix, pickupMatrix) => {
+  let zoneNick = locationZoneNick
+  if (!locNick || !prodNick || !fulfillmentOption || !zoneNick) return [null]
+
+  let validRoutes = ''
+  
+  // ***EXCEPTIONS & OVERRIDES***
+  if (locNick === 'lincoln' && (prodNick === 'fr' || prodNick === 'dtch')) {
+    validRoutes = [{ routeNick: "Lunch" }]
+  }
+  
+  if (
+    zoneNick === 'slopick' || zoneNick === 'Prado Retail'
+    || fulfillmentOption === 'slopick' || fulfillmentOption === 'Prado Retail'
+  ) {
+    // validRoutes = [{ routeNick: "Pick up SLO" }]
+    let key = `slopick#${prodNick}#${dayOfWeek}`
+    validRoutes = pickupMatrix[key] || [{ routeNick: "NOT ASSIGNED" }]
+  }
+  
+  if (
+    zoneNick === 'atownpick' || zoneNick === "Carlton Retail"
+    || fulfillmentOption === 'atownpick' || fulfillmentOption === 'Carlton Retail'
+  ) {
+    // validRoutes = [{ routeNick: "Pick up Carlton" }]
+    let key = `atownpick#${prodNick}#${dayOfWeek}`
+    validRoutes = pickupMatrix[key] || [{ routeNick: "NOT ASSIGNED" }]
+  }
+
+  // ***MATRIX LOOKUP***
+  if (!validRoutes) {
+    let key = `${locNick}#${prodNick}#${dayOfWeek}`
+    validRoutes = routeMatrix[key] || [{ routeNick: "NOT ASSIGNED" }]
+  }
+
+  return validRoutes
+}

@@ -13,6 +13,7 @@ export const listStandingByLocation = /* GraphQL */ `
             retailPrice
             packSize
             leadTime
+            daysAvailable
           } 
           qty
           dayOfWeek
@@ -52,6 +53,7 @@ export const standingByLocByDayOfWeek = /* GraphQL */ `
           retailPrice
           packSize
           leadTime
+          daysAvailable
         } 
         qty
         dayOfWeek

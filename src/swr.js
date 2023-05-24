@@ -102,7 +102,7 @@ export function useCustomerList() {
     fetcher,
     {
       revalidateIfStale: false,
-      revalidateOnFocus: true,
+      revalidateOnFocus: false,
       revalidateOnReconnect: true,
     }
   );

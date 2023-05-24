@@ -25,6 +25,7 @@ import "./cartOrder.css"
 import { reformatProdName } from "../_utils/reformatProdName"
 import { API } from "aws-amplify"
 import { InputText } from "primereact/inputtext"
+import { useWindowSizeDetector } from "../../../../functions/detectWindowSize"
 
 
 export const CartOrder = ({ locNick, setLocNick, isWhole }) => {
@@ -36,7 +37,7 @@ export const CartOrder = ({ locNick, setLocNick, isWhole }) => {
   }
   const isLoading = useSettingsStore((state) => state.isLoading)
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
-  const windowSize = useWindowDimensions()
+  const windowSize = useWindowSizeDetector()
   const isMobile = windowSize.width < 768
 
   // cart::admin state
@@ -72,17 +73,27 @@ export const CartOrder = ({ locNick, setLocNick, isWhole }) => {
   const changeDetected = cartOrderData
     ? detectChanges(cartOrderData.header, headerChanges, cartOrderData.items, itemChanges)
     : false
-  const calculateRoutes = useCalculateRoutesByLocation(locNick, !!locNick)
+  const calculateRoutes = useCalculateRoutesByLocation(locNick, !!locNick, true)
 
   const fulfillmentOptionIsValid = (typeof(headerChanges) === 'object' && (!!Object.keys(headerChanges).length))
     ? itemChanges.map(item => {
         let validRoutes = calculateRoutes(item.product.prodNick, getWeekday(delivDate), headerChanges.route)
 
-        return (!!validRoutes.length && (validRoutes[0] !== 'NOT ASSIGNED' || item.qty === 0))
+        return (!!validRoutes.length && (validRoutes[0]?.routeNick !== 'NOT ASSIGNED' || item.qty === 0))
       }).every(item => item === true)
     : true
   const itemsAreAllAvailable = itemChanges?.map(item => {
-    const isAvailable = testProductAvailability(item.product.prodNick, dayOfWeek)
+    //const isAvailable = testProductAvailability(item.product.prodNick, dayOfWeek)
+    const validRoutes = calculateRoutes(item.product.prodNick, getWeekday(delivDate), headerChanges?.route)
+    //const canFulfill = (!!validRoutes.length) && validRoutes[0]?.routeNick !== 'NOT ASSIGNED'
+    const adjustedLeadTime = validRoutes[0]?.adjustedLeadTime ?? item.product.leadTime
+    const delay = adjustedLeadTime - item.product.leadTime
+    
+    const defaultDaysAvailable = item.product.daysAvailable ?? [1, 1, 1, 1, 1, 1, 1]
+    const daysAvailable = defaultDaysAvailable.slice(7 - delay)
+      .concat(defaultDaysAvailable.slice(0, 7 - delay))
+    const isAvailable = !!daysAvailable[delivDate.getDay()]
+
     return (isAvailable || item.qty === 0)
   }).every(item => item === true)
   const errorsExist = !fulfillmentOptionIsValid || ! itemsAreAllAvailable

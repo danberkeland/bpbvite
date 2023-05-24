@@ -270,7 +270,8 @@ export const useCartOrderData = (locNick, delivDateJS, isWhole) => {
             prodNick: fav.product.prodNick,
             prodName: fav.product.prodName,
             leadTime: fav.product.leadTime,
-            packSize: fav.product.packSize
+            daysAvailable: fav.product.daysAvailable,
+            packSize: fav.product.packSize,
           },
           qty: 0,
           orderType: "T",

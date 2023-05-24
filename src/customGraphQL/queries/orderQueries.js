@@ -60,6 +60,7 @@ export const listOrdersByLocationByDateV2 = /* GraphQL */ `
           wholePrice
           retailPrice
           leadTime
+          daysAvailable
           packSize
         } 
         qty

@@ -9,24 +9,37 @@ export const CartCalendar = ({ delivDate, setDelivDate, locNick, inline }) => {
   //console.log("order Summary", orderSummary)
 
   const dateTemplate = (date) => {
+    //console.log(date)
     const calendarDate = `${date.year}-${('0' + String(date.month + 1).slice(-2))}-${('0' + String(date.day)).slice(-2)}`
     const dayOfWeek = yyyymmddToWeekday(calendarDate)
     const hasCart = orderSummary?.dates[calendarDate]?.hasCart ? 'C' : ''
     const hasStanding = orderSummary?.dates[calendarDate]?.hasStanding || orderSummary?.days[dayOfWeek] ? 'S' : ''
 
     let backgroundColor
-    if (hasStanding && !date.today && date.selectable && calendarDate !== dateToYyyymmdd(delivDate)) backgroundColor = 'lightGray'
-    if (hasCart && !date.today && calendarDate !== dateToYyyymmdd(delivDate)) backgroundColor = 'gray'
+    if (
+      hasStanding 
+      && !date.today 
+      && date.selectable 
+      //&& calendarDate !== dateToYyyymmdd(delivDate)
+    ) backgroundColor = 'lightGray'
+    if (
+      hasCart 
+      && !date.today 
+      //&& calendarDate !== dateToYyyymmdd(delivDate)
+    ) backgroundColor = 'gray'
 
-    const style = { padding: "2rem", backgroundColor: backgroundColor }
+    const style = { padding: "2rem", background: backgroundColor }
+
 
     return (
-    <div 
-      style={style} 
-      // onClick={() => {console.log(date, calendarDate, dayOfWeek, hasCart, hasStanding)}}
-    >
-      {date.day}
-    </div>
+      <div 
+        style={style}
+        // onClick={() => {
+        //   console.log(date, calendarDate, dayOfWeek, hasCart, hasStanding)}
+        // }
+      >
+        {date.day}
+      </div>
       
       )
   }
