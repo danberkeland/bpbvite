@@ -111,6 +111,8 @@ export function getWeekday(date) {
 
 
 /**
+ * DEPRECIATED: 'getTimeToLive' is a more robust alternative.
+ * 
  * Takes a js Date object and returns a ttl unix timestamp in seconds.
  * Calculates ttl as the end of the work date after the given deliv date.
  * 
@@ -123,6 +125,16 @@ export function getTtl(delivDate) {
   /// console.log('delivDateTtl', delivDate)
 
   return getWorkingDateTime(delivDate.toISOString()).plus({ days: 1}).plus({ hours: CUTOFF_TIME}).toSeconds()
+}
+
+export const getTimeToLive = (delivDateISO_8601) => {
+  return (
+    DateTime.fromFormat(
+      delivDateISO_8601, 
+      'yyyy-MM-dd', 
+      { zone: 'America/Los_Angeles' }
+    ).plus({ days: 1 }).plus({ hours: CUTOFF_TIME }).toSeconds()
+  )
 }
 
 export function yyyymmddToJSDate(isoDate) {

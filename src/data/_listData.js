@@ -112,6 +112,7 @@ const batchMutate = async ({
  * @function
  * @param {Object} input
  * @param {typeof LIST_TABLES[number]} input.tableName
+ * @param {String} input.customQuery Advanced override to use special queries byIndex.
  * @param {boolean} input.shouldFetch External control for when data should be fetched
  * @param {Object} input.variables Part of SWR cache key; changing this changes the cache.
  * @param {number} input.variables.limit Integer; default 5000. 
@@ -119,20 +120,23 @@ const batchMutate = async ({
  */
 export const useListData = ({ 
   tableName, 
+  customQuery = '',
   shouldFetch = false, 
   variables = { limit: LIMIT }, 
-  swrOptions = defaultSwrOptions 
+  swrOptions = defaultSwrOptions,
 }) => {
 
-  if (!LIST_TABLES.includes(tableName)) {
+  if (!!shouldFetch && !LIST_TABLES.includes(tableName)) {
     console.error(
       `tableName '${tableName}' not supported. Valid names:`,
       JSON.stringify(LIST_TABLES)
     )
   }
 
-  const queryName = `list${tableName}s`
+  const queryName = customQuery || `list${tableName}s`
   const query = listQueries[queryName]
+  if (!!shouldFetch && !query) { console.error('query lookup failed') }
+
   const pkAtt = TABLE_PKS[tableName]
   
   const { data, error, isLoading, isValidating, mutate } = useSWR(
@@ -229,7 +233,7 @@ export const useListData = ({
         return matchUpdateItem ? matchUpdateItem : item
       })
 
-    mutate({ data: {[`list${tableName}s`]: { items: newData } } }, false)
+    mutate({ data: {[queryName]: { items: newData } } }, false)
   }
   
   return ({
@@ -241,8 +245,8 @@ export const useListData = ({
     // createItem,
     // updateItem,
     // deleteItem,
-    submitMutations: submitMutations,
-    updateLocalData: updateLocalData
+    submitMutations,
+    updateLocalData
   })
 }
 
