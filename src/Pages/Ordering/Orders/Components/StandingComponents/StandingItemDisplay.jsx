@@ -181,6 +181,7 @@ export const StandingItemDisplay = ({
         <StandingQtyInput 
           item={standingItems[key]}
           baseItem={standingData?.items[key]}
+          product={product}
           disabled={shouldDisable}
           updateStanding={(newQty) => {
             let _standingItems = cloneDeep(standingItems)
