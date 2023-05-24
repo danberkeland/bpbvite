@@ -25,7 +25,7 @@ export const StandingQtyInput = ({
         e.target.select()
         setRollbackQty(parseInt(e.target.value) || 0)
       }}
-      tooltip={product.packSize > 1 
+      tooltip={product?.packSize > 1 
         ? `= ${(item.qty || 0) * product.packSize} ea`
         : ''
       }

@@ -1,6 +1,6 @@
 import { Tag } from "primereact/tag"
 import { Chip } from "primereact/chip"
-import { IconInfoMessage } from "../IconInfoMessage"
+import { IconInfoMessage } from "../../IconInfoMessage"
 
 const fulfillmentDisplayTextMap = {
   'deliv': 'Delivery',
