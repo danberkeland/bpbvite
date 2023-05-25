@@ -252,7 +252,7 @@ const getRouteOptions = ({ product, location, routeDict, ZRT }) => {
     group, 
     [
       meta => !meta.isValid,
-      meta => meta.adjustedLeadTime,
+      //meta => meta.adjustedLeadTime, runs counter to production scheduling logic
       meta => routeDict[meta.routeNick].routeStart,
     ]
   ))
@@ -291,8 +291,9 @@ const getRoutingMetadata = ({
     
     const routeIsAvailable = RouteSched.includes(ddbRouteSchedMap[day])
 
-    // Old test:
-    //    let customerIsOpen = latestFirstDeliv < routeEnd
+    // Testing Customer Availability
+    //
+    // Old test:      let customerIsOpen = latestFirstDeliv < routeEnd
     //
     // The old test allows for cases where the delivery window doesn't overlap
     // at all with the customer's availability window. Is there a reason for
@@ -327,6 +328,8 @@ const getRoutingMetadata = ({
       // const productReadyBeforeTransfer = readyTime < trRoute.routeStart
       // const transferConnectsBeforeRoute = transferEnd < routeStart
       //   || routeNick === 'Pick up SLO'
+
+      // Experimental logic:
       const productReadyBeforeTransfer = readyTime <= trRoute.routeStart
       const transferConnectsBeforeRoute = transferEnd <= routeStart // scrapping the rollover test here
         || routeNick === 'Pick up SLO' // (see **SPECIAL OVERRIDE**)
@@ -381,7 +384,7 @@ const getRoutingMetadata = ({
     //   ? product.readyTime < routeStart 
     //   : null
 
-    // Still using old logic that green-lights shelf products
+    // Old logic that green-lights shelf products
     // (ie ones with readyTime =15)
     const productReadyBeforeRoute = (
       productIsAvailable && routeIsAvailable && !needTransfer
