@@ -5,7 +5,7 @@ import { cloneDeep, groupBy, set, sortBy, uniqBy } from "lodash"
 import { Dropdown } from "primereact/dropdown"
 import { Button } from "primereact/button"
 import { StandingQtyInput } from "./StandingQtyInput"
-import { InputLabel } from "../CartComponents/InputLabel"
+import { InputLabel } from "../InputLabel"
 import { reformatProdName } from "../../functions/reformatProdName"
 import { InputText } from "primereact/inputtext"
 import { StandingSubmitButton } from "./StandingSubmitButton"
@@ -181,6 +181,7 @@ export const StandingItemDisplay = ({
         <StandingQtyInput 
           item={standingItems[key]}
           baseItem={standingData?.items[key]}
+          product={product}
           disabled={shouldDisable}
           updateStanding={(newQty) => {
             let _standingItems = cloneDeep(standingItems)

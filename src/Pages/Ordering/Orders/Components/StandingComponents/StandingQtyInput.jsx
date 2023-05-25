@@ -4,6 +4,7 @@ import { InputText } from "primereact/inputtext"
 export const StandingQtyInput = ({ 
   item, 
   baseItem, 
+  product,
   disabled,
   updateStanding, 
   maxQty=999,
@@ -23,6 +24,16 @@ export const StandingQtyInput = ({
       onFocus={e => {
         e.target.select()
         setRollbackQty(parseInt(e.target.value) || 0)
+      }}
+      tooltip={product?.packSize > 1 
+        ? `= ${(item.qty || 0) * product.packSize} ea`
+        : ''
+      }
+      tooltipOptions={{ 
+        event: 'focus', 
+        position: 'left', 
+        autoZIndex: false, 
+        baseZIndex: '75'
       }}
       onChange={e => {
         if (e.target.value === '') updateStanding('')

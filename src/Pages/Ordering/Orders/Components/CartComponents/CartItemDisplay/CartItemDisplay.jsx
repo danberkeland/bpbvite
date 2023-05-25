@@ -15,11 +15,11 @@ import { CartSubmitButton } from "./CartSubmitButton"
 import { CartItemMessages } from "./CartItemMessages"
 
 // const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-const fulfillmentDisplayTextMap = {
-  'deliv': 'Delivery',
-  'slopick': 'SLO pickup',
-  'atownpick': 'Carlton pickup',
-}
+// const fulfillmentDisplayTextMap = {
+//   'deliv': 'Delivery',
+//   'slopick': 'SLO pickup',
+//   'atownpick': 'Carlton pickup',
+// }
 
 
 
@@ -275,16 +275,16 @@ const ProductColumnDetails = ({
 
   return (
     <div style={{paddingTop: ".5rem", fontSize: ".9rem"}}>
-    {orderType === 'C' && 
-      <div>{`${lastAction} `}<TimeAgo datetime={qtyUpdatedOn}/></div>
-    }
-    {orderType === 'C' && updatedBy && 
-      <div>{`by ${updatedBy}`}</div>
-    }
-    {orderType === 'S' &&
-      <div>-- standing order</div>
-    }
-  </div>
+      {orderType === 'C' && 
+        <div>{`${lastAction} `}<TimeAgo datetime={qtyUpdatedOn}/></div>
+      }
+      {orderType === 'C' && updatedBy && 
+        <div>{`by ${updatedBy}`}</div>
+      }
+      {orderType === 'S' &&
+        <div>-- standing order</div>
+      }
+    </div>
   )
 }
 

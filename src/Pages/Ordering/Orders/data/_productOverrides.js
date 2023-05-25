@@ -26,11 +26,14 @@ export const applyOverridesForRouteAssignment = ({
   }
 
   // Ficelles baked north:
-  // AM North departs at 6.5; Pick Up Carlton starts at 6.75
-  // So if we pick a readyTime inbetween, we can make it 
-  // available for pickup but not early delivery.
-  else if (product.prodNick === 'fic' && route.RouteDepart === 'Carlton') {
-    overrides = { readyTime: 6.67 }
+  // AM North and Pick up Carlton departs at 6.75.
+  // Want to allow pickup but not AM North
+  else if (
+    product.prodNick === 'fic' 
+    && route.routeDepart === 'Carlton'
+    && route.routeNick !== 'Pick up Carlton'
+  ) {
+    overrides = { readyTime: 7 }
   }
 
   // // No ftmuff for south deliveries

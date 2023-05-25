@@ -1,6 +1,6 @@
 import React from "react"
 
-import { IconInfoMessage } from "../IconInfoMessage"
+import { IconInfoMessage } from "../../IconInfoMessage"
 import { Tag } from "primereact/tag"
 
 
