@@ -65,46 +65,43 @@ export const addFresh = (
     .map((ord) => ord.qty * ord.packSize);
 
   const dutchDeliv = fullOrders
-    .filter(
-      (full) => {
-        const isProductMatch = make.forBake === full.forBake;
-        const isAtownPick = full.atownPick || full.route === "atownpick";
-        const isAvailableRoute = checkZone(full, availableRoutesToday);
-        const isDutch = make.forBake === "Dutch";
+    .filter((full) => {
+      const isProductMatch = make.forBake === full.forBake;
+      const isAtownPick = full.atownPick || full.route === "atownpick";
+      const isAvailableRoute = checkZone(full, availableRoutesToday);
+      const isDutch = make.forBake === "Dutch";
 
-        const condition1 = isProductMatch && !isAtownPick && isAvailableRoute
-        const condition2 = isProductMatch && isDutch
+      const condition1 = isProductMatch && !isAtownPick && isAvailableRoute;
+      const condition2 = isProductMatch && isDutch
 
-        return condition1 || condition2
-        
-})
+      return condition1 || condition2;
+    })
     .map((ord) => ord.qty * ord.packSize);
-
-  if (dutchDeliv.length > 0) {
-    dutchDelivToday = dutchDeliv.reduce((acc, val) => acc + val);
-  }
-
-  if (qtyToday.length > 0) {
-    qtyAccToday = qtyToday.reduce((acc, val) => acc + val);
-  }
-
-  console.log("clone1", fullOrdersTomorrow);
 
   const qtyTomorrow = fullOrdersTomorrow
-    .filter(
-      (full) =>
-        make.forBake === full.forBake &&
-        ((!full.atownPick &&
-          full.route !== "atownpick" &&
-          full.prodName !== "Ficelle") ||
-          full.prodName === "Dutch Stick") &&
-        checkZone(full, availableRoutesTomorrow)
-    )
+    .filter((full) => {
+      const isProductMatch = make.forBake === full.forBake;
+      const isAtownPick = full.atownPick || full.route === "atownpick";
+      const isAvailableRoute = checkZone(full, availableRoutesTomorrow);
+      const isDutch = full.prodName === "Dutch Stick";
+      const isFicelle = full.prodName === "Ficelle";
+
+      const condition1 = (!isAtownPick && !isFicelle) || isDutch
+
+      return isProductMatch && isAvailableRoute && condition1;
+    })
     .map((ord) => ord.qty * ord.packSize);
 
-  if (qtyTomorrow.length > 0) {
-    qtyAccTomorrow = qtyTomorrow.reduce((acc, val) => acc + val);
-  }
+
+
+  dutchDelivToday =
+    dutchDeliv.length > 0 ? dutchDeliv.reduce((acc, val) => acc + val) : 0;
+  qtyAccToday =
+    qtyToday.length > 0 ? qtyToday.reduce((acc, val) => acc + val) : 0;
+  qtyAccTomorrow =
+    qtyTomorrow.length > 0 ? qtyTomorrow.reduce((acc, val) => acc + val) : 0;
+
+
 
   make.qty = make.forBake === "Dutch" ? dutchDelivToday : qtyAccToday;
   make.makeTotal = qtyAccToday + qtyAccTomorrow;
