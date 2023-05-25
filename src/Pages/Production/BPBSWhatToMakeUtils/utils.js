@@ -15,10 +15,11 @@ export const addProdAttr = (fullOrder, database) => {
     Object.assign(full, update(full, products, customers))
   );
 
-  console.log('fullToFix', fullToFix)
+  console.log("fullToFix", fullToFix);
 
   return fullToFix;
 };
+
 export const addFresh = (
   make,
   fullOrders,
@@ -33,7 +34,6 @@ export const addFresh = (
   let dutchDelivToday = 0;
   let prodInd = products.findIndex((prod) => prod.forBake === make.forBake);
   let guaranteeTimeToday = Number(products[prodInd].readyTime);
-  let prodForBake = products[prodInd].forBake;
   let availableRoutesToday = routes.filter(
     (rt) =>
       (rt.RouteDepart === "Prado") &
@@ -46,20 +46,16 @@ export const addFresh = (
 
   const qtyToday = fullOrders
     .filter((full) => {
-      const isForBakeMatch = make.forBake === full.forBake;
-      const isAvailableZone = checkZone(full, availableRoutesToday) === true;
-      const isDutchForBake = make.forBake === "Dutch";
-      const isCustNameInclude = full.custName.includes("__");
+      const isProductMatch = make.forBake === full.forBake;
+      const isAvailableRoute = checkZone(full, availableRoutesToday) === true;
+      const isDutch = make.forBake === "Dutch";
+      const isAtownPick = full.atownPick || full.route === "atownpick";
+      const isRetailCustomer = full.custName.includes("__");
 
-      const condition1 =
-        isForBakeMatch &&
-        (!full.atownPick && full.route !== "atownpick") &&
-        isAvailableZone;
+      const condition1 = isProductMatch && !isAtownPick && isAvailableRoute;
 
       const condition2 =
-        isForBakeMatch &&
-        isDutchForBake &&
-        (isAvailableZone || isCustNameInclude);
+        isProductMatch && isDutch && (isAvailableRoute || isRetailCustomer);
 
       return condition1 || condition2;
     })
@@ -69,7 +65,8 @@ export const addFresh = (
     .filter(
       (full) =>
         (make.forBake === full.forBake &&
-          (full.atownPick !== true && full.route !== "atownpick") &&
+          full.atownPick !== true &&
+          full.route !== "atownpick" &&
           checkZone(full, availableRoutesToday) === true) ||
         (make.forBake === full.forBake && make.forBake === "Dutch")
     )
@@ -87,7 +84,8 @@ export const addFresh = (
     .filter(
       (full) =>
         make.forBake === full.forBake &&
-        (((full.atownPick !== true && full.route !== "atownpick") &&
+        ((full.atownPick !== true &&
+          full.route !== "atownpick" &&
           full.prodName !== "Ficelle") ||
           full.prodName === "Dutch Stick") &&
         checkZone(full, availableRoutesTomorrow) === true
