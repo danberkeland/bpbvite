@@ -15,10 +15,11 @@ export const addProdAttr = (fullOrder, database) => {
     Object.assign(full, update(full, products, customers))
   );
 
-  console.log('fullToFix', fullToFix)
+  console.log("fullToFix", fullToFix);
 
   return fullToFix;
 };
+
 export const addFresh = (
   make,
   fullOrders,
@@ -28,75 +29,79 @@ export const addFresh = (
 ) => {
   make.qty = 0;
   console.log("make", make);
+
   let qtyAccToday = 0;
   let qtyAccTomorrow = 0;
   let dutchDelivToday = 0;
-  let prodInd = products.findIndex((prod) => prod.forBake === make.forBake);
-  let guaranteeTimeToday = Number(products[prodInd].readyTime);
-  let prodForBake = products[prodInd].forBake;
-  let availableRoutesToday = routes.filter(
+
+  const prodInd = products.findIndex((prod) => prod.forBake === make.forBake);
+  const guaranteeTimeToday = Number(products[prodInd].readyTime);
+
+  const availableRoutesToday = routes.filter(
     (rt) =>
-      (rt.RouteDepart === "Prado") &
-        (Number(rt.routeStart) > guaranteeTimeToday) ||
+      (rt.RouteDepart === "Prado" &&
+        Number(rt.routeStart) > guaranteeTimeToday) ||
       rt.routeName === "Pick up SLO"
   );
-  let availableRoutesTomorrow = routes.filter(
+
+  const availableRoutesTomorrow = routes.filter(
     (rt) => rt.RouteDepart === "Carlton"
   );
 
   const qtyToday = fullOrders
     .filter((full) => {
-      const isForBakeMatch = make.forBake === full.forBake;
-      const isAvailableZone = checkZone(full, availableRoutesToday) === true;
-      const isDutchForBake = make.forBake === "Dutch";
-      const isCustNameInclude = full.custName.includes("__");
+      const isProductMatch = make.forBake === full.forBake;
+      const isAvailableRoute = checkZone(full, availableRoutesToday);
+      const isDutch = make.forBake === "Dutch";
+      const isAtownPick = full.atownPick || full.route === "atownpick";
+      const isRetailCustomer = full.custName.includes("__");
 
-      const condition1 =
-        isForBakeMatch &&
-        (!full.atownPick && full.route !== "atownpick") &&
-        isAvailableZone;
-
+      const condition1 = isProductMatch && !isAtownPick && isAvailableRoute;
       const condition2 =
-        isForBakeMatch &&
-        isDutchForBake &&
-        (isAvailableZone || isCustNameInclude);
+        isProductMatch && isDutch && (isAvailableRoute || isRetailCustomer);
 
       return condition1 || condition2;
     })
     .map((ord) => ord.qty * ord.packSize);
 
-  let dutchDeliv = fullOrders
-    .filter(
-      (full) =>
-        (make.forBake === full.forBake &&
-          (full.atownPick !== true && full.route !== "atownpick") &&
-          checkZone(full, availableRoutesToday) === true) ||
-        (make.forBake === full.forBake && make.forBake === "Dutch")
-    )
+  const dutchDeliv = fullOrders
+    .filter((full) => {
+      const isProductMatch = make.forBake === full.forBake;
+      const isAtownPick = full.atownPick || full.route === "atownpick";
+      const isAvailableRoute = checkZone(full, availableRoutesToday);
+      const isDutch = make.forBake === "Dutch";
+
+      const condition1 = isProductMatch && !isAtownPick && isAvailableRoute;
+      const condition2 = isProductMatch && isDutch
+
+      return condition1 || condition2;
+    })
     .map((ord) => ord.qty * ord.packSize);
 
-  if (dutchDeliv.length > 0) {
-    dutchDelivToday = dutchDeliv.reduce(addUp);
-  }
-  if (qtyToday.length > 0) {
-    qtyAccToday = qtyToday.reduce(addUp);
-  }
-  let clone1 = clonedeep(fullOrdersTomorrow);
-  console.log("clone1", clone1);
-  let qtyTomorrow = fullOrdersTomorrow
-    .filter(
-      (full) =>
-        make.forBake === full.forBake &&
-        (((full.atownPick !== true && full.route !== "atownpick") &&
-          full.prodName !== "Ficelle") ||
-          full.prodName === "Dutch Stick") &&
-        checkZone(full, availableRoutesTomorrow) === true
-    )
+  const qtyTomorrow = fullOrdersTomorrow
+    .filter((full) => {
+      const isProductMatch = make.forBake === full.forBake;
+      const isAtownPick = full.atownPick || full.route === "atownpick";
+      const isAvailableRoute = checkZone(full, availableRoutesTomorrow);
+      const isDutch = full.prodName === "Dutch Stick";
+      const isFicelle = full.prodName === "Ficelle";
+
+      const condition1 = (!isAtownPick && !isFicelle) || isDutch
+
+      return isProductMatch && isAvailableRoute && condition1;
+    })
     .map((ord) => ord.qty * ord.packSize);
 
-  if (qtyTomorrow.length > 0) {
-    qtyAccTomorrow = qtyTomorrow.reduce(addUp);
-  }
+
+
+  dutchDelivToday =
+    dutchDeliv.length > 0 ? dutchDeliv.reduce((acc, val) => acc + val) : 0;
+  qtyAccToday =
+    qtyToday.length > 0 ? qtyToday.reduce((acc, val) => acc + val) : 0;
+  qtyAccTomorrow =
+    qtyTomorrow.length > 0 ? qtyTomorrow.reduce((acc, val) => acc + val) : 0;
+
+
 
   make.qty = make.forBake === "Dutch" ? dutchDelivToday : qtyAccToday;
   make.makeTotal = qtyAccToday + qtyAccTomorrow;
