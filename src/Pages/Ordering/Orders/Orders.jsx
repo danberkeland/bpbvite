@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo } from "react"
 import { TabMenu } from "primereact/tabmenu"
 
 import { CartCalendar } from "./Components/CartComponents/CartCalendar"
-import { LocationDropdown } from "./Components/CartComponents/LocationDropdown"
+import { LocationDropdown } from "./Components/LocationDropdown"
 import { FulfillmentDropdown } from "./Components/CartComponents/FulfillmentDropdown"
 import { CartItemDisplay } from "./Components/CartComponents/CartItemDisplay/CartItemDisplay"
 import { ItemNoteInput } from "./Components/CartComponents/ItemNoteInput"

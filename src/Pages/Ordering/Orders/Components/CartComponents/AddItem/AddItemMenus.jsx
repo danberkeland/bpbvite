@@ -6,7 +6,7 @@ import { AddItemQtyInput } from "./AddItemQtyInput"
 import { CartItemDropdown } from "./CartItemDropdown"
 import { Sidebar } from "primereact/sidebar"
 import { handleAddItem } from "./handleAddItem"
-import { AddItemInfoMessages } from "./InfoMessages"
+import { CartItemMessages } from "../CartItemMessages"
 
 
 
@@ -118,22 +118,32 @@ export const AddItemMenu = ({
   }
 
   const infoProps = {
-    selectedProdNick,
-    hasAssignedRoute,
-    isAvailable, 
-    inCart, 
-    inProd,
-    isValid,
-    defaultInclude,
-    leadTime,
-    maxQty, 
-    routeIsAvailable, 
-    recentlyDeleted,
-    user,
-    fulfillmentOption, 
-    selectedProduct,
+    // selectedProdNick,
+    // hasAssignedRoute,
+    // isAvailable, 
+    // inCart, 
+    // inProd,
+    // isValid,
+    // defaultInclude,
+    // leadTime,
+    // maxQty, 
+    // routeIsAvailable, 
+    // recentlyDeleted,
+    // user,
+    // fulfillmentOption, 
+    // product: selectedProduct,
+    // cartItem,
+    // cartMeta,
+    // delivDateDT,
+    // ORDER_DATE_DT,
+    // orderLeadTime,
+    //selectedProdNick,
+    displayFor: "addItem",
+    product: selectedProduct,
     cartItem,
     cartMeta,
+    fulfillmentOption, 
+    user,
     ...dateProps,
   }
 
@@ -151,10 +161,18 @@ export const AddItemMenu = ({
 
 
   const bodyTemplate = (<>
-    <CartItemDropdown 
-      {...dropdownProps} />
+    <CartItemDropdown {...dropdownProps} />
 
-    <AddItemInfoMessages {...infoProps} {...dateProps} />
+    <div className="info-message-box" 
+      style={{ 
+        minHeight: "3rem",
+        margin: "1rem .5rem", 
+        fontSize: ".9rem"
+      }}
+    >
+      {selectedProduct && <CartItemMessages {...infoProps} />}
+    </div>
+
   </>) 
 
   const footerTemplate = (

@@ -12,7 +12,7 @@ import { reformatProdName } from "../../../../Orders10/_utils/reformatProdName"
 
 import { CartQtyInput } from "./CartQtyInput"
 import { CartSubmitButton } from "./CartSubmitButton"
-import { CartItemMessages } from "./CartItemMessages"
+import { CartItemMessages } from "../CartItemMessages"
 
 // const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 // const fulfillmentDisplayTextMap = {
@@ -106,6 +106,8 @@ export const CartItemDisplay = ({
       maxQty, 
       qtyChanged 
     } = cartMeta[prodNick]
+
+    const product = products[prodNick]
     const { prodName, packSize, meta, defaultInclude } = products[prodNick]
     const { isAvailable, isValid, routeOption } = meta.assignedRouteSummary
     const { routeIsAvailable } = routeOption
@@ -119,16 +121,23 @@ export const CartItemDisplay = ({
     const recentlyDeleted = lastAction === 'Deleted' && sameDayUpdate
 
     const infoMessageProps = {
-      recentlyDeleted,
-      maxQty,
-      timingStatus,
-      fulfillmentOption,
-      isAvailable,
-      routeIsAvailable,
-      delivDateDT,
-      defaultInclude,
+      // recentlyDeleted,
+      // maxQty,
+      // timingStatus,
+      // fulfillmentOption,
+      // isAvailable,
+      // routeIsAvailable,
+      // delivDateDT,
+      // defaultInclude,
+      // user,
+      // qty,
+      //selectedProdNick,
+      product,
+      cartItem: rowData,
+      cartMeta,
+      fulfillmentOption, 
       user,
-      qty,
+      ...dateProps,
     }
     
     //const recentlyDeleted = (lastAction === "Deleted") && sameDayUpdate
