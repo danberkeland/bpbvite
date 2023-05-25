@@ -29,12 +29,9 @@ import { StandingItemDisplay } from "./Components/StandingComponents/StandingIte
 // Constants, Non-Reactive Data ************************************************
 /**
  * Compatible with JSDates .getDay() conventions. If using luxon's 
- * DateTime.weekday(), use '% 7' first to change Sun <=> 7 to Sun <=> 0.
+ * DateTime.weekday(), use '% 7' first to change Sunday from 7 to 0.
  */
 const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-
-const ORDER_DATE_DT = DateTime.now().setZone('America/Los_Angeles')
-  .plus({ hours: 4 }).startOf('day')
 
 const cartTabModel = [
   {label: 'Cart Orders', icon: 'pi pi-fw pi-shopping-cart'}
@@ -49,8 +46,11 @@ const standingBlacklist = ['high', 'hios', 'sandos']
 // Component
 // *****************************************************************************
 export const Orders = ({ useTestAuth }) => {
+  const ORDER_DATE_DT = DateTime.now().setZone('America/Los_Angeles')
+    .plus({ hours: 4 }).startOf('day')
+
   const windowSize = useWindowSizeDetector()
-  const wSize = windowSize.width >= 850 ? 'lg'
+  const wSize = windowSize.width >= 750 ? 'lg'
     : windowSize.width >= 440 ? 'md'
     : 'sm'
 
@@ -121,16 +121,6 @@ export const Orders = ({ useTestAuth }) => {
         item.orderType !== 'T' && item.qty !== item.baseQty
       )
     )
-  
-    
-    
-    // (
-    //   cartItems.some(item => item.qty !== item.baseQty)
-    //   || (
-    //     !isEqual(cartOrder.header, cartHeader)
-    //     && cartItems.some(item => !!item.id) 
-    //   )
-    // )
 
   // Standing *************************
   const [standingView, setStandingView] = useState('byProduct')
@@ -161,7 +151,6 @@ export const Orders = ({ useTestAuth }) => {
     standingItems, setStandingItems,
     standingView, setStandingView,
   }
-
 
 
   // Product Data:
@@ -249,84 +238,84 @@ export const Orders = ({ useTestAuth }) => {
       style={{
         padding: ".5rem .5rem 11.75rem .5rem",
         minWidth: "350px", 
+        maxWidth: wSize === 'lg' ? "58rem" : "25.5rem",
+        margin: "auto",
       }}
     >
       {/* ADMIN STUFF*/}
 
       {/* {user.authClass === 'bpbfull' &&  */}
       {defaultAuth === 'bpbfull' && 
-        <div style={{ 
-          maxWidth: "58rem", 
-          margin: "auto",
-          paddingBlock: "1rem",  
-        }} >
-          
+        <div style={{ paddingBlock: "1rem" }}>
           <LocationDropdown
             locNick={locNick}
             setLocNick={setLocNick}
             // authClass={user.authClass}
             authClass={defaultAuth}
           />     
-        
         </div>
       }
-
-
 
       <TabMenu 
         model={tabModel} 
         activeIndex={activeIndex} 
         onTabChange={(e) => setActiveIndex(e.index)} 
-        style={{ maxWidth: "58rem", margin: "auto" }}
+        //style={{ maxWidth: "58rem", margin: "auto" }}
       />
 
       {/* CART ORDER */}
 
       {activeIndex === 0 && !!cartOrder && <>
-        {/* <h2>CART ORDERS</h2> */}
-          <div style={{
-            maxWidth: wSize === 'lg' ? "53rem" : "25.5rem", 
-            paddingInline: wSize === 'lg' ? "" : ".5rem",
-            margin: "auto"
-          }}>
-            <h2 style={{color: "hsl(37, 100%, 5%)"}}>
-              {wSize === 'lg' ? headerMessage : mobileHeaderMessage}
-            </h2>
-          </div>
-        <div className="cart-flex-contents"
+
+        <div className="cart-order-ui-container"
           style={{
-            display: "flex", 
-            flexDirection: wSize === "lg" ? "row" : "column", 
-            justifyContent: wSize === "lg" ? "space-between" : "center", 
-            paddingInline: wSize === 'lg' ? "0" : ".5rem",
-            width: wSize === 'lg' ? "" : "100%",
-            maxWidth: wSize === 'lg'?"53rem":"25.5rem", 
-            margin: "auto"
+            maxWidth: wSize === 'lg' ? "54rem" : "26rem",
+            marginInline: wSize === 'lg' ? "" : ".5rem",
+            margin: "auto",
           }}
         >
-          <div className="column-1">
-            <div className="calendar-fulfillment"
-              style={wSize === 'lg'
-                ? {
-                  display: "flex", 
-                  flexDirection: "column", 
-                }
-                : {
-                  display: "flex", 
-                  justifyContent: "space-between", 
-                  flexDirection: "row-reverse", 
-                  gap: "1rem",
-                  maxWidth: '25.5rem',
-                }
+
+          <h2 style={{color: "hsl(37, 100%, 5%)"}}>
+            {wSize === 'lg' ? headerMessage : mobileHeaderMessage}
+          </h2>
+
+          <div className="cart-order-ui-body"
+            style={wSize === 'lg'
+              ? {
+                display: "flex", 
+                flexDirection: "row",
+                justifyContent: "space-between",
+                gap: "1.5rem",
               }
+              : {
+                display: "flex", 
+                flexDirection: "column", 
+                justifyContent: "center", 
+                width: "100%",
+              }
+            }
+          >
+            <div className="column-1" 
+              style={{
+                flex: wSize === 'lg' ? "0 0 26rem" : "" 
+              }}
             >
-              <div //className="bpb-cart-calendar-container"
-                style={{
-                  marginBlock: wSize === 'lg' ? "" : ".5rem",
-                  marginBottom: wSize === 'lg' ? "1.5rem" : "",
-                  flex: wSize === 'lg' ? "" : "0 1 7.5rem"
-                }}
-              >               
+
+              <div className="calendar-fulfillment-container"
+                style={wSize === 'lg'
+                  ? {
+                    display: "flex", 
+                    flexDirection: "column", 
+                  }
+                  : {
+                    display: "flex", 
+                    justifyContent: "space-between", 
+                    flexDirection: "row-reverse", 
+                    gap: "1rem",
+                    //maxWidth: '25.5rem',
+                  }
+                }
+              >
                 <CartCalendar 
                   delivDate={delivDateJS}
                   setDelivDate={setDelivDateJS}
@@ -350,74 +339,71 @@ export const Orders = ({ useTestAuth }) => {
                   showSidebar={showSidebar}
                   setShowSidebar={setShowSidebar}
                   disableInputs={disableInputs}
+                  cardStyle={{marginBlock: "1rem"}}
                 />
 
-              </div>
-
-              <div style={{
-                width: wSize === 'lg' ? "17rem" : undefined,
-                flex: wSize === 'lg' ? "" : "0 1 25.5rem", 
-                marginBlock: ".5rem",
-              }}
-                className="p-fluid"
-              >
                 <FulfillmentDropdown
                   location={location}
+                  cartHeader={cartHeader}
+                  setCartHeader={setCartHeader}
+                  disabled={disableInputs}
+                  containerStyle={{
+                    width: wSize === 'lg' ? "17rem" : undefined,
+                    flex: wSize === 'lg' ? undefined : "0 1 100%", 
+                  }}
+                />
+ 
+              </div> {/* End column-1 */}
+
+              <div style={{
+                width: wSize === 'lg' ? "17rem" : "100%",
+                marginBlock: "1rem",
+              }}>
+                <ItemNoteInput 
                   cartHeader={cartHeader}
                   setCartHeader={setCartHeader}
                   disabled={disableInputs}
                 />
               </div>
 
-            </div>
+            </div> {/* End column-1 */}
 
-            <div style={{
-              width: wSize === 'lg' ? "17rem" : "100%",
-              marginBlock: ".5rem",
-            }}>
-              <ItemNoteInput 
-                cartHeader={cartHeader}
-                setCartHeader={setCartHeader}
-                disabled={disableInputs}
-              />
-            </div>
+            <div className="column-2 bpb-datatable-orders"
+              style={{
+                width: "100%", 
+                maxWidth: "26rem"
+              }}
+            >
+              {!!products && !!cartItems && !!delivDateJS &&
+                <CartItemDisplay
+                  {...cartProps}
+                  cartCache={cartCache}
+                  dateProps={dateProps}
+                  wSize={wSize}
+                  user={user}
+                  location={location}
+                  products={products}
+                  setShowSidebar={setShowSidebar}
+                  orderHasChanges={orderHasChanges}
+                  disableInputs={disableInputs}
+                />
+              }
+            </div> {/* End column-2 */}
 
-          </div>
+          </div> {/* End cart-order-ui-body */}
 
-
-
-          <div className="column-2 bpb-datatable-orders"
-            style={{
-              width: "100%", 
-              maxWidth: "25.5rem"
-            }}
-          >
-            {!!products && !!cartItems && !!delivDateJS &&
-              <CartItemDisplay
-                {...cartProps}
-                cartCache={cartCache}
-                dateProps={dateProps}
-                wSize={wSize}
-                user={user}
-                location={location}
-                products={products}
-                setShowSidebar={setShowSidebar}
-                orderHasChanges={orderHasChanges}
-                disableInputs={disableInputs}
-              />
-            }
-
-          </div>
         </div>
       </>}
 
       {/* STANDING ORDER */}
 
       {standingBlacklist.indexOf(user.locNick) === -1 && activeIndex === 1 && 
-        <div style={{
-          maxWidth: wSize === 'lg' ? "53rem" : "25.5rem", 
-          margin: "auto",
-          marginTop: "2rem"
+        <div className="standing-order-ui-container"
+          style={{
+            maxWidth: wSize === 'lg' ? "54rem" : "26rem",
+            margin: "auto",
+            marginInline: wSize === 'lg' ? "" : ".5rem",
+            marginTop: "2rem"
         }}>
 
           <AddStandingItemMenu 
@@ -433,7 +419,6 @@ export const Orders = ({ useTestAuth }) => {
             setSelectedDisplayProdNick={setSelectedDisplayProdNick}
           />
   
-          
           <StandingItemDisplay 
             user={user} 
             locNick={locNick} 
@@ -442,7 +427,6 @@ export const Orders = ({ useTestAuth }) => {
             wSize={wSize}
             location={location}
             products={products}
-            // showStandingSidebar={showStandingSidebar}
             setShowStandingSidebar={setShowStandingSidebar}
             selectedProdNick={selectedDisplayProdNick}
             setSelectedProdNick={setSelectedDisplayProdNick}
@@ -463,7 +447,7 @@ export const Orders = ({ useTestAuth }) => {
 // Add metadata to order items to assist with display & input behavior
 const getCartItemMeta = (cartItems, products, user, dateProps) => {
   if (!cartItems || !products || !user) return undefined
-  const { isDelivDate, isPastDeliv } = dateProps
+  const { isDelivDate, isPastDeliv, ORDER_DATE_DT } = dateProps
 
   const metaList = cartItems.map(item => {
     const { prodNick, baseQty, qty, qtyUpdatedOn, sameDayMaxQty } = item

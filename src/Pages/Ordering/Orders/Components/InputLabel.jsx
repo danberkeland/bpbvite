@@ -8,7 +8,7 @@ export const InputLabel = ({
   children,
 }) => {
   if (hidden) return children
-  return (<>
+  return (<div>
     <label htmlFor={htmlFor}>
       <div style={{
         marginBottom: "-4px",
@@ -37,7 +37,7 @@ export const InputLabel = ({
     }}>
       {children}
     </div>
-  </>
+  </div>
   )
 
 

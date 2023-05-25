@@ -14,23 +14,20 @@ const maxDate = getWorkingDateTime('NOW').plus({ months: 2 }).endOf('month')
   .minus({ days: 1 }).toJSDate()
   
 export const CartCalendar = ({ 
+  locNick, 
   delivDate, 
   setDelivDate, 
   ORDER_DATE_DT,
-  locNick, 
   inline,
-  disabled
 }) => {
   const { data:orderSummary } = useOrderCalendarSummary({ 
     locNick, shouldFetch: !!locNick 
   })
-  //console.log("orderSummary", orderSummary)
 
   const dateTemplate = (date) => {
     const dateJS = new Date(date.year, date.month, date.day)
     const isCustomToday = dateJS.getTime() === ORDER_DATE_DT.toMillis()
 
-    //const isSelectedDate = dateJS.getTime() === delivDate.getTime()
     const calendarDate = `${date.year}-` 
       + `${('0' + String(date.month + 1).slice(-2))}-`
       + `${('0' + String(date.day)).slice(-2)}`
@@ -40,15 +37,6 @@ export const CartCalendar = ({
 
     const isRecentDelete = orderSummary?.byDate?.[calendarDate]?.isRecentDelete
 
-    // let background = ''
-    // if (hasStanding && !date.today && date.selectable ) {
-    //   background = 'rgba(200, 200, 200, .85)'
-    // }
-    // if (hasCart && !date.today && date.selectable ) {
-    //   background = 'rgba(150, 150, 150, .85)'
-    // }
-    //if (isCustomToday) console.log(calendarDate)
-    // if (isCustomToday) background = '#484f56'
     return (
       <div 
         id={isCustomToday && date.selectable
@@ -69,7 +57,6 @@ export const CartCalendar = ({
   return (
     <InputLabel label="Date" 
       htmlFor="bpb-order-calendar"
-      disabled={disabled}
       hidden={inline}
     >
       <Calendar
