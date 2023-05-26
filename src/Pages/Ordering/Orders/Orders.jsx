@@ -105,6 +105,8 @@ export const Orders = ({ useTestAuth }) => {
   const { data:location } = useLocationDetails({ locNick, shouldFetch })
 
   // Order ****************************
+  const [selectedCartQty, setSelectedCartQty] = useState('')
+  const [selectedCartProdNick, setSelectedCartProdNick] = useState()
   const [showOrderDateDialog, setShowOrderDateDialog] = useState(false)
   const { data:cartOrder } = useFullOrderByDate({ 
     locNick, delivDateJS, shouldFetch 
@@ -116,7 +118,12 @@ export const Orders = ({ useTestAuth }) => {
   useEffect(() => {
     setCartHeader(cartOrder?.header ?? {})
     setCartItems(cartOrder?.items ?? [])
-
+    if (selectedCartProdNick) {
+      const matchItem = cartOrder.items.find(i => 
+        i.prodNick === selectedCartProdNick
+      )
+      setSelectedCartQty(matchItem?.baseQty ?? 0)
+    }
   }, [cartOrder])
 
   const orderHasChanges = cartItems.some(item => item.qty !== item.baseQty)  
@@ -391,6 +398,10 @@ export const Orders = ({ useTestAuth }) => {
                   mode={wSize === 'lg' ? 'card' : 'sidebar'}
                   showSidebar={showSidebar}
                   setShowSidebar={setShowSidebar}
+                  selectedProdNick={selectedCartProdNick}
+                  setSelectedProdNick={setSelectedCartProdNick}
+                  selectedQty={selectedCartQty}
+                  setSelectedQty={setSelectedCartQty}
                   disableInputs={disableInputs}
                   cardStyle={{marginBlock: "1rem"}}
                 />

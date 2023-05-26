@@ -25,10 +25,9 @@ export const AddItemMenu = ({
   disableInputs,
   ORDER_DATE_DT,
   cardStyle,
+  selectedQty, setSelectedQty,
+  selectedProdNick, setSelectedProdNick,
 }) => {
-  const [selectedQty, setSelectedQty] = useState('')
-  const [selectedProdNick, setSelectedProdNick] = useState()
-
 
   const { delivDateJS, delivDateDT, orderLeadTime } = dateProps
   const relativeDateString = orderLeadTime === 0 
