@@ -203,7 +203,10 @@ export const StandingItemDisplay = ({
     <DataTable
       value={sortBy(rowOptions, opt => products?.[opt.value]?.prodName || '')}
       responsiveLayout="scroll"
-      style={{maxWidth: wSize === 'lg' ? "50rem" : "25.5rem", margin: "auto"}}
+      style={{
+        //maxWidth: wSize === 'lg' ? "50rem" : "25.5rem", 
+        margin: "auto"
+      }}
       scrollable={wSize === 'lg'}
       scrollHeight={wSize === 'lg' ? "50rem" : ""}
       footer={()=>{

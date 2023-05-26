@@ -9,7 +9,7 @@ const fulfillmentDisplayTextMap = {
   'atownpick': 'Carlton pickup',
 }
 
-const infoColor = 'hsl(218, 43%, 50%)'
+const infoColor = 'hsl(218, 65%, 50%)'
 const warnColor = 'hsl(45, 96%, 35%)'
 const dangerColor = 'hsl(0, 96%, 38%)'
 

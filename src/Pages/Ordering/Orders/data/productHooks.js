@@ -400,7 +400,7 @@ const getRoutingMetadata = ({
       && (
         needTransfer 
           ? transferSummary.some(trRoute => !trRoute.isLate)
-          : !!productReadyBeforeRoute
+          : productReadyBeforeRoute
       )
 
     return ({
@@ -479,6 +479,3 @@ export const useProductSelectionList = ({ locNick, shouldFetch }) => {
   return { data: useMemo(composeList, [products]) }
 
 }
-
-
-

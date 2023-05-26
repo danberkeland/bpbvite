@@ -22,6 +22,7 @@ export const AddStandingItemMenu = ({
   setShowStandingSidebar,
   //selectedDisplayProdNick,
   setSelectedDisplayProdNick,
+  cardStyle,
 }) => {
   const [selectedAddProdNick, setSelectedAddProdNick] = useState()
   const selectedAddProduct = products?.[selectedAddProdNick] ?? {}
@@ -105,10 +106,7 @@ export const AddStandingItemMenu = ({
           <span style={{fontSize: "1.25rem"}}>Add a Product</span>
         }
         //footer={footerTemplate}
-        style={{ 
-          margin: "1.5rem",
-          width: "25.5rem",
-        }}
+        style={cardStyle}
         footer={footerTemplate}
       >
         <StandingProductDropdown 
