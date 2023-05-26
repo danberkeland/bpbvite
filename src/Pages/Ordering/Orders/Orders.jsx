@@ -229,8 +229,18 @@ export const Orders = ({ useTestAuth }) => {
       : orderLeadTime > 1 ? `(Today +${orderLeadTime})`
     : ` (Yesterday) ${user.authClass !== 'bpbfull' ? " ― Read Only" : ""}`
 
-  const headerMessage = `${fulfillmentString} for `
-    + `${delivDateDT.toFormat('EEEE, MMM d')} ${relativeDateString}`
+  const headerMessage = <>
+    <span style={{display: "inline-block"}}>
+      {`${fulfillmentString} for ${delivDateDT.toFormat('EEEE')}, `}
+
+    </span> <span style={{display: "inline-block"}}>
+      {delivDateDT.toFormat('MMM d')}
+      
+    </span> <span style={{display: "inline-block"}}>
+      {relativeDateString}
+    </span>
+  
+  </>
   
   const mobileHeaderMessage = orderLeadTime > 0
     ? `For ${delivDateDT.toFormat('EEEE')} ${relativeDateString}`
