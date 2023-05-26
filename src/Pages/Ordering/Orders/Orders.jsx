@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react"
 
 import { TabMenu } from "primereact/tabmenu"
+import { Dialog } from "primereact/dialog"
 
 import { CartCalendar } from "./Components/CartComponents/CartCalendar"
 import { LocationDropdown } from "./Components/LocationDropdown"
@@ -42,13 +43,11 @@ const standingTabModel = [
 
 const standingBlacklist = ['high', 'hios', 'sandos']
 
+
 // *****************************************************************************
 // Component
 // *****************************************************************************
 export const Orders = ({ useTestAuth }) => {
-  const ORDER_DATE_DT = DateTime.now().setZone('America/Los_Angeles')
-    .plus({ hours: 4 }).startOf('day')
-
   const windowSize = useWindowSizeDetector()
   const wSize = windowSize.width >= 750 ? 'lg'
     : windowSize.width >= 440 ? 'md'
@@ -74,6 +73,11 @@ export const Orders = ({ useTestAuth }) => {
   const [locNick, setLocNick] = useState(user.locNick)
 
   // Date data
+  const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+  const ORDER_DATE_DT = DateTime.now().setZone('America/Los_Angeles')
+    .plus({ hours: 4 }).startOf('day')
+  const pastCutoff = todayDT.toMillis() !== ORDER_DATE_DT.toMillis()
+
   const [delivDateJS, setDelivDateJS] = useState(
     ORDER_DATE_DT.plus({ days: 1 }).toJSDate()
   )
@@ -101,6 +105,7 @@ export const Orders = ({ useTestAuth }) => {
   const { data:location } = useLocationDetails({ locNick, shouldFetch })
 
   // Order ****************************
+  const [showOrderDateDialog, setShowOrderDateDialog] = useState(false)
   const { data:cartOrder } = useFullOrderByDate({ 
     locNick, delivDateJS, shouldFetch 
   })
@@ -238,7 +243,7 @@ export const Orders = ({ useTestAuth }) => {
       style={{
         padding: ".5rem .5rem 11.75rem .5rem",
         minWidth: "350px", 
-        maxWidth: wSize === 'lg' ? "58rem" : "25.5rem",
+        maxWidth: wSize === 'lg' ? "60rem" : "26rem",
         margin: "auto",
       }}
     >
@@ -260,7 +265,6 @@ export const Orders = ({ useTestAuth }) => {
         model={tabModel} 
         activeIndex={activeIndex} 
         onTabChange={(e) => setActiveIndex(e.index)} 
-        //style={{ maxWidth: "58rem", margin: "auto" }}
       />
 
       {/* CART ORDER */}
@@ -269,15 +273,11 @@ export const Orders = ({ useTestAuth }) => {
 
         <div className="cart-order-ui-container"
           style={{
-            maxWidth: wSize === 'lg' ? "54rem" : "26rem",
+            maxWidth: wSize === 'lg' ? "56rem" : "28rem",
             marginInline: wSize === 'lg' ? "" : ".5rem",
             margin: "auto",
           }}
         >
-
-          <h2 style={{color: "hsl(37, 100%, 5%)"}}>
-            {wSize === 'lg' ? headerMessage : mobileHeaderMessage}
-          </h2>
 
           <div className="cart-order-ui-body"
             style={wSize === 'lg'
@@ -300,6 +300,49 @@ export const Orders = ({ useTestAuth }) => {
                 flex: wSize === 'lg' ? "0 0 26rem" : "" 
               }}
             >
+              <div className="cart-ui-header"
+                style={{
+                  color: "hsl(37, 100%, 5%)",
+                  background: "var(--bpb-surface-content-header)",
+                  padding: "1px 1rem",
+                  marginBlock: "1rem",
+                  borderRadius: "3px",
+                  boxShadow: "0 2px 1px -1px rgba(0, 0, 0, 0.2),"
+                    + " 0 1px 1px 0 rgba(0, 0, 0, 0.14),"
+                    + " 0 1px 3px 0 rgba(0, 0, 0, 0.12)",
+                }}
+              >
+                <h2 style={{marginBlock: ".75rem"}}>
+                  {wSize === 'lg' ? headerMessage : mobileHeaderMessage}
+                </h2>
+                
+                <div 
+                  style={{
+                    marginBottom: ".75rem", 
+                    display: "inline-flex", 
+                    justifyContent: "start",
+                    alignItems: "center",
+                    gap: ".25rem",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setShowOrderDateDialog(true)}
+                >
+                  <span>
+                    {"Your order date: "}
+                  </span>
+                  <span style={{
+                    color: pastCutoff ? "hsl(0, 96%, 38%)" : undefined, 
+                    fontWeight: pastCutoff ? "bold" : undefined, 
+                    paddingInline: ".25rem"
+                  }}>
+                    {ORDER_DATE_DT.toFormat('MMM d')}
+                  </span>
+                  <i className="pi pi-fw pi-question-circle" 
+                    style={{color: 'hsl(218, 65%, 50%)'}}
+                  />
+              </div>
+
+            </div>
 
               <div className="calendar-fulfillment-container"
                 style={wSize === 'lg'
@@ -357,7 +400,7 @@ export const Orders = ({ useTestAuth }) => {
 
               <div style={{
                 width: wSize === 'lg' ? "17rem" : "100%",
-                marginBlock: "1rem",
+                marginTop: "1rem",
               }}>
                 <ItemNoteInput 
                   cartHeader={cartHeader}
@@ -371,7 +414,8 @@ export const Orders = ({ useTestAuth }) => {
             <div className="column-2 bpb-datatable-orders"
               style={{
                 width: "100%", 
-                maxWidth: "26rem"
+                maxWidth: "28rem",
+                marginBlock: "1rem",
               }}
             >
               {!!products && !!cartItems && !!delivDateJS &&
@@ -400,7 +444,7 @@ export const Orders = ({ useTestAuth }) => {
       {standingBlacklist.indexOf(user.locNick) === -1 && activeIndex === 1 && 
         <div className="standing-order-ui-container"
           style={{
-            maxWidth: wSize === 'lg' ? "54rem" : "26rem",
+            maxWidth: wSize === 'lg' ? "54rem" : "28rem",
             margin: "auto",
             marginInline: wSize === 'lg' ? "" : ".5rem",
             marginTop: "2rem"
@@ -417,6 +461,10 @@ export const Orders = ({ useTestAuth }) => {
             setShowStandingSidebar={setShowStandingSidebar}
             selectedDisplayProdNick={selectedDisplayProdNick}
             setSelectedDisplayProdNick={setSelectedDisplayProdNick}
+            cardStyle={{ 
+              marginBlock: "1.5rem",
+              width: "26rem",
+            }}
           />
   
           <StandingItemDisplay 
@@ -433,6 +481,20 @@ export const Orders = ({ useTestAuth }) => {
           />
         </div>
       }
+
+      <Dialog visible={showOrderDateDialog}
+        header="Cutoff at 8:00pm"
+        onHide={() => setShowOrderDateDialog(false)}
+        style={{maxWidth: "26rem", margin: ".75rem"}}
+      >
+        <p>
+          Our system rolls forward at 8:00pm each day. 
+        </p>
+        <p>
+          Orders may be placed after the cutoff but will be 
+          treated as placed the next day.
+        </p>
+      </Dialog>
 
     </div>
   )  
