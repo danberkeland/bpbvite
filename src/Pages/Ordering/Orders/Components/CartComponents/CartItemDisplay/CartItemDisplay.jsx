@@ -205,7 +205,7 @@ export const CartItemDisplay = ({
       responsiveLayout="scroll"
       footer={footerTemplate}
       scrollable={wSize === 'lg'}
-      scrollHeight={wSize === 'lg' ? "48.5rem" : undefined}
+      scrollHeight={wSize === 'lg' ? "55.5rem" : undefined}
       style={{
         border: "none",
         boxShadow: "0 2px 1px -1px rgba(0, 0, 0, 0.2),"
