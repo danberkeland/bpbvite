@@ -73,7 +73,7 @@ export const CartOrder = ({ locNick, setLocNick, isWhole }) => {
   const changeDetected = cartOrderData
     ? detectChanges(cartOrderData.header, headerChanges, cartOrderData.items, itemChanges)
     : false
-  const calculateRoutes = useCalculateRoutesByLocation(locNick, !!locNick, true)
+  const calculateRoutes = useCalculateRoutesByLocation(locNick, !!locNick, false)
 
   const fulfillmentOptionIsValid = (typeof(headerChanges) === 'object' && (!!Object.keys(headerChanges).length))
     ? itemChanges.map(item => {
