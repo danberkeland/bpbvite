@@ -14,7 +14,7 @@ import { getWeekday, getWorkingDate, getWorkingDateTime } from "../../../../../f
 //import { useLocationDetails } from "../../../../../data/locationData"
 import TimeAgo from "timeago-react"
 import { InputText } from "primereact/inputtext"
-import { testProductAvailability } from "../../_utils/testProductAvailability"
+// import { testProductAvailability } from "../../_utils/testProductAvailability"
 import { reformatProdName } from "../../_utils/reformatProdName"
 import { IconInfoMessage } from "../../_components/IconInfoMessage"
 import { useSettingsStore } from "../../../../../Contexts/SettingsZustand"
@@ -80,7 +80,6 @@ export const CartItemDisplay = ({ headerChanges, itemBase, itemChanges, setItemC
         maxQty: maxQty,
         baseItem: baseItem,
         adjustedLeadTime: adjustedLeadTime,
-        delay,
       }
   
       return ({ 

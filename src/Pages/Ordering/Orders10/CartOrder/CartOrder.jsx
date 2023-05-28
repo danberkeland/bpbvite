@@ -17,8 +17,8 @@ import { useLocationDetails } from "../../../../data/locationData"
 import { APIGatewayFetcher } from "../../../../data/_fetchers"
 import { useSettingsStore } from "../../../../Contexts/SettingsZustand"
 import { useCalculateRoutesByLocation } from "../../../../data/productionData"
-import { testProductAvailability } from "../_utils/testProductAvailability"
-import useWindowDimensions from "../_utils/useWindowDimensions"
+// import { testProductAvailability } from "../_utils/testProductAvailability"
+// import useWindowDimensions from "../_utils/useWindowDimensions"
 import { BpbTerminal } from "./Components/BpbTerminal"
 
 import "./cartOrder.css"
@@ -54,7 +54,7 @@ export const CartOrder = ({ locNick, setLocNick, isWhole }) => {
   const delivDateString = DateTime
     .fromJSDate(delivDate, {zone: 'America/Los_Angeles'})
     .toLocaleString({ weekday: 'short', month: 'short', day: 'numeric' })  
-  const dayOfWeek = getWeekday(delivDate)
+  // const dayOfWeek = getWeekday(delivDate)
   
   const isDelivDate = delivDate.getTime() === getWorkingDateTime('NOW').toMillis()
   const isPastDeliv = delivDate < getWorkingDateTime('NOW')
