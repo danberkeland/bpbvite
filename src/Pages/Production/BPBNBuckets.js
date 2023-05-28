@@ -114,7 +114,8 @@ function BPBNBuckets({ loc }) {
       return sum + itemWeight;
     }, 0);
     
-    doughData.doughs[index].needed = totalPretzelWeight
+    try {doughData.doughs[index].needed = totalPretzelWeight} catch {}
+    
     let finalDoughs = doughData.doughs.filter((dou) => dou.mixedWhere === loc);
     setDoughs(finalDoughs);
     setDoughComponents(doughData.doughComponents);
