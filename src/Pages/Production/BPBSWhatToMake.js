@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -34,30 +34,10 @@ const WholeBox = styled.div`
   padding: 0 0 100px 0;
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  width: 100%;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-content: flex-start;
-`;
-
-const ButtonWrapper = styled.div`
-  font-family: "Montserrat", sans-serif;
-  display: flex;
-  width: 40%;
-  flex-direction: row;
-  justify-content: space-between;
-  align-content: center;
-
-  background: #ffffff;
-`;
 
 let today = todayPlus()[0];
 
 const clonedeep = require("lodash.clonedeep");
-
-const { DateTime } = require("luxon");
 
 const compose = new ComposeWhatToMake();
 
@@ -243,6 +223,7 @@ function BPBSWhatToMake() {
         { header: "Shelf Product", dataKey: "forBake" },
         { header: "Bake Today", dataKey: "qty" },
         { header: "Shape Today", dataKey: "makeTotal" },
+        { header: "Bag EOD", dataKey: "bagEOD" },
       ],
       startY: finalY + titleToNextTable,
       styles: { fontSize: tableFont },
@@ -407,6 +388,7 @@ function BPBSWhatToMake() {
           <Column field="forBake" header="Product"></Column>
           <Column field="qty" header="Bake Today"></Column>
           <Column field="makeTotal" header="Shape for Tomorrow"></Column>
+          <Column field="bagEOD" header="Bag EOD"></Column>
         </DataTable>
         <h2>Make For Freezer</h2>
         <DataTable value={freezerProds} className="p-datatable-sm">
