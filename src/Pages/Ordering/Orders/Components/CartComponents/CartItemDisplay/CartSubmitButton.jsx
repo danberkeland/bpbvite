@@ -10,9 +10,9 @@ import { useSettingsStore } from '../../../../../../Contexts/SettingsZustand'
 import { Dialog } from 'primereact/dialog'
 
 const fulfillmentDisplayTextMap = {
-  'deliv': 'Delivery for',
-  'slopick': 'SLO Pickup for',
-  'atownpick': 'Carlton Pickup for',
+  'deliv': 'Delivery',
+  'slopick': 'SLO Pickup',
+  'atownpick': 'Carlton Pickup',
 }
 
 const noChangeToast = { 
@@ -48,6 +48,12 @@ const toasts = {
   successEmail: successToastWithEmail
 }
 
+const WarnIcon = () => {
+  return <i className="pi pi-fw pi-exclamation-triangle" 
+    style={{color: 'hsl(45, 96%, 35%)'}} 
+  />
+
+}
 
 
 export const CartSubmitButton = ({ 
@@ -114,12 +120,22 @@ export const CartSubmitButton = ({
   const cnfDialogHeader = () => {
     return (
       <>
-        <div style={{marginBottom: ".5rem"}}>
+        <div>
+          {`${delivDateDT.toFormat('EEEE, MMM d')}`}
+        </div>
+        <div>
           {`${fulfillmentDisplayTextMap[cartHeader.route]}`}
         </div>
-        <div>{`${delivDateDT.toFormat('EEEE, MMM d')}`}</div>
-        {invalidRouteFlag && <div>Warning: invalid route</div>}
-        {inProdFlag && <div>Warning: increasing in-prod qty</div>}
+        {invalidRouteFlag && user.authClass == 'bpbfull' && 
+          <div>
+            <WarnIcon /> Invalid route <WarnIcon />
+          </div>
+        }
+        {inProdFlag && user.authClass == 'bpbfull' && 
+          <div>
+             <WarnIcon /> Over in-prod max <WarnIcon />
+          </div>
+        }
       </>
     )
   }
@@ -138,10 +154,27 @@ export const CartSubmitButton = ({
               <div key={`cnf-order-item-${idx}`} 
                 style={{ display: "flex", gap: ".5rem", marginBottom: ".2rem" }} 
               >
-                <span style={{ width: "1.75rem", textAlign: "end" }}>
+                <span 
+                  style={{ 
+                    width: "1.75rem", 
+                    textAlign: "end",
+                    fontWeight: item.baseQty !== item.qty ? "bold" : undefined,
+                    color: item.qty > cartMeta[item.prodNick].maxQty
+                      ? 'hsl(45, 96%, 35%)'
+                      : ''
+                  }}
+                >
                   {qty}
                 </span>
-                <span style={{ flex: "0 1 12rem" }}>
+                <span 
+                  style={{ 
+                    flex: "0 1 12rem",
+                    fontWeight: item.baseQty !== item.qty ? "bold" : undefined,
+                    color: item.qty > cartMeta[item.prodNick].maxQty
+                      ? 'hsl(45, 96%, 35%)'
+                      : ''
+                  }}
+                >
                   {reformatProdName(prodName, packSize)}
                 </span>
               </div>
