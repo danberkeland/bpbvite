@@ -6,7 +6,7 @@ import { Tag } from "primereact/tag"
 import { sortBy } from "lodash"
 import { reformatProdName } from "../../../../Orders10/_utils/reformatProdName"
 import { useListData } from "../../../../../../data/_listData"
-import { getWorkingDateTime } from "../../../../../../functions/dateAndTime"
+// import { getWorkingDateTime } from "../../../../../../functions/dateAndTime"
 
 export const CartItemDropdown = ({ 
   products,
@@ -44,7 +44,12 @@ export const CartItemDropdown = ({
   const dropdownItemTemplate = (product) => {
     const { prodNick, prodName, packSize, templateProd, defaultInclude} = product
     const { assignedRouteSummary } = product.meta
-    const { isValid, isAvailable, leadTime, inProd } = assignedRouteSummary
+    const { 
+      isValid, 
+      // isAvailable, 
+      leadTime, 
+      inProd 
+    } = assignedRouteSummary
 
     const cartItem = cartItems.find(item => item.prodNick === prodNick)
     const inCart = !!cartItem && cartItem.qty !== 0
@@ -197,8 +202,8 @@ export const CartItemDropdown = ({
       valueTemplate={dropdownValueTemplate}
       onChange={e => {
         console.log(products[e.value])
-        setSelectedQty(cartItems.find(i => i.prodNick === e.value)?.qty || 0)
         setSelectedProdNick(e.value)
+        setSelectedQty(cartItems.find(i => i.prodNick === e.value)?.qty || 0)
       }}
       //onHide={() => selectedProduct && inputNumberRef.current.focus()}
       placeholder={displayProducts ? "Select Product" : "Loading..."}

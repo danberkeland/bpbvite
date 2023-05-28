@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 
 import { Button } from "primereact/button"
 import { Card } from "primereact/card"
@@ -29,7 +29,7 @@ export const AddItemMenu = ({
   selectedProdNick, setSelectedProdNick,
 }) => {
 
-  const { delivDateJS, delivDateDT, orderLeadTime } = dateProps
+  const { delivDateDT, orderLeadTime } = dateProps
   const relativeDateString = orderLeadTime === 0 
     ? `(Today)${user.authClass !== 'bpbfull' && " ― Read Only"}`
     : orderLeadTime === 1 ? "(Tomorrow)"
@@ -51,12 +51,6 @@ export const AddItemMenu = ({
   const { inProd } = selectedProduct?.meta?.assignedRouteSummary ?? {}
   const { maxQty:inCartMaxQty } = cartMeta?.[selectedProdNick] ?? {}
   const maxQty = inCartMaxQty ?? (inProd ? 0 : 999) 
-
-
-  useEffect(() => {
-    const cartItem = cartItems.find(i => i.prodNick === selectedProdNick)
-    setSelectedQty(cartItem ? cartItem.qty : 0)
-  }, [delivDateJS])
 
 
   // ***Body Props

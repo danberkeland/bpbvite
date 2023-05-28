@@ -89,9 +89,9 @@ export const CartItemDisplay = ({
       updatedBy 
     } = rowData
     const { 
-      timingStatus, 
-      sameDayUpdate, 
-      maxQty, 
+      // timingStatus, 
+      // sameDayUpdate, 
+      // maxQty, 
       qtyChanged 
     } = cartMeta[prodNick]
 
@@ -185,18 +185,19 @@ export const CartItemDisplay = ({
   const footerTemplate = () => {
     const total = sumBy(cartItems, item => item.qty * item.rate).toFixed(2) 
 
-    return (
+    return (<>
       <div style={{
         display: "flex", 
         justifyContent: "space-between", 
-        alignItems: "center"}}
-      >
-        <span style={{ color: "hsl(37, 100%, 10%)", fontSize: "1.1rem" }}>
+        alignItems: "center",
+        color: "hsl(37, 100%, 10%)",
+      }}>
+        <span style={{fontSize: "1.1rem" }}>
           {`Total: $${total}`}
         </span>
         <CartSubmitButton {...submitButtonProps} />
       </div>
-    )
+    </>)
   }
 
   return (<>

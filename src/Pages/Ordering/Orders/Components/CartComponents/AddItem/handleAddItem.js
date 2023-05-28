@@ -27,12 +27,13 @@ export const handleAddItem = (
       baseQty: 0,
     }
     
-    const _cart = sortBy(
-      cartItems.concat(newItem), 
-      item => products[item.prodNick].prodName
-    )
+    // const _cart = sortBy(
+    //   cartItems.concat(newItem), 
+    //   item => products[item.prodNick].prodName
+    // )
 
-    setCartItems(_cart)
+    // setCartItems(_cart)
+    setCartItems(cartItems.concat(newItem))
 
   }
 } 
