@@ -50,7 +50,7 @@ export const CartItemMessages = ({
 
   const strWeekdayFull = delivDateDT.toFormat('EEEE')
   const strEarliestDate = 
-    ORDER_DATE_DT.plus({ days: leadTime }).toFormat('EEEE, MMM dd')
+    ORDER_DATE_DT.plus({ days: leadTime }).toFormat('EEE, MMM dd')
 
   const removeColor = displayFor === 'itemDisplay' && !qty
 
@@ -70,8 +70,8 @@ export const CartItemMessages = ({
 
 
     <IconInfoMessage showIf={timingStatus === 'deliv'}
-      text={`Delivery Date reached 
-        ${ inCart ? "(read only)" : `: Earliest ${strEarliestDate}` }`
+      text={"Delivery date reached"
+        + `${ inCart ? " (read only)" : `: earliest ${strEarliestDate}` }`
       } 
       iconClass={inCart ? "pi pi-fw pi-info-circle" : "pi pi-fw pi-times"}
       iconColor={removeColor ? "" : (inCart ? infoColor : dangerColor)}
