@@ -72,7 +72,7 @@ export const addFresh = (
       const isDutch = make.forBake === "Dutch";
 
       const condition1 = isProductMatch && !isAtownPick && isAvailableRoute;
-      const condition2 = isProductMatch && isDutch
+      const condition2 = isProductMatch && isDutch;
 
       return condition1 || condition2;
     })
@@ -86,13 +86,11 @@ export const addFresh = (
       const isDutch = full.prodName === "Dutch Stick";
       const isFicelle = full.prodName === "Ficelle";
 
-      const condition1 = (!isAtownPick && !isFicelle) || isDutch
+      const condition1 = (!isAtownPick && !isFicelle) || isDutch;
 
       return isProductMatch && isAvailableRoute && condition1;
     })
     .map((ord) => ord.qty * ord.packSize);
-
-
 
   dutchDelivToday =
     dutchDeliv.length > 0 ? dutchDeliv.reduce((acc, val) => acc + val) : 0;
@@ -100,8 +98,6 @@ export const addFresh = (
     qtyToday.length > 0 ? qtyToday.reduce((acc, val) => acc + val) : 0;
   qtyAccTomorrow =
     qtyTomorrow.length > 0 ? qtyTomorrow.reduce((acc, val) => acc + val) : 0;
-
-
 
   make.qty = make.forBake === "Dutch" ? dutchDelivToday : qtyAccToday;
   make.makeTotal = qtyAccToday + qtyAccTomorrow;
@@ -176,38 +172,76 @@ export const addPretzel = (
   make,
   fullOrders,
   fullOrdersTomorrow,
+  fullOrders2Day,
   products,
-  routes
+  routes,
+  delivDate
 ) => {
+  function getDayOfWeek(dateString) {
+    const date = new Date(dateString);
+    const dayOfWeek = date.getDay();
+    return dayOfWeek;
+  }
+
+  const today = (getDayOfWeek(delivDate)+1).toString();
+  const tomorrow = ((getDayOfWeek(delivDate) + 2) % 7).toString();
+  const twoDay = ((getDayOfWeek(delivDate) + 3) % 7).toString();
+
+  const availableRoutesToday = (checkDay) => {
+    return routes.filter(
+      (rt) =>
+        (rt.RouteDepart === "Prado" &&
+          Number(rt.routeStart) > 8.2 &&
+          rt.RouteSched.includes(checkDay)) ||
+        rt.routeName === "Pick up SLO"
+    );
+  };
+
   make.qty = 0;
   make.needEarly = 0;
-
-  let qtyAccToday = 0;
-  let qtyAccTomorrow = 0;
-
-  let filt = products.filter((prod) => prod.forBake === make.forBake);
-  let qtyMakeExtra = 0;
-  for (let fi of filt) {
-    qtyMakeExtra = qtyMakeExtra + fi.bakeExtra;
-  }
 
   let qtyToday = fullOrders
     .filter((full) => make.forBake === full.forBake)
     .map((ord) => ord.qty * ord.packSize);
-  if (qtyToday.length > 0) {
-    qtyAccToday = qtyToday.reduce(addUp);
-  }
+  let qtyAccToday = qtyToday.length > 0 ? qtyToday.reduce((a, b) => a + b) : 0;
+
+  let noRoute = fullOrdersTomorrow
+    .filter((full) => {
+      const bakeCantMakeRoute = !checkZone(
+        full,
+        availableRoutesToday(today)
+      );
+      const isProductMatch = make.forBake === full.forBake;
+      const isAtownPick = full.atownPick || full.route === "atownpick";
+
+      return isProductMatch && (bakeCantMakeRoute || isAtownPick);
+    })
+    .map((ord) => ord.qty * ord.packSize);
+
+  let noRoute2Day = fullOrders2Day
+    .filter((full) => {
+      const bakeCantMakeRoute = !checkZone(full, availableRoutesToday(tomorrow));
+      const isProductMatch = make.forBake === full.forBake;
+      const isAtownPick = full.atownPick || full.route === "atownpick";
+
+      return isProductMatch && (bakeCantMakeRoute || isAtownPick);
+    })
+    .map((ord) => ord.qty * ord.packSize);
+
   let qtyTomorrow = fullOrdersTomorrow
     .filter((full) => make.forBake === full.forBake)
     .map((ord) => ord.qty * ord.packSize);
 
-  if (qtyTomorrow.length > 0) {
-    qtyAccTomorrow = qtyTomorrow.reduce(addUp);
-  }
+  let qtyAccTomorrow =
+    qtyTomorrow.length > 0 ? qtyTomorrow.reduce((a, b) => a + b) : 0;
+  let noRouteAcc = noRoute.length > 0 ? noRoute.reduce((a, b) => a + b) : 0;
+  let noRoute2DayAcc =
+    noRoute2Day.length > 0 ? noRoute2Day.reduce((a, b) => a + b) : 0;
 
-  make.qty = qtyAccToday;
+  make.qty = qtyAccToday + noRouteAcc;
   make.needEarly = qtyAccToday;
-  make.makeTotal = qtyAccTomorrow;
+  make.makeTotal = qtyAccTomorrow + noRoute2DayAcc - noRouteAcc;
+  make.bagEOD = noRouteAcc;
 };
 
 const update = (order, products, customers) => {
