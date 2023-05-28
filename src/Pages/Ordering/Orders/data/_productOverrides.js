@@ -30,7 +30,7 @@ export const applyOverridesForRouteAssignment = ({
   // Want to allow pickup but not AM North
   else if (
     product.prodNick === 'fic' 
-    && route.routeDepart === 'Carlton'
+    && route.RouteDepart === 'Carlton'
     && route.routeNick !== 'Pick up Carlton'
   ) {
     overrides = { readyTime: 7 }

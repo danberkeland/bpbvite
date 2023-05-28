@@ -13,7 +13,7 @@
 // of these 'primitive' hooks.
 
 import useSWR from 'swr'
-import gqlFetcher from './_fetchers'
+import gqlFetcher, { gqlFetcherNoAwait } from './_fetchers'
 import { defaultSwrOptions, LIMIT, LIST_TABLES, TABLE_PKS } from './_constants'
 import * as listQueries from '../customGraphQL/queries/_listQueries'
 import * as mutations from '../customGraphQL/mutations'
@@ -34,18 +34,21 @@ const submitMutation = async ({ input, mutationType, tableName, pkAtt }) => {
   const mutationName = `${mutationType}${tableName}`
   const mutation = mutations[mutationName]
 
-  if (mutationType !== 'create' && pkAtt !== 'id' &&!input[pkAtt]) {
+  if (mutationType !== 'create' && pkAtt !== 'id' && !input[pkAtt]) {
     console.warn(`Primary Key '${pkAtt}' not found. Mutation may fail.`)
   }
 
-  try {
-    const { data, errors } = await gqlFetcher(mutation, { input })
-    if (data ) return ({ data: data[mutationName], errors: null })
-    else return ({ data: null, errors: errors }) // probably a malformed query
+  return gqlFetcherNoAwait(mutation, { input })
 
-  } catch (error) {
-    return ({ data: null, errors: error }) // probably a network error
-  }
+
+  // try {
+  //   const { data, errors } = await gqlFetcher(mutation, { input })
+  //   if (data ) return ({ data: data[mutationName], errors: null })
+  //   else return ({ data: null, errors: errors }) // probably a malformed query
+
+  // } catch (error) {
+  //   return ({ data: null, errors: error }) // probably a network error
+  // }
 
 }
 
@@ -53,7 +56,7 @@ const submitMutation = async ({ input, mutationType, tableName, pkAtt }) => {
 
 const batchMutate = async ({ 
   createInputs=[], updateInputs=[], deleteInputs=[], errors=[],
-  createItem, updateItem, deleteItem 
+  createItem, updateItem, deleteItem, tableName
 }) => {
   const _create = coerceInput(createInputs)
   const _update = coerceInput(updateInputs)
@@ -73,30 +76,48 @@ const batchMutate = async ({
   }
 
   try {
-    const cResps = await Promise.all(
-      _create.map(C => createItem(C))
-    )
+    // const cResps = await Promise.all(
+    //   _create.map(C => createItem(C))
+    // )
 
-    const uResps = await Promise.all(
-      _update.map(U => updateItem(U))
-    )
+    // const uResps = await Promise.all(
+    //   _update.map(U => updateItem(U))
+    // )
 
-    const dResps = await Promise.all(
-      _delete.map(D => deleteItem(D))
-    )
+    // const dResps = await Promise.all(
+    //   _delete.map(D => deleteItem(D))
+    // )
+    const cPromises = Promise.all(_create.map(C => createItem(C)))
+    const uPromises = Promise.all(_update.map(U => updateItem(U)))
+    const dPromises = Promise.all(_delete.map(D => deleteItem(D)))
 
+    const [cResults, uResults, dResults] =
+      await Promise.all([cPromises, uPromises, dPromises])
+
+    console.log(cResults, uResults, dResults)
+    
     return ({
-      createdItems: cResps.map(r => r.data),
-      updatedItems: uResps.map(r => r.data),
-      deletedItems: dResps.map(r => r.data),
-      errors: cResps.map(r => r.errors)
-        .concat(uResps.map(r => r.errors))
-        .concat(dResps.map(r => r.errors))
-        .filter(e => e !== null)
+      createdItems: cResults.map(r => r.data?.[`create${tableName}`]),
+      updatedItems: uResults.map(r => r.data?.[`update${tableName}`]),
+      deletedItems: dResults.map(r => r.data?.[`delete${tableName}`]),
+      errors: cResults.map(r => r.errors)
+        .concat(uResults.map(r => r.errors))
+        .concat(dResults.map(r => r.errors))
+        .filter(e => !!e)
     })
 
+
+  // try {
+  //   const { data, errors } = await gqlFetcher(mutation, { input })
+  //   if (data ) return ({ data: data[mutationName], errors: null })
+  //   else return ({ data: null, errors: errors }) // probably a malformed query
+
+  // } catch (error) {
+  //   return ({ data: null, errors: error }) // probably a network error
+  // }
+
   } catch (err) {
-    console.err("async mutation failed; should use async revalidation")
+    console.error("async mutation failed; should use async revalidation")
     console.error(err)
     return undefined
 
@@ -152,19 +173,19 @@ export const useListData = ({
     console.warn("WARNING: item limit reached")
   }
 
-  const createItem = (input) => submitMutation({ 
+  const createItem = async (input) => submitMutation({ 
     input, 
     mutationType: "create", 
     tableName, 
     pkAtt 
   })
-  const updateItem = (input) => submitMutation({ 
+  const updateItem = async (input) => submitMutation({ 
     input, 
     mutationType: "update", 
     tableName, 
     pkAtt 
   })
-  const deleteItem = (input) => submitMutation({ 
+  const deleteItem = async (input) => submitMutation({ 
     input, 
     mutationType: "delete",
     tableName, 
@@ -189,7 +210,7 @@ export const useListData = ({
     createInputs=[], updateInputs=[], deleteInputs=[], errors=[]
   }) => batchMutate({ 
     createInputs, updateInputs, deleteInputs, errors,
-    createItem, updateItem, deleteItem 
+    createItem, updateItem, deleteItem, tableName
   })
   
   /**

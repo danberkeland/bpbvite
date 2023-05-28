@@ -6,7 +6,7 @@ import { AddItemQtyInput } from "./AddItemQtyInput"
 import { CartItemDropdown } from "./CartItemDropdown"
 import { Sidebar } from "primereact/sidebar"
 import { handleAddItem } from "./handleAddItem"
-import { AddItemInfoMessages } from "./InfoMessages"
+import { CartItemMessages } from "../CartItemMessages"
 
 
 
@@ -24,26 +24,11 @@ export const AddItemMenu = ({
   setShowSidebar,
   disableInputs,
   ORDER_DATE_DT,
+  cardStyle,
 }) => {
   const [selectedQty, setSelectedQty] = useState('')
   const [selectedProdNick, setSelectedProdNick] = useState()
 
-  // const addItemProps = {
-  //   products,
-  //   cartHeader,
-  //   cartItems,
-  //   setCartItems,
-  //   //cartMeta,
-  //   dateProps,
-  //   user,
-  //   wSize,
-  //   selectedQty,
-  //   setSelectedQty,
-  //   selectedProdNick,
-  //   setSelectedProdNick,
-  //   showSidebar,
-  //   setShowSidebar,
-  // }
 
   const { delivDateJS, delivDateDT, orderLeadTime } = dateProps
   const relativeDateString = orderLeadTime === 0 
@@ -53,48 +38,21 @@ export const AddItemMenu = ({
     : `${user.authClass !== 'bpbfull' && " ― Read Only"}`
 
   const selectedProduct = products?.[selectedProdNick] ?? null
-  const defaultInclude = selectedProduct?.defaultInclude
+
   const cartItem = selectedProduct 
     ? cartItems.find(item => item.prodNick === selectedProduct.prodNick)
     : null
+
 
   const inCart = !!cartItem 
     && (cartItem.orderType !== 'T' || cartItem.qty !== 0)
 
   const baseQty = cartItem?.baseQty ?? 0
   const fulfillmentOption = cartHeader?.route
-  
-
-  const {
-    hasAssignedRoute, isAvailable, inProd,
-    isValid, leadTime , routeOption: { routeIsAvailable } 
-  } = selectedProduct?.meta?.assignedRouteSummary
-    || {    
-      hasAssignedRoute: null,
-      isAvailable: null,  
-      inProd: null,
-      isValid: null,
-      leadTime: null,
-      routeOption: { routeIsAvailable: null }
-    } 
-
-  const { 
-    maxQty:inCartMaxQty, 
-    sameDayUpdate, 
-    disableInput:cartDisableInput 
-  } = cartMeta?.[selectedProdNick]
-    || {
-      inCartMaxQty: null, 
-      sameDayUpdate: null, 
-      cartDisableInput: null
-    }
+  const { inProd } = selectedProduct?.meta?.assignedRouteSummary ?? {}
+  const { maxQty:inCartMaxQty } = cartMeta?.[selectedProdNick] ?? {}
   const maxQty = inCartMaxQty ?? (inProd ? 0 : 999) 
 
-  // console.log(cartMeta?.[selectedProdNick])
-  // console.log(maxQty, sameDayUpdate)
-
-
-  const recentlyDeleted = baseQty === 0 && sameDayUpdate
 
   useEffect(() => {
     const cartItem = cartItems.find(i => i.prodNick === selectedProdNick)
@@ -118,22 +76,12 @@ export const AddItemMenu = ({
   }
 
   const infoProps = {
-    selectedProdNick,
-    hasAssignedRoute,
-    isAvailable, 
-    inCart, 
-    inProd,
-    isValid,
-    defaultInclude,
-    leadTime,
-    maxQty, 
-    routeIsAvailable, 
-    recentlyDeleted,
-    user,
-    fulfillmentOption, 
-    selectedProduct,
+    displayFor: "addItem",
+    product: selectedProduct,
     cartItem,
     cartMeta,
+    fulfillmentOption, 
+    user,
     ...dateProps,
   }
 
@@ -151,10 +99,18 @@ export const AddItemMenu = ({
 
 
   const bodyTemplate = (<>
-    <CartItemDropdown 
-      {...dropdownProps} />
+    <CartItemDropdown {...dropdownProps} />
 
-    <AddItemInfoMessages {...infoProps} {...dateProps} />
+    <div className="info-message-box" 
+      style={{ 
+        minHeight: "3rem",
+        margin: "1rem .5rem", 
+        fontSize: ".9rem"
+      }}
+    >
+      {selectedProduct && <CartItemMessages {...infoProps} />}
+    </div>
+
   </>) 
 
   const footerTemplate = (
@@ -206,17 +162,17 @@ export const AddItemMenu = ({
   }
   
 
-  if (mode === 'card') return (<>
+  if (mode === 'card') return (
     <Card 
       title={() => 
         <span style={{fontSize: "1.25rem"}}>Add a Product</span>
       }
       footer={footerTemplate}
-      style={{ marginTop: "1rem" }}
+      style={cardStyle}
     >
       {bodyTemplate}
     </Card>
-    </>)
+  )
 
   else if (mode === 'sidebar') return (
     <Sidebar

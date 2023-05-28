@@ -79,6 +79,8 @@ export const CartItemDisplay = ({ headerChanges, itemBase, itemChanges, setItemC
         baseQty: baseItem?.qty || 0,
         maxQty: maxQty,
         baseItem: baseItem,
+        adjustedLeadTime: adjustedLeadTime,
+        delay,
       }
   
       return ({ 

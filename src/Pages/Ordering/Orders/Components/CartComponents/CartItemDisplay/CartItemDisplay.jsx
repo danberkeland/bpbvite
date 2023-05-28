@@ -4,23 +4,13 @@ import { Button } from "primereact/button"
 import { Column } from "primereact/column"
 import { DataTable } from "primereact/datatable"
 
-// import { IconInfoMessage } from "../IconInfoMessage"
-
 import TimeAgo from "timeago-react"
 import { sortBy, sumBy } from "lodash"
 import { reformatProdName } from "../../../../Orders10/_utils/reformatProdName"
 
 import { CartQtyInput } from "./CartQtyInput"
 import { CartSubmitButton } from "./CartSubmitButton"
-import { CartItemMessages } from "./CartItemMessages"
-
-// const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-// const fulfillmentDisplayTextMap = {
-//   'deliv': 'Delivery',
-//   'slopick': 'SLO pickup',
-//   'atownpick': 'Carlton pickup',
-// }
-
+import { CartItemMessages } from "../CartItemMessages"
 
 
 export const CartItemDisplay = ({ 
@@ -41,7 +31,6 @@ export const CartItemDisplay = ({
 }) => {
   const [showDetails, setShowDetails] = useState(false)
   const { delivDateJS, delivDateDT } = dateProps
-  const weekdayLong = delivDateDT.toLocaleString({ weekday: 'long' })
 
   const fulfillmentOption = cartHeader?.route ?? ''
 
@@ -61,7 +50,6 @@ export const CartItemDisplay = ({
     disableInputs,
     orderHasChanges,
   }
-
 
 
   const productHeaderTemplate = () => {
@@ -106,33 +94,25 @@ export const CartItemDisplay = ({
       maxQty, 
       qtyChanged 
     } = cartMeta[prodNick]
-    const { prodName, packSize, meta, defaultInclude } = products[prodNick]
-    const { isAvailable, isValid, routeOption } = meta.assignedRouteSummary
-    const { routeIsAvailable } = routeOption
+
+    const product = products[prodNick]
+    const { prodName, packSize } = products[prodNick]
     
-    //const notIncluded = !defaultInclude && user.authClass === 'bpbfull'
     const lastAction = (orderType) === 'C' 
       ? createdOn === updatedOn 
         ? "Created" 
         : (baseQty === 0 ? "Deleted" : "Updated") 
       : ""
-    const recentlyDeleted = lastAction === 'Deleted' && sameDayUpdate
 
     const infoMessageProps = {
-      recentlyDeleted,
-      maxQty,
-      timingStatus,
-      fulfillmentOption,
-      isAvailable,
-      routeIsAvailable,
-      delivDateDT,
-      defaultInclude,
+      product,
+      cartItem: rowData,
+      cartMeta,
+      fulfillmentOption, 
       user,
-      qty,
+      ...dateProps,
     }
-    
-    //const recentlyDeleted = (lastAction === "Deleted") && sameDayUpdate
-    
+        
     return (
       <div style={qty === 0 ? {opacity: ".70"} : null}>
         <div style={{ 
@@ -219,18 +199,13 @@ export const CartItemDisplay = ({
     )
   }
 
-  const displayItems = cartItems.filter(item => {
-    const meta = cartMeta[item.prodNick]
-
-  })
-
   return (<>
     <DataTable
-      value={sortBy(cartItems, item => products[item.prodNick].prodName)} 
+      value={sortBy(cartItems, i => products[i.prodNick].prodName)} 
       responsiveLayout="scroll"
       footer={footerTemplate}
       scrollable={wSize === 'lg'}
-      scrollHeight={wSize === 'lg' ? "49rem" : undefined}
+      scrollHeight={wSize === 'lg' ? "55.5rem" : undefined}
       style={{
         border: "none",
         boxShadow: "0 2px 1px -1px rgba(0, 0, 0, 0.2),"
@@ -266,6 +241,9 @@ export const CartItemDisplay = ({
 
 
 
+
+
+
 const ProductColumnDetails = ({ 
   orderType, 
   lastAction, 
@@ -289,6 +267,10 @@ const ProductColumnDetails = ({
 }
 
 
+
+
+
+
 const QtyColumnDetails = ({ qty, rate, packSize }) => {
   const containerStyle = { 
     paddingTop: "2.75rem", 
@@ -304,4 +286,3 @@ const QtyColumnDetails = ({ qty, rate, packSize }) => {
     </div>
   )
 }
-
