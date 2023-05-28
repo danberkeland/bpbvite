@@ -17,8 +17,10 @@ export const CartCalendar = ({
   locNick, 
   delivDate, 
   setDelivDate, 
+  dateUpdated,
   ORDER_DATE_DT,
   inline,
+  // handleSelectionUpdate,
 }) => {
   const { data:orderSummary } = useOrderCalendarSummary({ 
     locNick, shouldFetch: !!locNick 
@@ -73,7 +75,11 @@ export const CartCalendar = ({
         showOtherMonths={false}
         //showMinMaxRange={!inline}
         dateTemplate={dateTemplate}
-        onChange={(e) => setDelivDate(e.value)}
+        onChange={(e) => {
+          dateUpdated.current = true
+          setDelivDate(e.value)
+          // handleSelectionUpdate(e.value)
+        }}
         style={!inline
           ? {
             width:"6.5rem",

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react"
+import React, { useState, useEffect, useMemo, useRef } from "react"
 
 import { TabMenu } from "primereact/tabmenu"
 import { Dialog } from "primereact/dialog"
@@ -23,8 +23,9 @@ import { DateTime, Interval } from "luxon"
 import { useWindowSizeDetector } from "../../../functions/detectWindowSize"
 import { getWorkingDateTime } from "../../../functions/dateAndTime"
 import { useLocationDetails } from "./data/locationHooks"
-import { isEqual } from "lodash"
+import { isEqual, maxBy } from "lodash"
 import { StandingItemDisplay } from "./Components/StandingComponents/StandingItemDisplay"
+import TimeAgo from "timeago-react"
 
 
 // Constants, Non-Reactive Data ************************************************
@@ -78,6 +79,7 @@ export const Orders = ({ useTestAuth }) => {
     .plus({ hours: 4 }).startOf('day')
   const pastCutoff = todayDT.toMillis() !== ORDER_DATE_DT.toMillis()
 
+  const dateUpdated = useRef(false)
   const [delivDateJS, setDelivDateJS] = useState(
     ORDER_DATE_DT.plus({ days: 1 }).toJSDate()
   )
@@ -89,6 +91,7 @@ export const Orders = ({ useTestAuth }) => {
   const isPastDeliv = isNaN(orderLeadTime)
   const dateProps = { 
     ORDER_DATE_DT,
+    dateUpdated,
     delivDateJS, delivDateDT, delivWeekday, 
     orderLeadTime, isDelivDate, isPastDeliv
   }
@@ -118,13 +121,28 @@ export const Orders = ({ useTestAuth }) => {
   useEffect(() => {
     setCartHeader(cartOrder?.header ?? {})
     setCartItems(cartOrder?.items ?? [])
-    if (selectedCartProdNick) {
-      const matchItem = cartOrder.items.find(i => 
-        i.prodNick === selectedCartProdNick
-      )
-      setSelectedCartQty(matchItem?.baseQty ?? 0)
-    }
+
   }, [cartOrder])
+
+  const lastEditItem = maxBy(
+    cartItems.filter(i => i.orderType === 'C'), 
+    item => new Date(item.updatedOn).getTime()
+  )
+
+
+  // update the add-product menu's selection info when the date changes.
+  // If the product is in the cart for the new date, set the selected qty
+  // to the current qty in the cart, otherwise set to 0.
+  useEffect(() => {
+      if (!!dateUpdated.current && !!selectedCartProdNick) {
+        const matchItem = (cartOrder?.items ?? []).find(i => 
+          i.prodNick === selectedCartProdNick
+        )
+        setSelectedCartQty(matchItem?.qty ?? 0)
+        dateUpdated.current = false
+      }
+
+  }, [cartOrder, selectedCartProdNick])
 
   const orderHasChanges = cartItems.some(item => item.qty !== item.baseQty)  
     || (
@@ -224,33 +242,30 @@ export const Orders = ({ useTestAuth }) => {
     || isLoading
 
   const fulfillmentString = cartHeader 
-    ? cartHeader.route === 'deliv' 
-      ? "Delivery"
-      : "Pickup"
+    ? cartHeader.route === 'deliv' ? "Delivery"
+      : cartHeader.route === 'slopick' ? "SLO Pickup"
+      : "Carlton Pickup"
     : "Order"
 
   const relativeDateString = orderLeadTime === 0 
-    ? `(Today)${user.authClass !== 'bpbfull' ? " ― Read Only" : ""}`
+    ? `Today`
     : orderLeadTime === 1 
-      ? "(Tomorrow)"
-      : orderLeadTime > 1 ? `(Today +${orderLeadTime})`
-    : ` (Yesterday) ${user.authClass !== 'bpbfull' ? " ― Read Only" : ""}`
+      ? "Tomorrow"
+      : orderLeadTime > 1 ? `Today +${orderLeadTime}`
+    : `Yesterday`
 
   const headerMessage = <>
     <span style={{display: "inline-block"}}>
-      {`${fulfillmentString} for ${delivDateDT.toFormat('EEEE')}, `}
-
-    </span> <span style={{display: "inline-block"}}>
-      {delivDateDT.toFormat('MMM d')}
+      {delivDateDT.toFormat('EEEE, MMM d')} ({relativeDateString})
       
     </span> <span style={{display: "inline-block"}}>
-      {relativeDateString}
-    </span>
-  
+      {`${fulfillmentString}`}
+
+    </span> 
   </>
   
   const mobileHeaderMessage = orderLeadTime > 0
-    ? `For ${delivDateDT.toFormat('EEEE')} ${relativeDateString}`
+    ? `For ${delivDateDT.toFormat('EEEE')}, ${relativeDateString}`
     : orderLeadTime === 0
       ? `For Today ${user.authClass !== 'bpbfull' ? "― Read Only" : ""}`
       : `Yesterday ${user.authClass !== 'bpbfull' ? "― Read Only" : ""}`
@@ -335,17 +350,18 @@ export const Orders = ({ useTestAuth }) => {
                 
                 <div 
                   style={{
-                    marginBottom: ".75rem", 
+                    fontSize: "0.9rem",
+                    marginBottom: ".25rem", 
                     display: "inline-flex", 
                     justifyContent: "start",
-                    alignItems: "center",
+                    alignItems: "baseline",
                     gap: ".25rem",
                     cursor: "pointer",
                   }}
                   onClick={() => setShowOrderDateDialog(true)}
                 >
                   <span>
-                    {"Your order date: "}
+                    {"Your order placement date: "}
                   </span>
                   <span style={{
                     color: pastCutoff ? "hsl(0, 96%, 38%)" : undefined, 
@@ -354,12 +370,25 @@ export const Orders = ({ useTestAuth }) => {
                   }}>
                     {ORDER_DATE_DT.toFormat('MMM d')}
                   </span>
-                  <i className="pi pi-fw pi-question-circle" 
+                  <i className="pi pi-question-circle" 
                     style={{color: 'hsl(218, 65%, 50%)'}}
                   />
-              </div>
 
-            </div>
+                </div> 
+                {/* <pre>{JSON.stringify(lastEditItem, null, 2)}</pre> */}
+                
+                <div style={{
+                  marginBottom: ".75rem", 
+                  fontSize: "0.9rem",
+                  color: !!lastEditItem ? "" : "hsla(37, 30%, 20%, .8)"
+                }}>
+                  Last edit: {!!lastEditItem &&
+                    <em><TimeAgo datetime={lastEditItem.updatedOn}/></em>
+                  }
+                </div>
+
+              </div> {/* End cart-ui-header */}
+
 
               <div className="calendar-fulfillment-container"
                 style={wSize === 'lg'
@@ -380,6 +409,7 @@ export const Orders = ({ useTestAuth }) => {
                   delivDate={delivDateJS}
                   setDelivDate={setDelivDateJS}
                   ORDER_DATE_DT={ORDER_DATE_DT}
+                  dateUpdated={dateUpdated}
                   locNick={locNick}
                   inline={wSize === 'lg'}
                 />
@@ -417,7 +447,7 @@ export const Orders = ({ useTestAuth }) => {
                   }}
                 />
  
-              </div> {/* End column-1 */}
+            </div> {/* End column-1 */}
 
               <div style={{
                 width: wSize === 'lg' ? "17rem" : "100%",
@@ -504,16 +534,13 @@ export const Orders = ({ useTestAuth }) => {
       }
 
       <Dialog visible={showOrderDateDialog}
-        header="Cutoff at 8:00pm"
+        header="8:00pm Cutoff"
         onHide={() => setShowOrderDateDialog(false)}
         style={{maxWidth: "26rem", margin: ".75rem"}}
       >
         <p>
-          Our system rolls forward at 8:00pm each day. 
-        </p>
-        <p>
-          Orders may be placed after the cutoff but will be 
-          treated as placed the next day.
+          Orders placed after 8:00pm will be 
+          handled as if placed tomorrow.
         </p>
       </Dialog>
 
