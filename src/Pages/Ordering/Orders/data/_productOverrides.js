@@ -52,10 +52,23 @@ export const applyOverridesForRouteAssignment = ({
 
 /** override base leadTimes before deploying new version */
 export const tempDBAttributeOverrides = {
-  ptz: { leadTime: 2 },
-  pzb: { leadTime: 2 },
-  pzsl: { leadTime: 2 },
-  pzst: { leadTime: 2 },
-  unpz: { leadTime: 2 },
+  ptz:  { leadTime: 2, readyTime: 8.5 }, // pretzel stuff
+  pzb:  { leadTime: 2, readyTime: 8.5 },
+  pzsl: { leadTime: 2, readyTime: 8.5 },
+  pzst: { leadTime: 2, readyTime: 8.5 },
+  unpz: { leadTime: 2, readyTime: 8.5 },
+  rfr:  { leadTime: 1, readyTime: 9.5 }, // french
+  cub:  { leadTime: 1, readyTime: 9.5 },
+  mcub: { leadTime: 1, readyTime: 9.5 },
+  ses:  { leadTime: 1, readyTime: 9.5 },
+  sic:  { leadTime: 1, readyTime: 9.5 },
+  zdog: { leadTime: 1, readyTime: 9.5 },
+  bz:   { leadTime: 1, readyTime: 9.5 }, // brioche
+  lgbz: { leadTime: 1, readyTime: 9.5 },
+  brsl: { leadTime: 1, readyTime: 9.5 },
+  foc:  { leadTime: 1, readyTime: 9.5 }, // focaccias
+  hfoc: { leadTime: 1, readyTime: 9.5 },
+  wwbz: { leadTime: 1, readyTime: 9.5 }, // whole wheat
+  
   frpg: { leadTime: 2 },
 }
