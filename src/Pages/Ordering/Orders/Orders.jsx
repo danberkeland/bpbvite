@@ -259,17 +259,22 @@ export const Orders = ({ useTestAuth }) => {
     : `Yesterday`
 
   const headerMessage = <>
-    <span style={{display: "inline-block"}}>
-      {delivDateDT.toFormat('EEEE, MMM d')} ({relativeDateString})
-      
-    </span> <span style={{display: "inline-block"}}>
+    <div style={{display: "inline-block"}}>
       {`${fulfillmentString}`}
-
-    </span> 
+    </div> 
+    <div>
+      {delivDateDT.toFormat('EEEE, MMM d')} ({relativeDateString})
+    </div> 
   </>
   
   const mobileHeaderMessage = orderLeadTime > 0
-    ? `For ${delivDateDT.toFormat('EEEE')}, ${relativeDateString}`
+    ? <>
+        <span style={{display: "inline-block"}}>
+          {`For ${delivDateDT.toFormat('EEEE')}`}
+        </span> <span style={{display: "inline-block"}}>
+            {`(${relativeDateString})`}
+        </span>
+      </>
     : orderLeadTime === 0
       ? `For Today ${user.authClass !== 'bpbfull' ? "― Read Only" : ""}`
       : `Yesterday ${user.authClass !== 'bpbfull' ? "― Read Only" : ""}`
@@ -348,9 +353,13 @@ export const Orders = ({ useTestAuth }) => {
                     + " 0 1px 3px 0 rgba(0, 0, 0, 0.12)",
                 }}
               >
-                <h2 style={{marginBlock: ".75rem"}}>
+                <div style={{
+                  fontSize:"1.5rem", 
+                  fontWeight: "bold", 
+                  marginBlock: ".75rem"
+                }}>
                   {wSize === 'lg' ? headerMessage : mobileHeaderMessage}
-                </h2>
+                </div>
                 
                 <div 
                   style={{

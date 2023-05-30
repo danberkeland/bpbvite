@@ -84,10 +84,6 @@ export const CartItemDropdown = ({
     const infoFlag = inProd && maxQty !== 0
     //const severity = errorFlag ? "error" : warnFlag ? "warn" : "info"
 
-    // if (prodNick === 'brn') {
-    //   console.log(inProd, inCart, maxQty === 0)
-    //   console.log(errorFlag)
-    // }
     const favItem = templateProd.items[0]
     const isFav = !!favItem
     const favIcon = isFav ? "pi pi-star-fill" : "pi pi-star"
@@ -117,12 +113,14 @@ export const CartItemDropdown = ({
                 {line}
               </div>
             )}
-            {(recentlyDeleted && inProd) && 
+            {/* {(recentlyDeleted && inProd) && 
               <div style={{fontSize: ".9rem"}}>Recently Deleted</div>
+            } */}
+            {!warnFlag &&   
+              <div style={{fontSize: ".9rem"}}>
+                {`${leadTime} day lead${inCart ? "; In cart " : ""}`}
+              </div>
             }
-            <div style={{fontSize: ".9rem"}}>
-              {`${leadTime} day lead${inCart ? "; In cart " : ""}`}
-            </div>
             {!defaultInclude && user.authClass === 'bpbfull' &&
               <Tag 
                 severity='danger' 
