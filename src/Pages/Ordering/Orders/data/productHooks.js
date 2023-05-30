@@ -1,6 +1,6 @@
 import { useListData } from "../../../../data/_listData";
 import { useMemo } from "react";
-import { flatten, groupBy, orderBy, sortBy } from "lodash";
+import { cloneDeep, flatten, groupBy, orderBy, sortBy } from "lodash";
 import { useLocationDetails } from "./locationHooks";
 import { applyOverridesForRouteAssignment, getRouteOverridesForAssignment, tempDBAttributeOverrides } from "./_productOverrides";
 
@@ -62,19 +62,19 @@ export const useCustomizedProducts = ({
     // convert lists to dictionaries keyed on prodNick
     // each group should have max 1 item.
     //
-    // Filtering on front-end means admins wont recscan tables when switching
+    // Filtering on front-end means admins wont re-scan tables when switching
     // locations. These tables don't contain sensitive data, so fetching it
     // is not much concern. this also makes it easier to use useListData's
     // batch mutators in separate locations without special setup.
     //
-    // A more balanced flexible/efficient setup would be to make caches keyed
-    // with locNicks, but query by locNick index. This strategy works better as 
-    // app activity gets offloaded to users.
+    // A better setup would be to query by locNick index -- we would need to 
+    // codegen the queries in the schema. This strategy becomes more
+    // desirable as customers take on more of the ordering activity.
     //
     // *** TODO: confirm each group has at most 1 item and submit corrections
     // if duplicates are found (delete all but first item)
     // For now we can sort multiple items newest to oldest so that we tend
-    // to mutate the newest item by choosing items[0].
+    // to read/mutate the newest item by choosing items[0].
     const [_PNA, _APR, _ALT, _TPR] = [PNA, APR, ALT, TPR].map(items => { 
       const _filtered = items.filter(i => i.locNick === locNick)
       const _sorted = orderBy(_filtered, ['updatedAt'], ['desc'])
@@ -85,9 +85,9 @@ export const useCustomizedProducts = ({
     const routeDict = Object.fromEntries(RTE.map(R => [R.routeNick, R]))
 
 
-    // **************************
-    // Apply initial DB overrides
-    // **************************
+    // **************************************
+    // Apply initial slient-side DB overrides
+    // **************************************
 
     const _PRD = PRD.map(product => {
       if (product.prodNick in tempDBAttributeOverrides) {
@@ -151,7 +151,10 @@ export const useCustomizedProducts = ({
     }) // End _projectionWithOverrides = _PRD.filter(...
 
     const _withRoutingOptions = _projectionWithOverrides.map(product => {
-      // get part A
+      // get part A:
+      //   Pickup sumamries are calculated a bit differently. We override
+      //   the default customer configuration, basicially simulating one
+      //   whose zone is slopick/atownpick.
       const pickupRouteOptions = Object.fromEntries(
         pickupZoneNicks.map(zoneNick => {
           const locationOverride = {
@@ -160,8 +163,7 @@ export const useCustomizedProducts = ({
             latestFirstDeliv: 5,
             latestFinalDeliv: 14,
           }
-          // const opts = getRouteOptions(({ 
-          const opts = getRouteOptionsTest(({ 
+          const opts = getRouteOptions(({ 
             product, 
             location: locationOverride, 
             routeDict, 
@@ -173,8 +175,7 @@ export const useCustomizedProducts = ({
       
       // get part B
       const delivRouteOptions = {
-        // deliv: getRouteOptions(({ product, location, routeDict, ZRT }))
-        deliv: getRouteOptionsTest(({ product, location, routeDict, ZRT }))
+        deliv: getRouteOptions(({ product, location, routeDict, ZRT }))
       }
 
       // put parts A & B together
@@ -209,13 +210,291 @@ export const useCustomizedProducts = ({
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+/** 
+ * RouteOptions returns info about a route's ability to deliver the given
+ * product to the given location's zone, for each day of the week.
+ * 
+ * Returns an array of length 7 (sunday to saturday), each containing an
+ * array whose items represent all routes that serve the given zone. each route
+ * item reports if the route is valid, if the lead time should be adjusted, as
+ * well as other descriptive data to help understand how fulfillment is
+ * executed or why the route fails to be valid.
+ */
+const getRouteOptions = ({ product, location, routeDict, ZRT }) => { 
+  // routeDict is keyed on routeNick
+  // ZRT is an array of objects (in typical gql response format)
+
+  const zoneRoutes = ZRT.filter(zr => zr.zoneNick === location.zoneNick)
+  const routeNicks = zoneRoutes.map(zr => zr.routeNick)
+  const routes = routeNicks.map(rn => routeDict[rn])
+
+  // routes that can move products from one hub to another
+  const transferRoutes = Object.values(routeDict).filter(route => 
+    route.RouteDepart !== route.RouteArrive
+  )
+
+  // get all "1st round" summaries for all [routes]X[weekdays]
+  const _routeSummaries = routes.map(route => getRouteSummaries({
+    route, product, location, transferRoutes
+  }))
+
+  // Group route candidates by day of week, make sure weekday groups 
+  // are in Sun-Sat (0-6) order.
+  const routeSummaries = sortBy(
+    Object.values(groupBy(flatten(_routeSummaries), item => item.dayNum)),
+    group => group[0].dayNum
+  )
+
+  // get all "2nd round" summaries that make adjustments for delayed delivery.
+  // Iterating over route summaries grouped by weekday lets us read all
+  // routes tested on the previous day.
+  const adjustedRouteSummaries = adjustSummaries(routeSummaries, product)
+
+  // when multiple routes are considered, sort the options so that the first
+  // one is valid (if possible), has the minimum lead time, and earliest
+  // start.
+  const _assignedBySorting = adjustedRouteSummaries.map(group => sortBy(
+    group, 
+    [
+      meta => !meta.isValid,
+      meta => meta.adjustedLeadTime,
+      meta => routeDict[meta.routeNick].routeStart,
+    ]
+  ))
+
+  return _assignedBySorting
+  
+}
+
+/** 
+ * Testing different iteration order to allow 
+ * reading all route summaries for the previous day.
+ */
+const getRouteSummaries = ({ 
+  route:baseRoute, 
+  product:baseProduct, 
+  location, 
+  transferRoutes 
+
+}) => {
+
+  // ***************************************
+  // Apply Overrides before Route Assignment
+  // ***************************************
+
+
+  const productOverrides = applyOverridesForRouteAssignment({ 
+    product: baseProduct, 
+    location, 
+    route: baseRoute
+  })
+  const product = { ...baseProduct, ...productOverrides }
+
+  const routeOverrides = getRouteOverridesForAssignment({
+    product: baseProduct, 
+    location, 
+    route: baseRoute,
+  })
+  const route = { ...baseRoute, ...routeOverrides }
+
+  // end overrides
+
+  let { latestFirstDeliv, latestFinalDeliv } = location
+  let { readyTime, bakedWhere, daysAvailable } = product
+  let { routeNick, routeStart, routeTime, RouteDepart, RouteSched } = route
+  let routeEnd = routeStart + routeTime
+
+  const routeSummary = weekdays.map((day, idx) => {
+    const productIsAvailable = daysAvailable
+      ? !!daysAvailable[idx]
+      : true
+    
+    const isPickup = pickupRouteNicks.includes(routeNick)
+    const routeIsAvailable = RouteSched.includes(ddbRouteSchedMap[day])
+
+    // const locationIsOpenDuringRoute = productIsAvailable && routeIsAvailable
+    //   ? routeStart <= latestFinalDeliv && latestFirstDeliv <= routeEnd
+    //   : null
+    const locationIsOpenDuringRoute = routeStart <= latestFinalDeliv 
+      && latestFirstDeliv <= routeEnd
+
+
+    // const needTransfer = locationIsOpenDuringRoute
+    //   ? !bakedWhere.includes(RouteDepart)
+    //   : null
+    const needTransfer = !bakedWhere.includes(RouteDepart)
+
+    let transferSummary = needTransfer ? [] : null
+    if (needTransfer) for (let trRoute of transferRoutes) {
+      let transferEnd = trRoute.routeStart + trRoute.routeTime
+
+      const isAvailable = trRoute.RouteSched.includes(ddbRouteSchedMap[day])  
+      const connectsHubs = bakedWhere.includes(trRoute.RouteDepart)
+        && trRoute.RouteArrive === RouteDepart
+
+      const productReadyBeforeTransfer = readyTime <= trRoute.routeStart
+
+      const transferConnectsBeforeRoute = !isPickup // (i.e. for deliveries)
+        ? transferEnd <= routeStart
+        : null
+      const transferConnectsDuringRoute = isPickup
+        ? transferEnd <= routeEnd
+        : null
+
+
+      const onTime = productReadyBeforeTransfer
+        && (
+          transferConnectsBeforeRoute || transferConnectsDuringRoute
+        )
+
+      if (isAvailable && connectsHubs) transferSummary.push({
+        routeNick: trRoute.routeNick,
+        isLate: !onTime,
+        productReadyBeforeTransfer,
+        transferConnectsDuringRoute,
+        transferConnectsBeforeRoute,
+      })
+    }
+
+    // Test for deliveries:
+    const productReadyBeforeRoute =
+      (productIsAvailable && routeIsAvailable && !needTransfer && !isPickup)
+        ? product.readyTime < routeStart 
+        : null
+    // Test for pickup options:
+    const productReadyDuringRoute =
+      (productIsAvailable && routeIsAvailable && !needTransfer && isPickup)
+        ? product.readyTime < routeEnd 
+        : null
+
+
+    const lateTransferFlag = needTransfer && transferSummary.length
+      ? transferSummary.every(trRoute => trRoute.isLate)
+      : null
+
+    const isValid = routeIsAvailable && locationIsOpenDuringRoute 
+      && (
+        needTransfer 
+          ? transferSummary.some(trRoute => !trRoute.isLate)
+          : (productReadyBeforeRoute || productReadyDuringRoute)
+      )
+
+    return ({
+      dayNum: idx,
+      dayOfWeek: day,
+      prodNick: product.prodNick,
+      routeNick,
+      isValid,
+      productIsAvailable,
+      routeIsAvailable,
+      locationIsOpenDuringRoute,
+      needTransfer,
+      lateTransferFlag,
+      transferSummary,
+      productReadyBeforeRoute,
+      productReadyDuringRoute,
+      route: {
+        routeStart,
+        routeEnd,
+        RouteDepart: route.RouteDepart,
+        routeArrive: route.RouteArrive,
+        RouteSched: JSON.stringify(RouteSched),
+      },
+      specialOverrides: {
+        product: productOverrides
+      }
+    })
+  }) // end routeSummary
+
+  return routeSummary
+
+}
+
+const adjustSummaries = (routeSummaries, product) => {
+  const { daysAvailable } = product
+ 
+  let adjustedRouteSummaries = []
+  for (let i = 0; i < 7; i++) {
+    const summaryWeekdayGroup = routeSummaries[i]
+
+    let adjustedWeekdayGroup = []
+    for (let summary of summaryWeekdayGroup) {
+      const yesterdaySummaryGroup = routeSummaries[(i + 6) % 7]
+
+      const shouldUseStrictTest = !summary.productIsAvailable
+
+      const allowDelayedDelivery = shouldUseStrictTest
+        ? !summary.isValid
+            && summary.routeIsAvailable
+            && summary.locationIsOpenDuringRoute
+            && yesterdaySummaryGroup.every(yesterdaySummary => 
+              !yesterdaySummary.isValid
+              && yesterdaySummary.productIsAvailable
+            )
+        : !summary.isValid
+            && summary.routeIsAvailable
+            && summary.locationIsOpenDuringRoute
+            && (daysAvailable?.[(i + 6) % 7] ?? true)
+
+      const adjustedIsValid = summary.isValid || allowDelayedDelivery 
+      const adjustedLeadTime = allowDelayedDelivery
+        ? product.leadTime + 1
+        : product.leadTime
+
+      
+      const adjustedDaysAvailable = daysAvailable 
+        ? allowDelayedDelivery && shouldUseStrictTest
+          ? daysAvailable.slice(7 - 1, 7).concat(daysAvailable.slice(0, 7 - 1))
+          : daysAvailable
+        : [1, 1, 1, 1, 1, 1, 1]
+      
+      adjustedWeekdayGroup.push({
+        ...cloneDeep(summary),
+        isValid: adjustedIsValid,
+        allowDelayedDelivery,
+        adjustedLeadTime,
+        adjustedDaysAvailable,
+        baseIsAvailable: summary.productIsAvailable
+      })
+
+    }
+
+    adjustedRouteSummaries.push(adjustedWeekdayGroup)
+
+  }
+
+  return adjustedRouteSummaries
+
+}
+
+
+
+
+
+
+
+
+
+
 /**
  * routes is a dictionary keyed on routeNick; 
  * ZRT is an array of objects (in database table format)
  * 
  * Returns a weekday array whose items are arrays of options
  */
-const getRouteOptions = ({ product, location, routeDict, ZRT }) => { 
+const getRouteOptionsDepreciated = ({ product, location, routeDict, ZRT }) => { 
 
 
   const zoneRoutes = ZRT.filter(zr => zr.zoneNick === location.zoneNick)
@@ -535,312 +814,5 @@ export const useProductSelectionList = ({ locNick, shouldFetch }) => {
   }
 
   return { data: useMemo(composeList, [products]) }
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * routes is a dictionary keyed on routeNick; 
- * ZRT is an array of objects (in database table format)
- * 
- * Returns a weekday array whose items are arrays of options
- */
-const getRouteOptionsTest = ({ product, location, routeDict, ZRT }) => { 
-
-
-  const zoneRoutes = ZRT.filter(zr => zr.zoneNick === location.zoneNick)
-  const routeNicks = zoneRoutes.map(zr => zr.routeNick)
-
-  // routes that can move products from one hub to another
-  const transferRoutes = Object.values(routeDict).filter(route => 
-    route.RouteDepart !== route.RouteArrive
-  )
-  // console.log(transferRoutes)
-
-
-  // const route = routeDict[routeNick]
-  const routes = routeNicks.map(rn => routeDict[rn])
-
-  // get all "1st round" summaries for all [routes]X[weekdays]
-  const _routeSummaries = routes.map(route => getRoutingMetadataTest({
-    route, product, location, transferRoutes
-  }))
-
-  // Group routes by day of week, make sure weekday groups 
-  // are in Sun-Sat (0-6) order.
-  const routeSummaries = sortBy(
-    Object.values(groupBy(flatten(_routeSummaries), item => item.dayNum)),
-    group => group[0].dayNum
-  )
-
-  // get all "2nd round" summaries that make adjustments for delayed delivery.
-  // Iterating over route summaries grouped by weekday lets us read all
-  // routes tested on the previous day.
-  // const adjustedRouteSummaries = routeSummaries.map(summary => 
-  //   adjustSummaries(routeSummaries, product)
-  // )
-  const adjustedRouteSummaries = adjustSummaries(routeSummaries, product)
-
-  //console.log(routeSummaries)
-
-  const _assignedBySorting = adjustedRouteSummaries.map(group => sortBy(
-    group, 
-    [
-      meta => !meta.isValid,
-      meta => meta.adjustedLeadTime,
-      meta => routeDict[meta.routeNick].routeStart,
-    ]
-  ))
-
-  return _assignedBySorting
-
-
-
-  // Make sure dayNum (0-6) corresponds to index
-  // const routeMetaByWeekday = sortBy(
-  //   Object.values(groupBy(routeMeta, item => item.dayNum)),
-  //   group => group[0].dayNum
-  // )
-
-  // if a valid option exists, then the valid route with the 
-  // shortest lead time (with earliest start if multiple)
-  // will occupy the first array position.
-  // const _sortedMeta = routeMetaByWeekday.map(group => sortBy(
-  //   group, 
-  //   [
-  //     meta => !meta.isValid,
-  //     meta => meta.adjustedLeadTime,
-  //     meta => routeDict[meta.routeNick].routeStart,
-  //   ]
-  // ))
-
-  // return _sortedMeta
-  
-}
-
-/** 
- * Testing different iteration order to allow 
- * reading all route summaries for the previous day.
- */
-const getRoutingMetadataTest = ({ 
-  route:baseRoute, 
-  product:baseProduct, 
-  location, 
-  transferRoutes 
-
-}) => {
-
-  // ***************************************
-  // Apply Overrides before Route Assignment
-  // ***************************************
-
-
-  const productOverrides = applyOverridesForRouteAssignment({ 
-    product: baseProduct, 
-    location, 
-    route: baseRoute
-  })
-  const product = { ...baseProduct, ...productOverrides }
-
-  const routeOverrides = getRouteOverridesForAssignment({
-    product: baseProduct, 
-    location, 
-    route: baseRoute,
-  })
-  const route = { ...baseRoute, ...routeOverrides }
-
-  let { latestFirstDeliv, latestFinalDeliv } = location
-  let { readyTime, bakedWhere, daysAvailable } = product
-  let { routeNick, routeStart, routeTime, RouteDepart, RouteSched } = route
-  let routeEnd = routeStart + routeTime
-
-  const routeSummary = weekdays.map((day, idx) => {
-    const productIsAvailable = daysAvailable
-      ? !!daysAvailable[idx]
-      : true
-    
-    const isPickup = pickupRouteNicks.includes(routeNick)
-    const routeIsAvailable = RouteSched.includes(ddbRouteSchedMap[day])
-
-    const locationIsOpenDuringRoute = productIsAvailable && routeIsAvailable
-      ? routeStart <= latestFinalDeliv && latestFirstDeliv <= routeEnd
-      : null
-
-    const needTransfer = locationIsOpenDuringRoute
-      ? !bakedWhere.includes(RouteDepart)
-      : null
-
-    let transferSummary = needTransfer ? [] : null
-    if (needTransfer) for (let trRoute of transferRoutes) {
-      let transferEnd = trRoute.routeStart + trRoute.routeTime
-
-      const isAvailable = trRoute.RouteSched.includes(ddbRouteSchedMap[day])  
-      const connectsHubs = bakedWhere.includes(trRoute.RouteDepart)
-        && trRoute.RouteArrive === RouteDepart
-
-      const productReadyBeforeTransfer = readyTime <= trRoute.routeStart
-
-      const transferConnectsBeforeRoute = !isPickup // (i.e. for deliveries)
-        ? transferEnd <= routeStart
-        : null
-      const transferConnectsDuringRoute = isPickup
-        ? transferEnd <= routeEnd
-        : null
-
-
-      const onTime = productReadyBeforeTransfer
-        && (
-          transferConnectsBeforeRoute || transferConnectsDuringRoute
-        )
-
-      if (isAvailable && connectsHubs) transferSummary.push({
-        routeNick: trRoute.routeNick,
-        isLate: !onTime,
-        productReadyBeforeTransfer,
-        transferConnectsDuringRoute,
-        transferConnectsBeforeRoute,
-      })
-    }
-
-    // Test for deliveries:
-    const productReadyBeforeRoute =
-      (productIsAvailable && routeIsAvailable && !needTransfer && !isPickup)
-        ? product.readyTime < routeStart 
-        : null
-    // Test for pickup options:
-    const productReadyDuringRoute =
-      (productIsAvailable && routeIsAvailable && !needTransfer && isPickup)
-        ? product.readyTime < routeEnd 
-        : null
-
-
-    const lateTransferFlag = needTransfer && transferSummary.length
-      ? transferSummary.every(trRoute => trRoute.isLate)
-      : null
-
-    const isValid = locationIsOpenDuringRoute 
-      && (
-        needTransfer 
-          ? transferSummary.some(trRoute => !trRoute.isLate)
-          : (productReadyBeforeRoute || productReadyDuringRoute)
-      )
-
-    return ({
-      dayNum: idx,
-      dayOfWeek: day,
-      prodNick: product.prodNick,
-      routeNick,
-      isValid,
-      productIsAvailable,
-      routeIsAvailable,
-      locationIsOpenDuringRoute,
-      needTransfer,
-      lateTransferFlag,
-      transferSummary,
-      productReadyBeforeRoute,
-      productReadyDuringRoute,
-      route: {
-        routeStart,
-        routeEnd,
-        RouteDepart: route.RouteDepart,
-        routeArrive: route.RouteArrive,
-        RouteSched: JSON.stringify(RouteSched),
-      },
-      specialOverrides: {
-        product: productOverrides
-      }
-    })
-  }) // end routeSummary
-
-  return routeSummary
-
-  // const routeMetadata = routeSummary.map((summary, idx) => {
-  //   const yesterdaySummary = routeSummary[(idx + 6) % 7]
-    
-  //   const allowDelayedDelivery = !summary.isValid
-  //     && summary.routeIsAvailable
-  //     && yesterdaySummary.productIsAvailable
-  //     && !yesterdaySummary.isValid
-
-  //   const adjustedIsValid = summary.isValid || allowDelayedDelivery 
-
-  //   const adjustedLeadTime = allowDelayedDelivery
-  //     ? product.leadTime + 1
-  //     : product.leadTime
-    
-  //   const { daysAvailable } = product
-  //   const adjustedDaysAvailable = daysAvailable 
-  //     ? allowDelayedDelivery
-  //       ? daysAvailable.slice(7 - 1, 7).concat(daysAvailable.slice(0, 7 - 1))
-  //       : daysAvailable
-  //     : [1, 1, 1, 1, 1, 1, 1]
-
-  //   return ({
-  //     ...summary,
-  //     isValid: adjustedIsValid,
-  //     allowDelayedDelivery,
-  //     adjustedLeadTime,
-  //     adjustedDaysAvailable,
-  //   })
-
-  // })
-
-  // return routeMetadata
-
-}
-
-const adjustSummaries = (routeSummaries, product) => {
- 
-  let adjustedRouteSummaries = []
-  for (let i = 0; i < 7; i++) {
-    const summaryWeekdayGroup = routeSummaries[i]
-
-    let adjustedWeekdayGroup = []
-    for (let summary of summaryWeekdayGroup) {
-      const yesterdaySummaryGroup = routeSummaries[(i + 6) % 7]
-
-      const allowDelayedDelivery = !summary.isValid
-        && summary.routeIsAvailable
-        && yesterdaySummaryGroup.every(yesterdaySummary => 
-          yesterdaySummary.productIsAvailable && !yesterdaySummary.isValid
-        )
-
-      const adjustedIsValid = summary.isValid || allowDelayedDelivery 
-      const adjustedLeadTime = allowDelayedDelivery
-        ? product.leadTime + 1
-        : product.leadTime
-
-      const { daysAvailable } = product
-      const adjustedDaysAvailable = daysAvailable 
-        ? allowDelayedDelivery
-          ? daysAvailable.slice(7 - 1, 7).concat(daysAvailable.slice(0, 7 - 1))
-          : daysAvailable
-        : [1, 1, 1, 1, 1, 1, 1]
-      
-        adjustedWeekdayGroup.push({
-        ...summary,
-        isValid: adjustedIsValid,
-        allowDelayedDelivery,
-        adjustedLeadTime,
-        adjustedDaysAvailable,
-      })
-
-    }
-
-    adjustedRouteSummaries.push(adjustedWeekdayGroup)
-
-  }
-
-  return adjustedRouteSummaries
 
 }
