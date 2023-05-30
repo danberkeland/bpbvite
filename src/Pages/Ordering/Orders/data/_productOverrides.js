@@ -31,9 +31,9 @@ export const applyOverridesForRouteAssignment = ({
   else if (
     product.prodNick === 'fic' 
     && route.RouteDepart === 'Carlton'
-    && route.routeNick !== 'Pick up Carlton'
+    //&& route.routeNick !== 'Pick up Carlton'
   ) {
-    overrides = { readyTime: 7 }
+    overrides = { readyTime: 9 }
   }
 
   // // No ftmuff for south deliveries
@@ -50,25 +50,48 @@ export const applyOverridesForRouteAssignment = ({
 }
 
 
-/** override base leadTimes before deploying new version */
+// shelf breads with readyTime: 15 have their lead time reduced by 1.
+
+/** test behavior with different attribute settings before committing */
 export const tempDBAttributeOverrides = {
-  ptz:  { leadTime: 2, readyTime: 8.2 }, // pretzel stuff
-  pzb:  { leadTime: 2, readyTime: 8.2 },
-  pzsl: { leadTime: 2, readyTime: 8.2 },
-  pzst: { leadTime: 2, readyTime: 8.2 },
-  unpz: { leadTime: 2, readyTime: 8.2 },
-  rfr:  { leadTime: 1, readyTime: 9.5 }, // french
-  cub:  { leadTime: 1, readyTime: 9.5 },
-  mcub: { leadTime: 1, readyTime: 9.5 },
-  ses:  { leadTime: 1, readyTime: 9.5 },
-  sic:  { leadTime: 1, readyTime: 9.5 },
-  zdog: { leadTime: 1, readyTime: 9.5 },
-  bz:   { leadTime: 1, readyTime: 9.5 }, // brioche
-  lgbz: { leadTime: 1, readyTime: 9.5 },
-  brsl: { leadTime: 1, readyTime: 9.5 },
-  // foc:  { leadTime: 1, readyTime: 9.5 }, // focaccias
-  // hfoc: { leadTime: 1, readyTime: 9.5 },
-  // wwbz: { leadTime: 1, readyTime: 9.5 }, // whole wheat
-  
+  fr:	  { leadTime: 1 },                  // french
+  rfr:	{ leadTime: 1 },
+  cub:	{ leadTime: 1 },
+  mcub:	{ leadTime: 1 },
+  ses:	{ leadTime: 2 },
+  zdog:	{ leadTime: 1 },
+  bz:	  { leadTime: 1 },
+  lgbz:	{ leadTime: 1 },                  // brioche
+  brsl:	{ leadTime: 1 },
+  bri:	{ leadTime: 1 },
+  wwbz:	{ leadTime: 2 },                  // WW
+  hok:	{ leadTime: 2 },                  // doobie
+  sic:	{ leadTime: 1 },                  // sic
+  foc:	{ leadTime: 1 },                  // focaccias
+  hfoc:	{ leadTime: 2 },
+  smpz:	{ leadTime: 2, readyTime: 8.2 },  // pretzel
+  lgpz:	{ leadTime: 2, readyTime: 8.2 },
+  pzb:	{ leadTime: 2, readyTime: 8.2 },
+  pzsl:	{ leadTime: 2, readyTime: 8.2 },
+  ptz:	{ leadTime: 2, readyTime: 8.2 },
+  pzst:	{ leadTime: 2, readyTime: 8.2 },
+  unpz:	{ leadTime: 2, readyTime: 8.2 },
+
   frpg: { leadTime: 2 },
+  bb:   { readyTime: 6 },
+  bdrd: { isWhole: true },
+}
+
+
+export const getRouteOverridesForAssignment = ({
+  product, 
+  location, 
+  route 
+}) => {
+  let overrides = {}
+  if (route?.routeNick === "Pick up Carlton") {
+    overrides = { routeStart: 6.75, routeTime: 4}
+  }
+
+  return overrides
 }

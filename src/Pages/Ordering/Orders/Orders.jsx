@@ -201,7 +201,11 @@ export const Orders = ({ useTestAuth }) => {
   const products = useMemo(() => {
     if (!PRD || !fulfillmentOption || !delivDateJS) return undefined
 
+    
     return Object.fromEntries(PRD.map(product => {
+      // console.log(fulfillmentOption)
+      // console.log(delivDateJS.getDay())
+      // console.log(product)
       // option corresponding to the selected fulfillment/weekday
       const routeOption = product.meta
         .routeOptions[fulfillmentOption][delivDateJS.getDay()][0] ?? []
