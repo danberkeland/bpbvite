@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from "react"
 
 import { TabMenu } from "primereact/tabmenu"
-import { Dialog } from "primereact/dialog"
 
 import { CartCalendar } from "./Components/CartComponents/CartCalendar"
 import { LocationDropdown } from "./Components/LocationDropdown"
@@ -23,9 +22,9 @@ import { DateTime, Interval } from "luxon"
 import { useWindowSizeDetector } from "../../../functions/detectWindowSize"
 import { getWorkingDateTime } from "../../../functions/dateAndTime"
 import { useLocationDetails } from "./data/locationHooks"
-import { isEqual, maxBy } from "lodash"
+import { isEqual } from "lodash"
 import { StandingItemDisplay } from "./Components/StandingComponents/StandingItemDisplay"
-import TimeAgo from "timeago-react"
+import { CartHeaderSummary } from "./Components/CartComponents/CartHeaderSummary"
 
 
 // Constants, Non-Reactive Data ************************************************
@@ -74,10 +73,10 @@ export const Orders = ({ useTestAuth }) => {
   const [locNick, setLocNick] = useState(user.locNick)
 
   // Date data
-  const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+  // const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
   const ORDER_DATE_DT = DateTime.now().setZone('America/Los_Angeles')
     .plus({ hours: 4 }).startOf('day')
-  const pastCutoff = todayDT.toMillis() !== ORDER_DATE_DT.toMillis()
+  // const pastCutoff = todayDT.toMillis() !== ORDER_DATE_DT.toMillis()
 
   const dateUpdated = useRef(false)
   const [delivDateJS, setDelivDateJS] = useState(
@@ -124,10 +123,6 @@ export const Orders = ({ useTestAuth }) => {
 
   }, [cartOrder])
 
-  const lastEditItem = maxBy(
-    cartItems.filter(i => i.orderType === 'C'), 
-    item => new Date(item.updatedOn).getTime()
-  )
 
 
   // update the add-product menu's selection info when the date changes.
@@ -168,9 +163,6 @@ export const Orders = ({ useTestAuth }) => {
   })
   
   useEffect(() => {
-    // if (!standingData) return undefined
-    // setStandingHeader(standingData.header)
-    // setStandingItems(standingData.items)
     setStandingHeader(standingData?.header ?? {})
     setStandingItems(standingData?.items ?? {})
   }, [standingData])
@@ -245,40 +237,6 @@ export const Orders = ({ useTestAuth }) => {
   const disableInputs = (user.authClass !== 'bpbfull' && !(orderLeadTime > 0))
     || isLoading
 
-  const fulfillmentString = cartHeader 
-    ? cartHeader.route === 'deliv' ? "Delivery"
-      : cartHeader.route === 'slopick' ? "SLO Pickup"
-      : "Carlton Pickup"
-    : "Order"
-
-  const relativeDateString = orderLeadTime === 0 
-    ? `Today`
-    : orderLeadTime === 1 
-      ? "Tomorrow"
-      : orderLeadTime > 1 ? `Today +${orderLeadTime}`
-    : `Yesterday`
-
-  const headerMessage = <>
-    <div style={{display: "inline-block"}}>
-      {`${fulfillmentString}`}
-    </div> 
-    <div>
-      {delivDateDT.toFormat('EEEE, MMM d')} ({relativeDateString})
-    </div> 
-  </>
-  
-  const mobileHeaderMessage = orderLeadTime > 0
-    ? <>
-        <span style={{display: "inline-block"}}>
-          {`For ${delivDateDT.toFormat('EEEE')}`}
-        </span> <span style={{display: "inline-block"}}>
-            {`(${relativeDateString})`}
-        </span>
-      </>
-    : orderLeadTime === 0
-      ? `For Today ${user.authClass !== 'bpbfull' ? "― Read Only" : ""}`
-      : `Yesterday ${user.authClass !== 'bpbfull' ? "― Read Only" : ""}`
-
   return (
     <div className='ordering-page' 
       style={{
@@ -305,7 +263,8 @@ export const Orders = ({ useTestAuth }) => {
       <TabMenu 
         model={tabModel} 
         activeIndex={activeIndex} 
-        onTabChange={(e) => setActiveIndex(e.index)} 
+        onTabChange={(e) => setActiveIndex(e.index)}
+        style={{marginBottom: "1rem"}}
       />
 
       {/* CART ORDER */}
@@ -341,67 +300,16 @@ export const Orders = ({ useTestAuth }) => {
                 flex: wSize === 'lg' ? "0 0 26rem" : "" 
               }}
             >
-              <div className="cart-ui-header"
-                style={{
-                  color: "hsl(37, 100%, 5%)",
-                  background: "var(--bpb-surface-content-header)",
-                  padding: "1px 1rem",
-                  marginBlock: "1rem",
-                  borderRadius: "3px",
-                  boxShadow: "0 2px 1px -1px rgba(0, 0, 0, 0.2),"
-                    + " 0 1px 1px 0 rgba(0, 0, 0, 0.14),"
-                    + " 0 1px 3px 0 rgba(0, 0, 0, 0.12)",
-                }}
-              >
-                <div style={{
-                  fontSize:"1.5rem", 
-                  fontWeight: "bold", 
-                  marginBlock: ".75rem"
-                }}>
-                  {wSize === 'lg' ? headerMessage : mobileHeaderMessage}
-                </div>
-                
-                <div 
-                  style={{
-                    fontSize: "0.9rem",
-                    marginBottom: ".25rem", 
-                    display: "inline-flex", 
-                    justifyContent: "start",
-                    alignItems: "baseline",
-                    gap: ".25rem",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => setShowOrderDateDialog(true)}
-                >
-                  <span>
-                    {"Your order placement date: "}
-                  </span>
-                  <span style={{
-                    color: pastCutoff ? "hsl(0, 96%, 38%)" : undefined, 
-                    fontWeight: pastCutoff ? "bold" : undefined, 
-                    paddingInline: ".25rem"
-                  }}>
-                    {ORDER_DATE_DT.toFormat('MMM d')}
-                  </span>
-                  <i className="pi pi-question-circle" 
-                    style={{color: 'hsl(218, 65%, 50%)'}}
-                  />
-
-                </div> 
-                {/* <pre>{JSON.stringify(lastEditItem, null, 2)}</pre> */}
-                
-                <div style={{
-                  marginBottom: ".75rem", 
-                  fontSize: "0.9rem",
-                  color: !!lastEditItem ? "" : "hsla(37, 30%, 20%, .8)"
-                }}>
-                  Last edit: {!!lastEditItem &&
-                    <em><TimeAgo datetime={lastEditItem.updatedOn}/></em>
-                  }
-                </div>
-
-              </div> {/* End cart-ui-header */}
-
+              {wSize !== 'lg' &&
+                <CartHeaderSummary 
+                  showOrderDateDialog={showOrderDateDialog}
+                  setShowOrderDateDialog={setShowOrderDateDialog}
+                  {...cartProps}
+                  {...dateProps}
+                  wSize={wSize}
+                  user={user}
+                />
+              }
 
               <div className="calendar-fulfillment-container"
                 style={wSize === 'lg'
@@ -460,7 +368,7 @@ export const Orders = ({ useTestAuth }) => {
                   }}
                 />
  
-            </div> {/* End column-1 */}
+              </div>
 
               <div style={{
                 width: wSize === 'lg' ? "17rem" : "100%",
@@ -479,9 +387,20 @@ export const Orders = ({ useTestAuth }) => {
               style={{
                 width: "100%", 
                 maxWidth: "28rem",
-                marginBlock: "1rem",
               }}
             >
+
+              {wSize === 'lg' &&
+                <CartHeaderSummary
+                  showOrderDateDialog={showOrderDateDialog}
+                  setShowOrderDateDialog={setShowOrderDateDialog}
+                  {...cartProps}
+                  {...dateProps}
+                  wSize={wSize}
+                  user={user}
+                />
+              }
+              
               {!!products && !!cartItems && !!delivDateJS &&
                 <CartItemDisplay
                   {...cartProps}
@@ -546,16 +465,7 @@ export const Orders = ({ useTestAuth }) => {
         </div>
       }
 
-      <Dialog visible={showOrderDateDialog}
-        header="8:00pm Cutoff"
-        onHide={() => setShowOrderDateDialog(false)}
-        style={{maxWidth: "26rem", margin: ".75rem"}}
-      >
-        <p>
-          Orders placed after 8:00pm will be 
-          handled as if placed tomorrow.
-        </p>
-      </Dialog>
+
 
     </div>
   )  
