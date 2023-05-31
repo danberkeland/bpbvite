@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useRef, useState } from "react"
 
 import { Button } from "primereact/button"
 import { Dropdown } from "primereact/dropdown"
@@ -19,6 +19,8 @@ export const CartItemDropdown = ({
   selectedProdNick,
   setSelectedProdNick,
   ORDER_DATE_DT,
+  qtyInputRef,
+  dropdownRef,
 }) => {
   //console.log(cartMeta)
   const { 
@@ -185,7 +187,9 @@ export const CartItemDropdown = ({
   }
 
   return(<>
-    <Dropdown options={displayProducts || []} 
+    <Dropdown
+      id="dropdown"
+      options={displayProducts || []} 
       autoFocus={wSize !== 'lg'}
       //showOnFocus={true}
       optionLabel="prodName" 
@@ -203,10 +207,17 @@ export const CartItemDropdown = ({
         setSelectedProdNick(e.value)
         setSelectedQty(cartItems.find(i => i.prodNick === e.value)?.qty || 0)
       }}
-      //onHide={() => selectedProduct && inputNumberRef.current.focus()}
+      onHide={() => selectedProdNick && qtyInputRef.current.focus()}
+      // onKeyUp={e => {
+      //   if (e.key === 'Enter' && !!selectedProdNick) {
+      //     qtyInputRef.current.focus()
+      //   }
+      // }}
+      onClick={() => selectedProdNick && qtyInputRef.current.focus()}
       placeholder={displayProducts ? "Select Product" : "Loading..."}
       style={{width: "100%"}}
       scrollHeight="20rem"
+      ref={dropdownRef}
     />
     {/* <pre>{JSON.stringify(selectedProduct, null, 2)}</pre> */}
   </>)

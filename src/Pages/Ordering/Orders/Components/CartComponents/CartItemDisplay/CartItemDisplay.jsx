@@ -49,6 +49,7 @@ export const CartItemDisplay = ({
     delivDateDT,
     disableInputs,
     orderHasChanges,
+    wSize,
   }
 
 

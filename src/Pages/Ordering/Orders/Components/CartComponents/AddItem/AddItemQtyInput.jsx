@@ -10,13 +10,19 @@ export const AddItemQtyInput = ({
   baseQty,
   user,
   disableInputs,
+  qtyInputRef,
+  addButtonRef,
 }) => {
   const [rollbackQty, setRollbackQty] = useState()
+  const [touched, setTouched] = useState(false)
   const packSize = product?.packSize ?? 1
 
-  const handleQtyChange = newQty => newQty === '' 
-    ? setQty('')
-    : setQty( Math.min(Number(maxQty), Number(newQty)) )
+  const handleQtyChange = (newQty) => {
+    newQty === '' 
+      ? setQty('')
+      : setQty( Math.min(Number(maxQty), Number(newQty)) )
+    setTouched(true)
+  }
 
   return (<>
     <InputText
@@ -49,14 +55,20 @@ export const AddItemQtyInput = ({
       }
       readOnly={disableInputs || (maxQty === 0)}
       onFocus={e => {
+        setTouched(false)
         setRollbackQty(parseInt(e.target.value) || 0)
         if (!(disableInputs || (maxQty === 0))) e.target.select()
       }}
       onChange={(e) => handleQtyChange(e.target.value)}
-      onKeyDown={(e) => { //console.log(e)
+      onKeyUp={(e) => { //console.log(e)
         if (e.key === "Enter") { 
-          e.target.blur()
           if (e.target.value === '') handleQtyChange(0)
+          if (touched) {
+            e.target.blur()
+            addButtonRef.current.focus()
+          } else {
+            setTouched(true)
+          }
         }
 
         if (e.key === "Escape") {
@@ -71,6 +83,7 @@ export const AddItemQtyInput = ({
         }
       }}
       onBlur={() => { if (!!product && qty === '')  handleQtyChange(0) }}
+      ref={qtyInputRef}
     />
   </>)
 } // end qtyColumnTemplate

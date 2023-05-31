@@ -66,9 +66,9 @@ export const Orders = ({ useTestAuth }) => {
   const isLoading = useSettingsStore((state) => state.isLoading)
 
 
-  const tabModel = standingBlacklist.indexOf(user.locNick) === -1
-    ? cartTabModel.concat(standingTabModel)
-    : cartTabModel
+  const tabModel = standingBlacklist.includes(user.locNick)
+    ? cartTabModel
+    : cartTabModel.concat(standingTabModel)
 
   const [locNick, setLocNick] = useState(user.locNick)
 
@@ -96,7 +96,11 @@ export const Orders = ({ useTestAuth }) => {
   }
   //const [dayOfWeek, setDayOfWeek] = useState()
   const [activeIndex, setActiveIndex] = useState(0)
+  const [showOrderDateDialog, setShowOrderDateDialog] = useState(false)
+
   const [showSidebar, setShowSidebar] = useState(false)
+  const [selectedCartQty, setSelectedCartQty] = useState('')
+  const [selectedCartProdNick, setSelectedCartProdNick] = useState()
 
   // **********************************
   // DATA
@@ -107,9 +111,6 @@ export const Orders = ({ useTestAuth }) => {
   const { data:location } = useLocationDetails({ locNick, shouldFetch })
 
   // Order ****************************
-  const [selectedCartQty, setSelectedCartQty] = useState('')
-  const [selectedCartProdNick, setSelectedCartProdNick] = useState()
-  const [showOrderDateDialog, setShowOrderDateDialog] = useState(false)
   const { data:cartOrder } = useFullOrderByDate({ 
     locNick, delivDateJS, shouldFetch 
   })
@@ -337,16 +338,13 @@ export const Orders = ({ useTestAuth }) => {
 
                 <AddItemMenu
                   products={products}
-                  // {...cartProps}
-                  {...dateProps}
-                  cartHeader={cartHeader}
-                  cartItems={cartItems}
-                  setCartItems={setCartItems}
-                  cartMeta={cartMeta}
+                  {...cartProps}
                   dateProps={dateProps}
-                  user={user}
-                  wSize={wSize}
-                  mode={wSize === 'lg' ? 'card' : 'sidebar'}
+                  //{...dateProps}
+                  //cartHeader={cartHeader}
+                  //cartItems={cartItems}
+                  //cartMeta={cartMeta}
+                  //setCartItems={setCartItems}
                   showSidebar={showSidebar}
                   setShowSidebar={setShowSidebar}
                   selectedProdNick={selectedCartProdNick}
@@ -354,6 +352,9 @@ export const Orders = ({ useTestAuth }) => {
                   selectedQty={selectedCartQty}
                   setSelectedQty={setSelectedCartQty}
                   disableInputs={disableInputs}
+                  user={user}
+                  wSize={wSize}
+                  mode={wSize === 'lg' ? 'card' : 'sidebar'}
                   cardStyle={{marginBlock: "1rem"}}
                 />
 
@@ -424,7 +425,7 @@ export const Orders = ({ useTestAuth }) => {
 
       {/* STANDING ORDER */}
 
-      {standingBlacklist.indexOf(user.locNick) === -1 && activeIndex === 1 && 
+      {!standingBlacklist.includes(user.locNick) && activeIndex === 1 && 
         <div className="standing-order-ui-container"
           style={{
             maxWidth: wSize === 'lg' ? "54rem" : "28rem",

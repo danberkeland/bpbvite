@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useRef } from "react"
 
 import { Button } from "primereact/button"
 import { Card } from "primereact/card"
@@ -23,13 +23,16 @@ export const AddItemMenu = ({
   showSidebar,
   setShowSidebar,
   disableInputs,
-  ORDER_DATE_DT,
+
   cardStyle,
   selectedQty, setSelectedQty,
   selectedProdNick, setSelectedProdNick,
 }) => {
+  const dropdownRef = useRef(null)
+  const qtyInputRef = useRef(null)
+  const addButtonRef = useRef(null)
+  const { delivDateDT, orderLeadTime, ORDER_DATE_DT, } = dateProps
 
-  const { delivDateDT, orderLeadTime } = dateProps
   const relativeDateString = orderLeadTime === 0 
     ? `(Today)${user.authClass !== 'bpbfull' && " ― Read Only"}`
     : orderLeadTime === 1 ? "(Tomorrow)"
@@ -66,6 +69,8 @@ export const AddItemMenu = ({
     setSelectedProdNick,
     setSelectedQty,
     ORDER_DATE_DT,
+    qtyInputRef,
+    dropdownRef,
   }
 
   const infoProps = {
@@ -88,6 +93,8 @@ export const AddItemMenu = ({
     maxQty: user.authClass === 'bpbfull' ? 999 : maxQty,
     user,
     disableInputs: disableInputs || !selectedProdNick,
+    qtyInputRef,
+    addButtonRef,
   }
 
 
@@ -118,8 +125,8 @@ export const AddItemMenu = ({
         }}
         disabled={
           !selectedProduct 
-          || selectedQty === baseQty
           || disableInputs
+          // || selectedQty === baseQty
           // || (maxQty === 0 && user.authClass !== 'bpbfull')
           // || (isDelivDate && user.authClass !== 'bpbfull')
           // || isPastDeliv 
@@ -135,7 +142,27 @@ export const AddItemMenu = ({
           setSelectedProdNick('')
           setSelectedQty('')
           setShowSidebar(false)
+          
         }}
+        onKeyDown={e => {
+          if (e.key === 'Enter') {
+            document.querySelector('#dropdown input').focus()
+            console.log(dropdownRef)
+
+            handleAddItem(
+              products, 
+              selectedProduct, 
+              selectedQty, 
+              cartItems, 
+              setCartItems
+            )
+            setSelectedProdNick('')
+            setSelectedQty('')
+            setShowSidebar(false)
+          }
+        }}
+        onBlur={() => ""}
+        ref={addButtonRef}
       />
     </div>
   )
