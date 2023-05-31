@@ -185,7 +185,7 @@ export const addPretzel = (
 
   const today = (getDayOfWeek(delivDate)+1).toString();
   const tomorrow = ((getDayOfWeek(delivDate) + 2) % 7).toString();
-  const twoDay = ((getDayOfWeek(delivDate) + 3) % 7).toString();
+  const yesterday = ((getDayOfWeek(delivDate)) % 7).toString();
 
   const availableRoutesToday = (checkDay) => {
     return routes.filter(
@@ -204,6 +204,19 @@ export const addPretzel = (
     .filter((full) => make.forBake === full.forBake)
     .map((ord) => ord.qty * ord.packSize);
   let qtyAccToday = qtyToday.length > 0 ? qtyToday.reduce((a, b) => a + b) : 0;
+
+  let noRouteToday = fullOrders
+    .filter((full) => {
+      const bakeCantMakeRoute = !checkZone(
+        full,
+        availableRoutesToday(yesterday)
+      );
+      const isProductMatch = make.forBake === full.forBake;
+      const isAtownPick = full.atownPick || full.route === "atownpick";
+
+      return isProductMatch && (bakeCantMakeRoute || isAtownPick);
+    })
+    .map((ord) => ord.qty * ord.packSize);
 
   let noRoute = fullOrdersTomorrow
     .filter((full) => {
@@ -237,12 +250,23 @@ export const addPretzel = (
   let noRouteAcc = noRoute.length > 0 ? noRoute.reduce((a, b) => a + b) : 0;
   let noRoute2DayAcc =
     noRoute2Day.length > 0 ? noRoute2Day.reduce((a, b) => a + b) : 0;
+    let noRouteTodayAcc =
+    noRouteToday.length > 0 ? noRouteToday.reduce((a, b) => a + b) : 0;
 
-  make.qty = qtyAccToday + noRouteAcc;
+
+  make.forBake === "Unsalted Pretzel" && console.log('qtyAccToday Pretzel', qtyAccToday)
+  make.forBake === "Unsalted Pretzel" && console.log('noRouteAcc Pretzel', noRouteAcc)
+  make.forBake === "Unsalted Pretzel" && console.log('noRoute2DayAcc Pretzel', noRoute2DayAcc)
+  make.forBake === "Unsalted Pretzel" && console.log('qtyAccTomorrow Pretzel', qtyAccTomorrow)
+  make.forBake === "Unsalted Pretzel" && console.log('noRouteTodayAcc Pretzel', noRouteTodayAcc)
+
+  make.qty = qtyAccToday + noRouteAcc - noRouteTodayAcc;
   make.needEarly = qtyAccToday;
   make.makeTotal = qtyAccTomorrow + noRoute2DayAcc - noRouteAcc;
   make.bagEOD = noRouteAcc;
 };
+
+
 
 const update = (order, products, customers) => {
   let atownPick = "atownpick";
