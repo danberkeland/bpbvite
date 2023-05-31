@@ -306,14 +306,16 @@ export const useFullOrderByDate = ({ locNick, delivDateJS, shouldFetch }) => {
       let orderMatch = orderItems.find(order => 
         order.prodNick === product.prodNick
       )
-      let inCart = orderMatch?.orderType === 'C' 
-        && (orderMatch.updatedBy !== 'standing_order' && orderMatch.qty !== 0)
-      let shouldTakeId = orderMatch?.orderType === 'C' 
-        && (orderMatch.updatedBy === 'standing_order' || orderMatch.qty === 0)
+      // let inCart = orderMatch?.orderType === 'C' 
+      //   && (orderMatch.updatedBy !== 'standing_order' && orderMatch.qty !== 0)
+      // let shouldTakeId = orderMatch?.orderType === 'C' 
+      //   && (orderMatch.updatedBy === 'standing_order' || orderMatch.qty === 0)
       
-      if (!inCart) {
+      // if (!inCart) {
+      if (!orderMatch) {
         let newItem = { 
-          id: shouldTakeId ? orderMatch.id : null,
+          // id: shouldTakeId ? orderMatch.id : null,
+          id: null,
           prodNick: product.prodNick,
           qty: 0,
           qtyUpdatedOn: null,
@@ -329,14 +331,15 @@ export const useFullOrderByDate = ({ locNick, delivDateJS, shouldFetch }) => {
           isTemplate: true, // hopefully can depreciate this with rewrite
           action: "CREATE", // hopefully can depreciate with rewrite
         }
-        let shouldAppend = !orderMatch
-        let shouldReplace = shouldTakeId 
-          || (orderMatch?.orderType === 'S' && orderMatch.qty === 0)
+        //let shouldAppend = !orderMatch
+        // let shouldReplace = shouldTakeId 
+        //   || (orderMatch?.orderType === 'S' && orderMatch.qty === 0)
 
-        if (shouldAppend) orderItems = orderItems.concat(newItem)
-        if (shouldReplace) orderItems = orderItems.map(item => 
-          newItem.prodNick === item.prodNick ? newItem : item
-        )
+        // if (shouldAppend) orderItems = orderItems.concat(newItem)
+        // if (shouldReplace) orderItems = orderItems.map(item => 
+        //   newItem.prodNick === item.prodNick ? newItem : item
+        // )
+        orderItems = orderItems.concat(newItem)
       }
     }
     // Decided to generate derived metadata without memoizing in the order page
