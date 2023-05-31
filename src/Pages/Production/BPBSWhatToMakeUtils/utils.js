@@ -58,7 +58,7 @@ export const addFresh = (
 
       const condition1 = isProductMatch && !isAtownPick && isAvailableRoute;
       const condition2 =
-        isProductMatch && isDutch && (isAvailableRoute || isRetailCustomer);
+        isProductMatch && isDutch// && (isAvailableRoute || isRetailCustomer);
 
       return condition1 || condition2;
     })
