@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 
-import { cloneDeep, isEqual, sortBy } from "lodash"
+import { cloneDeep, sortBy } from "lodash"
 import { Button } from "primereact/button"
 import { Dropdown } from "primereact/dropdown"
 import { Card } from "primereact/card"
