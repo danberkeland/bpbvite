@@ -55,6 +55,13 @@ const WarnIcon = () => {
 
 }
 
+const signedNumber = (number) => {
+  return new Intl.NumberFormat('en-US', {
+    signDisplay: 'always',
+    useGrouping: false,
+  }).format(number)
+
+}
 
 export const CartSubmitButton = ({ 
   location,
@@ -69,6 +76,7 @@ export const CartSubmitButton = ({
   delivDateDT,
   disableInputs,
   orderHasChanges,
+  wSize,
 }) => {
   const setIsLoading = useSettingsStore((state) => state.setIsLoading)
   const toastRef = useRef(null)
@@ -116,85 +124,75 @@ export const CartSubmitButton = ({
     setIsLoading(false)
   }
 
-
   const cnfDialogHeader = () => {
     return (
       <>
-        <div>
-          {`${delivDateDT.toFormat('EEEE, MMM d')}`}
-        </div>
-        <div>
-          {`${fulfillmentDisplayTextMap[cartHeader.route]}`}
-        </div>
+        <div>{`${fulfillmentDisplayTextMap[cartHeader.route]}`}</div>
+        <div>{`${delivDateDT.toFormat('EEEE, MMM d')}`}</div>
+
         {invalidRouteFlag && user.authClass == 'bpbfull' && 
-          <div>
-            <WarnIcon /> Invalid route <WarnIcon />
-          </div>
+          <div><WarnIcon /> Invalid route <WarnIcon /></div>
         }
-        {inProdFlag && user.authClass == 'bpbfull' && 
-          <div>
-             <WarnIcon /> Over in-prod max <WarnIcon />
-          </div>
+        {inProdFlag && user.authClass == 'bpbfull' &&
+
+          <div><WarnIcon /> Over in-prod max <WarnIcon /></div>
         }
       </>
     )
   }
 
   const cnfDialogBody = () => {
-    return (
-      <div>
-        {
-          cartItems.filter(item => 
-            (item.baseQty !== item.qty) || item.qty !==0
-          ).map((item, idx) => {
-            const { prodNick, qty } = item
-            const { prodName, packSize } = products[prodNick]
+    const displayItems = cartItems.filter(item => 
+      item.baseQty !== item.qty || item.qty !== 0
+    )
 
-            return (
-              <div key={`cnf-order-item-${idx}`} 
-                style={{ display: "flex", gap: ".5rem", marginBottom: ".2rem" }} 
+    return (
+      <table style={{boxSizing: 'content-box', }}>
+        <colgroup>
+          <col />
+          <col style={{width: wSize === 'lg'? "" : "14rem"}}/>
+          {wSize === 'lg' && <col />} 
+        </colgroup>
+        <thead>
+          <tr>
+            <th aria-label="quantity"></th>
+            <th aria-label="product"></th>
+            {wSize === 'lg' && <th aria-label="quantity change"></th>}
+          </tr>
+        </thead>
+        <tbody>
+          {displayItems.map((item, idx) => {
+            const { prodNick, baseQty, qty } = item
+            const { prodName, packSize } = products[prodNick]
+            const maxQty = cartMeta[item.prodNick].maxQty
+            
+            const diff = (qty !== baseQty && baseQty !== 0)
+              ? `(${signedNumber(qty - baseQty)})`
+              : "" 
+            
+
+            return(
+              <tr 
+                key={`text-table-row-${idx}`}
+                style={{
+                  fontWeight: qty !== baseQty ? "bold" : "",
+                  color: item.qty > maxQty
+                    ? 'hsl(45, 96%, 35%)'
+                    : '',
+                }}
               >
-                <span 
-                  style={{ 
-                    width: "1.75rem", 
-                    textAlign: "end",
-                    fontWeight: item.baseQty !== item.qty ? "bold" : undefined,
-                    color: item.qty > cartMeta[item.prodNick].maxQty
-                      ? 'hsl(45, 96%, 35%)'
-                      : ''
-                  }}
-                >
-                  {qty}
-                </span>
-                <span 
-                  style={{ 
-                    flex: "0 1 12rem",
-                    fontWeight: item.baseQty !== item.qty ? "bold" : undefined,
-                    color: item.qty > cartMeta[item.prodNick].maxQty
-                      ? 'hsl(45, 96%, 35%)'
-                      : ''
-                  }}
-                >
-                  {reformatProdName(prodName, packSize)}
-                </span>
-              </div>
+                <td>{qty}</td>
+                <td>{reformatProdName(prodName, packSize)}</td>
+                {wSize === 'lg' && <td>{diff}</td>}
+              </tr>
             )
-          })
-        }
-      </div>
+          })}
+        </tbody>
+      </table>
     )
   }
 
-  // const confirmSubmit = () => {
-  //   confirmDialog({
-  //     header: cnfDialogHeader,
-  //     message: cnfDialogBody,
-  //     acceptLabel: "Confirm Order",
-  //     rejectLabel: "Go Back",
-  //     accept: handleSubmit,
-  //     reject: () => console.log("cancel submit"),
-  //   })
-  // }
+
 
   return (<>
     <Button label="Submit Order" 
