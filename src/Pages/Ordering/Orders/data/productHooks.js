@@ -2,7 +2,12 @@ import { useListData } from "../../../../data/_listData";
 import { useMemo } from "react";
 import { cloneDeep, flatten, groupBy, orderBy, sortBy } from "lodash";
 import { useLocationDetails } from "./locationHooks";
-import { applyOverridesForRouteAssignment, getRouteOverridesForAssignment, tempDBAttributeOverrides } from "./_productOverrides";
+import { 
+  applyOverridesForRouteAssignment, 
+  getRouteOverridesForAssignment, 
+  postDBOverrides, 
+  preDBOverrides 
+} from "./_productOverrides";
 
 const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const ddbRouteSchedMap = {
@@ -85,27 +90,15 @@ export const useCustomizedProducts = ({
     const routeDict = Object.fromEntries(RTE.map(R => [R.routeNick, R]))
 
 
-    // **************************************
-    // Apply initial slient-side DB overrides
-    // **************************************
 
-    const _PRD = PRD.map(product => {
-      if (product.prodNick in tempDBAttributeOverrides) {
-        return { ...product, ...tempDBAttributeOverrides[product.prodNick] }
-      } else return product
-    })
-
-    // ***************************
-    // Apply standard DB overrides
-    // ***************************
-
-    // keeping nested 'items' attribute to match graphQL format, in case 
-    // we decide to change query method later.
-    // const _projectionWithOverrides = PRD.filter(product => 
-    const _projectionWithOverrides = _PRD.filter(product => 
+    const _projectionWithOverrides = PRD.filter(product => 
       product.isWhole
 
-    ).map(product => {
+    ).map(product => ({
+      ...product,
+      ...preDBOverrides[product.prodNick],
+    })).map(product => {
+      // nested 'items' attribute preserves gql response format
       const prodsNotAllowed = { items: _PNA[product.prodNick] ?? [] }
       const altPricing = { items: _APR[product.prodNick] ?? [] }
       const altLeadTime = { items: _ALT[product.prodNick] ?? [] }
@@ -148,7 +141,13 @@ export const useCustomizedProducts = ({
         }
 
       })
-    }) // End _projectionWithOverrides = _PRD.filter(...
+    }).map(product => ({
+      ...product,
+      ...postDBOverrides[`${location.locNick}#${product.prodNick}`] // *1.
+    })) // End _projectionWithOverrides = _PRD.filter(...
+
+    // *1. Testing adjusted alt lead times for high/hios products
+    // New route assignment requires us to set lead time to 0.
 
     const _withRoutingOptions = _projectionWithOverrides.map(product => {
       // get part A:
