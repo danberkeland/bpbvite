@@ -97,11 +97,11 @@ export const CartItemDisplay = ({
 
     const product = products[prodNick]
     const { prodName, packSize } = products[prodNick]
-    
-    const lastAction = (orderType) === 'C' 
-      ? createdOn === updatedOn 
-        ? "Created" 
-        : (baseQty === 0 ? "Deleted" : "Updated") 
+
+    const lastAction = orderType === 'C' && !!createdOn
+      ? baseQty === 0 && updatedBy !== 'standing_order' 
+        ? "Deleted"
+        : createdOn === updatedOn ? "Created" : "Updated"
       : ""
 
     const infoMessageProps = {
@@ -139,6 +139,7 @@ export const CartItemDisplay = ({
             lastAction={lastAction}
             updatedBy={updatedBy}
             qtyUpdatedOn={qtyUpdatedOn}
+            qty={qty}
           />
         }
       </div>
@@ -206,7 +207,7 @@ export const CartItemDisplay = ({
       responsiveLayout="scroll"
       footer={footerTemplate}
       scrollable={wSize === 'lg'}
-      scrollHeight={wSize === 'lg' ? "57rem" : undefined}
+      scrollHeight={wSize === 'lg' ? "40rem" : undefined}
       style={{
         border: "none",
         boxShadow: "0 2px 1px -1px rgba(0, 0, 0, 0.2),"
@@ -249,19 +250,23 @@ const ProductColumnDetails = ({
   orderType, 
   lastAction, 
   qtyUpdatedOn, 
-  updatedBy 
+  updatedBy,
+  qty
 }) => {
 
   return (
     <div style={{paddingTop: ".5rem", fontSize: ".9rem"}}>
-      {orderType === 'C' && 
+      {orderType === 'C' && !!lastAction &&
         <div>{`${lastAction} `}<TimeAgo datetime={qtyUpdatedOn}/></div>
       }
-      {orderType === 'C' && updatedBy && 
+      {orderType === 'C' && !!updatedBy && 
         <div>{`by ${updatedBy}`}</div>
       }
+      {orderType === 'C' && !updatedBy && qty !== 0 &&
+        <div><em>-- Pending submit</em></div>
+      }
       {orderType === 'S' &&
-        <div>-- standing order</div>
+        <div>-- Standing order</div>
       }
     </div>
   )
