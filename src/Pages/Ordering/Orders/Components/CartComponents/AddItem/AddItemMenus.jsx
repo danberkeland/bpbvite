@@ -147,7 +147,7 @@ export const AddItemMenu = ({
         onKeyDown={e => {
           if (e.key === 'Enter') {
             document.querySelector('#dropdown input').focus()
-            console.log(dropdownRef)
+            //console.log(dropdownRef)
 
             handleAddItem(
               products, 

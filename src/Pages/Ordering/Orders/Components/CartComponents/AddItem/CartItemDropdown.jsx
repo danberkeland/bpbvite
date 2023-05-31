@@ -203,7 +203,7 @@ export const CartItemDropdown = ({
       itemTemplate={dropdownItemTemplate}
       valueTemplate={dropdownValueTemplate}
       onChange={e => {
-        console.log(products[e.value])
+        // console.log(products[e.value])
         setSelectedProdNick(e.value)
         setSelectedQty(cartItems.find(i => i.prodNick === e.value)?.qty || 0)
       }}
