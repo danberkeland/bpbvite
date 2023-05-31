@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { Column } from "primereact/column"
 import { DataTable } from "primereact/datatable"
-import { cloneDeep, groupBy, set, sortBy, uniqBy } from "lodash"
+import { cloneDeep, sortBy, uniqBy } from "lodash"
 import { Dropdown } from "primereact/dropdown"
 import { Button } from "primereact/button"
 import { StandingQtyInput } from "./StandingQtyInput"
@@ -21,7 +21,6 @@ const weekdayOptions = [
 
 ]
 
-const weekdayList = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 const weekdayNumberMap = {
   Sun: 0,
   Mon: 1,
@@ -90,13 +89,15 @@ export const StandingItemDisplay = ({
     ['label']
   )
 
-
+  // slight buggy behavior: 
+  // when changing locations, product dropdown shows blank even if 
+  // product options exist. Customers won't see this behavior though.
   useEffect(() => {
     if (!selectedProdNick && productOptions.length) {
       setSelectedProdNick(productOptions[0].value)
 
     }
-  }, [standingItems, productOptions, selectedProdNick])
+  }, [standingItems, productOptions, selectedProdNick, setSelectedProdNick])
 
 
   // control transposing rows & columns 
@@ -204,8 +205,11 @@ export const StandingItemDisplay = ({
       value={sortBy(rowOptions, opt => products?.[opt.value]?.prodName || '')}
       responsiveLayout="scroll"
       style={{
-        //maxWidth: wSize === 'lg' ? "50rem" : "25.5rem", 
-        margin: "auto"
+        margin: "auto",
+        border: "none",
+        boxShadow: "0 2px 1px -1px rgba(0, 0, 0, 0.2),"
+          + " 0 1px 1px 0 rgba(0, 0, 0, 0.14), "
+          + " 0 1px 3px 0 rgba(0, 0, 0, 0.12)",
       }}
       scrollable={wSize === 'lg'}
       scrollHeight={wSize === 'lg' ? "50rem" : ""}
@@ -287,6 +291,11 @@ const CompactViewSelectors = ({
         onClick={() => setStandingView(
           standingView === 'byProduct' ? 'byWeekday' : 'byProduct'  
         )}
+        style={{
+          boxShadow: "0 2px 1px -1px rgba(0, 0, 0, 0.2),"
+          + " 0 1px 1px 0 rgba(0, 0, 0, 0.14), "
+          + " 0 1px 3px 0 rgba(0, 0, 0, 0.12)",
+        }}
       />
     </InputLabel>
 
@@ -295,6 +304,7 @@ const CompactViewSelectors = ({
         //maxWidth: "25.5rem", 
         //margin: "auto", 
         paddingBlock: "1rem",
+        height: "6.25rem"
       }}>
         <InputLabel htmlFor="standing-dropdown" label={"Your Products"}>
           <Dropdown
@@ -320,6 +330,7 @@ const CompactViewSelectors = ({
         maxWidth: "25.5rem", 
         margin: "auto", 
         padding: "1rem 0rem",
+        height: "6.25rem",
       }}>
         <InputLabel htmlFor="standing-dropdown" 
           label={weekdayOptions.find(w => w.value === selectedDayOfWeek).label}
