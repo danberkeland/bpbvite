@@ -469,6 +469,45 @@ export const useStandingOrderByLocation = ({
   }
 }
 
+export const useRetailOrders = ({ shouldFetch }) => {
+  const { data:orders, ...otherSWRReturns } 
+    = useListData({ tableName:"Order", shouldFetch })  
+
+  const composeRetailOrders = () => {
+    if (!orders) return undefined
+
+    let retailOrderList = orders.filter(item => item.isWhole === false)
+    let nestedOrders = groupBy(retailOrderList, item => item.delivDate)
+
+    for (let dateKey of Object.keys(nestedOrders)) {
+      nestedOrders[dateKey] = groupBy(
+        nestedOrders[dateKey], 
+        item => item.locNick
+      )
+    }
+
+    const orderDates = uniqBy(retailOrderList, 'delivDate').map(item =>
+      item.delivDate
+    )
+    const customerNames = uniqBy(retailOrderList, 'locNick').map(item => 
+      item.locNick
+    )
+
+    return {
+      ordersByDateByName: nestedOrders,
+      orderDates,
+      customerNames,
+    }
+    
+  } // end composeRetailOrders
+
+  return {
+    data: useMemo(composeRetailOrders, [orders]),
+    otherSWRReturns,
+  }
+
+}
+
 // https://stackoverflow.com/questions/12303989/cartesian-product-of-multiple-arrays-in-javascript
 const cartesian = (...a) => 
   a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())))

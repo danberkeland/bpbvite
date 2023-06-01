@@ -25,6 +25,7 @@ import { useLocationDetails } from "./data/locationHooks"
 import { isEqual } from "lodash"
 import { StandingItemDisplay } from "./Components/StandingComponents/StandingItemDisplay"
 import { CartHeaderSummary } from "./Components/CartComponents/CartHeaderSummary"
+import { RetailOrders } from "./Components/RetailOrders"
 
 
 // Constants, Non-Reactive Data ************************************************
@@ -39,6 +40,9 @@ const cartTabModel = [
 ]
 const standingTabModel = [
   {label: 'Standing Orders', icon: 'pi pi-fw pi-calendar'},
+]
+const retailTabModel = [
+  {label: 'Retail', icon: 'pi pi-fw pi-shopping-cart'},
 ]
 
 const standingBlacklist = ['high', 'hios', 'sandos']
@@ -66,9 +70,15 @@ export const Orders = ({ useTestAuth }) => {
   const isLoading = useSettingsStore((state) => state.isLoading)
 
 
-  const tabModel = standingBlacklist.includes(user.locNick)
-    ? cartTabModel
-    : cartTabModel.concat(standingTabModel)
+  const tabModel = user.authClass === 'bpbfull'
+    ? cartTabModel.concat(standingTabModel).concat(retailTabModel)
+    : standingBlacklist.includes(user.locNick)
+      ? cartTabModel
+      : cartTabModel.concat(standingTabModel)
+
+  // const tabModel = standingBlacklist.includes(user.locNick)
+  //   ? cartTabModel
+  //   : cartTabModel.concat(standingTabModel)
 
   const [locNick, setLocNick] = useState(user.locNick)
 
@@ -373,7 +383,7 @@ export const Orders = ({ useTestAuth }) => {
 
               <div style={{
                 width: wSize === 'lg' ? "17rem" : "100%",
-                marginTop: "1rem",
+                marginBlock: "1rem",
               }}>
                 <ItemNoteInput 
                   cartHeader={cartHeader}
@@ -466,7 +476,11 @@ export const Orders = ({ useTestAuth }) => {
         </div>
       }
 
+      {/* RETAIL ORDER */}
 
+      {user.authClass === 'bpbfull' && activeIndex === 2 &&
+        <RetailOrders />
+      }
 
     </div>
   )  
