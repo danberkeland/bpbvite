@@ -30,6 +30,7 @@ export const GrandTotal = ({
   dailyInvoices,
   setDailyInvoices,
   products,
+  customers,
   altPricing,
   pickedProduct,
   setPickedProduct,
@@ -122,16 +123,23 @@ export const GrandTotal = ({
       let ind = filteredOrders.findIndex(filt => filt.prodName === ord.prodName)
       ind<0 ? id = null : id = filteredOrders[ind].id
      
+      // Map back to new database format
+      const product = products.find(P => P.prodName === ord.prodName)
+      const location = customers.find(C => C.custName === custName)
+  
+
       let updateDetails = {
-       
         qty: ord.qty,
-        prodName: ord.prodName,
-        custName: custName,
+        // prodName: ord.prodName,
+        prodNick: product.nickName,
+        // custName: custName,
+        locNick: location.nickName,
         isWhole: true,
         route: "deliv",
         rate: ord.rate,
         SO: ord.qty,
-        delivDate: convertDatetoBPBDate(delivDate)
+        // delivDate: convertDatetoBPBDate(delivDate)
+        delivDate: delivDate, // yyyymmdd format
         
       };
       console.log(updateDetails)
@@ -142,7 +150,11 @@ export const GrandTotal = ({
           await API.graphql(
             graphqlOperation(updateOrder, { input: { ...updateDetails } })
           );
-          console.log(updateDetails.prodName, "Successful update");
+          console.log(
+            //updateDetails.prodName, 
+            updateDetails.prodNick,
+            "Successful update"
+          );
         } catch (error) {
           console.log(error, "Failed Update");
         }
@@ -157,6 +169,8 @@ export const GrandTotal = ({
           console.log(error, "Failed create");
         }
       }
+
+      // todo: submit to legacy system ???
     
     }
 

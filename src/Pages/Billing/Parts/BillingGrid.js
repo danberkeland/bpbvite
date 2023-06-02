@@ -39,6 +39,8 @@ const BillingGrid = ({
         zones
       ).then((data) => setDailyInvoices(data));
     }
+    console.log(customers)
+    console.log(products)
   }, [delivDate, database, nextInv, zones]);
 
   const rowExpansionTemplate = (data) => {
@@ -48,6 +50,7 @@ const BillingGrid = ({
         dailyInvoices={dailyInvoices}
         setDailyInvoices={setDailyInvoices}
         products={products}
+        customers={customers}
         altPricing={altPricing}
         pickedProduct={pickedProduct}
         setPickedProduct={setPickedProduct}

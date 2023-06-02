@@ -17,6 +17,7 @@ export const ExpandedBillingRows = ({
   dailyInvoices,
   setDailyInvoices,
   products,
+  customers,
   altPricing,
   pickedProduct,
   setPickedProduct,
@@ -174,6 +175,7 @@ export const ExpandedBillingRows = ({
         dailyInvoices={dailyInvoices}
         setDailyInvoices={setDailyInvoices}
         products={products}
+        customers={customers}
         altPricing={altPricing}
         pickedProduct={pickedProduct}
         setPickedProduct={setPickedProduct}
