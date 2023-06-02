@@ -9,7 +9,7 @@ import { Column } from "primereact/column"
 import { useRetailOrders } from "../data/orderHooks"
 import { getWorkingDateTime } from "../../../../functions/dateAndTime"
 import { useState } from "react"
-import { DateTime } from "luxon"
+import { DateTime, Interval } from "luxon"
 import { InputLabel } from "./InputLabel"
 import { useListData } from "../../../../data/_listData"
 import { cloneDeep, sortBy } from "lodash"
@@ -35,6 +35,12 @@ const formatName = (inputName) => {
 export const RetailOrders = () => {
   const todayDT = getWorkingDateTime('NOW')
   const [delivDateJS, setDelivDateJS] = useState(todayDT.toJSDate())
+  const delivDateDT = 
+    DateTime.fromJSDate(delivDateJS).setZone('America/Los_Angeles')
+  const delivDateISO = delivDateDT.toISODate()
+  const relativeDate = Interval
+    .fromDateTimes(getWorkingDateTime('NOW'), delivDateDT).length('days')
+
   const [selectedCustomer, setSelectedCustomer] = useState()
   const [createName, setCreateName] = useState()
   const [selectedProdNick, setSelectedProdNick] = useState()
@@ -42,9 +48,7 @@ export const RetailOrders = () => {
   const currentLocNick = currentOrder?.header.locNick ?? ''
   const [currentName, currentToken] = formatName(currentLocNick)
 
-  const delivDateDT = 
-    DateTime.fromJSDate(delivDateJS).setZone('America/Los_Angeles')
-  const delivDateISO = delivDateDT.toISODate()
+
 
   const { data:PRD } = 
     useListData({ tableName: "Product", shouldFetch: true})
@@ -187,25 +191,6 @@ export const RetailOrders = () => {
           />
         </div>
 
-        <div style={{marginBlock: "1rem"}}>
-        <InputLabel label={"Existing Orders for " + delivDateISO}>
-          <ListBox 
-            id="bpb-order-calendar"
-            className="bpb-order-calendar"
-            options={namesForDate}
-            value={selectedCustomer}
-            onChange={e => {
-              setSelectedCustomer(e.value)
-              setCreateName()
-              const order = composeEditOrder(delivDateISO, e.value)
-              setCurrentOrder(order)
-
-            }}
-            style={{width: "25rem"}}
-          />
-        </InputLabel>
-        </div>
-
         <div style={{
           display: "flex", 
           justifyContent: "space-between", 
@@ -234,6 +219,27 @@ export const RetailOrders = () => {
           />
         </div>
 
+        <div style={{marginBlock: "1rem"}}>
+          <InputLabel label={"Existing Orders for " + delivDateISO}>
+            <ListBox 
+              id="bpb-order-calendar"
+              className="bpb-order-calendar"
+              options={namesForDate}
+              value={selectedCustomer}
+              onChange={e => {
+                setSelectedCustomer(e.value)
+                setCreateName()
+                const order = composeEditOrder(delivDateISO, e.value)
+                setCurrentOrder(order)
+
+              }}
+              style={{width: "25rem"}}
+            />
+          </InputLabel>
+        </div>
+
+
+
 
         {/* <pre>{JSON.stringify(createName, null, 2)}</pre> */}
         {/* <pre>{JSON.stringify(currentOrder, null, 2)}</pre> */}
@@ -242,19 +248,21 @@ export const RetailOrders = () => {
 
       <div className="retail-col-2" style={{width: "25.5rem"}}>
 
-        {currentOrder &&
-          <div style={{
-            background: "var(--bpb-surface-content-header)",
-            padding: ".75rem",
-            borderRadius: "3px",
-            marginBlock: "1rem",
-          }}>
-            <div style={{fontSize: "1.5rem"}}>Order for {currentName}</div>
-            <div style={{marginTop: ".5rem"}}>Token: {currentToken}</div>
+        <div style={{
+          background: "var(--bpb-surface-content-header)",
+          padding: ".75rem",
+          borderRadius: "3px",
+          marginBlock: "1rem",
+        }}>
+          <div style={{fontSize: "1.5rem", fontWeight: "bold"}}>
+            For {delivDateDT.toFormat('EEEE, MMM d')} (T +{relativeDate})
           </div>
-        }
+          <div style={{marginTop: ".5rem"}}>Customer: {currentName}</div>
+          <div >Token: {currentToken}</div>
+        </div>
+  
         <div style={{marginBlock: ".5rem"}}>
-          <InputLabel label="Fulfillment Option">
+          <InputLabel label="Pickup Location">
             <Dropdown 
               value={currentOrder?.header.route}
               options={fulfillmentOptions}
