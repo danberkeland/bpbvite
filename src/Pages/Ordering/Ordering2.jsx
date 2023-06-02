@@ -5,11 +5,16 @@ import { Orders } from "./Orders/Orders"
 import { useSettingsStore } from "../../Contexts/SettingsZustand"
 import { Button } from "primereact/button"
 
+const testLocations = ['backporch']
+
 const Ordering2 = () => {
 
   const authClass = useSettingsStore(state => state.authClass)
-  const [showNewPage, setShowNewPage] = useState(false)
+  const userLocNick = useSettingsStore(state => state.currentLoc)
   const [useTestAuth, setUseTestAuth] = useState(false)
+  const [showNewPage, setShowNewPage] = useState(
+    testLocations.includes(userLocNick) ? true : false
+  )
 
   return(
     <div style={{margin:"auto"}}>
