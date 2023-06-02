@@ -42,12 +42,15 @@ export const AddItemMenu = ({
   const selectedProduct = products?.[selectedProdNick] ?? null
 
   const cartItem = selectedProduct 
-    ? cartItems.find(item => item.prodNick === selectedProduct.prodNick)
+    ? cartItems.find(item => item.prodNick === selectedProdNick)
     : null
 
 
   const inCart = !!cartItem 
     && (cartItem.orderType !== 'T' || cartItem.qty !== 0)
+
+  const shouldDisableSample = 
+    cartItem?.rate === 0 && user.authClass !== 'bpbfull'
 
   const baseQty = cartItem?.baseQty ?? 0
   const fulfillmentOption = cartHeader?.route
@@ -92,7 +95,7 @@ export const AddItemMenu = ({
     baseQty,
     maxQty: user.authClass === 'bpbfull' ? 999 : maxQty,
     user,
-    disableInputs: disableInputs || !selectedProdNick,
+    disableInputs: disableInputs || !selectedProdNick || shouldDisableSample,
     qtyInputRef,
     addButtonRef,
   }

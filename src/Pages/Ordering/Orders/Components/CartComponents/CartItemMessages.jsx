@@ -119,7 +119,7 @@ export const CartItemMessages = ({
     />
 
     <IconInfoMessage 
-      showIf={displayFor === "itemDisplay" && cartItem?.rate === 0}
+      showIf={cartItem?.rate === 0}
       text={"Sample" + (user.authClass !== 'bpbfull' ? " (read only)" : "")}
       iconClass={"pi pi-fw pi-info-circle"}
       iconColor={removeColor ? "" : infoColor}
