@@ -162,6 +162,8 @@ export const CartItemDisplay = ({
     const { prodNick, qty, rate } = rowData
     const product = products[prodNick]
     const { packSize } = product
+    const shouldDisableSample = (rate === 0 && user.authClass !== 'bpbfull')
+
     return (
       <div>
         <CartQtyInput
@@ -171,7 +173,7 @@ export const CartItemDisplay = ({
           cartMeta={cartMeta}
           setCartItems={setCartItems}
           user={user}
-          disableInputs={disableInputs}
+          disableInputs={disableInputs || shouldDisableSample}
         />
         {showDetails && 
           <QtyColumnDetails 

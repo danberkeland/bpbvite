@@ -24,7 +24,7 @@ export const CartItemMessages = ({
   delivDateDT, ORDER_DATE_DT, orderLeadTime, // dateProps
 }) => {
   const { prodNick, defaultInclude } = product
-  const { qty, baseQty, orderType } = cartItem ?? {}
+  const { qty, baseQty, orderType, rate } = cartItem ?? {}
   const { maxQty:inCartMaxQty, sameDayUpdate } = cartMeta?.[prodNick] ?? {}
 
   const inCart = !!cartItem && cartItem.baseQty !== 0
@@ -118,6 +118,12 @@ export const CartItemMessages = ({
       iconColor={!!qty ? "hsl(218, 43%, 50%)" : ""}
     />
 
+    <IconInfoMessage 
+      showIf={displayFor === "itemDisplay" && cartItem?.rate === 0}
+      text={"Sample" + (user.authClass !== 'bpbfull' ? " (read only)" : "")}
+      iconClass={"pi pi-fw pi-info-circle"}
+      iconColor={removeColor ? "" : infoColor}
+    /> 
 
   </>)
 }
