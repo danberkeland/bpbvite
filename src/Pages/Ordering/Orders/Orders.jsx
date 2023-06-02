@@ -154,7 +154,7 @@ export const Orders = ({ useTestAuth }) => {
     || (
       !isEqual(cartOrder?.header ?? {}, cartHeader)
       && cartItems.some(item => 
-        item.orderType !== 'T' && item.qty !== item.baseQty
+        item.orderType !== 'T' // && item.qty !== item.baseQty
       )
     )
 
