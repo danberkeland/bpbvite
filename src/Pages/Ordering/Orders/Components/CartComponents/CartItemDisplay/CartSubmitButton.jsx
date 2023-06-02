@@ -8,6 +8,7 @@ import { reformatProdName } from '../../../../Orders10/_utils/reformatProdName'
 import { submitCartOrder } from '../../../functions/submitCartOrder'
 import { useSettingsStore } from '../../../../../../Contexts/SettingsZustand'
 import { Dialog } from 'primereact/dialog'
+import { sortBy } from 'lodash'
 
 const fulfillmentDisplayTextMap = {
   'deliv': 'Delivery',
@@ -129,12 +130,10 @@ export const CartSubmitButton = ({
       <>
         <div>{`${fulfillmentDisplayTextMap[cartHeader.route]}`}</div>
         <div>{`${delivDateDT.toFormat('EEEE, MMM d')}`}</div>
-
         {invalidRouteFlag && user.authClass == 'bpbfull' && 
           <div><WarnIcon /> Invalid route <WarnIcon /></div>
         }
         {inProdFlag && user.authClass == 'bpbfull' &&
-
           <div><WarnIcon /> Over in-prod max <WarnIcon /></div>
         }
       </>
@@ -142,8 +141,9 @@ export const CartSubmitButton = ({
   }
 
   const cnfDialogBody = () => {
-    const displayItems = cartItems.filter(item => 
-      item.baseQty !== item.qty || item.qty !== 0
+    const displayItems = sortBy(
+      cartItems.filter(item => item.baseQty !== item.qty || item.qty !== 0),
+      item => products[item.prodNick].prodName
     )
 
     return (
