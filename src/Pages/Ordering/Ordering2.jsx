@@ -5,7 +5,9 @@ import { Orders } from "./Orders/Orders"
 import { useSettingsStore } from "../../Contexts/SettingsZustand"
 import { Button } from "primereact/button"
 
-const testLocations = ['backporch']
+// LocNicks specified here will have the new ordering page show by default
+// (customers will not have the option to toggle)
+const testLocations = ['backporch', 'slopro']
 
 const Ordering2 = () => {
 
@@ -25,14 +27,14 @@ const Ordering2 = () => {
             onClick={() => setShowNewPage(!showNewPage)}  
           /> 
           <span>
-            {showNewPage ? "Mode: Test" : "Mode: Prod"}
+            Mode: {showNewPage ? "Test" : "Prod"}
           </span>
           <Button label="Toggle Auth" 
             style={{margin: "1rem"}}
             onClick={() => setUseTestAuth(!useTestAuth)}  
           /> 
           <span>
-            {useTestAuth ? "Auth: customer" : "Auth: bpbfull"}
+            Auth: {useTestAuth ? "customer" : "bpbfull"}
           </span>
         </div>
       }
