@@ -50,7 +50,7 @@ export const RetailOrders = () => {
   const currentLocNick = currentOrder?.header.locNick ?? ''
   const [currentName, currentToken] = formatName(currentLocNick)
 
-
+  
 
   const { data:PRD } = 
     useListData({ tableName: "Product", shouldFetch: true})
@@ -71,7 +71,13 @@ export const RetailOrders = () => {
     setCurrentOrder()
     setCreateName()
     setSelectedProdNick()
-    setCurrentOrder()
+    setCurrentOrder({ header: {
+      locNick: "",
+      route: null,
+      ItemNote: '',
+      delivDate: "",
+      isWhole: false,
+    }})
   }
 
   const composeNewOrder = () => {
