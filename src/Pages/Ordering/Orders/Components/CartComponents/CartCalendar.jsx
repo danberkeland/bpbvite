@@ -15,10 +15,10 @@ const maxDate = getWorkingDateTime('NOW').plus({ months: 2 }).endOf('month')
   
 export const CartCalendar = ({ 
   locNick, 
-  delivDate, 
-  setDelivDate, 
-  dateUpdated,
+  delivDateJS, 
+  setDelivDateJS, 
   ORDER_DATE_DT,
+  dateUpdated,
   todayDT,
   inline,
   // handleSelectionUpdate,
@@ -71,11 +71,11 @@ export const CartCalendar = ({
       <Calendar
         id="bpb-order-calendar"
         className="bpb-order-calendar"
-        value={delivDate}
+        value={delivDateJS}
         inline={inline}
         touchUI={!inline}
-        //viewDate={delivDate}
-        placeholder={dateToMmddyyyy(delivDate)} // ***1.
+        //viewDate={delivDateJS}
+        placeholder={dateToMmddyyyy(delivDateJS)} // ***1.
         readOnlyInput={!inline}
         minDate={minDate}
         maxDate={maxDate}
@@ -84,7 +84,7 @@ export const CartCalendar = ({
         dateTemplate={dateTemplate}
         onChange={(e) => {
           dateUpdated.current = true
-          setDelivDate(e.value)
+          setDelivDateJS(e.value)
           // handleSelectionUpdate(e.value)
         }}
         style={!inline

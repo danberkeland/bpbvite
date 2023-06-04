@@ -344,8 +344,8 @@ export const Orders = ({ useTestAuth }) => {
                   // delivDate={delivDateJS}
                   // setDelivDate={setDelivDateJS}
                   // ORDER_DATE_DT={ORDER_DATE_DT}
+                  // dateUpdated={dateUpdated}
                   {...dateProps}
-                  dateUpdated={dateUpdated}
                   locNick={locNick}
                   inline={wSize === 'lg'}
                 />
