@@ -326,8 +326,8 @@ const getRouteSummaries = ({
     // const locationIsOpenDuringRoute = productIsAvailable && routeIsAvailable
     //   ? routeStart <= latestFinalDeliv && latestFirstDeliv <= routeEnd
     //   : null
-    const locationIsOpenDuringRoute = routeStart <= latestFinalDeliv 
-      && latestFirstDeliv <= routeEnd
+    const locationIsOpenDuringRoute = routeStart < latestFinalDeliv 
+      && latestFirstDeliv < routeEnd
 
 
     // const needTransfer = locationIsOpenDuringRoute
@@ -343,13 +343,13 @@ const getRouteSummaries = ({
       const connectsHubs = bakedWhere.includes(trRoute.RouteDepart)
         && trRoute.RouteArrive === RouteDepart
 
-      const productReadyBeforeTransfer = readyTime <= trRoute.routeStart
+      const productReadyBeforeTransfer = readyTime < trRoute.routeStart
 
       const transferConnectsBeforeRoute = !isPickup // (i.e. for deliveries)
-        ? transferEnd <= routeStart
+        ? transferEnd < routeStart
         : null
       const transferConnectsDuringRoute = isPickup
-        ? transferEnd <= routeEnd
+        ? transferEnd < routeEnd
         : null
 
 
@@ -493,309 +493,309 @@ const adjustSummaries = (routeSummaries, product) => {
  * 
  * Returns a weekday array whose items are arrays of options
  */
-const getRouteOptionsDepreciated = ({ product, location, routeDict, ZRT }) => { 
+// const getRouteOptionsDepreciated = ({ product, location, routeDict, ZRT }) => { 
 
 
-  const zoneRoutes = ZRT.filter(zr => zr.zoneNick === location.zoneNick)
-  const routeNicks = zoneRoutes.map(zr => zr.routeNick)
+//   const zoneRoutes = ZRT.filter(zr => zr.zoneNick === location.zoneNick)
+//   const routeNicks = zoneRoutes.map(zr => zr.routeNick)
 
-  // routes that can move products from one hub to another
-  const transferRoutes = Object.values(routeDict).filter(route => 
-    route.RouteDepart !== route.RouteArrive
-  )
-  // console.log(transferRoutes)
+//   // routes that can move products from one hub to another
+//   const transferRoutes = Object.values(routeDict).filter(route => 
+//     route.RouteDepart !== route.RouteArrive
+//   )
+//   // console.log(transferRoutes)
 
-  let routeMeta = []
-  for (let routeNick of routeNicks) {
-    const route = routeDict[routeNick]
+//   let routeMeta = []
+//   for (let routeNick of routeNicks) {
+//     const route = routeDict[routeNick]
 
 
-    routeMeta = routeMeta.concat(getRoutingMetadata({
-      route, product, location, transferRoutes
-    }))
-  }
+//     routeMeta = routeMeta.concat(getRoutingMetadata({
+//       route, product, location, transferRoutes
+//     }))
+//   }
 
-  // Make sure dayNum (0-6) corresponds to index
-  const routeMetaByWeekday = sortBy(
-    Object.values(groupBy(routeMeta, item => item.dayNum)),
-    group => group[0].dayNum
-  )
+//   // Make sure dayNum (0-6) corresponds to index
+//   const routeMetaByWeekday = sortBy(
+//     Object.values(groupBy(routeMeta, item => item.dayNum)),
+//     group => group[0].dayNum
+//   )
 
-  // if a valid option exists, then the valid route with the 
-  // shortest lead time (with earliest start if multiple)
-  // will occupy the first array position.
-  const _sortedMeta = routeMetaByWeekday.map(group => sortBy(
-    group, 
-    [
-      meta => !meta.isValid,
-      meta => meta.adjustedLeadTime,
-      meta => routeDict[meta.routeNick].routeStart,
-    ]
-  ))
+//   // if a valid option exists, then the valid route with the 
+//   // shortest lead time (with earliest start if multiple)
+//   // will occupy the first array position.
+//   const _sortedMeta = routeMetaByWeekday.map(group => sortBy(
+//     group, 
+//     [
+//       meta => !meta.isValid,
+//       meta => meta.adjustedLeadTime,
+//       meta => routeDict[meta.routeNick].routeStart,
+//     ]
+//   ))
 
-  return _sortedMeta
+//   return _sortedMeta
   
-}
+// }
 
 /** returns a weekday array, each day index containing an array of valid
- * route options
+ * route options. DEPRECIATED
  */
-const getRoutingMetadata = ({ 
-  route:baseRoute, 
-  product:baseProduct, 
-  location, 
-  transferRoutes 
+// const getRoutingMetadata = ({ 
+//   route:baseRoute, 
+//   product:baseProduct, 
+//   location, 
+//   transferRoutes 
 
-}) => {
+// }) => {
 
-  // ***************************************
-  // Apply Overrides before Route Assignment
-  // ***************************************
+//   // ***************************************
+//   // Apply Overrides before Route Assignment
+//   // ***************************************
 
-  const productOverrides = applyOverridesForRouteAssignment({ 
-    product: baseProduct, 
-    location, 
-    route: baseRoute
-  })
-  const product = { ...baseProduct, ...productOverrides }
+//   const productOverrides = applyOverridesForRouteAssignment({ 
+//     product: baseProduct, 
+//     location, 
+//     route: baseRoute
+//   })
+//   const product = { ...baseProduct, ...productOverrides }
 
-  const routeOverrides = getRouteOverridesForAssignment({
-    product: baseProduct, 
-    location, 
-    route: baseRoute,
-  })
-  const route = { ...baseRoute, ...routeOverrides }
+//   const routeOverrides = getRouteOverridesForAssignment({
+//     product: baseProduct, 
+//     location, 
+//     route: baseRoute,
+//   })
+//   const route = { ...baseRoute, ...routeOverrides }
 
-  let { latestFirstDeliv, latestFinalDeliv } = location
-  let { readyTime, bakedWhere, daysAvailable } = product
-  let { routeNick, routeStart, routeTime, RouteDepart, RouteSched } = route
-  let routeEnd = routeStart + routeTime
+//   let { latestFirstDeliv, latestFinalDeliv } = location
+//   let { readyTime, bakedWhere, daysAvailable } = product
+//   let { routeNick, routeStart, routeTime, RouteDepart, RouteSched } = route
+//   let routeEnd = routeStart + routeTime
 
-  const routeSummary = weekdays.map((day, idx) => {
-    const productIsAvailable = daysAvailable
-      ? !!daysAvailable[idx]
-      : true
+//   const routeSummary = weekdays.map((day, idx) => {
+//     const productIsAvailable = daysAvailable
+//       ? !!daysAvailable[idx]
+//       : true
     
-    const isPickup = pickupRouteNicks.includes(routeNick)
-    const routeIsAvailable = RouteSched.includes(ddbRouteSchedMap[day])
+//     const isPickup = pickupRouteNicks.includes(routeNick)
+//     const routeIsAvailable = RouteSched.includes(ddbRouteSchedMap[day])
 
-    // Testing Customer Availability
-    //
-    // Old test:      let customerIsOpen = latestFirstDeliv < routeEnd
-    //
-    // The old test allows for cases where the delivery window doesn't overlap
-    // at all with the customer's availability window. Is there a reason for
-    // this? Testing with more accurate logic for now -- if we get weird
-    // behavior, the following should be an early candidate for debugging.
-    //
-    // 2023-05-18 Buggy behavior noted with Tooth & Nail.
-    // their deliv window is 7:00 to 10:00, but Long North Starts at 10:00
-    // old logic would have accepted this. Changing hard inequalities to
-    // soft inequalitites for now to address this one case.
-    // We may need to reconfigure customer's availability windows.
-    const locationIsOpenDuringRoute = productIsAvailable && routeIsAvailable
-      ? routeStart <= latestFinalDeliv && latestFirstDeliv <= routeEnd
-      : null
+//     // Testing Customer Availability
+//     //
+//     // Old test:      let customerIsOpen = latestFirstDeliv < routeEnd
+//     //
+//     // The old test allows for cases where the delivery window doesn't overlap
+//     // at all with the customer's availability window. Is there a reason for
+//     // this? Testing with more accurate logic for now -- if we get weird
+//     // behavior, the following should be an early candidate for debugging.
+//     //
+//     // 2023-05-18 Buggy behavior noted with Tooth & Nail.
+//     // their deliv window is 7:00 to 10:00, but Long North Starts at 10:00
+//     // old logic would have accepted this. Changing hard inequalities to
+//     // soft inequalitites for now to address this one case.
+//     // We may need to reconfigure customer's availability windows.
+//     const locationIsOpenDuringRoute = productIsAvailable && routeIsAvailable
+//       ? routeStart < latestFinalDeliv && latestFirstDeliv < routeEnd
+//       : null
 
-    const needTransfer = locationIsOpenDuringRoute
-      ? !bakedWhere.includes(RouteDepart)
-      : null
+//     const needTransfer = locationIsOpenDuringRoute
+//       ? !bakedWhere.includes(RouteDepart)
+//       : null
 
-    let transferSummary = needTransfer ? [] : null
-    if (needTransfer) for (let trRoute of transferRoutes) {
-      let transferEnd = trRoute.routeStart + trRoute.routeTime
+//     let transferSummary = needTransfer ? [] : null
+//     if (needTransfer) for (let trRoute of transferRoutes) {
+//       let transferEnd = trRoute.routeStart + trRoute.routeTime
 
-      const isAvailable = trRoute.RouteSched.includes(ddbRouteSchedMap[day])  
-      const connectsHubs = bakedWhere.includes(trRoute.RouteDepart)
-        && trRoute.RouteArrive === RouteDepart
+//       const isAvailable = trRoute.RouteSched.includes(ddbRouteSchedMap[day])  
+//       const connectsHubs = bakedWhere.includes(trRoute.RouteDepart)
+//         && trRoute.RouteArrive === RouteDepart
 
-      // passing these two conditions is equivalent to 'productCanBeInPlace'
-      // for cases where transfer is required.
+//       // passing these two conditions is equivalent to 'productCanBeInPlace'
+//       // for cases where transfer is required.
 
-      // old logic: hard inequality causes items to fail the tranfer check
-      // const productReadyBeforeTransfer = readyTime < trRoute.routeStart
-      // const transferConnectsBeforeRoute = transferEnd < routeStart
-      //   || routeNick === 'Pick up SLO'
+//       // old logic: hard inequality causes items to fail the tranfer check
+//       // const productReadyBeforeTransfer = readyTime < trRoute.routeStart
+//       // const transferConnectsBeforeRoute = transferEnd < routeStart
+//       //   || routeNick === 'Pick up SLO'
 
-      // Experimental logic:
-      const productReadyBeforeTransfer = readyTime <= trRoute.routeStart
+//       // Experimental logic:
+//       const productReadyBeforeTransfer = readyTime < trRoute.routeStart
 
-      // Scrapping this test logic for one that properly tests pickup
-      // const transferConnectsBeforeRoute = transferEnd <= routeStart // scrapping the rollover allowance here
-      //   || routeNick === 'Pick up SLO' // (see **SPECIAL OVERRIDE** below)
+//       // Scrapping this test logic for one that properly tests pickup
+//       // const transferConnectsBeforeRoute = transferEnd <= routeStart // scrapping the rollover allowance here
+//       //   || routeNick === 'Pick up SLO' // (see **SPECIAL OVERRIDE** below)
         
-      const transferConnectsBeforeRoute = !isPickup // test for delivery
-        ? transferEnd <= routeStart
-        : null
-      const transferConnectsDuringRoute = isPickup  // test for pickup
-        ? transferEnd <= routeEnd
-        : null
+//       const transferConnectsBeforeRoute = !isPickup // test for delivery
+//         ? transferEnd < routeStart
+//         : null
+//       const transferConnectsDuringRoute = isPickup  // test for pickup
+//         ? transferEnd < routeEnd
+//         : null
 
 
-      // const isLate = !productReadyBeforeTransfer || !transferConnectsBeforeRoute
-      const onTime = productReadyBeforeTransfer
-        && (
-          transferConnectsBeforeRoute || transferConnectsDuringRoute
-        )
+//       // const isLate = !productReadyBeforeTransfer || !transferConnectsBeforeRoute
+//       const onTime = productReadyBeforeTransfer
+//         && (
+//           transferConnectsBeforeRoute || transferConnectsDuringRoute
+//         )
 
-      if (isAvailable && connectsHubs) transferSummary.push({
-        routeNick: trRoute.routeNick,
-        isLate: !onTime,
-        productReadyBeforeTransfer,
-        transferConnectsDuringRoute,
-        transferConnectsBeforeRoute,
-      })
-    }
+//       if (isAvailable && connectsHubs) transferSummary.push({
+//         routeNick: trRoute.routeNick,
+//         isLate: !onTime,
+//         productReadyBeforeTransfer,
+//         transferConnectsDuringRoute,
+//         transferConnectsBeforeRoute,
+//       })
+//     }
 
-    // **SPECIAL OVERRIDE**
-    // Normally, transfer must complete before a 'route' starts
-    // because we assume products get loaded on the van when the route starts.
-    // With pickup routes, specifically pick up slo, the pick up window
-    // starts before transfer completes. But customers can still come in for
-    // pickup any time in the pickup window (and can assume customers know what
-    // time breads arrive from up north).
-    // A more accurate logic would check:
-    //  - the pickup interval...
-    //  - intersected with the product availability window 
-    //    (ie. transfer completion time to EOD)...
-    //  - intersected with the pickup customers availability window
-    // If there is some overlap of all three, then the product is 
-    // valid for pickup.
+//     // **SPECIAL OVERRIDE**
+//     // Normally, transfer must complete before a 'route' starts
+//     // because we assume products get loaded on the van when the route starts.
+//     // With pickup routes, specifically pick up slo, the pick up window
+//     // starts before transfer completes. But customers can still come in for
+//     // pickup any time in the pickup window (and can assume customers know what
+//     // time breads arrive from up north).
+//     // A more accurate logic would check:
+//     //  - the pickup interval...
+//     //  - intersected with the product availability window 
+//     //    (ie. transfer completion time to EOD)...
+//     //  - intersected with the pickup customers availability window
+//     // If there is some overlap of all three, then the product is 
+//     // valid for pickup.
 
-    // Original route assignment has some hacky logic that handles shelf 
-    // products. The expression
-    //                    readyTime > latestFinalDeliv
-    // is true when readyTime is set very late. However, this assumes
-    // the product can be baked and shelved the day before, and a separate
-    // decision process is made ensure production steps are timed accordingly.
-    // Moreover, this assumes that production for the given product happens
-    // every day, so that the item can be made & shelved the previous day.
-    //
-    // For now the goal is to add a minimal amount of extra logic to our order
-    // validation / route assignment, but a more ambitious improvement would be
-    // To manage order validation, route assignment, and production coordination
-    // all with the same decision-making functions. Our system will be more
-    // robust if, for example, the function that says "the lead time on this
-    // order is going to need one extra day" and the function that says
-    // "let's schedule the bake/shape/etc..." for this item one day earlier
-    // are the same function, or are reading from metadata generated by the 
-    // same function.
+//     // Original route assignment has some hacky logic that handles shelf 
+//     // products. The expression
+//     //                    readyTime > latestFinalDeliv
+//     // is true when readyTime is set very late. However, this assumes
+//     // the product can be baked and shelved the day before, and a separate
+//     // decision process is made ensure production steps are timed accordingly.
+//     // Moreover, this assumes that production for the given product happens
+//     // every day, so that the item can be made & shelved the previous day.
+//     //
+//     // For now the goal is to add a minimal amount of extra logic to our order
+//     // validation / route assignment, but a more ambitious improvement would be
+//     // To manage order validation, route assignment, and production coordination
+//     // all with the same decision-making functions. Our system will be more
+//     // robust if, for example, the function that says "the lead time on this
+//     // order is going to need one extra day" and the function that says
+//     // "let's schedule the bake/shape/etc..." for this item one day earlier
+//     // are the same function, or are reading from metadata generated by the 
+//     // same function.
     
 
-    // new Logic that separates delivery timing from production timing.   
+//     // new Logic that separates delivery timing from production timing.   
 
-    const productReadyBeforeRoute =
-      (productIsAvailable && routeIsAvailable && !needTransfer && !isPickup)
-        ? product.readyTime < routeStart 
-        : null
-    const productReadyDuringRoute =
-      (productIsAvailable && routeIsAvailable && !needTransfer && isPickup)
-        ? product.readyTime < routeEnd 
-        : null
+//     const productReadyBeforeRoute =
+//       (productIsAvailable && routeIsAvailable && !needTransfer && !isPickup)
+//         ? product.readyTime < routeStart 
+//         : null
+//     const productReadyDuringRoute =
+//       (productIsAvailable && routeIsAvailable && !needTransfer && isPickup)
+//         ? product.readyTime < routeEnd 
+//         : null
 
-    // Old logic that green-lights shelf products
-    // (ie ones with readyTime = 15)
-    // REVERT TO THIS IF TEST BEHAVIOR DOESN'T WORK
+//     // Old logic that green-lights shelf products
+//     // (ie ones with readyTime = 15)
+//     // REVERT TO THIS IF TEST BEHAVIOR DOESN'T WORK
 
-    // const productReadyBeforeRoute = (
-    //   productIsAvailable && routeIsAvailable && !needTransfer
-    // ) 
-    //   ? readyTime < routeStart || readyTime > latestFinalDeliv
-    //   : null
+//     // const productReadyBeforeRoute = (
+//     //   productIsAvailable && routeIsAvailable && !needTransfer
+//     // ) 
+//     //   ? readyTime < routeStart || readyTime > latestFinalDeliv
+//     //   : null
 
-    const lateTransferFlag = needTransfer && transferSummary.length
-      ? transferSummary.every(trRoute => trRoute.isLate)
-      : null
+//     const lateTransferFlag = needTransfer && transferSummary.length
+//       ? transferSummary.every(trRoute => trRoute.isLate)
+//       : null
 
-    const isValid = locationIsOpenDuringRoute 
-      && (
-        needTransfer 
-          ? transferSummary.some(trRoute => !trRoute.isLate)
-          : (productReadyBeforeRoute || productReadyDuringRoute)
-      )
+//     const isValid = locationIsOpenDuringRoute 
+//       && (
+//         needTransfer 
+//           ? transferSummary.some(trRoute => !trRoute.isLate)
+//           : (productReadyBeforeRoute || productReadyDuringRoute)
+//       )
 
-    return ({
-      dayNum: idx,
-      dayOfWeek: day,
-      prodNick: product.prodNick,
-      routeNick,
-      isValid,
-      productIsAvailable,
-      routeIsAvailable,
-      locationIsOpenDuringRoute,
-      needTransfer,
-      lateTransferFlag,
-      transferSummary,
-      productReadyBeforeRoute,
-      productReadyDuringRoute,
-      route: {
-        routeStart,
-        routeEnd,
-        RouteDepart: route.RouteDepart,
-        routeArrive: route.RouteArrive,
-        RouteSched: JSON.stringify(RouteSched),
-      },
-      specialOverrides: {
-        product: productOverrides
-      }
-    })
-  }) // end routeSummary
+//     return ({
+//       dayNum: idx,
+//       dayOfWeek: day,
+//       prodNick: product.prodNick,
+//       routeNick,
+//       isValid,
+//       productIsAvailable,
+//       routeIsAvailable,
+//       locationIsOpenDuringRoute,
+//       needTransfer,
+//       lateTransferFlag,
+//       transferSummary,
+//       productReadyBeforeRoute,
+//       productReadyDuringRoute,
+//       route: {
+//         routeStart,
+//         routeEnd,
+//         RouteDepart: route.RouteDepart,
+//         routeArrive: route.RouteArrive,
+//         RouteSched: JSON.stringify(RouteSched),
+//       },
+//       specialOverrides: {
+//         product: productOverrides
+//       }
+//     })
+//   }) // end routeSummary
 
-  const routeMetadata = routeSummary.map((summary, idx) => {
-    const yesterdaySummary = routeSummary[(idx + 6) % 7]
+//   const routeMetadata = routeSummary.map((summary, idx) => {
+//     const yesterdaySummary = routeSummary[(idx + 6) % 7]
     
-    // **V0** Old logic that only looks for lateness on transfer
-    // const allowDelayedDelivery = yesterdaySummary.lateTransferFlag 
-    //   && summary.routeIsAvailable
+//     // **V0** Old logic that only looks for lateness on transfer
+//     // const allowDelayedDelivery = yesterdaySummary.lateTransferFlag 
+//     //   && summary.routeIsAvailable
 
-    // **V1** New logic that looks for lateness whether or not
-    // transfer is required.
-    // const allowDelayedDelivery = summary.routeIsAvailable
-    //   && (
-    //     yesterdaySummary.lateTransferFlag 
-    //     || yesterdaySummary.productReadyBeforeRoute === false 
-    //     // (as opposed to null which means tests failed at an earlier point)
-    //   )
+//     // **V1** New logic that looks for lateness whether or not
+//     // transfer is required.
+//     // const allowDelayedDelivery = summary.routeIsAvailable
+//     //   && (
+//     //     yesterdaySummary.lateTransferFlag 
+//     //     || yesterdaySummary.productReadyBeforeRoute === false 
+//     //     // (as opposed to null which means tests failed at an earlier point)
+//     //   )
 
-    // **V2** new logic allows delayed delivery...
-    //   -- only if the route is not valid for the current day
-    //   -- if the route for the previous day is invalid for any reason, 
-    //      as long as the product was made the prior day.
-    //
-    // WARNING: we are assuming that delayed delivery 
-    // is a viable fallback strategy in all cases!! (That is, we assume
-    // there is never a second delay in the delivery process)
-    const allowDelayedDelivery = !summary.isValid
-      && summary.routeIsAvailable
-      && yesterdaySummary.productIsAvailable
-      && !yesterdaySummary.isValid
+//     // **V2** new logic allows delayed delivery...
+//     //   -- only if the route is not valid for the current day
+//     //   -- if the route for the previous day is invalid for any reason, 
+//     //      as long as the product was made the prior day.
+//     //
+//     // WARNING: we are assuming that delayed delivery 
+//     // is a viable fallback strategy in all cases!! (That is, we assume
+//     // there is never a second delay in the delivery process)
+//     const allowDelayedDelivery = !summary.isValid
+//       && summary.routeIsAvailable
+//       && yesterdaySummary.productIsAvailable
+//       && !yesterdaySummary.isValid
 
-    const adjustedIsValid = summary.isValid || allowDelayedDelivery 
+//     const adjustedIsValid = summary.isValid || allowDelayedDelivery 
 
-    const adjustedLeadTime = allowDelayedDelivery
-      ? product.leadTime + 1
-      : product.leadTime
+//     const adjustedLeadTime = allowDelayedDelivery
+//       ? product.leadTime + 1
+//       : product.leadTime
     
-    const { daysAvailable } = product
-    const adjustedDaysAvailable = daysAvailable 
-      ? allowDelayedDelivery
-        ? daysAvailable.slice(7 - 1, 7).concat(daysAvailable.slice(0, 7 - 1))
-        : daysAvailable
-      : [1, 1, 1, 1, 1, 1, 1]
+//     const { daysAvailable } = product
+//     const adjustedDaysAvailable = daysAvailable 
+//       ? allowDelayedDelivery
+//         ? daysAvailable.slice(7 - 1, 7).concat(daysAvailable.slice(0, 7 - 1))
+//         : daysAvailable
+//       : [1, 1, 1, 1, 1, 1, 1]
 
-    return ({
-      ...summary,
-      isValid: adjustedIsValid,
-      allowDelayedDelivery,
-      adjustedLeadTime,
-      adjustedDaysAvailable,
-    })
+//     return ({
+//       ...summary,
+//       isValid: adjustedIsValid,
+//       allowDelayedDelivery,
+//       adjustedLeadTime,
+//       adjustedDaysAvailable,
+//     })
 
-  })
+//   })
 
-  return routeMetadata
+//   return routeMetadata
 
-}
+// }
 
 /**
  * remove invalid products before calling into the ordering page 
