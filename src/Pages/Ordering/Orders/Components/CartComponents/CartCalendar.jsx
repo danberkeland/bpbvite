@@ -56,7 +56,7 @@ export const CartCalendar = ({
               : "bpb-date-cell-none"
         }
         style={{background: isRecentDelete ? "rgba(255, 0, 0, .25)" : ""}}
-        onClick={() => console.log(hasCart, hasStanding)}
+        //onClick={() => console.log(hasCart, hasStanding)}
       >
         {date.day}
       </div>

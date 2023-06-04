@@ -103,9 +103,11 @@ export const Orders = ({ useTestAuth }) => {
   const isPastDeliv = isNaN(orderLeadTime)
   const dateProps = { 
     ORDER_DATE_DT, todayDT,
-    dateUpdated, relativeDelivDate,
-    delivDateJS, delivDateDT, delivWeekday, 
-    orderLeadTime, isDelivDate, isPastDeliv
+    dateUpdated, 
+    delivDateJS, setDelivDateJS,
+    delivDateDT, delivWeekday, 
+    isDelivDate, isPastDeliv,
+    orderLeadTime, relativeDelivDate,
   }
   //const [dayOfWeek, setDayOfWeek] = useState()
   const [activeIndex, setActiveIndex] = useState(0)
