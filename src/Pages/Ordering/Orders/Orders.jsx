@@ -83,7 +83,8 @@ export const Orders = ({ useTestAuth }) => {
   const [locNick, setLocNick] = useState(user.locNick)
 
   // Date data
-  // const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+  const nowDT = DateTime.now().setZone('America/Los_Angeles')
+  const todayDT = nowDT.startOf('day')
   const ORDER_DATE_DT = DateTime.now().setZone('America/Los_Angeles')
     .plus({ hours: 4 }).startOf('day')
   // const pastCutoff = todayDT.toMillis() !== ORDER_DATE_DT.toMillis()
@@ -95,12 +96,14 @@ export const Orders = ({ useTestAuth }) => {
   const delivDateDT = DateTime.fromJSDate(delivDateJS)
   const delivWeekday = weekdays[delivDateJS.getDay()]
   const orderLeadTime = Interval
-    .fromDateTimes(getWorkingDateTime('NOW'), delivDateDT).length('days')
+    .fromDateTimes(ORDER_DATE_DT, delivDateDT).length('days')
+  const relativeDelivDate = Interval
+    .fromDateTimes(todayDT, delivDateDT).length('days')
   const isDelivDate = orderLeadTime === 0
   const isPastDeliv = isNaN(orderLeadTime)
   const dateProps = { 
-    ORDER_DATE_DT,
-    dateUpdated,
+    ORDER_DATE_DT, todayDT,
+    dateUpdated, relativeDelivDate,
     delivDateJS, delivDateDT, delivWeekday, 
     orderLeadTime, isDelivDate, isPastDeliv
   }
@@ -338,9 +341,10 @@ export const Orders = ({ useTestAuth }) => {
                 }
               >
                 <CartCalendar 
-                  delivDate={delivDateJS}
-                  setDelivDate={setDelivDateJS}
-                  ORDER_DATE_DT={ORDER_DATE_DT}
+                  // delivDate={delivDateJS}
+                  // setDelivDate={setDelivDateJS}
+                  // ORDER_DATE_DT={ORDER_DATE_DT}
+                  {...dateProps}
                   dateUpdated={dateUpdated}
                   locNick={locNick}
                   inline={wSize === 'lg'}

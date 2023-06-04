@@ -10,7 +10,9 @@ export const CartHeaderSummary = ({
   cartItems,              // ...
   delivDateDT,            // date props
   orderLeadTime,          // ...
+  relativeDelivDate,      // ...
   ORDER_DATE_DT,          // ...
+  todayDT,                // ...
   wSize,
   user,
 }) => {
@@ -26,14 +28,13 @@ export const CartHeaderSummary = ({
     : "Carlton Pickup"
   : "Order"
 
-  const relativeDateString = orderLeadTime === 0 
+  const relativeDateString = relativeDelivDate === 0 
     ? `Today`
     : orderLeadTime === 1 
       ? "Tomorrow"
       : orderLeadTime > 1 ? `Today +${orderLeadTime}`
     : `Yesterday`
 
-  const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
   const pastCutoff = todayDT.toMillis() !== ORDER_DATE_DT.toMillis()
 
   const headerMessage = <>
@@ -123,7 +124,8 @@ export const CartHeaderSummary = ({
       >
         <p>
           Orders placed after 8:00pm will be 
-          handled as if placed tomorrow.
+          handled as if placed tomorrow, 
+          which may affect product availability.
         </p>
       </Dialog>
 

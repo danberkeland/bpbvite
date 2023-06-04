@@ -75,6 +75,7 @@ export const CartSubmitButton = ({
   user,
   delivDateJS,
   delivDateDT,
+  relativeDelivDate,
   disableInputs,
   orderHasChanges,
   wSize,
@@ -102,6 +103,13 @@ export const CartSubmitButton = ({
   const disabled = disableInputs 
     || (!cartIsValid && user.authClass !== 'bpbfull')
 
+  const relativeDateString = relativeDelivDate === 0
+    ? "Today"
+    : relativeDelivDate === 1
+      ? "(Tomorrow)"
+      : relativeDelivDate > 1
+        ? `(T +${relativeDelivDate})`
+        : ''
 
   const handleSubmit = async () => {
     if (!navigator.onLine) {
@@ -129,11 +137,11 @@ export const CartSubmitButton = ({
     return (
       <>
         <div>{`${fulfillmentDisplayTextMap[cartHeader.route]}`}</div>
-        <div>{`${delivDateDT.toFormat('EEEE, MMM d')}`}</div>
-        {invalidRouteFlag && user.authClass == 'bpbfull' && 
+        <div>{delivDateDT.toFormat('EEEE, MMM d')} {relativeDateString}</div>
+        {invalidRouteFlag && user.authClass === 'bpbfull' && 
           <div><WarnIcon /> Invalid route <WarnIcon /></div>
         }
-        {inProdFlag && user.authClass == 'bpbfull' &&
+        {inProdFlag && user.authClass === 'bpbfull' &&
           <div><WarnIcon /> Over in-prod max <WarnIcon /></div>
         }
       </>

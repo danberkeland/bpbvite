@@ -166,8 +166,13 @@ export const useOrderCalendarSummary = ({ locNick, shouldFetch }) => {
         const cQty = item.C?.[0].qty ?? 0
         //const cExists = cQty !== undefined
 
-        const isStanding = (sExists && sQty !== 0) 
+        const isStanding = (sExists && sQty !== 0 && !cExists) 
           || (sQty !== 0 && sQty === cQty)
+          || (
+            cExists && item.C[0].updatedBy === "standing_order"
+          )
+
+
         // const isCart = cQty !== 0 && sQty === 0
         const isCart = cExists && cQty !== 0 && !sExists
           && item.C[0].updatedBy !== "standing_order"

@@ -19,6 +19,7 @@ export const CartCalendar = ({
   setDelivDate, 
   dateUpdated,
   ORDER_DATE_DT,
+  todayDT,
   inline,
   // handleSelectionUpdate,
 }) => {
@@ -29,6 +30,9 @@ export const CartCalendar = ({
   const dateTemplate = (date) => {
     const dateJS = new Date(date.year, date.month, date.day)
     const isCustomToday = dateJS.getTime() === ORDER_DATE_DT.toMillis()
+    const isToday = dateJS.getTime() === todayDT.toMillis()
+
+    //console.log(date)
 
     const calendarDate = `${date.year}-` 
       + `${('0' + String(date.month + 1).slice(-2))}-`
@@ -36,12 +40,14 @@ export const CartCalendar = ({
     const dayOfWeek = yyyymmddToWeekday(calendarDate)
     const hasCart = orderSummary?.byDate?.[calendarDate]?.hasCart
     const hasStanding = orderSummary?.byDay?.[dayOfWeek]?.hasStanding
+      || orderSummary?.byDate?.[calendarDate]?.hasStanding // for placeholders
 
     const isRecentDelete = orderSummary?.byDate?.[calendarDate]?.isRecentDelete
 
     return (
       <div 
-        id={isCustomToday && date.selectable
+        // id={isCustomToday && date.selectable
+        id={isToday
           ? "bpb-date-cell-custom-today"
           : hasCart && date.selectable
             ? "bpb-date-cell-cart"
@@ -50,6 +56,7 @@ export const CartCalendar = ({
               : "bpb-date-cell-none"
         }
         style={{background: isRecentDelete ? "rgba(255, 0, 0, .25)" : ""}}
+        onClick={() => console.log(hasCart, hasStanding)}
       >
         {date.day}
       </div>

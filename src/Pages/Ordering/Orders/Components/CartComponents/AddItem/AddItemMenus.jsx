@@ -31,13 +31,15 @@ export const AddItemMenu = ({
   const dropdownRef = useRef(null)
   const qtyInputRef = useRef(null)
   const addButtonRef = useRef(null)
-  const { delivDateDT, orderLeadTime, ORDER_DATE_DT, } = dateProps
+  const { delivDateDT, orderLeadTime, ORDER_DATE_DT, relativeDelivDate } = dateProps
 
-  const relativeDateString = orderLeadTime === 0 
-    ? `(Today)${user.authClass !== 'bpbfull' && " ― Read Only"}`
-    : orderLeadTime === 1 ? "(Tomorrow)"
-    : orderLeadTime > 1 ? `(Today +${orderLeadTime})`
-    : `${user.authClass !== 'bpbfull' && " ― Read Only"}`
+  const relativeDateString = relativeDelivDate === 0 
+    ? `(Today)${user.authClass !== 'bpbfull' ? " ― Read Only" : ""}`
+    : relativeDelivDate === 1 
+      ? "(Tomorrow)" 
+      : relativeDelivDate > 1 
+        ? `(Today +${relativeDelivDate})`
+        : `${user.authClass !== 'bpbfull' ? " ― Read Only" : ""}`
 
   const selectedProduct = products?.[selectedProdNick] ?? null
 

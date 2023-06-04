@@ -33,13 +33,15 @@ const formatName = (inputName) => {
 
 
 export const RetailOrders = () => {
-  const todayDT = getWorkingDateTime('NOW')
+  const nowDT = DateTime.now().setZone('America/Los_Angeles')
+  const todayDT = nowDT.startOf('day')
   const [delivDateJS, setDelivDateJS] = useState(todayDT.toJSDate())
   const delivDateDT = 
     DateTime.fromJSDate(delivDateJS).setZone('America/Los_Angeles')
   const delivDateISO = delivDateDT.toISODate()
-  const relativeDate = Interval
-    .fromDateTimes(getWorkingDateTime('NOW'), delivDateDT).length('days')
+  const relativeDate = 
+    Interval.fromDateTimes(todayDT, delivDateDT).length('days')
+    || (-1 * Interval.fromDateTimes(delivDateDT, todayDT).length('days'))
 
   const [selectedCustomer, setSelectedCustomer] = useState()
   const [createName, setCreateName] = useState()
@@ -60,6 +62,9 @@ export const RetailOrders = () => {
 
   const ordersForDate = ordersByDateByName?.[delivDateISO] ?? {}
   const namesForDate = Object.keys(ordersForDate)
+  const existingOrderOptions = namesForDate.map(str => 
+    ({ label:formatName(str)[0], value: str })
+  )
 
   const resetForm =() => {
     setSelectedCustomer()
@@ -84,11 +89,11 @@ export const RetailOrders = () => {
   }
 
   const composeEditOrder = (date, name) => {    
-    const items = ordersByDateByName[date][name]
+    const items = ordersByDateByName[date][name] ?? []
     const header = {
-      locNick: items?.[0].locNick,
-      route: items?.[0].route,
-      ItemNote: items?.[0].ItemNote,
+      locNick: items[0]?.locNick,
+      route: items[0]?.route,
+      ItemNote: items[0]?.ItemNote,
       delivDate: delivDateISO,
       isWhole: false,
     }
@@ -144,6 +149,7 @@ export const RetailOrders = () => {
         value={rowData.qty}
         inputMode="numeric"
         keyfilter={/[0-9]/}
+        onClick={() => console.log(rowData)}
         onFocus={e => {
           e.target.select()
         }}
@@ -224,7 +230,7 @@ export const RetailOrders = () => {
             <ListBox 
               id="bpb-order-calendar"
               className="bpb-order-calendar"
-              options={namesForDate}
+              options={existingOrderOptions}
               value={selectedCustomer}
               onChange={e => {
                 setSelectedCustomer(e.value)
@@ -363,6 +369,7 @@ export const RetailOrders = () => {
                 let submitItem = {
                   ...currentOrder.header,
                   qty: item.qty,
+                  rate: item.rate,
                   updatedBy: "bpb_admin",
                 }
 
@@ -371,10 +378,10 @@ export const RetailOrders = () => {
                 return submitItem
               })
 
-              const createItems = submitItems.filter(i => !i.id && i.qty !== 0)
-              const updateItems = submitItems.filter(i => !!i.id)
+              const createInputs = submitItems.filter(i => !i.id && i.qty !== 0)
+              const updateInputs = submitItems.filter(i => !!i.id)
 
-              console.log({ createItems, updateItems })
+              console.log({ createInputs, updateInputs })
             }}
             disabled={!currentOrder || !currentOrder?.header?.route}
           
