@@ -12,11 +12,12 @@ const testLocations = ['backporch', 'slopro']
 const Ordering2 = () => {
 
   const authClass = useSettingsStore(state => state.authClass)
-  const userLocNick = useSettingsStore(state => state.currentLoc)
+  //const userLocNick = useSettingsStore(state => state.currentLoc)
   const [useTestAuth, setUseTestAuth] = useState(false)
-  const [showNewPage, setShowNewPage] = useState(
-    testLocations.includes(userLocNick) ? true : false
-  )
+  // const [showNewPage, setShowNewPage] = useState(
+  //   testLocations.includes(userLocNick) ? true : false
+  // )
+  const [showNewPage, setShowNewPage] = useState(true)
 
   return(
     <div style={{margin:"auto"}}>
