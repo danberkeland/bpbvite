@@ -33,6 +33,13 @@ export const applyOverridesForRouteAssignment = ({
     overrides = { readyTime: 9 }
   }
 
+  else if (
+    product.prodNick === 'fic' 
+    && ['cpr', 'field'].includes(location.locNick)
+  ) {
+    overrides = { readyTime: 6 }
+  }
+
   // // No ftmuff for south deliveries
   // else if (
   //   product.prodNick === 'ftmuff' 

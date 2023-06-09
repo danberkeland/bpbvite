@@ -25,7 +25,7 @@ import { useLocationDetails } from "./data/locationHooks"
 import { isEqual } from "lodash"
 import { StandingItemDisplay } from "./Components/StandingComponents/StandingItemDisplay"
 import { CartHeaderSummary } from "./Components/CartComponents/CartHeaderSummary"
-import { RetailOrders } from "./Components/RetailOrders"
+import { RetailOrders } from "./Components/Retail/RetailOrders"
 
 
 // Constants, Non-Reactive Data ************************************************
@@ -272,6 +272,8 @@ export const Orders = ({ useTestAuth }) => {
             setLocNick={setLocNick}
             // authClass={user.authClass}
             authClass={defaultAuth}
+            setDelivDateJS={setDelivDateJS}
+            ORDER_DATE_DT={ORDER_DATE_DT}
           />     
         </div>
       }

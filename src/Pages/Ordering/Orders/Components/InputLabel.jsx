@@ -19,7 +19,7 @@ export const InputLabel = ({
         width: "fit-content",
         fontSize: ".9rem",
         position: "relative",
-        zIndex: "1",
+        zIndex: "0",
         boxShadow: "0 2px 1px -1px rgba(0, 0, 0, 0.2),"
           + " 0 1px 1px 0 rgba(0, 0, 0, 0.14),"
           + " 0 1px 3px 0 rgba(0, 0, 0, 0.12)",
@@ -29,7 +29,7 @@ export const InputLabel = ({
     </label>
     <div style={{
       position: "relative", 
-      zIndex: "2", borderRadius: "3px",
+      zIndex: "1", borderRadius: "3px",
       backgroundColor: "#c59649", // << kind of a hack to make the label 
                                     //    blend in on the page's standard 
                                     //    background color when disabling 

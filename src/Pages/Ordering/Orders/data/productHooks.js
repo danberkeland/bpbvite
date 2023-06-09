@@ -91,13 +91,13 @@ export const useCustomizedProducts = ({
 
 
 
-    const _projectionWithOverrides = PRD.filter(product => 
-      product.isWhole
-
-    ).map(product => ({
+    const _projectionWithOverrides = PRD.map(product => ({
       ...product,
       ...preDBOverrides[product.prodNick],
-    })).map(product => {
+    })).filter(product => 
+      product.isWhole
+
+    ).map(product => {
       // nested 'items' attribute preserves gql response format
       const prodsNotAllowed = { items: _PNA[product.prodNick] ?? [] }
       const altPricing = { items: _APR[product.prodNick] ?? [] }
