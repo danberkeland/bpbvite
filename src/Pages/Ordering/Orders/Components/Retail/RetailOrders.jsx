@@ -17,6 +17,7 @@ import { RetailCalendar } from "./RetailCalendar"
 import { OrderList } from "./OrderList"
 import { CreateMenu } from "./CreateMenu"
 import { Card } from "primereact/card"
+import { OrderForm } from "./OrderForm"
 
 
 // const fulfillmentOptions = [
@@ -384,10 +385,20 @@ export const RetailOrders = () => {
 
       <pre>{JSON.stringify(formMode, null, 2)}</pre>
       {/* <pre>{JSON.stringify(currentCustomer, null, 2)}</pre> */}
-      <pre>{JSON.stringify(currentOrder, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(currentOrder, null, 2)}</pre> */}
 
       <div classname="retail-column-2">
-      
+        {formMode !== 'hide' &&
+          <OrderForm
+            formMode={formMode}
+            setFormMode={setFormMode}
+            currentCustomer={currentCustomer}
+            setCurrentCustomer={setCurrentCustomer}
+            currentOrder={currentOrder}
+            setCurrentOrder={setCurrentOrder}
+            products={products}
+          />
+        }
       </div>
 
     </div>
