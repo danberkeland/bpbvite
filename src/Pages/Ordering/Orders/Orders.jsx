@@ -97,6 +97,7 @@ export const Orders = ({ useTestAuth }) => {
     .fromDateTimes(ORDER_DATE_DT, delivDateDT).length('days')
   const relativeDelivDate = 
     Interval.fromDateTimes(todayDT, delivDateDT).length('days')
+    || -1 * Interval.fromDateTimes(delivDateDT, todayDT).length('days')
   const isDelivDate = orderLeadTime === 0
   const isPastDeliv = isNaN(orderLeadTime)
   const dateUpdated = useRef(false) // just a flag for controling state
