@@ -60,7 +60,7 @@ export const LocationDropdown = ({
   setLocNick, 
   authClass,
   setDelivDateJS,
-  ORDER_DATE_DT,
+  todayDT,
 }) => {
   const { data:locations } = useListData({ 
     tableName:"Location", shouldFetch: authClass === 'bpbfull'
@@ -129,7 +129,7 @@ export const LocationDropdown = ({
           setSelectedLocation(e.value)
           if (e?.value?.locNick) {
             setLocNick(e.value.locNick)
-            setDelivDateJS(ORDER_DATE_DT.plus({ days: 1 }).toJSDate())
+            setDelivDateJS(todayDT.plus({ days: 1 }).toJSDate())
           }
           //console.log(e)
         }}

@@ -69,7 +69,6 @@ export const Orders = ({ useTestAuth }) => {
   }
   const isLoading = useSettingsStore((state) => state.isLoading)
 
-
   const tabModel = user.authClass === 'bpbfull'
     ? cartTabModel.concat(standingTabModel).concat(retailTabModel)
     : standingBlacklist.includes(user.locNick)
@@ -85,29 +84,29 @@ export const Orders = ({ useTestAuth }) => {
   // Date data
   const nowDT = DateTime.now().setZone('America/Los_Angeles')
   const todayDT = nowDT.startOf('day')
-  const ORDER_DATE_DT = DateTime.now().setZone('America/Los_Angeles')
-    .plus({ hours: 4 }).startOf('day')
+  const ORDER_DATE_DT = nowDT.plus({ hours: 4 }).startOf('day')
   // const pastCutoff = todayDT.toMillis() !== ORDER_DATE_DT.toMillis()
 
-  const dateUpdated = useRef(false)
   const [delivDateJS, setDelivDateJS] = useState(
-    ORDER_DATE_DT.plus({ days: 1 }).toJSDate()
+    todayDT.plus({ days: 1 }).toJSDate()
   )
-  const delivDateDT = DateTime.fromJSDate(delivDateJS)
+  const delivDateDT = 
+    DateTime.fromJSDate(delivDateJS).setZone('America/Los_Angeles')
   const delivWeekday = weekdays[delivDateJS.getDay()]
   const orderLeadTime = Interval
     .fromDateTimes(ORDER_DATE_DT, delivDateDT).length('days')
-  const relativeDelivDate = Interval
-    .fromDateTimes(todayDT, delivDateDT).length('days')
+  const relativeDelivDate = 
+    Interval.fromDateTimes(todayDT, delivDateDT).length('days')
   const isDelivDate = orderLeadTime === 0
   const isPastDeliv = isNaN(orderLeadTime)
+  const dateUpdated = useRef(false) // just a flag for controling state
   const dateProps = { 
     ORDER_DATE_DT, todayDT,
-    dateUpdated, 
     delivDateJS, setDelivDateJS,
     delivDateDT, delivWeekday, 
     isDelivDate, isPastDeliv,
     orderLeadTime, relativeDelivDate,
+    dateUpdated, 
   }
   //const [dayOfWeek, setDayOfWeek] = useState()
   const [activeIndex, setActiveIndex] = useState(0)
@@ -273,7 +272,7 @@ export const Orders = ({ useTestAuth }) => {
             // authClass={user.authClass}
             authClass={defaultAuth}
             setDelivDateJS={setDelivDateJS}
-            ORDER_DATE_DT={ORDER_DATE_DT}
+            todayDT={todayDT}
           />     
         </div>
       }

@@ -30,9 +30,9 @@ export const CartHeaderSummary = ({
 
   const relativeDateString = relativeDelivDate === 0 
     ? `Today`
-    : orderLeadTime === 1 
+    : relativeDelivDate === 1 
       ? "Tomorrow"
-      : orderLeadTime > 1 ? `Today +${orderLeadTime}`
+      : relativeDelivDate > 1 ? `Today +${relativeDelivDate}`
     : `Yesterday`
 
   const pastCutoff = todayDT.toMillis() !== ORDER_DATE_DT.toMillis()
