@@ -1,6 +1,6 @@
 // not sure why useState variables get "stuck" in the Terminal.
 // Initial values will display correctly, but updates (at least ones made thru terminal commands)
-// Do not show, even while components outside the terminal update correctly.
+// do not show, even while components outside the terminal update correctly.
 // holding/updating a value seems to work with useRef, however.
 //
 // a simple add function in the cli can update/modify a state variable
@@ -144,7 +144,10 @@ export const BPBTerminal = () => {
       style={{}}
     >
 
-      <Terminal welcomeMessage="Welcome to PrimeReact" prompt={prompt}/>
+      <Terminal 
+        welcomeMessage="Welcome to the BPB Terminal. Type 'help' or '?' for help." 
+        prompt={prompt}
+      />
       <pre>{JSON.stringify(module)}</pre>
       <pre>{JSON.stringify(state)}</pre>
 
