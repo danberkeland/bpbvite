@@ -91,12 +91,12 @@ export const useStandingDataByLocation = ({ locNick, shouldFetch }) => {
     // console.log('validating standing...')
     // if duplicates exist, keep the most recently updated record
     const _sorted = orderBy(data, ['updatedOn'], ['desc'])
-    const _byWeekdayByProduct = groupBy(_sorted, item => 
-      `${item.dayOfWeek}#${item.prodNick}`
+    const _byWeekdayByProductByType = groupBy(_sorted, item => 
+      `${item.dayOfWeek}#${item.prodNick}#${item.isStand}#${item.isWhole}`
     )
   
     let deleteInputs = []
-    for (let group of Object.values(_byWeekdayByProduct)) {
+    for (let group of Object.values(_byWeekdayByProductByType)) {
       deleteInputs = deleteInputs.concat(
         group.slice(1).map(item => ({ id: item.id }))
       )
@@ -109,7 +109,7 @@ export const useStandingDataByLocation = ({ locNick, shouldFetch }) => {
 
     // *** Detect 0 qty records ***
     const zeroQtyItems = data.filter(item => item.qty === 0)
-    const zeroQtyDeleteInputs = zeroQtyItems.map(item => ({ id: item.id })) 
+    // const zeroQtyDeleteInputs = zeroQtyItems.map(item => ({ id: item.id })) 
 
     if (zeroQtyItems.length) {
       console.log("Found zero qty items:", zeroQtyItems)
