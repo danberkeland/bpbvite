@@ -151,26 +151,25 @@ export const submitCartOrder = async ({
     return 'noChange'
   }
 
-
-  // *** Submit to legacy system
   const legacySubmitBody = getLegacySubmitBody(
     cartOrder, cartHeader, cartItems, location, products
   )
-  const legacyResponse = await submitToLegacy([legacySubmitBody])
+  const createInputs = submitItems.filter(item => !item.id)
+  const updateInputs = submitItems.filter(item => !!item.id)
+
+  const legacyPromise = submitToLegacy([legacySubmitBody])
+  const gqlPromise = submitCartItems({ createInputs, updateInputs })
+
+  const [legacyResponse, gqlResponse] = 
+    await Promise.all([legacyPromise, gqlPromise])
+
+  console.log("gqlResponse", gqlResponse)
   console.log("legacyResponse", legacyResponse)
 
   if (legacyResponse === undefined) {
     asyncMutate() // refresh cart records from the DB
     return 'error'
   }
-
-
-  // *** Submit to new system
-  const createInputs = submitItems.filter(item => !item.id)
-  const updateInputs = submitItems.filter(item => !!item.id)
-
-  const gqlResponse = await submitCartItems({ createInputs, updateInputs })
-  console.log("gqlResponse", gqlResponse)
 
   if (gqlResponse === undefined) {        
     console.error("GQL request failed")
