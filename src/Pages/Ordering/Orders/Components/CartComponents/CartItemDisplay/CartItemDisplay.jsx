@@ -116,35 +116,46 @@ export const CartItemDisplay = ({
     }
         
     return (
-      <div style={qty === 0 ? {opacity: ".70"} : null}>
-        <div style={{ 
-          display: "flex", 
-          justifyContent: "space-between", 
-          alignContent: "center", 
-          gap: ".25rem"
-        }}>
-          <span style={{
+      <div 
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          opacity: qty === 0 ? ".70" : "",
+          
+        }}
+      
+      >
+        {user.authClass === 'bpbfull' &&
+          <ItemIcon 
+            product={products[prodNick]} 
+            shouldFade={qty === 0}
+          />
+        }
+        <div>
+          <div style={{
             fontStyle: qtyChanged && qty > 0 ? "italic" : "normal", 
             fontWeight: "bold"
           }}>
             {reformatProdName(prodName, packSize)}
-          </span>
+          </div>
+
+          <CartItemMessages 
+            {...infoMessageProps} 
+          />
+      
+          {showDetails && 
+            <ProductColumnDetails 
+              orderType={orderType}
+              lastAction={lastAction}
+              updatedBy={updatedBy}
+              qtyUpdatedOn={qtyUpdatedOn}
+              qty={qty}
+            />
+          }
         </div>
 
-        <CartItemMessages 
-          {...infoMessageProps} 
-        />
-    
-        {showDetails && 
-          <ProductColumnDetails 
-            orderType={orderType}
-            lastAction={lastAction}
-            updatedBy={updatedBy}
-            qtyUpdatedOn={qtyUpdatedOn}
-            qty={qty}
-          />
-        }
       </div>
+
     )
   } // end productColumnTemplate
 
@@ -279,10 +290,6 @@ const ProductColumnDetails = ({
 }
 
 
-
-
-
-
 const QtyColumnDetails = ({ qty, rate, packSize }) => {
   const containerStyle = { 
     paddingTop: "2.75rem", 
@@ -297,4 +304,185 @@ const QtyColumnDetails = ({ qty, rate, packSize }) => {
       <div>{`$${(rate * qty).toFixed(2)}`}</div>
     </div>
   )
+}
+
+
+
+const ItemIcon = ({product, shouldFade}) => {
+
+  return <div style={{ 
+    width: "3rem", height: "3rem",
+    fontSize: "1.5rem",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: ".5rem",
+    //borderStyle: "solid",
+    borderWidth: "3px",
+    borderColor: "rgba(0, 0, 0, .5)",
+    borderRadius: "3px",
+    ...iconStyleByDoughNick[product.doughNick],
+    ...iconStyleByPackGroup[product.packGroup],
+    opacity: shouldFade ? "0.7" : "1",
+
+  }}>
+    {/* <div> */}
+      {prodNickEmoji[product.prodNick]}  
+    {/* </div> */}
+  </div>
+  
+
+}
+
+
+const iconStyleByPackGroup = {
+  "baked pastries": {border: "double 3px var(--bpb-orange-vibrant-600)"},
+  "brioche products": {border: "solid 2px darkred", background: "var(--bpb-orange-vibrant-050)"},
+  "cafe menu": {},
+  "focaccia": {},
+  "frozen pastries": {background: "rgba(173, 216, 230, .7)", border: "double 3px rgba(97, 180, 207, 0.9)"},
+  "retail": {borderStyle: "dashed"},
+  "rolls": {},
+  "rustic breads": {},
+  "sandwich breads": {},
+}
+
+const iconStyleByDoughNick = {
+  "Baguette": {background: "rgb(240, 240, 220)", border: "solid 3px rgb(170, 170, 140)"},
+  "Ciabatta": {background: "rgb(0, 255, 0)"},
+  "Country": {background: "rgb(144, 238, 144)", borderColor: "green", borderStyle: "solid",},
+  "Croissant": {background: ""},
+  "French": {background: "rgb(255, 255, 125)", border: "solid 2px rgb(165, 165, 35)"},
+  "Multi": {backgroundImage: "linear-gradient(165deg, green, gold, orangered)", border: "solid 1px brown"},
+  "Pretzel Bun": {borderColor: "rgb(165, 42, 0)", borderStyle: "solid", background: "var(--bpb-orange-vibrant-200)"},
+  "Rye": {background: "green",},
+}
+
+const prodNickEmoji = {
+  al: <div>🥐</div>,
+  azapp: <div></div>,
+  azpec: <div></div>,
+  azpkn: <div></div>,
+  bag: <div style={{fontSize: "2rem"}}>🥖</div>,
+  bb: <>
+    <div style={{position: "absolute", transform: "translate(-.25rem, -.25rem)"}}>🧁</div>
+    <div style={{position: "absolute", fontSize: "1rem", transform: "translate(.5rem, .5rem)"}}>🫐</div>
+  </>,
+  bcwal: <>
+    <div style={{position: "absolute", transform: "translate(-.25rem, -.25rem)"}}>🍞</div>
+    <div style={{position: "absolute", fontSize: "1rem", transform: "translate(.5rem, .5rem)"}}>🧀</div>
+  </>,
+  bd: <div></div>,
+  bdrd: <div></div>,
+  bri: <div>🍞</div>,
+  brn: <>
+    <div style={{position: "absolute", transform: "translate(-.25rem, -.25rem)"}}>🧁</div>
+    <div style={{position: "absolute", fontSize: "1rem", transform: "translate(.5rem, .5rem)"}}>🍫</div>
+  </>,
+  brsl: <>
+    <div style={{position: "absolute", fontSize: "1.25rem", transform: "translate(-.25rem, -.25rem)"}}>🍔</div>
+    <div style={{position: "absolute", fontSize: "1.25rem", transform: "translate(.25rem, .25rem)"}}>🍔</div>
+  </>,
+  bz: <div>🍔</div>,
+  ch: <>
+    <div style={{position: "absolute", transform: "translate(-.12rem, -.12rem)"}}>🥐</div>
+    <div style={{position: "absolute", fontSize: "1rem", transform: "translate(.45rem, .25rem)"}}>🍫</div>
+  </>,
+  chch: <div></div>,
+  chip: <div></div>,
+  cub: <>
+    <div style={{position: "absolute", fontSize: "1.25rem", transform: "translate(-.25rem, -.25rem)"}}>🥖</div>
+    <div style={{position: "absolute", fontSize: "1.25rem", transform: "translate(.25rem, .25rem)"}}>🥖</div>
+  </>,
+  dbag: <div>🥖</div>,
+  dbfdg: <div></div>,
+  dtbz: <div></div>,
+  dtch: <div style={{fontSize: "2rem"}}>🥖</div>,
+  epi: <div></div>,
+  fic: <div style={{fontSize: "1.1rem"}}>🥖</div>,
+  foc: <div></div>,
+  fr: <div style={{fontSize: "2rem"}}>🥖</div>,
+  fral: <div>🥐</div>,
+  frch: <>
+    <div style={{position: "absolute", transform: "translate(-.12rem, -.12rem)"}}>🥐</div>
+    <div style={{position: "absolute", fontSize: "1rem", transform: "translate(.45rem, .25rem)"}}>🍫</div>
+  </>,
+  frfr: <div style={{fontSize: "2rem"}}>🥖</div>,
+  frmb: <div>🥐</div>,
+  frmni: <div style={{fontSize: "1.25rem"}}>🥐</div>,
+  frpg: <>
+    <div style={{position: "absolute", transform: "translate(-.12rem, -.12rem)"}}>🥐</div>
+    <div style={{position: "absolute", fontSize: "1rem", transform: "translate(.45rem, .25rem)"}}>🧀</div>
+  </>,
+  frpl: <div>🥐</div>,
+  frsf: <>
+    <div style={{position: "absolute", transform: "translate(-.12rem, -.12rem)"}}>🥐</div>
+    <div style={{position: "absolute", fontSize: "1rem", transform: "translate(.45rem, .25rem)"}}>🥬</div>
+  </>,
+  frsl: <div></div>,
+  ftmuff: <div>🧁</div>,
+  hfoc: <div>🌿</div>,
+  hok: <div></div>,
+  lev: <div>🍞</div>,
+  lgbz: <div style={{fontSize: "2rem"}}>🍔</div>,
+  lglv: <div style={{fontSize: "2rem"}}>🍞</div>,
+  lgmt: <div style={{fontSize: "2rem"}}>🍞</div>,
+  lgpz: <div style={{fontSize: "2rem"}}>🥨</div>,
+  lgry: <div style={{fontSize: "2rem"}}>🍞</div>,
+  mb: <div>🥐</div>,
+  mbag: <>
+    <div style={{position: "absolute", fontSize: "1.25rem", transform: "translate(-.25rem, -.25rem)"}}>🥖</div>
+    <div style={{position: "absolute", fontSize: "1.25rem", transform: "translate(.25rem, .25rem)"}}>🥖</div>
+  </>,
+  mcub: <>
+    <div style={{position: "absolute", fontSize: "1.1rem", transform: "translate(-.25rem, -.25rem)"}}>🥖</div>
+    <div style={{position: "absolute", fontSize: "1.1rem", transform: "translate(.25rem, .25rem)"}}>🥖</div>
+  </>,
+  mdch: <div></div>,
+  mini: <div style={{fontSize: "1.25rem"}}>🥐</div>,
+  mlti: <div>🍞</div>,
+  oat: <div></div>,
+  oli: <>
+    <div style={{position: "absolute", transform: "translate(-.25rem, -.25rem)"}}>🍞</div>
+    <div style={{position: "absolute", fontSize: "1rem", transform: "translate(.5rem, .5rem)"}}>🫒</div>
+  </>,
+  pbck: <div></div>,
+  pec: <div></div>,
+  pg: <>
+    <div style={{position: "absolute", transform: "translate(-.12rem, -.12rem)"}}>🥐</div>
+    <div style={{position: "absolute", fontSize: "1rem", transform: "translate(.45rem, .25rem)"}}>🧀</div>
+  </>,
+  pknpie: <div></div>,
+  pl: <div>🥐</div>,
+  prodNick: <div></div>,
+  ptz: <div>🥨</div>,
+  pzb: <div>🌭</div>,
+  pzsl: <div></div>,
+  pzst: <div></div>,
+  rbag: <div>🥖</div>,
+  rdch: <div style={{fontSize: "2rem"}}>🥖</div>,
+  rfr: <div style={{fontSize: "2rem"}}>🥖</div>,
+  rlev: <div>🍞</div>,
+  rmlti: <div>🍞</div>,
+  roli: <>
+    <div style={{position: "absolute", transform: "translate(-.25rem, -.25rem)"}}>🍞</div>
+    <div style={{position: "absolute", fontSize: "1rem", transform: "translate(.5rem, .5rem)"}}>🫒</div>
+  </>,
+  rrye: <div>🍞</div>,
+  rye: <div>🍞</div>,
+  sco: <div></div>,
+  scrd: <div></div>,
+  ses: <div>🍔</div>,
+  sf: <>
+    <div style={{position: "absolute", transform: "translate(-.12rem, -.12rem)"}}>🥐</div>
+    <div style={{position: "absolute", fontSize: "1rem", transform: "translate(.45rem, .25rem)"}}>🥬</div>
+  </>,
+  sic: <div></div>,
+  smpz: <div style={{fontSize: "1.25rem"}}>🥨</div>,
+  snik: <div></div>,
+  unmb: <div>🥐</div>,
+  unpz: <div>🥨</div>,
+  wwbz: <div></div>,
+  zcock: <div></div>,
+  zdog: <div>🌭</div>,
 }
