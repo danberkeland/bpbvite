@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { InputText } from "primereact/inputtext";
+import { sortBy } from "lodash";
 
 
 const ProductGrid = ({ orderList }) => {
@@ -9,16 +11,14 @@ const ProductGrid = ({ orderList }) => {
 
 
   useEffect(() => {
-    let dat = orderList; 
+    let dat = sortBy(orderList, ['zone', 'custNick', 'prodNick']); 
     setData(dat ? dat : []);
   }, [orderList ]);
 
 
   const headerTemplate = (data) => {
     return (
-      <React.Fragment>
-        <h3>{data.zoneName}</h3>
-      </React.Fragment>
+      <div style={{fontSize: "1.25rem", fontWeight: "bold"}}>{data.zone}</div>
     );
   };
 
@@ -26,53 +26,76 @@ const ProductGrid = ({ orderList }) => {
     return <React.Fragment></React.Fragment>;
   };
 
+  const textInputFilterTemplate = (options) => {
+    return(
+      <InputText
+        onChange={e => options.filterApplyCallback(e.value)}
+        className="p-column-filter"
+      />
+    )
+  }
+
   return (
     <DataTable
       value={data}
       rowGroupMode="subheader"
-      groupField="zoneName"
+      groupRowsBy="zone"
       sortMode="single"
-      sortField="zoneName"
+      sortField="zone"
+      sort
       sortOrder={1}
       className="p-datatable-striped"
       rowGroupHeaderTemplate={headerTemplate}
       rowGroupFooterTemplate={footerTemplate}
+      filterDisplay="row"
     >
-      <Column
+      {/* <Column
         field="zone"
         header="Zone"
         filter
         filterPlaceholder="Search by zone"
-      ></Column>
+        showFilterMenu={false}
+        filterMatchMode="startsWith"
+      ></Column> */}
       <Column
         field="prodName"
         header="Product"
         filter
         filterPlaceholder="Search by product"
+        showFilterMenu={false}
+        filterMatchMode="startsWith"
       ></Column>
       <Column
         field="prodNick"
         header="Prod nick"
         filter
         filterPlaceholder="Search by nickname"
+        showFilterMenu={false}
+        filterMatchMode="startsWith"
       ></Column>
       <Column
         field="forBake"
         header="For Bake"
         filter
         filterPlaceholder="Search by forBake"
+        showFilterMenu={false}
+        filterMatchMode="startsWith"
       ></Column>
       <Column
         field="custName"
         header="Customer"
         filter
         filterPlaceholder="Search by customer"
+        showFilterMenu={false}
+        filterMatchMode="startsWith"
       ></Column>
       <Column
         field="custNick"
         header="Cust nick"
         filter
         filterPlaceholder="Search by nickname"
+        showFilterMenu={false}
+        filterMatchMode="startsWith"
       ></Column>
       <Column field="qty" header="Quantity"></Column>
     </DataTable>
