@@ -5,10 +5,13 @@ import { InputText } from "primereact/inputtext"
 import { InputTextarea } from "primereact/inputtextarea"
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
+import { ProductDropdown } from "./ProductDropdown"
+import { useState } from "react"
+import { InputLabel } from "../InputLabel"
 
 const pickupOptions = [
-  { label: "Pick up Carlton", value: "atownpick"},
-  { label: "Pick up SLO", value: "slopick"},
+  { label: "Carlton", value: "atownpick"},
+  { label: "SLO", value: "slopick"},
 ]
 
 export const OrderForm = ({
@@ -16,19 +19,33 @@ export const OrderForm = ({
   currentCustomer, setCurrentCustomer,
   currentOrder, setCurrentOrder,
   products,
+  selectedProduct, setSelectedProduct,
+  delivDateDT
 }) => {
+
+  const actionText = formMode === 'create' ? "Creating"
+    : formMode === 'edit' ? "Editing"
+    : ''
 
   const cardHeader = () => {
     return (
       <div className="card-header"
         style={{
-          padding: ".75rem",
+          padding: ".5rem 1rem",
         }}
       >
-        <div style={{display: "flex", justifyContent: "flex-end"}}>
+        <div style={{
+          display: "flex", 
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "1rem",
+        }}>
+          <span style={{fontSize: "1.5rem"}}>
+            {actionText} Order
+          </span>
           <Button 
             icon="pi pi-times"
-            className="p-button-rounded p-button-text"
+            className="p-button-rounded p-button-outlined"
             onClick={() => {
               setFormMode('hide')
               setCurrentCustomer('')
@@ -36,11 +53,12 @@ export const OrderForm = ({
             }}
           />
         </div>
-        <div style={{fontSize: "1.5rem", marginBottom: ".25rem"}}>
-          Name: {currentCustomer.split('__')[0]}
+
+        <div style={{fontSize: "1.25rem", marginBottom: ".25rem"}}>
+          Name: {currentOrder?.header.locNick.split('__')[0]}
         </div>
         <div style={{fontSize: ".9rem", marginBottom: "1rem"}}>
-          Token: {currentCustomer.split('__')[1]}
+          Token: {currentOrder?.header.locNick.split('__')[1]}
         </div>
 
         
@@ -97,7 +115,6 @@ export const OrderForm = ({
         }}
         onBlur={e => updateQty(Number(e.target.value))}
         style={{width: "3rem"}}
-        disabled={formMode === 'read'}
       />
     )
 
@@ -107,37 +124,58 @@ export const OrderForm = ({
     <Card 
       header={cardHeader}
       footer={cardFooter}
+      style={{padding: ".75rem"}}
     >
-      <Dropdown 
-        placeholder="Pick up location (required)" 
-        options={pickupOptions}
-        value={currentOrder?.header.route || ''}
-        onChange={e => {
-          let updatedOrder = structuredClone(currentOrder)
-          updatedOrder.header.route = e.value
-          setCurrentOrder(updatedOrder)
-        }}
-        style={{marginBottom: "1rem"}}
-        disabled={formMode === 'read'}
-      />
+      <div style={{
+        display: "flex", 
+        justifyContent: "space-between", 
+        gap: "2rem",
+        marginBottom: "1rem",
+      }}>
 
-      <div style={{marginBottom: "1rem"}}>
-        <InputTextarea 
-          value={currentOrder?.header.ItemNote}
-          onChange={e => {
-            let updatedOrder = structuredClone(currentOrder)
-            updatedOrder.header.ItemNote = e.target.value
-            setCurrentOrder(updatedOrder)
-          }}
-          rows={1}
-          disabled={formMode === 'read'}
-        />
+        <label style={{fontSize: ".9rem"}}>Pickup Location
+          <Dropdown 
+            placeholder="(required)" 
+            options={pickupOptions}
+            value={currentOrder?.header.route || ''}
+            onChange={e => {
+              let updatedOrder = structuredClone(currentOrder)
+              updatedOrder.header.route = e.value
+              setCurrentOrder(updatedOrder)
+            }}
+            style={{width: "10rem"}}
+          />
+        </label>
+
+        <label style={{fontSize: ".9rem"}}>Note 
+          <InputTextarea
+            value={currentOrder?.header.ItemNote}
+            onChange={e => {
+              let updatedOrder = structuredClone(currentOrder)
+              updatedOrder.header.ItemNote = e.target.value
+              setCurrentOrder(updatedOrder)
+            }}
+            rows={1}
+            autoResize
+          />
+        </label>
+
+
       </div>
+
 
       <DataTable
         value={currentOrder?.items ?? []}
+        style={{width: "25.5rem"}}
       >
-        <Column header="Product"
+        <Column 
+          header={() => {
+            return (
+              <div onClick={() => console.log(currentOrder)}>
+                Product
+              </div>
+            )
+          }}
           body={I => <span>
             {products?.[I.prodNick].prodName ?? I.prodNick}
           </span>} 
@@ -147,6 +185,47 @@ export const OrderForm = ({
           style={{width: "90px"}}
         />
       </DataTable>
+      
+      <div style={{
+        display: "flex", 
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: "1rem",
+      }}>
+        <ProductDropdown 
+          value={selectedProduct}
+          onChange={e => {setSelectedProduct(e.value); console.log(e.value)}}
+          style={{
+            width: "100%",
+            marginBlock: "1rem",
+            
+          }}
+          
+        />
+
+        <Button label="Add" 
+          onClick={() => {
+            if (!selectedProduct) return
+
+            const { prodNick, retailPrice, wholePrice } = selectedProduct
+            const inCart = currentOrder.items.findIndex(item => 
+              item.prodNick === prodNick
+            ) > -1
+
+            if (inCart) return
+
+            let updatedValue = structuredClone(currentOrder)
+            updatedValue.items.push({
+              prodNick: prodNick,
+              rate: retailPrice || wholePrice,
+              qty: 0,
+            })
+
+            setCurrentOrder(updatedValue)
+            setSelectedProduct(null)
+          }}
+        />
+      </div>
     </Card>
 
   )

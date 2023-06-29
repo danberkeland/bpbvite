@@ -36,7 +36,7 @@ export const OrderList = ({
             !!e.value
               ? setCurrentOrder(createEditOrder(orderItemsForDate[e.value]))
               : setCurrentOrder(null)
-            if (e.value) setFormMode('read')
+            //if (e.value) setFormMode('read')
           }}
           style={{width: "25rem"}}
           disabled={formMode === 'edit' || formMode === 'create'}
@@ -44,7 +44,7 @@ export const OrderList = ({
       </InputLabel>
       
       <Button label="Edit" 
-        disabled={!(!!currentCustomer && formMode === 'read')}
+        disabled={!currentCustomer || formMode !== 'hide'}
         onClick={e => setFormMode('edit')}
       />
 

@@ -6,7 +6,11 @@ import { Button } from "primereact/button"
 
 
 
-export const CreateMenu = () => {
+export const CreateMenu = ({
+  formMode, setFormMode,
+  delivDateISO,
+  currentOrder, setCurrentOrder,
+}) => {
 
   const [orderName, setOrderName] = useState('')
 
@@ -18,25 +22,34 @@ export const CreateMenu = () => {
       gap: "1rem"
     }}>
       <InputLabel label="Name for New Order">
-        {/* <Dropdown 
-          options={customerNames.filter(n => !namesForDate.includes(n))}
-          value={createName}
-          style={{
-            // width: "25rem"
-            flex: "1 1 25rem"
-          }} 
-          editable
-          onChange={e => setCreateName(e.value)}
-        /> */}
         <InputText 
           onChange={e => setOrderName(e.target.value)}
+          disabled={formMode !== 'hide'}
         />
       </InputLabel>
 
       <Button label="Create" 
-        disabled={!orderName}
+        disabled={!orderName || formMode !== 'hide'}
+        onClick={() => {
+          let newOrder = structuredClone(initOrder)
+          newOrder.header.locNick = orderName
+          newOrder.header.delivDate = delivDateISO
+          setCurrentOrder(newOrder)
+          setFormMode('create')
+        }}
         
       />
     </div>
   )
+}
+
+const initOrder = {
+  header: {
+    locNick: '',
+    delivDate: '',
+    isWhole: false,
+    route: null,
+    ItemNote: '',
+  },
+  items: [],
 }

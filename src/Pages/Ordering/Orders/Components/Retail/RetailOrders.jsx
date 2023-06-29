@@ -18,6 +18,7 @@ import { OrderList } from "./OrderList"
 import { CreateMenu } from "./CreateMenu"
 import { Card } from "primereact/card"
 import { OrderForm } from "./OrderForm"
+import { ProductDropdown } from "./ProductDropdown"
 
 
 // const fulfillmentOptions = [
@@ -341,17 +342,23 @@ export const RetailOrders = () => {
       delivDateDT, delivDateISO, relativeDelivDate 
     }
 
-  const handleDateChange = (e) => {
-    setDelivDateJS(e.value)
-    setCurrentOrder()
-  }
+
 
   const [currentCustomer, setCurrentCustomer] = useState('')
   const [currentOrder, setCurrentOrder] = useState()
-  //const [selectedCustomer, setSelectedCustomer] = useState()
-  const [formMode, setFormMode] = useState('hide') // 'hide'|'read'|'edit'|'create'
+  const [selectedProduct, setSelectedProduct] = useState(null)
 
- 
+  //const [selectedCustomer, setSelectedCustomer] = useState()
+  const [formMode, setFormMode] = useState('hide') // 'hide'|'edit'|'create'
+
+  const handleDateChange = (e) => {
+    if (delivDateJS.getTime() === e.value.getTime()) return
+    setDelivDateJS(e.value)
+    setCurrentOrder()
+    setSelectedProduct(null)
+    setCurrentCustomer('')
+    setFormMode('hide')
+  }
 
   return (<>
     <div className="retail-body-container"
@@ -369,7 +376,13 @@ export const RetailOrders = () => {
           calendarStyle={{marginBottom: "1rem"}}
         />
 
-        <CreateMenu />
+        <CreateMenu 
+          formMode={formMode}
+          setFormMode={setFormMode}
+          setCurrentCustomer={setCurrentCustomer}
+          setCurrentOrder={setCurrentOrder}
+          delivDateISO={delivDateISO}
+        />
 
         <OrderList 
           { ...dateProps }
@@ -383,12 +396,12 @@ export const RetailOrders = () => {
         />
       </div>
 
-      <pre>{JSON.stringify(formMode, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(formMode, null, 2)}</pre> */}
       {/* <pre>{JSON.stringify(currentCustomer, null, 2)}</pre> */}
       {/* <pre>{JSON.stringify(currentOrder, null, 2)}</pre> */}
 
-      <div classname="retail-column-2">
-        {formMode !== 'hide' &&
+      <div className="retail-column-2">
+        {formMode !== 'hide' && <>
           <OrderForm
             formMode={formMode}
             setFormMode={setFormMode}
@@ -397,8 +410,13 @@ export const RetailOrders = () => {
             currentOrder={currentOrder}
             setCurrentOrder={setCurrentOrder}
             products={products}
+            selectedProduct={selectedProduct}
+            setSelectedProduct={setSelectedProduct}
+            delivDateDT={delivDateDT}
           />
-        }
+
+          {/* <ProductDropdown /> */}
+        </>}
       </div>
 
     </div>
