@@ -36,7 +36,9 @@ export const CartQtyInput = ({
       value={qty}
       readOnly={disableQtyInput}
       inputMode="numeric"
-      keyfilter={/[0-9]/}
+      // keyfilter={/[0-9]/}
+      keyfilter={/\d/}
+      autoComplete="off"
       style={{
         width: "62px",
         float: "right",
