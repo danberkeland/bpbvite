@@ -110,7 +110,10 @@ export const StandingSubmitButton = ({
             user,
             ...submitFunctions,
           })
-          if (result ==='error') { setShowErrorDialog(true) }
+          if (result ==='error') { 
+            setIsLoading(false)
+            setShowErrorDialog(true) 
+          }
           else toastRef.current.show(toasts[result])
         } catch (err) {
           console.error(err)
