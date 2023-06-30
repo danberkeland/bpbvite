@@ -184,6 +184,50 @@ type User @model {
   locs: [LocationUser] @hasMany(indexName: "bySub", fields: ["sub"])
 }
 
+
+
+# Tables to be added on next amplify push
+
+
+
+type User2 @model {
+  id: ID!
+  name: String!
+  email: String! @index(name: "byUser")
+  username: String
+  phone: String
+  authClass: String
+  subs: [String] 
+  locNick: String
+  defaultLoc: Location @hasOne(fields: ["locNick"])
+  locs: [LocationUser2] @hasMany(indexName: "bySub", fields: ["id"])
+  request: String #requested, confirmed, denied
+}
+
+type LocationUser2 @model {
+  id: ID!
+  Type: String!
+    @default(value: "LocationUser")
+    @index(
+      name: "locUsers2ByAuthType"
+      queryField: "locUsers2ByAuthType"
+      sortKeyFields: ["authType"]
+    )
+  authType: Int
+  locNick: String! @index(name: "byLoc")
+  userID: ID! @index(name: "bySub")
+  location: Location @belongsTo(fields: ["locNick"])
+  user: User2 @belongsTo(fields: ["userID"])
+}
+
+
+
+#  End of tables to be added on next push
+
+
+
+
+
 type CreditApp @model {
   id: ID!
   firstName: String!
@@ -230,6 +274,7 @@ type Location @model {
   locNick: String! @primaryKey
   locName: String!
   subs: [LocationUser] @hasMany(indexName: "byLoc", fields: ["locNick"])
+  subs2: [LocationUser2] @hasMany(indexName: "byLoc", fields: ["locNick"])
   standing: [Standing] @hasMany(indexName: "byLoc", fields: ["locNick"])
   orders: [Order] @hasMany(indexName: "byLoc", fields: ["locNick"])
   ordersByDate: [Order] @hasMany(indexName: "byLocationByDelivDate", fields: ["locNick"])
@@ -267,6 +312,10 @@ type Location @model {
   templateProd: [TemplateProd]
     @hasMany(indexName: "byLoc", fields: ["locNick"])
   altLeadTimeByProduct: [AltLeadTime] @hasMany(indexName: "byLocByProd", fields: ["locNick"])
+  
+  # need to update these to LocationUser2
+  requests: [String]
+  #
 }
 
 type Product @model {

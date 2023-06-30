@@ -466,6 +466,9 @@ export const getUser = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -557,6 +560,7 @@ export const getUser = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -631,12 +635,448 @@ export const listUsers = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId
         }
         locs {
           nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getUser2 = /* GraphQL */ `
+  query GetUser2($id: ID!) {
+    getUser2(id: $id) {
+      id
+      name
+      email
+      username
+      phone
+      authClass
+      subs
+      locNick
+      defaultLoc {
+        Type
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        subs2 {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
+        ordersByDate {
+          nextToken
+        }
+        zoneNick
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        creditApp {
+          id
+          firstName
+          lastName
+          companyName
+          phone
+          email
+          addr1
+          addr2
+          city
+          state
+          zip
+          locAddr1
+          locAddr2
+          locCity
+          locState
+          locZip
+          startDate
+          businessType
+          bankName
+          bankPhone
+          refName
+          refAddr1
+          refAddr2
+          refCity
+          refZip
+          refPhone
+          refEmail
+          refDescrip
+          signture
+          sigDate
+          sigName
+          sigTitle
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        orderCnfEmail
+        phone
+        firstName
+        lastName
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        isActive
+        ttl
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        altLeadTimeByProduct {
+          nextToken
+        }
+        requests
+        createdAt
+        updatedAt
+        locationCreditAppId
+      }
+      locs {
+        items {
+          id
+          Type
+          authType
+          locNick
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      request
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUser2s = /* GraphQL */ `
+  query ListUser2s(
+    $filter: ModelUser2FilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUser2s(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        email
+        username
+        phone
+        authClass
+        subs
+        locNick
+        defaultLoc {
+          Type
+          locNick
+          locName
+          zoneNick
+          addr1
+          addr2
+          city
+          zip
+          email
+          orderCnfEmail
+          phone
+          firstName
+          lastName
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          isActive
+          ttl
+          requests
+          createdAt
+          updatedAt
+          locationCreditAppId
+        }
+        locs {
+          nextToken
+        }
+        request
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getLocationUser2 = /* GraphQL */ `
+  query GetLocationUser2($id: ID!) {
+    getLocationUser2(id: $id) {
+      id
+      Type
+      authType
+      locNick
+      userID
+      location {
+        Type
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        subs2 {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
+        ordersByDate {
+          nextToken
+        }
+        zoneNick
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        creditApp {
+          id
+          firstName
+          lastName
+          companyName
+          phone
+          email
+          addr1
+          addr2
+          city
+          state
+          zip
+          locAddr1
+          locAddr2
+          locCity
+          locState
+          locZip
+          startDate
+          businessType
+          bankName
+          bankPhone
+          refName
+          refAddr1
+          refAddr2
+          refCity
+          refZip
+          refPhone
+          refEmail
+          refDescrip
+          signture
+          sigDate
+          sigName
+          sigTitle
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        orderCnfEmail
+        phone
+        firstName
+        lastName
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        isActive
+        ttl
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        altLeadTimeByProduct {
+          nextToken
+        }
+        requests
+        createdAt
+        updatedAt
+        locationCreditAppId
+      }
+      user {
+        id
+        name
+        email
+        username
+        phone
+        authClass
+        subs
+        locNick
+        defaultLoc {
+          Type
+          locNick
+          locName
+          zoneNick
+          addr1
+          addr2
+          city
+          zip
+          email
+          orderCnfEmail
+          phone
+          firstName
+          lastName
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          isActive
+          ttl
+          requests
+          createdAt
+          updatedAt
+          locationCreditAppId
+        }
+        locs {
+          nextToken
+        }
+        request
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listLocationUser2s = /* GraphQL */ `
+  query ListLocationUser2s(
+    $filter: ModelLocationUser2FilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listLocationUser2s(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        Type
+        authType
+        locNick
+        userID
+        location {
+          Type
+          locNick
+          locName
+          zoneNick
+          addr1
+          addr2
+          city
+          zip
+          email
+          orderCnfEmail
+          phone
+          firstName
+          lastName
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          isActive
+          ttl
+          requests
+          createdAt
+          updatedAt
+          locationCreditAppId
+        }
+        user {
+          id
+          name
+          email
+          username
+          phone
+          authClass
+          subs
+          locNick
+          request
+          createdAt
+          updatedAt
         }
         createdAt
         updatedAt
@@ -745,6 +1185,18 @@ export const getLocation = /* GraphQL */ `
           authType
           locNick
           sub
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      subs2 {
+        items {
+          id
+          Type
+          authType
+          locNick
+          userID
           createdAt
           updatedAt
         }
@@ -931,6 +1383,7 @@ export const getLocation = /* GraphQL */ `
         }
         nextToken
       }
+      requests
       createdAt
       updatedAt
       locationCreditAppId
@@ -957,6 +1410,9 @@ export const listLocations = /* GraphQL */ `
         locNick
         locName
         subs {
+          nextToken
+        }
+        subs2 {
           nextToken
         }
         standing {
@@ -1050,6 +1506,7 @@ export const listLocations = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -1936,6 +2393,9 @@ export const getOrder = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -2027,6 +2487,7 @@ export const getOrder = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -2147,6 +2608,7 @@ export const listOrders = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId
@@ -2177,6 +2639,9 @@ export const getStanding = /* GraphQL */ `
         locNick
         locName
         subs {
+          nextToken
+        }
+        subs2 {
           nextToken
         }
         standing {
@@ -2270,6 +2735,7 @@ export const getStanding = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -2446,6 +2912,7 @@ export const listStandings = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId
@@ -4116,6 +4583,7 @@ export const getEventLog = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId
@@ -4172,6 +4640,9 @@ export const getTemplateProd = /* GraphQL */ `
         locNick
         locName
         subs {
+          nextToken
+        }
+        subs2 {
           nextToken
         }
         standing {
@@ -4265,6 +4736,7 @@ export const getTemplateProd = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -4432,6 +4904,7 @@ export const listTemplateProds = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId
@@ -4512,6 +4985,9 @@ export const getProdsNotAllowed = /* GraphQL */ `
         locNick
         locName
         subs {
+          nextToken
+        }
+        subs2 {
           nextToken
         }
         standing {
@@ -4605,6 +5081,7 @@ export const getProdsNotAllowed = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -4777,6 +5254,7 @@ export const listProdsNotAlloweds = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId
@@ -5314,6 +5792,9 @@ export const getLocationUser = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -5405,6 +5886,7 @@ export const getLocationUser = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -5447,6 +5929,7 @@ export const getLocationUser = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId
@@ -5505,6 +5988,7 @@ export const listLocationUsers = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId
@@ -5538,6 +6022,9 @@ export const getAltPricing = /* GraphQL */ `
         locNick
         locName
         subs {
+          nextToken
+        }
+        subs2 {
           nextToken
         }
         standing {
@@ -5631,6 +6118,7 @@ export const getAltPricing = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -5799,6 +6287,7 @@ export const listAltPricings = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId
@@ -5879,6 +6368,9 @@ export const getAltLeadTime = /* GraphQL */ `
         locNick
         locName
         subs {
+          nextToken
+        }
+        subs2 {
           nextToken
         }
         standing {
@@ -5972,6 +6464,7 @@ export const getAltLeadTime = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -6140,6 +6633,7 @@ export const listAltLeadTimes = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId
@@ -6242,6 +6736,84 @@ export const listTrainings = /* GraphQL */ `
     }
   }
 `;
+export const locUsers2ByAuthType = /* GraphQL */ `
+  query LocUsers2ByAuthType(
+    $Type: String!
+    $authType: ModelIntKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelLocationUser2FilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    locUsers2ByAuthType(
+      Type: $Type
+      authType: $authType
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        Type
+        authType
+        locNick
+        userID
+        location {
+          Type
+          locNick
+          locName
+          zoneNick
+          addr1
+          addr2
+          city
+          zip
+          email
+          orderCnfEmail
+          phone
+          firstName
+          lastName
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          isActive
+          ttl
+          requests
+          createdAt
+          updatedAt
+          locationCreditAppId
+        }
+        user {
+          id
+          name
+          email
+          username
+          phone
+          authClass
+          subs
+          locNick
+          request
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const locSortAZ = /* GraphQL */ `
   query LocSortAZ(
     $Type: String!
@@ -6264,6 +6836,9 @@ export const locSortAZ = /* GraphQL */ `
         locNick
         locName
         subs {
+          nextToken
+        }
+        subs2 {
           nextToken
         }
         standing {
@@ -6357,6 +6932,7 @@ export const locSortAZ = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -6615,6 +7191,7 @@ export const orderByLocByDelivDate = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId
@@ -6745,6 +7322,7 @@ export const orderByDelivDate = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId
@@ -6815,6 +7393,7 @@ export const standingByLocByStartDate = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId
@@ -6943,6 +7522,7 @@ export const standingByLocByEndDate = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId
@@ -7071,6 +7651,7 @@ export const standingByLocByDayOfWeek = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId
@@ -7197,6 +7778,7 @@ export const standingByDayOfWeek = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId
@@ -7354,6 +7936,7 @@ export const locUsersByAuthType = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId

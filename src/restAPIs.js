@@ -93,36 +93,6 @@ export const updateUser = async (event) => {
     });
 };
 
-/*
-export const updateUser = async (event) => {
-  let newEvent = await updateCognitoUser(event);
-  console.log("Userevent", event);
-
-  let newerEvent = {
-    sub: event.sub,
-    name: event.custName,
-    authClass: event.authClass,
-    email: event.email,
-    phone: event.phone,
-    locNick: event.defLoc,
-  };
-  for (let cust of event.customers) {
-    const newLocUser = {
-      authType: cust.authType,
-      locNick: event.locNick,
-      locName: event.locName,
-      sub: cust.sub,
-      id: cust.id,
-      Type: "LocationUser",
-    };
-    console.log("newLocUser", newLocUser);
-    await fetcher(newLocUser, "/locationUsers/updateLocationUser", "route");
-  }
-  console.log("newerEvent", newerEvent);
-  return fetcher(newerEvent, "/users/updateUser", "route");
-};
-
-*/
 
 export const deleteUser = (event) => {
   deleteCognitoUser(event);

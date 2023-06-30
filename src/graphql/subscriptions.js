@@ -648,6 +648,9 @@ export const onCreateUser = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -739,6 +742,7 @@ export const onCreateUser = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -777,6 +781,9 @@ export const onUpdateUser = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -868,6 +875,7 @@ export const onUpdateUser = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -906,6 +914,9 @@ export const onDeleteUser = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -997,6 +1008,7 @@ export const onDeleteUser = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -1012,6 +1024,927 @@ export const onDeleteUser = /* GraphQL */ `
           updatedAt
         }
         nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateUser2 = /* GraphQL */ `
+  subscription OnCreateUser2($filter: ModelSubscriptionUser2FilterInput) {
+    onCreateUser2(filter: $filter) {
+      id
+      name
+      email
+      username
+      phone
+      authClass
+      subs
+      locNick
+      defaultLoc {
+        Type
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        subs2 {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
+        ordersByDate {
+          nextToken
+        }
+        zoneNick
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        creditApp {
+          id
+          firstName
+          lastName
+          companyName
+          phone
+          email
+          addr1
+          addr2
+          city
+          state
+          zip
+          locAddr1
+          locAddr2
+          locCity
+          locState
+          locZip
+          startDate
+          businessType
+          bankName
+          bankPhone
+          refName
+          refAddr1
+          refAddr2
+          refCity
+          refZip
+          refPhone
+          refEmail
+          refDescrip
+          signture
+          sigDate
+          sigName
+          sigTitle
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        orderCnfEmail
+        phone
+        firstName
+        lastName
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        isActive
+        ttl
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        altLeadTimeByProduct {
+          nextToken
+        }
+        requests
+        createdAt
+        updatedAt
+        locationCreditAppId
+      }
+      locs {
+        items {
+          id
+          Type
+          authType
+          locNick
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      request
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateUser2 = /* GraphQL */ `
+  subscription OnUpdateUser2($filter: ModelSubscriptionUser2FilterInput) {
+    onUpdateUser2(filter: $filter) {
+      id
+      name
+      email
+      username
+      phone
+      authClass
+      subs
+      locNick
+      defaultLoc {
+        Type
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        subs2 {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
+        ordersByDate {
+          nextToken
+        }
+        zoneNick
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        creditApp {
+          id
+          firstName
+          lastName
+          companyName
+          phone
+          email
+          addr1
+          addr2
+          city
+          state
+          zip
+          locAddr1
+          locAddr2
+          locCity
+          locState
+          locZip
+          startDate
+          businessType
+          bankName
+          bankPhone
+          refName
+          refAddr1
+          refAddr2
+          refCity
+          refZip
+          refPhone
+          refEmail
+          refDescrip
+          signture
+          sigDate
+          sigName
+          sigTitle
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        orderCnfEmail
+        phone
+        firstName
+        lastName
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        isActive
+        ttl
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        altLeadTimeByProduct {
+          nextToken
+        }
+        requests
+        createdAt
+        updatedAt
+        locationCreditAppId
+      }
+      locs {
+        items {
+          id
+          Type
+          authType
+          locNick
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      request
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteUser2 = /* GraphQL */ `
+  subscription OnDeleteUser2($filter: ModelSubscriptionUser2FilterInput) {
+    onDeleteUser2(filter: $filter) {
+      id
+      name
+      email
+      username
+      phone
+      authClass
+      subs
+      locNick
+      defaultLoc {
+        Type
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        subs2 {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
+        ordersByDate {
+          nextToken
+        }
+        zoneNick
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        creditApp {
+          id
+          firstName
+          lastName
+          companyName
+          phone
+          email
+          addr1
+          addr2
+          city
+          state
+          zip
+          locAddr1
+          locAddr2
+          locCity
+          locState
+          locZip
+          startDate
+          businessType
+          bankName
+          bankPhone
+          refName
+          refAddr1
+          refAddr2
+          refCity
+          refZip
+          refPhone
+          refEmail
+          refDescrip
+          signture
+          sigDate
+          sigName
+          sigTitle
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        orderCnfEmail
+        phone
+        firstName
+        lastName
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        isActive
+        ttl
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        altLeadTimeByProduct {
+          nextToken
+        }
+        requests
+        createdAt
+        updatedAt
+        locationCreditAppId
+      }
+      locs {
+        items {
+          id
+          Type
+          authType
+          locNick
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      request
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateLocationUser2 = /* GraphQL */ `
+  subscription OnCreateLocationUser2(
+    $filter: ModelSubscriptionLocationUser2FilterInput
+  ) {
+    onCreateLocationUser2(filter: $filter) {
+      id
+      Type
+      authType
+      locNick
+      userID
+      location {
+        Type
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        subs2 {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
+        ordersByDate {
+          nextToken
+        }
+        zoneNick
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        creditApp {
+          id
+          firstName
+          lastName
+          companyName
+          phone
+          email
+          addr1
+          addr2
+          city
+          state
+          zip
+          locAddr1
+          locAddr2
+          locCity
+          locState
+          locZip
+          startDate
+          businessType
+          bankName
+          bankPhone
+          refName
+          refAddr1
+          refAddr2
+          refCity
+          refZip
+          refPhone
+          refEmail
+          refDescrip
+          signture
+          sigDate
+          sigName
+          sigTitle
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        orderCnfEmail
+        phone
+        firstName
+        lastName
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        isActive
+        ttl
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        altLeadTimeByProduct {
+          nextToken
+        }
+        requests
+        createdAt
+        updatedAt
+        locationCreditAppId
+      }
+      user {
+        id
+        name
+        email
+        username
+        phone
+        authClass
+        subs
+        locNick
+        defaultLoc {
+          Type
+          locNick
+          locName
+          zoneNick
+          addr1
+          addr2
+          city
+          zip
+          email
+          orderCnfEmail
+          phone
+          firstName
+          lastName
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          isActive
+          ttl
+          requests
+          createdAt
+          updatedAt
+          locationCreditAppId
+        }
+        locs {
+          nextToken
+        }
+        request
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateLocationUser2 = /* GraphQL */ `
+  subscription OnUpdateLocationUser2(
+    $filter: ModelSubscriptionLocationUser2FilterInput
+  ) {
+    onUpdateLocationUser2(filter: $filter) {
+      id
+      Type
+      authType
+      locNick
+      userID
+      location {
+        Type
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        subs2 {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
+        ordersByDate {
+          nextToken
+        }
+        zoneNick
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        creditApp {
+          id
+          firstName
+          lastName
+          companyName
+          phone
+          email
+          addr1
+          addr2
+          city
+          state
+          zip
+          locAddr1
+          locAddr2
+          locCity
+          locState
+          locZip
+          startDate
+          businessType
+          bankName
+          bankPhone
+          refName
+          refAddr1
+          refAddr2
+          refCity
+          refZip
+          refPhone
+          refEmail
+          refDescrip
+          signture
+          sigDate
+          sigName
+          sigTitle
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        orderCnfEmail
+        phone
+        firstName
+        lastName
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        isActive
+        ttl
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        altLeadTimeByProduct {
+          nextToken
+        }
+        requests
+        createdAt
+        updatedAt
+        locationCreditAppId
+      }
+      user {
+        id
+        name
+        email
+        username
+        phone
+        authClass
+        subs
+        locNick
+        defaultLoc {
+          Type
+          locNick
+          locName
+          zoneNick
+          addr1
+          addr2
+          city
+          zip
+          email
+          orderCnfEmail
+          phone
+          firstName
+          lastName
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          isActive
+          ttl
+          requests
+          createdAt
+          updatedAt
+          locationCreditAppId
+        }
+        locs {
+          nextToken
+        }
+        request
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteLocationUser2 = /* GraphQL */ `
+  subscription OnDeleteLocationUser2(
+    $filter: ModelSubscriptionLocationUser2FilterInput
+  ) {
+    onDeleteLocationUser2(filter: $filter) {
+      id
+      Type
+      authType
+      locNick
+      userID
+      location {
+        Type
+        locNick
+        locName
+        subs {
+          nextToken
+        }
+        subs2 {
+          nextToken
+        }
+        standing {
+          nextToken
+        }
+        orders {
+          nextToken
+        }
+        ordersByDate {
+          nextToken
+        }
+        zoneNick
+        zone {
+          zoneNick
+          zoneName
+          description
+          zoneFee
+          createdAt
+          updatedAt
+        }
+        creditApp {
+          id
+          firstName
+          lastName
+          companyName
+          phone
+          email
+          addr1
+          addr2
+          city
+          state
+          zip
+          locAddr1
+          locAddr2
+          locCity
+          locState
+          locZip
+          startDate
+          businessType
+          bankName
+          bankPhone
+          refName
+          refAddr1
+          refAddr2
+          refCity
+          refZip
+          refPhone
+          refEmail
+          refDescrip
+          signture
+          sigDate
+          sigName
+          sigTitle
+          createdAt
+          updatedAt
+        }
+        addr1
+        addr2
+        city
+        zip
+        email
+        orderCnfEmail
+        phone
+        firstName
+        lastName
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        isActive
+        ttl
+        prodsNotAllowed {
+          nextToken
+        }
+        customProd {
+          nextToken
+        }
+        templateProd {
+          nextToken
+        }
+        altLeadTimeByProduct {
+          nextToken
+        }
+        requests
+        createdAt
+        updatedAt
+        locationCreditAppId
+      }
+      user {
+        id
+        name
+        email
+        username
+        phone
+        authClass
+        subs
+        locNick
+        defaultLoc {
+          Type
+          locNick
+          locName
+          zoneNick
+          addr1
+          addr2
+          city
+          zip
+          email
+          orderCnfEmail
+          phone
+          firstName
+          lastName
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          isActive
+          ttl
+          requests
+          createdAt
+          updatedAt
+          locationCreditAppId
+        }
+        locs {
+          nextToken
+        }
+        request
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -1162,6 +2095,18 @@ export const onCreateLocation = /* GraphQL */ `
         }
         nextToken
       }
+      subs2 {
+        items {
+          id
+          Type
+          authType
+          locNick
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       standing {
         items {
           id
@@ -1343,6 +2288,7 @@ export const onCreateLocation = /* GraphQL */ `
         }
         nextToken
       }
+      requests
       createdAt
       updatedAt
       locationCreditAppId
@@ -1367,6 +2313,18 @@ export const onUpdateLocation = /* GraphQL */ `
         }
         nextToken
       }
+      subs2 {
+        items {
+          id
+          Type
+          authType
+          locNick
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       standing {
         items {
           id
@@ -1548,6 +2506,7 @@ export const onUpdateLocation = /* GraphQL */ `
         }
         nextToken
       }
+      requests
       createdAt
       updatedAt
       locationCreditAppId
@@ -1572,6 +2531,18 @@ export const onDeleteLocation = /* GraphQL */ `
         }
         nextToken
       }
+      subs2 {
+        items {
+          id
+          Type
+          authType
+          locNick
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       standing {
         items {
           id
@@ -1753,6 +2724,7 @@ export const onDeleteLocation = /* GraphQL */ `
         }
         nextToken
       }
+      requests
       createdAt
       updatedAt
       locationCreditAppId
@@ -3405,6 +4377,9 @@ export const onCreateOrder = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -3496,6 +4471,7 @@ export const onCreateOrder = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -3648,6 +4624,9 @@ export const onUpdateOrder = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -3739,6 +4718,7 @@ export const onUpdateOrder = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -3891,6 +4871,9 @@ export const onDeleteOrder = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -3982,6 +4965,7 @@ export const onDeleteOrder = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -4012,6 +4996,9 @@ export const onCreateStanding = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -4103,6 +5090,7 @@ export const onCreateStanding = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -4251,6 +5239,9 @@ export const onUpdateStanding = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -4342,6 +5333,7 @@ export const onUpdateStanding = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -4490,6 +5482,9 @@ export const onDeleteStanding = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -4581,6 +5576,7 @@ export const onDeleteStanding = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -7279,6 +8275,7 @@ export const onCreateEventLog = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId
@@ -7339,6 +8336,7 @@ export const onUpdateEventLog = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId
@@ -7399,6 +8397,7 @@ export const onDeleteEventLog = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId
@@ -7427,6 +8426,9 @@ export const onCreateTemplateProd = /* GraphQL */ `
         locNick
         locName
         subs {
+          nextToken
+        }
+        subs2 {
           nextToken
         }
         standing {
@@ -7520,6 +8522,7 @@ export const onCreateTemplateProd = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -7661,6 +8664,9 @@ export const onUpdateTemplateProd = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -7752,6 +8758,7 @@ export const onUpdateTemplateProd = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -7893,6 +8900,9 @@ export const onDeleteTemplateProd = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -7984,6 +8994,7 @@ export const onDeleteTemplateProd = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -8126,6 +9137,9 @@ export const onCreateProdsNotAllowed = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -8217,6 +9231,7 @@ export const onCreateProdsNotAllowed = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -8359,6 +9374,9 @@ export const onUpdateProdsNotAllowed = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -8450,6 +9468,7 @@ export const onUpdateProdsNotAllowed = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -8592,6 +9611,9 @@ export const onDeleteProdsNotAllowed = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -8683,6 +9705,7 @@ export const onDeleteProdsNotAllowed = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -9687,6 +10710,9 @@ export const onCreateLocationUser = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -9778,6 +10804,7 @@ export const onCreateLocationUser = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -9820,6 +10847,7 @@ export const onCreateLocationUser = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId
@@ -9852,6 +10880,9 @@ export const onUpdateLocationUser = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -9943,6 +10974,7 @@ export const onUpdateLocationUser = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -9985,6 +11017,7 @@ export const onUpdateLocationUser = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId
@@ -10017,6 +11050,9 @@ export const onDeleteLocationUser = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -10108,6 +11144,7 @@ export const onDeleteLocationUser = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -10150,6 +11187,7 @@ export const onDeleteLocationUser = /* GraphQL */ `
           currentBalance
           isActive
           ttl
+          requests
           createdAt
           updatedAt
           locationCreditAppId
@@ -10178,6 +11216,9 @@ export const onCreateAltPricing = /* GraphQL */ `
         locNick
         locName
         subs {
+          nextToken
+        }
+        subs2 {
           nextToken
         }
         standing {
@@ -10271,6 +11312,7 @@ export const onCreateAltPricing = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -10413,6 +11455,9 @@ export const onUpdateAltPricing = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -10504,6 +11549,7 @@ export const onUpdateAltPricing = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -10646,6 +11692,9 @@ export const onDeleteAltPricing = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -10737,6 +11786,7 @@ export const onDeleteAltPricing = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -10879,6 +11929,9 @@ export const onCreateAltLeadTime = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -10970,6 +12023,7 @@ export const onCreateAltLeadTime = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -11112,6 +12166,9 @@ export const onUpdateAltLeadTime = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -11203,6 +12260,7 @@ export const onUpdateAltLeadTime = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId
@@ -11345,6 +12403,9 @@ export const onDeleteAltLeadTime = /* GraphQL */ `
         subs {
           nextToken
         }
+        subs2 {
+          nextToken
+        }
         standing {
           nextToken
         }
@@ -11436,6 +12497,7 @@ export const onDeleteAltLeadTime = /* GraphQL */ `
         altLeadTimeByProduct {
           nextToken
         }
+        requests
         createdAt
         updatedAt
         locationCreditAppId

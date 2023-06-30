@@ -33,7 +33,7 @@ export const UserHeaderMenu = () => {
     !!user.locNick
   );
   const { data: locationList } = useLocationListSimple(true);
-  //console.log('userDetails', userDetails)
+  console.log('userDetails', userDetails)
 
   const userMenu = useRef(null);
   const locationMenu = useRef(null);
