@@ -8,9 +8,7 @@ import "@aws-amplify/ui-react/styles.css";
 import awsExports from "../aws-exports";
 import { I18n } from "aws-amplify";
 
-
 import { useSettingsStore } from "../Contexts/SettingsZustand";
-
 
 I18n.putVocabulariesForLanguage("en", {
   "Sign In": "Login", // Tab header
@@ -65,17 +63,15 @@ const bpbmgrItems = [
       window.location = "/Products";
     },
   },
-]
+];
 
 const itemsAuth2 = [
-  
   {
     label: "Ordering",
     icon: "pi pi-fw pi-shopping-cart",
     command: () => {
       window.location = "/Ordering";
     },
-    
   },
   /*
   {
@@ -97,15 +93,13 @@ const itemsAuth2 = [
 ];
 
 const itemsAuth2b = [
-  
   {
     label: "Ordering",
     icon: "pi pi-fw pi-shopping-cart",
     command: () => {
       window.location = "/Ordering";
     },
-    
-  }
+  },
 ];
 
 const itemsAuth1 = itemsAuth2b.concat([
@@ -159,12 +153,9 @@ const itemsAuth1 = itemsAuth2b.concat([
               window.location = "/Production/WhoShape";
             },
           },
-          
-          
         ],
       },
-      
-      
+
       {
         label: "BPBS",
         icon: "pi pi-fw pi-home",
@@ -204,11 +195,9 @@ const itemsAuth1 = itemsAuth2b.concat([
               window.location = "/Production/CroixToMake";
             },
           },
-          
-          
         ],
       },
-      
+
       {
         label: "Test New Production Pages",
         //icon: "pi pi-fw pi-wrench",
@@ -238,7 +227,7 @@ const itemsAuth1 = itemsAuth2b.concat([
       window.location = "/EODCounts";
     },
   },
-  
+
   {
     label: "Locations",
     icon: "pi pi-fw pi-map-marker",
@@ -293,38 +282,35 @@ function Pages({ Routes, Route, useLocation }) {
   const setItems = useSettingsStore((state) => state.setItems);
   const authClass = useSettingsStore((state) => state.authClass);
   useEffect(() => {
-    if (authClass === "customer"){
+    if (authClass === "customer") {
       setItems(itemsAuth2);
     } else if (authClass === "bpbmgr") {
-      setItems(bpbmgrItems)
+      setItems(bpbmgrItems);
     } else {
-      setItems(itemsAuth1)
+      setItems(itemsAuth1);
     }
-   
   }, [authClass]);
 
   return (
-    <Authenticator components={components} signUpAttributes={[
-      'email',
-      'name',
-      'phone_number'
-    ]}>
+    <Authenticator
+      components={components}
+      signUpAttributes={["email", "name", "phone_number"]}
+    >
       {({ signOut, user }) => {
-        
         return (
           <>
             <AnimatedRoutes
-     signOut={signOut} user={user}
-      Routes={Routes}
-      Route={Route}
-      useLocation={useLocation}
-    />
+              signOut={signOut}
+              user={user}
+              Routes={Routes}
+              Route={Route}
+              useLocation={useLocation}
+            />
           </>
         );
-      }} 
+      }}
     </Authenticator>
   );
-
 }
 
 export default Pages;

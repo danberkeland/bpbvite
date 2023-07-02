@@ -44,6 +44,7 @@ import EditZones2 from "../Pages/Settings/editZones/editZones2";
 import EditRoutes from "../Pages/Settings/editRoutes/editRoutes";
 import Notes2 from "../Pages/Settings/notes/Notes2";
 import Remap from "../Pages/EODCounts/EODCountsRempas";
+import TopNav from "./Auth/TopNav";
 
 function AnimatedRoutes({ Routes, Route, useLocation }) {
   const authClass = useSettingsStore((state) => state.authClass);
@@ -52,6 +53,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
   return (
     <AnimatePresence>
       <UserHeaderMenu />
+      {authClass !== "customer" && <TopNav />}
       <Routes location={location} key={location.pathname}>
         <Route path="/Ordering" element={<Ordering2 />} />
         <Route path="/CustomerNews" element={<CustomerNews />} />
