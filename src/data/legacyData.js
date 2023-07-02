@@ -1,5 +1,6 @@
 import { useMemo } from "react"
 import { useListData } from "./_listData"
+import { sortBy } from "lodash"
 
 /**
  * Fetches data from the current database and transforms it to
@@ -34,11 +35,26 @@ export const useLegacyFormatDatabase = () => {
       _orders, _doughs, _doughComponents
     ].some(data => !data)) return undefined
 
-    const products = mapProductsToLegacy(_products)
-    const customers = mapLocationsToLegacy(_locations, _orders, _locationUsers)
-    const routes = mapRoutesToLegacy(_routes, _zoneRoutes)
-    const standing = mapStandingItemsToLegacy(_standing, _products, _locations)
-    const orders = mapOrdersToLegacy(_orders, _products, _locations)
+    const products = sortBy(
+      mapProductsToLegacy(_products), 
+      'prodName'
+    )
+    const customers = sortBy(
+      mapLocationsToLegacy(_locations, _orders, _locationUsers), 
+      'custName'
+    )
+    const routes = sortBy(
+      mapRoutesToLegacy(_routes, _zoneRoutes),
+      'routeStart'
+    )
+    const standing = sortBy(
+      mapStandingItemsToLegacy(_standing, _products, _locations),
+      'timeStamp'
+    )
+    const orders = sortBy(
+      mapOrdersToLegacy(_orders, _products, _locations),
+      'prodName'
+    )
     const doughs = mapDoughsToLegacy(_doughs)
     const doughComponents = mapDoughComponentsToLegacy(_doughComponents)
 
