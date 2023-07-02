@@ -55,7 +55,7 @@ function LocationDescription(props) {
       (simp) => simp.value === e.value
     );
     let name = simpleCustomerList.data[ind].label;
-    let sub = simpleCustomerList.data[ind].sub;
+    let sub = simpleCustomerList.data[ind].id;
 
     arrayHelpers.push({ custName: name, sub: e.value, authType: 1 });
     const newLocUser = {

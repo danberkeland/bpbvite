@@ -1,7 +1,55 @@
 import mainCall from "/opt/mainCall/index.js";
 
+const query2 = /* GraphQL */ `
+  query MyQuery2 {
+    listLocationUser2s {
+      items {
+        user {
+          name
+          locs {
+            items {
+              locNick
+              userID
+              Type
+              authType
+              location {
+                locName
+              }
+              id
+            }
+          }
+          email
+          authClass
+          locNick
+          phone
+          id
+        }
+        location {
+          locName
+          subs2 {
+            items {
+              userID
+              authType
+              user {
+                name
+                locNick
+                phone
+                request
+                subs
+                username
+                id
+                email
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 const query = /* GraphQL */ `
-query MyQuery {
+  query MyQuery {
     listLocationUsers {
       items {
         user {
@@ -47,7 +95,6 @@ query MyQuery {
       }
     }
   }
-  
 `;
 
 /**
@@ -55,13 +102,13 @@ query MyQuery {
  */
 // Update
 const grabDetailedCustomerList = async (event) => {
-  let response = await mainCall(query, event);
+  let response = await mainCall(query2, event);
 
   let newArray = [];
 
-  console.log("responseCust", response.body.body.listLocationUsers.items);
+  console.log("responseCust", response.body.body.listLocationUser2s.items);
 
-  for (let item of response.body.body.listLocationUsers.items) {
+  for (let item of response.body.body.listLocationUser2s.items) {
     try {
       let locations = [];
       let customers = [];
@@ -71,18 +118,18 @@ const grabDetailedCustomerList = async (event) => {
           locNick: loc.locNick,
           locName: loc.location.locName,
           authType: loc.authType,
-          sub: loc.sub,
+          sub: loc.userID,
           Type: loc.Type,
-          id: loc.id
+          id: loc.id,
         };
         locations.push(newLoc);
       }
-      for (let sub of item.location.subs.items) {
+      for (let sub of item.location.subs2.items) {
         let newSub = {
-          sub: sub.sub,
+          sub: sub.userID,
           custName: sub.user.name,
           authType: sub.authType,
-          id: sub.id
+          id: sub.id,
         };
         customers.push(newSub);
       }
@@ -92,7 +139,7 @@ const grabDetailedCustomerList = async (event) => {
         authClass: item.user.authClass,
         email: item.user.email,
         phone: item.user.phone,
-        sub: item.user.sub,
+        sub: item.user.id,
         defLoc: item.user.locNick,
         locName: item.location.locName,
         locNick: item.location.locNick,
