@@ -14,7 +14,7 @@ I18n.putVocabulariesForLanguage("en", {
   "Sign In": "Login", // Tab header
   "Sign in": "Log in", // Button label
   "Sign in to your account": "Welcome Back!",
-  Username: "Enter your username", // Username label
+  Username: "Enter your username (Might be your email)", // Username label
   Password: "Enter your password", // Password label
   "Forgot your password?": "Reset Password",
   "Create Account": "Create Account", // Tab header
@@ -22,6 +22,7 @@ I18n.putVocabulariesForLanguage("en", {
   "Confirm Password": "Confirm your password", // Confirm Password label
   Email: "Enter your email",
   "Phone Number": "Enter your phone number",
+  "Code *": "Verification code has been sent to your email"
 });
 
 const components = {
