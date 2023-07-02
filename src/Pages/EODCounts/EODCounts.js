@@ -15,6 +15,7 @@ import dynamicSort from "../../functions/dynamicSort";
 import gqlFetcher from "../../data/_fetchers";
 
 import swal from "sweetalert";
+import { sortBy } from "lodash";
 
 const updateProductQuery = /* GraphQL */ `
   mutation UpdateProduct(
@@ -61,19 +62,26 @@ function EODCounts({ loc }) {
     if (!products) return []
     // console.log("prep products", products)
 
-    const eodProds = products?.filter(p => 
-      p.bakedWhere.includes(PROD_LOCATION) && p.bakedWhere.length === 1 
-        && p.isEOD === true
-    ).sort(dynamicSort("prodName"))
+    const sortedProducts = sortBy(products, 'prodName')
 
-    const pocketsToMap = products.filter(p => 
-      p.bakedWhere.includes("Prado") && p.bakedWhere.length === 1
-        && p.doughNick === "French"
-    ).sort(dynamicSort("prodName")).sort(dynamicSort("weight"))
-    const pocketItems = [...new Set(pocketsToMap.map(p => p.weight))].map(weight => 
-      pocketsToMap.find(product => product.weight === weight)
+    const eodProds = sortedProducts.filter(p => 
+      p.bakedWhere.includes(PROD_LOCATION) // && p.bakedWhere.length === 1 
+        && p.isEOD === true
     )
 
+    const pocketsToMap = sortedProducts.filter(p => 
+      p.doughNick === "French"
+        && p.bakedWhere.includes("Prado") && p.bakedWhere.length === 1
+    )
+
+    const pocketItems = sortBy(
+      [...new Set(pocketsToMap.map(p => p.weight))].map(weight => 
+        pocketsToMap.find(product => product.weight === weight)
+      ),
+      'weight'
+    )
+
+    console.log("pocketItems", pocketItems)
     return [eodProds, pocketItems]
   }
   
