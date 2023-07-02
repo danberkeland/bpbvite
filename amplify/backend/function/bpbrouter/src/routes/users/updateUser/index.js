@@ -9,14 +9,14 @@ const query = /* GraphQL */ `
     $email: String!
     $authClass: String
   ) {
-    updateUser(
+    updateUser2(
       input: {
         authClass: $authClass
         email: $email
         locNick: $locNick
         name: $name
         phone: $phone
-        sub: $sub
+        id: $sub
       }
     ) {
       email
@@ -25,7 +25,7 @@ const query = /* GraphQL */ `
       authClass
       name
       phone
-      sub
+      id
       updatedAt
     }
   }

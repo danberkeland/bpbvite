@@ -71,11 +71,14 @@ export const createUser = async (event) => {
   await createCognitoUser(event)
     .then((newEvent) => {
       console.log('newEvent', newEvent)
-      fetcher(newEvent.newerEvent, "/users/createUser", "route");
-      return newEvent.newLocUser;
+      fetcher(newEvent.newerEvent, "/users/createUser", "route").then(info => console.log('info', info));
+
+      
+      return newEvent;
     })
-    .then((newLocUser) => {
-      return createLocationUser(newLocUser);
+    .then((newStuff) => {
+      console.log('newStuff', newStuff)
+      return createLocationUser(newStuff.newLocUser);
     });
 };
 

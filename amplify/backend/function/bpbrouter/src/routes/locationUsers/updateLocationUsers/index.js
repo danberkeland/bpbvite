@@ -8,20 +8,20 @@ const query = /* GraphQL */ `
     $locNick: String!
     $sub: String!
   ) {
-    updateLocationUser(
+    updateLocationUser2(
       input: {
         Type: $Type
         authType: $authType
         id: $id
         locNick: $locNick
-        sub: $sub
+        userID: $sub
       }
     ) {
       Type
       authType
       id
       locNick
-      sub
+      userID
     }
   }
 `;

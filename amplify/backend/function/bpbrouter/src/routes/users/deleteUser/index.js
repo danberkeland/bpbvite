@@ -2,20 +2,20 @@ import mainCall from "/opt/mainCall/index.js";
 
 const query1 = /* GraphQL */ `
   mutation MyMutation($sub: String!) {
-    deleteUser(input: { sub: $sub }) {
+    deleteUser2(input: { id: $sub }) {
       locNick
-      sub
+      id
     }
   }
 `;
 
 const query2 = /* GraphQL */ `
   query MyQuery($sub: String!) {
-    listLocationUsers(filter: { sub: { eq: $sub } }) {
+    listLocationUser2s(filter: { userID: { eq: $sub } }) {
       items {
         id
         locNick
-        sub
+        userID
       }
     }
   }
@@ -23,7 +23,7 @@ const query2 = /* GraphQL */ `
 
 const query3 = /* GraphQL */ `
   mutation MyMutation($id: ID!) {
-    deleteLocationUser(input: { id: $id }) {
+    deleteLocationUser2(input: { id: $id }) {
       id
       locNick
     }
@@ -41,7 +41,7 @@ const deleteLocUser = async (event) => {
 const deleteUser = async (event) => {
   let response = await mainCall(query1, event);
   let list = await mainCall(query2, event);
-  for (let li of list.body.body.listLocationUsers.items) {
+  for (let li of list.body.body.listLocationUser2s.items) {
     let event2 = { id: li.id };
     let delResp = await deleteLocUser({ body: JSON.stringify(event2) });
     console.log("delResp", delResp);

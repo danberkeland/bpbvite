@@ -13,7 +13,7 @@ const cognito = new AWS.CognitoIdentityServiceProvider({ region: "us-east-2" });
 const deleteUser = async (sub) => {
   return await new Promise((resolve, reject) => {
     const params = {
-      UserPoolId: "us-east-2_931DOUCFU",
+      UserPoolId: "us-east-2_eE0F2fVdp",
       Username: sub,
     };
 

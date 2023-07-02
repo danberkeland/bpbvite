@@ -16,9 +16,13 @@ const createUser = async (event) => {
   const { email, custName, authClass, defLoc, username } = event;
   return await new Promise((resolve, reject) => {
     const params = {
-      UserPoolId: "us-east-2_931DOUCFU",
+      UserPoolId: "us-east-2_eE0F2fVdp",
       Username: email,
       UserAttributes: [
+        {
+          Name: "email",
+          Value: email,
+        },
        
         {
           Name: "custom:name",

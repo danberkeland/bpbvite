@@ -2,10 +2,10 @@ import mainCall from "/opt/mainCall/index.js";
 
 const query = /* GraphQL */ `
   mutation MyMutation($id: ID!) {
-    deleteLocationUser(input: { id: $id }) {
+    deleteLocationUser2(input: { id: $id }) {
       id
       locNick
-      sub
+      userID
     }
   }
 `;

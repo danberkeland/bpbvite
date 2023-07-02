@@ -1,14 +1,14 @@
 import mainCall from "/opt/mainCall/index.js";
 
 const query = /* GraphQL */ `
-mutation MyMutation($Type: String!, $authType: Int, $locNick: String!, $sub: String!) {
-  createLocationUser(input: {Type: $Type, authType: $authType, locNick: $locNick, sub: $sub}) {
+mutation MyMutation($Type: String!, $authType: Int, $locNick: String!, $sub: ID!) {
+  createLocationUser2(input: {Type: $Type, authType: $authType, locNick: $locNick, userID: $sub }) {
     Type
     authType
     createdAt
     id
     locNick
-    sub
+    userID
     updatedAt
   }
 }

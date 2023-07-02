@@ -15,7 +15,7 @@ const updateUser = async (event) => {
   const { email, custName, authClass, defLoc, sub } = event;
   return await new Promise((resolve, reject) => {
     const params = {
-      UserPoolId: "us-east-2_931DOUCFU",
+      UserPoolId: "us-east-2_eE0F2fVdp",
       Username: sub,
       UserAttributes: [
         {

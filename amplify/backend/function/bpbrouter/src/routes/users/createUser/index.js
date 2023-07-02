@@ -7,25 +7,30 @@ const query = /* GraphQL */ `
     $locNick: String
     $name: String!
     $phone: String
-    $sub: String!
+    $sub: ID!
+    
+   
   ) {
-    createUser(
+    createUser2(
       input: {
         authClass: $authClass
+        username: $email
         email: $email
         locNick: $locNick
         name: $name
         phone: $phone
-        sub: $sub
+        id: $sub
+       
       }
     ) {
       authClass
       createdAt
+      username
       email
       locNick
       name
       phone
-      sub
+      id
       updatedAt
     }
   }
