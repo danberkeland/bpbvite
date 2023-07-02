@@ -107,18 +107,12 @@ export function App() {
       <div className="headerBlock"></div>
 
       <Router>
-        {formType === "signedIn" && (
+      
           <React.Fragment>
             {authClass !== "bpbfull" && <NavBottom />}
             <Pages Routes={Routes} Route={Route} useLocation={useLocation} />
           </React.Fragment>
-        )}
-        {formType === "onNoUser" && <Splash />}
-        {formType === "verifyEmail" && <VerifyEmail />}
-        {formType === "Apply" && <UserApplyForm />}
-        {formType === "resetPassword" && <UserResetPassword />}
-        {formType === "forgotPassword" && <ForgotPassword />}
-        {formType === "Thankyou" && <UserApplyThanks />}
+       
       </Router>
     </React.Fragment>
   );

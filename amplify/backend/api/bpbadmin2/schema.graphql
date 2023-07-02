@@ -193,7 +193,10 @@ type User @model {
 type User2 @model {
   id: ID!
   name: String!
-  email: String! @index(name: "byUser")
+  email: String! @index(
+    name: "User2byEmail"
+    queryField: "User2byEmail"
+    )
   username: String
   phone: String
   authClass: String
