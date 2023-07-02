@@ -34,7 +34,7 @@
     }
   },
   "auth": {
-    "bpbadmin2db0d25d4": {
+    "bpbadmin23adeaa4d": {
       "customAuth": false,
       "dependsOn": [],
       "frontendAuthConfig": {
@@ -49,10 +49,11 @@
         "signupAttributes": [
           "EMAIL"
         ],
-        "socialProviders": [],
-        "usernameAttributes": [
-          "EMAIL"
+        "socialProviders": [
+          "FACEBOOK",
+          "GOOGLE"
         ],
+        "usernameAttributes": [],
         "verificationMechanisms": [
           "EMAIL"
         ]
@@ -296,29 +297,6 @@
           ],
           "category": "api",
           "resourceName": "bpbadmin2"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "grabSimpleLocationList": {
-      "build": true,
-      "dependsOn": [
-        {
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ],
-          "category": "api",
-          "resourceName": "bpbadmin2"
-        },
-        {
-          "attributes": [
-            "UserPoolId"
-          ],
-          "category": "auth",
-          "resourceName": "bpbadmin2db0d25d4"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -669,22 +647,6 @@
         {
           "category": "function",
           "resourceName": "grabProductById"
-        }
-      ]
-    },
-    "AMPLIFY_function_grabSimpleLocationList_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "grabSimpleLocationList"
-        }
-      ]
-    },
-    "AMPLIFY_function_grabSimpleLocationList_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "grabSimpleLocationList"
         }
       ]
     },

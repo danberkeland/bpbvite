@@ -6736,6 +6736,76 @@ export const listTrainings = /* GraphQL */ `
     }
   }
 `;
+export const user2byEmail = /* GraphQL */ `
+  query User2byEmail(
+    $email: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelUser2FilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    User2byEmail(
+      email: $email
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        email
+        username
+        phone
+        authClass
+        subs
+        locNick
+        defaultLoc {
+          Type
+          locNick
+          locName
+          zoneNick
+          addr1
+          addr2
+          city
+          zip
+          email
+          orderCnfEmail
+          phone
+          firstName
+          lastName
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          isActive
+          ttl
+          requests
+          createdAt
+          updatedAt
+          locationCreditAppId
+        }
+        locs {
+          nextToken
+        }
+        request
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const locUsers2ByAuthType = /* GraphQL */ `
   query LocUsers2ByAuthType(
     $Type: String!

@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "bpbadmin2db0d25d4_identitypool_db0d25d4",
+    "identityPoolName": "bpbadmin23adeaa4d_identitypool_3adeaa4d",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "bpbadmdb0d25d4",
-    "userPoolName": "bpbadmin2db0d25d4_userpool_db0d25d4",
+    "resourceNameTruncated": "bpbadm3adeaa4d",
+    "userPoolName": "bpbadmin23adeaa4d_userpool_3adeaa4d",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -31,18 +31,23 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "bpbadmdb0d25d4_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "bpbadm3adeaa4d_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "db0d25d4",
-    "resourceName": "bpbadmin2db0d25d4",
+    "sharedId": "3adeaa4d",
+    "resourceName": "bpbadmin23adeaa4d",
     "authSelections": "identityPoolAndUserPool",
-    "useDefault": "default",
-    "usernameAttributes": [
-      "email"
+    "useDefault": "defaultSocial",
+    "hostedUI": true,
+    "hostedUIDomainName": "bpbadmin23adeaa4d-3adeaa4d",
+    "authProvidersUserPool": [
+      "Facebook",
+      "Google"
     ],
+    "hostedUIProviderMeta": "[{\"ProviderName\":\"Facebook\",\"authorize_scopes\":\"email,public_profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"id\"}},{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://www.bpborder.com/\"],\"LogoutURLs\":[\"https://www.bpborder.com/\"]}",
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
     "useEnabledMfas": true
   }
-}  
+}

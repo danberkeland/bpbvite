@@ -12,9 +12,6 @@
       "AmplifyAppId": "d2nhue3419gd8g"
     },
     "categories": {
-      "auth": {
-        "bpbadmin2db0d25d4": {}
-      },
       "function": {
         "testingGrQL": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
@@ -60,10 +57,6 @@
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
           "s3Key": "amplify-builds/grabDetailedLocationList-344e613536655a7a6e72-build.zip"
         },
-        "grabSimpleLocationList": {
-          "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
-          "s3Key": "amplify-builds/grabSimpleLocationList-636d466650794c6d3174-build.zip"
-        },
         "bpbadmin2SDKLayer": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
           "s3Key": "amplify-builds/bpbadmin2SDKLayer-LambdaLayerVersione53e2e3b-build.zip"
@@ -104,6 +97,9 @@
       "api": {
         "bpbadmin2": {},
         "bpbGateway": {}
+      },
+      "auth": {
+        "bpbadmin23adeaa4d": {}
       }
     }
   },
