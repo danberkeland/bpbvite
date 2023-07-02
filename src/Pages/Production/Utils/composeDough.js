@@ -90,6 +90,9 @@ export default class ComposeDough {
     return Math.round(qty / 82);
   };
 
+  /** 
+   * Specifically for FRENCH pockets
+   */
   returnPockets = (database, loc,today, tomorrow, twoDay) => {
     let pocketsTodayPrep = getOrdersList(tomorrow, database, true).filter(
       (set) => pocketFilterToday(set, loc)
@@ -123,6 +126,10 @@ export default class ComposeDough {
 
     let pocketsLateTom = makePocketQty(pocketsTomLate);
 
+    //console.log("pocketList", [...pocketsToday, ...pocketsTom, ...pocketsLateToday, ...pocketsLateTom])
+    //console.log("pocketsTodayPrep", pocketsTodayPrep)
+    //console.log("pocketsToday", pocketsToday)
+    //console.log("pocketsTodayLate", pocketsTodayLate)
     for (let item of pocketsLateToday) {
       for (let otherItem of pocketsLateTom) {
         if (item.pocketSize === otherItem.pocketSize) {
@@ -131,7 +138,7 @@ export default class ComposeDough {
       }
     }
     let clone2 = clonedeep(pocketsLateToday)
-    console.log("pocketsLateTodayClone2",clone2)
+    //console.log("pocketsLateTodayClone2",clone2)
 
     for (let item of pocketsToday) {
       console.log("item",item)
@@ -144,14 +151,25 @@ export default class ComposeDough {
     }
 
     let clone3 = clonedeep(pocketsToday)
-    console.log("clone3",clone3)
+    //console.log("clone3",clone3)
 
+    let products = database[0]
     for (let item of pocketsToday) {
-      for (let otherItem of pocketsTodayLate) {
-        if (item.pocketSize === otherItem.weight) {
-          item.prepped = otherItem.preshaped;
-        }
-      }
+      // If the data isn't being transformed, get it from
+      // the primary source so that nobody has to trace
+      // through multiple files/functions to verify it.
+
+      // for (let otherItem of pocketsTodayLate) {
+      //   if (item.pocketSize === otherItem.weight) {
+      //     item.prepped = otherItem.preshaped;
+      //   }
+      // }
+
+      const matchItem = products.find(P => 
+        P.weight === item.pocketSize && P.doughType === "French"
+      )
+      item.prepped = matchItem.preshaped
+
     }
 
     for (let item of pocketsToday) {
