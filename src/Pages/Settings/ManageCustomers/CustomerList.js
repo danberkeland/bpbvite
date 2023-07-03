@@ -10,6 +10,7 @@ import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 import { withFadeIn } from "../../../hoc/withFadeIn";
 
 import CustomerDetails from "./CustomerDetails";
+import InviteUser from "./InviteUser";
 const initialState = {
   custName: "",
   authClass: "",
@@ -123,6 +124,7 @@ function CustomerList({
           {isInvite ? (
             <React.Fragment>
               <button onClick={handleCustomerList}>+ CUSTOMER LIST</button>
+              <InviteUser />
             </React.Fragment>
           ) : (
             <React.Fragment>
