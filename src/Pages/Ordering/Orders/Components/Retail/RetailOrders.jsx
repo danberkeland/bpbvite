@@ -323,8 +323,7 @@ import { ProductDropdown } from "./ProductDropdown"
 
 
 export const RetailOrders = () => {
-  const { data:PRD } = 
-    useListData({ tableName: "Product", shouldFetch: true})
+  const { data:PRD } = useListData({ tableName: "Product", shouldFetch: true})
   const products = Object.fromEntries(PRD.map(P => [P.prodNick, P])) 
 
   const nowDT = DateTime.now().setZone('America/Los_Angeles')
@@ -342,21 +341,28 @@ export const RetailOrders = () => {
       delivDateDT, delivDateISO, relativeDelivDate 
     }
 
-
-
+  // user entered name to create order
+  const [orderName, setOrderName] = useState('')
+  
+  // name for the displayed order; for creating or editing
   const [currentCustomer, setCurrentCustomer] = useState('')
+
+  // current order data
   const [currentOrder, setCurrentOrder] = useState()
+
+  // product to be added to currentOrder
   const [selectedProduct, setSelectedProduct] = useState(null)
 
   //const [selectedCustomer, setSelectedCustomer] = useState()
   const [formMode, setFormMode] = useState('hide') // 'hide'|'edit'|'create'
 
-  const handleDateChange = (e) => {
+  const handleDateChange = e => {
     if (delivDateJS.getTime() === e.value.getTime()) return
     setDelivDateJS(e.value)
     setCurrentOrder()
     setSelectedProduct(null)
     setCurrentCustomer('')
+    setOrderName('')
     setFormMode('hide')
   }
 
@@ -379,9 +385,11 @@ export const RetailOrders = () => {
         <CreateMenu 
           formMode={formMode}
           setFormMode={setFormMode}
+          delivDateISO={delivDateISO}
           setCurrentCustomer={setCurrentCustomer}
           setCurrentOrder={setCurrentOrder}
-          delivDateISO={delivDateISO}
+          orderName={orderName}
+          setOrderName={setOrderName}
         />
 
         <OrderList 
@@ -393,6 +401,7 @@ export const RetailOrders = () => {
           setCurrentOrder={setCurrentOrder}
           formMode={formMode}
           setFormMode={setFormMode}
+          setOrderName={setOrderName}
         />
       </div>
 

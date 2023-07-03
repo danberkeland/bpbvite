@@ -10,9 +10,8 @@ export const CreateMenu = ({
   formMode, setFormMode,
   delivDateISO,
   currentOrder, setCurrentOrder,
+  orderName, setOrderName,
 }) => {
-
-  const [orderName, setOrderName] = useState('')
 
   return (
     <div style={{
@@ -23,6 +22,7 @@ export const CreateMenu = ({
     }}>
       <InputLabel label="Name for New Order">
         <InputText 
+          value={orderName}
           onChange={e => setOrderName(e.target.value)}
           disabled={formMode !== 'hide'}
         />
