@@ -83,6 +83,7 @@ export function App() {
     console.log("check user useEffect");
     setIsLoading(true);
     checkUser().then((use) => {
+      console.log('user', use)
       use && setAccess(use.signInUserSession.accessToken.jwtToken);
       use && setUser(use.attributes["custom:name"]);
       use && !authClass && setAuthClass(use.attributes["custom:authType"]);

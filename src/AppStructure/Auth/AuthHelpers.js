@@ -3,11 +3,91 @@ import { API, graphqlOperation } from "aws-amplify";
 
 import { getLocation, getUser, listLocationUsers } from "../../graphql/queries";
 
+const user2byEmail = /* GraphQL */ `
+  query User2byEmail(
+    $email: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelUser2FilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    User2byEmail(
+      email: $email
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        email
+        username
+        phone
+        authClass
+        subs
+        locNick
+        defaultLoc {
+          Type
+          locNick
+          locName
+          zoneNick
+          addr1
+          addr2
+          city
+          zip
+          email
+          orderCnfEmail
+          phone
+          firstName
+          lastName
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          isActive
+          ttl
+          requests
+          createdAt
+          updatedAt
+          locationCreditAppId
+        }
+        locs {
+          items{
+            locNick
+          }
+          nextToken
+        }
+        request
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
 //  Checks for and, if exists, returns full Cognito object for user
 export const checkUser = async () => {
   try {
     console.log("currentAuthenticatedUser");
     let use = await Auth.currentAuthenticatedUser();
+    console.log('use.attributes.email', use.attributes.email)
+    let user = await API.graphql(graphqlOperation(user2byEmail, { email: use.attributes.email }));
+    console.log('user2byEmail', user.data.User2byEmail.items[0])
+    use.attributes["custom:name"] = user.data.User2byEmail.items[0].name
+    use.attributes["custom:authType"] = user.data.User2byEmail.items[0].authClass
+    use.attributes["custom:defLoc"] = user.data.User2byEmail.items[0].locNick
     return use;
   } catch (err) {
     console.log("Error AUthenticating User", err);
