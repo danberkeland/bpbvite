@@ -98,6 +98,7 @@ export const updateUser = async (event) => {
 
 
 export const deleteUser = (event) => {
+  console.log('eventDeleteUser', event)
   deleteCognitoUser(event);
   return fetcher(event, "/users/deleteUser", "route");
 };

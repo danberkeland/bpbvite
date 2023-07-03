@@ -1,7 +1,7 @@
 import mainCall from "/opt/mainCall/index.js";
 
 const query1 = /* GraphQL */ `
-  mutation MyMutation($sub: String!) {
+  mutation MyMutation($sub: ID!) {
     deleteUser2(input: { id: $sub }) {
       locNick
       id
@@ -10,7 +10,7 @@ const query1 = /* GraphQL */ `
 `;
 
 const query2 = /* GraphQL */ `
-  query MyQuery($sub: String!) {
+  query MyQuery($sub: ID!) {
     listLocationUser2s(filter: { userID: { eq: $sub } }) {
       items {
         id
