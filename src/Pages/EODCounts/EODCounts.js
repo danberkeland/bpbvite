@@ -16,6 +16,7 @@ import gqlFetcher from "../../data/_fetchers";
 
 import swal from "sweetalert";
 import { sortBy } from "lodash";
+import { useListData } from "../../data/_listData";
 
 const updateProductQuery = /* GraphQL */ `
   mutation UpdateProduct(
@@ -57,39 +58,40 @@ const PROD_LOCATION = "Prado"
 function EODCounts({ loc }) {
   const [signedIn, setSignedIn] = useState("null");
   const { data:products, mutate:mutateProducts } = useProductListFull(true);
+  // const { 
+  //   data:products, 
+  //   submitMutations:submitProducts,
+  //   updateLocalData:syncProducts
+  // } = useListData({ tableName: "Product", shouldFetch: true })
     
   const prepData = () => {
     if (!products) return []
-    // console.log("prep products", products)
 
-    const sortedProducts = sortBy(products, 'prodName')
-
-    const eodProds = sortedProducts.filter(p => 
+    const eodProds = products.filter(p => 
       p.bakedWhere.includes(PROD_LOCATION) // && p.bakedWhere.length === 1 
         && p.isEOD === true
     )
 
-    const pocketsToMap = sortedProducts.filter(p => 
+    const pocketsToMap = products.filter(p => 
       p.doughNick === "French"
         && p.bakedWhere.includes("Prado") && p.bakedWhere.length === 1
     )
 
     const pocketItems = sortBy(
       [...new Set(pocketsToMap.map(p => p.weight))].map(weight => 
-        pocketsToMap.find(product => product.weight === weight)
+        products.find(product => 
+          product.weight === weight && product.doughNick === "French"
+        )
       ),
       'weight'
     )
 
+    console.log("eodProds", eodProds)
     console.log("pocketItems", pocketItems)
     return [eodProds, pocketItems]
   }
   
   const [eodProds, pocketItems] = useMemo(prepData, [products])
-  console.log("eodProds", eodProds)
-  console.log("pocketItems", pocketItems)
-
-
 
   const handleSignIn = () => {
     let signIn;
