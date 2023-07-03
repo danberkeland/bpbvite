@@ -1,25 +1,27 @@
-import React, { useState } from 'react';
-import { useFormik } from 'formik';
-import { Dropdown } from 'primereact/dropdown';
-import { InputText } from 'primereact/inputtext';
-import { Button } from 'primereact/button';
-import * as Yup from 'yup';
-import hashSum from 'hash-sum';
+import React, { useState } from "react";
+import { useFormik } from "formik";
+import { Dropdown } from "primereact/dropdown";
+import { InputText } from "primereact/inputtext";
+import { Button } from "primereact/button";
+import * as Yup from "yup";
+import hashSum from "hash-sum";
 
 const locationOptions = [
-  { locName: 'Location 1', locNick: 'loc1' },
-  { locName: 'Location 2', locNick: 'loc2' },
-  { locName: 'Location 3', locNick: 'loc3' },
+  { locName: "High St. Deli", locNick: "high" },
+  { locName: "Novo", locNick: "novo" },
+  { locName: "Kreuzberg", locNick: "kberg" },
 ];
 
 const authTypeOptions = [
-  { label: '1', value: 1 },
-  { label: '2', value: 2 },
-  { label: '3', value: 3 },
+  { label: "1", value: 1 },
+  { label: "2", value: 2 },
+  { label: "3", value: 3 },
 ];
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().email('Invalid email address').required('Email is required'),
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
 });
 
 const InviteUser = () => {
@@ -27,12 +29,12 @@ const InviteUser = () => {
 
   const formik = useFormik({
     initialValues: {
-      email: '',
+      email: "",
       location: null,
       authType: null,
     },
     validationSchema,
-    onSubmit: values => {
+    onSubmit: (values) => {
       const hashCode = generateHashCode(values);
       setSubmittedValues({ ...values, hashCode });
     },
@@ -43,7 +45,7 @@ const InviteUser = () => {
     setSubmittedValues(null);
   };
 
-  const generateHashCode = values => {
+  const generateHashCode = (values) => {
     const { email, location, authType } = values;
     const dataToHash = email + location.locName + authType;
     const hashCode = hashSum(dataToHash).toString();
@@ -62,7 +64,9 @@ const InviteUser = () => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.email}
-            className={formik.errors.email && formik.touched.email ? 'p-invalid' : ''}
+            className={
+              formik.errors.email && formik.touched.email ? "p-invalid" : ""
+            }
           />
           {formik.errors.email && formik.touched.email && (
             <small className="p-error">{formik.errors.email}</small>
@@ -75,14 +79,21 @@ const InviteUser = () => {
             id="location"
             name="location"
             options={locationOptions}
-            onChange={formik.handleChange}
+            onChange={(e) => {
+              formik.setFieldValue("location", e.value); // Set the locNick value instead of the entire option object
+            }}
             onBlur={formik.handleBlur}
             value={formik.values.location}
             placeholder="Select a location"
             optionLabel="locName"
             optionValue="locNick"
-            className={formik.errors.location && formik.touched.location ? 'p-invalid' : ''}
+            className={
+              formik.errors.location && formik.touched.location
+                ? "p-invalid"
+                : ""
+            }
           />
+
           {formik.errors.location && formik.touched.location && (
             <small className="p-error">{formik.errors.location}</small>
           )}
@@ -98,7 +109,11 @@ const InviteUser = () => {
             onBlur={formik.handleBlur}
             value={formik.values.authType}
             placeholder="Select an auth type"
-            className={formik.errors.authType && formik.touched.authType ? 'p-invalid' : ''}
+            className={
+              formik.errors.authType && formik.touched.authType
+                ? "p-invalid"
+                : ""
+            }
           />
           {formik.errors.authType && formik.touched.authType && (
             <small className="p-error">{formik.errors.authType}</small>
@@ -115,7 +130,7 @@ const InviteUser = () => {
         <div className="p-mt-3">
           <h5>Submitted Values:</h5>
           <p>Email: {submittedValues.email}</p>
-          <p>Location: {submittedValues.location.locName}</p>
+          <p>Location: {submittedValues.location}</p>
           <p>Auth Type: {submittedValues.authType}</p>
           <p>Hash Code: {submittedValues.hashCode}</p>
         </div>
