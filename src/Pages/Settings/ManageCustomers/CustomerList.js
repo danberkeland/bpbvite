@@ -10,6 +10,7 @@ import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 import { withFadeIn } from "../../../hoc/withFadeIn";
 
 import CustomerDetails from "./CustomerDetails";
+import InviteUser from "./InviteUser";
 const initialState = {
   custName: "",
   authClass: "",
@@ -36,17 +37,29 @@ function CustomerList({
   const setIsCreate = useSettingsStore((state) => state.setIsCreate);
   const isCreate = useSettingsStore((state) => state.isCreate);
 
+  const [isInvite, setIsInvite] = useState(false);
+
   const [filter] = useState({
     custName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
 
   const { customerList } = useCustomerList();
 
-  console.log('rendering CustomerList', customerList)
-  const handleClick = () => {
-    setIsCreate(!isCreate);
+  console.log("rendering CustomerList", customerList);
+
+  const handleCreate = () => {
+    setIsInvite(false);
+    setIsCreate(true);
   };
 
+  const handleCustomerList = () => {
+    setIsInvite(false);
+    setIsCreate(false);
+  };
+
+  const handleInvite = () => {
+    setIsInvite(true);
+  };
 
   const decideList = () => {
     console.log("activeIndex", activeIndex);
@@ -63,7 +76,7 @@ function CustomerList({
   };
 
   const CustomerDataTable = () => {
-   return(
+    return (
       <DataTable
         className="dataTable"
         value={decideList()}
@@ -97,28 +110,40 @@ function CustomerList({
         )}
       </DataTable>
     );
-  }
+  };
 
   return (
     <React.Fragment>
       {isCreate ? (
         <React.Fragment>
-          <button onClick={handleClick}>+ CUSTOMER LIST</button>
+          <button onClick={handleCustomerList}>+ CUSTOMER LIST</button>
           <CustomerDetails initialState={initialState} />
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <button onClick={handleClick}>+ CREATE CUSTOMER</button>
-          <TabMenu
-            model={menuItems}
-            activeIndex={activeIndex}
-            onTabChange={(e) => setActiveIndex(e.index)}
-          />
-          {customerList.isLoading ? setIsLoading(true) : setIsLoading(false)}
+          {isInvite ? (
+            <React.Fragment>
+              <button onClick={handleCustomerList}>+ CUSTOMER LIST</button>
+              <InviteUser />
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <button onClick={handleCreate}>+ CREATE CUSTOMER</button>
+              <button onClick={handleInvite}>+ INVITE CUSTOMER</button>
+              <TabMenu
+                model={menuItems}
+                activeIndex={activeIndex}
+                onTabChange={(e) => setActiveIndex(e.index)}
+              />
+              {customerList.isLoading
+                ? setIsLoading(true)
+                : setIsLoading(false)}
 
-          {customerList.isError && <div>Table Failed to load</div>}
-          {customerList.data && <CustomerDataTable />}
-          <div className="bottomSpace"></div>
+              {customerList.isError && <div>Table Failed to load</div>}
+              {customerList.data && <CustomerDataTable />}
+              <div className="bottomSpace"></div>
+            </React.Fragment>
+          )}
         </React.Fragment>
       )}
     </React.Fragment>

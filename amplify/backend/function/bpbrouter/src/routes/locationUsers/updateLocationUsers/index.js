@@ -6,7 +6,7 @@ const query = /* GraphQL */ `
     $authType: Int
     $id: ID!
     $locNick: String!
-    $sub: String!
+    $sub: ID!
   ) {
     updateLocationUser2(
       input: {

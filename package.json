@@ -18,6 +18,7 @@
     "final-form": "^4.20.7",
     "formik": "^2.2.9",
     "framer-motion": "^7.3.5",
+    "hash-sum": "^2.0.0",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.5.28",
     "lodash": "^4.17.21",

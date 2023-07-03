@@ -2,7 +2,7 @@ import mainCall from "/opt/mainCall/index.js";
 
 const query = /* GraphQL */ `
   mutation MyMutation(
-    $sub: String!
+    $sub: ID!
     $phone: String
     $name: String!
     $locNick: String
