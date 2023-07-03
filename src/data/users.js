@@ -31,7 +31,7 @@ export const useUserDetails = (sub, shouldFetch) => {
 
   const transformData = () => {
     if (!data) return undefined
-    return getNestedObject(data, ['data', 'getUser'])
+    return getNestedObject(data, ['data', 'getUser2'])
   }
   const _data = useMemo(transformData, [data])
 

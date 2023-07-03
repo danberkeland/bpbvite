@@ -24,6 +24,7 @@ export const UserHeaderMenu = () => {
     authClass: useSettingsStore((state) => state.authClass),
     locNick: useSettingsStore((state) => state.currentLoc),
   };
+  console.log('user', user)
   const setCurrentLoc = useSettingsStore((state) => state.setCurrentLoc);
   const setFormType = useSettingsStore((state) => state.setFormType);
 

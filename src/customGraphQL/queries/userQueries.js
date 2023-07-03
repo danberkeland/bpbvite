@@ -1,11 +1,11 @@
 export const getUser = /* GraphQL */ `
-  query GetUser($sub: String!) {
-    getUser(sub: $sub) {
+  query GetUser($sub: ID!) {
+    getUser2(id: $sub) {
       name
       email
       phone
       authClass
-      sub
+      id
       defaultLoc {
         locNick
         locName
@@ -16,7 +16,7 @@ export const getUser = /* GraphQL */ `
           Type
           authType
           locNick
-          sub
+          userID
           createdAt
           updatedAt
         }
