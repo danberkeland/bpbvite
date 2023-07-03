@@ -59,7 +59,7 @@ export const useProductListSimple = (shouldFetch) => {
 // }
 
 /**
- * Produces a full list of prodNick/prodName items.
+ * Lists product objects with full attributes. Sorted by prodName.
  * @param {boolean} shouldFetch Fetches data only when true.
  * @returns {{ data: Array<{ locNick: string, locName: string }>, errors: object }} A list of locNick ID's and locName text labels.
  */
@@ -71,7 +71,7 @@ export const useProductListFull = (shouldFetch) => {
   )
 
   const transformData = () => {
-    if (data) return sortBy(data.data.listProducts.items, ['locName'])
+    if (data) return sortBy(data.data.listProducts.items, ['prodName'])
   }
 
   return({
