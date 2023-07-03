@@ -15,7 +15,7 @@ export const addProdAttr = (fullOrder, database) => {
     Object.assign(full, update(full, products, customers))
   );
 
-  console.log("fullToFix", fullToFix);
+  //console.log("fullToFix", fullToFix);
 
   return fullToFix;
 };
@@ -28,7 +28,7 @@ export const addFresh = (
   routes
 ) => {
   make.qty = 0;
-  console.log("make", make);
+  //console.log("make", make);
 
   let qtyAccToday = 0;
   let qtyAccTomorrow = 0;
@@ -254,11 +254,11 @@ export const addPretzel = (
     noRouteToday.length > 0 ? noRouteToday.reduce((a, b) => a + b) : 0;
 
 
-  make.forBake === "Unsalted Pretzel" && console.log('qtyAccToday Pretzel', qtyAccToday)
-  make.forBake === "Unsalted Pretzel" && console.log('noRouteAcc Pretzel', noRouteAcc)
-  make.forBake === "Unsalted Pretzel" && console.log('noRoute2DayAcc Pretzel', noRoute2DayAcc)
-  make.forBake === "Unsalted Pretzel" && console.log('qtyAccTomorrow Pretzel', qtyAccTomorrow)
-  make.forBake === "Unsalted Pretzel" && console.log('noRouteTodayAcc Pretzel', noRouteTodayAcc)
+  // make.forBake === "Unsalted Pretzel" && console.log('qtyAccToday Pretzel', qtyAccToday)
+  // make.forBake === "Unsalted Pretzel" && console.log('noRouteAcc Pretzel', noRouteAcc)
+  // make.forBake === "Unsalted Pretzel" && console.log('noRoute2DayAcc Pretzel', noRoute2DayAcc)
+  // make.forBake === "Unsalted Pretzel" && console.log('qtyAccTomorrow Pretzel', qtyAccTomorrow)
+  // make.forBake === "Unsalted Pretzel" && console.log('noRouteTodayAcc Pretzel', noRouteTodayAcc)
 
   make.qty = qtyAccToday + noRouteAcc - noRouteTodayAcc;
   make.needEarly = qtyAccToday;

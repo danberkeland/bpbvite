@@ -263,7 +263,7 @@ export const checkForUpdates = async (
 
     let dghPromises = []
     for (let dgh of doughsToUpdate) {
-      console.log("dgh", dgh);
+      //console.log("dgh", dgh);
       if (dgh.updatePreBucket !== tomorrow) {
         dgh.updatePreBucket = today;
       }
@@ -311,7 +311,7 @@ export const checkForUpdates = async (
         console.log("newSqOrd", newOrd);
         let qty = Number(newOrd["qty"]);
         let dt = new Date().toISOString();
-        console.log("dt", dt);
+        //console.log("dt", dt);
         let deliv = newOrd["delivDate"];
         let delivISO = new Date(deliv);
         let delivDate = deliv.split("T")[0];
@@ -357,7 +357,7 @@ export const checkForUpdates = async (
           updatedBy: "bpb_admin",
         };
 
-        console.log("orders", orders);
+        //console.log("orders", orders);
 
         let ind = orders.findIndex(
           (ord) => locNick.includes(ord["custName"]) && (ord["prodName"] === prodName || ord["prodName"] === "Brownie")

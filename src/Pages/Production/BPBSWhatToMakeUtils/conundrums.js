@@ -20,7 +20,7 @@ export const handleFrenchConundrum = (freshProds, shelfProds,database,delivDate)
     //let fullTomOrders = getFullProdOrders(tomBasedOnDelivDate(delivDate),database)
 
     let fullTomOrders = getFullProdOrders(tomBasedOnDelivDate(delivDate),database)
-    console.log("fullTomOrders",fullTomOrders)
+    //console.log("fullTomOrders",fullTomOrders)
     fullTomOrders = fullTomOrders.filter(fu => fu.prodName==="French Stick" || fu.prodName==="French Stick (Retail)").map(f => f.qty)
     
     let fullTom = fullTomOrders.reduce(addUp)
@@ -29,11 +29,12 @@ export const handleFrenchConundrum = (freshProds, shelfProds,database,delivDate)
     let frenchInd = shelfProds.findIndex(fr => fr.forBake==="French")
     let highqty = freshProds[highInd].qty
     let other = shelfProds[frenchInd].qty
-    console.log("High",highqty)
-    console.log("Other", other)
-    console.log("fullTomOrders",fullTom)
     let current = products[products.findIndex(pr => pr.forBake === "French")].currentStock
-    console.log("currentStock",current)
+
+    // console.log("High",highqty)
+    // console.log("Other", other)
+    // console.log("fullTomOrders",fullTom)
+    // console.log("currentStock",current)
 
     if (current > other){
         current = other
