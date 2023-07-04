@@ -32,7 +32,7 @@ export const RetailCalendar = ({
     )
   }
 
-  return (<>
+  return (
     <Calendar 
       inline
       value={delivDateJS}
@@ -40,8 +40,7 @@ export const RetailCalendar = ({
       onChange={e => handleDateChange(e)}
       style={calendarStyle}
     />
-    
-    </>
   )
+    
 }
 
