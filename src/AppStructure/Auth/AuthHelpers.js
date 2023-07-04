@@ -93,6 +93,9 @@ export const checkUser = async () => {
     );
     console.log("user2byEmail", user.data.User2byEmail.items);
     let ind = user.data.User2byEmail.items.findIndex(item => item.username === use.username)
+    if (ind<0){
+      ind = 0
+    }
     use.attributes["custom:name"] = user.data.User2byEmail.items[ind].name;
     use.attributes["custom:authType"] =
       user.data.User2byEmail.items[ind].authClass;
