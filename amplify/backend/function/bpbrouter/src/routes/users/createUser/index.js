@@ -4,6 +4,7 @@ const query = /* GraphQL */ `
   mutation MyMutation(
     $authClass: String
     $email: String!
+    $username: String!
     $locNick: String
     $name: String!
     $phone: String
@@ -14,7 +15,7 @@ const query = /* GraphQL */ `
     createUser2(
       input: {
         authClass: $authClass
-        username: $email
+        username: $username
         email: $email
         locNick: $locNick
         name: $name
