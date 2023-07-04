@@ -16,6 +16,12 @@ import {
   } from "./utils";
   import { handleFrenchConundrum } from "./conundrums.js";
   const { DateTime } = require("luxon");
+
+  const PRODUCTS = 0
+  const CUSTOMERS = 1
+  const ROUTES = 2
+  const STANDING = 3
+  const ORDERS = 4
   
   let today = todayPlus()[0];
   let tomorrow = todayPlus()[1];
@@ -74,15 +80,13 @@ import {
       let shelfProds = this.#getShelfProds(products, routes, fullOrdersT0, fullOrdersT1);
       let freezerProds = this.#getFreezerProds(products, routes, fullOrdersT0, fullOrdersT1);
       
-      let youllBeShort = this.#getYoullBeShort(
-        products, 
-        pocketsNorth,
-        freshProds,
-        shelfProds,
-        freezerProds,
+      let youllBeShort = this.getYoullBeShort(
+        database, // uses products only 
+        delivDate, 
+        pocketsNorth, freshProds, shelfProds, freezerProds
       )
 
-      let pretzels = this.#getPretzels(database, delivDate, fullOrdersT0, fullOrdersT1, fullOrdersT2);
+      let pretzels = this.#getPretzels(products, routes, delivDate, fullOrdersT0, fullOrdersT1, fullOrdersT2);
       let baguetteStuff = this.#getBaguetteStuff(database, delivDate);
   
       [freshProds, shelfProds] = handleFrenchConundrum(
@@ -251,8 +255,8 @@ import {
       return fil;
     };
   
-    #getPretzels(database, delivDate, fullOrdersToday, fullOrdersTomorrow, fullOrders2Day) {
-      const [products, customers, routes, standing, orders] = database;
+    #getPretzels(products, routes, delivDate, fullOrdersT0, fullOrdersT1, fullOrdersT2) {
+      // const [products, customers, routes, standing, orders] = database;
       // console.log('delivDate', delivDate)
       // let tom = tomBasedOnDelivDate(delivDate);
       // if (delivDate === "2022-12-24") {
@@ -265,7 +269,7 @@ import {
       let makeShelfProds = makeProds(products, this.pretzelsFilter);
   
       for (let make of makeShelfProds) {
-        addPretzel(make, fullOrdersToday, fullOrdersTomorrow, fullOrders2Day, products, routes, delivDate);
+        addPretzel(make, fullOrdersT0, fullOrdersT1, fullOrdersT2, products, routes, delivDate);
         addNeedEarly(make, products);
       }
   
@@ -310,16 +314,35 @@ import {
       return fil;
     };
   
-    #getYoullBeShort = (
-      products, 
-      pocketsNorth,
-      shelfProds,
-      freshProds,
-      freezerProds,
+    getYoullBeShort = (
+      database, delivDate,
+      pocketsNorth, shelfProds, freshProds, freezerProds
     ) => {
+      const products = database[PRODUCTS]
+      const routes = database[ROUTES]
 
-      let weightStr = 
-        [...pocketsNorth, ...shelfProds, ...freshProds, ...freezerProds]
+      let orderItems   
+      if (!!pocketsNorth && !!shelfProds && !!freshProds && !!freezerProds) {
+        orderItems = 
+          [...pocketsNorth, ...shelfProds, ...freshProds, ...freezerProds]
+
+      } else {
+        let tom = delivDate !== "2022-12-24" 
+          ? tomBasedOnDelivDate(delivDate)
+          : TwodayBasedOnDelivDate(delivDate)
+        let fullOrdersT0 = getFullMakeOrders(delivDate, database)
+        let fullOrdersT1 = getFullMakeOrders(tom, database)
+
+        const PN = this.#getPocketsNorth(products, fullOrdersT0)
+        const SP = this.#getShelfProds(products, routes, fullOrdersT0, fullOrdersT1)
+        const FP = this.#getFreshProds(products, routes, fullOrdersT0, fullOrdersT1)
+        const FrzP = this.#getFreezerProds(products, routes, fullOrdersT0, fullOrdersT1)
+
+        orderItems = [...PN, ...SP, ...FP, ...FrzP]
+
+      }
+
+      let weightStr = orderItems
           .filter((item) => item.doughType === "French")
           .map((item) => ({
             pocketWeight: item.weight,
@@ -339,20 +362,28 @@ import {
       }
   
       for (let weight of weightList) {
-        let availablePockets =
-          products[
-            products.findIndex(
-              (prod) =>
-                prod.weight === weight.pocketWeight && prod.doughType === "French"
-            )
-          ].preshaped;
-        let preAvailablePockets =
-          products[
-            products.findIndex(
-              (prod) =>
-                prod.weight === weight.pocketWeight && prod.doughType === "French"
-            )
-          ].prepreshaped;
+        // let availablePockets =
+        //   products[
+        //     products.findIndex(
+        //       (prod) =>
+        //         prod.weight === weight.pocketWeight && prod.doughType === "French"
+        //     )
+        //   ].preshaped;
+        // let preAvailablePockets =
+        //   products[
+        //     products.findIndex(
+        //       (prod) =>
+        //         prod.weight === weight.pocketWeight && prod.doughType === "French"
+        //     )
+        //   ].prepreshaped;
+
+        let { 
+          preshaped: availablePockets, 
+          prepreshaped: preAvailablePockets
+        } = products.find(P => 
+          P.weight === weight.pocketWeight && P.doughType === "French"
+        ) ?? {}
+
         weight.need = weight.makeTotal; 
         weight.preshaped = availablePockets;
         weight.prepreshaped = preAvailablePockets;
