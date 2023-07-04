@@ -85,17 +85,18 @@ export const checkUser = async () => {
     console.log("currentAuthenticatedUser");
     let use = await Auth.currentAuthenticatedUser();
     console.log("use.attributes.email", use.attributes.email);
+    console.log('use.attributes.username', use.username)
     let user = await API.graphql(
       graphqlOperation(user2byEmail, {
         email: use.attributes.email,
-        username: use.attributes.username,
       })
     );
-    console.log("user2byEmail", user.data.User2byEmail.items[0]);
-    use.attributes["custom:name"] = user.data.User2byEmail.items[0].name;
+    console.log("user2byEmail", user.data.User2byEmail.items);
+    let ind = user.data.User2byEmail.items.findIndex(item => item.username === use.username)
+    use.attributes["custom:name"] = user.data.User2byEmail.items[ind].name;
     use.attributes["custom:authType"] =
-      user.data.User2byEmail.items[0].authClass;
-    use.attributes["custom:defLoc"] = user.data.User2byEmail.items[0].locNick;
+      user.data.User2byEmail.items[ind].authClass;
+    use.attributes["custom:defLoc"] = user.data.User2byEmail.items[ind].locNick;
     return use;
   } catch (err) {
     console.log("Error AUthenticating User", err);
