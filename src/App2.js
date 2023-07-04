@@ -110,7 +110,7 @@ export function App() {
       <Router>
       
           <React.Fragment>
-            {authClass !== "bpbfull" && <NavBottom />}
+            {authClass === "customer" && <NavBottom />}
             <Pages Routes={Routes} Route={Route} useLocation={useLocation} />
           </React.Fragment>
        

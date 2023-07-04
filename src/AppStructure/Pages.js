@@ -296,6 +296,7 @@ function Pages({ Routes, Route, useLocation }) {
     <Authenticator
       components={components}
       signUpAttributes={["email", "name", "phone_number"]}
+      hideSignUp={true}
     >
       {({ signOut, user }) => {
         return (
