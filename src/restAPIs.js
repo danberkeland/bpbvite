@@ -1,6 +1,7 @@
 import { Auth } from "aws-amplify";
 import axios from "axios";
 import { checkUser } from "./AppStructure/Auth/AuthHelpers";
+import { sendCognitoSignupEmail } from "./Pages/Ordering/Orders/functions/sendEmailConfirmation";
 
 const API_bpbrouterAuth =
   "https://8gw70qn5eb.execute-api.us-east-2.amazonaws.com/auth";
@@ -79,7 +80,7 @@ export const createUser = async (event) => {
     .then((newStuff) => {
       console.log('newStuff', newStuff)
       return createLocationUser(newStuff.newLocUser);
-    });
+    })
 };
 
 export const updateUser = async (event) => {
