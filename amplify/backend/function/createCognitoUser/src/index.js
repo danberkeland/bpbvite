@@ -17,7 +17,7 @@ const createUser = async (event) => {
   return await new Promise((resolve, reject) => {
     const params = {
       UserPoolId: "us-east-2_eE0F2fVdp",
-      Username: email,
+      Username: username,
       UserAttributes: [
         {
           Name: "email",
@@ -59,7 +59,8 @@ exports.handler = async (event) => {
     console.log("returnData", data);
 
     let newerEvent = {
-      sub: data.User.Username,
+      sub: event.username+"_"+event.email,
+      username: event.username,
       name: event.custName,
       authClass: event.authClass,
       email: event.email,
@@ -70,7 +71,7 @@ exports.handler = async (event) => {
     let newLocUser = {
       authType: 1,
       locNick: event.defLoc,
-      sub: data.User.Username,
+      sub: event.username+"_"+event.email,
       Type: "LocationUser",
     };
 

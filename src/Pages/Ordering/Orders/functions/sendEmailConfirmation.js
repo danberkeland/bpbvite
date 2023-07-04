@@ -94,3 +94,61 @@ export const sendConfirmationEmail = async (
   return true
 
 }
+
+
+
+export const sendCognitoSignupEmail = async (
+  email, username
+) => {
+  
+
+  const body = {
+    params: {
+      Source: "backporchbakeryslo@gmail.com",
+      Destination: {
+        ToAddresses: email,
+      },
+      Message: {
+        Subject: {
+          Data: `You have been setup to start ordering from BPB`
+        },
+        Body: {
+          Html: {
+            // Data: "This message body contains HTML formatting. 
+            // It can, for example, contain links like this one: 
+            // <a 
+            //   class=\"ulink\" 
+            //   href=\"http://docs.aws.amazon.com/ses/latest/DeveloperGuide\" 
+            //   target=\"_blank\"
+            // >
+            //   Amazon SES Developer Guide
+            // </a>."
+            Data: `
+              <head>
+                <style>
+                  table {border-spacing: 1rem 0rem;}
+                  th {
+                    text-align: left;
+                    padding-block: .5rem;
+                  }
+                  .qty-column {text-align: center;}
+                </style>
+              </head>
+              
+              <body>
+                <h2>You are setup to order with BPB</h2>
+               
+              </body>
+            `
+          }
+        }
+      }
+    }
+  }
+
+  const emailResp = await API.post('bpbGateway', '/ses', {body: body})
+  console.log(emailResp)
+
+  return true
+
+}

@@ -48,7 +48,7 @@ export const withBPBForm = (Component) => (props) => {
     setCurrentLoc,
   };
 
-  console.log('Updateprops', props)
+  console.log("Updateprops", props);
 
   let str = props.name;
   let source = str + "List";
@@ -66,17 +66,16 @@ export const withBPBForm = (Component) => (props) => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  },[]);
+  }, []);
 
   const handleEdit = () => {
-    console.log('Doing something?')
+    console.log("Doing something?");
     window.scrollTo(0, 0);
     setIsEdit(true);
   };
 
   return (
     <div>
-      
       <Formik
         initialValues={props.initialState}
         validationSchema={props.validationSchema(sourceVar)}
@@ -89,16 +88,16 @@ export const withBPBForm = (Component) => (props) => {
           if (isCreate) {
             // fns.create(props, fns).then(() => {
             //fns.create(props).then(() => {            // TESTING CHANGE
-            fns.create(props, {...fns}).then(() => {
+            fns.create(props, { ...fns }).then(() => {
               window.location = path;
             });
           } else {
             // fns.update({ ...fns, ...props }).then(() => {
             //fns.update(props).then(() => {     // TESTING CHANGE
-            fns.update(props, {...fns}).then(() => {
-              console.log('Doing the update')
+            fns.update(props, { ...fns }).then(() => {
+              console.log("Doing the update");
               //console.log("Formprops", props);
-              formType === "signedIn" ? (window.location = path) : <div></div>
+              formType === "signedIn" ? (window.location = path) : <div></div>;
             });
           }
         }}

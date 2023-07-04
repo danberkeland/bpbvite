@@ -6,6 +6,7 @@ import { getLocation, getUser, listLocationUsers } from "../../graphql/queries";
 const user2byEmail = /* GraphQL */ `
   query User2byEmail(
     $email: String!
+   
     $sortDirection: ModelSortDirection
     $filter: ModelUser2FilterInput
     $limit: Int
@@ -13,6 +14,7 @@ const user2byEmail = /* GraphQL */ `
   ) {
     User2byEmail(
       email: $email
+      
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -63,7 +65,7 @@ const user2byEmail = /* GraphQL */ `
           locationCreditAppId
         }
         locs {
-          items{
+          items {
             locNick
           }
           nextToken
@@ -82,12 +84,22 @@ export const checkUser = async () => {
   try {
     console.log("currentAuthenticatedUser");
     let use = await Auth.currentAuthenticatedUser();
-    console.log('use.attributes.email', use.attributes.email)
-    let user = await API.graphql(graphqlOperation(user2byEmail, { email: use.attributes.email }));
-    console.log('user2byEmail', user.data.User2byEmail.items[0])
-    use.attributes["custom:name"] = user.data.User2byEmail.items[0].name
-    use.attributes["custom:authType"] = user.data.User2byEmail.items[0].authClass
-    use.attributes["custom:defLoc"] = user.data.User2byEmail.items[0].locNick
+    console.log("use.attributes.email", use.attributes.email);
+    console.log('use.attributes.username', use.username)
+    let user = await API.graphql(
+      graphqlOperation(user2byEmail, {
+        email: use.attributes.email,
+      })
+    );
+    console.log("user2byEmail", user.data.User2byEmail.items);
+    let ind = user.data.User2byEmail.items.findIndex(item => item.username === use.username)
+    if (ind<0){
+      ind = 0
+    }
+    use.attributes["custom:name"] = user.data.User2byEmail.items[ind].name;
+    use.attributes["custom:authType"] =
+      user.data.User2byEmail.items[ind].authClass;
+    use.attributes["custom:defLoc"] = user.data.User2byEmail.items[ind].locNick;
     return use;
   } catch (err) {
     console.log("Error AUthenticating User", err);
@@ -128,13 +140,12 @@ export const setAuthListener = (
         break;
       case "signOut":
         console.log("User Signed Out");
-        
-          setAccess("");
-          setUserObject({});
-          setUser("");
-          setAuthClass("");
-          setFormType("onNoUser");
-        ;
+
+        setAccess("");
+        setUserObject({});
+        setUser("");
+        setAuthClass("");
+        setFormType("onNoUser");
         break;
 
       default:
