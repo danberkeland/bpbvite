@@ -1,15 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Calendar } from "primereact/calendar";
 import { convertDatetoBPBDate } from "../../../helpers/dateTimeHelpers";
 
 const { DateTime } = require("luxon");
 
 const ToolBar = ({ delivDate, setDelivDate }) => {
-
-  const setDate = (date) => {
-    const dt2 = DateTime.fromJSDate(date);
-    setDelivDate(dt2.toFormat("yyyy-MM-dd"));
-  };
+  const [calendarDate, setCalendarDate] = useState(new Date())
 
   return (
     <React.Fragment>
@@ -20,9 +16,13 @@ const ToolBar = ({ delivDate, setDelivDate }) => {
         <Calendar
           style={{maxWidth: "10rem"}}
           id="delivDate"
-          placeholder={convertDatetoBPBDate(delivDate)}
+          value={calendarDate}
           dateFormat="mm/dd/yy"
-          onChange={(e) => setDate(e.value)}
+          onChange={(e) => {
+            console.log(e.value)
+            setCalendarDate(e.value)
+            setDelivDate(DateTime.fromJSDate(e.value).toFormat("yyyy-MM-dd"))
+          }}
         />
       </div>
     </React.Fragment>
