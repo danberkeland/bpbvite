@@ -75,7 +75,7 @@ function BPBSWhatToMake() {
         delivDate,
         setIsLoading
       ).then((db) => gatherMakeInfo(db));
-  }, [database]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [database, delivDate]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const gatherMakeInfo = (database) => {
     let makeData = compose.returnMakeBreakDown(database, delivDate);
@@ -93,7 +93,8 @@ function BPBSWhatToMake() {
     if (delivDate !== today) {
       confirmDialog({
         message:
-          "This is not the list for TODAY.  Are you sure this is the one you want to print?",
+          "This is not the list for TODAY. " 
+          + "Are you sure this is the one you want to print?",
         header: "Confirmation",
         icon: "pi pi-exclamation-triangle",
         accept: () => exportListPdf(),
