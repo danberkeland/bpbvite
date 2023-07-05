@@ -19,6 +19,7 @@ const query2 = /* GraphQL */ `
             }
           }
           email
+          username
           authClass
           locNick
           phone
@@ -67,6 +68,7 @@ const query = /* GraphQL */ `
             }
           }
           authClass
+          username
           email
           locNick
           phone
@@ -137,6 +139,7 @@ const grabDetailedCustomerList = async (event) => {
       let newItem = {
         custName: item.user.name,
         authClass: item.user.authClass,
+        username: item.user.username,
         email: item.user.email,
         phone: item.user.phone,
         sub: item.user.id,

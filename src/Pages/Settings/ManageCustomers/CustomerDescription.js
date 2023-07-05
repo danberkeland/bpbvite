@@ -39,9 +39,9 @@ const handleDeleteCustomer = (e, props) => {
     icon: "pi pi-exclamation-triangle",
     accept: () => {
       console.log("values", props);
-      deleteUser({ sub: props.values.sub }).then(() => {
-        window.location = "/Settings/ManageCustomers";
-      });
+      deleteUser({ username: props.values.username, sub: props.values.sub })//.then(() => {
+        //window.location = "/Settings/ManageCustomers";
+      //});
     },
     reject: () => {
       return;

@@ -75,7 +75,7 @@
         },
         "bpbrouter": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
-          "s3Key": "amplify-builds/bpbrouter-55526d35384f7754326c-build.zip"
+          "s3Key": "amplify-builds/bpbrouter-394b4a7868553275616f-build.zip"
         },
         "confirmCognitoEmail": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
@@ -87,7 +87,7 @@
         },
         "deleteCognitoUser": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
-          "s3Key": "amplify-builds/deleteCognitoUser-622b3350723355756363-build.zip"
+          "s3Key": "amplify-builds/deleteCognitoUser-534b776166306e366a6b-build.zip"
         },
         "updateCognitoUser": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
