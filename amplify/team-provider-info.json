@@ -87,7 +87,7 @@
         },
         "deleteCognitoUser": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
-          "s3Key": "amplify-builds/deleteCognitoUser-65634e546c706c2b5374-build.zip"
+          "s3Key": "amplify-builds/deleteCognitoUser-534b776166306e366a6b-build.zip"
         },
         "updateCognitoUser": {
           "deploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
