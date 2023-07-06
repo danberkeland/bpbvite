@@ -88,7 +88,7 @@ function SpecialOrders() {
         delivDate,
         setIsLoading
       ).then((db) => gatherSpecialOrdersInfo(db));
-  }, [database]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [database, delivDate]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const gatherSpecialOrdersInfo = (database) => {
     let colNorth = compose.returnSpecialNorthColumns(database,delivDate);
