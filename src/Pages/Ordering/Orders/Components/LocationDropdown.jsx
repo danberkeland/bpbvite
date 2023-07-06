@@ -61,6 +61,7 @@ export const LocationDropdown = ({
   authClass,
   setDelivDateJS,
   todayDT,
+  disabled,
 }) => {
   const { data:locations } = useListData({ 
     tableName:"Location", shouldFetch: authClass === 'bpbfull'
@@ -105,11 +106,12 @@ export const LocationDropdown = ({
   return (
     <InputLabel label="Current Location" 
       htmlFor="location-selector"
+      disabled={disabled}
     >
       <AutoComplete 
         id="location-selector"
         field="locName"
-        value={selectedLocation}
+        value={disabled ? "" : selectedLocation}
         dropdown
         suggestions={filteredLocations}
         itemTemplate={option => 
@@ -157,6 +159,7 @@ export const LocationDropdown = ({
           color: "var(--bpb-text-color)",
           background: "var(--bpb-surface-input)",
         }}
+        disabled={disabled}
       />
     </InputLabel>
   )

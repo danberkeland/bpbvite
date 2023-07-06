@@ -374,9 +374,10 @@ export const RetailOrders = () => {
     <div className="retail-body-container"
       style={{
         width: "56rem",
+        margin: "auto",
         display: "flex",
         justifyContent: "space-between",
-        gap: "1.5rem"
+        gap: "1.5rem",
       }}
     >
       <div className="retail-column-1">
