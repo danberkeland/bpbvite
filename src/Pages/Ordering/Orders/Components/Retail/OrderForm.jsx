@@ -8,6 +8,8 @@ import { Column } from "primereact/column"
 import { ProductDropdown } from "./ProductDropdown"
 import { useState } from "react"
 import { InputLabel } from "../InputLabel"
+import { isEqual } from "lodash"
+import { useRetailOrders } from "../../data/orderHooks"
 
 const pickupOptions = [
   { label: "Carlton", value: "atownpick"},
@@ -17,15 +19,63 @@ const pickupOptions = [
 export const OrderForm = ({
   formMode, setFormMode,
   currentCustomer, setCurrentCustomer,
+  currentOrderBase,
   currentOrder, setCurrentOrder,
+  setOrderName,
   products,
   selectedProduct, setSelectedProduct,
   delivDateDT
 }) => {
 
+  const { 
+    submitMutations,
+    updateLocalData
+  } = useRetailOrders({ shouldFetch: true })
+
+  const headerChanged = !isEqual(
+    currentOrderBase.header,
+    currentOrder.header
+  )
+
+  const itemsChanged = currentOrder.items.some(item => 
+    !item.id && item.qty !== 0
+    || (
+      !!item.id && !isEqual(
+        item, 
+        currentOrderBase.items.find(baseItem => baseItem.id === item.id)
+      )
+    )
+  )
+
   const actionText = formMode === 'create' ? "Creating"
     : formMode === 'edit' ? "Editing"
     : ''
+
+  const handleSubmit = async () => {
+    console.log(currentOrder)
+    
+    const submitItems = currentOrder.items.map(item => {
+      const { updatedOn, ...attributesToSubmit } = item
+      return {
+        ...currentOrder.header,
+        ...attributesToSubmit
+      }
+
+    })
+
+    const createInputs = submitItems.filter(item => !item.id && item.qty !== 0)
+    const updateInputs = submitItems.filter(item => !!item.id)
+
+    console.log("creating:", createInputs)
+    console.log("updating:", updateInputs)
+
+    updateLocalData(
+      await submitMutations({ createInputs, updateInputs })
+    )
+    setOrderName('')
+    setFormMode('hide')
+
+  } 
 
   const cardHeader = () => {
     return (
@@ -70,7 +120,10 @@ export const OrderForm = ({
   const cardFooter = () => {
     return (
       <div style={{display: "flex", justifyContent: "flex-end"}}>
-        <Button label="Submit" />
+        <Button label="Submit" 
+          onClick={handleSubmit}
+          disabled={!headerChanged && !itemsChanged}
+        />
       </div>
     )
   }
@@ -82,9 +135,9 @@ export const OrderForm = ({
     const updateQty = (newValue) => {
       let newState = structuredClone(currentOrder)
 
-      const matchIdx = newState.items.findIndex(i => 
-        i.prodNick === rowData.prodNick
-      )
+      const matchIdx = !!rowData.id 
+        ? newState.items.findIndex(i => i.id === rowData.id)
+        : newState.items.findIndex(i => i.prodNick === rowData.prodNick)
       newState.items[matchIdx].qty = newValue
       setCurrentOrder(newState)
     }
@@ -169,16 +222,27 @@ export const OrderForm = ({
         style={{width: "25.5rem"}}
       >
         <Column 
-          header={() => {
-            return (
-              <div onClick={() => console.log(currentOrder)}>
-                Product
-              </div>
+          header={() => 
+            <div onClick={() => console.log(currentOrder, currentOrderBase)}>
+              Product
+            </div>
+          }
+          body={item => {
+            const itemChanged = !item.id && item.qty !== 0 
+              || (!!item.id && !isEqual(
+                  item,
+                  currentOrderBase.items.find(baseItem => 
+                    baseItem.id === item.id  
+                )
+              ) 
+            )
+
+            return(
+              <span style={{fontWeight: itemChanged ? "bold" : ""}}>
+                {products?.[item.prodNick].prodName ?? item.prodNick}
+              </span>
             )
           }}
-          body={I => <span>
-            {products?.[I.prodNick].prodName ?? I.prodNick}
-          </span>} 
         />
         <Column header="Qty" 
           body={qtyColumnTemplate}
@@ -217,7 +281,7 @@ export const OrderForm = ({
             let updatedValue = structuredClone(currentOrder)
             updatedValue.items.push({
               prodNick: prodNick,
-              rate: retailPrice || wholePrice,
+              rate: null, //retailPrice || wholePrice,
               qty: 0,
             })
 
@@ -226,6 +290,8 @@ export const OrderForm = ({
           }}
         />
       </div>
+
+      {/* <div><pre>{headerChanged.toString()} {itemsChanged.toString()}</pre></div> */}
     </Card>
 
   )

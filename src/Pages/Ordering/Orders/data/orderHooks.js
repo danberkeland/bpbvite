@@ -524,7 +524,7 @@ export const useRetailOrders = ({ shouldFetch }) => {
 
   return {
     data: useMemo(composeRetailOrders, [orders]),
-    otherSWRReturns,
+    ...otherSWRReturns,
   }
 
 }

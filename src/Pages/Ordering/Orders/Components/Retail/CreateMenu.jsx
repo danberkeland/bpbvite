@@ -9,7 +9,7 @@ import { Button } from "primereact/button"
 export const CreateMenu = ({
   formMode, setFormMode,
   delivDateISO,
-  currentOrder, setCurrentOrder,
+  setCurrentOrderBase, setCurrentOrder,
   orderName, setOrderName,
 }) => {
 
@@ -34,7 +34,8 @@ export const CreateMenu = ({
           let newOrder = structuredClone(initOrder)
           newOrder.header.locNick = orderName
           newOrder.header.delivDate = delivDateISO
-          setCurrentOrder(newOrder)
+          setCurrentOrderBase(structuredClone(newOrder))
+          setCurrentOrder(structuredClone(newOrder))
           setFormMode('create')
         }}
         
@@ -50,6 +51,7 @@ const initOrder = {
     isWhole: false,
     route: null,
     ItemNote: '',
+    updatedBy: "bpb_admin"
   },
   items: [],
 }

@@ -8,7 +8,7 @@ import { useRetailOrders } from "../../data/orderHooks"
 export const OrderList = ({
   delivDateISO,
   currentCustomer, setCurrentCustomer,
-  currentOrder, setCurrentOrder,
+  setCurrentOrderBase, setCurrentOrder,
   formMode, setFormMode,
   setOrderName,
 }) => {
@@ -25,7 +25,9 @@ export const OrderList = ({
   const handleChange = e => {
     setCurrentCustomer(e.value || '')
     if (!!e.value) {
-      setCurrentOrder(createEditOrder(orderItemsForDate[e.value]))
+      const newOrder = createEditOrder(orderItemsForDate[e.value])
+      setCurrentOrderBase(structuredClone(newOrder))
+      setCurrentOrder(structuredClone(newOrder))
       setOrderName('')
       setFormMode('edit')
     } else {
@@ -64,14 +66,15 @@ export const OrderList = ({
 const createEditOrder = (orderItems) => {
   if (!orderItems.length) return { header: {}, items: [] }
 
-  const { locNick, delivDate, isWhole, route, ItemNote } = orderItems[0] ?? {}
-  const header = { locNick, delivDate, isWhole, route, ItemNote }
+  const { locNick, delivDate, isWhole, route, ItemNote, updatedBy } = orderItems[0] ?? {}
+  const header = { locNick, delivDate, isWhole, route, ItemNote, updatedBy }
 
   const items = orderItems.map(item => ({
     id: item.id,
     prodNick: item.prodNick,
     qty: item.qty,
     rate: item.rate,
+    updatedOn: item.updatedOn,
   }))
 
   return({ header, items })

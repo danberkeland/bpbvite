@@ -348,6 +348,7 @@ export const RetailOrders = () => {
   const [currentCustomer, setCurrentCustomer] = useState('')
 
   // current order data
+  const [currentOrderBase, setCurrentOrderBase] = useState()
   const [currentOrder, setCurrentOrder] = useState()
 
   // product to be added to currentOrder
@@ -359,12 +360,15 @@ export const RetailOrders = () => {
   const handleDateChange = e => {
     if (delivDateJS.getTime() === e.value.getTime()) return
     setDelivDateJS(e.value)
+    setCurrentOrderBase()
     setCurrentOrder()
     setSelectedProduct(null)
     setCurrentCustomer('')
     setOrderName('')
     setFormMode('hide')
   }
+
+
 
   return (<>
     <div className="retail-body-container"
@@ -387,6 +391,7 @@ export const RetailOrders = () => {
           setFormMode={setFormMode}
           delivDateISO={delivDateISO}
           setCurrentCustomer={setCurrentCustomer}
+          setCurrentOrderBase={setCurrentOrderBase}
           setCurrentOrder={setCurrentOrder}
           orderName={orderName}
           setOrderName={setOrderName}
@@ -398,6 +403,7 @@ export const RetailOrders = () => {
           // setSelectedCustomer={setSelectedCustomer}
           currentCustomer={currentCustomer}
           setCurrentCustomer={setCurrentCustomer}
+          setCurrentOrderBase={setCurrentOrderBase}
           setCurrentOrder={setCurrentOrder}
           formMode={formMode}
           setFormMode={setFormMode}
@@ -410,14 +416,16 @@ export const RetailOrders = () => {
       {/* <pre>{JSON.stringify(currentOrder, null, 2)}</pre> */}
 
       <div className="retail-column-2">
-        {formMode !== 'hide' && <>
+        {formMode !== 'hide' && currentOrder && <>
           <OrderForm
             formMode={formMode}
             setFormMode={setFormMode}
             currentCustomer={currentCustomer}
             setCurrentCustomer={setCurrentCustomer}
+            currentOrderBase={currentOrderBase}
             currentOrder={currentOrder}
             setCurrentOrder={setCurrentOrder}
+            setOrderName={setOrderName}
             products={products}
             selectedProduct={selectedProduct}
             setSelectedProduct={setSelectedProduct}
