@@ -274,6 +274,7 @@ export const Orders = ({ useTestAuth }) => {
             authClass={defaultAuth}
             setDelivDateJS={setDelivDateJS}
             todayDT={todayDT}
+            disabled={activeIndex === 2}
           />     
         </div>
       }
@@ -446,7 +447,7 @@ export const Orders = ({ useTestAuth }) => {
       {!standingBlacklist.includes(user.locNick) && activeIndex === 1 && 
         <div className="standing-order-ui-container"
           style={{
-            maxWidth: wSize === 'lg' ? "54rem" : "28rem",
+            maxWidth: wSize === 'lg' ? "56rem" : "28rem",
             margin: "auto",
             marginInline: wSize === 'lg' ? "" : ".5rem",
             marginTop: "2rem"
