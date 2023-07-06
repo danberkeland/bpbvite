@@ -108,12 +108,24 @@ import {
     };
 
     returnOnlyPretzel = (database, delivDate) => {
-      
-      let pretzels = this.#getPretzels(database, delivDate);
+      const products = database[PRODUCTS]
+      const routes = database[ROUTES]
+
+      let T1 = delivDate !== "2022-12-24"
+        ? tomBasedOnDelivDate(delivDate)
+        : TwodayBasedOnDelivDate(delivDate)
+      let T2 = TwodayBasedOnDelivDate(delivDate)
+
+      let fullOrdersT0 = getFullMakeOrders(delivDate, database);
+      let fullOrdersT1 = getFullMakeOrders(T1, database);
+      let fullOrdersT2 = getFullProdMakeOrders(T2, database)
+
       return { 
-        pretzels: pretzels
-      };
-    };
+        pretzels: this.#getPretzels(
+          products, routes, delivDate, fullOrdersT0, fullOrdersT1, fullOrdersT2
+        )
+      }
+    }
 
     #getPocketsNorth(products, fullOrdersToday) {
       let makePocketsNorth = makeProds(products, this.pocketsNorthFilter);
@@ -281,6 +293,7 @@ import {
     }
   
     pretzelsFilter = (prod) => {
+      if (prod.bakedWhere === undefined) console.error(prod)
       let fil =
         !prod.bakedWhere.includes("Carlton") &&
         //Number(prod.readyTime) >= 15 &&
