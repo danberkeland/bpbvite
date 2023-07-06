@@ -305,10 +305,11 @@ export const checkForUpdates = async (
     console.log("Yes they have!  Loading new Square Orders in DB");
 
     let ord = await fetchSq(db);
+    console.log("Fetched Sq orders:", ord)
     if (ord) {
       let promises = []
       for (let newOrd of ord) {
-        console.log("newSqOrd", newOrd);
+        //console.log("newSqOrd", newOrd);
         let qty = Number(newOrd["qty"]);
         let dt = new Date().toISOString();
         //console.log("dt", dt);

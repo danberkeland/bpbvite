@@ -141,9 +141,9 @@ export default class ComposeDough {
     //console.log("pocketsLateTodayClone2",clone2)
 
     for (let item of pocketsToday) {
-      console.log("item",item)
+      //console.log("item",item)
       for (let otherItem of pocketsLateToday) {
-        console.log("otherItem",otherItem)
+        //console.log("otherItem",otherItem)
         if (item.pocketSize === otherItem.pocketSize) {
           item.late = otherItem.qty;
         }

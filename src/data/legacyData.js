@@ -120,7 +120,7 @@ const mapLocationsToLegacy = (locations, orders, locationUsers) => {
     })
   })
   
-  console.log("retail locs:", retailLocations)
+  // console.log("retail locs:", retailLocations)
   return legacyLocations.concat(retailLocations)
 }
 

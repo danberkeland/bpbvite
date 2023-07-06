@@ -15,8 +15,8 @@ export default class ComposeWhatToMake {
 
   returnWhatToMake = (delivDate, database) => {
     console.log('Made it here')
-    console.log('delivDate', delivDate)
-    console.log('database', database)
+    // console.log('delivDate', delivDate)
+    // console.log('database', database)
     let whatToMakeList = getOrdersList(delivDate, database);
    
     let whatToMakeToday = whatToMakeList.filter((set) => DayOneFilter(set));

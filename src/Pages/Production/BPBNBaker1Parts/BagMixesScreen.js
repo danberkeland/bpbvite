@@ -8,7 +8,7 @@ import {mixFormula} from './MixFormula'
 
 export const BagMixesScreen = ({ mixes, doughs, infoWrap, deliv }) => {
 
-  console.log("BAG MIX DATA:", mixes, doughs, infoWrap, deliv )
+  // console.log("BAG MIX DATA:", mixes, doughs, infoWrap, deliv )
 
   return (
     <React.Fragment>

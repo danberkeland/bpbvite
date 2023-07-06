@@ -6,7 +6,7 @@ let tomorrow = todayPlus()[1]
 export const mixFormula = (doughs, infoWrap, multi, deliv) => {
     //  Set up Mix 1
 
-    console.log("infoWrap",infoWrap)
+    // console.log("infoWrap",infoWrap)
   
     let [dough, multiple, stickerAmount, bucketSets, mixes, info] = getMixInfo(
       doughs,
@@ -45,10 +45,10 @@ export const mixFormula = (doughs, infoWrap, multi, deliv) => {
       (0.5730 * ((stickerAmount-OldDough) * multiple[multi]) - (Mix1BucketSets * 19.22)) % 50
     ).toFixed(2);
     let Mix1WholeWheat = (0.038 * (stickerAmount-OldDough) * multiple[multi]).toFixed(2);
-    console.log("stickerAmount",stickerAmount)
-    console.log("oldDough",OldDough)
-    console.log("bucketSets",bucketSets)
-    console.log("multiple",multiple[multi])
+    // console.log("stickerAmount",stickerAmount)
+    // console.log("oldDough",OldDough)
+    // console.log("bucketSets",bucketSets)
+    // console.log("multiple",multiple[multi])
     let Mix1Water = (
       ((0.374 * (stickerAmount-OldDough) - bucketSets * 19.22) * multiple[multi]) %
       25
