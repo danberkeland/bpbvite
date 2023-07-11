@@ -30,6 +30,10 @@ export const useCartDataByLocation = ({ locNick, shouldFetch }) => {
   useEffect(() => {
     if (!data) return
 
+    const executeDelete = async (deleteInputs) => {
+      updateLocalData( await submitMutations({ deleteInputs }) )
+    } 
+
     // console.log('validating cart...')
     // if duplicates exist, keep the most recently updated record
     const _sorted = orderBy(data, ['updatedOn'], ['desc'])
@@ -46,9 +50,7 @@ export const useCartDataByLocation = ({ locNick, shouldFetch }) => {
 
     if (deleteInputs.length) {
       console.log('Duplicates to delete:', deleteInputs)
-      // updateLocalData(
-      //   submitMutations({ deleteInputs })
-      // )
+      //executeDelete(deleteInputs)
     }
   }, [data]) // end useEffect
 
