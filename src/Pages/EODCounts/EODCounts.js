@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useMemo } from "react";
+import React, { useContext, useEffect, useState, useMemo, useRef } from "react";
 
 import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
@@ -9,28 +9,12 @@ import TimeAgo from "timeago-react"
 import us from "timeago.js/lib/lang/en_US"
 
 import styled from "styled-components";
-import { useProductListFull } from "../../data/productData";
-import dynamicSort from "../../functions/dynamicSort";
-
-import gqlFetcher from "../../data/_fetchers";
 
 import swal from "sweetalert";
 import { sortBy } from "lodash";
 import { useListData } from "../../data/_listData";
+import { DateTime } from "luxon";
 
-const updateProductQuery = /* GraphQL */ `
-  mutation UpdateProduct(
-    $input: UpdateProductInput!
-  ) {
-    updateProduct(input: $input) {
-      prodNick
-      currentStock
-      prepreshaped
-      updatedAt
-      whoCountedLast
-    }
-  }
-`;
 
 const BasicContainer = styled.div`
   display: flex;
@@ -57,41 +41,81 @@ const PROD_LOCATION = "Prado"
 
 function EODCounts({ loc }) {
   const [signedIn, setSignedIn] = useState("null");
-  const { data:products, mutate:mutateProducts } = useProductListFull(true);
-  // const { 
-  //   data:products, 
-  //   submitMutations:submitProducts,
-  //   updateLocalData:syncProducts
-  // } = useListData({ tableName: "Product", shouldFetch: true })
+  const [mode, setMode] = useState('edit')
+  const [shelfForm, setShelfForm] = useState()
+  const [shelfTableData, setShelfTableData] = useState()
+  const [freezerForm, setFreezerForm] = useState()
+
+  const { 
+    data:PRD, 
+    submitMutations:submitProducts,
+    updateLocalData:syncProducts
+  } = useListData({ tableName: "Product", shouldFetch: true })
+
+  
     
-  const prepData = () => {
-    if (!products) return []
+  const [shelfData, freezerData, pocketItems] = useMemo(() => {
+    if (!PRD) return undefined
+    const products = sortBy(PRD, 'prodName')
 
     const eodProds = products.filter(p => 
       p.bakedWhere.includes(PROD_LOCATION) // && p.bakedWhere.length === 1 
         && p.isEOD === true
     )
 
-    const pocketsToMap = products.filter(p => 
-      p.doughNick === "French"
-        && p.bakedWhere.includes("Prado") && p.bakedWhere.length === 1
+    const shelfData = eodProds.filter(P => P.freezerThaw !== true)
+    const freezerData = eodProds.filter(prod => prod.freezerThaw === true)
+
+    const pocketsToMap = products.filter(P => 
+      P.doughNick === "French"
+        && P.bakedWhere.includes("Prado") && P.bakedWhere.length === 1
     )
 
     const pocketItems = sortBy(
       [...new Set(pocketsToMap.map(p => p.weight))].map(weight => 
-        products.find(product => 
-          product.weight === weight && product.doughNick === "French"
+        products.find(P => 
+          P.weight === weight && P.doughNick === "French"
         )
       ),
       'weight'
     )
 
-    console.log("eodProds", eodProds)
-    console.log("pocketItems", pocketItems)
-    return [eodProds, pocketItems]
-  }
-  
-  const [eodProds, pocketItems] = useMemo(prepData, [products])
+    return [shelfData, freezerData, pocketItems]
+  }, [PRD]) ?? []
+
+  useEffect(() => {
+    if (!shelfData || !freezerData) return undefined
+    
+    if (mode === 'edit') {
+      setShelfForm(shelfData)
+      setFreezerForm(freezerData)
+    } else if (mode === 'edit-shelf') {
+      setShelfForm( resetForm(shelfData) ) 
+    } else if (mode === 'edit-freezer') {
+      setFreezerForm( resetForm(freezerData) )
+    }
+
+  }, [shelfData, freezerData, mode])
+
+  const now = DateTime.now().setZone('America/Los_Angeles')
+
+  const shelfNeedsFullCount = shelfData?.some(product => {
+    const updatedDT = DateTime.fromISO(product.updatedAt).setZone('America/Los_Angeles')
+
+    return(
+      updatedDT.startOf('day').toMillis() !== now.startOf('day').toMillis()
+        || now.hour >= 9 && updatedDT.hour < 9
+    ) 
+  })
+
+  const freezerNeedsFullCount = freezerData?.some(product => {
+    const updatedDT = DateTime.fromISO(product.updatedAt).setZone('America/Los_Angeles')
+
+    return(
+      updatedDT.startOf('day').toMillis() !== now.startOf('day').toMillis()
+        || now.hour >= 9 && updatedDT.hour < 9
+    ) 
+  })
 
   const handleSignIn = () => {
     let signIn;
@@ -104,69 +128,113 @@ function EODCounts({ loc }) {
     });
   };
 
-  const inputTemplate = ({ rowData, qtyAttribute }) => {
-    return(
+
+  const inputTemplate = ({ 
+    rowData, 
+    data,
+    setData,
+    qtyAttribute, 
+    editMode='single' 
+  }) => {
+    
+    return (
       <InputText 
         inputMode="numeric"
         style={{width: "50px", fontWeight: "bold"}}
-        placeholder={rowData[qtyAttribute]}
+        // value={inputMode === 'edit-batch' 
+        //   ? rowData[qtyAttribute]
+        //   : undefined
+        // }
+        placeholder={editMode === 'single' 
+          ? rowData[qtyAttribute]
+          : undefined
+        }
+        keyfilter={/[0-9]/}
         onFocus={e => e.target.select()}
         onKeyUp={e => {if (e.code === "Enter") e.target.blur()}}
-        onBlur={async e => {
-          if (!e.target.value) return
+        // onBlur={async e => {
+        //   if (!e.target.value) return
 
-          const submitItem = {
-            prodNick: rowData.prodNick,
-            [qtyAttribute]: Number(e.target.value),
-            updatedAt: new Date().toISOString(),
-            whoCountedLast: signedIn,
-          }
-          console.log("submitItem", submitItem)
-          const responseItem = await gqlFetcher(updateProductQuery, { input: submitItem })
+        //   if (editMode = 'batch') {
+        //     const updatedItem = { 
+        //       ...rowData,
+        //       [qtyAttribute]: e.target.value
+        //     }
+        //     const updateIndex = fullCountData.findIndex(P => P.prodNick === rowData.prodNick)
+        //     let updatedData = structuredClone(fullCountData)
+        //     updatedData[updateIndex] = updatedItem
+        //     setFullCountData(updatedData)
+        //   }
 
-          console.log("RESPONSE", responseItem.data.updateProduct)
-          const i = products.findIndex(p => 
-            p.prodNick === rowData.prodNick
-          )
-          const newItem = { 
-            ...products[i],
-            ...responseItem.data.updateProduct
-          }   
-          const _products = [...products.slice(0, i), newItem, ...products.slice(i + 1)]
+        //   if (editMode === 'single') {
+        //     const updateItem = {
+        //       prodNick: rowData.prodNick,
+        //       [qtyAttribute]: Number(e.target.value),
+        //       whoCountedLast: signedIn,
+        //     }
 
-          const newData = { data: { listProducts: { items: _products }}}
-
-          mutateProducts(newData, {
-            revalidate: false
-          })
-        }}
+        //     syncProducts(
+        //       await submitProducts({ updateInputs: [updateItem] })
+        //     )
+        //   }
+        // }}
+        disabled={editMode === 'disabled'}
       />
     )
 
   }
 
-  const currentStockInputTemplate = (rowData) => {
-    return inputTemplate({ rowData, qtyAttribute: "currentStock"})
-  }
   const prepreshapedInputTemplate = (rowData) => {
-    return inputTemplate({ rowData, qtyAttribute: "prepreshaped" })
+    return inputTemplate({ 
+      rowData, qtyAttribute: "prepreshaped", inputMode: 'edit-single'
+    })
   }
 
-  const lastCountTemplate = (rowData) => {
-    const { updatedAt, whoCountedLast } = rowData
-    return (
-      <div style={{fontSize: ".8rem"}}>
-        Counted {
-          <TimeAgo
-            datetime={updatedAt} 
-            locale={us} 
-          />
-        } by {whoCountedLast}
-      </div>
-    )
-  }
 
-  if (!products || !pocketItems) return <div>Loading...</div>
+  const currentStockTemplate = ({
+    rowData,
+    disabled,
+    data,
+    setData
+  }) => TextQtyInput({
+    rowData,
+    disabled,
+    handleChange: (newQty) => updateForm({
+      newQty,
+      qtyAttribute: 'currentStock',
+      rowData,
+      data,
+      setData,
+    }),
+    handleBlur: mode === 'edit'
+      ? (newQty) => submitUpdate({
+        newQty,
+        qtyAttribute: 'currentStock',
+        rowData,
+        signedIn,
+        submitProducts,
+        syncProducts,
+      })
+      : () => undefined
+  })
+
+  const shelfStockTemplate = (rowData) => currentStockTemplate({
+    rowData,
+    disabled: (mode !== 'edit' && mode !== 'edit-shelf') 
+      || (mode === 'edit' && shelfNeedsFullCount),
+    data: shelfForm,
+    setData: setShelfForm,
+  })
+
+  const freezerStockTemplate = (rowData) => currentStockTemplate({
+    rowData,
+    disabled: (mode !== 'edit' && mode !== 'edit-freezer')
+      || (mode === 'edit' && freezerNeedsFullCount),
+    data: freezerForm,
+    setData: setFreezerForm,
+  })
+
+  if (!PRD || !pocketItems) return <div>Loading...</div>
   return (
     <React.Fragment>
       <WholeBox>
@@ -184,18 +252,61 @@ function EODCounts({ loc }) {
           <div></div>
         )}
         {signedIn !== "null" ? (
-          <React.Fragment>
-            <h2>On Shelf</h2>
+          <div style={{mxWidth: "45rem"}}>
+            <div><pre>{JSON.stringify(mode)}</pre></div>
+            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}> 
+            {shelfNeedsFullCount
+                ? <h2>On Shelf — Needs Full Count <i className="pi pi-fw pi-arrow-right" /></h2>
+                : <h2>On Shelf</h2>
+              }
+              <div>
+                {mode === "edit-shelf" && <>
+                  <Button label="Cancel" 
+                    className="p-button-outlined"
+                    style={{marginRight: "2rem"}}
+                    onClick={() => {
+                      setShelfForm(shelfData)
+                      setMode('edit')
+                    }}
+                  />
+
+                  <Button 
+                    label="Submit"
+                    disabled={shelfForm.some(P => P.currentStock === '')}
+                    onClick={async () => {
+                      const updateInputs = shelfForm.map(product => ({
+                        prodNick: product.prodNick,
+                        currentStock: product.currentStock,
+                        whoCountedLast: signedIn,
+                      }))
+                      console.log("submitting:", updateInputs)
+
+                      syncProducts(
+                        await submitProducts({ updateInputs })
+                      )
+
+                      setMode('edit')
+                    }}
+                  />
+                </>}
+                {mode === 'edit' && 
+                  <Button 
+                    label="Count All" 
+                    onClick={()=> {
+                      setMode("edit-shelf")
+                      setShelfForm( resetForm(shelfData) )
+                    }}
+                  />
+                }
+              </div>
+            </div>
             <DataTable
-              value={eodProds.filter(prod =>
-                prod.freezerThaw !== true && prod.packSize > 1
-              )}
+              value={shelfForm.filter(product => product.packSize > 1)}
               className="p-datatable-sm"
             >
-              <Column field="prodName" header="By Bag" />
+              <Column field="prodName" header="By Pack" />
               <Column header="# of bags"
-                body={currentStockInputTemplate}
-                //body={(e) => handleInput(e)}
+                body={shelfStockTemplate}
                 className="p-text-center"
               />
               <Column header="ea"
@@ -211,9 +322,7 @@ function EODCounts({ loc }) {
             </DataTable>
 
             <DataTable
-              value={eodProds.filter(prod =>
-                prod.freezerThaw !== true && prod.packSize === 1
-              )}
+              value={shelfForm.filter(product => product.packSize === 1)}
               className="p-datatable-sm"
             >
               <Column field="prodName" header="Each" />
@@ -221,7 +330,7 @@ function EODCounts({ loc }) {
               <Column
                 className="p-text-center"
                 header="ea"
-                body={currentStockInputTemplate}
+                body={shelfStockTemplate}
               />
               <Column
                 className="p-text-center"
@@ -230,19 +339,63 @@ function EODCounts({ loc }) {
               />
             </DataTable>
    
-            <h2>In Freezer</h2>
+            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}> 
+              {freezerNeedsFullCount
+                ? <h2>In Freezer — Needs Full Count <i className="pi pi-fw pi-arrow-right" /></h2>
+                : <h2>In Freezer</h2>
+              }
+              {/* <h2>In Freezer{freezerNeedsFullCount ? " - Need Full Count " : ""}</h2> */}
+              <div>
+                {mode === "edit-freezer" && <>
+                  <Button label="Cancel" 
+                    className="p-button-outlined"
+                    style={{marginRight: "2rem"}}
+                    onClick={() => {
+                      setFreezerForm(freezerData)
+                      setMode('edit')
+                    }}
+                  />
+
+                  <Button 
+                    label="Submit"
+                    disabled={freezerForm.some(P => P.currentStock === '')}
+                    onClick={async () => {
+                      const updateInputs = shelfForm.map(product => ({
+                        prodNick: product.prodNick,
+                        currentStock: product.currentStock,
+                        whoCountedLast: signedIn,
+                      }))
+                      console.log("submitting:", updateInputs)
+
+                      syncProducts(
+                        await submitProducts({ updateInputs })
+                      )
+
+                      setMode('edit')
+                    }}
+                  />
+                </>}
+                {mode === 'edit' && 
+                  <Button 
+                    label="Count All" 
+                    onClick={()=> {
+                      setMode("edit-freezer")
+                      setFreezerForm( resetForm(freezerData) )
+                    }}
+                  />
+                }
+              </div>
+            </div>
             <DataTable
-              value={eodProds.filter(prod =>
-                prod.freezerThaw !== false && prod.packSize > 1
-              )}
+              value={freezerForm.filter(product => product.packSize > 1)}
               className="p-datatable-sm"
             >
-              <Column field="prodName" header="In Freezer"/>
+              <Column field="prodName" header="By Pack"/>
 
               <Column
                 className="p-text-center"
                 header="# of bags"
-                body={currentStockInputTemplate}
+                body={freezerStockTemplate}
               />
               <Column
                 className="p-text-center"
@@ -257,9 +410,7 @@ function EODCounts({ loc }) {
             </DataTable>
 
             <DataTable
-              value={eodProds.filter(prod =>
-                  prod.freezerThaw !== false && prod.packSize === 1
-              )}
+              value={freezerForm.filter(product => product.packSize === 1)}
               className="p-datatable-sm"
             >
               <Column field="prodName" header="Each" />
@@ -267,7 +418,7 @@ function EODCounts({ loc }) {
               <Column
                 className="p-text-center"
                 header="ea"
-                body={currentStockInputTemplate}
+                body={freezerStockTemplate}
               />
               <Column
                 className="p-text-center"
@@ -294,13 +445,100 @@ function EODCounts({ loc }) {
               />
             </DataTable>
            
-          </React.Fragment>
+          </div>
         ) : (
           <div></div>
         )}
       </WholeBox>
-    </React.Fragment>
+      </React.Fragment>
   );
 }
 
 export default EODCounts;
+
+
+const lastCountTemplate = (rowData) => {
+  const { updatedAt, whoCountedLast } = rowData
+  return updatedAt === ''
+    ? <div></div>
+    : <div style={{fontSize: ".9rem"}}>
+      Counted <TimeAgo datetime={updatedAt} locale={us} /> by {whoCountedLast}
+    </div>
+}
+
+
+
+
+const TextQtyInput = ({
+  rowData,
+  handleChange,
+  handleBlur,
+  disabled,
+}) => {
+  // const [value, setValue] = useState(initialQty)
+
+  // useEffect(()=> setValue(initialQty), [initialQty])
+
+  return (
+    <InputText 
+      inputMode="numeric"
+      style={{width: "50px", fontWeight: "bold"}}
+      // placeholder={initialQty}
+      value={rowData.currentStock}
+      keyfilter={/[0-9]/}
+      onFocus={e => e.target.select()}
+      onKeyUp={e => {if (e.code === "Enter") e.target.blur()}}
+      onChange={e => handleChange(e.target.value)}
+      onBlur={e => handleBlur(Number(e.target.value))}
+      disabled={disabled}
+    />
+  )
+}
+
+const resetForm = (formData) => {
+  return formData.map(item => ({
+    ...item,
+    currentStock: '',
+    whoCountedLast: '',
+    updatedAt: '',
+  }))
+}
+
+const updateForm = ({
+  newQty,
+  qtyAttribute,
+  rowData,
+  data,
+  setData,
+}) => {
+
+  const matchIndex = data.findIndex(P => P.prodNick === rowData.prodNick)
+  let _data = structuredClone(data)
+  _data[matchIndex] = {
+    ...rowData,
+    [qtyAttribute]: newQty
+  }
+
+  setData(_data)
+
+}
+
+
+
+const submitUpdate = async ({
+  newQty,
+  qtyAttribute,
+  rowData,
+  signedIn,
+  submitProducts,
+  syncProducts,
+}) => {
+  const updateItem = {
+    prodNick: rowData.prodNick,
+    [qtyAttribute]: newQty,
+    whoCountedLast: signedIn,
+  }
+
+  syncProducts( await submitProducts({ updateInputs: [updateItem] }) )
+
+}
