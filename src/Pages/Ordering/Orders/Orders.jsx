@@ -22,10 +22,13 @@ import { DateTime, Interval } from "luxon"
 import { useWindowSizeDetector } from "../../../functions/detectWindowSize"
 import { getWorkingDateTime } from "../../../functions/dateAndTime"
 import { useLocationDetails } from "./data/locationHooks"
-import { isEqual } from "lodash"
+import { debounce, isEqual } from "lodash"
 import { StandingItemDisplay } from "./Components/StandingComponents/StandingItemDisplay"
 import { CartHeaderSummary } from "./Components/CartComponents/CartHeaderSummary"
 import { RetailOrders } from "./Components/Retail/RetailOrders"
+import { API, graphqlOperation } from "aws-amplify"
+
+import * as subscriptions from "../../../customGraphQL/subscriptions"
 
 
 // Constants, Non-Reactive Data ************************************************
@@ -129,7 +132,75 @@ export const Orders = ({ useTestAuth }) => {
   const { data:cartOrder } = useFullOrderByDate({ 
     locNick, delivDateJS, shouldFetch 
   })
+  
+  // primary hook used to build the above useFullOrderByDate
+  // we're calling this in to pass the mutate functions to the submit button
   const cartCache = useCartDataByLocation({ locNick, shouldFetch })
+  const { updateLocalData } = cartCache
+
+  const updateQueue = useRef({
+    createdItems: [],
+    updatedItems: [],
+    deletedItems: [],
+  })
+
+  const debouncedUpdate = debounce(({
+    createdItems=[], updatedItems=[], deletedItems=[],
+  }) => {
+    updateLocalData({ createdItems, updatedItems, deletedItems })
+    updateQueue.current = { createdItems: [],updatedItems: [],deletedItems: [] }
+  }, 500)
+
+
+  useEffect(() => {
+    const subVariables = { filter: { 
+      locNick: { eq: user.authClass === 'bpbfull' ? locNick : null } 
+    }}
+
+    const createOrderSub = API.graphql(
+      graphqlOperation(
+        subscriptions.onCreateOrder,
+        subVariables
+      )
+    ).subscribe({
+      next: ({ provider, value }) => {
+        console.log({ provider, value })
+        updateQueue.current = ({
+          ...updateQueue.current,
+          createdItems: updateQueue.current.createdItems
+            .concat(value.data.onCreateOrder),
+        })
+        debouncedUpdate(updateQueue.current)
+      },
+      error: error => console.warn(error)
+    })
+
+    const updateOrderSub = API.graphql(
+      graphqlOperation(
+        subscriptions.onUpdateOrder,
+        subVariables
+      )
+    ).subscribe({
+      next: ({ provider, value }) => {
+        console.log({ provider, value })
+        updateQueue.current = ({
+          ...updateQueue.current,
+          updatedItems: updateQueue.current.updatedItems
+            .concat(value.data.onUpdateOrder),
+        })
+        debouncedUpdate(updateQueue.current)
+      },
+      error: error => console.warn(error)
+    })
+
+    return () => {
+      createOrderSub.unsubscribe()
+      updateOrderSub.unsubscribe()
+    }
+
+  }, [locNick, user.authClass, debouncedUpdate])
+
+
 
   const [cartHeader, setCartHeader] = useState({})
   const [cartItems, setCartItems] = useState([])
