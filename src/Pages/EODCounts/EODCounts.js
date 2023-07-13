@@ -206,6 +206,8 @@ function EODCounts({ loc }) {
         <Dialog header="Enter a Name:" 
           visible={signedIn !== null} 
           closable={false}
+          draggable={false}
+          modal={false}
           footer={() => <Button 
             label="Sign In"
             onClick={() => setSignedIn(enteredName)}
