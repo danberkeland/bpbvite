@@ -153,49 +153,55 @@ export const Orders = ({ useTestAuth }) => {
 
 
   useEffect(() => {
-    const subVariables = { filter: { 
-      locNick: { eq: user.authClass === 'bpbfull' ? locNick : null } 
-    }}
+    let createOrderSub
+    let updateOrderSub
 
-    const createOrderSub = API.graphql(
-      graphqlOperation(
-        subscriptions.onCreateOrder,
-        subVariables
-      )
-    ).subscribe({
-      next: ({ provider, value }) => {
-        console.log({ provider, value })
-        updateQueue.current = ({
-          ...updateQueue.current,
-          createdItems: updateQueue.current.createdItems
-            .concat(value.data.onCreateOrder),
-        })
-        debouncedUpdate(updateQueue.current)
-      },
-      error: error => console.warn(error)
-    })
+    if (user.authClass === 'bpbfull') {
+      const subVariables = { filter: { 
+        locNick: { eq: locNick ?? '' } 
+      }}
+  
+      createOrderSub = API.graphql(
+        graphqlOperation(
+          subscriptions.onCreateOrder,
+          subVariables
+        )
+      ).subscribe({
+        next: ({ provider, value }) => {
+          console.log({ provider, value })
+          updateQueue.current = ({
+            ...updateQueue.current,
+            createdItems: updateQueue.current.createdItems
+              .concat(value.data.onCreateOrder),
+          })
+          debouncedUpdate(updateQueue.current)
+        },
+        error: error => console.warn(error)
+      })
+  
+      updateOrderSub = API.graphql(
+        graphqlOperation(
+          subscriptions.onUpdateOrder,
+          subVariables
+        )
+      ).subscribe({
+        next: ({ provider, value }) => {
+          console.log({ provider, value })
+          updateQueue.current = ({
+            ...updateQueue.current,
+            updatedItems: updateQueue.current.updatedItems
+              .concat(value.data.onUpdateOrder),
+          })
+          debouncedUpdate(updateQueue.current)
+        },
+        error: error => console.warn(error)
+      })
 
-    const updateOrderSub = API.graphql(
-      graphqlOperation(
-        subscriptions.onUpdateOrder,
-        subVariables
-      )
-    ).subscribe({
-      next: ({ provider, value }) => {
-        console.log({ provider, value })
-        updateQueue.current = ({
-          ...updateQueue.current,
-          updatedItems: updateQueue.current.updatedItems
-            .concat(value.data.onUpdateOrder),
-        })
-        debouncedUpdate(updateQueue.current)
-      },
-      error: error => console.warn(error)
-    })
+    }
 
     return () => {
-      createOrderSub.unsubscribe()
-      updateOrderSub.unsubscribe()
+      createOrderSub?.unsubscribe()
+      updateOrderSub?.unsubscribe()
     }
 
   }, [locNick, user.authClass, debouncedUpdate])
