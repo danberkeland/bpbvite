@@ -1,28 +1,30 @@
-const doughBackupAttributes = /* GraphQL */ `
-  id
-  doughName
-  hydration
-  process
-  batchSize
-  mixedWhere
-  components
-  oldDough
-  isBakeReady
-  buffer
-  bucketSets
-  preBucketSets
-  updatePreBucket
-  saltInDry
-  createdAt
-  updatedAt
-`
+import * as attributes from './standardAttributes'
+
+// const doughBackupAttributes = /* GraphQL */ `
+//   id
+//   doughName
+//   hydration
+//   process
+//   batchSize
+//   mixedWhere
+//   components
+//   oldDough
+//   isBakeReady
+//   buffer
+//   bucketSets
+//   preBucketSets
+//   updatePreBucket
+//   saltInDry
+//   createdAt
+//   updatedAt
+// `
 export const createDoughBackup = /* GraphQL */ `
   mutation CreateDoughBackup(
     $input: CreateDoughBackupInput!
     $condition: ModelDoughBackupConditionInput
   ) {
     createDoughBackup(input: $input, condition: $condition) {
-      ${doughBackupAttributes}
+      ${attributes.doughBackupAttributes}
     }
   }
 `;
@@ -32,7 +34,7 @@ export const updateDoughBackup = /* GraphQL */ `
     $condition: ModelDoughBackupConditionInput
   ) {
     updateDoughBackup(input: $input, condition: $condition) {
-      ${doughBackupAttributes}
+      ${attributes.doughBackupAttributes}
     }
   }
 `;
@@ -42,27 +44,27 @@ export const deleteDoughBackup = /* GraphQL */ `
     $condition: ModelDoughBackupConditionInput
   ) {
     deleteDoughBackup(input: $input, condition: $condition) {
-      ${doughBackupAttributes}
+      ${attributes.doughBackupAttributes}
     }
   }
 `;
 
-const doughComponentBackupAttributes = /* GraphQL */ `
-  id
-  dough
-  componentType
-  componentName
-  amount
-  createdAt
-  updatedAt
-`
+// const doughComponentBackupAttributes = /* GraphQL */ `
+//   id
+//   dough
+//   componentType
+//   componentName
+//   amount
+//   createdAt
+//   updatedAt
+// `
 export const createDoughComponentBackup = /* GraphQL */ `
   mutation CreateDoughComponentBackup(
     $input: CreateDoughComponentBackupInput!
     $condition: ModelDoughComponentBackupConditionInput
   ) {
     createDoughComponentBackup(input: $input, condition: $condition) {
-      ${doughComponentBackupAttributes}
+      ${attributes.doughComponentBackupAttributes}
     }
   }
 `;
@@ -72,7 +74,7 @@ export const updateDoughComponentBackup = /* GraphQL */ `
     $condition: ModelDoughComponentBackupConditionInput
   ) {
     updateDoughComponentBackup(input: $input, condition: $condition) {
-      ${doughComponentBackupAttributes}
+      ${attributes.doughComponentBackupAttributes}
     }
   }
 `;
@@ -82,22 +84,22 @@ export const deleteDoughComponentBackup = /* GraphQL */ `
     $condition: ModelDoughComponentBackupConditionInput
   ) {
     deleteDoughComponentBackup(input: $input, condition: $condition) {
-      ${doughComponentBackupAttributes}
+      ${attributes.doughComponentBackupAttributes}
     }
   }
 `;
 
-const userAttributes = /* GraphQL */ `
-  name
-  email
-  username
-  phone
-  authClass
-  sub
-  locNick
-  createdAt
-  updatedAt
-`
+// const userAttributes = /* GraphQL */ `
+//   name
+//   email
+//   username
+//   phone
+//   authClass
+//   sub
+//   locNick
+//   createdAt
+//   updatedAt
+// `
 
 export const createUser = /* GraphQL */ `
   mutation CreateUser(
@@ -105,7 +107,7 @@ export const createUser = /* GraphQL */ `
     $condition: ModelUserConditionInput
   ) {
     createUser(input: $input, condition: $condition) {
-      ${userAttributes}
+      ${attributes.userAttributes}
     }
   }
 `;
@@ -115,7 +117,7 @@ export const updateUser = /* GraphQL */ `
     $condition: ModelUserConditionInput
   ) {
     updateUser(input: $input, condition: $condition) {
-      ${userAttributes}
+      ${attributes.userAttributes}
     }
   }
 `;
@@ -125,52 +127,52 @@ export const deleteUser = /* GraphQL */ `
     $condition: ModelUserConditionInput
   ) {
     deleteUser(input: $input, condition: $condition) {
-      ${userAttributes}
+      ${attributes.userAttributes}
     }
   }
 `;
 
-const locationAttributes = /* GraphQL */ `
-  Type
-  locNick
-  locName
-  zoneNick
-  addr1
-  addr2
-  city
-  zip
-  email
-  orderCnfEmail
-  phone
-  firstName
-  lastName
-  toBePrinted
-  toBeEmailed
-  printDuplicate
-  terms
-  invoicing
-  latestFirstDeliv
-  latestFinalDeliv
-  webpageURL
-  picURL
-  gMap
-  specialInstructions
-  delivOrder
-  qbID
-  currentBalance
-  isActive
-  ttl
-  createdAt
-  updatedAt
-  locationCreditAppId
-`
+// const locationAttributes = /* GraphQL */ `
+//   Type
+//   locNick
+//   locName
+//   zoneNick
+//   addr1
+//   addr2
+//   city
+//   zip
+//   email
+//   orderCnfEmail
+//   phone
+//   firstName
+//   lastName
+//   toBePrinted
+//   toBeEmailed
+//   printDuplicate
+//   terms
+//   invoicing
+//   latestFirstDeliv
+//   latestFinalDeliv
+//   webpageURL
+//   picURL
+//   gMap
+//   specialInstructions
+//   delivOrder
+//   qbID
+//   currentBalance
+//   isActive
+//   ttl
+//   createdAt
+//   updatedAt
+//   locationCreditAppId
+// `
 export const createLocation = /* GraphQL */ `
   mutation CreateLocation(
     $input: CreateLocationInput!
     $condition: ModelLocationConditionInput
   ) {
     createLocation(input: $input, condition: $condition) {
-      ${locationAttributes}
+      ${attributes.locationAttributes}
     }
   }
 `;
@@ -180,7 +182,7 @@ export const updateLocation = /* GraphQL */ `
     $condition: ModelLocationConditionInput
   ) {
     updateLocation(input: $input, condition: $condition) {
-      ${locationAttributes}
+      ${attributes.locationAttributes}
     }
   }
 `;
@@ -190,75 +192,75 @@ export const deleteLocation = /* GraphQL */ `
     $condition: ModelLocationConditionInput
   ) {
     deleteLocation(input: $input, condition: $condition) {
-      ${locationAttributes}
+      ${attributes.locationAttributes}
     }
   }
 `;
 
-const productAttributes = /* GraphQL */ `
-  Type
-  prodName
-  prodNick
-  packGroup
-  packSize
-  doughNick
-  freezerThaw
-  packGroupOrder
-  shapeDay
-  shapeNick
-  bakeDay
-  bakeNick
-  guarantee
-  transferStage
-  readyTime
-  bakedWhere
-  wholePrice
-  retailPrice
-  isRetail
-  retailName
-  retailDescrip
-  isWhole
-  isEOD
-  weight
-  descrip
-  picURL
-  squareID
-  forBake
-  bakeExtra
-  batchSize
-  defaultInclude
-  leadTime
-  daysAvailable
-  qbID
-  currentStock
-  whoCountedLast
-  freezerClosing
-  freezerCount
-  freezerNorth
-  freezerNorthClosing
-  freezerNorthFlag
-  prepreshaped
-  preshaped
-  updatePreDate
-  updateFreezerDate
-  backporchbakerypre
-  backporchbakery
-  bpbextrapre
-  bpbextra
-  bpbssetoutpre
-  bpbssetout
-  sheetMake
-  updatedAt
-  createdAt
-  inventoryProductId
-`
+// const productAttributes = /* GraphQL */ `
+//   Type
+//   prodName
+//   prodNick
+//   packGroup
+//   packSize
+//   doughNick
+//   freezerThaw
+//   packGroupOrder
+//   shapeDay
+//   shapeNick
+//   bakeDay
+//   bakeNick
+//   guarantee
+//   transferStage
+//   readyTime
+//   bakedWhere
+//   wholePrice
+//   retailPrice
+//   isRetail
+//   retailName
+//   retailDescrip
+//   isWhole
+//   isEOD
+//   weight
+//   descrip
+//   picURL
+//   squareID
+//   forBake
+//   bakeExtra
+//   batchSize
+//   defaultInclude
+//   leadTime
+//   daysAvailable
+//   qbID
+//   currentStock
+//   whoCountedLast
+//   freezerClosing
+//   freezerCount
+//   freezerNorth
+//   freezerNorthClosing
+//   freezerNorthFlag
+//   prepreshaped
+//   preshaped
+//   updatePreDate
+//   updateFreezerDate
+//   backporchbakerypre
+//   backporchbakery
+//   bpbextrapre
+//   bpbextra
+//   bpbssetoutpre
+//   bpbssetout
+//   sheetMake
+//   updatedAt
+//   createdAt
+//   inventoryProductId
+// `
 export const createProduct = /* GraphQL */ `
   mutation CreateProduct(
     $input: CreateProductInput!
     $condition: ModelProductConditionInput
   ) {
     createProduct(input: $input, condition: $condition) {
-      ${productAttributes}
+      ${attributes.productAttributes}
     }
   }
 `;
@@ -268,7 +270,7 @@ export const updateProduct = /* GraphQL */ `
     $condition: ModelProductConditionInput
   ) {
     updateProduct(input: $input, condition: $condition) {
-      ${productAttributes}
+      ${attributes.productAttributes}
     }
   }
 `;
@@ -278,38 +280,38 @@ export const deleteProduct = /* GraphQL */ `
     $condition: ModelProductConditionInput
   ) {
     deleteProduct(input: $input, condition: $condition) {
-      ${productAttributes}
+      ${attributes.productAttributes}
     }
   }
 `;
 
-const orderAttributes = /* GraphQL */ `
-  Type
-  id
-  qty
-  qtyUpdatedOn
-  sameDayMaxQty
-  prodNick
-  locNick
-  ItemNote
-  SO
-  isWhole
-  delivDate
-  rate
-  route
-  isLate
-  createdOn
-  updatedOn
-  updatedBy
-  ttl
-`
+// const orderAttributes = /* GraphQL */ `
+//   Type
+//   id
+//   qty
+//   qtyUpdatedOn
+//   sameDayMaxQty
+//   prodNick
+//   locNick
+//   ItemNote
+//   SO
+//   isWhole
+//   delivDate
+//   rate
+//   route
+//   isLate
+//   createdOn
+//   updatedOn
+//   updatedBy
+//   ttl
+// `
 export const createOrder = /* GraphQL */ `
   mutation CreateOrder(
     $input: CreateOrderInput!
     $condition: ModelOrderConditionInput
   ) {
     createOrder(input: $input, condition: $condition) {
-      ${orderAttributes}
+      ${attributes.orderAttributes}
     }
   }
 `;
@@ -319,7 +321,7 @@ export const updateOrder = /* GraphQL */ `
     $condition: ModelOrderConditionInput
   ) {
     updateOrder(input: $input, condition: $condition) {
-      ${orderAttributes}
+      ${attributes.orderAttributes}
     }
   }
 `;
@@ -329,33 +331,33 @@ export const deleteOrder = /* GraphQL */ `
     $condition: ModelOrderConditionInput
   ) {
     deleteOrder(input: $input, condition: $condition) {
-      ${orderAttributes}
+      ${attributes.orderAttributes}
     }
   }
 `;
-const standingAttributes = /* GraphQL */ `
-  id
-  locNick
-  isWhole
-  isStand
-  dayOfWeek
-  route
-  prodNick
-  qty
-  ItemNote
-  startDate
-  endDate
-  createdAt
-  updatedAt
-  updatedBy
-`
+// const standingAttributes = /* GraphQL */ `
+//   id
+//   locNick
+//   isWhole
+//   isStand
+//   dayOfWeek
+//   route
+//   prodNick
+//   qty
+//   ItemNote
+//   startDate
+//   endDate
+//   createdAt
+//   updatedAt
+//   updatedBy
+// `
 export const createStanding = /* GraphQL */ `
   mutation CreateStanding(
     $input: CreateStandingInput!
     $condition: ModelStandingConditionInput
   ) {
     createStanding(input: $input, condition: $condition) {
-      ${standingAttributes}
+      ${attributes.standingAttributes}
     }
   }
 `;
@@ -365,7 +367,7 @@ export const updateStanding = /* GraphQL */ `
     $condition: ModelStandingConditionInput
   ) {
     updateStanding(input: $input, condition: $condition) {
-      ${standingAttributes}
+      ${attributes.standingAttributes}
     }
   }
 `;
@@ -375,26 +377,26 @@ export const deleteStanding = /* GraphQL */ `
     $condition: ModelStandingConditionInput
   ) {
     deleteStanding(input: $input, condition: $condition) {
-      ${standingAttributes}
+      ${attributes.standingAttributes}
     }
   }
 `;
 
-const zoneAttributes = /* GraphQL */ ` 
-  zoneNick
-  zoneName
-  description
-  zoneFee
-  createdAt
-  updatedAt
-`
+// const zoneAttributes = /* GraphQL */ ` 
+//   zoneNick
+//   zoneName
+//   description
+//   zoneFee
+//   createdAt
+//   updatedAt
+// `
 export const createZone = /* GraphQL */ `
   mutation CreateZone(
     $input: CreateZoneInput!
     $condition: ModelZoneConditionInput
   ) {
     createZone(input: $input, condition: $condition) {
-      ${zoneAttributes}
+      ${attributes.zoneAttributes}
     }
   }
 `;
@@ -404,7 +406,7 @@ export const updateZone = /* GraphQL */ `
     $condition: ModelZoneConditionInput
   ) {
     updateZone(input: $input, condition: $condition) {
-      ${zoneAttributes}
+      ${attributes.zoneAttributes}
     }
   }
 `;
@@ -414,31 +416,31 @@ export const deleteZone = /* GraphQL */ `
     $condition: ModelZoneConditionInput
   ) {
     deleteZone(input: $input, condition: $condition) {
-      ${zoneAttributes}
+      ${attributes.zoneAttributes}
     }
   }
 `;
 
-const routeAttributes = /* GraphQL */ ` 
-  routeNick
-  routeName
-  routeStart
-  routeTime
-  RouteDepart
-  RouteArrive
-  RouteSched
-  printOrder
-  driver
-  createdAt
-  updatedAt
-`
+// const routeAttributes = /* GraphQL */ ` 
+//   routeNick
+//   routeName
+//   routeStart
+//   routeTime
+//   RouteDepart
+//   RouteArrive
+//   RouteSched
+//   printOrder
+//   driver
+//   createdAt
+//   updatedAt
+// `
 export const createRoute = /* GraphQL */ `
   mutation CreateRoute(
     $input: CreateRouteInput!
     $condition: ModelRouteConditionInput
   ) {
     createRoute(input: $input, condition: $condition) {
-      ${routeAttributes}
+      ${attributes.routeAttributes}
     }
   }
 `;
@@ -448,7 +450,7 @@ export const updateRoute = /* GraphQL */ `
     $condition: ModelRouteConditionInput
   ) {
     updateRoute(input: $input, condition: $condition) {
-      ${routeAttributes}
+      ${attributes.routeAttributes}
     }
   }
 `;
@@ -458,25 +460,25 @@ export const deleteRoute = /* GraphQL */ `
     $condition: ModelRouteConditionInput
   ) {
     deleteRoute(input: $input, condition: $condition) {
-      ${routeAttributes}
+      ${attributes.routeAttributes}
     }
   }
 `;
 
-const infoQBAuthAttributes =/* GraphQL */ `
-  id
-  infoName
-  infoContent
-  createdAt
-  updatedAt
-`
+// const infoQBAuthAttributes =/* GraphQL */ `
+//   id
+//   infoName
+//   infoContent
+//   createdAt
+//   updatedAt
+// `
 export const createInfoQBAuth = /* GraphQL */ `
   mutation CreateInfoQBAuth(
     $input: CreateInfoQBAuthInput!
     $condition: ModelInfoQBAuthConditionInput
   ) {
     createInfoQBAuth(input: $input, condition: $condition) {
-      ${infoQBAuthAttributes}
+      ${attributes.infoQBAuthAttributes}
     }
   }
 `;
@@ -486,7 +488,7 @@ export const updateInfoQBAuth = /* GraphQL */ `
     $condition: ModelInfoQBAuthConditionInput
   ) {
     updateInfoQBAuth(input: $input, condition: $condition) {
-      ${infoQBAuthAttributes}
+      ${attributes.infoQBAuthAttributes}
     }
   }
 `;
@@ -496,27 +498,27 @@ export const deleteInfoQBAuth = /* GraphQL */ `
     $condition: ModelInfoQBAuthConditionInput
   ) {
     deleteInfoQBAuth(input: $input, condition: $condition) {
-      ${infoQBAuthAttributes}
+      ${attributes.infoQBAuthAttributes}
     }
   }
 `;
 
-const notesAttributes = /* GraphQL */ `
-  id
-  note
-  forWhom
-  byWhom
-  when
-  createdAt
-  updatedAt
-`
+// const notesAttributes = /* GraphQL */ `
+//   id
+//   note
+//   forWhom
+//   byWhom
+//   when
+//   createdAt
+//   updatedAt
+// `
 export const createNotes = /* GraphQL */ `
   mutation CreateNotes(
     $input: CreateNotesInput!
     $condition: ModelNotesConditionInput
   ) {
     createNotes(input: $input, condition: $condition) {
-      ${notesAttributes}
+      ${attributes.notesAttributes}
     }
   }
 `;
@@ -526,7 +528,7 @@ export const updateNotes = /* GraphQL */ `
     $condition: ModelNotesConditionInput
   ) {
     updateNotes(input: $input, condition: $condition) {
-      ${notesAttributes}
+      ${attributes.notesAttributes}
     }
   }
 `;
@@ -536,25 +538,25 @@ export const deleteNotes = /* GraphQL */ `
     $condition: ModelNotesConditionInput
   ) {
     deleteNotes(input: $input, condition: $condition) {
-      ${notesAttributes}
+      ${attributes.notesAttributes}
     }
   }
 `;
 
-const templateProdAttributes = /* GraphQL */ `
-  id
-  locNick
-  prodNick
-  createdAt
-  updatedAt
-`
+// const templateProdAttributes = /* GraphQL */ `
+//   id
+//   locNick
+//   prodNick
+//   createdAt
+//   updatedAt
+// `
 export const createTemplateProd = /* GraphQL */ `
   mutation CreateTemplateProd(
     $input: CreateTemplateProdInput!
     $condition: ModelTemplateProdConditionInput
   ) {
     createTemplateProd(input: $input, condition: $condition) {
-      ${templateProdAttributes}
+      ${attributes.templateProdAttributes}
     }
   }
 `;
@@ -564,7 +566,7 @@ export const updateTemplateProd = /* GraphQL */ `
     $condition: ModelTemplateProdConditionInput
   ) {
     updateTemplateProd(input: $input, condition: $condition) {
-      ${templateProdAttributes}
+      ${attributes.templateProdAttributes}
     }
   }
 `;
@@ -574,26 +576,26 @@ export const deleteTemplateProd = /* GraphQL */ `
     $condition: ModelTemplateProdConditionInput
   ) {
     deleteTemplateProd(input: $input, condition: $condition) {
-      ${templateProdAttributes}
+      ${attributes.templateProdAttributes}
     }
   }
 `;
 
-const prodsNotAllowedAttributes = /* GraphQL */ `
-  id
-  isAllowed
-  locNick
-  prodNick
-  createdAt
-  updatedAt
-`
+// const prodsNotAllowedAttributes = /* GraphQL */ `
+//   id
+//   isAllowed
+//   locNick
+//   prodNick
+//   createdAt
+//   updatedAt
+// `
 export const createProdsNotAllowed = /* GraphQL */ `
   mutation CreateProdsNotAllowed(
     $input: CreateProdsNotAllowedInput!
     $condition: ModelProdsNotAllowedConditionInput
   ) {
     createProdsNotAllowed(input: $input, condition: $condition) {
-      ${prodsNotAllowedAttributes}
+      ${attributes.prodsNotAllowedAttributes}
     }
   }
 `;
@@ -603,7 +605,7 @@ export const updateProdsNotAllowed = /* GraphQL */ `
     $condition: ModelProdsNotAllowedConditionInput
   ) {
     updateProdsNotAllowed(input: $input, condition: $condition) {
-      ${prodsNotAllowedAttributes}
+      ${attributes.prodsNotAllowedAttributes}
     }
   }
 `;
@@ -613,18 +615,18 @@ export const deleteProdsNotAllowed = /* GraphQL */ `
     $condition: ModelProdsNotAllowedConditionInput
   ) {
     deleteProdsNotAllowed(input: $input, condition: $condition) {
-      ${prodsNotAllowedAttributes}
+      ${attributes.prodsNotAllowedAttributes}
     }
   }
 `;
 
-const zoneRouteAttributes = /* GraphQL */ `
-  id
-  routeNick
-  zoneNick
-  createdAt
-  updatedAt
-`
+// const zoneRouteAttributes = /* GraphQL */ `
+//   id
+//   routeNick
+//   zoneNick
+//   createdAt
+//   updatedAt
+// `
 
 export const createZoneRoute = /* GraphQL */ `
   mutation CreateZoneRoute(
@@ -632,7 +634,7 @@ export const createZoneRoute = /* GraphQL */ `
     $condition: ModelZoneRouteConditionInput
   ) {
     createZoneRoute(input: $input, condition: $condition) {
-      ${zoneRouteAttributes}
+      ${attributes.zoneRouteAttributes}
     }
   }
 `;
@@ -642,7 +644,7 @@ export const updateZoneRoute = /* GraphQL */ `
     $condition: ModelZoneRouteConditionInput
   ) {
     updateZoneRoute(input: $input, condition: $condition) {
-      ${zoneRouteAttributes}
+      ${attributes.zoneRouteAttributes}
     }
   }
 `;
@@ -652,27 +654,27 @@ export const deleteZoneRoute = /* GraphQL */ `
     $condition: ModelZoneRouteConditionInput
   ) {
     deleteZoneRoute(input: $input, condition: $condition) {
-      ${zoneRouteAttributes}
+      ${attributes.zoneRouteAttributes}
     }
   }
 `;
 
-const locationUserAttributes = /* GraphQL */ `
-  id
-  Type
-  authType
-  locNick
-  sub
-  createdAt
-  updatedAt
-`
+// const locationUserAttributes = /* GraphQL */ `
+//   id
+//   Type
+//   authType
+//   locNick
+//   sub
+//   createdAt
+//   updatedAt
+// `
 export const createLocationUser = /* GraphQL */ `
   mutation CreateLocationUser(
     $input: CreateLocationUserInput!
     $condition: ModelLocationUserConditionInput
   ) {
     createLocationUser(input: $input, condition: $condition) {
-      ${locationUserAttributes}
+      ${attributes.locationUserAttributes}
     }
   }
 `;
@@ -682,7 +684,7 @@ export const updateLocationUser = /* GraphQL */ `
     $condition: ModelLocationUserConditionInput
   ) {
     updateLocationUser(input: $input, condition: $condition) {
-      ${locationUserAttributes}
+      ${attributes.locationUserAttributes}
     }
   }
 `;
@@ -692,26 +694,26 @@ export const deleteLocationUser = /* GraphQL */ `
     $condition: ModelLocationUserConditionInput
   ) {
     deleteLocationUser(input: $input, condition: $condition) {
-      ${locationUserAttributes}
+      ${attributes.locationUserAttributes}
     }
   }
 `;
 
-const altPricingAttributes = /* GraphQL */ `
-  id
-  wholePrice
-  locNick
-  prodNick
-  createdAt
-  updatedAt
-`
+// const altPricingAttributes = /* GraphQL */ `
+//   id
+//   wholePrice
+//   locNick
+//   prodNick
+//   createdAt
+//   updatedAt
+// `
 export const createAltPricing = /* GraphQL */ `
   mutation CreateAltPricing(
     $input: CreateAltPricingInput!
     $condition: ModelAltPricingConditionInput
   ) {
     createAltPricing(input: $input, condition: $condition) {
-      ${altPricingAttributes}
+      ${attributes.altPricingAttributes}
     }
   }
 `;
@@ -721,7 +723,7 @@ export const updateAltPricing = /* GraphQL */ `
     $condition: ModelAltPricingConditionInput
   ) {
     updateAltPricing(input: $input, condition: $condition) {
-      ${altPricingAttributes}
+      ${attributes.altPricingAttributes}
     }
   }
 `;
@@ -731,26 +733,26 @@ export const deleteAltPricing = /* GraphQL */ `
     $condition: ModelAltPricingConditionInput
   ) {
     deleteAltPricing(input: $input, condition: $condition) {
-      ${altPricingAttributes}
+      ${attributes.altPricingAttributes}
     }
   }
 `;
 
-const altLeadTimeAttributes = /* GraphQL */ `
-  id
-  leadTime
-  locNick
-  prodNick
-  createdAt
-  updatedAt
-`
+// const altLeadTimeAttributes = /* GraphQL */ `
+//   id
+//   leadTime
+//   locNick
+//   prodNick
+//   createdAt
+//   updatedAt
+// `
 export const createAltLeadTime = /* GraphQL */ `
   mutation CreateAltLeadTime(
     $input: CreateAltLeadTimeInput!
     $condition: ModelAltLeadTimeConditionInput
   ) {
     createAltLeadTime(input: $input, condition: $condition) {
-      ${altLeadTimeAttributes}
+      ${attributes.altLeadTimeAttributes}
     }
   }
 `;
@@ -760,7 +762,7 @@ export const updateAltLeadTime = /* GraphQL */ `
     $condition: ModelAltLeadTimeConditionInput
   ) {
     updateAltLeadTime(input: $input, condition: $condition) {
-      ${altLeadTimeAttributes}
+      ${attributes.altLeadTimeAttributes}
     }
   }
 `;
@@ -770,27 +772,27 @@ export const deleteAltLeadTime = /* GraphQL */ `
     $condition: ModelAltLeadTimeConditionInput
   ) {
     deleteAltLeadTime(input: $input, condition: $condition) {
-      ${altLeadTimeAttributes}
+      ${attributes.altLeadTimeAttributes}
     }
   }
 `;
 
-const trainingAttributes = /* GraphQL */ `
-  id
-  role
-  order
-  heading
-  instruction
-  createdAt
-  updatedAt
-`
+// const trainingAttributes = /* GraphQL */ `
+//   id
+//   role
+//   order
+//   heading
+//   instruction
+//   createdAt
+//   updatedAt
+// `
 export const createTraining = /* GraphQL */ `
   mutation CreateTraining(
     $input: CreateTrainingInput!
     $condition: ModelTrainingConditionInput
   ) {
     createTraining(input: $input, condition: $condition) {
-      ${trainingAttributes}
+      ${attributes.trainingAttributes}
     }
   }
 `;
@@ -800,7 +802,7 @@ export const updateTraining = /* GraphQL */ `
     $condition: ModelTrainingConditionInput
   ) {
     updateTraining(input: $input, condition: $condition) {
-      ${trainingAttributes}
+      ${attributes.trainingAttributes}
     }
   }
 `;
@@ -810,7 +812,7 @@ export const deleteTraining = /* GraphQL */ `
     $condition: ModelTrainingConditionInput
   ) {
     deleteTraining(input: $input, condition: $condition) {
-      ${trainingAttributes}
+      ${attributes.trainingAttributes}
     }
   }
 `;
