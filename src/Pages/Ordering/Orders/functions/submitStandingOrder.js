@@ -72,7 +72,7 @@ export const submitStandingOrder = async ({
     }
     
     let cartResponse
-    try { cartResponse = await gqlFetcher(query, variables) } 
+    try { cartResponse = await gqlFetcher([query, variables]) } 
     catch (err) { console.error(err); return 'error'} // maybe network error
     if (cartResponse.errors) {                        // maybe bad query
       console.error(cartResponse.errors) 
@@ -195,10 +195,10 @@ export const submitStandingOrder = async ({
       )
 
       try {
-        const legacyCartResponse = await APIGatewayFetcher(
+        const legacyCartResponse = await APIGatewayFetcher([
           '/orders/submitLegacyCart', 
           {body: legacySubmitBody}
-        )
+        ])
         console.log(
           "Legacy Cart Response:", 
           legacyCartResponse
@@ -280,10 +280,10 @@ export const submitStandingOrder = async ({
     console.log("Submit Standing to Legacy System:", legacyStandingSubmitBody)
 
     try {
-      const legacyStandingResponse = await APIGatewayFetcher(
+      const legacyStandingResponse = await APIGatewayFetcher([
         '/orders/submitLegacyStanding', 
         { body: legacyStandingSubmitBody }
-      )
+      ])
       console.log("Legacy standing response:", legacyStandingResponse)
 
     } catch (err) {

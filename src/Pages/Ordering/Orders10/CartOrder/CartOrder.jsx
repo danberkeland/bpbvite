@@ -341,7 +341,10 @@ export const CartOrder = ({ locNick, setLocNick, isWhole }) => {
     console.log("submitting:", body)
 
     try {
-      let legacyResponse = await APIGatewayFetcher('/orders/submitLegacyCart', {body: [body]})
+      let legacyResponse = await APIGatewayFetcher([
+        '/orders/submitLegacyCart', 
+        {body: [body]}
+      ])
       console.log("bpbGateway response:", legacyResponse)
       //const legacyItems = response.body.data
     } catch (error) {

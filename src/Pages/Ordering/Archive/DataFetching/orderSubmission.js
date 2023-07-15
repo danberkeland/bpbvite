@@ -39,7 +39,7 @@ export const handleOrderSubmit = async (location, delivDate, data) => {
       case 'CREATE':
         console.log("Calling createOrder for... ", JSON.stringify(item, null, 2))
 
-        response = await gqlFetcher(mutations.createOrder, {input: item})
+        response = await gqlFetcher([mutations.createOrder, {input: item}])
         response = response.data.createOrder
         console.log(response)
         _orderData = orderData.map(oldItem => oldItem.prodNick === response.prodNick ? 
@@ -64,7 +64,7 @@ export const handleOrderSubmit = async (location, delivDate, data) => {
       case 'UPDATE':
         console.log("Calling updateOrder for... ", JSON.stringify(item, null, 2))
 
-        response = await gqlFetcher(mutations.updateOrder, {input: item})
+        response = await gqlFetcher([mutations.updateOrder, {input: item}])
         response = response.data.updateOrder
         console.log(response)
         _orderData = orderData.map(oldItem => oldItem.prodNick === response.prodNick ? 

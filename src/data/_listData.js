@@ -38,7 +38,7 @@ const submitMutation = async ({ input, mutationType, tableName, pkAtt }) => {
     console.warn(`Primary Key '${pkAtt}' not found. Mutation may fail.`)
   }
 
-  return gqlFetcherNoAwait(mutation, { input })
+  return gqlFetcherNoAwait([mutation, { input }])
 
 
   // try {

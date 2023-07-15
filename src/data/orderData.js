@@ -140,10 +140,10 @@ const LOGGING = true
 
 export const createOrder = async (createOrderInput) => {
   if (LOGGING) console.log("Create order input: ", createOrderInput)
-  const response = await gqlFetcher(
+  const response = await gqlFetcher([
     mutations.createOrder, 
     { input: createOrderInput }
-  )
+  ])
   if (LOGGING) console.log("Create order response: ", response)
 
   return response
@@ -151,10 +151,10 @@ export const createOrder = async (createOrderInput) => {
 
 export const updateOrder = async (updateOrderInput) => {
   if (LOGGING) console.log("Update order input: ", updateOrderInput)
-  const response = await gqlFetcher(
+  const response = await gqlFetcher([
     mutations.updateOrder, 
     { input: updateOrderInput }
-  )
+  ])
   if (LOGGING) console.log("Update order response: ", response)
 
   return response
@@ -162,10 +162,10 @@ export const updateOrder = async (updateOrderInput) => {
 
 export const deleteOrder = async (deleteOrderInput) => {
   if (LOGGING) console.log("Delete order input: ", deleteOrderInput)
-  const response = await gqlFetcher(
+  const response = await gqlFetcher([
     mutations.deleteOrder,
     { input: deleteOrderInput }
-  )
+  ])
   if (LOGGING) console.log("Delete order response: ", response)
 
   return response
@@ -402,14 +402,14 @@ export const fetchTransitionOrders = async (location) => {
     delivDate: {between: [transitionDates[0], transitionDates[3]]}
   }
 
-  const data = (await gqlFetcher(query, variables)).data.orderByLocByDelivDate.items
+  const data = (await gqlFetcher([query, variables])).data.orderByLocByDelivDate.items
 
   return data
 }
 
 
 export const submitToLegacy = async (body) => {
-  let response = await APIGatewayFetcher('/orders/submitLegacyCart', body)
+  let response = await APIGatewayFetcher(['/orders/submitLegacyCart', body])
 
   return response
 }

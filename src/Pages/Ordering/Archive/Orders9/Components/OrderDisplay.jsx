@@ -165,12 +165,12 @@ export const OrderDisplay = ({
 
       let response;
       if (action === "CREATE") {
-        response = await gqlFetcher(createOrder, { input: subItem });
+        response = await gqlFetcher([createOrder, { input: subItem }]);
         response = response.data.createOrder;
         console.log(response);
       }
       if (action === "UPDATE") {
-        response = await gqlFetcher(updateOrder, { input: subItem });
+        response = await gqlFetcher([updateOrder, { input: subItem }]);
         response = response.data.updateOrder;
         console.log(response);
       }

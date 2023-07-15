@@ -16,7 +16,7 @@ import gqlFetcher from "./_fetchers"
  * @returns 
  */
 export const gqlMutate = ({ action, table, input }) => {
-  return gqlFetcher(mutations[`${action}${table}`], { input })
+  return gqlFetcher([mutations[`${action}${table}`], { input }])
 }
 
 /**
@@ -29,7 +29,7 @@ export const gqlMutate = ({ action, table, input }) => {
 export const batchGqlMutate = ({ action, table, inputs }) => {
   let responses = []
   for (let input of inputs) {
-    responses.push(gqlFetcher(mutations[`${action}${table}`], { input }))
+    responses.push(gqlFetcher([mutations[`${action}${table}`], { input }]))
   }
   return responses
 }

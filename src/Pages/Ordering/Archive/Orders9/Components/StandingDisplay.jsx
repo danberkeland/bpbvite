@@ -333,7 +333,7 @@ const handleStandingSubmit = async (location, isWhole, standingBase, standingCha
           let query = queries.createOrder
           let variables = { input: cartCreateItem }
 
-          const response = await gqlFetcher(query, variables)
+          const response = await gqlFetcher([query, variables])
           console.log("Created cart order:", JSON.stringify(response.data.createOrder))
           shouldMutateCart = true
 
@@ -361,7 +361,7 @@ const handleStandingSubmit = async (location, isWhole, standingBase, standingCha
           let query = queries.createOrder
           let variables = { input: cartCreateItem }
 
-          const response = await gqlFetcher(query, variables)
+          const response = await gqlFetcher([query, variables])
           console.log("Created cart order:", JSON.stringify(response.data.createOrder))
           shouldMutateCart = true
 
@@ -406,7 +406,7 @@ const handleStandingSubmit = async (location, isWhole, standingBase, standingCha
               qty: changeItem.qty
             }
           }
-          const response = await gqlFetcher(query, variables)
+          const response = await gqlFetcher([query, variables])
           console.log("Updated standing order:", JSON.stringify(response.data.createStanding))
         }
         
@@ -420,7 +420,7 @@ const handleStandingSubmit = async (location, isWhole, standingBase, standingCha
               id: baseItem.id
             }
           }
-          const response = await gqlFetcher(query, variables)
+          const response = await gqlFetcher([query, variables])
           console.log("Deleted standing order:", JSON.stringify(response.data.deleteStanding))
         }
         
@@ -445,7 +445,7 @@ const handleStandingSubmit = async (location, isWhole, standingBase, standingCha
             updatedBy: userName
           }
         }
-        const response = await gqlFetcher(query, variables)
+        const response = await gqlFetcher([query, variables])
         console.log("Created standing order:", JSON.stringify(response.data.createStanding))
 
       }

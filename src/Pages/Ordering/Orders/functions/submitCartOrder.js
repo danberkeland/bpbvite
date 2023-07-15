@@ -116,7 +116,7 @@ const getLegacySubmitBody = (
  */
 const submitToLegacy = async (body) => {
   try {
-    return await APIGatewayFetcher('/orders/submitLegacyCart', { body: body })
+    return await APIGatewayFetcher(['/orders/submitLegacyCart', { body: body }])
      
   } catch (error) {
     console.log("Gateway error:", error)

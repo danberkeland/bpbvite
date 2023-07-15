@@ -220,7 +220,7 @@ export async function validateCart(cartData, mutateCart) {
         let instancesToDelete = instancesOfProduct.slice(0, -1) // all but last instance of product
         for (let instanceId of instancesToDelete) {
           const input = {id: instanceId}
-          let response = await gqlFetcher(deleteOrder, {input: input})
+          let response = await gqlFetcher([deleteOrder, {input: input}])
           console.log("deleted item: ", response)
         }
         

@@ -11,8 +11,10 @@ import { SevenDayList } from "./NewPages/SevenDayList";
 import { Database } from "./NewPages/Database";
 import { BPBNBuckets } from "./NewPages/BPBNBucketsNew";
 import { Routing } from "./NewPages/Routing";
+import { Sandbox } from "./NewPages/_Sandbox";
 
 const bpbnPages = [
+  {name: "Sandbox", component: <Sandbox />},
   {name: "BPBNBaker1", component: <BPBNBaker1 />},
   {name: "BPBNBaker2", component: <BPBNBaker2 />},
   {name: "BPBNSetout", component: <BPBNSetout />},

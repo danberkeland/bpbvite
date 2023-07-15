@@ -161,10 +161,10 @@ export const createLocation = async (createLocationInput) => {
     return
   }
 
-  const response = await gqlFetcher(
+  const response = await gqlFetcher([
     mutations.createLocation, 
     { input: createLocationInput }
-  )
+  ])
   if (LOGGING) console.log("Create location response: ", response)
 
 }
@@ -172,10 +172,10 @@ export const createLocation = async (createLocationInput) => {
 
 export const updateLocation = async (updateLocationInput) => {
   if (LOGGING) console.log("Update location input: ", updateLocationInput)
-  const response = await gqlFetcher(
+  const response = await gqlFetcher([
     mutations.updateLocation, 
     { input: updateLocationInput }
-  )
+  ])
   if (LOGGING) console.log("Update location response: ", response)
 
 }
@@ -183,10 +183,10 @@ export const updateLocation = async (updateLocationInput) => {
 
 export const deleteLocation = async (deleteLocationInput) => {
   if (LOGGING) console.log("Delete location input: ", deleteLocationInput)
-  const response = await gqlFetcher(
+  const response = await gqlFetcher([
     mutations.deleteLocation,
     { input: deleteLocationInput }
-  )
+  ])
   if (LOGGING) console.log("Delete location response: ", response)
 
 }

@@ -237,10 +237,10 @@ const LOGGING = true
 export const createProduct = async (createProductInput) => {
   if (LOGGING) console.log("Create product input: ", createProductInput)
 
-  const response = await gqlFetcher(
+  const response = await gqlFetcher([
     mutations.createProduct, 
     { input: createProductInput }
-  )
+  ])
   if (LOGGING) console.log("Create product response: ", response)
 
 }
@@ -249,10 +249,10 @@ export const createProduct = async (createProductInput) => {
 export const updateProduct = async (updateProductInput) => {
   if (LOGGING) console.log("Update product nput: ", updateProductInput)
 
-  const response = await gqlFetcher(
+  const response = await gqlFetcher([
     mutations.updateProduct, 
     { input: updateProductInput }
-  )
+  ])
   if (LOGGING) console.log("Update product response: ", response)
 
 }
@@ -261,10 +261,10 @@ export const updateProduct = async (updateProductInput) => {
 export const deleteProduct = async (deleteProductInput) => {
 
   if (LOGGING) console.log("Delete product input: ", deleteProductInput)
-  const response = await gqlFetcher(
+  const response = await gqlFetcher([
     mutations.deleteProduct,
     { input: deleteProductInput }
-  )
+  ])
   if (LOGGING) console.log("Delete product response: ", response)
 
 }

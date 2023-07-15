@@ -1,6 +1,6 @@
 import { API } from "aws-amplify"
 
-const gqlFetcher = async (query, variables) => {
+const gqlFetcher = async ([query, variables]) => {
  
   const data = await API.graphql({
     query: query,
@@ -14,11 +14,11 @@ export default gqlFetcher;
 
 
 
-export const APIGatewayFetcher = async (path, body) => {
+export const APIGatewayFetcher = async ([path, body]) => {
   return await API.post('bpbGateway', path, body)
 }
 
-export const gqlFetcherNoAwait = async (query, variables) => {
+export const gqlFetcherNoAwait = async ([query, variables]) => {
  
   return API.graphql({
     query: query,

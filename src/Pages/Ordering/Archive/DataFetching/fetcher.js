@@ -3,7 +3,7 @@ import { dateToMmddyyyy, getWeekday } from "../Orders9/Functions/dateAndTime"
 import dynamicSort from "../Orders9/Functions/dynamicSort"
 import * as queries from './queries'
 
-export const gqlFetcher = async (query, variables) => {
+export const gqlFetcher = async ([query, variables]) => {
   return (
     await API.graphql({
       query: query,

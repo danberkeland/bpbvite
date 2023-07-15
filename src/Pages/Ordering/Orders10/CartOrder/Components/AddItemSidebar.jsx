@@ -347,7 +347,7 @@ const createFav = async (locNick, prodNick) => {
     }
   }
 
-  let response = await gqlFetcher(query, variables)
+  let response = await gqlFetcher([query, variables])
   console.log("createFav", response)
 }
 
@@ -359,7 +359,7 @@ const deleteFav = async (id) => {
     }
   }
 
-  let response = await gqlFetcher(query, variables)
+  let response = await gqlFetcher([query, variables])
   console.log("deleteFav", response)
 }
 

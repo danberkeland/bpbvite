@@ -136,25 +136,28 @@ export const createTraining = async (createTrainingInput) => {
     return;
   }
 
-  const response = await gqlFetcher(mutations.createTraining, {
-    input: createTrainingInput,
-  });
+  const response = await gqlFetcher([
+    mutations.createTraining, 
+    { input: createTrainingInput }
+  ]);
   if (LOGGING) console.log("Create training response: ", response);
 };
 
 export const updateTraining = async (updateTrainingInput) => {
   if (LOGGING) console.log("Update training input: ", updateTrainingInput);
-  const response = await gqlFetcher(mutations.updateTraining, {
-    input: updateTrainingInput,
-  });
+  const response = await gqlFetcher([
+    mutations.updateTraining, 
+    { input: updateTrainingInput }
+  ]);
   if (LOGGING) console.log("Update training response: ", response);
 };
 
 export const deleteTraining = async (deleteTrainingInput) => {
   if (LOGGING) console.log("Delete training input: ", deleteTrainingInput);
-  const response = await gqlFetcher(mutations.deleteTraining, {
-    input: deleteTrainingInput,
-  });
+  const response = await gqlFetcher([
+    mutations.deleteTraining, 
+    { input: deleteTrainingInput }
+  ]);
   if (LOGGING) console.log("Delete training response: ", response);
 };
 

@@ -71,30 +71,30 @@ const LOGGING = true
 
 export const createStanding = async (createStandingInput) => {
   if (LOGGING) console.log("Create standing input: ", createStandingInput)
-  const response = await gqlFetcher(
+  const response = await gqlFetcher([
     mutations.createStanding, 
     { input: createStandingInput }
-  )
+  ])
   if (LOGGING) console.log("Create standing response: ", response)
 
 }
 
 export const updateStanding = async (updateStandingInput) => {
   if (LOGGING) console.log("Update standing input: ", updateStandingInput)
-  const response = await gqlFetcher(
+  const response = await gqlFetcher([
     mutations.updateStanding, 
     { input: updateStandingInput }
-  )
+  ])
   if (LOGGING) console.log("Update standing response: ", response)
 
 }
 
 export const deleteStanding = async (deleteStandingInput) => {
   if (LOGGING) console.log("Delete standing input: ", deleteStandingInput)
-  const response = await gqlFetcher(
+  const response = await gqlFetcher([
     mutations.deleteStanding,
     { input: deleteStandingInput }
-  )
+  ])
   if (LOGGING) console.log("Delete standing response: ", response)
 
 }

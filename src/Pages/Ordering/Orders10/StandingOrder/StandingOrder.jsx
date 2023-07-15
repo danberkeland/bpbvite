@@ -874,7 +874,10 @@ const handleSubmit = async (
     console.log("Submitting cart placeholders to legacy system:", legacyCartSubmitBody)
     let legacyCartResponse
     if (legacyCartSubmitBody.length) {
-      legacyCartResponse = await APIGatewayFetcher('/orders/submitLegacyCart', {body: legacyCartSubmitBody})
+      legacyCartResponse = await APIGatewayFetcher([
+        '/orders/submitLegacyCart', 
+        {body: legacyCartSubmitBody}
+      ])
       console.log("Legacy cart response:", legacyCartResponse)
     }
   }
@@ -901,7 +904,10 @@ const handleSubmit = async (
       const legacyStandingSubmitBody = getLegacyStandingSubmitBody(submitItems, locationDetails, productData, submissionCandidates, isStand)
       console.log("Submit for legacy system:", legacyStandingSubmitBody)
 
-      legacyStandingResponse = await APIGatewayFetcher('/orders/submitLegacyStanding', {body: legacyStandingSubmitBody})
+      legacyStandingResponse = await APIGatewayFetcher([
+        '/orders/submitLegacyStanding', 
+        {body: legacyStandingSubmitBody}
+      ])
       console.log("Legacy standing response:", legacyStandingResponse)
     }
   }

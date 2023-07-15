@@ -82,7 +82,7 @@ export const fetchTransitionOrders = async (location) => {
     delivDate: {between: [transitionDates[0], transitionDates[3]]}
   }
 
-  const data = (await gqlFetcher(query, variables)).data.orderByLocByDelivDate.items
+  const data = (await gqlFetcher([query, variables])).data.orderByLocByDelivDate.items
 
   return data
 }
