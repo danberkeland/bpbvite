@@ -4,6 +4,7 @@ import { API } from "aws-amplify"
 import { sortBy } from "lodash"
 import { useCartOrderData } from "../orderData"
 import { useListData } from "../_listData"
+import { useMemo } from "react"
 
 /**
  * @param {string} queryName - Name of one of the queries exported from ./gqlQueries/subscriptions.js
