@@ -1,10 +1,11 @@
 import useSWRSubscription from "swr/subscription"
 import * as subscriptions from "./gqlQueries/subscriptions"
 import { API } from "aws-amplify"
-import { sortBy } from "lodash"
+import { maxBy, sortBy } from "lodash"
 import { useCartOrderData } from "../orderData"
 import { useListData } from "../_listData"
 import { useMemo } from "react"
+import { DateTime } from "luxon"
 
 /**
  * @param {string} queryName - Name of one of the queries exported from ./gqlQueries/subscriptions.js
@@ -32,6 +33,12 @@ const useGenericSubscription = (queryName, variables) => useSWRSubscription(
   }
 )
 
+
+
+// Capure a 'stream' of table mutations. We add a label describing the
+// mutation type: C, U, D => create, update, delete. We defensively sort
+// by updatedOn -- one would assume subscriptions are published in the order 
+// that database actions happen, but async can be weird.
 export const useOrderSubscription = ({
   variables={},
 }={}) => {
@@ -44,7 +51,7 @@ export const useOrderSubscription = ({
 
   const streamData = sortBy(
     (createData || []).map(item => ({ ...item, _action: 'C' }))
-      .concat(updateData || []).map(item => ({ ...item, _action: 'U'})),
+      .concat((updateData || []).map(item => ({ ...item, _action: 'U'}))),
     'updatedOn',
   )
 
@@ -54,6 +61,9 @@ export const useOrderSubscription = ({
   })
 }
 
+
+
+// Start by fetching cache data
 export const useLiveCartOrderDataByLocByDelivDate = ({ 
   shouldFetch, 
   locNick, 
@@ -77,15 +87,24 @@ export const useLiveCartOrderDataByLocByDelivDate = ({
   const { data:orderStream } = useOrderSubscription({ variables })
   
   const composeLiveData = () => {
-    if (!orderCache && !orderStream) return undefined
+    if (!orderCache || !orderStream) return undefined
 
+    const cacheTimestamp = maxBy(orderCache, 'updatedOn').updatedOn
     let _cache = orderCache 
       ? Object.fromEntries(orderCache.map(item => [item.id, item]))
       : {}
-    let _stream = orderStream || []
+
+    let _stream = sortBy(
+      (orderStream || []),
+      'updatedOn'
+    ).filter(item => item.updatedOn > cacheTimestamp )
+    
+    console.log(cacheTimestamp)
+    console.log('orderStream', orderStream)
+    console.log('_stream', _stream)
 
     for (let subItem of _stream) {
-      if (subItem["_action"] !== 'D') _cache[subItem.id] = subItem
+      if (subItem['_action'] !== 'D') _cache[subItem.id] = subItem
       else delete _cache[subItem.id]
     }
 
@@ -95,7 +114,7 @@ export const useLiveCartOrderDataByLocByDelivDate = ({
 
 
   return {
-    data: useMemo(composeLiveData, [orderCache, orderStream])
+    data: useMemo(composeLiveData, [orderCache, orderStream]),
   }
 
 }
