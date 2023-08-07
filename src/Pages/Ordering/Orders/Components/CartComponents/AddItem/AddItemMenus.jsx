@@ -7,6 +7,7 @@ import { CartItemDropdown } from "./CartItemDropdown"
 import { Sidebar } from "primereact/sidebar"
 import { handleAddItem } from "./handleAddItem"
 import { CartItemMessages } from "../CartItemMessages"
+import { CartItemAutoComplete } from "./CartItemAutocomplete"
 
 
 
@@ -104,7 +105,12 @@ export const AddItemMenu = ({
 
 
   const bodyTemplate = (<>
-    <CartItemDropdown {...dropdownProps} />
+    {
+      user.authClass === 'bpbfull' 
+        ? <CartItemAutoComplete {...dropdownProps} />
+        : <CartItemDropdown {...dropdownProps} />
+    }
+    
 
     <div className="info-message-box" 
       style={{ 
@@ -151,8 +157,10 @@ export const AddItemMenu = ({
         }}
         onKeyDown={e => {
           if (e.key === 'Enter') {
-            document.querySelector('#dropdown input').focus()
-            //console.log(dropdownRef)
+            // document.querySelector('#dropdown input').focus()
+            // document.querySelector('#product-dropdown input').focus()
+            console.log(dropdownRef)
+            dropdownRef.current.focus()
 
             handleAddItem(
               products, 

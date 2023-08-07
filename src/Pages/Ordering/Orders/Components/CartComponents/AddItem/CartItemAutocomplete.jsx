@@ -2,13 +2,14 @@ import React, { useState } from "react"
 
 import { Button } from "primereact/button"
 import { Dropdown } from "primereact/dropdown"
+import { AutoComplete } from "primereact/autocomplete"
 import { Tag } from "primereact/tag"
 import { sortBy } from "lodash"
 import { reformatProdName } from "../../../../Orders10/_utils/reformatProdName"
 import { useListData } from "../../../../../../data/_listData"
 // import { getWorkingDateTime } from "../../../../../../functions/dateAndTime"
 
-export const CartItemDropdown = ({ 
+export const CartItemAutoComplete = ({ 
   products,
   cartHeader, 
   cartItems,
@@ -23,6 +24,8 @@ export const CartItemDropdown = ({
   dropdownRef,
 }) => {
   //console.log(cartMeta)
+  const [selectedProduct, setSelectedProduct] = useState()
+  const [suggestions, setSuggestions] = useState([])
   const { 
     submitMutations:submitFavs, 
     updateLocalData:updateFavs
@@ -55,19 +58,6 @@ export const CartItemDropdown = ({
 
     const cartItem = cartItems.find(item => item.prodNick === prodNick)
     const inCart = !!cartItem && cartItem.qty !== 0
-    // const sameDayMaxQty = cartItem?.sameDayMaxQty 
-    // const baseQty = cartItem?.baseQty
-    // const qtyUpdatedOn = cartItem?.qtyUpdatedOn
-
-    // const sameDayUpdate = 
-    //   getWorkingDateTime(qtyUpdatedOn).toMillis() === ORDER_DATE_DT.toMillis()
-    // const maxQty = !!cartItem 
-    //   ? inProd 
-    //       ? (sameDayUpdate ? sameDayMaxQty : baseQty)
-    //       : 999
-    //   : inProd 
-    //       ? 0
-    //       : 999
 
     const maxQty = cartMeta?.[prodNick]?.maxQty ?? 0
 
@@ -185,47 +175,102 @@ export const CartItemDropdown = ({
     )
 
   }
+  
+  const search = (event) => {
+    const query = event.query.toLowerCase().replace(/\s/g, '')
 
-  return(<>
-    <Dropdown
-      id="dropdown"
-      options={displayProducts || []} 
-      autoFocus={wSize !== 'lg'}
-      //showOnFocus={true}
-      optionLabel="prodName" 
-      optionValue="prodNick"
-      value={selectedProdNick || null}
-      filter 
-      filterBy={`prodName${user.locNick === 'backporch' ? ",prodNick" : ""}`} 
-      showFilterClear 
-      resetFilterOnHide 
-      filterInputAutoFocus
+    if (!query) setSuggestions(displayProducts)
+    else {
+      let results = displayProducts.filter(P => 
+        P.prodNick.includes(query) 
+        || P.prodName.replace(/\s/g, '').toLowerCase().includes(query)
+      )
+      
+      if (!results.length) results = displayProducts
+
+      results = results.map(P => {
+        let d1 = levenshteinDistance(P.prodNick, query)
+        let d2 = levenshteinDistance(P.prodName.toLowerCase(), query)
+        let score = Math.min(d1, d2)
+
+        return { ...P, score }
+      })
+
+      setSuggestions(sortBy(results, 'score').slice(0,10))
+
+    }
+
+  }
+
+  return (
+    <AutoComplete 
+      id="product-dropdown"
+      value={selectedProduct || null}
+      field="prodName"
+      suggestions={suggestions || []}
+      completeMethod={search}
+      dropdown={true}
       itemTemplate={dropdownItemTemplate}
-      valueTemplate={dropdownValueTemplate}
+      //selectedItemTemplate={dropdownValueTemplate}
+      autoHighlight
+      forceSelection
+      delay={50}
+      spellCheck="false"
+
+      onFocus={e => e.target.select()}
       onChange={e => {
         // console.log(products[e.value])
-        setSelectedProdNick(e.value)
+        setSelectedProduct(e.value)
+        setSelectedProdNick(e.value?.prodNick)
         setSelectedQty(cartItems.find(i => i.prodNick === e.value)?.qty || 0)
       }}
       onHide={() => selectedProdNick && qtyInputRef.current.focus()}
-      // onKeyUp={e => {
-      //   if (e.key === 'Enter' && !!selectedProdNick) {
-      //     qtyInputRef.current.focus()
-      //   }
-      // }}
-      onClick={() => selectedProdNick && qtyInputRef.current.focus()}
       placeholder={displayProducts ? "Select Product" : "Loading..."}
       style={{width: "100%"}}
-      scrollHeight="20rem"
-      ref={dropdownRef}
+      scrollHeight="16rem"
+      inputRef={dropdownRef}
     />
-    {/* <pre>{JSON.stringify(selectedProduct, null, 2)}</pre> */}
-  </>)
+  )
+
+  // return(<>
+  //   <Dropdown
+  //     id="dropdown"
+  //     options={displayProducts || []} 
+  //     autoFocus={wSize !== 'lg'}
+  //     //showOnFocus={true}
+  //     optionLabel="prodName" 
+  //     optionValue="prodNick"
+  //     value={selectedProdNick || null}
+  //     filter 
+  //     filterBy={`prodName${user.locNick === 'backporch' ? ",prodNick" : ""}`} 
+  //     showFilterClear 
+  //     resetFilterOnHide 
+  //     filterInputAutoFocus
+  //     itemTemplate={dropdownItemTemplate}
+  //     valueTemplate={dropdownValueTemplate}
+  //     onChange={e => {
+  //       // console.log(products[e.value])
+  //       setSelectedProdNick(e.value)
+  //       setSelectedQty(cartItems.find(i => i.prodNick === e.value)?.qty || 0)
+  //     }}
+  //     onHide={() => selectedProdNick && qtyInputRef.current.focus()}
+  //     // onKeyUp={e => {
+  //     //   if (e.key === 'Enter' && !!selectedProdNick) {
+  //     //     qtyInputRef.current.focus()
+  //     //   }
+  //     // }}
+  //     onClick={() => selectedProdNick && qtyInputRef.current.focus()}
+  //     placeholder={displayProducts ? "Select Product" : "Loading..."}
+  //     style={{width: "100%"}}
+  //     scrollHeight="20rem"
+  //     ref={dropdownRef}
+  //   />
+  //   {/* <pre>{JSON.stringify(selectedProduct, null, 2)}</pre> */}
+  // </>)
 }
 
 
 /**
- * 
  * @param {String} s - Input String 
  * @param {Int} w - Column width; Max # of characters per line 
  * @returns String with newlines inserted 
@@ -233,3 +278,24 @@ export const CartItemDropdown = ({
 const wrapText = (s, w) => s.replace(
   new RegExp(`(?![^\\n]{1,${w}}$)([^\\n]{1,${w}})\\s`, 'g'), '$1\n'
 );
+
+
+const levenshteinDistance = (s, t) => {
+  if (!s.length) return t.length;
+  if (!t.length) return s.length;
+  const arr = [];
+  for (let i = 0; i <= t.length; i++) {
+    arr[i] = [i];
+    for (let j = 1; j <= s.length; j++) {
+      arr[i][j] =
+        i === 0
+          ? j
+          : Math.min(
+              arr[i - 1][j] + 1,
+              arr[i][j - 1] + 1,
+              arr[i - 1][j - 1] + (s[j - 1] === t[i - 1] ? 0 : 1)
+            );
+    }
+  }
+  return arr[t.length][s.length];
+};
