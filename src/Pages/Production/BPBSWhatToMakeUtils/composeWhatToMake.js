@@ -72,12 +72,14 @@ import {
       let T2 = TwodayBasedOnDelivDate(delivDate)
 
       let fullOrdersT0 = getFullMakeOrders(delivDate, database);
-      let fullOrdersT1 = getFullMakeOrders(T1, database);
+      let fullProdT1 = getFullProdMakeOrders(T1, database)
+      let fullOrdersT1 = fullProdT1.filter(order => order.isStand !== false)
+      //let fullOrdersT1 = getFullMakeOrders(T1, database)
       let fullOrdersT2 = getFullProdMakeOrders(T2, database)
 
       let pocketsNorth = this.#getPocketsNorth(products, fullOrdersT0);
       let freshProds = this.#getFreshProds(products, routes, fullOrdersT0, fullOrdersT1);
-      let shelfProds = this.#getShelfProds(products, routes, fullOrdersT0, fullOrdersT1);
+      let shelfProds = this.#getShelfProds(products, routes, fullOrdersT0, fullProdT1);
       let freezerProds = this.#getFreezerProds(products, routes, fullOrdersT0, fullOrdersT1);
       
       let youllBeShort = this.getYoullBeShort(

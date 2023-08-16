@@ -1,5 +1,18 @@
 import * as attributes from "./_standardAttributes"
 
+
+// *** Get Item Queries ***
+
+export const getProduct = /* GraphQL */ `
+  query GetProduct($prodNick: String!) {
+    getProduct(prodNick: $prodNick) {
+      ${attributes.productAttributes}
+    }
+  }
+`;
+
+// *** List Item Queries ***
+
 export const listDoughBackups = /* GraphQL */ `
   query ListDoughBackups(
     $filter: ModelDoughBackupFilterInput
@@ -296,6 +309,29 @@ export const listAltLeadTimes = /* GraphQL */ `
 // Special queries -- by index
 // *****************************************************************************
 
+export const orderByDelivDate = /* GraphQL */ `
+  query OrderByDelivDate(
+    $delivDate: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelOrderFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    orderByDelivDate(
+      delivDate: $delivDate
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        ${attributes.orderAttributes}
+      }
+      nextToken
+    }
+  }
+`;
+
 export const orderByLocByDelivDate = /* GraphQL */ `
   query OrderByLocByDelivDate(
     $locNick: String!
@@ -315,6 +351,29 @@ export const orderByLocByDelivDate = /* GraphQL */ `
     ) {
       items {
         ${attributes.orderAttributes}
+      }
+      nextToken
+    }
+  }
+`;
+
+export const standingByDayOfWeek = /* GraphQL */ `
+  query StandingByDayOfWeek(
+    $dayOfWeek: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelStandingFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    standingByDayOfWeek(
+      dayOfWeek: $dayOfWeek
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        ${attributes.standingAttributes}
       }
       nextToken
     }
