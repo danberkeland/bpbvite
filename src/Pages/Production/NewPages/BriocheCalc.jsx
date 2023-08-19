@@ -5,7 +5,7 @@ import { getProduct } from "../../../data/swr2.x.x/gqlQueries/queries"
 import { useListData } from "../../../data/_listData"
 import { DateTime } from "luxon"
 import { useMemo } from "react"
-import { groupBy, map, mapValues, orderBy, round, set, sum, sumBy } from "lodash"
+import { flatten, groupBy, map, mapValues, orderBy, round, set, sum, sumBy } from "lodash"
 import { DataTable } from "primereact/datatable"
 import { TreeTable } from 'primereact/treetable'
 import { Column } from "primereact/column"
@@ -26,6 +26,24 @@ const getRelativeWeekday = (daysAhead) => todayDT.plus({ days: daysAhead }).toFo
  * @param {number} x
  */
 const relu = (x) => x >= 0 ? x : 0
+
+// const convertToTreeStructure = (data, iteratee) => {
+//   const groupedData = groupBy(data, iteratee)
+
+//   const foo = Object.entries(treeData).map(entry => ({
+//     key: `${data.key ? data.key + '.' : ''}${entry[0]}`,
+//     data: {},
+//     children: {}
+//   }))
+// }
+
+// const makeTreeData = (data, groupByIteratees) => {
+  
+//   for (let iter of groupByIteratees) {
+//     groupedData = groupBy(data, iter)
+//   }
+
+// }
 
 const useProduct = (prodNick) => {
   const { data } = useSWR(
@@ -438,10 +456,47 @@ const useOrderProjection = () => {
     )
   })
   
-  console.log('rowData', rowData)
+
+
+  // with grouping
+
+  const productRowTemplate = briocheProdNicks.map(pn => ({
+    key: pn,
+    data: { label: pn },
+    children: [],
+  }))
+
+  const ordersByProductByTypeByLocation = groupBy(
+    flatten(allOrderData),
+    order => `${order.prodNick}.${order.type === 'H' ? 'H' : 'CS'}.${order.locNick}`
+  )
+
+  const datePlaceholder = { T0: 0, T1: 0, T2: 0, T3: 0, T4: 0, T5: 0, T6: 0 }
+  const withPivotedQtys = mapValues(
+    ordersByProductByTypeByLocation,
+    group => ({
+      ...datePlaceholder,
+      ...mapValues(
+        groupBy(group, order => `T${order.relativeDate}`),
+        group => sumBy(group, order => order.qty * products[order.prodNick].packSize)
+      )
+    })
+  ) 
+  let nestedOrders = {}
+  Object.entries(withPivotedQtys).forEach(entry => 
+    set(nestedOrders, entry[0], entry[1])
+  )
+
+
+  //console.log('rowData', rowData)
+  console.log('allOrderData', allOrderData)
+  console.log('ordersByProductByTypeByLocation', ordersByProductByTypeByLocation)
+  console.log('nestedOrders', nestedOrders)
   return { rowData }
 
 }
+
+
 
 
 export const BriocheCalc = () => {
@@ -470,10 +525,13 @@ export const BriocheCalc = () => {
         are included since they typically represent potential next-day orders
         that we need to be able to fulfill.
       </p>
-      <p>Totals are not exact sums of their component parts as they are rounded to batch-size multiples.</p>
       <p>
-        Mix predictions tend to underestimate our dough needs. It 
-        mostly serves to show what is being made to order (known) vs to stock (guessing).
+        Totals are not exact sums of their component parts as they are rounded 
+        to batch-size multiples.
+      </p>
+      <p>
+        Mix predictions tend to underestimate our dough needs. It mostly serves 
+        to show what is being made to order (known) vs to stock (guessing).
       </p>
 
       <h2>Bake Strategies for Today</h2>
