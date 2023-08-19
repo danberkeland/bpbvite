@@ -218,8 +218,8 @@ export const AddItemMenu = ({
       blockScroll={true}
       icons={sidebarHeaderTemplate}
       position="top"
-      style={{height: "15.75rem"}}    
-      footer={footerTemplate}
+      style={{height: "20rem"}}    
+      // footer={footerTemplate}
     >
       <div style={{marginTop: ".25rem"}}>
         {bodyTemplate}
