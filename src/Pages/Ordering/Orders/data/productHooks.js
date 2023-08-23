@@ -231,7 +231,7 @@ export const useCustomizedProducts = ({
  * well as other descriptive data to help understand how fulfillment is
  * executed or why the route fails to be valid.
  */
-const getRouteOptions = ({ product, location, routeDict, ZRT }) => { 
+export const getRouteOptions = ({ product, location, routeDict, ZRT }) => { 
   // routeDict is keyed on routeNick
   // ZRT is an array of objects (in typical gql response format)
 
@@ -423,6 +423,7 @@ const getRouteSummaries = ({
 
 const adjustSummaries = (routeSummaries, product) => {
   const { daysAvailable } = product
+  // console.log(product.prodNick, routeSummaries)
  
   let adjustedRouteSummaries = []
   for (let i = 0; i < 7; i++) {

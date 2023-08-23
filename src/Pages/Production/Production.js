@@ -13,6 +13,7 @@ import { BPBNBuckets } from "./NewPages/BPBNBucketsNew";
 import { Routing } from "./NewPages/Routing";
 import { Sandbox } from "./NewPages/_Sandbox";
 import { BriocheCalc } from "./NewPages/BriocheCalc";
+import { SpecialPacking } from "./NewPages/SpecialPacking";
 
 const bpbnPages = [
   {name: "Sandbox", component: <Sandbox />},
@@ -28,6 +29,7 @@ const bpbnPages = [
   {name: "Seven Day List", component: <SevenDayList />},
   {name: "Order Routing", component: <Routing />},
   {name: "Brioche Calculator", component: <BriocheCalc />},
+  {name: "Special Pack Lists", component: <SpecialPacking />},
 ]
 
 const Production = () => {
