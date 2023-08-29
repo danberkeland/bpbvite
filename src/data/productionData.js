@@ -24,6 +24,8 @@ import { groupBy } from "../functions/groupBy"
 import { useListData } from "./_listData"
 import { sortBy } from "lodash"
 
+import { preDBOverrides } from "./_productOverrides"
+
 const LIMIT = 5000
 
 // **************************
@@ -316,7 +318,17 @@ export const useOrderReportByDate = ({ delivDateJS, includeHolding, shouldFetch 
     const combinedRoutedOrdersWithDimensionData = combinedRoutedOrders.map(order => ({
       ...order,
       fulfillment: order.route,
-      location: order.isWhole ? locations[order.locNick] : { locNick: order.locNick, locName: order.locNick, latestFirstDeliv: 7, latestFinalDeliv: 13 },
+      location: order.isWhole 
+        ? locations[order.locNick] 
+        : { 
+          locNick: order.locNick, 
+          locName: order.locNick, 
+          latestFirstDeliv: 7, 
+          latestFinalDeliv: 13,
+          zoneNick: order.route === 'atownpick' 
+            ? 'atownpick' 
+            : 'slopick'
+        },
       product: products[order.prodNick],
       route: routes[order.routeNick]
     }))
@@ -330,7 +342,6 @@ export const useOrderReportByDate = ({ delivDateJS, includeHolding, shouldFetch 
     routedOrderData: useMemo(transformData, [combinedOrders, dimensionData, dayOfWeek])
   })
 }
-
 
 // ***Cache to enable general route assignment in the ordering page***
 

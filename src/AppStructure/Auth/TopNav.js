@@ -97,6 +97,12 @@ function TopNav() {
                 window.location = "/Production/BPBSBuckets";
               },
             },
+            {
+              label: "Special Packing",
+              command: () => {
+                window.location = "/Production/BPBSPacking";
+              },
+            },
             
             
           ],

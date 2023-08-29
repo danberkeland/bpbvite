@@ -45,6 +45,7 @@ import EditRoutes from "../Pages/Settings/editRoutes/editRoutes";
 import Notes2 from "../Pages/Settings/notes/Notes2";
 import Remap from "../Pages/EODCounts/EODCountsRempas";
 import TopNav from "./Auth/TopNav";
+import { SpecialPacking } from "../Pages/Production/NewPages/SpecialPacking";
 
 function AnimatedRoutes({ Routes, Route, useLocation }) {
   const authClass = useSettingsStore((state) => state.authClass);
@@ -91,6 +92,10 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             <Route
               path="/Production/BPBSMixPocket"
               element={<BPBSMixPocket />}
+            />
+            <Route
+              path="/Production/BPBSPacking"
+              element={<SpecialPacking />}
             />
             <Route path="/Production/CroixCount" element={<CroixCount />} />
             <Route path="/Production/CroixToMake" element={<CroixToMake />} />
