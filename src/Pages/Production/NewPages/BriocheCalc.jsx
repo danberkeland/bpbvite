@@ -10,7 +10,7 @@ import { DataTable } from "primereact/datatable"
 import { TreeTable } from 'primereact/treetable'
 import { Column } from "primereact/column"
 
-const briocheProdNicks = ['bz', 'lgbz', 'brsl', 'bri']
+const briocheProdNicks = ['bz', 'lgbz', 'brsl', 'bri', 'zdog']
 const qtyPlaceholder = { bz: 0, lgbz: 0, brsl: 0, bri: 0 }
 const emptyQtyPlaceholder = { bz: '', lgbz: '', brsl: '', bri: '' }
 
@@ -197,19 +197,18 @@ const useFullOrderReport = () => {
   const { data:lgbz } = useProduct('lgbz')
   const { data:brsl } = useProduct('brsl')
   const { data:bri } = useProduct('bri')
+  const { data:zdog } = useProduct('zdog')
+  const productArray = [bz, lgbz, brsl, bri, zdog]
+  const products = { bz, lgbz, brsl, bri, zdog }
 
-  const { data: T0 } = useFullOrderByRelativeDate({ daysAhead: 0 })
-  const { data: T1 } = useFullOrderByRelativeDate({ daysAhead: 1 })
-  const { data: T2 } = useFullOrderByRelativeDate({ daysAhead: 2 })
-  const { data: T3 } = useFullOrderByRelativeDate({ daysAhead: 3 })
-
-
-  const allLoaded = [bz, lgbz, brsl, bri, T0, T1, T2, T3].every(data => !!data)
-  if (!allLoaded) return { data: undefined }
-
-  const products = { bz, lgbz, brsl, bri }
-  const productArray = [bz, lgbz, brsl, bri]
+  const { data:T0 } = useFullOrderByRelativeDate({ daysAhead: 0 })
+  const { data:T1 } = useFullOrderByRelativeDate({ daysAhead: 1 })
+  const { data:T2 } = useFullOrderByRelativeDate({ daysAhead: 2 })
+  const { data:T3 } = useFullOrderByRelativeDate({ daysAhead: 3 })
   const allOrderData = [T0, T1, T2, T3]
+
+  const allLoaded = [...productArray, ...allOrderData].every(data => !!data)
+  if (!allLoaded) return { data: undefined }
 
   const allOrders = allOrderData.map(TN => TN.filter(order => order.type !== 'H'))
   const allHolding = allOrderData.map(TN => TN.filter(order => order.type === 'H'))
@@ -412,6 +411,7 @@ const useOrderProjection = () => {
   const { data:lgbz } = useProduct('lgbz')
   const { data:brsl } = useProduct('brsl')
   const { data:bri } = useProduct('bri')
+  const { data:zdog } = useProduct('zdog')
 
   const { data: T0 } = useFullOrderByRelativeDate({ daysAhead: 0 })
   const { data: T1 } = useFullOrderByRelativeDate({ daysAhead: 1 })
@@ -422,8 +422,8 @@ const useOrderProjection = () => {
   const { data: T6 } = useFullOrderByRelativeDate({ daysAhead: 6 })
 
   const allOrderData = [T0, T1, T2, T3, T4, T5, T6]
-  const productArray = [bz, lgbz, brsl, bri]
-  const products = { bz, lgbz, brsl, bri }
+  const productArray = [bz, lgbz, brsl, bri, zdog]
+  const products = { bz, lgbz, brsl, bri, zdog }
 
   const allLoaded = [ ...productArray, ...allOrderData ].every(data => !!data)
   if (!allLoaded) return { data: undefined }
@@ -478,7 +478,10 @@ const useOrderProjection = () => {
       ...datePlaceholder,
       ...mapValues(
         groupBy(group, order => `T${order.relativeDate}`),
-        group => sumBy(group, order => order.qty * products[order.prodNick].packSize)
+        group => sumBy(group, order => {
+          if (!products[order.prodNick]) console.log(order.prodNick)
+          return order.qty * products[order.prodNick].packSize
+        })
       )
     })
   ) 
