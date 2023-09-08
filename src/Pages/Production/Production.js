@@ -14,6 +14,7 @@ import { Routing } from "./NewPages/Routing";
 import { Sandbox } from "./NewPages/_Sandbox";
 import { BriocheCalc } from "./NewPages/BriocheCalc";
 import { SpecialPacking } from "./NewPages/SpecialPacking";
+import { OrderReview } from "./NewPages/OrderReview";
 
 const bpbnPages = [
   {name: "Sandbox", component: <Sandbox />},
@@ -30,6 +31,7 @@ const bpbnPages = [
   {name: "Order Routing", component: <Routing />},
   {name: "Brioche Calculator", component: <BriocheCalc />},
   {name: "Special Pack Lists", component: <SpecialPacking />},
+  {name: "Order Review", component: <OrderReview />},
 ]
 
 const Production = () => {
