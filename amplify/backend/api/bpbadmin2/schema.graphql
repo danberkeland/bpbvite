@@ -283,6 +283,7 @@ type Location @model {
   ordersByDate: [Order] @hasMany(indexName: "byLocationByDelivDate", fields: ["locNick"])
   zoneNick: String
   zone: Zone @hasOne(fields: ["zoneNick"])
+  dfFulfill: String
   creditApp: CreditApp @hasOne
   addr1: String
   addr2: String

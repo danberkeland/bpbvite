@@ -487,6 +487,7 @@ export const getUser = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -610,6 +611,7 @@ export const listUsers = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -689,6 +691,7 @@ export const getUser2 = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -806,6 +809,7 @@ export const listUser2s = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -883,6 +887,7 @@ export const getLocationUser2 = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -975,6 +980,7 @@ export const getLocationUser2 = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -1035,6 +1041,7 @@ export const listLocationUser2s = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -1279,6 +1286,7 @@ export const getLocation = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      dfFulfill
       creditApp {
         id
         firstName
@@ -1433,6 +1441,7 @@ export const listLocations = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -2414,6 +2423,7 @@ export const getOrder = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -2583,6 +2593,7 @@ export const listOrders = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -2662,6 +2673,7 @@ export const getStanding = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -2887,6 +2899,7 @@ export const listStandings = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -4558,6 +4571,7 @@ export const getEventLog = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -4663,6 +4677,7 @@ export const getTemplateProd = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -4879,6 +4894,7 @@ export const listTemplateProds = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -5008,6 +5024,7 @@ export const getProdsNotAllowed = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -5229,6 +5246,7 @@ export const listProdsNotAlloweds = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -5813,6 +5831,7 @@ export const getLocationUser = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -5904,6 +5923,7 @@ export const getLocationUser = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -5963,6 +5983,7 @@ export const listLocationUsers = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -6045,6 +6066,7 @@ export const getAltPricing = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -6262,6 +6284,7 @@ export const listAltPricings = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -6391,6 +6414,7 @@ export const getAltLeadTime = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -6608,6 +6632,7 @@ export const listAltLeadTimes = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -6765,6 +6790,7 @@ export const user2byEmail = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -6834,6 +6860,7 @@ export const locUsers2ByAuthType = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -6929,6 +6956,7 @@ export const locSortAZ = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -7236,6 +7264,7 @@ export const orderByLocByDelivDate = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -7367,6 +7396,7 @@ export const orderByDelivDate = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -7438,6 +7468,7 @@ export const standingByLocByStartDate = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -7567,6 +7598,7 @@ export const standingByLocByEndDate = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -7696,6 +7728,7 @@ export const standingByLocByDayOfWeek = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -7823,6 +7856,7 @@ export const standingByDayOfWeek = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -7981,6 +8015,7 @@ export const locUsersByAuthType = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city

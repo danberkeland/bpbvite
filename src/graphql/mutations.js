@@ -696,6 +696,7 @@ export const createUser = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -832,6 +833,7 @@ export const updateUser = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -968,6 +970,7 @@ export const deleteUser = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -1105,6 +1108,7 @@ export const createUser2 = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -1243,6 +1247,7 @@ export const updateUser2 = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -1381,6 +1386,7 @@ export const deleteUser2 = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -1516,6 +1522,7 @@ export const createLocationUser2 = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -1608,6 +1615,7 @@ export const createLocationUser2 = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -1689,6 +1697,7 @@ export const updateLocationUser2 = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -1781,6 +1790,7 @@ export const updateLocationUser2 = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -1862,6 +1872,7 @@ export const deleteLocationUser2 = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -1954,6 +1965,7 @@ export const deleteLocationUser2 = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -2235,6 +2247,7 @@ export const createLocation = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      dfFulfill
       creditApp {
         id
         firstName
@@ -2456,6 +2469,7 @@ export const updateLocation = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      dfFulfill
       creditApp {
         id
         firstName
@@ -2677,6 +2691,7 @@ export const deleteLocation = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      dfFulfill
       creditApp {
         id
         firstName
@@ -4473,6 +4488,7 @@ export const createOrder = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -4723,6 +4739,7 @@ export const updateOrder = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -4973,6 +4990,7 @@ export const deleteOrder = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -5101,6 +5119,7 @@ export const createStanding = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -5347,6 +5366,7 @@ export const updateStanding = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -5593,6 +5613,7 @@ export const deleteStanding = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -8451,6 +8472,7 @@ export const createEventLog = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -8515,6 +8537,7 @@ export const updateEventLog = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -8579,6 +8602,7 @@ export const deleteEventLog = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -8657,6 +8681,7 @@ export const createTemplateProd = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -8894,6 +8919,7 @@ export const updateTemplateProd = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -9131,6 +9157,7 @@ export const deleteTemplateProd = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -9369,6 +9396,7 @@ export const createProdsNotAllowed = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -9607,6 +9635,7 @@ export const updateProdsNotAllowed = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -9845,6 +9874,7 @@ export const deleteProdsNotAllowed = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -10951,6 +10981,7 @@ export const createLocationUser = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -11042,6 +11073,7 @@ export const createLocationUser = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -11122,6 +11154,7 @@ export const updateLocationUser = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -11213,6 +11246,7 @@ export const updateLocationUser = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -11293,6 +11327,7 @@ export const deleteLocationUser = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -11384,6 +11419,7 @@ export const deleteLocationUser = /* GraphQL */ `
           locNick
           locName
           zoneNick
+          dfFulfill
           addr1
           addr2
           city
@@ -11462,6 +11498,7 @@ export const createAltPricing = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -11700,6 +11737,7 @@ export const updateAltPricing = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -11938,6 +11976,7 @@ export const deleteAltPricing = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -12176,6 +12215,7 @@ export const createAltLeadTime = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -12414,6 +12454,7 @@ export const updateAltLeadTime = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
@@ -12652,6 +12693,7 @@ export const deleteAltLeadTime = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        dfFulfill
         creditApp {
           id
           firstName
