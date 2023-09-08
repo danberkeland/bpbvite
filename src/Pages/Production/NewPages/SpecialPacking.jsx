@@ -10,17 +10,16 @@
 
 import { DateTime } from "luxon"
 import { Card } from "primereact/card"
-import { Divider } from "primereact/divider"
 import { groupBy, mapValues, round, sortBy } from "lodash"
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
-import { useDimensionData, useOrderReportByDate } from "../../../data/productionData"
+import { useOrderReportByDate } from "../../../data/productionData"
 import { getRouteOptions } from "../../Ordering/Orders/data/productHooks"
 import { useWindowSizeDetector } from "../../../functions/detectWindowSize"
 
 const prodNicks = ['pz', 'unpz', 'lgpz', 'pzsl']
-const qtyPlaceholders = Object.fromEntries(prodNicks.map(pn => [pn, 0]))
-const emptyQtyPlaceholder = Object.fromEntries(prodNicks.map(pn => [pn, '']))
+// const qtyPlaceholders = Object.fromEntries(prodNicks.map(pn => [pn, 0]))
+// const emptyQtyPlaceholder = Object.fromEntries(prodNicks.map(pn => [pn, '']))
 
 const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
 const getRelativeIsoDate = (daysAhead) => todayDT.plus({ days: daysAhead }).toISODate()
