@@ -93,8 +93,9 @@ export const Orders = ({ useTestAuth }) => {
   const [delivDateJS, setDelivDateJS] = useState(
     todayDT.plus({ days: 1 }).toJSDate()
   )
-  const delivDateDT = 
-    DateTime.fromJSDate(delivDateJS).setZone('America/Los_Angeles')
+  const delivDateDT = DateTime.fromJSDate(delivDateJS)
+    .setZone('America/Los_Angeles')
+    .startOf('day')
   const delivWeekday = weekdays[delivDateJS.getDay()]
   const orderLeadTime = Interval
     .fromDateTimes(ORDER_DATE_DT, delivDateDT).length('days')

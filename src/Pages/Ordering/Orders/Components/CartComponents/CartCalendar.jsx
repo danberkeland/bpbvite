@@ -7,6 +7,7 @@ import {
 } from "../../../../../functions/dateAndTime";
 import { useOrderCalendarSummary } from "../../data/orderHooks";
 import { InputLabel } from "../InputLabel";
+import { DateTime } from "luxon";
 
 const minDate = getWorkingDateTime('NOW')
   .minus({ days: 1 }).toJSDate()
@@ -44,6 +45,9 @@ export const CartCalendar = ({
 
     const isRecentDelete = orderSummary?.byDate?.[calendarDate]?.isRecentDelete
 
+    const fulfillment = orderSummary?.byDate?.[calendarDate]?.fulfillment
+
+
     return (
       <div 
         // id={isCustomToday && date.selectable
@@ -58,7 +62,7 @@ export const CartCalendar = ({
         style={{background: isRecentDelete ? "rgba(255, 0, 0, .25)" : ""}}
         //onClick={() => console.log(hasCart, hasStanding)}
       >
-        {date.day}
+        {date.day}{}
       </div>
     )
   }
@@ -84,7 +88,18 @@ export const CartCalendar = ({
         dateTemplate={dateTemplate}
         onChange={(e) => {
           dateUpdated.current = true
-          setDelivDateJS(e.value)
+
+          const dateObj = { 
+            year: e.value.getFullYear(),
+            month: e.value.getMonth() + 1,
+            day: e.value.getDate(),
+          }
+          const opts = { zone: 'America/Los_Angeles' }
+
+          const bpbDate = DateTime.fromObject(dateObj, opts).toJSDate()
+
+          setDelivDateJS(bpbDate)
+
           // handleSelectionUpdate(e.value)
         }}
         style={!inline
