@@ -13,6 +13,7 @@ const getLocation = /* GraphQL */ `
       specialInstructions
       delivOrder
       isActive 
+      dfFulfill
       zoneNick
       zone {
         zoneNick

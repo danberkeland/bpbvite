@@ -10,6 +10,8 @@ import { useSettingsStore } from '../../../../../../Contexts/SettingsZustand'
 import { Dialog } from 'primereact/dialog'
 import { sortBy } from 'lodash'
 
+const northZones = ['atownpick', '46', 'Atown', 'Margarita', 'Paso', 'Templeton', 'Tin City']
+
 const fulfillmentDisplayTextMap = {
   'deliv': 'Delivery',
   'slopick': 'SLO Pickup',
@@ -133,10 +135,33 @@ export const CartSubmitButton = ({
     setIsLoading(false)
   }
 
+  //console.log('BBBBB', location)
   const cnfDialogHeader = () => {
+    const showPickupWarning = user.authClass === 'bpbfull'
+      && (
+        (northZones.includes(location.zoneNick) && cartHeader.route === 'slopick')
+        || (!northZones.includes(location.zoneNick) && cartHeader.route === 'atownpick')
+
+      )
+    const showFulfillWarning = user.authClass === 'bpbfull'
+      && cartHeader.route !== cartHeader.meta.defaultRoute
+
     return (
       <>
-        <div>{`${fulfillmentDisplayTextMap[cartHeader.route]}`}</div>
+        <div>
+          {user.authClass === 'bpbfull' && location.locName}
+        </div>
+        <div style={{
+          color: showPickupWarning ? 'red'
+            : showFulfillWarning ? 'hsl(45, 96%, 35%)' 
+            : ''
+        }}>
+          {`${fulfillmentDisplayTextMap[cartHeader.route]}`}
+          {showPickupWarning ? ' (Are You Sure?)'
+            : showFulfillWarning ? ' (Alternate)'
+            : ''
+          }
+        </div>
         <div>{delivDateDT.toFormat('EEEE, MMM d')} {relativeDateString}</div>
         {invalidRouteFlag && user.authClass === 'bpbfull' && 
           <div><WarnIcon /> Invalid route <WarnIcon /></div>

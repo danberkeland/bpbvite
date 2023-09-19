@@ -17,13 +17,15 @@ export const FulfillmentDropdown = ({
   disabled,
   containerStyle,
 }) => {
-  const defaultRoute = ['slopick', 'atownpick'].includes(location?.zoneNick)
-    ? location.zoneNick
-    : 'deliv'
+  const defaultRoute = ['atownpick', 'slopick', 'deliv'].includes(location?.dfFulfill)
+    ? location.dfFulfill
+    : ['atownpick', 'slopick'].includes(location?.zoneNick) 
+      ? location.zoneNick
+      : 'deliv'
 
-  let dropdownModel = defaultRoute === 'deliv' 
-    ? delivOptions.concat(pickupOptions) 
-    : pickupOptions
+  let dropdownModel = ['atownpick', 'slopick'].includes(location?.zoneNick) 
+    ? pickupOptions
+    : delivOptions.concat(pickupOptions) 
     
 
   return (

@@ -220,8 +220,10 @@ export const useOrderCalendarSummary = ({ locNick, shouldFetch }) => {
       const isDelete = summary.every(item => item.isDelete)
       const isRecentDelete = summary.some(item => item.isRecentDelete)
         && summary.every(item => item.isDelete)
+      
+      const fulfillment = cItems[0]?.route
 
-      return ([dateKey, { hasCart, hasStanding, isDelete, isRecentDelete }])   
+      return ([dateKey, { hasCart, hasStanding, isDelete, isRecentDelete, fulfillment }])   
     }) // end cartSummary
 
     // This part only considers standing orders. Calendar should try to match
@@ -374,9 +376,11 @@ export const useFullOrderByDate = ({ locNick, delivDateJS, shouldFetch }) => {
     orderItems = sortBy(orderItems, ['product.prodName'])
     
     // Make Header
-    const defaultRoute = ['atownpick', 'slopick'].includes(location.zoneNick) 
-      ? location.zoneNick
-      : 'deliv'
+    const defaultRoute = ['atownpick', 'slopick', 'deliv'].includes(location.dfFulfill)
+      ? location.dfFulfill
+      : ['atownpick', 'slopick'].includes(location.zoneNick) 
+        ? location.zoneNick
+        : 'deliv'
     
     // *** FUTURE: if standing orders make use of route/note attributes:
     //const standingRoute = ...
