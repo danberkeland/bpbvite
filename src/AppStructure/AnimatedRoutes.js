@@ -7,6 +7,7 @@ import CustomerBilling from "../Pages/CustomerBilling/CustomerBilling";
 import CustomerSettings from "../Pages/CustomerSettings/CustomerSettings";
 import CustomerProducts from "../Pages/CustomerProducts/CustomerProducts";
 import BPBNBaker1 from "../Pages/Production/BPBNBaker1";
+import BPBNBaker1Backup from "../Pages/Production/BPBNBaker1Backup";
 import BPBNBaker2 from "../Pages/Production/BPBNBaker2";
 import WhoBake from "../Pages/Production/WhoBake";
 import WhoShape from "../Pages/Production/WhoShape";
@@ -28,6 +29,7 @@ import { AnimatePresence } from "framer-motion";
 import { useSettingsStore } from "../Contexts/SettingsZustand";
 import { UserHeaderMenu } from "./UserHeaderMenu";
 import BPBSWhatToMake from "../Pages/Production/BPBSWhatToMake";
+import BPBSWhatToMakeBackup from "../Pages/Production/BPBSWhatToMakeBackup";
 import BPBSMixPocket from "../Pages/Production/BPBSMixPocket";
 import CroixCount from "../Pages/Production/CroixCount";
 import CroixToMake from "../Pages/Production/CroixToMake";
@@ -65,6 +67,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
         {authClass !== "customer" && (
           <React.Fragment>
             <Route path="/Production/BPBNBaker1" element={<BPBNBaker1 />} />
+            <Route path="/BPBNProd/BPBNBaker1Backup" element={<BPBNBaker1Backup />} />
             <Route path="/Production/BPBNBaker2" element={<BPBNBaker2 />} />
             <Route path="/Production/Production" element={<Production />} />
             <Route path="/Production/WhoBake" element={<WhoBake />} />
@@ -88,6 +91,10 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             <Route
               path="/Production/BPBSWhatToMake"
               element={<BPBSWhatToMake />}
+            />
+            <Route
+              path="/BPBSProd/BPBSWhatToMakeBackup"
+              element={<BPBSWhatToMakeBackup />}
             />
             <Route
               path="/Production/BPBSMixPocket"
