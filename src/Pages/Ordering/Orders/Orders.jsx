@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from "react"
 
 import { TabMenu } from "primereact/tabmenu"
 
+import { Accordion, AccordionTab } from 'primereact/accordion'
 import { CartCalendar } from "./Components/CartComponents/CartCalendar"
 import { LocationDropdown } from "./Components/LocationDropdown"
 import { FulfillmentDropdown } from "./Components/CartComponents/FulfillmentDropdown"
@@ -29,6 +30,8 @@ import { RetailOrders } from "./Components/Retail/RetailOrders"
 import { API, graphqlOperation } from "aws-amplify"
 
 import * as subscriptions from "../../../customGraphQL/subscriptions"
+import { Button } from "primereact/button"
+import { Toast } from "primereact/toast"
 
 
 // Constants, Non-Reactive Data ************************************************
@@ -39,13 +42,16 @@ import * as subscriptions from "../../../customGraphQL/subscriptions"
 const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 const cartTabModel = [
-  {label: 'Cart Orders', icon: 'pi pi-fw pi-shopping-cart'}
+  {index: 0, label: 'Cart Orders', icon: 'pi pi-fw pi-shopping-cart'}
 ]
 const standingTabModel = [
-  {label: 'Standing Orders', icon: 'pi pi-fw pi-calendar'},
+  {index: 1, label: 'Standing Orders', icon: 'pi pi-fw pi-calendar'},
 ]
 const retailTabModel = [
-  {label: 'Retail', icon: 'pi pi-fw pi-shopping-cart'},
+  {index: 2, label: 'Retail', icon: 'pi pi-fw pi-shopping-cart'},
+]
+const helpTabModel = [
+  {index: 3, label: 'Help', icon: 'pi pi-fw pi-question-circle'},
 ]
 
 const standingBlacklist = ['high', 'hios', 'sandos']
@@ -73,19 +79,16 @@ export const Orders = ({ useTestAuth }) => {
   const isLoading = useSettingsStore((state) => state.isLoading)
 
   const tabModel = user.authClass === 'bpbfull'
-    ? cartTabModel.concat(standingTabModel).concat(retailTabModel)
+    ? cartTabModel.concat(standingTabModel).concat(retailTabModel).concat(helpTabModel)
     : standingBlacklist.includes(user.locNick)
-      ? cartTabModel
-      : cartTabModel.concat(standingTabModel)
-
-  // const tabModel = standingBlacklist.includes(user.locNick)
-  //   ? cartTabModel
-  //   : cartTabModel.concat(standingTabModel)
+      ? cartTabModel //.concat(helpTabModel)
+      : cartTabModel.concat(standingTabModel) //.concat(helpTabModel)
 
   const [locNick, setLocNick] = useState(user.locNick)
 
   // Date data
   const nowDT = DateTime.now().setZone('America/Los_Angeles')
+  // console.log('TIME', nowDT)
   const todayDT = nowDT.startOf('day')
   const ORDER_DATE_DT = nowDT.plus({ hours: 4 }).startOf('day')
   // const pastCutoff = todayDT.toMillis() !== ORDER_DATE_DT.toMillis()
@@ -120,6 +123,8 @@ export const Orders = ({ useTestAuth }) => {
   const [showSidebar, setShowSidebar] = useState(false)
   const [selectedCartQty, setSelectedCartQty] = useState('')
   const [selectedCartProdNick, setSelectedCartProdNick] = useState()
+
+  const toastRef = useRef(null)
 
   // **********************************
   // DATA
@@ -360,7 +365,9 @@ export const Orders = ({ useTestAuth }) => {
       <TabMenu 
         model={tabModel} 
         activeIndex={activeIndex} 
-        onTabChange={(e) => setActiveIndex(e.index)}
+        onTabChange={(e) => {
+          setActiveIndex(tabModel[e.index].index)
+        }}
         style={{marginBottom: "1rem"}}
       />
 
@@ -567,6 +574,104 @@ export const Orders = ({ useTestAuth }) => {
 
       {user.authClass === 'bpbfull' && activeIndex === 2 &&
         <RetailOrders />
+      }
+
+      {activeIndex === 3 &&
+        <div>
+          <Accordion>
+            <AccordionTab header="Cart Orders">
+              <h3>Basic Ordering</h3>
+              <ul>
+                <li>
+                  Select a date using the calendar. If you're on a small screen,
+                  click/tap on the 'Date' field to show the calendar.
+                </li>
+                <li>
+                  Use the dropdown to find your product. You can use the search bar 
+                  to filter your options. For small screens, use the "Add" button to display product selection.
+                </li>
+                <li>
+                  Pick a quantity and click the nearby "Add" button. 
+                  Quantites for added items can also be changed in the main list.
+                  Note that some of our products are counted in packs. 
+                </li>
+                <li>
+                  Use the "Submit Order" button to complete your order.
+                </li>
+              </ul>
+
+              <h3>"Did my Order go Through?"</h3>
+              <p>
+                When your order goes through, a confirmation popup will be
+                displayed. Click the button below to see what it looks like
+              </p>
+              <Button 
+                label="Show Confirmation"
+                onClick={()=>{
+                  toastRef.current.show({ 
+                    summary: 'Confirmed', 
+                    detail: 'Order received', 
+                    severity: 'success', 
+                    life: 8000
+                  })
+                }}
+              />
+              <Toast ref={toastRef} 
+                style={{ width: "15rem", opacity: ".98" }}
+              />
+              <p>
+                Orders that have been successfully submitted will also show 
+                timestamps indicating when the last edit was submitted.
+              </p>
+              <p>
+                If something stange happens and you're still not sure if we 
+                got your order, try refreshing the page. What you see after
+                a refresh will be the most up-to-date info stored on our
+                computers. If everything looks correct, then we definitely got 
+                your order.
+              </p>
+
+              <h3>Lead Times</h3>
+              <p>
+                Most of our products have a 2 or 3 day lead time. Items are not
+                available for ordering inside the lead time window and will
+                be marked as "in production."
+              </p>
+            </AccordionTab>
+
+            <AccordionTab header="Standing Orders">
+              <p>
+                Standing orders allow you to set recurring orders for a given
+                day of the week.
+              </p>
+              <p>
+                Adding products works mostly the same as with Cart Orders.
+              </p>
+              <p>
+                Fill out your grid with your desired quantites for each day 
+                of the week, and for each product, then finish by using the 
+                "Submit Changes" button to finish.
+              </p>
+
+            </AccordionTab>
+
+            <AccordionTab header="Cutoff Time">
+              <p>
+                Orders placed after 8:00pm will be treated as if made the next
+                day, which may affect product availability.
+              </p>
+            </AccordionTab>
+
+            <AccordionTab header="Favorites">
+              <p>
+                You can toggle products as favorites by clicking on the star 
+                icon next to a product listed in the dropdown menu. Favorites 
+                are displayed automatically when placing a new order.
+              </p>
+            </AccordionTab>
+
+          </Accordion>
+        </div>
       }
 
     </div>
