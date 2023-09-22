@@ -25,6 +25,7 @@ import ComposeWhatToMake from "./BPBSWhatToMakeUtils/composeWhatToMake"
 import styled from "styled-components";
 
 import { API, graphqlOperation } from "aws-amplify";
+import { DateTime } from "luxon";
 
 const WholeBox = styled.div`
   display: flex;
@@ -53,6 +54,15 @@ function BPBSWhatToMake() {
   const [pocketsNorth, setPocketsNorth] = useState();
   const [baguetteStuff, setBaguetteStuff] = useState();
   const [products, setProducts] = useState();
+
+  const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+  const [year, month, day] = delivDate.split("-")
+  const delivDateDT = DateTime.fromObject(
+    {year, month, day}, 
+    {zone: 'America/Los_Angeles'}
+  )
+  const diff = delivDateDT.diff(todayDT, "days").values.days
+  const tomorrowSelected = diff === 1
 
   
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
@@ -347,7 +357,7 @@ function BPBSWhatToMake() {
           <h2>Pocket Count</h2>
           <DataTable value={youllBeShort} className="p-datatable-sm">
             <Column field="pocketWeight" header="Pocket Size"></Column>
-            <Column field="preshaped" header="Available"></Column>
+            <Column field={tomorrowSelected? "prepreshaped" : "preshaped"} header="Available"></Column>
             <Column field="need" header="Need Today"></Column>
             <Column
               field="makeTotal"
