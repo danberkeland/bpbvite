@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useRef } from "react";
 import { Calendar } from "primereact/calendar";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
-import { confirmDialog } from "primereact/confirmdialog";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 
 import styled from "styled-components";
 
@@ -339,6 +339,7 @@ const SelectDate = ({ database, dailyInvoices }) => {
           }}
           style={printButtonStyle}
         />
+        <ConfirmDialog />
       </BasicContainer>
     </React.Fragment>
   );
