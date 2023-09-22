@@ -78,11 +78,15 @@ export const Orders = ({ useTestAuth }) => {
   }
   const isLoading = useSettingsStore((state) => state.isLoading)
 
-  const tabModel = user.authClass === 'bpbfull'
-    ? cartTabModel.concat(standingTabModel).concat(retailTabModel).concat(helpTabModel)
+  const _tabModel = user.authClass === 'bpbfull'
+    ? cartTabModel.concat(standingTabModel).concat(retailTabModel)
     : standingBlacklist.includes(user.locNick)
       ? cartTabModel //.concat(helpTabModel)
       : cartTabModel.concat(standingTabModel) //.concat(helpTabModel)
+
+  const tabModel = defaultAuth === 'bpbfull'
+    ? _tabModel.concat(helpTabModel)
+    : _tabModel
 
   const [locNick, setLocNick] = useState(user.locNick)
 
@@ -578,99 +582,128 @@ export const Orders = ({ useTestAuth }) => {
 
       {activeIndex === 3 &&
         <div>
-          <Accordion>
-            <AccordionTab header="Cart Orders">
-              <h3>Basic Ordering</h3>
-              <ul>
-                <li>
-                  Select a date using the calendar. If you're on a small screen,
-                  click/tap on the 'Date' field to show the calendar.
-                </li>
-                <li>
-                  Use the dropdown to find your product. You can use the search bar 
-                  to filter your options. For small screens, use the "Add" button to display product selection.
-                </li>
-                <li>
-                  Pick a quantity and click the nearby "Add" button. 
-                  Quantites for added items can also be changed in the main list.
-                  Note that some of our products are counted in packs. 
-                </li>
-                <li>
-                  Use the "Submit Order" button to complete your order.
-                </li>
-              </ul>
+            <Accordion >
+              <AccordionTab header="Cart Ordering">
+                <ul>
+                  <li>
+                    Select a date using the calendar. If you're on a small screen,
+                    click/tap on the 'Date' field to show the calendar.
+                  </li>
+                  <li>
+                    Use the dropdown menu to find your product. You can use the 
+                    search bar to filter your options. For small screens, use 
+                    the "Add" button to display product selection.
+                  </li>
+                  <li>
+                    Pick a quantity and click the nearby "Add" button. Quantites 
+                    for added items can also be changed in the main list. Note 
+                    that some of our products are counted in packs. 
+                  </li>
+                  <li>
+                    Use the "Submit Order" button to complete your order.
+                  </li>
+                </ul>
 
-              <h3>"Did my Order go Through?"</h3>
-              <p>
-                When your order goes through, a confirmation popup will be
-                displayed. Click the button below to see what it looks like
-              </p>
-              <Button 
-                label="Show Confirmation"
-                onClick={()=>{
-                  toastRef.current.show({ 
-                    summary: 'Confirmed', 
-                    detail: 'Order received', 
-                    severity: 'success', 
-                    life: 8000
-                  })
-                }}
-              />
-              <Toast ref={toastRef} 
-                style={{ width: "15rem", opacity: ".98" }}
-              />
-              <p>
-                Orders that have been successfully submitted will also show 
-                timestamps indicating when the last edit was submitted.
-              </p>
-              <p>
-                If something stange happens and you're still not sure if we 
-                got your order, try refreshing the page. What you see after
-                a refresh will be the most up-to-date info stored on our
-                computers. If everything looks correct, then we definitely got 
-                your order.
-              </p>
+                <p>
+                  Your calendar will be hilighted a darker gray on the selected 
+                  date to indicate that a cart order has been set.
+                </p>
+              </AccordionTab>
 
-              <h3>Lead Times</h3>
-              <p>
-                Most of our products have a 2 or 3 day lead time. Items are not
-                available for ordering inside the lead time window and will
-                be marked as "in production."
-              </p>
-            </AccordionTab>
+              {!standingBlacklist.includes(user.locNick) &&
+                <AccordionTab header="Set Up a Standing Order">
+                  <p>
+                    Standing orders allow you to set recurring orders 
+                    for a given day of the week.
+                  </p>
+                  <ul>
+                    <li>
+                      Use the dropdown menu to find your product. You can use the 
+                      search bar to filter your options. For small screens, use 
+                      the "Add" button to display product selection.
+                    </li>                 
+                    <li>
+                      Fill out your grid with your desired quantites for each day 
+                      of the week and for each product.
+                    </li>
+                    <li>
+                      Finish by using the "Submit Changes" button.
+                    </li>
+                  </ul>
 
-            <AccordionTab header="Standing Orders">
-              <p>
-                Standing orders allow you to set recurring orders for a given
-                day of the week.
-              </p>
-              <p>
-                Adding products works mostly the same as with Cart Orders.
-              </p>
-              <p>
-                Fill out your grid with your desired quantites for each day 
-                of the week, and for each product, then finish by using the 
-                "Submit Changes" button to finish.
-              </p>
+                  <p>
+                    To prevent conflicts with individual product lead times, 
+                    new changes to your standing order will need 4 days to start
+                    up. If you need to adjust your orders sooner than that, you
+                    can place cart orders for dates in that transition period.
+                  </p>
 
-            </AccordionTab>
+                  <p>
+                    Unedited standing orders will be hilighted light-gray on your 
+                    cart order calendar.
+                  </p>
+                </AccordionTab>
+              }
 
-            <AccordionTab header="Cutoff Time">
-              <p>
-                Orders placed after 8:00pm will be treated as if made the next
-                day, which may affect product availability.
-              </p>
-            </AccordionTab>
+              <AccordionTab header='"Did My Order Go Through?"'>
+                <p>
+                  A confirmation message will pop up when your order is 
+                  successfully submitted. Click the button below to see what 
+                  it looks like.
+                </p>
+                <Button 
+                  label="Show Confirmation"
+                  onClick={()=>{
+                    toastRef.current.show({ 
+                      summary: 'Confirmed', 
+                      detail: 'Order received', 
+                      severity: 'success', 
+                      life: 8000
+                    })
+                  }}
+                />
+                <Toast 
+                  ref={toastRef} 
+                  style={{ width: "15rem", opacity: ".98" }}
+                />
+                <p>
+                  Cart orders that have been successfully submitted will also 
+                  display how long ago the most recent changes were made.
+                </p>
+                <p>
+                  If something stange happens and you're still not sure if we 
+                  got your order, try refreshing the page. What you see after
+                  a refresh will be the most up-to-date info stored on our
+                  computers. If everything looks correct, then your order was
+                  successfully submitted.
+                </p>
+              </AccordionTab>
 
-            <AccordionTab header="Favorites">
-              <p>
-                You can toggle products as favorites by clicking on the star 
-                icon next to a product listed in the dropdown menu. Favorites 
-                are displayed automatically when placing a new order.
-              </p>
-            </AccordionTab>
+              <AccordionTab header="Lead Times">
+                <p>
+                  Most of our products have a 2 or 3 day lead time. Items are 
+                  not available for adding to orders inside the lead time 
+                  window and will be marked as "in production."
+                </p>
+              </AccordionTab>
 
-          </Accordion>
+              <AccordionTab header="Cutoff Time">
+                <p>
+                  Orders placed after 8:00pm will be handled as if made the next
+                  day, which may affect product availability.
+                </p>
+              </AccordionTab>
+
+              <AccordionTab header="Favorite Products">
+                <p>
+                  You can toggle products as favorites by clicking/tapping the 
+                  star icon next to a product listed in the dropdown menu. Favorites 
+                  allow for easy access to your most frequently ordered items.
+                </p>
+              </AccordionTab>
+            </Accordion>
+
+
         </div>
       }
 
