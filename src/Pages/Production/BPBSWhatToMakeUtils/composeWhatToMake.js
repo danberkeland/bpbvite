@@ -4,24 +4,25 @@ import {
     tomBasedOnDelivDate,
     TwodayBasedOnDelivDate,
   } from "../../../helpers/dateTimeHelpers";
-  import { getFullOrders } from "../../../helpers/CartBuildingHelpers";
-  import { getFullProdOrders } from "../../../helpers/CartBuildingHelpers";
-  import {
-    addProdAttr,
-    addFresh,
-    addNeedEarly,
-    addShelf,
-    addPretzel,
-    addPocketsQty,
-  } from "./utils";
-  import { handleFrenchConundrum } from "./conundrums.js";
-  const { DateTime } = require("luxon");
+import { getFullOrders } from "../../../helpers/CartBuildingHelpers";
+import { getFullProdOrders } from "../../../helpers/CartBuildingHelpers";
+import {
+  addProdAttr,
+  addFresh,
+  addNeedEarly,
+  addShelf,
+  addPretzel,
+  addPocketsQty,
+} from "./utils";
+import { handleFrenchConundrum } from "./conundrums.js";
+// import { groupBy, mapValues } from "lodash";
+const { DateTime } = require("luxon");
 
-  const PRODUCTS = 0
-  const CUSTOMERS = 1
-  const ROUTES = 2
-  const STANDING = 3
-  const ORDERS = 4
+const PRODUCTS = 0
+const CUSTOMERS = 1
+const ROUTES = 2
+const STANDING = 3
+const ORDERS = 4
   
   let today = todayPlus()[0];
   let tomorrow = todayPlus()[1];
@@ -375,6 +376,11 @@ import {
           }
         }
       }
+
+      // const weightTotals =  mapValues(
+      //   groupBy(orderItems, "weight"),
+      //   group => sumBy(group, "makeTotal")
+      // )
   
       for (let weight of weightList) {
         // let availablePockets =
