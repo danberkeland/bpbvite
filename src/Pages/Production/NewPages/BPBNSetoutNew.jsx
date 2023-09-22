@@ -34,6 +34,12 @@ const displayDate = dateDT.toLocaleString({
 })
 
 export const BPBNSetout = () => {
+  const setoutData = useBPBNcroixSetoutList({ 
+    dateDT, format: 'groupedByProdNick'
+  })
+
+  if (!!setoutData) console.log('setout data:', setoutData)
+
   const setoutTotals = useBPBNcroixSetoutList({ 
     dateDT, format: 'prodNickTotals'
   })
