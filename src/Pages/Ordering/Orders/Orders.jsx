@@ -78,15 +78,11 @@ export const Orders = ({ useTestAuth }) => {
   }
   const isLoading = useSettingsStore((state) => state.isLoading)
 
-  const _tabModel = user.authClass === 'bpbfull'
-    ? cartTabModel.concat(standingTabModel).concat(retailTabModel)
+  const tabModel = user.authClass === 'bpbfull'
+    ? cartTabModel.concat(standingTabModel, retailTabModel, helpTabModel)
     : standingBlacklist.includes(user.locNick)
-      ? cartTabModel //.concat(helpTabModel)
-      : cartTabModel.concat(standingTabModel) //.concat(helpTabModel)
-
-  const tabModel = defaultAuth === 'bpbfull'
-    ? _tabModel.concat(helpTabModel)
-    : _tabModel
+      ? cartTabModel.concat(helpTabModel)
+      : cartTabModel.concat(standingTabModel, helpTabModel)
 
   const [locNick, setLocNick] = useState(user.locNick)
 
@@ -583,7 +579,7 @@ export const Orders = ({ useTestAuth }) => {
       {activeIndex === 3 &&
         <div>
             <Accordion >
-              <AccordionTab header="Cart Ordering">
+              <AccordionTab header="Cart Orders">
                 <ul>
                   <li>
                     Select a date using the calendar. If you're on a small screen,
@@ -611,7 +607,7 @@ export const Orders = ({ useTestAuth }) => {
               </AccordionTab>
 
               {!standingBlacklist.includes(user.locNick) &&
-                <AccordionTab header="Set Up a Standing Order">
+                <AccordionTab header="Standing Orders">
                   <p>
                     Standing orders allow you to set recurring orders 
                     for a given day of the week.
@@ -673,7 +669,7 @@ export const Orders = ({ useTestAuth }) => {
                 <p>
                   If something stange happens and you're still not sure if we 
                   got your order, try refreshing the page. What you see after
-                  a refresh will be the most up-to-date info stored on our
+                  that will be the most up-to-date info stored on our
                   computers. If everything looks correct, then your order was
                   successfully submitted.
                 </p>
@@ -681,8 +677,8 @@ export const Orders = ({ useTestAuth }) => {
 
               <AccordionTab header="Lead Times">
                 <p>
-                  Most of our products have a 2 or 3 day lead time. Items are 
-                  not available for adding to orders inside the lead time 
+                  Most of our products have a 2 or 3 day lead time. Items/quantities 
+                  cannot be added to orders inside the lead time 
                   window and will be marked as "in production."
                 </p>
               </AccordionTab>
