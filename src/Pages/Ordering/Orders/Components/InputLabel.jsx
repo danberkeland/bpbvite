@@ -50,7 +50,10 @@ export const InputLabel = ({
         />
         <Dialog visible={showDialog}
           header={helpHeader}
-          style={{maxWidth: '25rem'}}
+          style={{
+            maxWidth: '25rem',
+            margin: ".5rem"
+          }}
           onHide={() => setShowDialog(false)}
         >
           {helpText}
