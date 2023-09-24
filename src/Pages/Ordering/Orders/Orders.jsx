@@ -580,6 +580,7 @@ export const Orders = ({ useTestAuth }) => {
         <div>
             <Accordion >
               <AccordionTab header="Cart Orders">
+                <h4>Basic Ordering</h4>
                 <ul>
                   <li>
                     Select a date using the calendar. If you're on a small screen,
@@ -604,10 +605,32 @@ export const Orders = ({ useTestAuth }) => {
                   Your calendar will be hilighted a darker gray on the selected 
                   date to indicate that a cart order has been set.
                 </p>
+                <h4>Fulfillment Options</h4>
+
+                <p>
+                  Your order can be set for {
+                    !['slopick', 'atownpick'].includes(location?.zoneNick) 
+                      && "delivery, or for "
+                  }pickup at either of our locations. Orders will be preset
+                  to handle your usual needs, but take care when you set
+                  this option manually. If you pick an unintended option, your
+                  order will end up in the wrong place!
+                </p>
+
+                <h4>Delivery Note</h4>
+                <p>
+                  Delivery notes will be printed on our paper invoices and are 
+                  meant to assist with your own record keeping.
+                </p>
+                <p>
+                  For now, we're better equipped to handle special requests 
+                  for your order through the hotline.
+                </p>
               </AccordionTab>
 
               {!standingBlacklist.includes(user.locNick) &&
                 <AccordionTab header="Standing Orders">
+                  <h4>Basic Ordering</h4>
                   <p>
                     Standing orders allow you to set recurring orders 
                     for a given day of the week.
@@ -664,7 +687,7 @@ export const Orders = ({ useTestAuth }) => {
                 />
                 <p>
                   Cart orders that have been successfully submitted will also 
-                  display how long ago the most recent changes were made.
+                  display when the most recent changes were made.
                 </p>
                 <p>
                   If something stange happens and you're still not sure if we 

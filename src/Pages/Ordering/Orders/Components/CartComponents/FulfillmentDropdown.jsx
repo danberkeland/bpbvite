@@ -33,6 +33,17 @@ export const FulfillmentDropdown = ({
       <InputLabel label="Fulfillment Method" 
         htmlFor="fulfillment-dropdown"
         disabled={disabled}
+        helpHeader="Fulfillment"
+        helpText={                  
+          `Your order can be set for ${
+            !['slopick', 'atownpick'].includes(location?.zoneNick) 
+              ? "delivery, or for "
+              : ''
+          }pickup at either of our locations. Orders will be preset
+          to handle your usual needs, but take care when you set
+          this option manually. If you pick an unintended option, your
+          order will end up in the wrong place!`
+        }
       >
         <Dropdown 
           id="fulfillment-dropdown"
