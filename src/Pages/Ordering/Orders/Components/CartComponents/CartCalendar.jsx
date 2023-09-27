@@ -28,7 +28,7 @@ export const CartCalendar = ({
     locNick, shouldFetch: !!locNick 
   })
 
-  console.log(orderSummary)
+  //console.log(orderSummary)
 
   const dateTemplate = (date) => {
     const dateJS = new Date(date.year, date.month, date.day)
@@ -62,7 +62,7 @@ export const CartCalendar = ({
               : "bpb-date-cell-none"
         }
         style={{background: isRecentDelete ? "rgba(255, 0, 0, .25)" : ""}}
-        onClick={() => console.log(calendarDate, hasCart, hasStanding)}
+        //onClick={() => console.log(calendarDate, hasCart, hasStanding)}
       >
         {date.day}{}
       </div>
