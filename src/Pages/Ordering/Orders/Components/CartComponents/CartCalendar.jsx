@@ -28,6 +28,8 @@ export const CartCalendar = ({
     locNick, shouldFetch: !!locNick 
   })
 
+  console.log(orderSummary)
+
   const dateTemplate = (date) => {
     const dateJS = new Date(date.year, date.month, date.day)
     const isCustomToday = dateJS.getTime() === ORDER_DATE_DT.toMillis()
@@ -36,7 +38,7 @@ export const CartCalendar = ({
     //console.log(date)
 
     const calendarDate = `${date.year}-` 
-      + `${('0' + String(date.month + 1).slice(-2))}-`
+      + `${('0' + String(date.month + 1)).slice(-2)}-`
       + `${('0' + String(date.day)).slice(-2)}`
     const dayOfWeek = yyyymmddToWeekday(calendarDate)
     const hasCart = orderSummary?.byDate?.[calendarDate]?.hasCart
@@ -60,7 +62,7 @@ export const CartCalendar = ({
               : "bpb-date-cell-none"
         }
         style={{background: isRecentDelete ? "rgba(255, 0, 0, .25)" : ""}}
-        //onClick={() => console.log(hasCart, hasStanding)}
+        onClick={() => console.log(calendarDate, hasCart, hasStanding)}
       >
         {date.day}{}
       </div>
