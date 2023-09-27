@@ -3,7 +3,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
-import { confirmDialog } from "primereact/confirmdialog";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 
 import jsPDF from "jspdf";
 import "jspdf-autotable";
@@ -16,10 +16,6 @@ import {
 } from "../../../../helpers/delivGridHelpers";
 
 import styled from "styled-components";
-import {
-  checkQBValidation,
-  grabQBInvoicePDF,
-} from "../../../../functions/legacyFunctions/helpers/QBHelpers";
 import { downloadPDF } from "../../../../functions/legacyFunctions/helpers/PDFHelpers";
 import { sortAtoZDataByIndex } from "../../../../helpers/sortDataHelpers";
 import {
@@ -27,6 +23,7 @@ import {
   todayPlus,
 } from "../../../../helpers/dateTimeHelpers";
 import { useSettingsStore } from "../../../../Contexts/SettingsZustand";
+import { checkQBValidation, grabQBInvoicePDF } from "../../../../helpers/QBHelpers";
 
 const axios = require("axios").default;
 
@@ -50,6 +47,7 @@ let today = todayPlus()[0];
 
 const RouteGrid = ({ route, orderList, altPricing, database, delivDate }) => {
   const dt = useRef(null);
+  console.log("delivDate:", delivDate)
 
 
   const [columns, setColumns] = useState([]);
@@ -157,7 +155,7 @@ const RouteGrid = ({ route, orderList, altPricing, database, delivDate }) => {
     setIsLoading(true);
     let access = await checkQBValidation();
 
-    let init = true;
+    // let init = true;
     let routeList = Array.from(new Set(orderList.map((ord) => ord.route)));
     if (driver !== "allRoutes") {
       routeList = routeList.filter(
@@ -391,6 +389,7 @@ const RouteGrid = ({ route, orderList, altPricing, database, delivDate }) => {
           style={printButtonStyle}
         />
       </ButtonWrapper>
+      <ConfirmDialog />
     </>
   );
 
