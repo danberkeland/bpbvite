@@ -46,6 +46,7 @@ function ProductDetails({ initialState }) {
     withBPBForm,
     withFadeIn
   )((props) => {
+    
     return (
       <React.Fragment>
         <GroupBox>

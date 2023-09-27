@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 import { Button } from "primereact/button";
 
 import { Formik, Form } from "formik";
 import { useSettingsStore } from "../Contexts/SettingsZustand";
 import { FlexSpaceBetween } from "../CommonStyles";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { deleteLocation, deleteProduct } from "../restAPIs";
 
 export const withBPBForm = (Component) => (props) => {
   const isEdit = useSettingsStore((state) => state.isEdit);
@@ -68,10 +70,36 @@ export const withBPBForm = (Component) => (props) => {
     window.scrollTo(0, 0);
   }, []);
 
+  const delButton = useRef(null);
+
   const handleEdit = () => {
     console.log("Doing something?");
     window.scrollTo(0, 0);
     setIsEdit(true);
+  };
+
+  const handleDelete = (e, props) => {
+    console.log("propsDelete", props.values);
+    console.log("eDelete", e);
+    
+    confirmDialog({
+      message: "Are you sure you want to delete this item?",
+      header: "Confirmation",
+      icon: "pi pi-exclamation-triangle",
+      accept: () => {
+        if (props.values.Type === "Product"){
+          deleteProduct(props).then(() => {
+            window.location = path;
+          });
+        }
+        if (props.values.Type === "Location"){
+          deleteLocation(props).then(() => {
+            window.location = path;
+          });
+        }
+        
+      },
+    });
   };
 
   return (
@@ -104,6 +132,7 @@ export const withBPBForm = (Component) => (props) => {
       >
         {(props) => (
           <React.Fragment>
+            <ConfirmDialog />
             <Form>
               <Component {...props} />
               {isEdit | isCreate && formType === "signedIn" ? (
@@ -132,6 +161,14 @@ export const withBPBForm = (Component) => (props) => {
                     className="p-button-outlined p-button-help"
                     label="Edit"
                     onClick={(e) => handleEdit(e, props)}
+                  />
+                  <Button
+                    ref={delButton}
+                    type="button"
+                    icon="pi pi-trashcan"
+                    className="p-button-outlined p-button-help"
+                    label={"Delete "+props.values.Type}
+                    onClick={(e) => handleDelete(e, props)}
                   />
                 </FlexSpaceBetween>
               )}

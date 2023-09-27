@@ -282,8 +282,9 @@ const SelectDate = ({ database, dailyInvoices }) => {
         /* Begin email module */
 
         let DocNum = inv.invNum;
+        
         let invID = await getQBInvIDandSyncToken(access, DocNum);
-
+       
         if (Number(invID.data.Id) > 0) {
           invID = invID.data.Id;
           let custo =
