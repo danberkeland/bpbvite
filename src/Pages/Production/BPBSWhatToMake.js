@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { confirmDialog } from "primereact/confirmdialog";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { InputText } from "primereact/inputtext";
 
 import { checkForUpdates } from "../../helpers/databaseFetchers";
@@ -349,6 +349,7 @@ function BPBSWhatToMake() {
         >
           Print What To Make List
         </Button>
+        <ConfirmDialog />
 
 
         <React.Fragment>
