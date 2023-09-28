@@ -2,6 +2,7 @@ import { Auth } from "aws-amplify";
 import axios from "axios";
 import { checkUser } from "./AppStructure/Auth/AuthHelpers";
 import { sendCognitoSignupEmail } from "./Pages/Ordering/Orders/functions/sendEmailConfirmation";
+import { checkQBValidation, getQBProdSyncToken } from "./helpers/QBHelpers";
 
 const API_bpbrouterAuth =
   "https://8gw70qn5eb.execute-api.us-east-2.amazonaws.com/auth";
@@ -34,7 +35,7 @@ export const fetcher = async (event, path, fetchType) => {
   let obj;
   try {
     obj = await axios.post(root + path, event, {
-      headers: headers
+      headers: headers,
     });
   } catch (err) {
     console.log(`Error creating ${path}`, err);
@@ -43,11 +44,167 @@ export const fetcher = async (event, path, fetchType) => {
   return obj.data.body;
 };
 
-export const createProduct = (event) => {
+const createQBProd = async (addDetails, SyncToken) => {
+  let Sync = "0";
+  if (SyncToken) {
+    Sync = SyncToken;
+  }
+  console.log("Sync", Sync);
+  let access = await checkQBValidation();
+
+  let QBDetails = {
+    Name: addDetails.prodName,
+    Active: true,
+    FullyQualifiedName: addDetails.prodName,
+    Taxable: false,
+    UnitPrice: addDetails.wholePrice,
+    Type: "Service",
+    IncomeAccountRef: {
+      value: "56",
+      name: "Uncategorized Income",
+    },
+    PurchaseCost: 0,
+    ExpenseAccountRef: {
+      value: "57",
+      name: "Outside Expense",
+    },
+    TrackQtyOnHand: false,
+    domain: "QBO",
+    sparse: false,
+    SyncToken: Sync,
+  };
+
+  try {
+    if (Number(addDetails.qbID) > 0) {
+      QBDetails.Id = addDetails.qbID;
+    }
+  } catch {}
+  console.log("QBDetails", QBDetails);
+  let res;
+
+  try {
+    await axios
+      .post("https://brzqs4z7y3.execute-api.us-east-2.amazonaws.com/done", {
+        accessCode: "Bearer " + access,
+        itemInfo: QBDetails,
+        itemType: "Item",
+      })
+      .then((data) => {
+        res = data.data;
+      });
+  } catch {
+    console.log("Error creating Item " + addDetails.prodName);
+  }
+
+  return res;
+};
+
+const createQBLoc = async (addDetails, SyncToken) => {
+  let Sync = "0";
+  if (SyncToken) {
+    Sync = SyncToken;
+  }
+  console.log("Sync", Sync);
+  let access = await checkQBValidation();
+
+  let QBDetails = {
+    FullyQualifiedName: addDetails.locName,
+    PrimaryEmailAddr: {
+      Address: addDetails.email,
+    },
+    DisplayName: addDetails.locName,
+    PrimaryPhone: {
+      FreeFormNumber: addDetails.phone,
+    },
+    CompanyName: addDetails.locName,
+    BillAddr: {
+      CountrySubDivisionCode: "CA",
+      City: addDetails.city,
+      PostalCode: addDetails.zip,
+      Line1: addDetails.addr1,
+      Line2: addDetails.addr2,
+
+      Country: "USA",
+    },
+    sparse: false,
+    SyncToken: Sync,
+  };
+
+  try {
+    if (Number(addDetails.qbID) > 0) {
+      QBDetails.Id = addDetails.qbID;
+    }
+  } catch {}
+  console.log("QBDetails", QBDetails);
+
+  let cust;
+  try {
+    cust = await axios
+      .post("https://brzqs4z7y3.execute-api.us-east-2.amazonaws.com/done", {
+        accessCode: "Bearer " + access,
+        itemInfo: QBDetails,
+        itemType: "Customer",
+      })
+      .then((data) => data.data);
+  } catch {
+    console.log("Error creating Location ");
+  }
+  return cust;
+};
+
+export const createProduct = async (event) => {
+  console.log("createProductEvent", event);
+  let newID;
+
+  await createQBProd(event).then((data) => {
+    newID = data;
+  });
+
+  event.qbID = newID;
+
   return fetcher(event, "/products/createProduct", "route");
 };
 
-export const updateProduct = (event) => {
+export const updateProduct = async (event) => {
+  let newID;
+  let SyncToken;
+
+  if (!event.squareID) {
+    event.squareID = "xxx";
+  }
+
+  console.log(event);
+
+  let access = await checkQBValidation();
+
+  console.log("updateQBID", event.qbID);
+  console.log(access);
+
+  try {
+    await axios
+      .post("https://sntijvwmv6.execute-api.us-east-2.amazonaws.com/done", {
+        accessCode: "Bearer " + access,
+        itemInfo: event.qbID,
+        itemType: "Item",
+      })
+      .then((data) => {
+        SyncToken = data.data;
+        console.log("data", data.data);
+      });
+  } catch {
+    console.log("Error creating Item " + event.prodName);
+  }
+
+  console.log("updateDetails", event);
+  console.log("syncToken", SyncToken);
+
+  await createQBProd(event, SyncToken).then((data) => {
+    newID = data;
+  });
+
+  event.qbID = newID;
+  console.log("newID", newID);
+
   return fetcher(event, "/products/updateProduct", "route");
 };
 
@@ -55,11 +212,30 @@ export const deleteProduct = (event) => {
   return fetcher(event.values, "/products/deleteProduct", "route");
 };
 
-export const createLocation = (event) => {
+export const createLocation = async (event) => {
+  console.log("createProductEvent", event);
+  let newID;
+
+  await createQBLoc(event).then((data) => {
+    newID = data;
+  });
+  console.log('newID', newID)
+  event.qbID = newID;
   return fetcher(event, "/locations/createLocation", "route");
 };
 
-export const updateLocation = (event) => {
+export const updateLocation = async (event) => {
+  let newID;
+  
+  let access = await checkQBValidation();
+  let SyncToken = await getQBProdSyncToken(access, event);
+  await createQBLoc(event, SyncToken).then((data) => {
+    newID = data;
+  });
+
+  event.qbID = newID;
+  
+  
   return fetcher(event, "/locations/updateLocation", "route");
 };
 
@@ -68,38 +244,38 @@ export const deleteLocation = (event) => {
 };
 
 export const createUser = async (event) => {
-  console.log('eventCreateUser', event)
+  console.log("eventCreateUser", event);
   await createCognitoUser(event)
     .then((newEvent) => {
-      console.log('newEvent', newEvent)
-      fetcher(newEvent.newerEvent, "/users/createUser", "route").then(info => console.log('info', info));
+      console.log("newEvent", newEvent);
+      fetcher(newEvent.newerEvent, "/users/createUser", "route").then((info) =>
+        console.log("info", info)
+      );
 
-      
       return newEvent;
     })
     .then((newStuff) => {
-      console.log('newStuff', newStuff)
+      console.log("newStuff", newStuff);
       return createLocationUser(newStuff.newLocUser);
-    })
+    });
 };
 
 export const updateUser = async (event) => {
-  console.log('Entryevent', event)
+  console.log("Entryevent", event);
   await updateCognitoUser(event)
     .then((newEvent) => {
-      console.log('newEvent', newEvent)
+      console.log("newEvent", newEvent);
       fetcher(newEvent.newerEvent, "/users/updateUser", "route");
       return newEvent.newLocUser;
     })
     .then(() => {
-      console.log('newLocUsers', event.locations)
+      console.log("newLocUsers", event.locations);
       return updateLocationUsers(event.locations);
     });
 };
 
-
 export const deleteUser = (event) => {
-  console.log('eventDeleteUser', event)
+  console.log("eventDeleteUser", event);
   deleteCognitoUser(event);
   return fetcher(event, "/users/deleteUser", "route");
 };
@@ -137,11 +313,15 @@ export const getOrder = (event) => {
 // export const submitAuth = async (props) => {
 // const {email, password, setIsLoading, setFormType, setShowMessage, setUserObject} = props;
 export const submitAuth = async (props, fns) => {
-  
-  const { email, password } = props
-  const { setIsLoading, setFormType, setShowMessage, setUserObject, setResetPassword } = fns
+  const { email, password } = props;
+  const {
+    setIsLoading,
+    setFormType,
+    setShowMessage,
+    setUserObject,
+    setResetPassword,
+  } = fns;
 
-  
   const emailCheck = [
     "danberkeland@gmail.com",
     "eat@highstdeli.com",
@@ -166,7 +346,7 @@ export const submitAuth = async (props, fns) => {
   await Auth.signIn(email, password)
     .then((use) => {
       setUserObject(use);
-  
+
       if (use.challengeName === "NEW_PASSWORD_REQUIRED") {
         setIsLoading(false);
         setFormType("resetPassword");
@@ -215,7 +395,7 @@ export const submitConfirm = async (props) => {
 
 export const setNewPassword = async (props, fns) => {
   const { setIsLoading, setFormType, userObject } = fns;
-  const { passwordConfirm } = props
+  const { passwordConfirm } = props;
   setIsLoading(true);
   await Auth.completeNewPassword(userObject, passwordConfirm).then((use) => {
     setFormType("onNoUser");
@@ -232,11 +412,11 @@ export const sendForgottenPasswordEmail = async (email) => {
 export const resetPassword = async (props, fns) => {
   const { email, code, passwordNew } = props;
   const { setIsLoading, setFormType, userObject } = fns;
-  console.log('fns', fns)
-  console.log('props', props)
-  console.log('code', code)
-  console.log('email', email)
-  console.log('passwordNew', passwordNew)
+  console.log("fns", fns);
+  console.log("props", props);
+  console.log("code", code);
+  console.log("email", email);
+  console.log("passwordNew", passwordNew);
   Auth.forgotPasswordSubmit(email, code, passwordNew)
     .then((data) => console.log(data))
     .catch((err) => console.log(err))

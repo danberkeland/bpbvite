@@ -10,7 +10,7 @@ export const checkQBValidation = async () => {
     "https://28ue1wrzng.execute-api.us-east-2.amazonaws.com/done"
   );
 
-  console.log("val",val)
+  console.log('val', val)
 
   if (val.data) {
     let authData = await API.graphql(

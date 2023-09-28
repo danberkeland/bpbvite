@@ -4,17 +4,14 @@ import { CustomInputs } from "../../FormComponents/CustomInputs";
 import { validationSchema } from "./ValidationSchema";
 
 // import { deleteLocation, updateLocation, createLocation } from "../../restAPIs";
-import {
-  createLocation,
-  updateLocation,
-  deleteLocation,
-} from "../../data/locationData";
+
 import { withFadeIn } from "../../hoc/withFadeIn";
 import { withBPBForm } from "../../hoc/withBPBForm";
 import { GroupBox } from "../../CommonStyles";
 import { compose } from "../../utils";
 import { useZoneListFull } from "../../data/zoneData";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
+import { createLocation, deleteLocation, updateLocation } from "../../restAPIs";
 // import { useSimpleZoneList } from "../../swr";
 
 
