@@ -88,7 +88,7 @@ export const useLogisticsDimensionData = (shouldFetch) => {
 
   const transformData = () => {
     if (!data) return undefined
-    console.log("Depreciated. consider calling useDimensionData instead")
+    console.warn("Depreciated. consider calling useDimensionData instead")
 
     const products = Object.fromEntries(data.data.listProducts.items.map(i => [i.prodNick, i]))
     const zones = Object.fromEntries(data.data.listZones.items.map(i => [i.zoneNick, i]))

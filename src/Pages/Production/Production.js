@@ -6,7 +6,7 @@ import { BPBNSetout } from "./NewPages/BPBNSetoutNew";
 import { BPBTerminal } from "./NewPages/BPBTerminal2";
 import { WhoBake } from "./NewPages/WhoBakeNew";
 import { WhoShape } from "./NewPages/WhoShapeNew";
-import { CroixToMake } from "./NewPages/CroixToMake";
+import { CroixToMake } from "./NewPages/CroixToMake/CroixToMake";
 import { SevenDayList } from "./NewPages/SevenDayList";
 import { Database } from "./NewPages/Database";
 import { BPBNBuckets } from "./NewPages/BPBNBucketsNew";

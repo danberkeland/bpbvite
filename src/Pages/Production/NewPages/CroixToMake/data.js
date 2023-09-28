@@ -1,24 +1,12 @@
 import React, { useMemo } from "react"
-import dynamicSort from "../../../functions/dynamicSort"
-import { groupBy } from "lodash"
-import { DateTime } from "luxon"
-import { Button } from "primereact/button"
-import { DataTable } from "primereact/datatable"
-import { Column } from "primereact/column"
-import { sumBy } from "lodash"
+import dynamicSort from "../../../../functions/dynamicSort"
+import { groupBy, set, sumBy } from "lodash"
 
-import { set } from "lodash"
-import { sum } from "lodash"
-import { flattenDeep } from "lodash"
-import { useT0T7orders } from "./_hooks/dataHooks"
 
-const TODAY = DateTime.now().setZone("America/Los_Angeles").startOf("day")
+import { useT0T7orders } from "../_hooks/dataHooks"
 
-export const CroixToMake = () => {
-  const { data:T0T7data } = useT0T7orders({ 
-    shouldFetch: true, 
-    useLocal: true 
-  })
+export const useTableData =(shouldFetch=true, useLocal=false) => {
+  const { data:T0T7data } = useT0T7orders({ shouldFetch: true, useLocal: false, manualRefresh: false })
 
   const composeData = () => {
     if (!T0T7data) return undefined
@@ -111,41 +99,31 @@ export const CroixToMake = () => {
       const { freezerCount, sheetMake, batchSize } = products[prodNick]
       const makeTotal = batchSize * (sheetMake ?? 0)
 
+      //console.log(products[prodNick])
+
       return({
         ...rowData,
         T0: {
           ...T0,
           stock: { freezerCount: freezerCount ?? 0 },
-          make: { total: makeTotal}
+          make: {
+            sheetMake: sheetMake ?? 0,
+            sheetMakeUpdate: sheetMake ?? 0,
+            total: makeTotal
+          }
         }
       })
     })
+
     return projection.sort(dynamicSort("prodNick"))
 
   }
 
-  const tableData = useMemo(composeData, [T0T7data])
-  console.log("tableData", tableData)
 
-
-
-  return(
-    <div>
-      <h1>{`Croissant Production ${TODAY.toLocaleString()}`}</h1>
-
-      <Button label="Print Croix Shape List" />
-
-      <DataTable value={tableData}>
-        <Column header="Product" field="prodNick" />
-        <Column header="freezerCount" field="T0.stock.freezerCount" />
-        <Column header="Σ T+0" body={rowData => cumulativeColumnTemplate(rowData, 0)} />
-        <Column header="Σ T+1" body={rowData => cumulativeColumnTemplate(rowData, 1)} />
-        <Column header="Σ T+2" body={rowData => cumulativeColumnTemplate(rowData, 2)} />
-        <Column header="Σ T+3" body={rowData => cumulativeColumnTemplate(rowData, 3)} />
-        <Column header="Σ T+4" body={rowData => cumulativeColumnTemplate(rowData, 4)} />
-      </DataTable>
-    </div>
-  )
+  return {
+    tableData: useMemo(composeData, [T0T7data]),
+    dimensionData: !!T0T7data ? T0T7data.dimensionData: undefined
+  }
 }
 
 
@@ -290,29 +268,4 @@ const countFrCroix = ({ orders, products, relativeDate }) => {
 
   return frCroixTotals
 
-}
-
-// ***********************
-// * Component Templates *
-// ***********************
-
-const cumulativeColumnTemplate = (rowData, dayIdx) => {
-  const byRelDate = ['T0', 'T1', 'T2', 'T3', 'T4']
-    .map(TN => rowData[TN])
-    .slice(0, dayIdx + 1)
-
-  // break down the nested structure and sum on qty values.
-  // 'byRelDate' ('TN' attributes) have 'type' object-values.
-  // 'type' ('make/pull/stock' attributes) have 'qtyItem' object values.
-  // 'qtyItems' are simple key/value pairs with
-  // 'frozenDeliv/setoutPrado/setoutCarlton' attributes and qty values.
-  //
-  // These qtys are what we're ultimately after and want to sum up.
-  const qtys = flattenDeep(Object.values(byRelDate).map(type => 
-    Object.values(type).map(qtyItem => 
-      Object.values(qtyItem)
-    )
-  ))
-
-  return sum(qtys)
 }

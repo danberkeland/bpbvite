@@ -3,7 +3,7 @@ import { DateTime } from "luxon"
 import { assignDelivRoute } from "../../../../functions/routeFunctions/assignDelivRoute"
 import { getWeekday } from "../../../../functions/dateAndTime"
 
-import { useCombinedOrdersByDate } from "../../../../data/productionData"
+import { useCombinedOrdersByDate, useDimensionData } from "../../../../data/productionData"
 import { useLogisticsDimensionData } from "../../../../data/productionData"
 
 const TODAY = DateTime.now().setZone("America/Los_Angeles").startOf("day")
@@ -59,12 +59,9 @@ export const useT0T7orders = ({ shouldFetch, useLocal, manualRefresh }) => {
     includeHolding: true,
     shouldFetch: shouldFetch && !shouldUseLocal
   })
-  const { data:dimensionData } = useLogisticsDimensionData(
-    shouldFetch && !shouldUseLocal
+  const { data:dimensionData } = useDimensionData(
+    shouldFetch // && !shouldUseLocal // no local cache feature
   )
-
-  const allOrders = [T0orders, T1orders, T2orders, T3orders, T4orders, T5orders, T6orders, T7orders]
-  //console.log("allOrders", allOrders)
 
   const transformData = () => {
     if (shouldUseLocal) {
@@ -72,11 +69,15 @@ export const useT0T7orders = ({ shouldFetch, useLocal, manualRefresh }) => {
       return localData
     }
 
-    if (!shouldUseLocal && allOrders.every(item => !!item) && !!dimensionData) {
+    if (
+      !shouldUseLocal 
+      && [T0orders, T1orders, T2orders, T3orders, T4orders, T5orders, T6orders, T7orders].every(item => !!item) 
+      && !!dimensionData
+    ) {
       const { locations, products, routes, routeMatrix } = dimensionData
       //console.log("dimensionData", dimensionData)
 
-      const allRoutedOrders = allOrders.map((combinedOrders, relativeDateIdx) => {
+      const allRoutedOrders = [T0orders, T1orders, T2orders, T3orders, T4orders, T5orders, T6orders, T7orders].map((combinedOrders, relativeDateIdx) => {
         const dayOfWeek = getWeekday(TODAY.plus({ days: relativeDateIdx }).toJSDate())
         //console.log(relativeDateIdx, dayOfWeek)
 
@@ -109,7 +110,21 @@ export const useT0T7orders = ({ shouldFetch, useLocal, manualRefresh }) => {
 
     return undefined
   }
-  const _data = useMemo(transformData, [shouldUseLocal, allOrders, dimensionData, localData])
+  const _data = useMemo(
+    transformData, 
+    [
+      shouldUseLocal, 
+      T0orders,
+      T1orders,
+      T2orders,
+      T3orders,
+      T4orders,
+      T5orders,
+      T6orders,
+      T7orders, 
+      dimensionData, 
+      localData
+    ])
 
   return ({ data: _data })
 }
