@@ -33,7 +33,7 @@ export const buildInvList = (custListArray, customers, delivDate) => {
   let invList = custListArray.map((cust) => ({
     custName: cust.custName,
     qbID: cust.qbID,
-    invNum: newDate + cust.nickName,
+    invNum: newDate + cust.nickName.slice(0, 13),
     orders: [],
   }));
 
