@@ -1,271 +1,234 @@
-import React, { useMemo } from "react"
-import dynamicSort from "../../../../functions/dynamicSort"
-import { groupBy, set, sumBy } from "lodash"
+import { DateTime } from "luxon";
+import { useListData } from "../../../../data/_listData";
+import { flatten, groupBy, keyBy, mapKeys, mapValues, set, sortBy, sumBy } from "lodash";
+import { useMemo } from "react";
 
+import { getRouteOptions } from "../../../Ordering/Orders/data/productHooks"
 
-import { useT0T7orders } from "../_hooks/dataHooks"
+const croixBucketMap = {
+  pl: 'pl', frpl: 'pl', al: 'pl', fral: 'pl',
+  ch: 'ch', frch: 'ch',
+  pg: 'pg', frpg: 'pg',
+  sf: 'sf', frsf: 'sf',
+  mb: 'mb', frmb: 'mb', unmb: 'mb',
+  mini: 'mini', frmini: 'mini',
+}
+const countNicks = ['pl', 'ch', 'pg', 'sf', 'mini', 'mb']
 
-export const useTableData =(shouldFetch=true, useLocal=false) => {
-  const { data:T0T7data } = useT0T7orders({ shouldFetch: true, useLocal: false, manualRefresh: false })
-
-  const composeData = () => {
-    if (!T0T7data) return undefined
-
-    const { timestamp, dimensionData } = T0T7data
-
-    const T0T7array = [0, 1, 2, 3, 4, 5, 6, 7]
-      .map(N => T0T7data[`T${N}orders`])
-
-    // ***************************************
-    // * Get Qtys Pulled From Freezer By Day *
-    // ***************************************
-
-    // the final data structure will preserve the sources 
-    // of qtys pulled, eg for north/south setout or
-    // for a frozen croix delivery
-
-    let pradoSetouts = []
-    for (let dayIdx = 0; dayIdx < 5; dayIdx++) {
-      const setoutTotals = countSetout({ 
-        prodLocation: "Prado", 
-        dimensionData,
-        T1T3orders: T0T7array.slice(dayIdx + 1, dayIdx + 4), // setout count for a given date (T+0) comes from T+1 to T+3 orders
-        relativeDate: "T" + dayIdx,
-      })
-      pradoSetouts = pradoSetouts.concat(setoutTotals)
-    }
-
-    let carltonSetouts = []
-    for (let dayIdx = 0; dayIdx < 5; dayIdx++) {
-      const setoutTotals = countSetout({ 
-        prodLocation: "Carlton", 
-        dimensionData,
-        T1T3orders: T0T7array.slice(dayIdx + 1, dayIdx + 4),
-        relativeDate: "T" + dayIdx,
-      })
-      
-      carltonSetouts = carltonSetouts.concat(setoutTotals)
-    }
-
-    let frozenDeliveries = []
-    for (let dayIdx = 0; dayIdx < 5; dayIdx++) {
-      const frCroixTotals = countFrCroix({ 
-        orders: T0T7array[dayIdx],
-        products: dimensionData.products,
-        relativeDate: "T" + dayIdx,
-      })
-      
-      frozenDeliveries = frozenDeliveries.concat(frCroixTotals)
-    }
-
-    // Adding relative-date and type attributes to items let us concatenate
-    // all data as a flat list, then construct any hierarchies we like.
-    // we use lodash's groupBy, set, and sum functions.
-    const pullList = pradoSetouts.concat(carltonSetouts).concat(frozenDeliveries)
-  
-    // get smallest "chunks". We insert 'pull' as a nested attribute so that we can later
-    // add 'stock' and 'make' data under T0 while grouping it separately. 
-    const _byCompoundKey = groupBy(pullList, item => `${item.prodNick}#${item.relativeDate}#pull#${item.type}`)
-
-    // compound keys imply a nesting structure;
-    // categorical data gets emdedded as attribute names -- we only need qty as the value
-    const nestedData = {}
-    for (let key in _byCompoundKey) {
-      const originalValue = _byCompoundKey[key]
-      set(nestedData, key.split('#'), originalValue[0].qty * -1)
-    }
-
-    // "flatten the top" to make rows for each prodNick
-    const pullData = Object.keys(nestedData).map(key => ({
-      prodNick: key,
-      ...nestedData[key]
-    }))
-
-    // *************************
-    // * Get opening/make qtys *
-    // *************************
-
-    // These qtys are just product attributes. 
-    // freezerCount represents the start of day qty
-    // sheetMake is multiplied by batchSize to get the qty shaped
-    // the end of day count is a total of 
-    //    freezerCount + (sheetMake * batchSize) - <Qty Pulled>
-    // where qty pulled is calculated for T0 in the previous section.
-
-    const { products } = dimensionData
-
-    const projection = pullData.map(rowData => {
-      const { prodNick, T0 } = rowData
-      const { freezerCount, sheetMake, batchSize } = products[prodNick]
-      const makeTotal = batchSize * (sheetMake ?? 0)
-
-      //console.log(products[prodNick])
-
-      return({
-        ...rowData,
-        T0: {
-          ...T0,
-          stock: { freezerCount: freezerCount ?? 0 },
-          make: {
-            sheetMake: sheetMake ?? 0,
-            sheetMakeUpdate: sheetMake ?? 0,
-            total: makeTotal
-          }
-        }
-      })
-    })
-
-    return projection.sort(dynamicSort("prodNick"))
-
-  }
-
+const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+const dateList = [0, 1, 2, 3, 4, 5, 6, 7].map(daysAhead => {
+  const dateDT = todayDT.plus({ days: daysAhead })
 
   return {
-    tableData: useMemo(composeData, [T0T7data]),
-    dimensionData: !!T0T7data ? T0T7data.dimensionData: undefined
+    relDate: daysAhead,
+    delivDate: dateDT.toFormat('yyyy-MM-dd'),
+    dayOfWeek: dateDT.toFormat('EEE'),
+    weekdayNum: dateDT.toFormat('E')
   }
-}
 
+})
 
+export const useT0T7Data = ({ shouldFetch }) => {
+  const { data:cart } = useListData({ tableName: "Order", shouldFetch })
+  const { data:standing } = useListData({ tableName: "Standing", shouldFetch })
+  const { data:PRD } = useListData({ tableName: "Product", shouldFetch })
+  const { data:LOC } = useListData({ tableName: "Location", shouldFetch })
+  const { data:RTE } = useListData({ tableName: "Route", shouldFetch })
+  const { data:ZRT } = useListData({ tableName: "ZoneRoute", shouldFetch })
 
-// *********************
-// * Compose Functions *
-// *********************
+  const composeData = () => {
+    if (!cart || !standing || !PRD || !LOC || !RTE || !ZRT) return undefined
 
-const countSetout = ({ prodLocation, dimensionData, T1T3orders, relativeDate }) => {
-  const { products, routes } = dimensionData
-  const [T1prodOrders, T2prodOrders, T3prodOrders] = T1T3orders
+    const products = keyBy(PRD, 'prodNick')
+    const locations = keyBy(LOC, 'locNick')
+    const routes = keyBy(RTE, 'routeNick')
+    const zoneRoutes = sortBy(ZRT, 'routeStart')
+    console.log('zoneRoutes:', zoneRoutes.map(zr => ({
+      zoneNick: zr.zoneNick,
+      routeNick: zr.routeNick
+    })))
 
-  // ***Counts for both Prado and Carlton***
+    const isCroissant = (prodNick) => {
+      const { doughNick, packGroup } = products[prodNick]
 
-  // only need to look at production orders for tomorrow. That is,
-  //   we only bake and deliver same day.
-  const T0setoutOrders = T1prodOrders.filter(order => {
-    const { locNick, prodNick, routeNick } = order
-    const { packGroup, doughNick } = products[prodNick]
-    const { RouteDepart } = routes[routeNick] ?? { RouteDepart: null } // fallback for "NOT ASSIGNED" cases
+      return doughNick === 'Croissant' 
+        && ['baked pastries', 'frozen pastries'].includes(packGroup)
+    }
+    console.log(PRD.filter(P => isCroissant(P.prodNick)).map(P => ({
+      prodNick: P.prodNick,
+      batchSize: P.batchSize,
+    })))
 
-    const pickupAtLocation = 
-      (prodLocation === "Prado" && routeNick === "Pick up SLO")
-      || (prodLocation === "Carlton" && routeNick=== "Pick up Carlton")
+    const _cart = cart.filter(C => isCroissant(C.prodNick))
+    const _standing = standing.filter(S => isCroissant(S.prodNick))
 
-    return (
-      RouteDepart === prodLocation 
-      || pickupAtLocation 
-      || locNick === "backporch"
-    ) && (
-      locNick !== "bpbextras"
-      && prodNick !== "al"
-      && packGroup === "baked pastries"
-      && doughNick === "Croissant"
+    const ordersByDate = dateList.map(dateObj => {
+      const { delivDate, dayOfWeek, relDate, weekdayNum } = dateObj
+
+      const cartDict = keyBy(
+        _cart.filter(C => C.delivDate === delivDate),
+        item => `${item.locNick}#${item.prodNick}`
+      )
+      const standingDict = keyBy(
+        _standing.filter(S => S.isStand === true && S.dayOfWeek === dayOfWeek), 
+        item => `${item.locNick}#${item.prodNick}`
+      )
+      const holdingDict = keyBy(
+        _standing.filter(S => S.isStand === false && S.dayOfWeek === dayOfWeek), 
+        item => `${item.locNick}#${item.prodNick}`
+      )
+
+      console.log(cartDict)
+      console.log(standingDict)
+      console.log(holdingDict)
+
+      // holding orders are only considered for future dates
+      const orders = relDate === 0
+        ? { ...standingDict, ...cartDict } 
+        : { ...holdingDict, ...standingDict, ...cartDict }
+
+      return Object.values(orders).map(order => ({
+        ...order,
+        countNick: croixBucketMap[order.prodNick],
+        delivDate,
+        dayOfWeek,
+        weekdayNum,
+        relDate,
+        routeMeta: getRouteOptions({
+          product: products[order.prodNick],
+          location: order.isWhole 
+            ? locations[order.locNick]
+            // Those pesky retail orders need a mock location set for them
+            : {
+              locNick: order.locNick, 
+              locName: order.locNick, 
+              latestFirstDeliv: 7, 
+              latestFinalDeliv: 13,
+              zoneNick: order.route === 'atownpick' ? 'atownpick' : 'slopick'
+            },
+          routeDict: routes,
+          ZRT: zoneRoutes
+        })[weekdayNum % 7][0]
+      })).filter(order => order.locNick !== 'bpbextras') // WHYYYY?????????????? Just legacy code things.
+    })
+
+    const orders = flatten(ordersByDate)
+    console.log("ORDERS:", orders)
+
+    const frozenCroixProdNicks = PRD.filter(P => 
+      P.doughNick === 'Croissant' && P.packGroup === 'frozen pastries'
+        && P.prodNick !== 'fral'
+    ).map(P => P.prodNick)
+
+    const bakedCroixProdNicks = PRD.filter(P => 
+      P.doughNick === 'Croissant' && P.packGroup === 'baked pastries'
+        && P.prodNick !== 'al'
+    ).map(P => P.prodNick)
+
+    // console.log('frozenCroixProdNicks', frozenCroixProdNicks)
+    // console.log('bakedCroixProdNicks', bakedCroixProdNicks)
+
+    // relDate := the date relative to the current day (todayDT)
+    //
+    // We are calculating consumption totals for T+0 to T+4, but we need our
+    // data to look ahead as far as T+7 to make that calculation.
+    const frCroixConsumptionProjection = [0, 1, 2, 3, 4].map(relDate => {
+      // non-almond frozen croix are consumed by current-day frozen orders.
+      const T0Frozen = ordersByDate[relDate].filter(order =>
+        frozenCroixProdNicks.includes(order.prodNick)        
+      )
+
+      // non-almond frozen croix are consumed by next-day baked orders.
+      //
+      // qty is tweaked to observe the 'split in half & round up' rule found in 
+      // legacy setout functions, which applies only to backporch orders.
+      const T1Baked = ordersByDate[relDate + 1].filter(order => 
+        bakedCroixProdNicks.includes(order.prodNick)
+      ).map(order => ({
+        ...order,
+        qty: order.locNick === "backporch"
+          ? Math.ceil(order.qty / 2) * 2
+          : order.qty,
+      }))
+
+      // frozen plains are set out for frozen almond orders 2 days ahead.
+      const T2Fral = ordersByDate[relDate + 2].filter(order =>
+        order.prodNick === 'fral'
+      )
+
+      // al (baked almond croissants):
+      //
+      // legacy rules say frozen plains are set out 2 days ahead for al orders
+      // that are delivered from Prado (South), and 3 days ahead for al orders 
+      // that are delivered from the Carlton (North)
+      const T2SouthAl = ordersByDate[relDate + 2].filter(order =>
+        order.prodNick === 'al' 
+          && order.routeMeta.route.RouteDepart === "Prado"
+      )
+      const T3NorthAl = ordersByDate[relDate + 3].filter(order =>
+        order.prodNick === 'al'
+          && order.routeMeta.route.RouteDepart === "Carlton"
+      )
+
+      return [
+        ...T0Frozen, ...T1Baked, ...T2Fral, ...T2SouthAl, ...T3NorthAl
+      ].map(order => ({...order, countRelDate: relDate }))
+
+    })
+
+    const byCountNickByCountRelDate = groupBy(
+      flatten(frCroixConsumptionProjection),
+      order => `${order.countNick}#${order.countRelDate}`
     )
 
-  }).map(order => order.locNick === "backporch" 
-      ? { ...order, qty: Math.ceil(order.qty/2) }
-      : order
+    // table cells hold all the order order records that were aggregated
+    // in the totalQty
+    const tableCells = mapValues(
+      byCountNickByCountRelDate,  
+      group => ({
+        countNick: group[0].countNick,
+        countRelDate: group[0].countRelDate,
+        totalQty: sumBy(group, 'qty') * -1,
+        items: group,
+      })
+    )
 
-  ).map(order => order.prodNick === "unmb" // need to count unmb and mb together as mb
-    ? { ...order, prodNick: "mb" }
-    : order
-  )
+    const tableRows = sortBy(countNicks).map(countNick => {
+      const { 
+        freezerCount, freezerClosing, 
+        freezerNorth, freezerNorthClosing, 
+        sheetMake, batchSize,
+      } = products[countNick]
 
-  const T0setoutOrdersByProduct = Object.values(
-    groupBy(T0setoutOrders, order => order.prodNick)
-  )
-  const T0setoutTotals = T0setoutOrdersByProduct.map(group => {
-    return ({
-      prodNick: group[0].prodNick,
-      qty: sumBy(group, order => order.qty),
-      relativeDate,
-      type: "setout" + prodLocation
+      //console.log(freezerCount, freezerClosing, freezerNorth, freezerNorthClosing, sheetMake, batchSize)
+
+      // packaging up the relevant tableCells for each countNick row
+      const T = [0, 1, 2, 3, 4].map(countRelDate => 
+        tableCells[`${countNick}#${countRelDate}`]  
+      )
+
+      // cumulative total CN is the sum of totalQtys for T0 to TN.
+      const C = [0, 1, 2, 3, 4].map(countRelDate => {
+
+        return {
+          totalQty: sumBy(T.slice(0, countRelDate + 1), 'totalQty')
+        }
+      })
+
+      return {
+        countNick,
+        freezerCount, freezerClosing,
+        freezerNorth, freezerNorthClosing,
+        sheetMake, batchSize,
+        T, C
+      }
     })
-  })
 
-  // ***Counts for Prado only***
-  // pl setout on T0 to prep for al/fral orders on t2 or t3
+    return tableRows
+
+  }
+
+  return { data: useMemo(composeData, [cart, standing, PRD])}
   
-  let T0pradoTotals
-  if (prodLocation === "Prado") {
-    // all fral orders have a 2 day lead time
-    const T2fralOrders = T2prodOrders.filter(order => 
-      order.prodNick === "fral" && order.locNick !=="bpbextras"
-    )
-    .map(order => order.locNick === "backporch" 
-      ? { ...order, qty: Math.ceil(order.qty / 2) }
-      : order
-    )
-
-    // al orders fulfilled from the Prado hub have a 2 day lead
-    const T2alOrdersPrado = T2prodOrders.filter(order => {
-      const { locNick, prodNick, routeNick } = order
-      const { RouteDepart } = routes[routeNick] || { RouteDepart: null }
-
-      return (RouteDepart === "Prado" || locNick === "backporch")
-        && prodNick === "al" && locNick !=="bpbextras"
-    
-    })
-    .map(order => order.locNick === "backporch" 
-      ? { ...order, qty: Math.ceil(order.qty / 2) }
-      : order
-    )
-
-    // al orders fulfilled from the Carlton hub have a 3 day lead
-    const T3alOrdersCarlton = T3prodOrders.filter(order => {
-      const { locNick, prodNick, routeNick } = order
-      const { RouteDepart } = routes[routeNick] || { RouteDepart: null }
-
-      return (RouteDepart === "Carlton" || locNick === "backporch")
-        && prodNick === "al" && locNick !=="bpbextras"
-    
-    })
-    .map(order => order.locNick === "backporch" 
-      ? { ...order, qty: Math.ceil(order.qty / 2) }
-      : order
-    )
-    
-    const totalPlainSetoutForAlmonds = sumBy(
-      T2fralOrders.concat(T2alOrdersPrado).concat(T3alOrdersCarlton),
-      order => order.qty
-    )
-
-    T0pradoTotals = T0setoutTotals.map(item => item.prodNick === "pl"
-      ? { ...item, qty: (item.qty + totalPlainSetoutForAlmonds)}
-      : item
-    )
-  }
-
-  return prodLocation === "Prado" ? T0pradoTotals : T0setoutTotals
 }
 
-const countFrCroix = ({ orders, products, relativeDate }) => {
-  // filter to frozen products
-  const frCroixOrders = orders.filter(order => {
-    const { packGroup, doughNick } = products[order.prodNick]
-    return order.prodNick.startsWith("fr") // making a new rule!
-      && doughNick === "Croissant"
-      && packGroup === "frozen pastries" 
-      && order.prodNick !== "fral"
-  })
-
-  // group by prodNick
-  const frCroixGroups = Object.values(
-    groupBy(frCroixOrders, order => order.prodNick)
-  )
-
-  // get total; map frozen item's prodNick to its baked equivalent. We are 
-  // following an implicit rule that the prodNicks of the frozen and baked
-  // items are the same, except the frozen item is prefixed with "fr". Thus,
-  // ex: mb and frmb for morning bun and frozen morning bun.
-  const frCroixTotals = frCroixGroups.map(group => {
-    const total = sumBy(group, order => order.qty)
-    return ({
-      prodNick: group[0].prodNick.slice(2), // remove the "fr"
-      qty: total,
-      relativeDate,
-      type: "frozenDeliv"
-    })
-  })
-
-  return frCroixTotals
-
-}
