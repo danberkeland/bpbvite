@@ -6,8 +6,9 @@ import { useEffect, useState } from "react"
 import { Button } from "primereact/button"
 import { useListData } from "../../../../data/_listData"
 import { printCroixShapeList } from "./printPDF"
-import { sumBy } from "lodash"
+import { orderBy, sortBy, sumBy } from "lodash"
 import { DateTime } from "luxon"
+import { Dialog } from "primereact/dialog"
 
 // For counting croix we introduce a new naming convention: countNick.
 // countNicks are a subset of prodNicks. Products are assigned the same
@@ -18,10 +19,13 @@ import { DateTime } from "luxon"
 // Example: products with prodNicks 'mb', 'frmb', 'unmb' would all be assigned 
 // the countNick 'mb'.
 
-const today = DateTime.now()
+const todayDT = DateTime.now()
   .setZone('America/Los_Angeles')
   .startOf('day')
-  .toFormat('MM/dd/yyyy')
+  
+const today = todayDT.toFormat('MM/dd/yyyy')
+const relDateToDate = relDate => todayDT.plus({ days: relDate }).toFormat('MM/dd/yyyy')
+const relDateToWeekday = relDate => todayDT.plus({ days: relDate }).toFormat('EEE')
 
 export const CroixToMake = () => {
   const productCache = useListData({ tableName: "Product", shouldFetch: true })
@@ -83,22 +87,71 @@ export const CroixToMake = () => {
     </div>
   }
 
-  const cumTotalTemplate = (rowData, daysAhead) => {
+  const CumTotalTemplate = ({ rowData, daysAhead }) => {
+    const [showDialog, setShowDialog] = useState(false)
     const { countNick, freezerCount, batchSize, C } = rowData
-    const value = freezerCount + (sheetMake[countNick] * batchSize) + C[daysAhead].totalQty
-    return <div style={{
-      fontWeight: 'bold',
-      textAlign: 'center',
-      background: value >= 0
-        ? 'rgb(128, 243, 159)'
-        : 'rgb(209, 144, 146)',
-      width: '3.75rem',
-      padding: '.25rem',
-      border: 'solid 1px var(--bpb-text-color)',
-      borderRadius: '6px',
-    }}>
-      {value}
-    </div>
+    const value = freezerCount 
+      + (sheetMake[countNick] * batchSize) 
+      + C[daysAhead].totalQty
+
+    const tableData = sortBy(
+      rowData.T[daysAhead].items.filter(item => item.qty !== 0),
+      ['delivDate', 'prodNick', 'locNick']
+    )
+
+    return(<>    
+      <div 
+        style={{
+          fontWeight: 'bold',
+          textAlign: 'center',
+          background: value >= 0
+            ? 'rgb(128, 243, 159)'
+            : 'rgb(209, 144, 146)',
+          width: '3.75rem',
+          padding: '.25rem',
+          border: 'solid 1px var(--bpb-text-color)',
+          borderRadius: '6px',
+          
+        }}
+        onClick={() => setShowDialog(true)}
+      >
+        {value}
+      </div>
+
+      <Dialog 
+        visible={showDialog} 
+        onHide={() => setShowDialog(false)}
+        header={<>
+          <div>Orders Consuming {countNick}</div>
+          <div>On {relDateToWeekday(daysAhead)}, {todayDT.plus({ days: daysAhead}).toFormat('M/dd')} (T +{daysAhead})</div>
+        </>}
+      >
+        <DataTable value={tableData} 
+          size="small"
+          //responsiveLayout="scroll"
+          scrollable
+          scrollHeight="35rem"
+          style={{width: "40rem"}}
+        >
+          <Column header="delivDate" field="delivDate" />
+          {/* <Column header="delivDate" field="routeMeta.routeNick" /> */}
+          <Column header="location" body={row => row.locNick.split('__')[0]} />
+          <Column header="product" field="prodNick" />
+          <Column header="qty" field="qty" 
+            footer={() => `Σ = ${sumBy(tableData, 'qty')}`} 
+            style={{maxWidth: "4.5rem"}}
+          />
+          <Column header="retail?" 
+            body={row => !row.isWhole ? 'true' : ''} 
+            style={{maxWidth: "4rem"}}  
+          />
+          <Column header="holding?" 
+            body={row => row.isStand === false ? 'true' : ''} 
+            style={{maxWidth: "5rem"}}  
+          />
+        </DataTable>
+      </Dialog>
+    </>)
   }
 
   const submitSheets = async () => {
@@ -158,23 +211,23 @@ export const CroixToMake = () => {
         footer={`Σ = ${sumBy(Object.values(sheetMake))}`}
       />
       <Column header={<><div>Closing </div><div>Freezer</div></>} 
-        body={rowData => cumTotalTemplate(rowData, 0)} 
+        body={rowData => CumTotalTemplate({ rowData, daysAhead: 0})} 
         style={{ color: 'var(--bpb-text-color'}}  
       />
       <Column header="TOM" 
-        body={rowData => cumTotalTemplate(rowData, 1)} 
+        body={rowData => CumTotalTemplate({ rowData, daysAhead: 1})} 
         style={{ color: 'var(--bpb-text-color'}}
       />
       <Column header="2DAY" 
-        body={rowData => cumTotalTemplate(rowData, 2)} 
+        body={rowData => CumTotalTemplate({ rowData, daysAhead: 2})} 
         style={{ color: 'var(--bpb-text-color'}}  
       />
       <Column header="3DAY" 
-        body={rowData => cumTotalTemplate(rowData, 3)} 
+        body={rowData => CumTotalTemplate({ rowData, daysAhead: 3})} 
         style={{ color: 'var(--bpb-text-color'}}
       />
       <Column header="4DAY" 
-        body={rowData => cumTotalTemplate(rowData, 4)} 
+        body={rowData => CumTotalTemplate({ rowData, daysAhead: 4})} 
         style={{ color: 'var(--bpb-text-color'}}
       />
 
@@ -202,6 +255,7 @@ export const CroixToMake = () => {
         style={{margin: '1rem'}}
       />
     }
+
   </div>)
 
 }

@@ -1,9 +1,10 @@
 export const listStandingByLocation = /* GraphQL */ `
   query MyQuery(
     $locNick: String!, 
+    $limit: Int = 1000
   ) {
     getLocation(locNick: $locNick) {
-      standing {
+      standing(limit: $limit) {
         items {
           id
           product {
