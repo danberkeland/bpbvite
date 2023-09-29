@@ -95,10 +95,10 @@ export const CroixToMake = () => {
     </div>
   }
 
-  const submitSheets = () => {
+  const submitSheets = async () => {
 
     const updateInputs = tableRows
-      // .filter(row => row.sheetMake !== sheetMake[row.countNick])
+      .filter(row => row.sheetMake !== sheetMake[row.countNick])
       .map(row => {
         const { countNick, freezerCount, batchSize, C } = row
         const eodCount = freezerCount 
@@ -115,32 +115,40 @@ export const CroixToMake = () => {
     console.log('updateItems', updateInputs)
 
     productCache.updateLocalData(
-      productCache.submitMutations({ updateInputs })
+      await productCache.submitMutations({ updateInputs })
     )
+    setisEditing(false)
   }
 
   const sheetMakeHasChanges = tableRows.some(row => 
     row.sheetMake !== sheetMake[row.countNick]
   )
 
-  return(<>
+  return(<div>
     <Button label="Print Croix Shape List" 
       onClick={() => printCroixShapeList(tableRows)}
       disabled={isEditing}
       style={{margin: '1rem'}}
     />
+    
     <DataTable
       value={tableRows}
       responsiveLayout="scroll"
       // size={"small"}
-      style={{
-        maxWidth: "55rem", 
-        padding: '1rem',
-      }}
+      style={{ maxWidth: "55rem", padding: '1rem' }}
     >
-      <Column header="Product" field="countNick" /> 
-      <Column header={<><div>Opening </div><div>Freezer</div></>} field="freezerCount" />
-      <Column header="Sheets" body={sheetInputTemplate} />
+      <Column header="Product" 
+        field="countNick" 
+        style={{ color: 'var(--bpb-text-color'}}  
+      /> 
+      <Column header={<><div>Opening </div><div>Freezer</div></>} 
+        field="freezerCount" 
+        style={{ color: 'var(--bpb-text-color'}}  
+      />
+      <Column header="Sheets" 
+        body={sheetInputTemplate} 
+        style={{ color: 'var(--bpb-text-color'}}  
+      />
       <Column header={<><div>Closing </div><div>Freezer</div></>} body={rowData => cumTotalTemplate(rowData, 0)} />
       <Column header="TOM" body={rowData => cumTotalTemplate(rowData, 1)} />
       <Column header="2DAY" body={rowData => cumTotalTemplate(rowData, 2)} />
@@ -152,8 +160,6 @@ export const CroixToMake = () => {
       {/* <Column header="T2" field="T.2.totalQty" /> */}
       {/* <Column header="T3" field="T.3.totalQty" /> */}
       {/* <Column header="T4" field="T.4.totalQty" /> */}
-    
-
     </DataTable>
 
     <Button label={isEditing ? "Cancel Edit" : "Edit Sheets"}
@@ -173,6 +179,6 @@ export const CroixToMake = () => {
         style={{margin: '1rem'}}
       />
     }
-  </>)
+  </div>)
 
 }

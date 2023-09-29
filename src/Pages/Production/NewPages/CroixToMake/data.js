@@ -228,7 +228,7 @@ export const useT0T7Data = ({ shouldFetch }) => {
 
   }
 
-  return { data: useMemo(composeData, [cart, standing, PRD])}
+  return { data: useMemo(composeData, [cart, standing, PRD, LOC, RTE, ZRT])}
   
 }
 
