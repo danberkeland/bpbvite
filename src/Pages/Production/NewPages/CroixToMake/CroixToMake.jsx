@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import { Button } from "primereact/button"
 import { useListData } from "../../../../data/_listData"
 import { printCroixShapeList } from "./printPDF"
+import { sumBy } from "lodash"
 
 // For counting croix we introduce a new naming convention: countNick.
 // countNicks are a subset of prodNicks. Products are assigned the same
@@ -147,7 +148,8 @@ export const CroixToMake = () => {
       />
       <Column header="Sheets" 
         body={sheetInputTemplate} 
-        style={{ color: 'var(--bpb-text-color'}}  
+        style={{ color: 'var(--bpb-text-color'}}
+        footer={`Σ = ${sumBy(Object.values(sheetMake))}`}
       />
       <Column header={<><div>Closing </div><div>Freezer</div></>} body={rowData => cumTotalTemplate(rowData, 0)} />
       <Column header="TOM" body={rowData => cumTotalTemplate(rowData, 1)} />
