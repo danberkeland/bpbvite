@@ -7,6 +7,7 @@ import { Button } from "primereact/button"
 import { useListData } from "../../../../data/_listData"
 import { printCroixShapeList } from "./printPDF"
 import { sumBy } from "lodash"
+import { DateTime } from "luxon"
 
 // For counting croix we introduce a new naming convention: countNick.
 // countNicks are a subset of prodNicks. Products are assigned the same
@@ -16,6 +17,11 @@ import { sumBy } from "lodash"
 //
 // Example: products with prodNicks 'mb', 'frmb', 'unmb' would all be assigned 
 // the countNick 'mb'.
+
+const today = DateTime.now()
+  .setZone('America/Los_Angeles')
+  .startOf('day')
+  .toFormat('MM/dd/yyyy')
 
 export const CroixToMake = () => {
   const productCache = useListData({ tableName: "Product", shouldFetch: true })
@@ -125,6 +131,7 @@ export const CroixToMake = () => {
   )
 
   return(<div>
+    <h1 style={{marginLeft: "1rem"}}>Croissant Production {today}</h1>
     <Button label="Print Croix Shape List" 
       onClick={() => printCroixShapeList(tableRows)}
       disabled={isEditing}
