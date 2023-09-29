@@ -83,7 +83,6 @@ export const CroixToMake = () => {
     return <div style={{
       fontWeight: 'bold',
       textAlign: 'center',
-      color: 'var(--bpb-text-color)',
       background: value >= 0
         ? 'rgb(128, 243, 159)'
         : 'rgb(209, 144, 146)',
@@ -151,11 +150,26 @@ export const CroixToMake = () => {
         style={{ color: 'var(--bpb-text-color'}}
         footer={`Σ = ${sumBy(Object.values(sheetMake))}`}
       />
-      <Column header={<><div>Closing </div><div>Freezer</div></>} body={rowData => cumTotalTemplate(rowData, 0)} />
-      <Column header="TOM" body={rowData => cumTotalTemplate(rowData, 1)} />
-      <Column header="2DAY" body={rowData => cumTotalTemplate(rowData, 2)} />
-      <Column header="3DAY" body={rowData => cumTotalTemplate(rowData, 3)} />
-      <Column header="4DAY" body={rowData => cumTotalTemplate(rowData, 4)} />
+      <Column header={<><div>Closing </div><div>Freezer</div></>} 
+        body={rowData => cumTotalTemplate(rowData, 0)} 
+        style={{ color: 'var(--bpb-text-color'}}  
+      />
+      <Column header="TOM" 
+        body={rowData => cumTotalTemplate(rowData, 1)} 
+        style={{ color: 'var(--bpb-text-color'}}
+      />
+      <Column header="2DAY" 
+        body={rowData => cumTotalTemplate(rowData, 2)} 
+        style={{ color: 'var(--bpb-text-color'}}  
+      />
+      <Column header="3DAY" 
+        body={rowData => cumTotalTemplate(rowData, 3)} 
+        style={{ color: 'var(--bpb-text-color'}}
+      />
+      <Column header="4DAY" 
+        body={rowData => cumTotalTemplate(rowData, 4)} 
+        style={{ color: 'var(--bpb-text-color'}}
+      />
 
       {/* <Column header="T0" field="T.0.totalQty" /> */}
       {/* <Column header="T1" field="T.1.totalQty" /> */}
