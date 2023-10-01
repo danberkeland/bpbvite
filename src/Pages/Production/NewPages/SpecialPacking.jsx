@@ -237,12 +237,12 @@ export const SpecialPacking = () => {
 
   return(
     <div style={{display: "flex", justifyContent: "center"}}>
-    <div style={{maxWidth: "45rem"}}>
+    <div style={{maxWidth: "45rem", marginBottom: "10rem"}}>
       <p>
         Note: Table rows are not meant to show each customer's entire order.
       </p>
 
-      <h1>Pretzel Packing</h1>
+      <h1>Pretzel Packing {todayDT.toFormat('MM/dd/yyyy')}</h1>
       <h2>Pack for Today</h2>
       <InfoTemplate
         key='pretzel_T0'
