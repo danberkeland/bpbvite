@@ -15,6 +15,7 @@ import { Sandbox } from "./NewPages/_Sandbox";
 import { BriocheCalc } from "./NewPages/BriocheCalc";
 import { SpecialPacking } from "./NewPages/SpecialPacking";
 import { OrderReview } from "./NewPages/OrderReview";
+import { CroixCount } from "./NewPages/CroixEOD/CroixCount";
 
 const bpbnPages = [
   {name: "Sandbox", component: <Sandbox />},
@@ -25,6 +26,7 @@ const bpbnPages = [
   {name: "WhoBake", component: <WhoBake />},
   {name: "WhoShape", component: <WhoShape />},
   {name: "Croix To Make", component: <CroixToMake />},
+  {name: "Croix Count", component: <CroixCount />},
   {name: "Terminal", component: <BPBTerminal />},
   {name: "Database", component: <Database />},
   {name: "Seven Day List", component: <SevenDayList />},
