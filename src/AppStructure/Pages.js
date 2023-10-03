@@ -74,23 +74,21 @@ const itemsAuth2 = [
       window.location = "/Ordering";
     },
   },
-  /*
   {
     label: "Products",
     icon: "pi pi-fw pi-tags",
-    
+    command: () => window.location = "/CustomerProducts"
   },
-  {
-    label: "Billing",
-    icon: "pi pi-fw pi-dollar",
+  // {
+  //   label: "Billing",
+  //   icon: "pi pi-fw pi-dollar",
     
-  },
-  {
-    label: "Settings",
-    icon: "pi pi-fw pi-cog",
+  // },
+  // {
+  //   label: "Settings",
+  //   icon: "pi pi-fw pi-cog",
    
-  },
-  */
+  // },
 ];
 
 const itemsAuth2b = [
@@ -283,14 +281,11 @@ function Pages({ Routes, Route, useLocation }) {
   const setItems = useSettingsStore((state) => state.setItems);
   const authClass = useSettingsStore((state) => state.authClass);
   useEffect(() => {
-    if (authClass === "customer") {
-      setItems(itemsAuth2);
-    } else if (authClass === "bpbmgr") {
-      setItems(bpbmgrItems);
-    } else {
-      setItems(itemsAuth1);
-    }
-  }, [authClass]);
+    if (authClass === "customer") setItems(itemsAuth2)
+    else if (authClass === "bpbmgr") setItems(bpbmgrItems)
+    else setItems(itemsAuth1)
+
+  }, [authClass])
 
   return (
     <Authenticator

@@ -5,7 +5,7 @@ import Ordering2 from "../Pages/Ordering/Ordering2";
 import CustomerNews from "../Pages/CustomerNews/CustomerNews";
 import CustomerBilling from "../Pages/CustomerBilling/CustomerBilling";
 import CustomerSettings from "../Pages/CustomerSettings/CustomerSettings";
-import CustomerProducts from "../Pages/CustomerProducts/CustomerProducts";
+import { CustomerProducts } from "../Pages/CustomerProducts/CustomerProducts";
 import BPBNBaker1 from "../Pages/Production/BPBNBaker1";
 import BPBNBaker1Backup from "../Pages/Production/BPBNBaker1Backup";
 import BPBNBaker2 from "../Pages/Production/BPBNBaker2";

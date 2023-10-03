@@ -11,39 +11,28 @@ import { motion } from "framer-motion";
 // import { dateToMmddyyyy, getBpbTime, getWorkingDateTime } from "../functions/dateAndTime";
 
 const itemsAuth4min = [
-  {
-    icon: "pi pi-fw pi-home",
-    command: () => {
-      window.location = "/";
-    },
+  { 
+    icon: "pi pi-fw pi-home", 
+    command: () => { window.location = "/" } 
   },
   {
     icon: "pi pi-fw pi-shopping-cart",
-    command: () => {
-      window.location = "/Ordering";
-    },
+    command: () => { window.location = "/Ordering"},
   },
   {
     icon: "pi pi-fw pi-tags",
-    command: () => {
-      window.location = "/CustomerOrdering";
-    },
+    command: () => {window.location = "/CustomerOrdering"},
   },
   {
-    label: "More",
-    icon: "pi pi-fw pi-bars",
-    command: () => {
-      window.location = "/";
-    },
+    label: "More", icon: "pi pi-fw pi-bars", 
+    command: () => {window.location = "/"},
   },
 ];
 
 const onlyHome = [
   {
     icon: "pi pi-fw pi-home",
-    command: () => {
-      window.location = "/";
-    },
+    command: () => { window.location = "/" },
   }
 ];
 
@@ -77,13 +66,13 @@ export function NavSide() {
 }
 
 export function NavBottom() {
-  const setFormType = useSettingsStore((state) => state.setFormType);
+  // const setFormType = useSettingsStore((state) => state.setFormType);
   const authClass = useSettingsStore((state) => state.authClass);
  
 
-  const signOut = () => {
-    authSignOut(setFormType);
-  };
+  // const signOut = () => {
+  //   authSignOut(setFormType);
+  // };
   return (
     <motion.div
       initial={{ opacity: 0 }}
