@@ -28,8 +28,7 @@ export const CustomerProducts = () => {
   const windowSize = useWindowSizeDetector()
 
   const { data:PRD } = useCustomizedProducts({ 
-    //locNick: user.locNick, 
-    locNick: 'kilo', 
+    locNick: user.locNick, 
     shouldFetch: true, 
     format: 'list'
   })
