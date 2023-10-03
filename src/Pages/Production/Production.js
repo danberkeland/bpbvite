@@ -16,6 +16,7 @@ import { BriocheCalc } from "./NewPages/BriocheCalc";
 import { SpecialPacking } from "./NewPages/SpecialPacking";
 import { OrderReview } from "./NewPages/OrderReview";
 import { CroixCount } from "./NewPages/CroixEOD/CroixCount";
+import { BPBSWhatToMake } from "./NewPages/BPBSWhatToMake/BPBSWhatToMake";
 
 const bpbnPages = [
   {name: "Sandbox", component: <Sandbox />},
@@ -25,6 +26,7 @@ const bpbnPages = [
   {name: "BPBNBuckets", component: <BPBNBuckets />},
   {name: "WhoBake", component: <WhoBake />},
   {name: "WhoShape", component: <WhoShape />},
+  {name: "BPBSWhatToMake", component: <BPBSWhatToMake />},
   {name: "Croix To Make", component: <CroixToMake />},
   {name: "Croix Count", component: <CroixCount />},
   {name: "Terminal", component: <BPBTerminal />},

@@ -43,10 +43,10 @@ export const useT0T7Data = ({ shouldFetch }) => {
     const locations = keyBy(LOC, 'locNick')
     const routes = keyBy(RTE, 'routeNick')
     const zoneRoutes = sortBy(ZRT, 'routeStart')
-    console.log('zoneRoutes:', zoneRoutes.map(zr => ({
-      zoneNick: zr.zoneNick,
-      routeNick: zr.routeNick
-    })))
+    // console.log('zoneRoutes:', zoneRoutes.map(zr => ({
+    //   zoneNick: zr.zoneNick,
+    //   routeNick: zr.routeNick
+    // })))
 
     const isCroissant = (prodNick) => {
       const { doughNick, packGroup } = products[prodNick]

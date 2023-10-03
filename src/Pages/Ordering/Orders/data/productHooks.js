@@ -110,6 +110,7 @@ export const useCustomizedProducts = ({
         // isRetail: product.isRetail, // often null; use isWhole === false?
         defaultInclude: prodsNotAllowed.items.length
           ? !product.defaultInclude
+          //? prodsNotAllowed.items[0].defaultInclude
           : product.defaultInclude,
           // Previous logic does not look at the isAllowed value, rather,
           // it only checks the existence of the record to decide
