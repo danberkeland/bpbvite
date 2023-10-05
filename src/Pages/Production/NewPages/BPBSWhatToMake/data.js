@@ -1,354 +1,23 @@
-import { flatten, groupBy, keyBy, mapValues, sortBy, sumBy, uniqBy } from "lodash"
+import { groupBy, keyBy,  sortBy, sumBy } from "lodash"
 import { DateTime } from "luxon"
 import { useMemo } from "react"
 
 import { useListData } from "../../../../data/_listData"
-import { getRouteOptions } from "../../../Ordering/Orders/data/productHooks"
+import { useT0T7ProdOrders } from "./useT0T7ProdOrders"
 
-// A hook to power all production/logistics reports. A bit overpowered for 
-// some reports, but with programmatic routing we can view several reports
-// without re-fetching data. 
-//
-// returns routed production orders for T+0 to T+7, relative to the
-// input reportDate (yyyy-MM-dd formatted string)
-//
-// To keep the hook versatile, we avoid premature filtering.
-//
-// Holding orders are included for all dates, but can be omitted on the fly
-// by filtering with 'isStand === false'.
-//
-// orders for bpbextras is included as well. 
-//
-// returns a flattened list of cart & standing items, souped-up with extra 
-// indexes that allow for easy grouping/filtering.
+/** 'Rectified Linear Unit' function -- converts negative numbers to 0 */
+const relu = (x) => x > 0 ? x : 0
 
-// Possible future improvement could be to clean up the routeMeta object
-
-const useT0T7ProdOrders = ({ shouldFetch, reportDate }) => {
-
-  const { data:cart } = useListData({ tableName: "Order", shouldFetch })
-  const { data:standing } = useListData({ tableName: "Standing", shouldFetch })
-
-  const { data:PRD } = useListData({ tableName: "Product", shouldFetch })
-  const { data:LOC } = useListData({ tableName: "Location", shouldFetch })
-  const { data:RTE } = useListData({ tableName: "Route", shouldFetch })
-  const { data:ZRT } = useListData({ tableName: "ZoneRoute", shouldFetch })
-
-  const composeData = () => {
-    if (!cart || !standing || !PRD || !LOC || !RTE || !ZRT) return undefined
-
-    const products = keyBy(PRD, 'prodNick')
-    const locations = keyBy(LOC, 'locNick')
-    const routes = keyBy(RTE, 'routeNick')
-    const zoneRoutes = sortBy(ZRT, 'routeStart')
-  
-    const reportDateDT = DateTime.fromFormat(
-      reportDate, 'yyyy-MM-dd', { zone: 'America/Los_Angeles'}
-    )
-
-    const dateList = [0, 1, 2, 3, 4, 5, 6, 7].map(daysAhead => ({
-      delivDate: reportDateDT.plus({ days: daysAhead }).toFormat('yyyy-MM-dd'),
-      dayOfWeek: reportDateDT.plus({ days: daysAhead }).toFormat('EEE'),
-      weekdayNum: reportDateDT.plus({ days: daysAhead }).toFormat('E') % 7,
-      relDate: daysAhead
-    }))
-    
-    console.log(dateList)
-    const ordersByDate = dateList.map(dateObj => {
-      const { delivDate, dayOfWeek, relDate, weekdayNum } = dateObj
-
-      const cartDict = keyBy(
-        cart.filter(C => C.delivDate === delivDate),
-        item => `${item.locNick}#${item.prodNick}`
-      )
-      const standingDict = keyBy(
-        standing.filter(S => S.isStand === true && S.dayOfWeek === dayOfWeek), 
-        item => `${item.locNick}#${item.prodNick}`
-      )
-      const holdingDict = keyBy(
-        standing.filter(S => S.isStand === false && S.dayOfWeek === dayOfWeek), 
-        item => `${item.locNick}#${item.prodNick}`
-      )
-
-      const orders = { ...holdingDict, ...standingDict, ...cartDict }
-
-      return Object.values(orders).map(order => {
-
-        const routeMeta = getRouteOptions({
-          product: products[order.prodNick],
-          location: order.isWhole 
-            ? locations[order.locNick]
-            // Those pesky retail orders need a mock location set for them
-            : {
-              locNick: order.locNick, 
-              locName: order.locNick, 
-              latestFirstDeliv: 7, 
-              latestFinalDeliv: 13,
-              zoneNick: order.route === 'atownpick' ? 'atownpick' : 'slopick'
-            },
-          routeDict: routes,
-          ZRT: zoneRoutes
-        })[weekdayNum % 7][0]
-
-        const delivLeadTime = 
-          routeMeta.adjustedLeadTime - products[order.prodNick].leadTime
-        const bakeRelDate = relDate - delivLeadTime
-
-        return {
-          ...order,
-          delivDate,
-          dayOfWeek,
-          weekdayNum,
-          relDate, // ...                                for col indexing
-          routeMeta,
-          bakeRelDate, // ...                            for filtering
-          delivLeadTime,
-          forBake: products[order.prodNick].forBake // for row indexing
-        }
-      }).filter(order => order.qty !== 0)
-    })
-
-    console.log(ordersByDate)
-    return flatten(ordersByDate)
-  }
-
-  return { data: useMemo(composeData, [cart, standing, PRD, LOC, RTE, ZRT])}
-
-}
-
-
-
-export const useBpbsWtmData = ({ shouldFetch, reportRelDate }) => {
-  if (![0, 1].includes(reportRelDate)) {
-    console.error("What To Make only supported for today or tomorrow")
-  }
-
-  // Filters
-  const isForCurrentDay = (order) => order.relDate === reportRelDate
-  const isForNextDay = (order) => order.relDate === reportRelDate + 1
-
-  const today = DateTime.now()
-    .setZone('America/Los_Angeles')
-    .startOf('day')
-    .toFormat('yyyy-MM-dd')
-
-  const { data:prodOrders } = useT0T7ProdOrders({ shouldFetch, reportDate: today })
-  const { data:PRD } = useListData({ tableName: "Product", shouldFetch })
-
-  const composeData = () => {
-    if (!prodOrders || !PRD) return undefined
-
-    const products = keyBy(PRD, 'prodNick')
-
-    // assignListType makes a special exception for 
-    // High French (prodNick: frfr), moving it from fresh to shelf.
-    const { freezer=[], fresh=[], pretzel=[], shelf=[] } = groupBy( 
-      prodOrders.map(order => ({
-        ...order, 
-        listType: assignListType(products[order.prodNick])
-      })), 
-      'listType'
-    )
-
-    const { freshOrders=[], northPockets=[] } = groupBy(
-      fresh,
-      order => shouldSendPocketsNorth(products[order.prodNick], order)
-        ? 'northPockets'
-        : 'freshOrders'
-    )
-    
-    // *********
-    // * FRESH *
-    // *********
-
-    const assignFreshCol = (order) => {
-
-    }
-
-    const _fresh = fresh.filter(order => 
-      (isForCurrentDay(order) && order.delivLeadTime === 0 && !isHoldingOrder(order))
-      || (isForNextDay(order) && order.delivLeadTime === 1)
-    ).map(order => ({
-      ...order,
-      rowKey: order.forBake,
-      colKey: isForNextDay(order) ? 'bag'
-        : shouldSendPocketsNorth(products[order.prodNick], order) ? 'pocket'
-        : 'deliv'
-    }))
-
-    const freshOrderCells = mapValues(
-      groupBy(_fresh, order => `${order.rowKey}#${order.colKey}`), 
-      group => ({
-        rowKey: group[0].rowKey,
-        colKey: group[0].colKey,
-        totalPk: sumBy(group, 'qty'),
-        totalEa: sumBy(group, order => order.qty * products[order.prodNick].packSize),
-        items: group,
-      })
-    )
-
-    // specially omit High St French from the list. It will show on the
-    // shelf list.
-    const freshProductForBakes = sortBy(uniqBy(
-      PRD.filter(P => 
-        isFreshProduct(P) && P.forBake !== "High French"
-      ).map(P => P.forBake)
-    ))
-    
-    const freshCellTemplate = { totalPk: 0, totalEa: 0, items: [] }
-    const freshOrderData = freshProductForBakes.map(forBake => ({
-      forBake,
-      0: freshOrderCells[`${forBake}#0`] ?? { ...freshCellTemplate },              
-      1: freshOrderCells[`${forBake}#1`] ?? { ...freshCellTemplate },          
-    }))
-    
-    // *****************
-    // * NORTH POCKETS *
-    // *****************
-
-    let northPocketCells = groupBy(
-      northPockets.filter(order => isForCurrentDay(order) 
-        && order.delivLeadTime === 0 
-        && !isHoldingOrder(order)
-      ),
-      order => `${order.forBake}#${order.relDate - reportRelDate}`
-    )
-    northPocketCells = mapValues(
-      northPocketCells, 
-        group => ({
-        forBake: group[0].forBake,
-        delivLeadTime: group[0].delivLeadTime,
-        totalPk: sumBy(group, 'qty'),
-        totalEa: sumBy(group, order => order.qty * products[order.prodNick].packSize),
-        items: group,
-      })
-    )
-    
-    const northPocketForBakes = sortBy(uniqBy(
-      PRD.filter(P => canSendPocketsNorth(P)).map(P => P.forBake)
-    ))
-    const northPocketTemplate = { totalPk: 0, totalEa: 0, items: [] }
-    const northPocketData = northPocketForBakes.map(forBake => ({
-      forBake,
-      0: northPocketCells[`${forBake}#0`] ?? { ...northPocketTemplate },              
-    }))
-
-    // *********
-    // * SHELF *
-    // *********
-
-    // frfr should only be counted for the current day
-    let shelfCells = groupBy(
-      shelf.filter(order => 
-        (isForCurrentDay(order) && !isHoldingOrder(order))
-        || (isForNextDay(order) && !isFreshProduct(products[order.prodNick]))
-      ),
-      order => `${order.forBake}#${order.relDate - reportRelDate}`
-    )
-    shelfCells = mapValues(
-      shelfCells, 
-      group => ({
-        forBake: group[0].forBake,
-        delivLeadTime: group[0].delivLeadTime,
-        totalPk: sumBy(group, order => 
-          !isFreshProduct(products[order.prodNick]) ? order.qty : 0
-        ),
-        totalEa: sumBy(group, order =>
-          !isFreshProduct(products[order.prodNick])
-            ? order.qty * products[order.prodNick].packSize
-            : 0
-        ),
-        freshTotalPk: sumBy(group, order => 
-          isFreshProduct(products[order.prodNick]) ? order.qty : 0
-        ),
-        freshTotalEa: sumBy(group, order => 
-          isFreshProduct(products[order.prodNick])
-            ? order.qty * products[order.prodNick].packSize 
-            : 0
-        ),
-        items: group,
-      })
-    )
-    
-    // Add High French to the list. It will be added specially with
-    // regular french, always appearing as a 'need early' quantity.
-    const shelfProductsByForBake = groupBy(
-      PRD.filter(P => isShelfProduct(P) || P.forBake === 'High French'), 
-      'forBake'
-    )
-
-    const shelfProductInfo = mapValues(
-      shelfProductsByForBake,
-      group => ({
-        bakeExtra: sumBy(group, 'bakeExtra'),
-        currentStock: sortBy(PRD, 'prodName')
-          .find(P => P.forBake === group[0].forBake)
-          ?.currentStock ?? 0,
-        batchSize: sortBy(PRD, 'prodName')
-          .find(P => P.forBake === group[0].forBake)
-          .batchSize,
-      })
-    )
-    const shelfProductForBakes = Object.keys(shelfProductInfo)
-
-    const shelfTemplate = { 
-      totalPk: 0, totalEa: 0, bakeExtra: 0, currentStock: 0, items: []
-    }
-
-    // we've produced this data in mostly the same manner as with fresh
-    // products, but we need to go one step further...
-    const shelfData = shelfProductForBakes.map(forBake =>  {
-      return ({
-        forBake,
-        ...shelfProductInfo[forBake],
-        0: { 
-          ...shelfTemplate, 
-          ...shelfCells[`${forBake}#0`],
-        },
-        1: { 
-          ...shelfTemplate, 
-          ...shelfCells[`${forBake}#1`],
-        },
-      })
-    })
-
-    // key 0 has today's orders. The Total Deliv column will show totalEa.
-    // the Amt needed early will be 
-
-    console.log(shelfData)
-
-    return {
-      freshOrderData,   
-      northPocketData,
-      shelfData
-    }
-
-  }
-
-  return { data: useMemo(composeData, [prodOrders, PRD]) }
-
-}
-
-// Filter functions:
-//
-// Meant to work on order data produced by the useT0T7ProdOrders hook.
-// That is, filters make use of custom attributes added to order data.
-// If the hook changes, these filters may need to be updated.
-//
-// special attributes currently used:
-//
-// - order.routeMeta.routeNick
+// Filter Functions **********************************************************
 
 const isHoldingOrder = (order) => order.isStand === false
 
-// const deliveryLeadTime = (order, product) => 
-//   order.routeMeta.adjustedLeadTime - product.leadTime
-
+// change from legacy version: exclude pretzel products
 const isFreshProduct = (product) => product.readyTime < 15
   && product.bakedWhere.includes("Prado")
   && product.packGroup !== "frozen pastries"
   && product.packGroup !== "baked pastries"
-  && product.doughNick !== "Pretzel Bun"    // added to make mutually exclusive with pretzel products
+  && product.doughNick !== "Pretzel Bun"    
 
 const canSendPocketsNorth = (product) => isFreshProduct(product)
   && product.bakedWhere.includes("Carlton")
@@ -373,76 +42,269 @@ const isFreezerProduct = (product) => isBaggedProduct(product)
 const isPretzelProduct = (product) => product.bakedWhere.includes("Prado")
   && product.doughNick === "Pretzel Bun" 
 
-const assignListType = (product) => {
-  if (product.prodNick === 'frfr') return "shelf"
-  if (isPretzelProduct(product)) return "pretzel" 
-  if (isFreshProduct(product)) return "fresh"
-  if (isShelfProduct(product)) return "shelf"
-  if (isFreezerProduct(product)) return "freezer"
-}
 
 
+// note on naming conventions:
+//
+// T0 & T1 are used to mark the date relative to reportRelDate, which in turn
+// is relative to the actual current date. The reportRelDate can be set to
+// 0 or 1 generate lists for Today (for morning bakes) or for tomorrow
+// (for exporting backups).
 
-
-
-
-export const useBpbsWtmData2 = ({ shouldFetch, reportRelDate }) => {
+export const useBpbsWtmData = ({ shouldFetch, reportRelDate }) => {
   if (![0, 1].includes(reportRelDate)) {
     console.error("What To Make only supported for today or tomorrow")
   }
-
-  // Filters
-  const isForCurrentDay = (order) => order.relDate === reportRelDate
-  const isForNextDay = (order) => order.relDate === reportRelDate + 1
 
   const today = DateTime.now()
     .setZone('America/Los_Angeles')
     .startOf('day')
     .toFormat('yyyy-MM-dd')
-
-  const { data:prodOrders } = useT0T7ProdOrders({ shouldFetch, reportDate: today })
-  const { data:PRD } = useListData({ tableName: "Product", shouldFetch })
+  
+  const { data:_prodOrders } = useT0T7ProdOrders({ shouldFetch, reportDate: today })
+  const { data:_PRD } = useListData({ tableName: "Product", shouldFetch })
 
   const composeData = () => {
-    if (!prodOrders || !PRD) return undefined
+    if (!_prodOrders || !_PRD) return undefined
+
+    const assignListType = (product) => {
+      if (product.prodNick === 'frfr') return "shelf" // special exception
+      if (isPretzelProduct(product)) return "pretzel"
+      if (isFreshProduct(product)) return "fresh"
+      if (isShelfProduct(product)) return "shelf"
+      if (isFreezerProduct(product)) return "freezer"
+      return "other"
+    }
+
+    const PRD = sortBy(_PRD, 'prodName')
+      .map(P => ({ 
+        ...P, 
+        listType: assignListType(P),
+        rowKey: P.prodNick === 'frfr' ? 'French' : P.forBake
+      }))
 
     const products = keyBy(PRD, 'prodNick')
 
-    // assignListType makes a special exception for 
-    // High French (prodNick: frfr), moving it from fresh to shelf.
-    const { freezer=[], fresh=[], pretzel=[], shelf=[] } = groupBy( 
-      prodOrders.map(order => ({
+    const productsByRowKey = groupBy(
+      PRD.filter(P => P.prodNick !== 'frfr'),
+      'rowKey'
+    )
+
+    const tableRows = Object.values(productsByRowKey).map(rowKeyGroup => ({
+      rowKey: rowKeyGroup[0].rowKey,
+      listType: rowKeyGroup[0].listType,
+      currentStock: rowKeyGroup[0].currentStock,
+      preshaped: rowKeyGroup[0].preshaped,
+      prepreshaped: rowKeyGroup[0].prepreshaped,
+      bakeExtraTotal: sumBy(rowKeyGroup, 'bakeExtra'),
+      productRep: rowKeyGroup[0],
+    }))
+
+    // We only ever need to look at orders for the given day and the next day.
+    // holding orders for the given date should be excluded.
+    const __prodOrders = _prodOrders
+      .filter(order => 
+        (reportRelDate <= order.relDate || order.relDate <= reportRelDate + 2)
+        && !(order.relDate === reportRelDate && isHoldingOrder(order)) 
+      ).map(order => ({
         ...order, 
-        listType: assignListType(products[order.prodNick])
-      })), 
+        listType: assignListType(products[order.prodNick]),
+        rowKey: order.prodNick === 'frfr' 
+          ? 'French' 
+          : products[order.prodNick].forBake
+      }))
+
+    const prodOrders = sortBy(
+      __prodOrders, 
+      [
+        'delivDate', 
+        'routeMeta.route.routeStart', 'routeMeta.routeNick',
+        'locNick', 
+        'prodNick'
+      ]
+    )
+    const ordersByRowKey = groupBy(prodOrders, 'rowKey')
+
+
+    
+    const { fresh, shelf, freezer, pretzel } = groupBy(
+      tableRows,
       'listType'
     )
 
-    const { freshOrders=[], northPockets=[] } = groupBy(
-      fresh,
-      order => shouldSendPocketsNorth(products[order.prodNick], order)
-        ? 'northPockets'
-        : 'freshOrders'
+    const northPockets = fresh.filter(row => 
+      canSendPocketsNorth(row.productRep)
     )
+
+    /** Convert pks to ea by multiplying by the product's pack size */
+    const calcEa = (order) => order.qty * products[order.prodNick].packSize
+
+    // delivLeadTime is calculated in the T0T7 hook:
+    // * 0 means the order is baked on the delivDate
+    // * 1 means the order is baked the day before the delivDate 
+
+    // *************** North Pockets ***************
+    const northPocketData = northPockets.map(row => {
+      const orders = (ordersByRowKey[row.rowKey] ?? []).filter(order => 
+        order.relDate === reportRelDate
+        && order.delivLeadTime === 0
+        && shouldSendPocketsNorth(products[order.prodNick], order)
+      )
+      return {
+        ...row,
+        totalCol: {
+          orders,
+          totalEa: sumBy(orders, order => calcEa(order))
+        }
+      }
+    })
+
+    // *************** Fresh ***************
+    const freshData = fresh.map(row => {
+      const T0Orders = (ordersByRowKey[row.rowKey] || []).filter(order => 
+        order.relDate === reportRelDate
+        && order.delivLeadTime === 0
+        && !shouldSendPocketsNorth(products[order.prodNick], order)
+      )
+      const T0TotalEa = sumBy(T0Orders, order => calcEa(order))
+
+      const T1Orders = (ordersByRowKey[row.rowKey] || []).filter(order => 
+        order.relDate === reportRelDate + 1
+        && order.delivLeadTime === 1
+        && !shouldSendPocketsNorth(products[order.prodNick], order)
+      )
+      const T1TotalEa = sumBy(T1Orders, order => calcEa(order))
+
+      return {
+        ...row,
+        totalDelivCol: {
+          orders: T0Orders,
+          totalEa: T0TotalEa,
+        },
+        bagTomorrowCol: {
+          orders: T1Orders,
+          totalEa: T1TotalEa,
+        },
+        makeTotalCol: {
+          orders: [...T0Orders, ...T1Orders],
+          totalEa: T0TotalEa + T1TotalEa,
+        }
+      }
+
+    })
+
+    // *************** Shelf & Freezer ********************
     
-    // *********
-    // * FRESH *
-    // *********
+    // same process/final structure for both shelf and freezer data, so we
+    // map the process over each table
+    const [shelfData, freezerData] = [shelf, freezer].map(table => 
+      table.map(row => {
+        const { batchSize, currentStock, packSize } = row.productRep
+        const currentStockEa = (currentStock ?? 0) * packSize
 
-    const _freshOrders = freshOrders.filter(order => 
-      (isForCurrentDay(order) && order.delivLeadTime === 0 && !isHoldingOrder(order))
-      || (isForNextDay(order) && order.delivLeadTime === 1)
+
+        const { 
+          'true.0':_T0Fresh=[], 
+          'false.0':T0BaggedOrders=[],
+          'false.1':T1BaggedOrders=[], 
+        } = groupBy(
+          ordersByRowKey[row.rowKey], 
+          order => `${isFreshProduct(products[order.prodNick])}`
+           + '.' + `${order.relDate - reportRelDate}`
+        )
+
+        const T0FreshOrders = _T0Fresh.filter(order => 
+          order.delivLeadTime === 0
+        )
+
+        const T0FTotal = sumBy(T0FreshOrders, order => calcEa(order))
+        const T0BTotal = sumBy(T0BaggedOrders, order => calcEa(order))
+        const T1BTotal = sumBy(T1BaggedOrders, order => calcEa(order))
+
+        const makeTotalNeededEa = 
+          relu(T0BTotal + T1BTotal - currentStockEa) + T0FTotal
+
+        const makeTotalwithExtrasEa = 
+          makeTotalNeededEa + row.bakeExtraTotal
+
+        const makeTotalRoundedEa = 
+          Math.ceil(makeTotalwithExtrasEa / batchSize) * batchSize
+
+        return {
+          ...row,
+          totalDelivCol: {
+            orders: [...T0BaggedOrders, ...T0FreshOrders],
+            totalEa: T0FTotal + T0BTotal,
+          },
+          needEarlyCol: {
+            totalEa: relu(T0BTotal - currentStockEa) + T0FTotal
+          },
+          makeTotalCol: {
+            orders: [...T0FreshOrders, ...T0BaggedOrders, ...T1BaggedOrders],
+            baggedTotalEa: T0BTotal + T1BTotal,
+            freshTotalEa: T0FTotal,
+            baseTotalEa: makeTotalwithExtrasEa,
+            extraTotalEa: makeTotalwithExtrasEa,
+            totalEa: makeTotalRoundedEa,
+          },
+          _sums: {   
+            currentStockEa,     
+            T0FTotal,
+            T0BTotal,
+            T1BTotal,
+          }
+        }
+
+      })
     )
 
-    //const freshRows
+    // *************** pretzel ********************
+    
+    const pretzelData = pretzel.map(row => {
+      const rowOrders = ordersByRowKey[row.rowKey] || []
 
-   
+      const T0Bake = rowOrders.filter(order => 
+        order.bakeRelDate === reportRelDate
+      )
+      const T0BakeTotalEa = sumBy(T0Bake, order => calcEa(order))
+
+      const T1Bake = rowOrders.filter(order => 
+        order.bakeRelDate === reportRelDate + 1
+      )
+      const T1BakeTotalEa = sumBy(T1Bake, order => calcEa(order))
+
+      const T1DelayedOrders = T0Bake.filter(order => order.delivLeadTime === 1)
+
+      const T1DelayedTotalEa = sumBy(T1DelayedOrders, order => calcEa(order))
+
+
+      return {
+        ...row,
+        bakeCol: {
+          orders: T0Bake,
+          totalEa: T0BakeTotalEa,
+        },
+        shapeCol: {
+          orders: T1Bake,
+          totalEa: T1BakeTotalEa,
+        },
+        bagCol: {
+          orders: T1DelayedOrders,
+          totalEa: T1DelayedTotalEa,
+        }
+      }
+
+    })
+
     return {
-      _freshOrders
+      northPocketData,
+      freshData,
+      shelfData,
+      freezerData,
+      pretzelData
     }
-
   }
 
-  return { data: useMemo(composeData, [prodOrders, PRD]) }
+  return { data: useMemo(composeData, [_prodOrders, _PRD]) }
 
 }

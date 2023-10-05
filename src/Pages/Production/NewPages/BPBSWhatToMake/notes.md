@@ -109,3 +109,67 @@ and bagging dutch sticks.
 
 I could see a more useful report grouping items by dough type, or by the
 timing of the bake.
+
+# data.js
+
+the whatToMake data hook calls a more basic production hook that returns
+a full set of routed orders. We may eventually hit the limit on that, and we
+can address that by using query by index (codegen-ing the index/query if need
+be).
+
+Data Transformation works as follows:
+
+## Setting up the Table rows
+
+Tables can be first divided into 4 main types: fresh, shelf, freezer, and 
+pretzel. the pocket north table can be thought of as a subset of the fresh
+table, and we can separate those later on.
+
+Each table has static rows that correspond 'pretty much' to product forBakes.
+There is one exception: frfr has a different forBake than fr & rfr, but we want
+to count them together on the table. So, we will assign each order & product
+a 'rowKey', which is just the product's forBake, but with this exception
+handled.
+
+We get the rowKey list from product data because we need to generate the full
+list every time, even if there happens to be no orders for a given row.
+
+We want our list to have 1 product of each rowKey type, so we need to pick a
+'representative' product for each type. We can choose that representative 
+consistently by sorting the product list by prodName, then taking the 
+first-occurring product of each type. Doing so gives us products that hold
+currentStock data, for cases where that is needed.
+
+We should probably omit frfr from the list in this process, since we don't want
+the forBake 'High French' to show up in our rows, and we don't want frfr to
+somehow end up as the product representative (sorting should take care of it,
+but who knows, the names could change?)
+
+Note, lodash's uniqBy takes the first-occurring item in each category, so it
+works for our needs.
+
+## Setting up Order Data
+
+### Setting up Order Rows
+our big data object can be filtered down to just T0 to T2 data, making
+subsequent filter/map operations quicker.
+
+We can use a similar process as with the product list:  group orders into list 
+types, then group the data belonging to each list type into rows by rowKey.
+
+### north pockets
+
+At this point we can separate out the north pocket data. We can copy the
+subset of rows from the fresh list, then actually separate the fresh order
+data into separate 'send pockets north' and 'bake fresh' parts
+
+## Combining order rows with product rows
+
+Our product list serves as a skeleton that we can attach related order data to,
+matching them up by rowKey.
+
+## setting up columns
+
+Grouping row data into separate columns is a more complicated task. Tables will
+need to be handled differently.
+
