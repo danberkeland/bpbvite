@@ -107,7 +107,7 @@ export const useT0T7ProdOrders = ({ shouldFetch, reportDate }) => {
       }).filter(order => order.qty !== 0)
     })
 
-    console.log(ordersByDate)
+    //console.log(ordersByDate)
     return flatten(ordersByDate)
   }
 

@@ -1,9 +1,9 @@
-import { groupBy, keyBy,  sortBy, sumBy } from "lodash"
+import { flatten, groupBy, keyBy,  sortBy, sumBy, uniqBy } from "lodash"
 import { DateTime } from "luxon"
 import { useMemo } from "react"
 
 import { useListData } from "../../../../data/_listData"
-import { useT0T7ProdOrders } from "./useT0T7ProdOrders"
+import { useT0T7ProdOrders } from "../_hooks/useT0T7ProdOrders"
 
 /** 'Rectified Linear Unit' function -- converts negative numbers to 0 */
 const relu = (x) => x > 0 ? x : 0
@@ -100,6 +100,15 @@ export const useBpbsWtmData = ({ shouldFetch, reportRelDate }) => {
       productRep: rowKeyGroup[0],
     }))
 
+    const { fresh, shelf, freezer, pretzel } = groupBy(
+      tableRows,
+      'listType'
+    )
+
+    const northPockets = fresh.filter(row => 
+      canSendPocketsNorth(row.productRep)
+    )
+
     // We only ever need to look at orders for the given day and the next day.
     // holding orders for the given date should be excluded.
     const __prodOrders = _prodOrders
@@ -125,17 +134,6 @@ export const useBpbsWtmData = ({ shouldFetch, reportRelDate }) => {
     )
     const ordersByRowKey = groupBy(prodOrders, 'rowKey')
 
-
-    
-    const { fresh, shelf, freezer, pretzel } = groupBy(
-      tableRows,
-      'listType'
-    )
-
-    const northPockets = fresh.filter(row => 
-      canSendPocketsNorth(row.productRep)
-    )
-
     /** Convert pks to ea by multiplying by the product's pack size */
     const calcEa = (order) => order.qty * products[order.prodNick].packSize
 
@@ -152,7 +150,7 @@ export const useBpbsWtmData = ({ shouldFetch, reportRelDate }) => {
       )
       return {
         ...row,
-        totalCol: {
+        makeTotalCol: {
           orders,
           totalEa: sumBy(orders, order => calcEa(order))
         }
@@ -296,15 +294,76 @@ export const useBpbsWtmData = ({ shouldFetch, reportRelDate }) => {
 
     })
 
+    // *************** French Pockets ********************
+
+    const frenchPocketProductReps = sortBy(
+      uniqBy(PRD.filter(P => P.doughNick === "French"), 'weight'),
+      'weight'
+    )
+    // console.log("frenchPocketProductReps", frenchPocketProductReps)
+
+    const frenchPocketRows = [
+      ...northPocketData, ...freshData, ...shelfData
+    ].filter(tableRow => tableRow.productRep.doughNick === "French")
+
+    const frenchPocketRowsByWeight = groupBy(
+      frenchPocketRows, 
+      "productRep.weight"
+    )
+
+    const frenchPocketData = frenchPocketProductReps.map(P => {
+      const pocketRows = frenchPocketRowsByWeight[P.weight]
+      const orders = flatten(pocketRows.map(row => row.makeTotalCol.orders))
+
+      const needTotalEa = sumBy(pocketRows, row => row.makeTotalCol.totalEa)
+
+      return {
+        prodNick: P.prodNick,
+        weight: P.weight,
+        preshaped: P.preshaped,
+        prepreshaped: P.prepreshaped,
+        needTodayCol: {
+          totalEa: needTotalEa,
+          orders
+        },
+        surplus: P.preshaped - needTotalEa
+      }
+    })
+
+    // *************** BPBS Baguettes ********************
+
+    // Look for baguette orders under BPB Extras. A negative qty signals that
+    // baguettes should be baked on that date, mixed the day before, and
+    // scaled 2 days prior. This minor amout of logic allows us to control
+    // when to bake baguettes @ Prado through BPB Extras' orders.
+
+    const bagBpbExtras = prodOrders.filter(order =>
+      order.locNick === 'bpbextras' 
+      && order.prodNick === 'bag'
+      && order.qty < 0
+    )
+
+    const baguetteData = [{
+      product: "Baguette (54 ea.)",
+      bucket: bagBpbExtras.some(order => order.relDate === reportRelDate + 2)
+        ? "YES" : "NO",
+      mix: bagBpbExtras.some(order => order.relDate === reportRelDate + 1)
+        ? "YES" : "NO",
+      bake: bagBpbExtras.some(order => order.relDate === reportRelDate)
+        ? "YES" : "NO",
+    }]
+
     return {
       northPocketData,
       freshData,
       shelfData,
       freezerData,
-      pretzelData
+      pretzelData,
+      frenchPocketData,
+      baguetteData,
     }
   }
 
-  return { data: useMemo(composeData, [_prodOrders, _PRD]) }
+  return { data: useMemo(composeData, [_prodOrders, _PRD, reportRelDate]) }
 
 }
