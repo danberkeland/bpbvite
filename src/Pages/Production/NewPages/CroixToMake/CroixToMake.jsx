@@ -37,6 +37,7 @@ export const CroixToMake = () => {
   // sheetMake state is a dict with keys= prodNicks, values= sheetMake-numbers
   const [sheetMake, setSheetMake] = useState({}) 
   const [isEditing, setisEditing] = useState(false)
+  const [displayMode, setDisplayMode] = useState("daily") // "proj" or "daily"
   
   useEffect(() => {
     if (!!tableRows) {
@@ -89,10 +90,12 @@ export const CroixToMake = () => {
 
   const CumTotalTemplate = ({ rowData, daysAhead }) => {
     const [showDialog, setShowDialog] = useState(false)
-    const { countNick, freezerCount, batchSize, C } = rowData
-    const value = freezerCount 
-      + (sheetMake[countNick] * batchSize) 
-      + C[daysAhead].totalQty
+    const { countNick, freezerCount, batchSize, C, T } = rowData
+    const value = displayMode === "proj"
+      ? freezerCount 
+        + (sheetMake[countNick] * batchSize) 
+        + C[daysAhead].totalQty
+      : T[daysAhead].totalQty
 
     const tableData = sortBy(
       rowData.T[daysAhead].items.filter(item => item.qty !== 0),
@@ -104,14 +107,16 @@ export const CroixToMake = () => {
         style={{
           fontWeight: 'bold',
           textAlign: 'center',
-          background: value >= 0
-            ? 'rgb(128, 243, 159)'
-            : 'rgb(209, 144, 146)',
+          background: displayMode === "daily"
+            ? 'rgba(200, 200, 200, .6)'
+            : value >= 0
+              ? 'rgba(136, 226, 160, .8)'
+              : 'rgba(209, 154, 156, 0.8)',
           width: '3.75rem',
           padding: '.25rem',
           border: 'solid 1px var(--bpb-text-color)',
           borderRadius: '6px',
-          
+          cursor: "pointer",
         }}
         onClick={() => setShowDialog(true)}
       >
@@ -185,11 +190,31 @@ export const CroixToMake = () => {
 
   return(<div>
     <h1 style={{marginLeft: "1rem"}}>Croissant Production {today}</h1>
-    <Button label="Print Croix Shape List" 
-      onClick={() => printCroixShapeList(tableRows)}
-      disabled={isEditing}
-      style={{margin: '1rem'}}
-    />
+
+    <div style={{
+      display: "flex", 
+      justifyContent: "space-between",
+      alignItems: "center"  
+    }}>
+      <Button label="Print Shape List" 
+        icon="pi pi-fw pi-print"
+        onClick={() => printCroixShapeList(tableRows)}
+        disabled={isEditing}
+        style={{margin: '1rem'}}
+      />
+
+      <div>
+        <Button label="Inventory Projection" 
+          onClick={() => setDisplayMode("proj")} 
+          className={displayMode === "proj" ? '' : 'p-button-outlined'}
+        />
+        <Button label="Daily Consumption" 
+          onClick={() => setDisplayMode("daily")} 
+          className={displayMode === "daily" ? '' : 'p-button-outlined'}
+          style={{marginInline: "1rem"}}
+        />
+      </div>
+    </div>
     
     <DataTable
       value={tableRows}
@@ -197,7 +222,7 @@ export const CroixToMake = () => {
       // size={"small"}
       style={{ maxWidth: "55rem", padding: '1rem' }}
     >
-      <Column header="Product" 
+      <Column header="Product"
         field="countNick" 
         style={{ color: 'var(--bpb-text-color'}}  
       /> 
@@ -210,7 +235,11 @@ export const CroixToMake = () => {
         style={{ color: 'var(--bpb-text-color'}}
         footer={`Σ = ${sumBy(Object.values(sheetMake))}`}
       />
-      <Column header={<><div>Closing </div><div>Freezer</div></>} 
+      <Column 
+        header={displayMode === "proj"
+          ? <div>Closing <br />Freezer</div>
+          : "Today"
+        } 
         body={rowData => CumTotalTemplate({ rowData, daysAhead: 0})} 
         style={{ color: 'var(--bpb-text-color'}}  
       />
