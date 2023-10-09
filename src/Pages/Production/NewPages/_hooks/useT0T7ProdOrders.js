@@ -36,6 +36,9 @@ export const useT0T7ProdOrders = ({ shouldFetch, reportDate }) => {
   const composeData = () => {
     if (!cart || !standing || !PRD || !LOC || !RTE || !ZRT) return undefined
 
+    console.log("cart length:", cart.length)
+    console.log("standing length:", standing.length)
+
     const products = keyBy(PRD, 'prodNick')
     const locations = keyBy(LOC, 'locNick')
     const routes = keyBy(RTE, 'routeNick')
@@ -52,7 +55,7 @@ export const useT0T7ProdOrders = ({ shouldFetch, reportDate }) => {
       relDate: daysAhead
     }))
     
-    console.log(dateList)
+    //console.log(dateList)
     const ordersByDate = dateList.map(dateObj => {
       const { delivDate, dayOfWeek, relDate, weekdayNum } = dateObj
 

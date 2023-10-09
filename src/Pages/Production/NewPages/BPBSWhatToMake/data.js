@@ -50,7 +50,6 @@ const isPretzelProduct = (product) => product.bakedWhere.includes("Prado")
 // is relative to the actual current date. The reportRelDate can be set to
 // 0 or 1 generate lists for Today (for morning bakes) or for tomorrow
 // (for exporting backups).
-
 export const useBpbsWtmData = ({ shouldFetch, reportRelDate }) => {
   if (![0, 1].includes(reportRelDate)) {
     console.error("What To Make only supported for today or tomorrow")

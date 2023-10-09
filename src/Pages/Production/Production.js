@@ -17,6 +17,7 @@ import { SpecialPacking } from "./NewPages/SpecialPacking";
 import { OrderReview } from "./NewPages/OrderReview";
 import { CroixCount } from "./NewPages/CroixEOD/CroixCount";
 import { BPBSWhatToMake } from "./NewPages/BPBSWhatToMake/BPBSWhatToMake";
+import { BPBSSetout } from "./NewPages/BPBSSetout/Setout";
 
 const bpbnPages = [
   {name: "Sandbox", component: <Sandbox />},
@@ -27,6 +28,7 @@ const bpbnPages = [
   {name: "WhoBake", component: <WhoBake />},
   {name: "WhoShape", component: <WhoShape />},
   {name: "BPBSWhatToMake", component: <BPBSWhatToMake />},
+  {name: "BPBSSetout", component: <BPBSSetout />},
   {name: "Croix To Make", component: <CroixToMake />},
   {name: "Croix Count", component: <CroixCount />},
   {name: "Terminal", component: <BPBTerminal />},
