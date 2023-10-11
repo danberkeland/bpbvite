@@ -37,7 +37,7 @@ export const CroixToMake = () => {
   // sheetMake state is a dict with keys= prodNicks, values= sheetMake-numbers
   const [sheetMake, setSheetMake] = useState({}) 
   const [isEditing, setisEditing] = useState(false)
-  const [displayMode, setDisplayMode] = useState("daily") // "proj" or "daily"
+  const [displayMode, setDisplayMode] = useState("proj") // "proj" or "daily"
   
   useEffect(() => {
     if (!!tableRows) {
@@ -127,7 +127,7 @@ export const CroixToMake = () => {
         visible={showDialog} 
         onHide={() => setShowDialog(false)}
         header={<>
-          <div>Orders Consuming {countNick}</div>
+          <div>Orders Consuming Shaped {countNick}</div>
           <div>On {relDateToWeekday(daysAhead)}, {todayDT.plus({ days: daysAhead}).toFormat('M/dd')} (T +{daysAhead})</div>
         </>}
       >

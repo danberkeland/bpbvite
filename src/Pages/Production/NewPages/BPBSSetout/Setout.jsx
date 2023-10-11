@@ -1,9 +1,10 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import { Button } from "primereact/button"
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 import { Dialog } from "primereact/dialog"
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog"
 
 import { keyBy, round, sumBy } from "lodash"
 import { DateTime } from "luxon"
@@ -12,32 +13,92 @@ import { useListData } from "../../../../data/_listData"
 import { useSetoutData } from "./data"
 import { exportPastryPrepPdf } from "./exportPdf"
 
-const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+import { updateInfoQBAuth, createInfoQBAuth } from "../../../../graphql/mutations"
+import { API, graphqlOperation } from "aws-amplify"
+
+const _todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+const todayDT = _todayDT.toFormat('MM-dd') === '12-24'
+  ? _todayDT.plus({ days: 1 }) : _todayDT
+console.log(_todayDT.toFormat('MM-dd'))
 const todayISO = todayDT.toFormat('yyyy-MM-dd')
 const todayUS = todayDT.toFormat('MM/dd/yyyy')
 
 const SetoutByLocation = ({ reportLocation }) => {
 
   const { data:setoutData } = useSetoutData({ reportDate: todayISO })
-  const { data:PRD } = useListData({ tableName: "Product", shouldFetch: true })
+  const { 
+    data:PRD,
+    submitMutations:submitProducts,
+    updateLocalData:updateProductCache,
+  } = useListData({ tableName: "Product", shouldFetch: true })
+
+
+  const setoutTimeInStone = async () => {
+    let input = {
+      id: todayISO + reportLocation + "setoutTime",
+      infoContent: "updated",
+      infoName: reportLocation + "setoutTime",
+    };
+    try {
+      await API.graphql(graphqlOperation(updateInfoQBAuth, { input }))
+      console.log('QBInfo Updated')
+    } catch (error) {
+      try {
+        await API.graphql(graphqlOperation(createInfoQBAuth, { input }))
+        console.log('QBInfo Created')
+      } catch (error) {
+        console.log("error on updating info", error);
+      }
+    }
+  }
+
+  useEffect(() => {
+    console.log("Got here to confirm!");
+    confirmDialog({
+      message: "Click YES to confirm these setout numbers will be used.",
+      header: "Confirmation",
+      icon: "pi pi-exclamation-triangle",
+      accept: setoutTimeInStone,
+    });
+  }, []);
 
   if (!setoutData || !PRD) return <div>Loading...</div>
 
   const products = keyBy(PRD, 'prodNick')
   const { north,  south } = setoutData
-  console.log('north', north)
-  console.log('south', south)
+  // console.log('north', north)
+  // console.log('south', south)
+
+  // save main setout totals by updating the product's prepreshaped values.
+  const submitPrepreshaped = async () => {
+    if (!setoutData?.south?.nonAlmondCroix) {
+      console.error("Error: setout data not found")
+      return
+    }
+
+    const updateInputs = setoutData.south.nonAlmondCroix.map(row => ({
+      prodNick: row.setoutKey,
+      prepreshaped: row.total
+    }))
+    const response = await submitProducts({ updateInputs })
+    // console.log(response)
+    updateProductCache( response )
+
+  }
 
   return (
     <div style={{width:"30rem", marginBottom: "10rem"}}>
       <h1>Prado Pastry Prep {todayUS}</h1>
       <Button label={`Print ${reportLocation} Prep List`} 
-        onClick={() => exportPastryPrepPdf({
-          reportLocation: reportLocation,
-          reportDateUS: todayUS,
-          reportDateISO: todayISO,
-          data: reportLocation === "Prado" ? south : north
-        })}
+        onClick={() => {
+          exportPastryPrepPdf({
+            reportLocation: reportLocation,
+            reportDateUS: todayUS,
+            reportDateISO: todayISO,
+            data: reportLocation === "Prado" ? south : north
+          })
+          submitPrepreshaped()
+        }}
       />
       
       <h2>Set Out</h2>
@@ -46,6 +107,7 @@ const SetoutByLocation = ({ reportLocation }) => {
           ? south.nonAlmondCroix
           : north.nonAlmondCroix
         }
+        size="small"
       >
         <Column header="Product" field="setoutKey" />
         <Column header="Qty" field="total" 
@@ -64,6 +126,7 @@ const SetoutByLocation = ({ reportLocation }) => {
           ? south.otherPastries
           : north.otherPastries
         }
+        size="small"
       >
         <Column header="Product" field="rowKey" />
         <Column header="Qty" field="total" 
@@ -76,7 +139,7 @@ const SetoutByLocation = ({ reportLocation }) => {
 
       {reportLocation === "Prado" && <>
         <h2>Almonds</h2>
-        <DataTable value={south.almondCroix}>
+        <DataTable value={south.almondCroix} size="small">
           <Column header="Put Where" field="rowKey" />
           <Column header="Qty" field="total" 
             body={rowData => ExpandableCellTemplate({
@@ -87,6 +150,7 @@ const SetoutByLocation = ({ reportLocation }) => {
         </DataTable>
       </>}
 
+      <ConfirmDialog />
     </div>
   )
 }
