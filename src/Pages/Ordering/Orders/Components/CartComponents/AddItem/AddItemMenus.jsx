@@ -24,7 +24,7 @@ export const AddItemMenu = ({
   showSidebar,
   setShowSidebar,
   disableInputs,
-
+  deactivated,
   cardStyle,
   selectedQty, setSelectedQty,
   selectedProdNick, setSelectedProdNick,
@@ -137,6 +137,7 @@ export const AddItemMenu = ({
         disabled={
           !selectedProduct 
           || disableInputs
+          || deactivated
           // || selectedQty === baseQty
           // || (maxQty === 0 && user.authClass !== 'bpbfull')
           // || (isDelivDate && user.authClass !== 'bpbfull')

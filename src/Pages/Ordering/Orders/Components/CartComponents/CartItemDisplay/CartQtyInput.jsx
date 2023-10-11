@@ -10,6 +10,7 @@ export const CartQtyInput = ({
   cartItems, 
   setCartItems, 
   disableInputs,
+  deactivated,
 }) => {
   const { prodNick, baseQty, qty } = rowData
   const { maxQty:userMaxQty, qtyChanged } = cartMeta[prodNick]
@@ -20,6 +21,7 @@ export const CartQtyInput = ({
   const disableQtyInput = disableInputs 
     || (maxQty === 0 && user.authClass !== 'bpbfull')
     || (!product.defaultInclude && user.authClass !== 'bpbfull')
+    || deactivated
 
   const updateProductQty = (newQty) => {
     const inputIsValid = /^\d{0,3}$/.test(newQty)

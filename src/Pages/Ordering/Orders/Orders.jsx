@@ -334,7 +334,8 @@ export const Orders = ({ useTestAuth }) => {
   }
 
   const disableInputs = (user.authClass !== 'bpbfull' && !(orderLeadTime > 0))
-    || isLoading
+    || isLoading 
+  const deactivated = (user.authClass !== 'bpbfull' && location?.isActive === false)
 
   return (
     <div className='ordering-page' 
@@ -456,6 +457,7 @@ export const Orders = ({ useTestAuth }) => {
                   selectedQty={selectedCartQty}
                   setSelectedQty={setSelectedCartQty}
                   disableInputs={disableInputs}
+                  deactivated={deactivated}
                   user={user}
                   wSize={wSize}
                   mode={wSize === 'lg' ? 'card' : 'sidebar'}
@@ -518,6 +520,7 @@ export const Orders = ({ useTestAuth }) => {
                   setShowSidebar={setShowSidebar}
                   orderHasChanges={orderHasChanges}
                   disableInputs={disableInputs}
+                  deactivated={deactivated}
                 />
               }
             </div> {/* End column-2 */}
@@ -545,6 +548,7 @@ export const Orders = ({ useTestAuth }) => {
             wSize={wSize}
             locNick={locNick}
             user={user}
+            disabled={disableInputs}
             showStandingSidebar={showStandingSidebar}
             setShowStandingSidebar={setShowStandingSidebar}
             selectedDisplayProdNick={selectedDisplayProdNick}
@@ -561,6 +565,7 @@ export const Orders = ({ useTestAuth }) => {
             {...standingProps}
             {...dateProps}
             wSize={wSize}
+            disabled={disableInputs}
             location={location}
             products={products}
             setShowStandingSidebar={setShowStandingSidebar}

@@ -28,6 +28,7 @@ export const CartItemDisplay = ({
   setShowSidebar,
   orderHasChanges,
   disableInputs,
+  deactivated,
 }) => {
   const [showDetails, setShowDetails] = useState(false)
   const { delivDateJS, delivDateDT } = dateProps
@@ -49,6 +50,7 @@ export const CartItemDisplay = ({
     ...dateProps,
     user,
     disableInputs,
+    deactivated,
     orderHasChanges,
     wSize,
   }
@@ -164,7 +166,7 @@ export const CartItemDisplay = ({
     else return (
       <Button label="Add"
         onClick={() => setShowSidebar(true)} 
-        disabled={disableInputs} 
+        disabled={disableInputs || deactivated} 
         style={{width: "62px", fontSize: "1.1rem"}} 
       />
     )
@@ -186,6 +188,7 @@ export const CartItemDisplay = ({
           setCartItems={setCartItems}
           user={user}
           disableInputs={disableInputs || shouldDisableSample}
+          deactivated={deactivated}
         />
         {showDetails && 
           <QtyColumnDetails 

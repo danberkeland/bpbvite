@@ -79,6 +79,7 @@ export const CartSubmitButton = ({
   delivDateDT,
   relativeDelivDate,
   disableInputs,
+  deactivated,
   orderHasChanges,
   wSize,
 }) => {
@@ -228,14 +229,14 @@ export const CartSubmitButton = ({
 
 
   return (<>
-    <Button label="Submit Order" 
+    <Button label={!deactivated ? "Submit Order" : "Ordering Disabled"}
       style={{
         background: !disabled && orderHasChanges 
           ? "var(--bpb-background-0)"
           : '',
         fontSize: "1.1rem"
       }}
-      disabled={disabled}
+      disabled={disabled || deactivated}
       onClick={() => {
         if (orderHasChanges) confirmDialog({
           header: cnfDialogHeader,

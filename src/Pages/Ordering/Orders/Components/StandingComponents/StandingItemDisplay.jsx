@@ -63,6 +63,7 @@ export const StandingItemDisplay = ({
   delivDateDT,                         // dateProps
   ORDER_DATE_DT,
   wSize,
+  disabled,
   location,
   products,
   setShowStandingSidebar,
@@ -124,6 +125,7 @@ export const StandingItemDisplay = ({
     products,
     ORDER_DATE_DT,
     user,
+    disabled,
   }
 
   const labelColumnHeaderTemplate = () => {
@@ -149,6 +151,7 @@ export const StandingItemDisplay = ({
       <Button label="Add"
         style={{fontSize: "1.1rem", width: "62px"}}
         onClick={() => setShowStandingSidebar(true)}
+        disabled={disabled}
       />
     )
   }
@@ -183,7 +186,7 @@ export const StandingItemDisplay = ({
           item={standingItems[key]}
           baseItem={standingData?.items[key]}
           product={product}
-          disabled={shouldDisable}
+          disabled={shouldDisable || disabled}
           updateStanding={(newQty) => {
             let _standingItems = cloneDeep(standingItems)
             _standingItems[key].qty = newQty
