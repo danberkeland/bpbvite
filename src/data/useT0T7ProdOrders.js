@@ -33,7 +33,7 @@ export const useT0T7ProdOrders = ({ shouldFetch, reportDate }) => {
   const { data:RTE } = useListData({ tableName: "Route", shouldFetch })
   const { data:ZRT } = useListData({ tableName: "ZoneRoute", shouldFetch })
 
-  const composeData = () => {
+  const calculateValue = () => {
     if (!cart || !standing || !PRD || !LOC || !RTE || !ZRT) return undefined
 
     console.log("cart length:", cart.length)
@@ -50,7 +50,12 @@ export const useT0T7ProdOrders = ({ shouldFetch, reportDate }) => {
 
   }
 
-  return { data: useMemo(composeData, [cart, standing, PRD, LOC, RTE, ZRT])}
+  return { 
+    data: useMemo(
+      calculateValue, 
+      [reportDate, cart, standing, PRD, LOC, RTE, ZRT]
+    )
+  }
 
 }
 
@@ -59,10 +64,11 @@ export const useT0T7ProdOrders = ({ shouldFetch, reportDate }) => {
 /** report date in yyyy-MM-dd format */
 export const useProdOrdersByDate = ({ shouldFetch, reportDate }) => {
 
-  const reportDateDT = DateTime.fromFormat(
-    reportDate, 'yyyy-MM-dd', { zone: 'America/Los_Angeles'}
-  )
-  const dayOfWeek = reportDateDT.toFormat('EEE')
+  const dayOfWeek = DateTime.fromFormat(
+    reportDate, 
+    'yyyy-MM-dd', 
+    { zone: 'America/Los_Angeles'}
+  ).toFormat('EEE')
 
   const { data:cart } = useListData({ 
     tableName: "Order", 
@@ -88,6 +94,9 @@ export const useProdOrdersByDate = ({ shouldFetch, reportDate }) => {
     console.log("cart length:", cart.length)
     console.log("standing length:", standing.length)
 
+    const reportDateDT = DateTime.fromFormat(
+      reportDate, 'yyyy-MM-dd', { zone: 'America/Los_Angeles'}
+    )
     const dateList = makeDateList({ startDateDT: reportDateDT, nDays:1 })
 
     return combineOrdersOnDates({ 
@@ -96,7 +105,12 @@ export const useProdOrdersByDate = ({ shouldFetch, reportDate }) => {
 
   }
 
-  return { data: useMemo(calculateValue, [cart, standing, PRD, LOC, RTE, ZRT])}
+  return { 
+    data: useMemo(
+      calculateValue, 
+      [reportDate, cart, standing, PRD, LOC, RTE, ZRT]
+    )
+  }
 
 }
 
