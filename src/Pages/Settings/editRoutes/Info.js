@@ -44,7 +44,7 @@ const driverOptions = [
   "Long Driver",
   "AM Pastry",
   "AM South",
-  "Pick Up"
+  "None"
 ]
 
 const Info = ({ selectedRoute, setSelectedRoute, zoneList }) => {
@@ -122,7 +122,7 @@ const Info = ({ selectedRoute, setSelectedRoute, zoneList }) => {
       </DuoWrapper>
 
       <InputGroupLabel attribute="driver" labelText="Driver">
-        {/* <Dropdown attribute="driver"
+        <Dropdown attribute="driver"
           id="driver"
           value={selectedRoute.driver}
           options={driverOptions}
@@ -130,14 +130,14 @@ const Info = ({ selectedRoute, setSelectedRoute, zoneList }) => {
             ...structuredClone(selectedRoute),
             driver: e.value
           })}
-        /> */}
-        <InputText attribute="driver" id="driver"
+        />
+        {/* <InputText attribute="driver" id="driver"
           value={selectedRoute.driver}
           onChange={e => setSelectedRoute({
             ...structuredClone(selectedRoute),
             driver: e.value
           })}
-        />
+        /> */}
       </InputGroupLabel>
 
       <WeekWrapper>
