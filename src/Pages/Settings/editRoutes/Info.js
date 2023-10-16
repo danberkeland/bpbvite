@@ -28,8 +28,7 @@ const WeekWrapper = styled.div`
   margin: 0 0 1rem 0;
 `;
 
-const hubDepart = [{ RouteDepart: "Prado" }, { RouteDepart: "Carlton" }];
-const hubArrive = [{ RouteArrive: "Prado" }, { RouteArrive: "Carlton" }];
+const hubOptions = ["Prado", "Carlton"]
 
 const dayNumberStringMap = {
   "1": "Sun",
@@ -40,6 +39,13 @@ const dayNumberStringMap = {
   "6": "Fri",
   "7": "Sat"
 }
+
+const driverOptions = [
+  "Long Driver",
+  "AM Pastry",
+  "AM South",
+  "Pick Up"
+]
 
 const Info = ({ selectedRoute, setSelectedRoute, zoneList }) => {
   const [source, setSource] = useState()
@@ -93,30 +99,39 @@ const Info = ({ selectedRoute, setSelectedRoute, zoneList }) => {
         <InputGroupLabel attribute="RouteDepart" labelText="Depart Hub">
           <Dropdown
             id="RouteDepart"
-            optionLabel="RouteDepart"
-            options={hubDepart}
-            onChange={(e) =>
-              setSelectedRoute(setDropDownValue(e, selectedRoute))
-            }
-            placeholder={
-              selectedRoute ? selectedRoute.RouteDepart : "Departure Hub"
-            }
+            value={selectedRoute.RouteDepart}
+            options={hubOptions}
+            onChange={e => setSelectedRoute({
+              ...structuredClone(selectedRoute),
+              RouteDepart: e.value
+            })}
+            placeholder="Departure Hub"
           />
         </InputGroupLabel>
         <InputGroupLabel attribute="RouteDepart" labelText="Arrival Hub">
-          <Dropdown
-            id="RouteArrive"
-            optionLabel="RouteArrive"
-            options={hubArrive}
-            onChange={(e) =>
-              setSelectedRoute(setDropDownValue(e, selectedRoute))
-            }
-            placeholder={
-              selectedRoute ? selectedRoute.RouteArrive : "Arrival Hub"
-            }
+          <Dropdown id="RouteArrive"
+            value={selectedRoute.RouteArrive}
+            options={hubOptions}
+            onChange={e => setSelectedRoute({
+              ...structuredClone(selectedRoute),
+              RouteArrive: e.value
+            })}
+            placeholder="Arrival Hub"
           />
         </InputGroupLabel>
       </DuoWrapper>
+
+      <InputGroupLabel attribute="driver" labelText="Driver">
+        <Dropdown attribute="driver"
+          id="driver"
+          value={selectedRoute.driver}
+          options={driverOptions}
+          onChange={e => setSelectedRoute({
+            ...structuredClone(selectedRoute),
+            driver: e.value
+          })}
+        />
+      </InputGroupLabel>
 
       <WeekWrapper>
         {Object.keys(dayNumberStringMap).map(dns => {

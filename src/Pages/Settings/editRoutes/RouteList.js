@@ -31,7 +31,10 @@ const RouteList = ({ selectedRoute, setSelectedRoute, routes }) => {
             value={routes}
             className="p-datatable-striped"
             selection={selectedRoute}
-            onSelectionChange={(e) => setSelectedRoute(e.value)}
+            onSelectionChange={(e) => {
+              setSelectedRoute(e.value)
+              console.log(e.value)
+            }}
             selectionMode="single"
             dataKey="routeName"
           >
