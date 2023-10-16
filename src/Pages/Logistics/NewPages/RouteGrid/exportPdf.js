@@ -127,7 +127,7 @@ export const exportInvoicePdf = async ({
   ))
 
   const pdfResponses = await Promise.all(pdfPromises)
-  // console.log("pdfResponses", pdfResponses)
+  console.log("PDF responses:", pdfResponses)
 
   // keep location data associated with the generated responses.
   const responsesWithLocations = pdfResponses.map((pdfResponse, index) => ({

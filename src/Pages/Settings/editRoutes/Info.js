@@ -122,10 +122,17 @@ const Info = ({ selectedRoute, setSelectedRoute, zoneList }) => {
       </DuoWrapper>
 
       <InputGroupLabel attribute="driver" labelText="Driver">
-        <Dropdown attribute="driver"
+        {/* <Dropdown attribute="driver"
           id="driver"
           value={selectedRoute.driver}
           options={driverOptions}
+          onChange={e => setSelectedRoute({
+            ...structuredClone(selectedRoute),
+            driver: e.value
+          })}
+        /> */}
+        <InputText attribute="driver" id="driver"
+          value={selectedRoute.driver}
           onChange={e => setSelectedRoute({
             ...structuredClone(selectedRoute),
             driver: e.value
