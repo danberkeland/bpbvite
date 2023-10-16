@@ -1,9 +1,10 @@
 import jsPDF from "jspdf"
 import "jspdf-autotable"
-import { flatMap, flatten, mapValues, sortBy, uniqBy } from "lodash"
-import { checkQBValidation, checkQBValidation_v2 } from "../../../../helpers/QBHelpers"
+import { sortBy, uniqBy } from "lodash"
+import { checkQBValidation_v2 } from "../../../../helpers/QBHelpers"
 import axios from "axios"
 import { downloadPDF } from "../../../../functions/legacyFunctions/helpers/PDFHelpers"
+import { groupBy } from "lodash"
 
 /** Designed to work with the gridData object made with the useRouteGrid hook. */
 export const exportRouteGridPdf = ({ gridData, reportDateDT, fileName }) => {
@@ -82,10 +83,14 @@ export const exportRouteGridPdf = ({ gridData, reportDateDT, fileName }) => {
 // and over body rows.
 export const exportInvoicePdf = async ({ 
   gridData, 
+  fileName,
   routes, 
   locations, 
-  reportDateDT 
+  reportDateDT,
+  setIsLoading,
 }) => {
+  
+  setIsLoading(true)
 
   const orderedRouteNicks = sortBy(
     Object.keys(gridData), 
@@ -101,30 +106,96 @@ export const exportInvoicePdf = async ({
     locations[locNick]
   )
 
-  const invoiceIds = orderedUniqLocations.filter(L => 
-    L.toBePrinted === true
-  ).flatMap(L => 
-    L.printDuplicate ? [L.qbID, L.qbID] : L.qbID
+  const locationsWithBadIDs = orderedUniqLocations.filter(location => 
+    !(location.qbID.match(/^\d+$/))
+  )
+
+  if (locationsWithBadIDs.length) console.warn(
+    "Bad IDs found: ", 
+    Object.fromEntries(
+      locationsWithBadIDs.map(L => [L.locNick, L.qbID])
+    )
   )
 
   const accessToken = await checkQBValidation_v2()
-
   const accessCode = "Bearer " + accessToken
   const delivDate = reportDateDT.toFormat('yyyy-MM-dd') // "transaction date"
 
-  const pdfPromises = invoiceIds.map(qbID => axios.post(
+  const pdfPromises = orderedUniqLocations.map(location => axios.post(
     "https://47i7i665dd.execute-api.us-east-2.amazonaws.com/done",
-    { accessCode, delivDate, custID: qbID }
+    { accessCode, delivDate, custID: location.qbID }
   ))
 
   const pdfResponses = await Promise.all(pdfPromises)
+  // console.log("pdfResponses", pdfResponses)
 
-  console.log("pdfResponses", pdfResponses)
-  const pdfs = pdfResponses.map(resp => resp.data)
+  // keep location data associated with the generated responses.
+  const responsesWithLocations = pdfResponses.map((pdfResponse, index) => ({
+    pdfResponse,
+    location: orderedUniqLocations[index]
+  }))
 
-  const fileName = `${delivDate}_Invoices.pdf`
+  const { true:successes=[], false:failures=[] } = groupBy(
+    responsesWithLocations,
+    rwl => typeof rwl.pdfResponse.data === 'string'
+  )
+
+  if (successes.length) console.log(
+    "Fetch succeeded for:", 
+    successes.map(rwl => rwl.location.locNick),
+  )
+
+  if (failures.length) console.error(
+    "Fetch failed for:",
+    Object.fromEntries(
+      failures.map(rwl => [rwl.location.locNick, rwl.pdfResponse.data])
+    )
+  )
+  
+  const pdfs = successes.flatMap(rwl => 
+    rwl.location.printDuplicate ? [rwl, rwl] : rwl
+  ).map(rwl => rwl.pdfResponse.data)
 
   downloadPDF(pdfs, fileName)
+  setIsLoading(false)
+
+}
 
 
+export const exportSingleInvoice = async ({ 
+  location, 
+  delivDate, 
+  setIsLoading 
+}) => {
+
+  setIsLoading(true)
+
+  if (!(location.qbID.match(/^\d+$/))) {
+    console.warn("Bad qbID: ", location.qbID)
+  }
+
+  const accessToken = await checkQBValidation_v2()
+  const accessCode = "Bearer " + accessToken
+
+  const pdfResponse = await axios.post(
+    "https://47i7i665dd.execute-api.us-east-2.amazonaws.com/done",
+    { accessCode, delivDate, custID: location.qbID }
+  )
+
+  if (typeof pdfResponse.data !== 'string') {
+
+    console.error(`Fetch failed for ${location.locNick}:`, pdfResponse.data)
+  } else {
+
+    downloadPDF(
+      [pdfResponse.data], 
+      `${delivDate}_${location.locNick}_Invoice.pdf`
+    )
+    setIsLoading(false)
+
+  }
+
+
+
+  
 }

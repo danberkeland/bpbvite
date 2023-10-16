@@ -1,7 +1,7 @@
 import { useMemo } from "react"
 import { useProdOrdersByDate } from "../../../../data/useT0T7ProdOrders"
 import { useListData } from "../../../../data/_listData"
-import { groupBy, keyBy, mapValues, sortBy, truncate, uniqBy } from "lodash"
+import { groupBy, keyBy, mapValues, orderBy, sortBy, truncate, uniqBy } from "lodash"
 
 /**
  * The returned tableData and pdfGrids objects are keyed by routeNick, where
@@ -21,14 +21,18 @@ export const useRouteGrid = ({ reportDate, shouldFetch }) => {
     const locations = keyBy(LOC, 'locNick')
     const products = keyBy(PRD, 'prodNick')
     const routes = keyBy(RTE, 'routeNick')
-    console.log("ROUtESSSSSS", routes)
+    // console.log("ROUtESSSSSS", routes)
 
-    const orders = prodOrders
-      .filter(order => order.isStand !== false)
-      .filter(order => order.qty !== 0 )
-  
+    const orders = orderBy(
+      prodOrders.filter(order =>
+        order.isWhole && order.isStand !== false && order.qty !== 0
+      ),
+      order => locations[order.locNick].delivOrder,
+      'desc'
+    )
+
     const ordersByRoute = groupBy(orders, 'routeMeta.routeNick')
-    console.log("ordersByRoute", ordersByRoute)
+    // console.log("ordersByRoute", ordersByRoute)
 
      // pivot columns have full order object values
     const ordersByRouteByLocation = mapValues(
@@ -44,22 +48,18 @@ export const useRouteGrid = ({ reportDate, shouldFetch }) => {
             prodNick => prodNick
           ]
         ),
-        rows: sortBy(
-          Object.values(groupBy(routeGroup, 'locNick'),
-          order => locations[order.locNick]?.delivOrder ?? 0
-          ).map(rowGroup => {
+        rows: (Object.values(groupBy(routeGroup, 'locNick')).map(rowGroup => {
 
-            const locNick = rowGroup[0].locNick
-            const locName = locations[locNick]?.locName || locNick
+          const locNick = rowGroup[0].locNick
+          const locName = locations[locNick]?.locName || locNick
 
-            return {
-              locNick,
-              locName, // maybe skip?,
-              locNameShort: `${truncate(locName, { length: 16 })}`,
-              ...keyBy(rowGroup, 'prodNick')
-            }
-          })
-        )
+          return {
+            locNick,
+            locName, // maybe skip?,
+            locNameShort: `${truncate(locName, { length: 16 })}`,
+            ...keyBy(rowGroup, 'prodNick')
+          }
+        }))
       })
     )
 
@@ -77,26 +77,22 @@ export const useRouteGrid = ({ reportDate, shouldFetch }) => {
             prodNick => prodNick
           ]
         ),
-        rows: sortBy(
-            Object.values(groupBy(routeGroup, 'locNick'),
-            order => locations[order.locNick]?.delivOrder ?? 0
-          ).map(rowGroup => {
+        rows: (Object.values(groupBy(routeGroup, 'locNick')).map(rowGroup => {
 
-            const locNick = rowGroup[0].locNick
-            const locName = locations[locNick]?.locName || locNick
+          const locNick = rowGroup[0].locNick
+          const locName = locations[locNick]?.locName || locNick
 
-            return {
-              locNick,
-              locName, // maybe skip?,
-              locNameShort: `${truncate(locName, { length: 16 })}`,
-              ...Object.fromEntries(rowGroup.map(order => [order.prodNick, order.qty]))
-            }
-          })
-        )
+          return {
+            locNick,
+            locName, // maybe skip?,
+            locNameShort: `${truncate(locName, { length: 16 })}`,
+            ...Object.fromEntries(rowGroup.map(order => [order.prodNick, order.qty]))
+          }
+        }))
       })
     )
     
-    console.log("ordersByRouteByLocationFlat", ordersByRouteByLocationFlat)
+    // console.log("ordersByRouteByLocationFlat", ordersByRouteByLocationFlat)
     const pdfGrids = mapValues(
       ordersByRouteByLocationFlat,
       routeDataObj => {
@@ -129,9 +125,9 @@ export const useRouteGrid = ({ reportDate, shouldFetch }) => {
       
     )
     
-    console.log("ordersByRouteByLocation", ordersByRouteByLocation)
-    console.log("ordersByRouteByLocationFlat", ordersByRouteByLocationFlat)
-    console.log("locations", locations)
+    // console.log("ordersByRouteByLocation", ordersByRouteByLocation)
+    // console.log("ordersByRouteByLocationFlat", ordersByRouteByLocationFlat)
+    // console.log("locations", locations)
 
     return {
       tableData: ordersByRouteByLocation,
@@ -142,12 +138,3 @@ export const useRouteGrid = ({ reportDate, shouldFetch }) => {
 
   return { data: useMemo(calculateValue, [prodOrders, RTE, LOC, PRD]) }
 }
-
-
-// filter by routes
-
-// sort orders by... delivery order?
-
-// transform filter by mapping order to 
-
-// console.log(':', )
