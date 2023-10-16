@@ -265,10 +265,10 @@ const RouteGrid = ({ route, orderList, altPricing, database, delivDate }) => {
       );
     }
 
-    if (driver === "current") {
-      routeList = route;
-      console.log("routeList");
-    }
+    // if (driver === "current") {
+    //   routeList = route;
+    //   console.log("routeList");
+    // }
 
     if (driver === "current") {
       routeList = [{ route: routeList }];

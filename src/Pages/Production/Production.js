@@ -18,6 +18,7 @@ import { OrderReview } from "./NewPages/OrderReview";
 import { CroixCount } from "./NewPages/CroixEOD/CroixCount";
 import { BPBSWhatToMake } from "./NewPages/BPBSWhatToMake/BPBSWhatToMake";
 import { BPBSSetout } from "./NewPages/BPBSSetout/Setout";
+import { RouteGrid } from "../Logistics/NewPages/RouteGrid/RouteGrid";
 
 const bpbnPages = [
   {name: "Sandbox", component: <Sandbox />},
@@ -38,6 +39,7 @@ const bpbnPages = [
   {name: "Brioche Calculator", component: <BriocheCalc />},
   {name: "Special Pack Lists", component: <SpecialPacking />},
   {name: "Order Review", component: <OrderReview />},
+  {name: "Route Grid", component: <RouteGrid />},
 ]
 
 const Production = () => {
