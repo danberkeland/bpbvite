@@ -395,7 +395,6 @@ const getRouteSummaries = ({
       dayNum: idx,
       dayOfWeek: day,
       prodNick: product.prodNick,
-      routeNick,
       isValid,
       productIsAvailable,
       routeIsAvailable,
@@ -405,6 +404,7 @@ const getRouteSummaries = ({
       transferSummary,
       productReadyBeforeRoute,
       productReadyDuringRoute,
+      routeNick,
       route: {
         routeStart,
         routeEnd,
