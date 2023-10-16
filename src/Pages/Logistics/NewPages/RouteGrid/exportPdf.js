@@ -97,39 +97,77 @@ export const exportInvoicePdf = async ({
     routeNick => routes[routeNick].printOrder
   )
 
-  // body rows are sorted by delivOrder in the data hook
-  const orderedLocNicks = orderedRouteNicks.flatMap(routeNick => 
-      gridData[routeNick].body.map(row => row.locNick),
-  )
-  // uniqBy preserves order of first appearance 
-  const orderedUniqLocations = uniqBy(orderedLocNicks).map(locNick => 
-    locations[locNick]
+  // body rows are already sorted by delivOrder in the data hook
+  // Note: after completing this function I decided to carry route information
+  // through, so routeNicks are shoehorned into location objects. Be aware of 
+  // this extra, non-standard property
+  const orderedLocations = orderedRouteNicks.flatMap(routeNick => 
+      gridData[routeNick].body.map(row => ({
+        ...locations[row.locNick],
+        routeNick
+      })),
   )
 
+  // uniqBy preserves order of first appearance. Batch print jobs should only 
+  // include locations that are configured for printed invoices.
+  const orderedUniqLocations = uniqBy(orderedLocations, 'locNick').filter(location => 
+    location.toBePrinted === true
+  )
+
+  // proper qbID's are positive integer strings
   const locationsWithBadIDs = orderedUniqLocations.filter(location => 
     !(location.qbID.match(/^\d+$/))
   )
 
   if (locationsWithBadIDs.length) console.warn(
-    "Bad IDs found: ", 
-    Object.fromEntries(
-      locationsWithBadIDs.map(L => [L.locNick, L.qbID])
-    )
+    "Bad IDs encountered:", 
+    locationsWithBadIDs.map(L => ({ locNick: L.locNick, qbID: L.qbID }))
   )
 
   const accessToken = await checkQBValidation_v2()
   const accessCode = "Bearer " + accessToken
   const delivDate = reportDateDT.toFormat('yyyy-MM-dd') // "transaction date"
 
-  const pdfPromises = orderedUniqLocations.map(location => axios.post(
+  const fetchInvoice = (qbID) => axios.post(
     "https://47i7i665dd.execute-api.us-east-2.amazonaws.com/done",
-    { accessCode, delivDate, custID: location.qbID }
-  ))
+    { accessCode, delivDate, custID: qbID }
+  )
 
-  const pdfResponses = await Promise.all(pdfPromises)
+  const hasTimeout = (response) => 
+    typeof response?.data?.errorMessage === 'string'
+      && response.data.errorMessage.includes("Task timed out")
+
+  let pdfResponses = await Promise.all(
+    orderedUniqLocations.map(L => fetchInvoice(L.qbID))
+  )
   console.log("PDF responses:", pdfResponses)
+  for (let i = 1; i <= 5; i++) {
+    if (pdfResponses.some(response => hasTimeout(response))) {
 
-  // keep location data associated with the generated responses.
+      console.log("Some requests timed out:")
+      pdfResponses.forEach((response, index) => {
+        if (hasTimeout(response)) {
+          console.log(orderedUniqLocations[index].locNick)
+        }
+      })
+      console.log(`Retry attempt ${i} of 5...`)
+
+      const retryPromises = pdfResponses.map((response, index) => 
+        hasTimeout(response)
+          ? fetchInvoice(orderedUniqLocations[index].qbID)
+          : response
+      )
+      pdfResponses = await Promise.all(retryPromises)
+      console.log("...with retrys:", pdfResponses)
+
+    } else { 
+      console.log("No timeouts encountered.")
+      break
+    }
+  }
+
+  // keep location data associated with pdf responses. 
+  // At this point the arrays correspond by index.
   const responsesWithLocations = pdfResponses.map((pdfResponse, index) => ({
     pdfResponse,
     location: orderedUniqLocations[index]
@@ -140,17 +178,31 @@ export const exportInvoicePdf = async ({
     rwl => typeof rwl.pdfResponse.data === 'string'
   )
 
-  if (successes.length) console.log(
-    "Fetch succeeded for:", 
-    successes.map(rwl => rwl.location.locNick),
+  console.log(
+    `Fetch success count: ${successes.length}/${pdfResponses.length}`
   )
 
-  if (failures.length) console.error(
-    "Fetch failed for:",
-    Object.fromEntries(
-      failures.map(rwl => [rwl.location.locNick, rwl.pdfResponse.data])
+  if (failures.length) {
+    console.error(
+      "Fetch failed for:",
+      Object.fromEntries(
+        failures.map(rwl => [rwl.location.locNick, rwl.pdfResponse.data])
+      )
     )
-  )
+
+    if (failures.some(rwl => hasTimeout(rwl.pdfResponse))) {
+      alert(
+        "Fetch timed out for the following locations:\n\n"
+        + failures
+            .filter(rwl => hasTimeout(rwl.pdfResponse))
+            .map(rwl => `${rwl.location.routeNick} > ${rwl.location.locNick}`)
+            .join('\n')
+
+        +"\n\nTry grabbing these invoices individually."
+      )
+    }
+  }
+  
   
   const pdfs = successes.flatMap(rwl => 
     rwl.location.printDuplicate ? [rwl, rwl] : rwl
@@ -185,17 +237,14 @@ export const exportSingleInvoice = async ({
   if (typeof pdfResponse.data !== 'string') {
 
     console.error(`Fetch failed for ${location.locNick}:`, pdfResponse.data)
+    alert(`Fetch failed with error message:\n\n${pdfResponse.data?.errorMessage}`)
   } else {
 
     downloadPDF(
       [pdfResponse.data], 
       `${delivDate}_${location.locNick}_Invoice.pdf`
     )
-    setIsLoading(false)
-
   }
-
-
-
   
+  setIsLoading(false)
 }
