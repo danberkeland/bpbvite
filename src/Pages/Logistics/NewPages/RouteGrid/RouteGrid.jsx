@@ -47,7 +47,7 @@ export const RouteGrid = () => {
   console.log("tableData", tableData)
   // console.log("pdfGrids", pdfGrids)
   // console.log(RTE)
-  // console.log(LOC)
+  // console.log("LOC:", LOC)
   const routeOptions = sortBy(RTE, ['routeStart', 'routeNick'])
     .filter(R => tableData.hasOwnProperty(R.routeNick))
     .map(R => ({
@@ -156,7 +156,6 @@ export const RouteGrid = () => {
             routes, locations, reportDateDT, setIsLoading
           })
         }}
-        disabled={true}
       />
 
       <Button label="Driver 2 (Pastry)"
@@ -173,7 +172,6 @@ export const RouteGrid = () => {
             routes, locations, reportDateDT, setIsLoading
           })
         }}    
-        disabled={true} 
       />
 
       <Button label="Driver 3 (South Driver)"
@@ -190,7 +188,6 @@ export const RouteGrid = () => {
             routes, locations, reportDateDT, setIsLoading
           })
         }}
-        disabled={true}
       />
 
     </div>
