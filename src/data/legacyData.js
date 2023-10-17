@@ -90,10 +90,7 @@ export const useLegacyDoughComponents = () => {
  * be plugged in without any alteration.
  * 
  * Those functions are housed in legacyDataFunctions.js
- */
-
-
-/**
+ *
  * Legacy sources have been broken into individual hooks. We can call the full
  * Database here for compatibility with legacy functions, or call the individual
  * tables if we wish to incrementally improve efficiency of those functions.
