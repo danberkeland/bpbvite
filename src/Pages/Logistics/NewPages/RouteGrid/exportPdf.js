@@ -1,10 +1,9 @@
 import jsPDF from "jspdf"
 import "jspdf-autotable"
-import { sortBy, uniqBy } from "lodash"
+import { sortBy, uniqBy, groupBy } from "lodash"
 import { checkQBValidation_v2 } from "../../../../helpers/QBHelpers"
 import axios from "axios"
 import { downloadPDF } from "../../../../functions/legacyFunctions/helpers/PDFHelpers"
-import { groupBy } from "lodash"
 
 /** Designed to work with the gridData object made with the useRouteGrid hook. */
 export const exportRouteGridPdf = ({ gridData, reportDateDT, fileName }) => {
@@ -229,10 +228,24 @@ export const exportSingleInvoice = async ({
   const accessToken = await checkQBValidation_v2()
   const accessCode = "Bearer " + accessToken
 
-  const pdfResponse = await axios.post(
+  const fetchInvoice = (qbID) => axios.post(
     "https://47i7i665dd.execute-api.us-east-2.amazonaws.com/done",
-    { accessCode, delivDate, custID: location.qbID }
+    { accessCode, delivDate, custID: qbID }
   )
+
+  const hasTimeout = (response) => 
+    typeof response?.data?.errorMessage === 'string'
+    && response.data.errorMessage.includes("Task timed out")
+
+  let pdfResponse = await fetchInvoice(location.qbID)
+
+  if (hasTimeout(pdfResponse)) for (let i = 1; i <= 5; i++) {
+
+    console.log(`Request timed out: Retrying (${i}/5)...`)
+    pdfResponse = await fetchInvoice(location.qbID)
+  } else {
+    console.log("No timeout encountered")
+  }
 
   if (typeof pdfResponse.data !== 'string') {
 
