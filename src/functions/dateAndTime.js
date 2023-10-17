@@ -127,6 +127,10 @@ export function getTtl(delivDate) {
   return getWorkingDateTime(delivDate.toISOString()).plus({ days: 1}).plus({ hours: CUTOFF_TIME}).toSeconds()
 }
 
+/**
+ * More convenient way to calculate standard TTL, 
+ * using a yyyy-MM-dd formatted date string.
+ */
 export const getTimeToLive = (delivDateISO_8601) => {
   return (
     DateTime.fromFormat(
