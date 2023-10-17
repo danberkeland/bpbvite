@@ -48,6 +48,7 @@ import Notes2 from "../Pages/Settings/notes/Notes2";
 import Remap from "../Pages/EODCounts/EODCountsRempas";
 import TopNav from "./Auth/TopNav";
 import { SpecialPacking } from "../Pages/Production/NewPages/SpecialPacking";
+import { RouteGrid } from "../Pages/Logistics/NewPages/RouteGrid/RouteGrid";
 
 function AnimatedRoutes({ Routes, Route, useLocation }) {
   const authClass = useSettingsStore((state) => state.authClass);
@@ -112,7 +113,8 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             <Route path="/Billing" element={<Billing />} />
             <Route path="/EODCounts" element={<EODCounts />} />
             <Route path="/Logistics" element={<Logistics />} />
-            <Route path="/Logistics/ByRoute" element={<ByRoute />} />
+            <Route path="/Logistics/ByRoute/Legacy" element={<ByRoute />} />
+            <Route path="/Logistics/ByRoute" element={<RouteGrid />} />
             <Route path="/Logistics/ByProduct" element={<ByProduct />} />
             <Route path="/Logistics/NorthLists" element={<NorthList />} />
             <Route path="/Logistics/AMPastry" element={<AMPastry />} />
