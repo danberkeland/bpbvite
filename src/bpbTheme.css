@@ -4538,9 +4538,11 @@ div.read-only-button > .p-disabled, .p-component:disabled {
   box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
 }
 .p-confirm-popup .p-confirm-popup-content {
+  background: var(--bpb-surface-content);
   padding: 1rem;
 }
 .p-confirm-popup .p-confirm-popup-footer {
+  background: var(--bpb-surface-content);
   text-align: right;
   padding: 0 1rem 1rem 1rem;
 }
