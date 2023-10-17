@@ -154,6 +154,7 @@ const RouteGrid = ({ route, orderList, altPricing, database, delivDate }) => {
     let alreadyPrinted = [];
     setIsLoading(true);
     let access = await checkQBValidation();
+    console.log('access', access)
 
     // let init = true;
     let routeList = Array.from(new Set(orderList.map((ord) => ord.route)));

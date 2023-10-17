@@ -229,6 +229,7 @@ export const updateLocation = async (event) => {
   
   let access = await checkQBValidation();
   let SyncToken = await getQBProdSyncToken(access, event);
+  console.log('SyncToken', SyncToken)
   await createQBLoc(event, SyncToken).then((data) => {
     newID = data;
   });

@@ -260,6 +260,7 @@ const SelectDate = ({ database, dailyInvoices }) => {
           let invID;
 
           invID = await getQBInvIDandSyncToken(access, DocNum);
+          console.log('invID', invID)
 
           if (Number(invID.data.Id) > 0) {
             custSetup.Id = invID.data.Id;
