@@ -1,17 +1,21 @@
 import { useRouteGrid } from "./data"
 import { useListData } from "../../../../data/_listData"
 
-// import { ListBox } from "primereact/listbox"
+import { ListBox } from "primereact/listbox"
 import { Calendar } from "primereact/calendar"
-import { Dropdown } from "primereact/dropdown"
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 import { Button } from "primereact/button"
+import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup"
 
 import { useState } from "react"
 import { DateTime } from "luxon"
 import { keyBy, pickBy, sortBy } from "lodash"
-import { exportInvoicePdf, exportRouteGridPdf, exportSingleInvoice } from "./exportPdf"
+import { 
+  exportRouteGridPdf, 
+  exportInvoicePdf, 
+  exportSingleInvoice
+} from "./exportPdf"
 
 import "./routeGrid.css"
 import { useSettingsStore } from "../../../../Contexts/SettingsZustand"
@@ -48,7 +52,8 @@ export const RouteGrid = () => {
   // console.log("pdfGrids", pdfGrids)
   // console.log(RTE)
   // console.log("LOC:", LOC)
-  const routeOptions = sortBy(RTE, ['routeStart', 'routeNick'])
+
+  const routeOptions = sortBy(RTE, 'printOrder')
     .filter(R => tableData.hasOwnProperty(R.routeNick))
     .map(R => ({
       label: R.routeNick,
@@ -56,143 +61,160 @@ export const RouteGrid = () => {
       disabled: !R.RouteSched.includes(reportWeekdayNum.toString())
     }))
 
-  return (
-    <div style={{marginBottom: "10rem"}}>
-      <Dropdown 
-        value={routeNick}
-        options={routeOptions}
-        onChange={e => {if (e.value) setRouteNick(e.value)}}
-        style={{width:"10rem"}}
-      />
+  // 'partial application' technique allows us to call the function while
+  // specifying only the inputs that change from one call to the next.
+  const exportInvoice = ({ location }) => exportSingleInvoice({
+    location, delivDate: reportDateISO, setIsLoading
+  })
+  const exportInvoices = ({ gridData, fileName }) => exportInvoicePdf({
+    gridData, fileName, routes, locations, reportDateDT, setIsLoading
+  })
+  const exportGrids = ({ gridData, fileName }) => exportRouteGridPdf({ 
+    gridData, fileName, reportDateDT 
+  })
 
-      <Calendar 
-        value={reportDateJS}
-        onChange={e => {
-          setRouteNick('AM Pastry')
-          setReportDateJS(e.value)}
-        }
-      />
 
-      <DataTable
-        value={tableData?.[routeNick]?.rows ?? []}
-        showGridlines
-        stripedRows
-        size="small"
-        className={reportDateIsToday ? 'today-table' : 'not-today-table'}
-      >
-        <Column 
-          body={row => {
-            return (
-              <div 
-                onClick={() => exportSingleInvoice({ 
-                  location: locations[row.locNick ], 
-                  delivDate: reportDateISO,
-                  setIsLoading
-                })}
-                style={{ cursor: "pointer"}}
-              >
-                <i className="pi pi-fw pi-print" />
-              </div>
+  const exportInvoiceWithConfirm = ({ event, location }) => {
+    if (location.toBePrinted === true) {
 
-            ) 
-          }} 
+      exportInvoice({ location })
+    } else {
+      
+      confirmPopup({
+        target: event.currentTarget,
+        message: <span>
+          This customer doesn't get a printed invoice. <br />Print anyway?
+        </span>,
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => exportInvoice({ location }),
+      })
+    }
+  }
+
+
+  const printColumnTemplate = (row) => 
+    <i className="pi pi-fw pi-print" 
+      onClick={event => exportInvoiceWithConfirm({ 
+        event, location: locations[row.locNick] 
+      })}
+      style={{ cursor: "pointer"}}
+    />
+
+  return (<>
+    <div style={{
+      marginBottom: "10rem",
+      display: "grid",
+      gridTemplateColumns: "10rem 1fr",
+      gap: "0 2rem",
+      margin: "6rem"
+    }}>
+      <div>
+        <ConfirmPopup />
+        {/* <h2>Routes:</h2> */}
+        <Calendar 
+          value={reportDateJS}
+          onChange={e => {
+            setRouteNick('AM Pastry')
+            setReportDateJS(e.value)}
+          }
+          inputStyle={{width: "8rem", height: "2.5rem"}}
+          showIcon iconPos="left" icon="pi pi-fw pi-calendar"
         />
-        <Column header="Location" field="locNameShort" bodyStyle={{width: "8rem"}}/>
-        {(tableData?.[routeNick]?.prodNickList ?? []).map(prodNick => {
-          return (
-            <Column 
-              key={`${prodNick}-col`} 
-              header={prodNick} 
-              field={`${prodNick}.qty`}
-            />
-          )
-        })}
 
-      </DataTable>
+        <ListBox 
+          value={routeNick}
+          options={routeOptions}
+          onChange={e => {if (e.value) setRouteNick(e.value)}}
+          style={{width:"10rem", marginTop: "1rem"}}
+        />
 
-      <Button label="Print All Routes" 
-        onClick={() => {
-          exportRouteGridPdf({ 
-            gridData: pdfGrids, 
-            fileName: `${reportDateISO}_All_Routes.pdf`,
-            reportDateDT 
-          })
-          exportInvoicePdf({ 
-            gridData: pdfGrids, 
-            fileName: `${reportDateISO}_All_Invoices.pdf`,
-            routes, locations, reportDateDT, setIsLoading
-          })
-        } 
-        } 
-      />
+        <Button label={<span>Print <br/>Current Route</span>}
+          onClick={() => {
+            const gridData = pickBy(
+              pdfGrids, 
+              (value, key) => key === routeNick
+            )
+            const fStr = `${reportDateISO}_${routeNick.replace(" ", "_")}`
+            exportGrids({ gridData, fileName: fStr + '_Route_Grid.pdf' })
+            exportInvoices({ gridData, fileName: fStr + '_Invoices.pdf' })
+          }}      
+          style={{width: "100%", marginTop: "1rem"}}
+        />
 
-      <Button label="Print Current Route"
-        onClick={() => {
-          const gridData = pickBy(pdfGrids, (value, key) => key === routeNick)
-          exportRouteGridPdf({ 
-            gridData, 
-            fileName: `${reportDateISO}_${routeNick.replace(" ", "_")}_Route.pdf`, 
-            reportDateDT 
-          })
-          exportInvoicePdf({ 
-            gridData, 
-            fileName: `${reportDateISO}_${routeNick.replace(" ", "_")}_Invoices.pdf`,
-            routes, locations, reportDateDT, setIsLoading
-          })
-        }}      
-      />
+        <Button label={<span>Print <br/>All Routes</span>}
+          onClick={() => {
+            const gridData = pdfGrids
+            const fStr = `${reportDateISO}_All`
+            exportGrids({ gridData, fileName: fStr + '_Route_Grids.pdf' })
+            exportInvoices({ gridData, fileName: fStr + '_Invoices.pdf' })
+          }} 
+          style={{width: "100%", marginTop: "1rem"}}
+        />
+      </div>
 
-      <Button label="Driver 1 (Long Driver)"
-        onClick={() => {
-          const gridData = pickBy(pdfGrids, routeGridObj => routeGridObj.driver === "Long Driver")
-          exportRouteGridPdf({
-            gridData: gridData,
-            fileName: `${reportDateISO}_Long_Driver_Routes.pdf`,
-            reportDateDT
-          })
-          exportInvoicePdf({ 
-            gridData, 
-            fileName: `${reportDateISO}_Long_Driver_Invoices.pdf`,
-            routes, locations, reportDateDT, setIsLoading
-          })
-        }}
-      />
+      <div>
+        <div style={{height: "3.5rem", display: "flex", alignItems: "flex-Start", gap: "1rem"}}>
+          <Button label="Driver 1 (Long Driver)"
+            onClick={() => {
+              const gridData = pickBy(
+                pdfGrids, 
+                routeGridObj => routeGridObj.driver === "Long Driver"
+              )
+              const fStr = `${reportDateISO}_Long_Driver`
+              exportGrids({ gridData, fileName: fStr + '_Route_Grids.pdf' })
+              exportInvoices({ gridData, fileName: fStr + '_Invoices.pdf' })
+            }}
+            icon="pi pi-fw pi-print"
+          />
 
-      <Button label="Driver 2 (Pastry)"
-        onClick={() => {
-          const gridData = pickBy(pdfGrids, routeGridObj => routeGridObj.driver === "AM Pastry")
-          exportRouteGridPdf({
-            gridData: gridData,
-            fileName: `${reportDateISO}_AM_Pastry_Routes.pdf`,
-            reportDateDT
-          })
-          exportInvoicePdf({ 
-            gridData, 
-            fileName: `${reportDateISO}_AM_Pastry_Invoices.pdf`,
-            routes, locations, reportDateDT, setIsLoading
-          })
-        }}    
-      />
+          <Button label="Driver 2 (Pastry)"
+            onClick={() => {
+              const gridData = pickBy(
+                pdfGrids, 
+                routeGridObj => routeGridObj.driver === "AM Pastry"
+              )
+              const fStr = `${reportDateISO}_AM_Pastry`
+              exportGrids({ gridData, fileName: fStr + '_Route_Grids.pdf' })
+              exportInvoices({ gridData, fileName: fStr + '_Invoices.pdf' })
+            }}
+            icon="pi pi-fw pi-print"
+          />
 
-      <Button label="Driver 3 (South Driver)"
-        onClick={() => {
-          const gridData = pickBy(pdfGrids, routeGridObj => routeGridObj.driver === "AM South")
-          exportRouteGridPdf({
-            gridData: gridData,
-            fileName: `${reportDateISO}_AM_South_Routes.pdf`,
-            reportDateDT
-          })
-          exportInvoicePdf({ 
-            gridData, 
-            fileName: `${reportDateISO}_AM_South_Invoices.pdf`,
-            routes, locations, reportDateDT, setIsLoading
-          })
-        }}
-      />
+          <Button label="Driver 3 (South Driver)"
+            onClick={() => {
+              const gridData = pickBy(
+                pdfGrids, 
+                routeGridObj => routeGridObj.driver === "AM South"
+              )
+              const fStr = `${reportDateISO}_AM_South`
+              exportGrids({ gridData, fileName: fStr + '_Route_Grids.pdf' })
+              exportInvoices({ gridData, fileName: fStr + '_Invoices.pdf' })
+            }}
+            icon="pi pi-fw pi-print"
+          />
+        </div>
 
+        <DataTable
+          value={tableData?.[routeNick]?.rows ?? []}
+          showGridlines stripedRows size="small"
+          className={reportDateIsToday ? 'today-table' : 'not-today-table'}
+
+        >
+          <Column body={printColumnTemplate} style={{width: "2rem"}} frozen />
+          <Column header="Location" field="locNameShort" frozen />
+          {(tableData?.[routeNick]?.prodNickList ?? []).map(prodNick => {
+            return (
+              <Column 
+                key={`${prodNick}-col`} 
+                header={prodNick} 
+                field={`${prodNick}.qty`}
+              />
+            )
+          })}
+        </DataTable>
+      </div>
     </div>
-
-  )
+  </>)
 }
 
 
