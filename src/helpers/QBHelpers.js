@@ -146,6 +146,8 @@ export const createQBInvItem = (count, ord, qbID, delivDate) => {
 
   export const getQBProdSyncToken = async (access,updateDetails) => {
     let SyncToken
+    console.log('access', access)
+    console.log('updateDetails', updateDetails)
     try {
       await axios
         .post("https://sntijvwmv6.execute-api.us-east-2.amazonaws.com/done", {
