@@ -38,17 +38,15 @@ export const checkQBValidation_v2 = async () => {
     "https://28ue1wrzng.execute-api.us-east-2.amazonaws.com/done"
   );
 
-  console.log('validationResponse', validationResp)
-
   if (!validationResp.data) {
-    console.log("not valid QB Auth")
+    console.warn("not valid QB Auth")
+    console.log('validationResponse', validationResp)
     return undefined 
   }
 
   const tokenResp = await API.graphql(
     graphqlOperation(getInfoQBAuth, { id: "accessToken" })
   )
-  console.log('gql response:', tokenResp)
     
   return tokenResp.data.getInfoQBAuth.infoContent
      
