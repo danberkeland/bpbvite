@@ -10,12 +10,12 @@ import {
   useLocation,
 } from "react-router-dom";
 
-import { Splash } from "./AppStructure/Auth/Splash2";
-import { UserApplyForm } from "./AppStructure/Auth/UserApplyForm";
-import { UserResetPassword } from "./AppStructure/Auth/UserResetPassword2";
-import { UserApplyThanks } from "./AppStructure/Auth/UserApplyThanks";
-import { VerifyEmail } from "./AppStructure/Auth/VerifyEmail";
-import { ForgotPassword } from "./AppStructure/Auth/ForgotPassword";
+// import { Splash } from "./AppStructure/Auth/Splash2";
+// import { UserApplyForm } from "./AppStructure/Auth/UserApplyForm";
+// import { UserResetPassword } from "./AppStructure/Auth/UserResetPassword2";
+// import { UserApplyThanks } from "./AppStructure/Auth/UserApplyThanks";
+// import { VerifyEmail } from "./AppStructure/Auth/VerifyEmail";
+// import { ForgotPassword } from "./AppStructure/Auth/ForgotPassword";
 
 import { NavBottom } from "./AppStructure/Nav";
 
@@ -49,6 +49,7 @@ export function App() {
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
   Hub.listen("auth", (data) => {
+    console.log("HUB:", data)
     switch (data.payload.event) {
       case "signIn":
         console.log("New User Signed in");

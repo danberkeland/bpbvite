@@ -34,7 +34,7 @@ nuanced reading would be...
 ## setout at prado 'today' 
 Setout counts are derived from 'production orders' which combines standing 
 and holding orders (according to override rules not explained here), along
-with holding orders.
+with cart orders.
 
 An order is 'fulfilled from Prado' if it a SLO pickup or if it is delivered
 on a route that starts from Prado.

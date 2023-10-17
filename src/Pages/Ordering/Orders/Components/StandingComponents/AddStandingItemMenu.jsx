@@ -18,6 +18,7 @@ export const AddStandingItemMenu = ({
   wSize, 
   locNick, 
   user,
+  disabled,
   showStandingSidebar,
   setShowStandingSidebar,
   //selectedDisplayProdNick,
@@ -48,6 +49,7 @@ export const AddStandingItemMenu = ({
     toggleFav,
     wSize,
     user,
+    disabled,
   }
 
   const handleAddStandingProduct = () => {
@@ -88,7 +90,7 @@ export const AddStandingItemMenu = ({
           width: "5.5rem", 
           fontSize: "1.1rem"
         }}
-        disabled={!selectedAddProdNick}
+        disabled={!selectedAddProdNick || disabled}
         onClick={() => {
           handleAddStandingProduct()
           setSelectedAddProdNick('')
@@ -156,6 +158,7 @@ const StandingProductDropdown = ({
   toggleFav,
   wSize,
   user,
+  disabled,
 }) => {
   const [isValidating, setIsValidating] = useState()
 
@@ -224,7 +227,7 @@ const StandingProductDropdown = ({
             setIsValidating(false)
           }} 
           className="p-button-text p-button-rounded"
-          disabled={isValidating}
+          disabled={isValidating || disabled}
           style={{width: "2.5rem"}}
         />
       </div>
@@ -258,6 +261,7 @@ const StandingProductDropdown = ({
       //placeholder={displayProducts ? "Select Product" : "Loading..."}
       style={{width: "100%"}}
       scrollHeight="20rem"
+      disabled={disabled}
     />
   )
 

@@ -120,16 +120,16 @@ const usePackData = () => {
       order.routeMeta.adjustedLeadTime === order.product.leadTime + 1
     )
 
-    console.log(T0_Orders, T1_Orders)
+  // console.log(T0_Orders, T1_Orders)
 
   const orders = [T0_Orders, T1_Orders]
   console.log(
-    "Unassigned", 
+    '"NOT ASSIGNED" orders (bad if Nonempty):', 
     T0_Orders.filter(order => order.routeNick === "NOT ASSIGNED"),
     T1_Orders.filter(order => order.routeNick === "NOT ASSIGNED"),
   )
-  console.log("Retail T0:", T0_Routed.filter(order => order.isWhole === false))
-  console.log("Retail T1:", T1_Routed.filter(order => order.isWhole === false))
+  // console.log("Retail T0:", T0_Routed.filter(order => order.isWhole === false))
+  // console.log("Retail T1:", T1_Routed.filter(order => order.isWhole === false))
 
   const makeTableData = (TN_Orders) => {
     const TN_Pivot = groupBy(TN_Orders, 'locNick')
@@ -234,16 +234,15 @@ export const SpecialPacking = () => {
 
   if (!data) return <div>Loading...</div>
   console.log(data)
-  console.log(Object.values(data.frPastry.T1[0].items))
 
   return(
     <div style={{display: "flex", justifyContent: "center"}}>
-    <div style={{maxWidth: "45rem"}}>
+    <div style={{maxWidth: "45rem", marginBottom: "10rem"}}>
       <p>
         Note: Table rows are not meant to show each customer's entire order.
       </p>
 
-      <h1>Pretzel Packing</h1>
+      <h1>Pretzel Packing {todayDT.toFormat('MM/dd/yyyy')}</h1>
       <h2>Pack for Today</h2>
       <InfoTemplate
         key='pretzel_T0'

@@ -76,7 +76,7 @@ export const preDBOverrides = {
 
   sic:	 { leadTime: 1 },                  // sic
 
-  foc:	 { leadTime: 1 },                  // focaccias
+  foc:	 { leadTime: 2 },                  // focaccias
   hfoc:	 { leadTime: 2 },
 
   smpz:	 { leadTime: 2, readyTime: 8.2 },  // pretzel

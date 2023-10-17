@@ -4,6 +4,7 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { CroixToMake as CroixToMakeNew } from "./NewPages/CroixToMake/CroixToMake";
 
 import ComposeCroixInfo from "./BPBSWhatToMakeUtils/composeCroixInfo";
 
@@ -83,7 +84,7 @@ const compose = new ComposeCroixInfo();
 
 const clonedeep = require("lodash.clonedeep");
 
-function CroixToMake() {
+function CroixToMakeLegacy() {
 
   const [delivDate, setDelivDate] = useState(todayPlus()[0]);
   const [mod, setMod] = useState(false);
@@ -591,6 +592,33 @@ function CroixToMake() {
       </WholeBox>
     </React.Fragment>
   );
+}
+
+const CroixToMake = () => {
+  const [showLegacy, setShowLegacy] = useState()
+
+  return (<>
+    <Button label="Use Old Version" 
+      onClick={() => setShowLegacy(true)}
+      style={{margin: "1rem"}}
+    />
+    <Button label="Use New Version" 
+      onClick={() => setShowLegacy(false)}
+      style={{margin: "1rem"}}
+    />
+    
+    <div style={{marginTop: "2rem"}}>
+      {showLegacy === true && <CroixToMakeLegacy />}
+      {showLegacy === false && 
+        <div style={{
+          display: "flex",
+          justifyContent: "center"
+        }}>
+          <CroixToMakeNew />
+        </div>
+      }
+    </div>
+  </>)
 }
 
 export default CroixToMake;

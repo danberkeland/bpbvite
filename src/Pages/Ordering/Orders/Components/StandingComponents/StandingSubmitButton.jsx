@@ -48,6 +48,7 @@ export const StandingSubmitButton = ({
   products,
   ORDER_DATE_DT,
   user,
+  disabled,
 }) => {
   const setIsLoading = useSettingsStore((state) => state.setIsLoading)
   // const isLoading = useSettingsStore((state) => state.isLoading)
@@ -130,8 +131,9 @@ export const StandingSubmitButton = ({
   return (
     <>
       <Button 
-        label="Submit Changes"
+        label={!disabled ? "Submit Changes" : "Ordering Disabled"}
         //disabled={!itemsHaveChanges}
+        disabled={disabled}
         onClick={() => {
           if (itemsHaveChanges) confirmSubmit()
           else toastRef.current.show(toasts.noChange)

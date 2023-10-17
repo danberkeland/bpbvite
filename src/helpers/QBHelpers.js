@@ -1,4 +1,4 @@
-import { listInfoQBAuths } from "../graphql/queries";
+import { getInfoQBAuth, listInfoQBAuths } from "../graphql/queries";
 
 import { API, graphqlOperation } from "aws-amplify";
 
@@ -30,6 +30,29 @@ export const checkQBValidation = async () => {
 
   return access;
 };
+
+// fetch accessToken with getItem query instead
+export const checkQBValidation_v2 = async () => {
+  
+  const validationResp = await axios.get(
+    "https://28ue1wrzng.execute-api.us-east-2.amazonaws.com/done"
+  );
+
+  console.log('validationResponse', validationResp)
+
+  if (!validationResp.data) {
+    console.log("not valid QB Auth")
+    return undefined 
+  }
+
+  const tokenResp = await API.graphql(
+    graphqlOperation(getInfoQBAuth, { id: "accessToken" })
+  )
+  console.log('gql response:', tokenResp)
+    
+  return tokenResp.data.getInfoQBAuth.infoContent
+     
+}
 
 
 export const createQBInvItem = (count, ord, qbID, delivDate) => {

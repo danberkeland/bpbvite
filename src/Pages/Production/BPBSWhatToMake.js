@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { confirmDialog } from "primereact/confirmdialog";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { InputText } from "primereact/inputtext";
 
 import { checkForUpdates } from "../../helpers/databaseFetchers";
@@ -27,6 +27,8 @@ import styled from "styled-components";
 import { API, graphqlOperation } from "aws-amplify";
 import { DateTime } from "luxon";
 
+import { BPBSWhatToMake as BPBSWhatToMakeNew } from "./NewPages/BPBSWhatToMake/BPBSWhatToMake";
+
 const WholeBox = styled.div`
   display: flex;
   flex-direction: column;
@@ -42,7 +44,7 @@ const clonedeep = require("lodash.clonedeep");
 
 const compose = new ComposeWhatToMake();
 
-function BPBSWhatToMake() {
+function BPBSWhatToMakeLegacy() {
  
  
   const [youllBeShort, setYoullBeShort] = useState();
@@ -349,6 +351,7 @@ function BPBSWhatToMake() {
         >
           Print What To Make List
         </Button>
+        <ConfirmDialog />
 
 
         <React.Fragment>
@@ -413,4 +416,36 @@ function BPBSWhatToMake() {
   );
 }
 
+const BPBSWhatToMake = () => {
+  const [showLegacy, setShowLegacy] = useState()
+
+  return (<>
+    <Button label="Use Old Version" 
+      onClick={() => setShowLegacy(true)}
+      style={{margin: "1rem"}}
+    />
+    <Button label="Use New Version" 
+      onClick={() => setShowLegacy(false)}
+      style={{margin: "1rem"}}
+    />
+    
+    <div style={{marginTop: "2rem"}}>
+      {showLegacy === true && <BPBSWhatToMakeLegacy />}
+      {showLegacy === false && 
+        <div style={{
+          display: "flex",
+          justifyContent: "center",
+          // marginLeft: "50%",
+          // marginRight: "50%"
+        }}>
+          <BPBSWhatToMakeNew />
+        </div>
+      }
+    </div>
+  </>)
+  
+}
+
 export default BPBSWhatToMake;
+
+

@@ -122,7 +122,10 @@ export const OrderForm = ({
       <div style={{display: "flex", justifyContent: "flex-end"}}>
         <Button label="Submit" 
           onClick={handleSubmit}
-          disabled={!headerChanged && !itemsChanged}
+          disabled={
+            (!headerChanged && !itemsChanged) 
+            || currentOrder.header.route === null
+          }
         />
       </div>
     )

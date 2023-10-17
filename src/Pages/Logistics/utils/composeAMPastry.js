@@ -17,6 +17,7 @@ import {
     productReadyBeforeRouteStarts,
     customerIsOpen,
   } from "../ByRoute/Parts/utils/utils";
+import { orderBy, uniqBy } from "lodash";
  
   let today = todayPlus()[0];
   
@@ -111,10 +112,16 @@ import {
     fullOrder = buildGridOrderArray(fullOrder, database);
     fullOrder = addRoutes(delivDate, fullOrder, database);
     console.log("fullOrder",fullOrder)
-    let custOrder = sortZtoADataByIndex(fullOrder,"delivOrder")
-    custOrder = sortAtoZDataByIndex(custOrder,"route")
-    custOrder = custOrder.map(cust => cust.custName)
-    custOrder = Array.from(new Set(custOrder))
+    // let custOrder = sortZtoADataByIndex(fullOrder,"delivOrder")
+    // custOrder = sortAtoZDataByIndex(custOrder,"route")
+    // custOrder = custOrder.map(cust => cust.custName)
+    // custOrder = Array.from(new Set(custOrder))
+    let custOrder = uniqBy(
+      orderBy(fullOrder, ["route", "delivOrder"], ["asc", "desc"]).map(cust => 
+        cust.custName
+      )
+    )
+
     let newCustOrder = []
     console.log("custNames",custNames)
     for (let cust of custOrder){
@@ -131,6 +138,26 @@ import {
         customer: cust,
         customerShort: cust.length>10 ? cust.substring(0,13)+"..." : cust
       };
+      try {
+        custItem.route =
+          fullOrder[
+            fullOrder.findIndex(
+              (ord) => ord.custName === cust
+            )
+          ].route;
+      } catch {
+        custItem.route = null;
+      }
+      try {
+        custItem.delivOrder =
+          fullOrder[
+            fullOrder.findIndex(
+              (ord) => ord.custName === cust
+            )
+          ].delivOrder;
+      } catch {
+        custItem.delivOrder = null;
+      }
       for (let prod of prodNames) {
         let prodFullName =
           products[products.findIndex((pr) => pr.nickName === prod)].prodName;
@@ -144,6 +171,7 @@ import {
         } catch {
           custItem[prod] = null;
         }
+
       }
       orderArray.push(custItem);
     }

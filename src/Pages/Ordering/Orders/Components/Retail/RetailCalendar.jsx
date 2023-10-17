@@ -14,7 +14,7 @@ export const RetailCalendar = ({
     const isCustomToday = dateJS.getTime() === todayDT.toMillis()
 
     const calendarDate = `${date.year}-` 
-      + `${('0' + String(date.month + 1).slice(-2))}-`
+      + `${('0' + String(date.month + 1)).slice(-2)}-`
       + `${('0' + String(date.day)).slice(-2)}`
     const hasCart = orderDates.includes(calendarDate)
 
