@@ -2,6 +2,87 @@ import { useMemo } from "react"
 import { useListData } from "./_listData"
 import { sortBy } from "lodash"
 
+const shouldFetch = true
+
+export const useLegacyProducts = () => {
+  const { data:PRD } = useListData({ tableName: "Product", shouldFetch })
+  const calculateValue = () => !!PRD 
+    ? sortBy(mapProductsToLegacy(PRD), 'prodName') 
+    : undefined
+
+  return { data: useMemo(calculateValue, [PRD]) }
+}
+
+export const useLegacyLocations = () => {
+  const { data:LOC } = useListData({ tableName: "Location", shouldFetch })
+  const calculateValue = () => !!LOC 
+    ? sortBy(mapProductsToLegacy(LOC), 'custName') 
+    : undefined
+
+  return { data: useMemo(calculateValue, [LOC]) }
+}
+
+export const useLegacyCustomers = () => {
+  const { data:LOC } = useListData({ tableName: "Location", shouldFetch })
+  const { data:ORD } = useListData({ tableName: "Order", shouldFetch })
+  const { data:LCU } = useListData({ tableName: "LocationUser", shouldFetch })
+  const calculateValue = () => (!!LOC && !!ORD && !!LCU)
+    ? sortBy(mapLocationsToLegacy(LOC, ORD, LCU), 'custName')
+    : undefined
+
+  return { data: useMemo(calculateValue, [LOC, ORD, LCU]) }
+}
+
+export const useLegacyRoutes = () => {
+  const { data:RTE } = useListData({ tableName: "Route", shouldFetch })
+  const { data:ZRT } = useListData({ tableName: "ZoneRoute", shouldFetch })
+  const calculateValue = () => (!!RTE && !!ZRT) 
+    ? sortBy(mapRoutesToLegacy(RTE, ZRT), 'routeStart')
+    : undefined
+
+  return { data: useMemo(calculateValue, [RTE, ZRT]) }
+}
+
+export const useLegacyStanding = () => {
+  const { data:STD } = useListData({ tableName: "Standing", shouldFetch })
+  const { data:PRD } = useListData({ tableName: "Product", shouldFetch })
+  const { data:LOC } = useListData({ tableName: "Location", shouldFetch })
+  const calculateValue = () => (!!STD && !!PRD && !!LOC)
+    ? sortBy(mapStandingItemsToLegacy(STD, PRD, LOC), 'timeStamp')
+    : undefined
+
+  return { data: useMemo(calculateValue, [STD, PRD, LOC]) }
+}
+
+export const useLegacyOrders = () => {
+  const { data:ORD } = useListData({ tableName: "Order", shouldFetch })
+  const { data:PRD } = useListData({ tableName: "Product", shouldFetch })
+  const { data:LOC } = useListData({ tableName: "Location", shouldFetch })
+  const calculateValue = () => (!!ORD && !!PRD && !!LOC)
+    ? sortBy(mapOrdersToLegacy(ORD, PRD, LOC), 'prodName')
+    : undefined
+
+  return { data: useMemo(calculateValue, [ORD, PRD, LOC]) }
+}
+
+export const useLegacyDoughs = () => {
+  const { data:DGH } = useListData({ tableName: "DoughBackup", shouldFetch })
+  const calculateValue = () => !!DGH 
+    ? mapDoughsToLegacy(DGH)
+    : undefined
+
+  return { data: useMemo(calculateValue, [DGH]) }
+}
+
+export const useLegacyDoughComponents = () => {
+  const { data:DCP } = useListData({ tableName: "DoughComponentBackup", shouldFetch })
+  const calculateValue = () => !!DCP 
+    ? mapDoughComponentsToLegacy(DCP)
+    : undefined
+
+  return { data: useMemo(calculateValue, [DCP]) }
+}
+
 /**
  * Fetches data from the current database and transforms it to
  * Legacy format. The intent is to make the translation here so
@@ -13,66 +94,29 @@ import { sortBy } from "lodash"
 
 
 /**
- * Data is now broken up into separate SWR sources, so updating values
- * and revalidating can happen through one of the primary hooks, which
- * is less costly.
- */
+ * Legacy sources have been broken into individual hooks. We can call the full
+ * Database here for compatibility with legacy functions, or call the individual
+ * tables if we wish to incrementally improve efficiency of those functions.
+ * 
+ * As before, all data can be traced back to some primitive useListData caches,
+ * so mutation/revalidation can be efficiently handled with those.
+*/
 export const useLegacyFormatDatabase = () => {
-  const { data:_products } = useListData({ tableName: "Product", shouldFetch: true})
-  const { data:_locations } = useListData({ tableName: "Location", shouldFetch: true})
-  const { data:_locationUsers } = useListData({ tableName: "LocationUser", shouldFetch: true})
-  const { data:_routes } = useListData({ tableName: "Route", shouldFetch: true})
-  const { data:_zoneRoutes } = useListData({ tableName: "ZoneRoute", shouldFetch: true})
-  const { data:_standing } = useListData({ tableName: "Standing", shouldFetch: true})
-  const { data:_orders } = useListData({ tableName: "Order", shouldFetch: true})
-  const { data:_doughs } = useListData({ tableName: "DoughBackup", shouldFetch: true})
-  const { data:_doughComponents } = useListData({ tableName: "DoughComponentBackup", shouldFetch: true})
+  const { data:PRD } = useLegacyProducts()
+  const { data:CUS } = useLegacyCustomers()
+  const { data:RTE } = useLegacyRoutes()
+  const { data:STD } = useLegacyStanding()
+  const { data:ORD } = useLegacyOrders()
+  const { data:DGH } = useLegacyDoughs()
+  const { data:DCP } = useLegacyDoughComponents()
 
-  const transformData = () => {
-    if ([
-      _products, _locations, _locationUsers, 
-      _routes, _zoneRoutes, _standing, 
-      _orders, _doughs, _doughComponents
-    ].some(data => !data)) return undefined
-
-    const products = sortBy(
-      mapProductsToLegacy(_products), 
-      'prodName'
-    )
-    const customers = sortBy(
-      mapLocationsToLegacy(_locations, _orders, _locationUsers), 
-      'custName'
-    )
-    const routes = sortBy(
-      mapRoutesToLegacy(_routes, _zoneRoutes),
-      'routeStart'
-    )
-    const standing = sortBy(
-      mapStandingItemsToLegacy(_standing, _products, _locations),
-      'timeStamp'
-    )
-    const orders = sortBy(
-      mapOrdersToLegacy(_orders, _products, _locations),
-      'prodName'
-    )
-    const doughs = mapDoughsToLegacy(_doughs)
-    const doughComponents = mapDoughComponentsToLegacy(_doughComponents)
-
-    return ([products, customers, routes, standing, orders, doughs, doughComponents])
-  }
-
-  const transformedData = useMemo(
-    transformData, 
-    [
-      _products, _locations, _locationUsers, 
-      _routes, _zoneRoutes, _standing, 
-      _orders, _doughs, _doughComponents
-    ]
-  )
-
-  return ({
-    data: transformedData
-  })
+  // order is important! original order:
+  // [products, customers, routes, standing, orders, doughs, doughComponents]
+  const calcValue = () => (PRD && CUS && RTE && STD && ORD && DGH && DCP)
+    ? [PRD, CUS, RTE, STD, ORD, DGH, DCP]
+    : undefined
+   
+  return ({ data: useMemo(calcValue, [PRD, CUS, RTE, STD, ORD, DGH, DCP]) })
 
 }
 
