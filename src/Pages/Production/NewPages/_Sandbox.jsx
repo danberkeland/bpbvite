@@ -4,23 +4,37 @@ import { Column } from "primereact/column"
 import { DateTime } from "luxon"
 import { orderBy } from "lodash"
 import TimeAgo from "timeago-react"
+import { Button } from "primereact/button"
+import { syncSquareOrders } from "../../../helpers/databaseFetchers"
+import { useListData } from "../../../data/_listData"
 
 
-const formatTime = (isoStr) => DateTime.fromISO(isoStr)
-  .setZone('America/Los_Angeles')
-  .toFormat('MMM dd, h:mm a')
+// const formatTime = (isoStr) => DateTime.fromISO(isoStr)
+//   .setZone('America/Los_Angeles')
+//   .toFormat('MMM dd, h:mm a')
+
+const syncSquare = ({ productCache, orderCache }) => {
+  (!!productCache.data && !!orderCache.data) 
+    ? syncSquareOrders({ productCache, orderCache })
+    : console.log("product data required to execute")
+}
 
 export const Sandbox = () => {
-  const { data } = useOrderSubscription()
 
-  const tableData = orderBy(
-    data,
-    'updatedOn', 
-    'desc'
-  )
+  const productCache = useListData({ tableName: "Product", shouldFetch: true })
+  const orderCache = useListData({ tableName: "Order", shouldFetch: true })
+
+
+  // const { data } = useOrderSubscription()
+
+  // const tableData = orderBy(
+  //   data,
+  //   'updatedOn', 
+  //   'desc'
+  // )
 
   return (<div>
-    <DataTable 
+    {/* <DataTable 
       value={tableData}
       size='small'
     >
@@ -39,7 +53,12 @@ export const Sandbox = () => {
         } 
       />
       <Column header='action' field='_action' />
-    </DataTable>
+    </DataTable> */}
+
+    <Button label="Test Square" 
+      onClick={() => syncSquare({ productCache, orderCache })}
+    />
+
 
   </div>)
 }
