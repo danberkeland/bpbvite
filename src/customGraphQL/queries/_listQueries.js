@@ -137,6 +137,7 @@ export const listLocations = /* GraphQL */ `
         invoicing
         latestFirstDeliv
         latestFinalDeliv
+        dfFulfill
         webpageURL
         picURL
         gMap

@@ -20,6 +20,7 @@ import EODCounts from "../Pages/EODCounts/EODCounts";
 import Logistics from "../Pages/Logistics/Logistics";
 import ByRoute from "../Pages/Logistics/ByRoute/ByRoute";
 import Locations from "../Pages/Locations/Locations";
+import { Locations as LocationsNew } from "../Pages/Locations/NewPage/Locations";
 import ManageCustomers from "../Pages/Settings/ManageCustomers/ManageCustomers";
 import ManageTraining from "../Pages/Settings/ManageTraining/ManageTraining";
 import CustProds from "../Pages/Settings/custProds/custProds";
@@ -125,6 +126,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             />
             <Route path="/Logistics/FreezerThaw" element={<FreezerThaw />} />
             <Route path="/Locations" element={<Locations />} />
+            <Route path="/Locations/New" element={<LocationsNew />} />
             <Route
               path="/Settings/ManageCustomers"
               element={<ManageCustomers />}
