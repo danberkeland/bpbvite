@@ -53,13 +53,10 @@ export const RouteGrid = () => {
   // console.log(RTE)
   // console.log("LOC:", LOC)
 
-  const routeOptions = sortBy(RTE, 'printOrder')
-    .filter(R => tableData.hasOwnProperty(R.routeNick))
-    .map(R => ({
-      label: R.routeNick,
-      value: R.routeNick,
-      disabled: !R.RouteSched.includes(reportWeekdayNum.toString())
-    }))
+  const routeOptions = sortBy(
+    Object.keys(gridData.tableData), 
+    routeNick => routes[routeNick]?.printOrder ?? 0 
+  )
 
   // 'partial application' technique allows us to call the function while
   // specifying only the inputs that change from one call to the next.
@@ -94,10 +91,15 @@ export const RouteGrid = () => {
 
   const printColumnTemplate = (row) => 
     <i className="pi pi-fw pi-print" 
-      onClick={event => exportInvoiceWithConfirm({ 
-        event, location: locations[row.locNick] 
-      })}
-      style={{ cursor: "pointer"}}
+      onClick={event => { if (routeNick !== 'NOT ASSIGNED') {
+        exportInvoiceWithConfirm({ 
+          event, location: locations[row.locNick] 
+        })
+      }}}
+      style={{ 
+        cursor: routeNick === 'NOT ASSIGNED' ? "pointer" : '',
+        opacity: routeNick === 'NOT ASSIGNED' ? '.6' : ''
+      }}
     />
 
   return (<>
@@ -139,6 +141,7 @@ export const RouteGrid = () => {
             exportInvoices({ gridData, fileName: fStr + '_Invoices.pdf' })
           }}      
           style={{width: "100%", marginTop: "1rem"}}
+          disabled={routeNick === 'NOT ASSIGNED'}
         />
 
         <Button label={<span>Print <br/>All Routes</span>}
@@ -149,6 +152,7 @@ export const RouteGrid = () => {
             exportInvoices({ gridData, fileName: fStr + '_Invoices.pdf' })
           }} 
           style={{width: "100%", marginTop: "1rem"}}
+          disabled={routeOptions.includes('NOT ASSIGNED')}
         />
       </div>
 
@@ -208,6 +212,12 @@ export const RouteGrid = () => {
                 key={`${prodNick}-col`} 
                 header={prodNick} 
                 field={`${prodNick}.qty`}
+                body={row => {
+                  return (
+                    <div onClick={() => console.log(row[prodNick])}>
+                      {row[prodNick]?.qty}
+                    </div>
+                )}}
               />
             )
           })}

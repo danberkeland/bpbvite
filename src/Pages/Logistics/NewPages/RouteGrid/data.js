@@ -28,10 +28,15 @@ export const useRouteGrid = ({ reportDate, shouldFetch }) => {
         order.isWhole && order.isStand !== false && order.qty !== 0
       ),
       order => locations[order.locNick].delivOrder,
-      'desc'
+      'asc'
     )
 
-    const ordersByRoute = groupBy(orders, 'routeMeta.routeNick')
+    const ordersByRoute = groupBy(
+      orders, 
+      order => order.routeMeta.isValid 
+        ? order.routeMeta.routeNick
+        : "NOT ASSIGNED"
+    )
     // console.log("ordersByRoute", ordersByRoute)
 
      // pivot columns have full order object values
@@ -40,7 +45,7 @@ export const useRouteGrid = ({ reportDate, shouldFetch }) => {
       routeGroup => ({
         routeNick: routeGroup[0].routeMeta.routeNick,
         driver: routes[routeGroup[0].routeMeta.routeNick].driver,
-        prodNickList: sortBy(
+        prodNickList: orderBy(
           uniqBy(routeGroup.map(order => order.prodNick)),
           [
             prodNick => products[prodNick].packGroup,

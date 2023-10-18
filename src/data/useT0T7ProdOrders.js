@@ -62,7 +62,7 @@ export const useT0T7ProdOrders = ({ shouldFetch, reportDate }) => {
 
 
 /** report date in yyyy-MM-dd format */
-export const useProdOrdersByDate = ({ shouldFetch, reportDate }) => {
+export const useProdOrdersByDate = ({ reportDate, shouldFetch }) => {
 
   const dayOfWeek = DateTime.fromFormat(
     reportDate, 

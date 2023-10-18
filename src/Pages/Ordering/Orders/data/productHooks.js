@@ -464,6 +464,7 @@ const adjustSummaries = (routeSummaries, product) => {
       adjustedWeekdayGroup.push({
         ...cloneDeep(summary),
         isValid: adjustedIsValid,
+        //routeNick: adjustedIsValid ? summary.routeNick : 'NOT ASSIGNED',
         allowDelayedDelivery,
         adjustedLeadTime,
         adjustedDaysAvailable,
