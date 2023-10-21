@@ -11,7 +11,7 @@ const croixBucketMap = {
   pg: 'pg', frpg: 'pg',
   sf: 'sf', frsf: 'sf',
   mb: 'mb', frmb: 'mb', unmb: 'mb',
-  mini: 'mini', frmini: 'mini',
+  mini: 'mini', frmni: 'mini',
 }
 const countNicks = ['pl', 'ch', 'pg', 'sf', 'mini', 'mb']
 
@@ -54,10 +54,10 @@ export const useT0T7Data = ({ shouldFetch }) => {
       return doughNick === 'Croissant' 
         && ['baked pastries', 'frozen pastries'].includes(packGroup)
     }
-    console.log(PRD.filter(P => isCroissant(P.prodNick)).map(P => ({
-      prodNick: P.prodNick,
-      batchSize: P.batchSize,
-    })))
+    // console.log(PRD.filter(P => isCroissant(P.prodNick)).map(P => ({
+    //   prodNick: P.prodNick,
+    //   batchSize: P.batchSize,
+    // })))
 
     const _cart = cart.filter(C => isCroissant(C.prodNick))
     const _standing = standing.filter(S => isCroissant(S.prodNick))
@@ -78,9 +78,9 @@ export const useT0T7Data = ({ shouldFetch }) => {
         item => `${item.locNick}#${item.prodNick}`
       )
 
-      console.log(cartDict)
-      console.log(standingDict)
-      console.log(holdingDict)
+      // console.log(cartDict)
+      // console.log(standingDict)
+      // console.log(holdingDict)
 
       // holding orders are only considered for future dates
       const orders = relDate === 0
@@ -113,7 +113,7 @@ export const useT0T7Data = ({ shouldFetch }) => {
     })
 
     const orders = flatten(ordersByDate)
-    console.log("ORDERS:", orders)
+    // console.log("ORDERS:", orders)
 
     const frozenCroixProdNicks = PRD.filter(P => 
       P.doughNick === 'Croissant' && P.packGroup === 'frozen pastries'
