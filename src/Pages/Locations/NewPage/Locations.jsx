@@ -1,14 +1,17 @@
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
+import { Button } from "primereact/button"
 import { Dropdown } from "primereact/dropdown"
-import { FilterMatchMode, FilterOperator } from "primereact/api"
+import { MultiSelect } from "primereact/multiselect"
 import { InputText } from "primereact/inputtext"
 
 import { useListData } from "../../../data/_listData"
 
-import { debounce, keyBy, sortBy, truncate } from "lodash"
+import { debounce, omitBy, sortBy, truncate, uniqBy } from "lodash"
 import { TabMenu } from "primereact/tabmenu"
+
 import { useEffect, useState } from "react"
+import { FormDialog } from "./FormDialog"
 
 const tabOptions = [
   { label: 'Address', icon: '' },
@@ -45,7 +48,7 @@ const getMatchScore = (location, query) => {
 
 const searchLocations = (locations, query) => {
   if (!query) return locations
-  const q = query.toLowerCase()
+  const q = query.toLowerCase().replace(/\s/g, '')
 
   let results = locations.filter(L => 
     L.locNick.includes(q) 
@@ -62,38 +65,65 @@ export const Locations = () => {
 
   const [activeIndex, setActiveIndex] = useState(0)
   const [columnCategory, setColumnCategory] = useState('Address')
-  const [locations, setLocations] = useState()
-  const dbSetLocations = debounce(setLocations, 100)
 
-  const [filterValue, setFilterValue] = useState('')
-  const dbSetFilterValue = debounce(setFilterValue, 100)
+  const [query, setQuery] = useState('')
+  const dbSetQuery = debounce(setQuery, 120)
 
-  const [zoneNickFilterValue, setZoneNickfilterValue] = useState()
+  const [zoneNickFilterValues, setZoneNickfilterValues] = useState()
   
   const { data:LOC } = useListData({ tableName:"Location", shouldFetch: true })
-  const { data:ZNE } = useListData({ tableName: "Zone", shouldFetch: true})
 
-  useEffect(() => {if (!!LOC) setLocations(structuredClone(LOC))}, [LOC])
+  if (!LOC) return <div>Loading...</div>
 
-  if (!locations || !LOC || !ZNE) return <div>Loading...</div>
+  const zoneOptions = sortBy(uniqBy(LOC, 'zoneNick').map(L => L.zoneNick))
 
-  //console.log("attributes", Object.keys(LOC[0]))
-  const zoneOptions = sortBy(ZNE.map(Z => Z.zoneNick))
+  const displayData = searchLocations(LOC, query)
+    .filter(L =>
+      (!zoneNickFilterValues || !zoneNickFilterValues.length)
+      || zoneNickFilterValues.includes(L.zoneNick)
+    )
 
-  const zoneInputTemplate = (row) => {
-    return <Dropdown options={zoneOptions} value={row.zoneNick} />
+  const GMapTemplate = ({ row }) => {
+    // const [showDialog, setShowDialog] = useState(false)
+    if (!row.gMap) return 
+
+    return <div>
+      {/* <Dialog visible={showDialog} onHide={() => setShowDialog(false)}> */}
+      <a href={row.gMap} target="_blank" referrerPolicy="no-referrer">Link</a>
+    </div> 
+    
   }
 
-  const tableData = searchLocations(LOC, filterValue).filter(L => 
-    !zoneNickFilterValue || L.zoneNick === zoneNickFilterValue  
-  )
+  const CreateButtonTemplate = ({ rowData }) => {
+    const [show, setShow] = useState(false)
+    const editMode = 'create'
+    const dialogProps = {rowData, editMode, show, setShow}
 
+    return <div>
+      <Button icon="pi pi-plus" 
+        className="p-button-rounded" 
+        onClick={() => setShow(true)}
+      />
+      {show && <FormDialog {...dialogProps} />}
+    </div>
+  }
+
+  const UpdateButtonTemplate = ({ rowData }) => {
+    const [show, setShow] = useState(false)
+    const editMode = 'update'
+    const dialogProps = {rowData, editMode, show, setShow}
+
+    return <div>
+      <Button icon="pi pi-pencil" 
+        className="p-button-rounded p-button-outlined" 
+        onClick={() => setShow(true)}
+      />
+      {show && <FormDialog {...dialogProps} />}
+    </div>
+  }
 
   return(
     <div style={{padding: "6rem" }}>
-
-
-
       <div>
         <TabMenu model={tabOptions} 
           activeIndex={activeIndex} 
@@ -104,70 +134,118 @@ export const Locations = () => {
         />
       </div>
       <DataTable 
-        value={tableData} 
+        value={displayData} 
         dataKey="locNick"
         editMode="cell"
         scrollable
         scrollHeight="600px"
-        //size="large"
-        //showGridlines
-        //resizableColumns
         responsiveLayout="scroll"
+        style={{background: "var(--bpb-surface-content)"}}
+      
       >
-        {/* <Column rowEditor frozen style={{maxWidth: "7rem"}} /> */}
-        {/* <Column header="locNick (ID)" field="locNick" frozen />
-        <Column header="locName" field="locName" frozen /> */}
+        <Column frozen
+          header={rowData => CreateButtonTemplate({ rowData })} 
+          body={rowData => UpdateButtonTemplate({ rowData })} 
+          style={{flex: "0 0 4.5rem"}}
+          headerStyle={{height: "5.1rem"}}
+        />
         <Column 
           field="locName" frozen
           header={row => {
-            return <InputText 
-              placeholder="Location"
-              onChange={e => dbSetFilterValue(e.target.value)}
-              style={{width: "10rem"}}
-              onFocus={e => e.target.select()}
-            />
+            return <span className="p-input-icon-right" style={{flex: "1 .5 9rem"}}>
+              <i className="pi pi-fw pi-search" />
+              <InputText 
+                placeholder="Location"
+                onChange={e => dbSetQuery(e.target.value)}
+                onFocus={e => e.target.select()}
+                style={{width: "100%"}}
+              />
+            </span>
           }} 
-          body={R => <div onClick={() => console.log(R)}>
+          body={R => <div onClick={() => console.log(R)} style={{minHeight: "2.75rem"}}>
             <div>{R.locName}</div>
-            <div style={{fontSize: ".8rem", fontFamily: "monospace"}}>{R.locNick}</div>
+            <div style={{fontSize: ".8rem", fontFamily: "monospace" }}>{R.locNick}</div>
           </div>}
-          style={{flex: "0 0 15rem"}}
+          style={{flex: "1 0 13rem"}}
         />
 
-        <Column header="Addr1" field="addr1" hidden={columnCategory !== 'Address'} />
-        <Column header="Addr2" field="addr2" hidden={columnCategory !== 'Address'}/>
-        <Column header="City" field="city" hidden={columnCategory !== 'Address'} />
-        <Column header="Zip" field="zip" hidden={columnCategory !== 'Address'} />
+        {columnCategory === 'Address' && [
+          <Column header="Addr1" field="addr1" style={{flex: "1 0 10rem", maxWidth: "15rem"}} />,
+          <Column header="Addr2" field="addr2" style={{flex: "1 0 10rem", maxWidth: "15rem"}} />,
+          <Column header="City" field="city" style={{flex: ".5 0 8rem", maxWidth: "15rem"}} />,
+          <Column header="Zip" field="zip" style={{flex: "0 0 7rem"}} />,
+          <Column header="gMap" field="gMap" style={{flex: "0 0 6rem"}}
+            body={row => <GMapTemplate row={row} />}
+          />,
+        ]}
 
-        <Column header="First Name" field="firstName" hidden={columnCategory !== 'Contact'} />
-        <Column header="Last Name" field="lastName" hidden={columnCategory !== 'Contact'} />
-        <Column header="Phone" field="phone" hidden={columnCategory !== 'Contact'} style={{width: "15rem"}}/>
-        <Column header="Email" field="email" hidden={columnCategory !== 'Contact'} 
-          body={R => <div>
-            {R.email.replace(' ', '').split(",").map((email, idx) => {
-              return <div key={`email=${idx}`}>{truncate(email, { length: 20 })}</div>
-            })}
-          </div>}
-        />
+        {columnCategory === 'Contact' && [
+          <Column header="First Name" field="firstName" style={{flex: ".25 0 8rem", maxWidth: "15rem"}} />,
+          <Column header="Last Name" field="lastName" style={{flex: ".25 0 8rem", maxWidth: "15rem"}} />,
+          <Column header="Phone" field="phone" style={{flex: "0 0 9rem"}} />,
+          <Column header="Email" field="email" style={{flex: "1 0 10rem"}} bodyStyle={{overflow: "hidden"}}
+            body={R => <div>
+              {R.email.replace(' ', '').split(",").map((email, idx) => {
+                return <div key={`email=${idx}`}>
+                  {/* {truncate(email, { length: 20 })} */}
+                  {email}
+                </div>
+              })}
+            </div>}
+          />,
+        ]}
 
-        <Column header="qbID" field="qbID" body={R => truncate(R.qbID, { length: 10 })} hidden={columnCategory !== 'Billing'} sortable />
-        <Column header="Invoice Frequency" field="invoicing" hidden={columnCategory !== 'Billing'} />
-        <Column header="Terms" field="terms" hidden={columnCategory !== 'Billing'} />
-        <Column header="Print Invoice?" body={R => JSON.stringify(R.toBePrinted)} hidden={columnCategory !== 'Billing'} />
-        <Column header="Print Duplicate?" body={R => JSON.stringify(R.printDuplicate)} hidden={columnCategory !== 'Billing'} />
-        <Column header="Email Invoice?" body={R => JSON.stringify(R.toBeEmailed)} hidden={columnCategory !== 'Billing'} />
+        {columnCategory === 'Billing' && [
+          <Column header="qbID" field="qbID" body={R => truncate(R.qbID, { length: 10 })} sortable style={{flex: "0 0 7rem"}} />,
+          <Column header="Invoice Frequency" field="invoicing"  style={{flex: "0 0 7rem"}} />,
+          <Column header="Terms" field="terms" style={{flex: "0 0 7rem"}} />,
+          <Column header="Print Invoice?" body={R => JSON.stringify(R.toBePrinted)} style={{flex: "0 0 7rem"}} />,
+          <Column header="Print Duplicate?" body={R => JSON.stringify(R.printDuplicate)} style={{flex: "0 0 7rem"}} />,
+          <Column header="Email Invoice?" body={R => JSON.stringify(R.toBeEmailed)} style={{flex: "0 0 7rem"}} />,
+        ]}
 
-        <Column field="zoneNick" hidden={columnCategory !== 'Fulfillment'} 
-          header={R => <Dropdown placeholder="Zone" options={zoneOptions} value={zoneNickFilterValue} onChange={e => setZoneNickfilterValue(e.value)} showClear />}
-        />
-        <Column header="Preferred Fulfillment" field="dfFulfill" hidden={columnCategory !== 'Fulfillment'} />
-        <Column header="Earliest Deliv" field="latestFirstDeliv" hidden={columnCategory !== 'Fulfillment'} />
-        <Column header="Latest Deliv" field="latestFinalDeliv" hidden={columnCategory !== 'Fulfillment'} />
-        <Column header="Deliv Order" field="delivOrder" body={R => JSON.stringify(R.delivOrder)} sortable hidden={columnCategory !== 'Fulfillment'} />
-        
+        {columnCategory === 'Fulfillment' && [
+          <Column field="zoneNick"  
+            header={R => <MultiSelect 
+              placeholder="Zone" 
+              options={zoneOptions} 
+              value={zoneNickFilterValues} 
+              onChange={e => setZoneNickfilterValues(e.value)} 
+              showClear
+              maxSelectedLabels={1}
+              style={{width: "13rem"}}
+              panelStyle={{ width: "13rem "}}
+            />}
+            style={{flex: ".15 0 10rem"}}
+          />,
+          <Column header="Preferred Fulfillment" field="dfFulfill" style={{flex: ".1 0 7rem"}} />,
+          <Column header="Earliest Deliv" field="latestFirstDeliv" style={{flex: ".1 0 7rem"}} />,
+          <Column header="Latest Deliv" field="latestFinalDeliv" style={{flex: ".1 0 7rem"}} />,
+          <Column header="Deliv Order" field="delivOrder" body={R => JSON.stringify(R.delivOrder)} sortable style={{flex: ".1 0 7rem"}} />,
+        ]}
 
       </DataTable>
+
+      {/* <Button label="Clean up Deliv Order" 
+        onClick={() => {
+          const falsyItems = LOC.filter(L => !L.delivOrder).map(L => ({locNick: L.locNick, delivOrder: L.delivOrder}))
+          console.log("Deliv Orders to fix: ", falsyItems)
+          const logItems = sortBy(LOC, 'delivOrder')
+            .filter(L => !!L.delivOrder) // preserve 0 or null values to be handled manually
+            .map((L, idx) => {
+              return {
+                locNick: L.locNick,
+                delivOrder: (idx + 1) * 10,
+                oldDelivOrder: L.delivOrder,
+              }
+            })
+          console.log("Changes to be submitted:", logItems)
+          const updateInputs = logItems.map(L => ({ locNick: L.locNick, delivOrder: L.delivOrder}))
+          console.log("submitting...", updateInputs)
+        }}
+      /> */}
     </div>
   )
 
 }
+

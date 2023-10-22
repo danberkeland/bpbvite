@@ -639,6 +639,7 @@ const orderQuery = /* GraphQL */ `
     limit: $limit
   ) {
     items {
+      id
       isWhole
       locNick
       prodNick
@@ -653,6 +654,7 @@ const standingQuery = /* GraphQL */ `
     limit: $limit
   ) {
     items {
+      id
       isStand
       isWhole
       locNick

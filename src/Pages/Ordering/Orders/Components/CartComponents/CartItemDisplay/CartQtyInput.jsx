@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 
 import { InputText } from "primereact/inputtext"
+import { DateTime } from "luxon"
 
 export const CartQtyInput = ({ 
   rowData, 
@@ -110,7 +111,14 @@ export const CartQtyInput = ({
         baseZIndex: '75'
       }}
       onClick={() => {
-        if (user.authClass === 'bpbfull') console.log(rowData, product)
+        if (user.authClass === 'bpbfull') {
+          console.log(rowData, product)
+          console.log(
+            DateTime.fromISO(rowData.updatedOn)
+              .setZone('America/Los_Angeles')
+              .toFormat('EEE MMM d t')
+          )
+        }
       }}
       onFocus={e => {
         if (!disableQtyInput) {
