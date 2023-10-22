@@ -122,11 +122,11 @@ export const withBPBForm = (Component) => (props) => {
           } else {
             // fns.update({ ...fns, ...props }).then(() => {
             //fns.update(props).then(() => {     // TESTING CHANGE
-            fns.update(props, { ...fns })//.then(() => {
-              //console.log("Doing the update");
-              //console.log("Formprops", props);
-              //formType === "signedIn" ? (window.location = path) : <div></div>;
-            //});
+            fns.update(props, { ...fns }).then(() => {
+              console.log("Doing the update");
+              console.log("Formprops", props);
+              formType === "signedIn" ? (window.location = path) : <div></div>;
+            });
           }
         }}
       >
