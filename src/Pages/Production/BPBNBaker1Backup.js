@@ -38,11 +38,11 @@ let yes =
 
 //for push7
 
-const doobieStuffx = [
+const doobieStuff = [
   {
     Prod: "Doobie Buns",
     Bucket: "YES",
-    Mix: yes ? "YES" : "YES",
+    Mix: yes ? "NO" : "NO",
     Bake: yes ? "NO" : "NO",
   },
   {
@@ -53,7 +53,7 @@ const doobieStuffx = [
   },
 ];
 
-const doobieStuff = [
+const doobieStuffx = [
   {
     Prod: "Doobie Buns",
     Bucket: "YES",
