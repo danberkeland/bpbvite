@@ -86,6 +86,7 @@ export const CartQtyInput = ({
     fontWeight: qtyChanged ? "bold" : "normal",
     opacity: rowData.qty === 0 ? ".85" : "",
     backgroundColor: qtyChanged ? 'hsl(37, 67%, 95%)' :'',
+    marginBlock: "0px",
   }
 
   //if (!rowData) return <InputText style={inputStyle} readOnly={true} />
@@ -94,22 +95,22 @@ export const CartQtyInput = ({
     <InputText
       value={qty}
       //value={inputStr}
-      readOnly={disableQtyInput}
+      // readOnly={disableQtyInput}
       inputMode="numeric"
       keyfilter={/[0-9]/}
       //keyfilter={/[0-9+-]/}
       autoComplete="off"
       style={inputStyle}
-      tooltip={product.packSize > 1 
-        ? `= ${(rowData.qty || 0) * product.packSize} ea`
-        : ''
-      }
-      tooltipOptions={{ 
-        event: 'focus', 
-        position: 'left', 
-        autoZIndex: false, 
-        baseZIndex: '75'
-      }}
+      // tooltip={product.packSize > 1 
+      //   ? `= ${(rowData.qty || 0) * product.packSize} ea`
+      //   : ''
+      // }
+      // tooltipOptions={{ 
+      //   event: 'focus', 
+      //   position: 'left', 
+      //   autoZIndex: false, 
+      //   baseZIndex: '75'
+      // }}
       onClick={() => {
         if (user.authClass === 'bpbfull') {
           console.log(rowData, product)

@@ -34,6 +34,7 @@ import { Button } from "primereact/button"
 import { Toast } from "primereact/toast"
 
 
+
 // Constants, Non-Reactive Data ************************************************
 /**
  * Compatible with JSDates .getDay() conventions. If using luxon's 
@@ -240,8 +241,13 @@ export const Orders = ({ useTestAuth }) => {
 
   const orderHasChanges = cartItems.some(item => item.qty !== item.baseQty)  
     || (
-      !isEqual(cartOrder?.header ?? {}, cartHeader)
-      && cartItems.some(item => 
+      //!isEqual(cartOrder?.header ?? {}, cartHeader)
+      !!cartOrder && (
+
+        cartOrder.header.ItemNote !== cartHeader.ItemNote
+        || cartOrder.header.route !== cartHeader.route
+      ) && cartItems.some(item => 
+        
         item.orderType !== 'T' // && item.qty !== item.baseQty
       )
     )
@@ -336,6 +342,32 @@ export const Orders = ({ useTestAuth }) => {
   const disableInputs = (user.authClass !== 'bpbfull' && !(orderLeadTime > 0))
     || isLoading 
   const deactivated = (user.authClass !== 'bpbfull' && location?.isActive === false)
+
+  // Warn before navigating away with unsaved changes
+  useEffect(() => {
+    const onBeforeUnload = (e) => {
+      if (orderHasChanges) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", onBeforeUnload);
+    };
+  }, [orderHasChanges]);
+  // useEffect(() => {
+  //   const visibilitychange = (e) => {
+  //     if (orderHasChanges) {
+  //       e.preventDefault();
+  //       e.returnValue = "";
+  //     }
+  //   };
+  //   window.addEventListener("visibilitychange", visibilitychange);
+  //   return () => {
+  //     window.removeEventListener("visibilitychange", visibilitychange);
+  //   };
+  // }, [orderHasChanges]);
 
   return (
     <div className='ordering-page' 

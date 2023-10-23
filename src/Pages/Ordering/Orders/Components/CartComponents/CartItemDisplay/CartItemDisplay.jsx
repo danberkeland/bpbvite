@@ -5,12 +5,13 @@ import { Column } from "primereact/column"
 import { DataTable } from "primereact/datatable"
 
 import TimeAgo from "timeago-react"
-import { sortBy, sumBy } from "lodash"
+import { maxBy, sortBy, sumBy } from "lodash"
 import { reformatProdName } from "../../../../Orders10/_utils/reformatProdName"
 
 import { CartQtyInput } from "./CartQtyInput"
 import { CartSubmitButton } from "./CartSubmitButton"
 import { CartItemMessages } from "../CartItemMessages"
+import { DateTime } from "luxon"
 
 
 export const CartItemDisplay = ({ 
@@ -55,6 +56,17 @@ export const CartItemDisplay = ({
     wSize,
   }
 
+  const lastEditItem = maxBy(
+    cartItems.filter(i => 
+      i.orderType === 'C' && i.updatedBy !== "standing_order"
+    ), 
+    item => new Date(item.updatedOn).getTime()
+  )
+  const lastEdit = lastEditItem 
+    ? DateTime.fromISO(lastEditItem.updatedOn)
+      .setZone('America/Los_Angeles')
+      .toFormat('EEE MMM dd, t')
+    : undefined
 
   const productHeaderTemplate = () => {
     return (
@@ -179,7 +191,8 @@ export const CartItemDisplay = ({
     const shouldDisableSample = (rate === 0 && user.authClass !== 'bpbfull')
 
     return (
-      <div>
+      <div style={{display: "flex", flexDirection: "column"}}>
+        <div>
         <CartQtyInput
           rowData={rowData}
           product={product}
@@ -190,6 +203,17 @@ export const CartItemDisplay = ({
           disableInputs={disableInputs || shouldDisableSample}
           deactivated={deactivated}
         />
+        </div>
+        {packSize > 1 &&
+          <div style={{
+            paddingBlock: "0px",
+            fontSize: ".85rem", 
+            textAlign: "center",
+            opacity: qty === 0 ? ".70" : ""
+          }}>
+            ({qty * packSize} ea)
+          </div>
+        }
         {showDetails && 
           <QtyColumnDetails 
             qty={qty}
@@ -258,11 +282,61 @@ export const CartItemDisplay = ({
         style={{width: "90px", flex: "0 0 90px"}}
       />
     </DataTable>
+    
+    <div style={{display: "flex", alignItems: "flex-end", flexDirection:"column"}}>
+      {!!lastEdit && lastEdit !== "Invalid DateTime" &&
+        <LastEditMessage lastEdit={lastEdit} />
+      }
+      {orderHasChanges && <EditingMessage />}
+    </div>
   </>)
 }
 
+const EditingMessage = () => {
+  return (
+    <div 
+      style={{
+        marginTop: ".5rem",
+        padding: ".2rem 1rem .2rem 1rem",
+        // background: "rgba(255, 221, 51, .9)",
+        background: "#FFECB3",
+        border: "solid #d9a300",
+        borderRadius: "1rem",
+        borderWidth: "0px",
+        color: "#6d5100",
+        boxShadow: "0 2px 1px -1px rgba(0, 0, 0, 0.2),"
+          +" 0 1px 1px 0 rgba(0, 0, 0, 0.14), "
+          +"0 1px 3px 0 rgba(0, 0, 0, 0.12)",
+        textAlign: "center"
+      }}
+    >
+      <i className="pi pi-pencil" /> Editing …
+    </div>
+  )
+}
 
-
+const LastEditMessage = ({ lastEdit }) => {
+  return (
+    <div 
+      style={{
+        marginTop: ".5rem",
+        padding: ".2rem 1rem .2rem 1rem",
+        // background: "rgba(255, 221, 51, .9)",
+        background: "#9af79d",
+        //border: "solid #439446",
+        borderRadius: "1rem",
+        //borderWidth: "0px",
+        color: "#224a23",
+        boxShadow: "0 2px 1px -1px rgba(0, 0, 0, 0.2),"
+          +" 0 1px 1px 0 rgba(0, 0, 0, 0.14), "
+          +"0 1px 3px 0 rgba(0, 0, 0, 0.12)",
+        textAlign: "center"
+      }}
+    >
+      Last submitted {lastEdit} 
+    </div>
+  )
+}
 
 
 
@@ -295,7 +369,7 @@ const ProductColumnDetails = ({
 
 const QtyColumnDetails = ({ qty, rate, packSize }) => {
   const containerStyle = { 
-    paddingTop: "2.75rem", 
+    paddingTop: ".25rem", 
     fontSize: ".9rem", 
     textAlign: "center"
   }

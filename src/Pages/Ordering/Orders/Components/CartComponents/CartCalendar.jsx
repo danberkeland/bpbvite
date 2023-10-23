@@ -91,6 +91,7 @@ export const CartCalendar = ({
         onChange={(e) => {
           dateUpdated.current = true
 
+          // force calendar to produce dates in the bpb local time zone
           const dateObj = { 
             year: e.value.getFullYear(),
             month: e.value.getMonth() + 1,
