@@ -1,7 +1,6 @@
 import * as yup from 'yup'
 import { useListData } from '../../../data/_listData'
-import { useMemo } from 'react'
-import { set } from 'lodash'
+import { pickBy, set } from 'lodash'
 
 export const useLocationSchema = ({ editMode }) => {
   
@@ -30,7 +29,6 @@ export const useLocationSchema = ({ editMode }) => {
         is: 'create',
         then: schema => schema.notOneOf(locNames, "this name is not available.")
       })
-      .notOneOf(locNames, "this name is not available.")
       .required("Required"),
     // Address
     addr1: yup.string().nullable(),
@@ -51,7 +49,12 @@ export const useLocationSchema = ({ editMode }) => {
         if (this.isType(value) && value !== null) return value
         else return originalValue ? originalValue.split(/[\s,]+/) : []
       })
-      .of(yup.string().email(({ value }) => `${value} is not a valid email`)),
+      .of(yup.string().email(({ value }) => `${value} is not a valid email`))
+      .test(
+        'email-string-length',
+        'string will exceed max 100 characters',
+        value => value.join(",").length <= 100
+      ),
       
     // Billing
     qbID: yup.string().nullable(),
@@ -78,7 +81,7 @@ export const useLocationSchema = ({ editMode }) => {
   return locationSchema
 }
 
-export const defaultLocaiton = {
+export const defaultLocation = {
   Type: "Location",
   locNick: "",
   // Address
@@ -96,16 +99,40 @@ export const defaultLocaiton = {
   // Billing
   qbID: "",
   invoicing: "",
-  terms: "15",
-  toBePrinted: true,
-  printDuplicate: false,
-  toBeEmailed: true,
+  // terms: "15",           // better to not set these for now.
+  // toBeEmailed: true,     // Some items may have unusual settings that
+  // toBePrinted: true,     // should be preserved.
+  // printDuplicate: false,
   // Fulfillment
   zoneNick: "",
   dfFulfill: "",
   latestFirstDeliv: 7,
   latestFinalDeliv: 13,
-  delivOrder: 0
+  delivOrder: 0,
+  // Others we may integrate in the future
+  currentBalance: '',         // string
+  picURL: '',                 // string
+  orderCnfEmail: '',          // string
+  specialInstructions: '',    // string
+  webpageURL: '',             // string
+  isActive: true,             // bool
+}
+
+// Coerces null values in old data to standard defaults,
+// elminiates whitespace from strings
+export const cleanLocationValues = (location) => {
+
+  const cleanedLocation = { 
+    ...pickBy(location, (key, val) => val !== null), 
+    ...location,
+    email: location.email.split(/[\s,]+/).join(',')
+  }
+
+
+
+
+  return cleanedLocation
+
 }
 
 /**

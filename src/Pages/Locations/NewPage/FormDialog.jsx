@@ -9,18 +9,17 @@ import {
   FormikNumber,
   FormikBoolean,
   FormikDropdown,
-  FormikDropdown2
 } from "./FormInputs"
 
 import { useFormik } from "formik"
-import { defaultLocaiton, useLocationSchema, validateWithContext } from "./schema"
+import { cleanLocationValues, defaultLocation, useLocationSchema, validateWithContext } from "./schema"
 
 import { useListData } from "../../../data/_listData"
-import { isPlainObject, mapValues, pickBy, set, sortBy, truncate } from "lodash"
+import { pickBy, sortBy, truncate } from "lodash"
 import { checkQBValidation_v2, getQBProdSyncToken } from "../../../helpers/QBHelpers"
 
 const termsOptions = ["0", "15", "30"]
-const invoicingOptions = ["daily", "weekly"]
+const invoicingOptions = ["daily", "weekly", "no invoice"]
 const fulfillmentOptions = (zoneNick) => ["atownpick", "slopick"].includes(zoneNick)
   ? ["atownpick", "slopick"]
   : ["deliv", "atownpick", "slopick"]
@@ -33,25 +32,27 @@ const categories = {
   Fulfillment: ['zoneNick', 'dfFulfill', 'latestFirstDeliv', 'latestFinalDeliv', 'delivOrder'],
 }
 
-export const FormDialog = ({editMode, rowData, show, setShow}) => {
+export const LocationForm = ({ editMode, rowData, show, setShow }) => {
 
   const locationCache = useListData({ tableName: "Location", shouldFetch: true })
   const { data:ZNE=[] } = useListData({ tableName: "Zone", shouldFetch: true})
   const zoneOptions = sortBy(ZNE.map(Z => Z.zoneNick))
-  const schema = useLocationSchema({ editMode })
+  const schema = useLocationSchema({ context: { editMode }})
 
   const formik = useFormik({
-    initialValues: editMode === 'update' ? rowData : defaultLocaiton,
+    initialValues: editMode === 'update' ? rowData : defaultLocation,
     //validationSchema: schema,
     validate: values => validateWithContext(schema, values, { editMode }),
     validateOnChange: false,
     validateOnBlur: true,
     onSubmit: values => {
-      if (editMode === 'create') createLocation({ values })
+      if (editMode === 'create') {
+        createLocation({ values })
+      }
       if (editMode === 'update') {
         updateLocation({ values, initialValues:rowData, schema, locationCache })
       }
-      //formik.setSubmitting(false)
+      formik.setSubmitting(false)
     }
   })
 
@@ -121,10 +122,10 @@ export const FormDialog = ({editMode, rowData, show, setShow}) => {
 
         <TabPanel header={badgeTemplate("Billing")}>
           <div style={{marginBlock: "1rem"}}>qbID: {truncate(formik.values.qbID, { length: "20" })}</div>
-          <FormikDropdown formik={formik} field="invoicing" labelText="Invoice Frequency" options={invoicingOptions} />
-          <FormikDropdown formik={formik} field="terms" labelText="Terms" options={termsOptions} />
-          <FormikBoolean formik={formik} field="toBeEmailed" labelText="Send Email Invoice" />
-          <FormikBoolean formik={formik} field="toBePrinted" labelText="Send Print Invoice" 
+          <FormikDropdown formik={formik} field="invoicing"   labelText="Invoice Frequency" options={invoicingOptions} />
+          <FormikDropdown formik={formik} field="terms"       labelText="Terms" options={termsOptions} />
+          <FormikBoolean  formik={formik} field="toBeEmailed" labelText="Send Email Invoice" />
+          <FormikBoolean  formik={formik} field="toBePrinted" labelText="Send Print Invoice" 
             onChange={function (e) {
                 if (e.value === true) {
                   formik.setFieldValue('toBePrinted', true)
@@ -173,44 +174,80 @@ const createLocation = async ({ values }) => {
 
 }
 
-const updateLocation = async ({ values, initialValues, schema, locationCache }) => {
+const updateLocation = async ({ 
+  values:rawValues, 
+  initialValues, 
+  schema, 
+  locationCache 
+}) => {
   const { submitMutations, updateLocalData } = locationCache
-  const submissionAttributes = Object.keys(schema.fields)
-  console.log(submissionAttributes, "submissionAttributes")
-  console.log(JSON.stringify(values, null, 2))
+  
+  //console.log(JSON.stringify(values, null, 2))
 
+  // cleanup routine will catch 
+  const values = cleanLocationValues(rawValues)
+    
+  console.log("Form Values:", JSON.stringify(values, null, 2))
 
-
-  const { locNick, ...updateValues } = pickBy(values, (v, k) => {
-
-    const testResult =  submissionAttributes.includes(k)
-      && (values[k] !== initialValues[k])
-    return testResult
+  const updateValues = pickBy(values, (v, k) => {
+    return k ==='locNick' || (
+        Object.keys(schema.fields).includes(k) 
+        && (values[k] !== initialValues[k])
+      )
   })
 
-  const qbUpdateValues = pickBy(updateValues, (v, k) => qbFields.includes(k))
+  const qbUpdateValues = pickBy(values, (v, k) => {
+    return k ==='qbID' || (
+        qbFields.includes(k) 
+        && (values[k] !== initialValues[k])
+      )
+  })
 
-  console.log("Attributes to submit:")
-  console.log("...To AppSync:", JSON.stringify(updateValues, null, 2))
-  console.log("...to QB:", JSON.stringify(qbUpdateValues, null, 2))
+  console.log(updateValues, qbUpdateValues)
 
-  // Update QB
-  if (Object.keys(qbUpdateValues).length) {
-    console.log("Updating QB record")
-    // const accessToken = await checkQBValidation_v2()
-    // console.log("accessToken", accessToken)
+  if (Object.keys(qbUpdateValues).length > 1) {
 
-    // const SyncToken = await getQBProdSyncToken(accessToken, values)
-    // console.log('SyncToken', SyncToken)
+    const qbIdIsValid = /^[1-9][0-9]*$/.test(values.qbID)
 
-    // const qbResp = await createQBLoc(values, SyncToken)
-    // console.log("qbResp", qbResp)
+    if (qbIdIsValid) {
+      console.log(
+        "Submitting to AppSync:", 
+        JSON.stringify(qbUpdateValues, null, 2)
+      )
 
+      // const accessToken = await checkQBValidation_v2()
+      // console.log("accessToken", accessToken)
+  
+      // const SyncToken = await getQBProdSyncToken(accessToken, values)
+      // console.log('SyncToken', SyncToken)
+  
+      // const qbResp = await createQBLoc(values, SyncToken)
+      // console.log("qbResp", qbResp)
+    } else {
+
+      console.error("Cannot submit to QB")
+      alert(`Warning: invalid qbID.\n\nData will only be submitted to AppSync.`)
+    }
+
+  } else {
+
+    console.log("Nothing to submit to QB")
   }
 
-  if (Object.keys(updateValues).length) {
-    console.log("Updating through appsync")
-    // updateLocalData( await submitMutations({ updateInputs: [updateValues] }))
-  } 
+  if (Object.keys(updateValues).length > 1) {
+
+    console.log("Submitting to QB:", JSON.stringify(updateValues, null, 2))
+    // updateLocalData( 
+    //   await submitMutations({ updateInputs: [updateValues] })
+    // )
+  } else {
+    console.log("Nothing to submit to AppSync")
+  }
+  
+}
+
+
+
+const cleanSubmitValues = (values) => {
   
 }
