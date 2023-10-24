@@ -149,7 +149,6 @@ export const listLocations = /* GraphQL */ `
         ttl
         createdAt
         updatedAt
-        locationCreditAppId
       }
       nextToken
     }

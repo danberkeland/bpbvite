@@ -1,0 +1,22 @@
+.bpb-help-button {
+  color: hsl(218, 65%, 50%);
+  background-color: hsl(37, 100%, 70%);
+  opacity: .85;
+  border-radius: 8px;
+  padding: .24rem;
+  margin-inline: 0.5rem;
+  box-shadow: 0 1px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  -webkit-transition: background-color 0.5s ease-out;
+  -moz-transition: background-color 0.5s ease-out;
+  -o-transition: background-color 0.5s ease-out;
+  transition: background-color 0.5s ease-in-out;
+}
+
+.bpb-help-button.bpb-disabled {
+  opacity: .45;
+}
+
+.bpb-help-button:hover {
+  background-color: hsl(37, 100%, 90%);
+}

@@ -1,17 +1,16 @@
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 import { Button } from "primereact/button"
-import { Dropdown } from "primereact/dropdown"
 import { MultiSelect } from "primereact/multiselect"
 import { InputText } from "primereact/inputtext"
 
 import { useListData } from "../../../data/_listData"
 
-import { debounce, omitBy, sortBy, truncate, uniqBy } from "lodash"
+import { debounce, sortBy, truncate, uniqBy } from "lodash"
 import { TabMenu } from "primereact/tabmenu"
 
-import { useEffect, useState } from "react"
-import { FormDialog } from "./FormDialog"
+import { useState } from "react"
+import { LocationForm } from "./FormDialog"
 
 const tabOptions = [
   { label: 'Address', icon: '' },
@@ -83,17 +82,6 @@ export const Locations = () => {
       || zoneNickFilterValues.includes(L.zoneNick)
     )
 
-  const GMapTemplate = ({ row }) => {
-    // const [showDialog, setShowDialog] = useState(false)
-    if (!row.gMap) return 
-
-    return <div>
-      {/* <Dialog visible={showDialog} onHide={() => setShowDialog(false)}> */}
-      <a href={row.gMap} target="_blank" referrerPolicy="no-referrer">Link</a>
-    </div> 
-    
-  }
-
   const CreateButtonTemplate = ({ rowData }) => {
     const [show, setShow] = useState(false)
     const editMode = 'create'
@@ -104,7 +92,7 @@ export const Locations = () => {
         className="p-button-rounded" 
         onClick={() => setShow(true)}
       />
-      {show && <FormDialog {...dialogProps} />}
+      {show && <LocationForm {...dialogProps} />}
     </div>
   }
 
@@ -118,7 +106,7 @@ export const Locations = () => {
         className="p-button-rounded p-button-outlined" 
         onClick={() => setShow(true)}
       />
-      {show && <FormDialog {...dialogProps} />}
+      {show && <LocationForm {...dialogProps} />}
     </div>
   }
 
@@ -199,9 +187,9 @@ export const Locations = () => {
           <Column header="qbID" field="qbID" body={R => truncate(R.qbID, { length: 10 })} sortable style={{flex: "0 0 7rem"}} />,
           <Column header="Invoice Frequency" field="invoicing"  style={{flex: "0 0 7rem"}} />,
           <Column header="Terms" field="terms" style={{flex: "0 0 7rem"}} />,
-          <Column header="Print Invoice?" body={R => JSON.stringify(R.toBePrinted)} style={{flex: "0 0 7rem"}} />,
-          <Column header="Print Duplicate?" body={R => JSON.stringify(R.printDuplicate)} style={{flex: "0 0 7rem"}} />,
-          <Column header="Email Invoice?" body={R => JSON.stringify(R.toBeEmailed)} style={{flex: "0 0 7rem"}} />,
+          <Column header="Email Invoice?" body={R => boolTemplate(R.toBeEmailed)} style={{flex: "0 0 6rem"}} />,
+          <Column header="Print Invoice?" body={R => boolTemplate(R.toBePrinted)} style={{flex: "0 0 6rem"}} />,
+          <Column header="Print Duplicate?" body={R => boolTemplate(R.printDuplicate)} style={{flex: "0 0 6rem"}} />,
         ]}
 
         {columnCategory === 'Fulfillment' && [
@@ -249,3 +237,29 @@ export const Locations = () => {
 
 }
 
+
+
+const GMapTemplate = ({ row }) => {
+  // const [showDialog, setShowDialog] = useState(false)
+  if (!row.gMap) return 
+
+  return <div>
+    {/* <Dialog visible={showDialog} onHide={() => setShowDialog(false)}> */}
+    <a 
+      href={row.gMap} 
+      target="_blank" 
+      rel="noreferrer" 
+      referrerPolicy="no-referrer"
+    >
+      Link
+    </a>
+  </div> 
+  
+}
+
+
+const boolTemplate = (boolValue) => boolValue === true
+  ? <i className="pi pi-check-circle" />
+  : boolValue === false 
+    ? <i className="pi pi-times" style={{opacity: ".35"}} />
+    : JSON.stringify(boolValue, null, 2)

@@ -1,7 +1,7 @@
-import { maxBy } from "lodash"
-import { DateTime } from "luxon"
+// import { maxBy } from "lodash"
+// import { DateTime } from "luxon"
 import { Dialog } from "primereact/dialog"
-import TimeAgo from "timeago-react"
+// import TimeAgo from "timeago-react"
 
 export const CartHeaderSummary = ({
   showOrderDateDialog, 
@@ -17,10 +17,10 @@ export const CartHeaderSummary = ({
   user,
 }) => {
 
-  const lastEditItem = maxBy(
-    cartItems.filter(i => i.orderType === 'C'), 
-    item => new Date(item.updatedOn).getTime()
-  )
+  // const lastEditItem = maxBy(
+  //   cartItems.filter(i => i.orderType === 'C'), 
+  //   item => new Date(item.updatedOn).getTime()
+  // )
 
   const fulfillmentString = cartHeader 
   ? cartHeader.route === 'deliv' ? "Delivery"
@@ -63,7 +63,7 @@ export const CartHeaderSummary = ({
       style={{
         color: "hsl(37, 100%, 5%)",
         background: "var(--bpb-surface-content-header)",
-        padding: "1px 1rem",
+        padding: "1px 1rem .75rem 1rem",
         marginBottom: "1rem",
         borderRadius: "3px",
         boxShadow: "0 2px 1px -1px rgba(0, 0, 0, 0.2),"
@@ -107,7 +107,7 @@ export const CartHeaderSummary = ({
 
       </div> 
       
-      <div style={{
+      {/* <div style={{
         marginBottom: ".75rem", 
         fontSize: "0.9rem",
         color: !!lastEditItem ? "" : "hsla(37, 30%, 20%, .8)"
@@ -115,7 +115,7 @@ export const CartHeaderSummary = ({
         Last edit: {!!lastEditItem &&
           <em><TimeAgo datetime={lastEditItem.updatedOn}/></em>
         }
-      </div>
+      </div> */}
 
       <Dialog visible={showOrderDateDialog}
         header="8:00pm Cutoff"
