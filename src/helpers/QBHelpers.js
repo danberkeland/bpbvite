@@ -33,23 +33,32 @@ export const checkQBValidation = async () => {
 
 // fetch accessToken with getItem query instead
 export const checkQBValidation_v2 = async () => {
+
+  const fetchURL = "https://28ue1wrzng.execute-api.us-east-2.amazonaws.com/done"
   
-  const validationResp = await axios.get(
-    "https://28ue1wrzng.execute-api.us-east-2.amazonaws.com/done"
-  );
+  const accessToken = axios.get(fetchURL)
+    .then(response => {
+      if (!response) {
+        throw new Error("QB Auth not valid")
+      } else {
+        // get appsync token
+        return API.graphql(
+          graphqlOperation(getInfoQBAuth, { id: "accessToken" })
+        )
+      }
 
-  if (!validationResp.data) {
-    console.warn("not valid QB Auth")
-    console.log('validationResponse', validationResp)
-    return undefined 
-  }
+    })
+    .then(gqlResp => {
+      return gqlResp.data.getInfoQBAuth.infoContent
 
-  const tokenResp = await API.graphql(
-    graphqlOperation(getInfoQBAuth, { id: "accessToken" })
-  )
-    
-  return tokenResp.data.getInfoQBAuth.infoContent
-     
+    })
+    .catch(err => {
+
+      console.error(err)
+      return undefined
+    })
+
+  return accessToken   
 }
 
 

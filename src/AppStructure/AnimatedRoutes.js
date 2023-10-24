@@ -125,8 +125,8 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
               element={<SpecialOrders />}
             />
             <Route path="/Logistics/FreezerThaw" element={<FreezerThaw />} />
-            <Route path="/Locations" element={<Locations />} />
-            <Route path="/Locations/New" element={<LocationsNew />} />
+            <Route path="/Locations" element={<LocationsNew />} />
+            <Route path="/Locations/Old" element={<Locations />} />
             <Route
               path="/Settings/ManageCustomers"
               element={<ManageCustomers />}

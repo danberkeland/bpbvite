@@ -15,8 +15,11 @@ import { useFormik } from "formik"
 import { cleanLocationValues, defaultLocation, useLocationSchema, validateWithContext } from "./schema"
 
 import { useListData } from "../../../data/_listData"
-import { pickBy, sortBy, truncate } from "lodash"
-import { checkQBValidation_v2, getQBProdSyncToken } from "../../../helpers/QBHelpers"
+import { isEqual, pickBy, sortBy, truncate } from "lodash"
+import { checkQBValidation_v2 } from "../../../helpers/QBHelpers"
+
+import axios from "axios"
+import { useSettingsStore } from "../../../Contexts/SettingsZustand"
 
 const termsOptions = ["0", "15", "30"]
 const invoicingOptions = ["daily", "weekly", "no invoice"]
@@ -32,7 +35,12 @@ const categories = {
   Fulfillment: ['zoneNick', 'dfFulfill', 'latestFirstDeliv', 'latestFinalDeliv', 'delivOrder'],
 }
 
+
+
 export const LocationForm = ({ editMode, rowData, show, setShow }) => {
+
+  const isLoading = useSettingsStore((state) => state.isLoading)
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading)
 
   const locationCache = useListData({ tableName: "Location", shouldFetch: true })
   const { data:ZNE=[] } = useListData({ tableName: "Zone", shouldFetch: true})
@@ -47,10 +55,20 @@ export const LocationForm = ({ editMode, rowData, show, setShow }) => {
     validateOnBlur: true,
     onSubmit: values => {
       if (editMode === 'create') {
-        createLocation({ values })
+        createLocation({ 
+          values, 
+          locationCache,
+          setIsLoading,
+        })
       }
       if (editMode === 'update') {
-        updateLocation({ values, initialValues:rowData, schema, locationCache })
+        updateLocation({ 
+          values, 
+          initialValues:rowData, 
+          schema, 
+          locationCache,
+          setIsLoading,
+        })
       }
       formik.setSubmitting(false)
     }
@@ -70,7 +88,6 @@ export const LocationForm = ({ editMode, rowData, show, setShow }) => {
       : cKey
   }
   
-
   const dialogHeader = () => 
     <div 
       onClick={() => {
@@ -83,11 +100,11 @@ export const LocationForm = ({ editMode, rowData, show, setShow }) => {
   
   const dialogFooter = () => <div>
     <Button 
-      label="Submit" 
+      label={(formik.isSubmitting || isLoading) ? "Submitting..." : "Submit"}
       type="submit" 
       form="location-form"
       onClick={formik.handleSubmit}
-      disabled={formik.isSubmitting}
+      disabled={isEqual(rowData, formik.values) || isLoading}
     />
   </div>
   
@@ -169,41 +186,54 @@ const qbFields =
   ['qbId', 'locName', 'email', 'phone', 'addr1', 'addr2', 'city', 'zip']
 
 
-const createLocation = async ({ values }) => {
-  console.log(JSON.stringify(values, null, 2))
+const createLocation = async ({ values:rawValues, locationCache, setIsLoading }) => {
+  const { submitMutations, updateLocalData } = locationCache
+  setIsLoading(true)
+  const values = cleanLocationValues(rawValues)
+  console.log("Form Values:", JSON.stringify(values, null, 2))
 
+  // submit to QB
+  const accessToken = await checkQBValidation_v2()
+  console.log("accessToken:", truncate(accessToken, { length: 15 }))
+
+  const qbResp = await createQBLocation({ values, accessToken })
+  console.log("qbResp:", qbResp)
+
+  // submit to AppSync
+  updateLocalData(
+    await submitMutations({ createInputs: [{ ...values, qbID: qbResp.data }] })
+  )
+
+  setIsLoading(false)
 }
 
 const updateLocation = async ({ 
   values:rawValues, 
   initialValues, 
   schema, 
-  locationCache 
+  locationCache,
+  setIsLoading,
 }) => {
   const { submitMutations, updateLocalData } = locationCache
-  
-  //console.log(JSON.stringify(values, null, 2))
-
-  // cleanup routine will catch 
+  setIsLoading(true)
   const values = cleanLocationValues(rawValues)
-    
   console.log("Form Values:", JSON.stringify(values, null, 2))
 
   const updateValues = pickBy(values, (v, k) => {
-    return k ==='locNick' || (
+
+    return k === 'locNick' || (
         Object.keys(schema.fields).includes(k) 
         && (values[k] !== initialValues[k])
       )
   })
 
   const qbUpdateValues = pickBy(values, (v, k) => {
-    return k ==='qbID' || (
+
+    return k === 'qbID' || (
         qbFields.includes(k) 
         && (values[k] !== initialValues[k])
       )
   })
-
-  console.log(updateValues, qbUpdateValues)
 
   if (Object.keys(qbUpdateValues).length > 1) {
 
@@ -211,43 +241,140 @@ const updateLocation = async ({
 
     if (qbIdIsValid) {
       console.log(
-        "Submitting to AppSync:", 
+        "Changes to submit to QB:", 
         JSON.stringify(qbUpdateValues, null, 2)
       )
 
-      // const accessToken = await checkQBValidation_v2()
-      // console.log("accessToken", accessToken)
+      const accessToken = await checkQBValidation_v2()
+      console.log("accessToken:", truncate(accessToken, { length: 15 }))
   
-      // const SyncToken = await getQBProdSyncToken(accessToken, values)
-      // console.log('SyncToken', SyncToken)
+      const SyncToken = await getSyncToken({ qbID: values.qbID, accessToken })
+      console.log('SyncToken:', SyncToken)
   
-      // const qbResp = await createQBLoc(values, SyncToken)
-      // console.log("qbResp", qbResp)
+      const qbResp = await updateQBLocation({ values, SyncToken, accessToken })
+      console.log("qbResp:", qbResp)
+  
     } else {
-
       console.error("Cannot submit to QB")
-      alert(`Warning: invalid qbID.\n\nData will only be submitted to AppSync.`)
+      alert(`Warning: malformed qbID.\n\nData will only be submitted to AppSync.`)
+
     }
 
   } else {
-
     console.log("Nothing to submit to QB")
+
   }
 
   if (Object.keys(updateValues).length > 1) {
+    console.log(
+      "Changes to submit to AppSync:", 
+      JSON.stringify(updateValues, null, 2)
+    )
+    updateLocalData( 
+      await submitMutations({ updateInputs: [updateValues] })
+    )
 
-    console.log("Submitting to QB:", JSON.stringify(updateValues, null, 2))
-    // updateLocalData( 
-    //   await submitMutations({ updateInputs: [updateValues] })
-    // )
   } else {
     console.log("Nothing to submit to AppSync")
+
   }
-  
+
+  setIsLoading(false)  
 }
 
 
+const buildQBLocationItem = ({ locationValues:L, SyncToken="0" }) => {
+  let itemInfo =  {
+    FullyQualifiedName: L.locName,
+    PrimaryEmailAddr: {
+      Address: L.email,
+    },
+    DisplayName: L.locName,
+    PrimaryPhone: {
+      FreeFormNumber: L.phone,
+    },
+    CompanyName: L.locName,
+    BillAddr: {
+      CountrySubDivisionCode: "CA",
+      City: L.city,
+      PostalCode: L.zip,
+      Line1: L.addr1,
+      Line2: L.addr2,
 
-const cleanSubmitValues = (values) => {
+      Country: "USA",
+    },
+    sparse: false,
+    SyncToken,
+  }
+
+  if (!!L.qbID) {
+    itemInfo.Id = L.qbID
+  }
+
+  return itemInfo
+}
+
+/**
+ * Full item update as opposed to sparse update. 
+ * 
+ * Returned response object contains qbID in response.data
+ * Should return undefined if the fetch encounters an error
+ */
+const submitFullToQB = async ({ itemType, itemInfo, accessCode }) => {
+  const url = "https://brzqs4z7y3.execute-api.us-east-2.amazonaws.com/done"
+  const requestData = { itemType, itemInfo, accessCode }
+
+  const qbResponse = axios.post(url, requestData)
+    .catch(err => {
+      console.error("Error creating Location")
+      console.log(err)
+      return undefined
+    })
   
+  return qbResponse
+}
+
+
+const updateQBLocation = async ({ values, SyncToken, accessToken }) => {
+
+  const itemInfo = buildQBLocationItem({ locationValues: values, SyncToken })
+  const accessCode = "Bearer " + accessToken
+  return submitFullToQB({ itemType: "Customer", itemInfo, accessCode })
+}
+
+
+/**values.qbID should be falsy ("", null, undefined, ...) */
+const createQBLocation = async ({ values, accessToken }) => {
+  if (!!values.qbID) {
+    console.warn("values.qbID should be falsy")
+  } 
+
+  const itemInfo = buildQBLocationItem({ 
+    locationValues: values, 
+    SyncToken: "0" // ensures existing records cannot be overwritten
+  })
+  const accessCode = "Bearer " + accessToken
+  return submitFullToQB({ itemType: "Customer", itemInfo, accessCode })
+}
+
+
+const getSyncToken = async ({ qbID, accessToken }) => {
+  const url = "https://sntijvwmv6.execute-api.us-east-2.amazonaws.com/done"
+
+  const requestData = { 
+    itemType: "Customer", 
+    itemInfo: qbID, 
+    accessCode: "Bearer " + accessToken,
+  }
+
+  const SyncToken = axios.post(url, requestData)
+    .then((response) => {
+      return response.data
+    })
+    .catch(err => {
+      console.error("Error creating Item ")
+      console.log(err)
+    })
+
+  return SyncToken
 }

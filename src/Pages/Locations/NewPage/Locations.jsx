@@ -17,6 +17,7 @@ const tabOptions = [
   { label: 'Contact', icon: '' },
   { label: 'Billing', icon: '' },
   { label: 'Fulfillment', icon: '' },
+  { label: 'Misc', icon: '' },
 ]
 
 const levenshteinDistance = (s, t) => {
@@ -210,6 +211,14 @@ export const Locations = () => {
           <Column header="Earliest Deliv" field="latestFirstDeliv" style={{flex: ".1 0 7rem"}} />,
           <Column header="Latest Deliv" field="latestFinalDeliv" style={{flex: ".1 0 7rem"}} />,
           <Column header="Deliv Order" field="delivOrder" body={R => JSON.stringify(R.delivOrder)} sortable style={{flex: ".1 0 7rem"}} />,
+        ]}
+
+        {columnCategory === 'Misc' && [
+          <Column header="Is Active?" field="isActive" />,
+          <Column header="Current Balance" field="currentBalance" />,
+          <Column header="picURL" field="picURL" />,
+          <Column header="Email for Order Confirmation" field="orderCnfEmail" />,
+          <Column header="Webpage URL" field="webpageURL" />,
         ]}
 
       </DataTable>
