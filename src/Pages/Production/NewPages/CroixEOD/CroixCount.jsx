@@ -11,6 +11,7 @@ import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
 import { InputNumber } from 'primereact/inputnumber'
 import { DateTime } from 'luxon'
+import { useNorthEodData } from './data'
 
 
 const countProdNicks = ['ch', 'mb', 'mini', 'pg', 'pl', 'sf']
@@ -63,6 +64,9 @@ export const CroixCount = () => {
     submitMutations, 
     updateLocalData 
   } = useCroixProductData()
+
+  // const { data:northEodData } = useNorthEodData()
+  // console.log(northEodData)
 
   const [editMode, setEditMode] = useState('none')
   const [counts, setCounts] = useState()
