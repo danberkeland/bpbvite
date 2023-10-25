@@ -87,7 +87,10 @@ const SetoutByLocation = ({ reportLocation }) => {
   }
 
   return (
-    <div style={{width:"30rem", marginBottom: "10rem"}}>
+    <div style={{
+      width:"30rem", 
+      margin: "auto"
+    }}>
       <h1>Prado Pastry Prep {todayUS}</h1>
       <Button label={`Print ${reportLocation} Prep List`} 
         onClick={() => {

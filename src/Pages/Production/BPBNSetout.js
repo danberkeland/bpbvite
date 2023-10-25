@@ -34,7 +34,7 @@ let today = todayPlus()[0];
 
 const compose = new ComposePastryPrep();
 
-function BPBNSetOutLegacy({ loc }) {
+function BPBNSetOut({ loc }) {
   const [setOut, setSetOut] = useState([]);
   const [delivDate, setDelivDate] = useState(todayPlus()[0]);
   const [pastryPrep, setPastryPrep] = useState([]);
@@ -242,36 +242,6 @@ function BPBNSetOutLegacy({ loc }) {
       </WholeBox>
     </React.Fragment>
   );
-}
-
-
-
-const BPBNSetOut = ({ loc }) => {
-  const [showLegacy, setShowLegacy] = useState()
-
-  return (<>
-    <Button label="Use Old Version" 
-      onClick={() => setShowLegacy(true)}
-      style={{margin: "1rem"}}
-    />
-    <Button label="Use New Version" 
-      onClick={() => setShowLegacy(false)}
-      style={{margin: "1rem"}}
-    />
-    
-    <div style={{marginTop: "2rem"}}>
-      {showLegacy === true && <BPBNSetOutLegacy loc={loc} />}
-      {showLegacy === false && 
-        <div style={{
-          display: "flex",
-          justifyContent: "center"
-        }}>
-          {loc === "Prado" && <BPBSSetoutNew />}
-          {loc === "Carlton" && <BPBNSetoutNew />}
-        </div>
-      }
-    </div>
-  </>)
 }
 
 export default BPBNSetOut
