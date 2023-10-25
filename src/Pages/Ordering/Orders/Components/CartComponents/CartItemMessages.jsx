@@ -54,6 +54,9 @@ export const CartItemMessages = ({
 
   const removeColor = displayFor === 'itemDisplay' && !qty
 
+  const isSpecialOrder = (cartItem?.baseQty ?? 0) !== 0                                                  // holefully only as an intentional admin override
+    && product.meta.assignedRouteSummary.isValid === false
+
   return (<>
 
 
@@ -87,7 +90,10 @@ export const CartItemMessages = ({
     />
 
 
-    <IconInfoMessage showIf={!isAvailable || !assignedRouteIsValid}
+    <IconInfoMessage showIf={
+        (user.authClass === 'bpbfull' || !isSpecialOrder)
+        && (!isAvailable || !assignedRouteIsValid)
+      }
       text={`Not available for 
         ${fulfillmentDisplayTextMap[fulfillmentOption]} 
         ${strWeekdayFull}s`
@@ -100,7 +106,12 @@ export const CartItemMessages = ({
       iconColor={removeColor ? "" : warnColor}
     /> 
 
-
+    <IconInfoMessage showIf={isSpecialOrder && user.authClass === 'bpbfull'}
+      text={"Submitted item flagged not valid"}
+      iconClass={"pi pi-fw pi-exclamation-triangle"} 
+      iconColor={removeColor ? "" : warnColor}
+    /> 
+  
     {!defaultInclude && user.authClass === 'bpbfull' && 
       <div style={{paddingBlock: ".2rem", fontSize: ".9rem"}}>
         <Tag 
@@ -112,8 +123,12 @@ export const CartItemMessages = ({
         Special cases only
       </div>
     } 
-    <IconInfoMessage showIf={!defaultInclude && user.authClass !== 'bpbfull'}
-      text={`Special Order (read only)`} 
+    <IconInfoMessage 
+      showIf={
+        (!defaultInclude || isSpecialOrder)
+        && user.authClass !== 'bpbfull'
+      }
+      text={"Special order (read only)"}
       iconClass="pi pi-fw pi-info-circle"
       iconColor={!!qty ? "hsl(218, 43%, 50%)" : ""}
     />

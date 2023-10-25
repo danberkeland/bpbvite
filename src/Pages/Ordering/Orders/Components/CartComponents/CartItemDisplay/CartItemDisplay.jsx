@@ -189,6 +189,8 @@ export const CartItemDisplay = ({
     const product = products[prodNick]
     const { packSize } = product
     const shouldDisableSample = (rate === 0 && user.authClass !== 'bpbfull')
+    const isSpecialOrder = rowData.baseQty !== 0                                                  // holefully only as an intentional admin override
+      && product.meta.assignedRouteSummary.isValid === false
 
     return (
       <div style={{display: "flex", flexDirection: "column"}}>
@@ -200,7 +202,11 @@ export const CartItemDisplay = ({
           cartMeta={cartMeta}
           setCartItems={setCartItems}
           user={user}
-          disableInputs={disableInputs || shouldDisableSample}
+          disableInputs={
+            disableInputs 
+            || shouldDisableSample
+            || (user.authClass !== 'bpbfull' && isSpecialOrder)
+          }
           deactivated={deactivated}
         />
         </div>

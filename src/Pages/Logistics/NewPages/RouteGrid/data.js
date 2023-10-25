@@ -31,12 +31,31 @@ export const useRouteGrid = ({ reportDate, shouldFetch }) => {
       'asc'
     )
 
+    // *** The following has been replaced with new logic farther below ***
+    //
+    // const ordersByRoute = groupBy(
+    //   orders, 
+    //   order => order.routeMeta.isValid 
+    //     ? order.routeMeta.routeNick
+    //     : "NOT ASSIGNED"
+    // )
+
+    // Easing up restrictions for route grid:
+    //
+    // routeMeta.isValid was originally designed for ordering logic and includes
+    // a check on daysAvailable to mark items as valid/invalid.
+    // Admins have the opportunity to override these checks and enter orders
+    // anyway.
+    //
+    // We change the logic here to only check the logistics part -- if there is
+    // a route that could theoretically get the item to its destination,
     const ordersByRoute = groupBy(
       orders, 
-      order => order.routeMeta.isValid 
+      order => order.routeMeta.routeIsAvailable 
         ? order.routeMeta.routeNick
         : "NOT ASSIGNED"
     )
+
     // console.log("ordersByRoute", ordersByRoute)
 
      // pivot columns have full order object values
