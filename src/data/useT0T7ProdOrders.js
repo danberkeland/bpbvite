@@ -23,6 +23,7 @@ import { getRouteOptions } from "../Pages/Ordering/Orders/data/productHooks"
 // indexes that allow for easy grouping/filtering.
 
 // Possible future improvement could be to clean up the routeMeta object
+/** reportDate should be a yyyy-MM-dd formatted date string. */
 export const useT0T7ProdOrders = ({ shouldFetch, reportDate }) => {
 
   const { data:cart } = useListData({ tableName: "Order", shouldFetch })

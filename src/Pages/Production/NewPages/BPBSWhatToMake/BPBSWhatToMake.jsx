@@ -10,6 +10,7 @@ import { useListData } from "../../../../data/_listData"
 import { keyBy, round, set, sumBy } from "lodash"
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog"
 import { exportBpbsWtmPdf } from "./exportPdf"
+import { useCheckUpdates } from "../../Utils/useCheckUpdates"
 
 const flexSplitStyle = {
   display: "flex",
@@ -47,6 +48,8 @@ export const BPBSWhatToMake = () => {
       ? '' 
       : "rgb(191, 210, 218)"
   }
+
+  useCheckUpdates() // overnight flip routine, check square orders
 
   const { data:WTM } = useBpbsWtmData({ shouldFetch: true, reportRelDate })
   const { 

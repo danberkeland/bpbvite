@@ -121,18 +121,13 @@ export const defaultLocation = {
 // Coerces null values in old data to standard defaults,
 // elminiates whitespace from strings
 export const cleanLocationValues = (location) => {
-
   const cleanedLocation = { 
+    ...defaultLocation,
     ...pickBy(location, (key, val) => val !== null), 
-    ...location,
     email: location.email.split(/[\s,]+/).join(',')
   }
 
-
-
-
   return cleanedLocation
-
 }
 
 /**

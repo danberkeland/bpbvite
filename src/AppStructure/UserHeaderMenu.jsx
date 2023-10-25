@@ -24,7 +24,7 @@ export const UserHeaderMenu = () => {
     authClass: useSettingsStore((state) => state.authClass),
     locNick: useSettingsStore((state) => state.currentLoc),
   };
-  console.log('user', user)
+  // console.log('user', user)
   const setCurrentLoc = useSettingsStore((state) => state.setCurrentLoc);
   const setFormType = useSettingsStore((state) => state.setFormType);
 
@@ -34,7 +34,7 @@ export const UserHeaderMenu = () => {
     !!user.locNick
   );
   const { data: locationList } = useLocationListSimple(true);
-  console.log('userDetails', userDetails)
+  // console.log('userDetails', userDetails)
 
   const userMenu = useRef(null);
   const locationMenu = useRef(null);
