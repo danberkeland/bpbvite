@@ -44,7 +44,7 @@ const clonedeep = require("lodash.clonedeep");
 
 const compose = new ComposeWhatToMake();
 
-function BPBSWhatToMakeLegacy() {
+function BPBSWhatToMake() {
  
  
   const [youllBeShort, setYoullBeShort] = useState();
@@ -414,36 +414,6 @@ function BPBSWhatToMakeLegacy() {
       </WholeBox>
     </React.Fragment>
   );
-}
-
-const BPBSWhatToMake = () => {
-  const [showLegacy, setShowLegacy] = useState()
-
-  return (<>
-    <Button label="Use Old Version" 
-      onClick={() => setShowLegacy(true)}
-      style={{margin: "1rem"}}
-    />
-    <Button label="Use New Version" 
-      onClick={() => setShowLegacy(false)}
-      style={{margin: "1rem"}}
-    />
-    
-    <div style={{marginTop: "2rem"}}>
-      {showLegacy === true && <BPBSWhatToMakeLegacy />}
-      {showLegacy === false && 
-        <div style={{
-          display: "flex",
-          justifyContent: "center",
-          // marginLeft: "50%",
-          // marginRight: "50%"
-        }}>
-          <BPBSWhatToMakeNew />
-        </div>
-      }
-    </div>
-  </>)
-  
 }
 
 export default BPBSWhatToMake;

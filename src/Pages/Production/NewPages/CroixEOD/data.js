@@ -9,9 +9,9 @@ import { DateTime } from "luxon"
 import { useT0T7ProdOrders } from "../../../../data/useT0T7ProdOrders"
 import { useListData } from "../../../../data/_listData"
 import { useMemo } from "react"
-import { keyBy } from "lodash"
+import { keyBy} from "lodash"
 
-import { flow, pickBy, mapValues, mapKeys, groupBy, sumBy } from "lodash/fp"
+import { flow, pickBy, mapValues, mapKeys, groupBy, sumBy, merge, filter, map } from "lodash/fp"
 
 // maps different croissant type products back to their original shaped type.
 // we label orders by these 'shapeNicks' to help us aggregate qtys.
@@ -29,63 +29,75 @@ const mapToShapeNick = (prodNick) => shapeNickMap[prodNick]
 const isBakedCroix = (product) => product.packGroup === "baked pastries" 
   && product.doughNick === "Croissant"
 
-const makeSummarizedData = (orderArray) => {
-  return {
-    shapeNick: (orderArray[0] ?? {}).shapeNick,
-    total: sumBy('qty')(orderArray),
-    items: orderArray,
-  }
-}
 
 // can take any superset of T0 & T1 orders. Holding orders are not required.
 const calculateCroixSentNorth = ({ T0T1Orders, products }) => {
+  console.log("products", products)
 
-  const shapeNickObject = flow(
+  const freezerCounts = flow(
     pickBy(isBakedCroix),
-    mapValues(product => []),
+    mapValues(product => ({ total: product.freezerNorth })),
     mapKeys(mapToShapeNick),
   )(products)  
 
-  const frozenOrders = T0T1Orders
-    .filter(order => {
-      const product = products[order.prodNick]
+  const emptyData = mapValues(P => ({ total: 0, items: []}))(freezerCounts)
 
-      return order.relDate === 0
-        && product.packGroup === "frozen pastries"
-        && product.doughNick === "Croissant"
-        && order.isStand !== false
-        && order.routeMeta.route.RouteDepart === "Carlton"
+  const isT0FrozenNorthCroixOrder = (order) => {
+    const product = products[order.prodNick]
 
-    })
-    .map(order => {
-      return { ...order, shapeNick: shapeNickMap[order.prodNick] }
-
-    })
-
-  const bakedOrders = T0T1Orders
-    .filter(order => {
-      const product = products[order.prodNick]
-
-      return order.relDate === 1
-        && product.packGroup === "baked pastries"
-        && product.doughNick === "Croissant"
-        && order.isStand !== false
-        && order.routeMeta.route.RouteDepart === "Carlton"
-
-    })
-    .map(order => {
-      return { ...order, shapeNick: shapeNickMap[order.prodNick] }
-
-    })
-
-  const ordersByShapeNick = {
-    ...shapeNickObject,
-    ...groupBy('shapeNick')(frozenOrders.concat(bakedOrders))
+    return order.relDate === 0
+      && product.packGroup === "frozen pastries"
+      && product.doughNick === "Croissant"
+      && order.isStand !== false
+      && order.routeMeta.route.RouteDepart === "Carlton"
   }
 
+  const _frozenOrders = flow(
+    filter(isT0FrozenNorthCroixOrder),
+    map(order => ({ ...order, shapeNick: shapeNickMap[order.prodNick] })),
+    groupBy('shapeNick'),
+    mapValues(group => ({ total: sumBy('qty')(group), items: group }))
+  )(T0T1Orders)
+  const frozenOrders = { ...emptyData, ..._frozenOrders }
 
-  return mapValues(makeSummarizedData)(ordersByShapeNick)
+  const isT1BakedNorthCroixOrder = (order) => {
+    const product = products[order.prodNick]
+
+    return order.relDate === 1
+      && product.packGroup === "baked pastries"
+      && product.doughNick === "Croissant"
+      && order.isStand !== false
+      && order.routeMeta.route.RouteDepart === "Carlton"
+
+  }
+
+  const _bakedOrders = flow(
+    filter(isT1BakedNorthCroixOrder),
+    map(order => ({ ...order, shapeNick: shapeNickMap[order.prodNick] })),
+    groupBy('shapeNick'),
+    mapValues(group => ({ total: sumBy('qty')(group), items: group }))
+  )(T0T1Orders)
+  const bakedOrders = { ...emptyData, ..._bakedOrders }
   
+
+  const calculateSendNorthTotal = (value, shapeNickKey) => {
+    const fr = frozenOrders[shapeNickKey].total
+    const bk = bakedOrders[shapeNickKey].total
+    const stock = freezerCounts[shapeNickKey].total
+
+    return Math.ceil(Math.max(fr + bk - stock, 0) / 12) * 12
+  }
+
+  console.log("emptyData", emptyData)
+  const northEodCounts = 
+    mapValues.convert({cap: false})(calculateSendNorthTotal)(emptyData)
+
+  return {
+    bakedOrders,
+    freezerCounts,
+    frozenOrders,
+    northEodCounts,
+  }
 }
 
 
@@ -102,7 +114,7 @@ export const useNorthEodData = () => {
     tableName: "Product", 
     shouldFetch: true 
   })
-
+ 
 
 
   const calculateValue = () => {
@@ -111,22 +123,16 @@ export const useNorthEodData = () => {
     const products = keyBy(PRD, 'prodNick')
     
     console.log(products, orders)
-    const croixSentNorth = calculateCroixSentNorth({ 
-      T0T1Orders: orders,
-      products,
-    })
-
+    const croixSentNorth = 
+      calculateCroixSentNorth({ T0T1Orders: orders, products })
     console.log("croixSentNorth:", croixSentNorth)
+
+
+
+
   }
 
 
 
   return { data: useMemo(calculateValue, [orders, PRD])}
 }
-
-
-
-
-    // PRD.filter(P => {
-    //   return P.packGroup === "baked pastries" && P.doughType === "Croissant"
-    // })

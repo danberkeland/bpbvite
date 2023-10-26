@@ -95,7 +95,7 @@ export const CartQtyInput = ({
     <InputText
       value={qty}
       //value={inputStr}
-      // readOnly={disableQtyInput}
+      readOnly={disableQtyInput}
       inputMode="numeric"
       keyfilter={/[0-9]/}
       //keyfilter={/[0-9+-]/}

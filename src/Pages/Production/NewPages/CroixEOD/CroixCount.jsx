@@ -25,11 +25,8 @@ const footerStyle = {
 
 const useCroixProductData = () => {
 
-  const { 
-    data:PRD,
-    submitMutations,
-    updateLocalData, 
-  } = useListData({ tableName: "Product", shouldFetch: true })
+  const { data:PRD, submitMutations, updateLocalData } = 
+    useListData({ tableName: "Product", shouldFetch: true })
 
   const composeData = () => {
 
@@ -65,8 +62,8 @@ export const CroixCount = () => {
     updateLocalData 
   } = useCroixProductData()
 
-  // const { data:northEodData } = useNorthEodData()
-  // console.log(northEodData)
+  const { data:northEodData } = useNorthEodData()
+  console.log(northEodData)
 
   const [editMode, setEditMode] = useState('none')
   const [counts, setCounts] = useState()
@@ -156,90 +153,93 @@ export const CroixCount = () => {
   }
 
 
-  return(<div>
-    
-    <h1><div>Croissant Freezer Count</div><div>{today}</div></h1>
+  return(
+    <div style={{width: "25rem", margin: "auto"}}>
+      <h1>
+        <div>Croissant Freezer Count</div>
+        <div>{today}</div>
+      </h1>
 
-    <div>
       <div>
-        <h2>South Freezer</h2>
-        <DataTable 
-          value={sortBy(Object.values(countData), 'prodNick')} 
-          size="large"
-          style={{width: "25rem"}}
-        >
-          <Column header="Product" 
-            field="prodNick"
-            bodyStyle={{fontWeight: "bold"}} 
-            footerStyle={footerStyle} 
-          />
-          <Column field="freezerCount" 
-            header={() => countHeaderTemplate(
-              { attribute: "freezerCount", headerText: "Open" }
-            )}
-            body={rowData => countColumnTemplate({ 
-              rowData, attribute: "freezerCount", syncAtt: "freezerClosing", 
-            })}
-            bodyStyle={{paddingBlock: "0rem", width: "8.25rem"}}
-            footer={rowData => countFooterTemplate(
-              { attribute: "freezerCount"}
-            )}
-            footerStyle={footerStyle}
-          />
-          <Column field="freezerClosing"
-            header={() => countHeaderTemplate(
-              { attribute: "freezerClosing", headerText: "Close" }
-            )} 
-            body={rowData => countColumnTemplate({ 
-              rowData, attribute: "freezerClosing", syncAtt: "freezerCount", 
-            })}
-            bodyStyle={{paddingBlock: "0rem", width: "8.25rem"}}
-            footer={rowData => countFooterTemplate(
-              { attribute: "freezerClosing"}
-            )}
-            footerStyle={footerStyle}
-          />
-        </DataTable>
-      </div>
+        <div>
+          <h2>South Freezer</h2>
+          <DataTable 
+            value={sortBy(Object.values(countData), 'prodNick')} 
+            size="large"
+            style={{width: "25rem"}}
+          >
+            <Column header="Product" 
+              field="prodNick"
+              bodyStyle={{fontWeight: "bold"}} 
+              footerStyle={footerStyle} 
+            />
+            <Column field="freezerCount" 
+              header={() => countHeaderTemplate(
+                { attribute: "freezerCount", headerText: "Open" }
+              )}
+              body={rowData => countColumnTemplate({ 
+                rowData, attribute: "freezerCount", syncAtt: "freezerClosing", 
+              })}
+              bodyStyle={{paddingBlock: "0rem", width: "8.25rem"}}
+              footer={rowData => countFooterTemplate(
+                { attribute: "freezerCount"}
+              )}
+              footerStyle={footerStyle}
+            />
+            <Column field="freezerClosing"
+              header={() => countHeaderTemplate(
+                { attribute: "freezerClosing", headerText: "Close" }
+              )} 
+              body={rowData => countColumnTemplate({ 
+                rowData, attribute: "freezerClosing", syncAtt: "freezerCount", 
+              })}
+              bodyStyle={{paddingBlock: "0rem", width: "8.25rem"}}
+              footer={rowData => countFooterTemplate(
+                { attribute: "freezerClosing"}
+              )}
+              footerStyle={footerStyle}
+            />
+          </DataTable>
+        </div>
 
-      <div style={{margin: "4rem 0 6rem 0"}}>
-        <h2>North Freezer</h2>
-        <DataTable 
-          value={sortBy(Object.values(countData), 'prodNick')} 
-          size="large"
-          style={{width: "25rem"}}
-        >
-          <Column header="Product" 
-            field="prodNick" 
-            bodyStyle={{fontWeight: "bold"}} 
-            footerStyle={footerStyle}
-          />
-          <Column header="Open"
-            body={rowData => counts[rowData.prodNick].freezerNorth}
-            bodyStyle={{paddingBlock: "0rem", width: "8.25rem"}}
-            //footer={''}
-            footerStyle={footerStyle}
-          />
-          <Column field="freezerNorthClosing"
-            header={() => countHeaderTemplate(
-              { attribute: "freezerNorthClosing", headerText: "Close" }
-            )}
-            body={rowData => countColumnTemplate({ 
-              rowData, 
-              attribute: "freezerNorthClosing", 
-              syncAtt: "freezerNorth", 
-            })}
-            bodyStyle={{paddingBlock: "0rem", width: "8.25rem"}}
-            footer={rowData => countFooterTemplate(
-              { attribute: "freezerNorthClosing"}
-            )}
-            footerStyle={footerStyle}
-          />
-        </DataTable>
+        <div style={{margin: "4rem 0 6rem 0"}}>
+          <h2>North Freezer</h2>
+          <DataTable 
+            value={sortBy(Object.values(countData), 'prodNick')} 
+            size="large"
+            style={{width: "25rem"}}
+          >
+            <Column header="Product" 
+              field="prodNick" 
+              bodyStyle={{fontWeight: "bold"}} 
+              footerStyle={footerStyle}
+            />
+            <Column header="Open"
+              body={rowData => counts[rowData.prodNick].freezerNorth}
+              bodyStyle={{paddingBlock: "0rem", width: "8.25rem"}}
+              //footer={''}
+              footerStyle={footerStyle}
+            />
+            <Column field="freezerNorthClosing"
+              header={() => countHeaderTemplate(
+                { attribute: "freezerNorthClosing", headerText: "Close" }
+              )}
+              body={rowData => countColumnTemplate({ 
+                rowData, 
+                attribute: "freezerNorthClosing", 
+                syncAtt: "freezerNorth", 
+              })}
+              bodyStyle={{paddingBlock: "0rem", width: "8.25rem"}}
+              footer={rowData => countFooterTemplate(
+                { attribute: "freezerNorthClosing"}
+              )}
+              footerStyle={footerStyle}
+            />
+          </DataTable>
+        </div>
       </div>
     </div>
-  </div>)
-  
+  )
 }
 
 

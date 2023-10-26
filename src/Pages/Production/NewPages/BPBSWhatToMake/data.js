@@ -50,17 +50,17 @@ const isPretzelProduct = (product) => product.bakedWhere.includes("Prado")
 // is relative to the actual current date. The reportRelDate can be set to
 // 0 or 1 generate lists for Today (for morning bakes) or for tomorrow
 // (for exporting backups).
-export const useBpbsWtmData = ({ shouldFetch, reportRelDate }) => {
+export const useBpbsWtmData = ({ shouldFetch, reportDate, reportRelDate }) => {
   if (![0, 1].includes(reportRelDate)) {
     console.error("What To Make only supported for today or tomorrow")
   }
 
-  const today = DateTime.now()
-    .setZone('America/Los_Angeles')
-    .startOf('day')
-    .toFormat('yyyy-MM-dd')
+  // const today = DateTime.now()
+  //   .setZone('America/Los_Angeles')
+  //   .startOf('day')
+  //   .toFormat('yyyy-MM-dd')
   
-  const { data:_prodOrders } = useT0T7ProdOrders({ shouldFetch, reportDate: today })
+  const { data:_prodOrders } = useT0T7ProdOrders({ shouldFetch, reportDate })
   const { data:_PRD } = useListData({ tableName: "Product", shouldFetch })
 
   const composeData = () => {

@@ -5,6 +5,7 @@ import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 import { Dialog } from "primereact/dialog"
 import { InputNumber } from "primereact/inputnumber"
+import { Calendar } from "primereact/calendar"
 import { useEffect, useState } from "react"
 import { useListData } from "../../../../data/_listData"
 import { keyBy, round, set, sumBy } from "lodash"
@@ -34,6 +35,7 @@ const formatHours = (timeFloat) => {
 
 export const BPBSWhatToMake = () => {
 
+  const [reportDate, setReportDate] = useState(today)
   const [reportRelDate, setReportRelDate] = useState(0)
   console.log(reportRelDate)
   const reportDateDT = todayDT.plus({ days: reportRelDate })
@@ -51,7 +53,11 @@ export const BPBSWhatToMake = () => {
 
   useCheckUpdates() // overnight flip routine, check square orders
 
-  const { data:WTM } = useBpbsWtmData({ shouldFetch: true, reportRelDate })
+  const { data:WTM } = useBpbsWtmData({ 
+    shouldFetch: true, 
+    reportRelDate,
+    reportDate,
+  })
   const { 
     data:PRD,
     submitMutations:submitProducts,
@@ -64,7 +70,7 @@ export const BPBSWhatToMake = () => {
   useEffect(() => {if (!!WTM) {
     const preshapedDict = Object.fromEntries(
       WTM.frenchPocketData.map(row => 
-        [row.prodNick, row. preshaped - row.needTodayCol.totalEa]
+        [row.prodNick, row.preshaped - row.needTodayCol.totalEa]
       )
     )
 
@@ -132,209 +138,221 @@ export const BPBSWhatToMake = () => {
     />
 
   
-  return(<div style={{marginBottom: "10rem", flex: "0 0 40rem"}}>
-    <div style={flexSplitStyle}>
-      <h1 style={{marginTop: "0"}}>
-        BPBS What to Make <br />
-        {reportDateUS} {reportRelDate === 1 ? " (Backup)" : ''}
-      </h1> 
+  return(
+    <div style={{
+      marginTop: "5rem",
+      display: "flex",
+      justifyContent: "center",
+      // marginLeft: "50%",
+      // marginRight: "50%"
+    }}>
+    <div style={{
+      marginBottom: "10rem", 
+      flex: "0 0 35rem",
+    }}>
+      {/* <DevCalendar reportDate={reportDate} setReportDate={setReportDate} /> */}
+      <div style={flexSplitStyle}>
+        <h1 style={{marginTop: "0"}}>
+          BPBS What to Make <br />
+          {reportDateUS} {reportRelDate === 1 ? " (Backup)" : ''}
+        </h1> 
 
-      <div>
-        <Button label="Today" 
-          onClick={() => setReportRelDate(0)}
-          className={reportRelDate === 0 ? '' : 'p-button-outlined'}
-        />
-    
-        <Button label="Tomorrow" 
-          onClick={() => setReportRelDate(1)}
-          className={reportRelDate === 1 ? '' : 'p-button-outlined'}
-          style={{marginLeft: "1rem"}}
-        />
+        <div>
+          <Button label="Today" 
+            onClick={() => setReportRelDate(0)}
+            className={reportRelDate === 0 ? '' : 'p-button-outlined'}
+          />
+      
+          <Button label="Tomorrow" 
+            onClick={() => setReportRelDate(1)}
+            className={reportRelDate === 1 ? '' : 'p-button-outlined'}
+            style={{marginLeft: "1rem"}}
+          />
+        </div>        
       </div>
 
-    </div>
+      <Button label="Print What to Make List" 
+        onClick={handlePrintPDF}  
+      />
+      <ConfirmDialog />
 
-    <Button label="Print What to Make List" 
-      onClick={handlePrintPDF}  
-    />
-    <ConfirmDialog />
+      <h2>Pocket Count</h2>
+      <DataTable value={WTM.frenchPocketData}>
+        <Column header="Pocket Size" 
+          field="weight" 
+          headerStyle={{...headerStyle}}
+        />
+        <Column header="Available" 
+          body={row => reportRelDate === 0 
+            ? calcPreshaped(row.prodNick)
+            : frenchPocketDict?.[row.prodNick].prepreshaped
+          } 
+          headerStyle={{...headerStyle}}
+        />
+        <Column header="Need Today" 
+          field="needTodayCol.totalEa" 
+          headerStyle={{...headerStyle}}
+        />
+        <Column header="Short(-)/Surplus(+)" 
+          field="surplus" 
+          body={pocketInputTemplate}
+          headerStyle={{...headerStyle}}
+        />
+      </DataTable>
 
-    <h2>Pocket Count</h2>
-    <DataTable value={WTM.frenchPocketData}>
-      <Column header="Pocket Size" 
-        field="weight" 
-        headerStyle={{...headerStyle}}
-      />
-      <Column header="Available" 
-        body={row => reportRelDate === 0 
-          ? calcPreshaped(row.prodNick)
-          : frenchPocketDict?.[row.prodNick].prepreshaped
-        } 
-        headerStyle={{...headerStyle}}
-      />
-      <Column header="Need Today" 
-        field="needTodayCol.totalEa" 
-        headerStyle={{...headerStyle}}
-      />
-      <Column header="Short(-)/Surplus(+)" 
-        field="surplus" 
-        body={pocketInputTemplate}
-        headerStyle={{...headerStyle}}
-      />
-    </DataTable>
+      <h2>Baguette Production</h2>
+      <DataTable value={WTM.baguetteData}>
+        <Column header="Product" field="product" headerStyle={{...headerStyle}}/>
+        <Column header="Bucket" field="bucket" headerStyle={{...headerStyle}}/>
+        <Column header="Mix" field="mix" headerStyle={{...headerStyle}}/>
+        <Column header="Bake" field="bake" headerStyle={{...headerStyle}}/>
+      </DataTable>
 
-    <h2>Baguette Production</h2>
-    <DataTable value={WTM.baguetteData}>
-      <Column header="Product" field="product" headerStyle={{...headerStyle}}/>
-      <Column header="Bucket" field="bucket" headerStyle={{...headerStyle}}/>
-      <Column header="Mix" field="mix" headerStyle={{...headerStyle}}/>
-      <Column header="Bake" field="bake" headerStyle={{...headerStyle}}/>
-    </DataTable>
+      <h2>Send Pockets North</h2>
+      <DataTable value={WTM.northPocketData} size="small">
+        <Column header="Product" field="rowKey" headerStyle={{...headerStyle}}/>
+        <Column header="Total" 
+          body={(rowData => ExpandableCellTemplate({
+            dialogHeader: 'Orders for Carlton Pickup',
+            colKey: 'makeTotalCol',
+            rowData,
+            products,
+          }))}  
+          headerStyle={{...headerStyle}}
+        />
+      </DataTable>
 
-    <h2>Send Pockets North</h2>
-    <DataTable value={WTM.northPocketData} size="small">
-      <Column header="Product" field="rowKey" headerStyle={{...headerStyle}}/>
-      <Column header="Total" 
-        body={(rowData => ExpandableCellTemplate({
-          dialogHeader: 'Orders for Carlton Pickup',
-          colKey: 'makeTotalCol',
-          rowData,
-          products,
-        }))}  
-        headerStyle={{...headerStyle}}
-      />
-    </DataTable>
+      <h2>Make Fresh</h2>
+      <DataTable value={WTM.freshData} size="small">
+        <Column header="Product" field="rowKey" headerStyle={{...headerStyle}}/>
+        <Column header="Total Deliv" field="makeTotalCol.totalEa"
+          body={(rowData => ExpandableCellTemplate({
+            dialogHeader: 'Bake & Deliver Today',
+            colKey: 'makeTotalCol',
+            rowData,
+            products,
+          }))}  
+          headerStyle={{...headerStyle}}
+        />
+        <Column header="Make Total" field="totalDelivCol.totalEa"
+          body={(rowData => ExpandableCellTemplate({
+            dialogHeader: 'Total Requirements',
+            colKey: 'makeTotalCol',
+            rowData,
+            products,
+          }))}  
+          headerStyle={{...headerStyle}}
+        />
+        <Column header="Bag For Tomorrow" field="bagTomorrowCol.totalEa"
+          body={(rowData => ExpandableCellTemplate({
+            dialogHeader: 'Bake Ahead for Tomorrow',
+            colKey: 'bagTomorrowCol',
+            rowData,
+            products,
+          }))}  
+          headerStyle={{...headerStyle}}
+        />
+      </DataTable>
 
-    <h2>Make Fresh</h2>
-    <DataTable value={WTM.freshData} size="small">
-      <Column header="Product" field="rowKey" headerStyle={{...headerStyle}}/>
-      <Column header="Total Deliv" field="makeTotalCol.totalEa"
-        body={(rowData => ExpandableCellTemplate({
-          dialogHeader: 'Bake & Deliver Today',
-          colKey: 'makeTotalCol',
-          rowData,
-          products,
-        }))}  
-        headerStyle={{...headerStyle}}
-      />
-      <Column header="Make Total" field="totalDelivCol.totalEa"
-        body={(rowData => ExpandableCellTemplate({
-          dialogHeader: 'Total Requirements',
-          colKey: 'makeTotalCol',
-          rowData,
-          products,
-        }))}  
-        headerStyle={{...headerStyle}}
-      />
-      <Column header="Bag For Tomorrow" field="bagTomorrowCol.totalEa"
-        body={(rowData => ExpandableCellTemplate({
-          dialogHeader: 'Bake Ahead for Tomorrow',
-          colKey: 'bagTomorrowCol',
-          rowData,
-          products,
-        }))}  
-        headerStyle={{...headerStyle}}
-      />
-    </DataTable>
+      <h2>Make For Shelf</h2>
+      <DataTable value={WTM.shelfData} size="small">
+        <Column header="Product" field="rowKey"headerStyle={{...headerStyle}} />
+        <Column header="Total Deliv" field="totalDelivCol.totalEa" 
+          body={(rowData => ExpandableCellTemplate({
+            dialogHeader: 'Deliveries',
+            colKey: 'totalDelivCol',
+            rowData,
+            products,
+          }))}  
+          headerStyle={{...headerStyle}}
+        />
+        <Column header="Need Early" 
+          field="needEarlyCol.totalEa" 
+          headerStyle={{...headerStyle}}
+        />
+        <Column header="Make Total" field="makeTotalCol.totalEa" 
+          body={(rowData => ExpandableCellTemplate({
+            dialogHeader: 'Today & Tomorrow Orders',
+            colKey: 'makeTotalCol',
+            rowData,
+            products,
+          }))}  
+          headerStyle={{...headerStyle}}
+        />
+      </DataTable>
 
-    <h2>Make For Shelf</h2>
-    <DataTable value={WTM.shelfData} size="small">
-      <Column header="Product" field="rowKey"headerStyle={{...headerStyle}} />
-      <Column header="Total Deliv" field="totalDelivCol.totalEa" 
-        body={(rowData => ExpandableCellTemplate({
-          dialogHeader: 'Deliveries',
-          colKey: 'totalDelivCol',
-          rowData,
-          products,
-        }))}  
-        headerStyle={{...headerStyle}}
-      />
-      <Column header="Need Early" 
-        field="needEarlyCol.totalEa" 
-        headerStyle={{...headerStyle}}
-      />
-      <Column header="Make Total" field="makeTotalCol.totalEa" 
-        body={(rowData => ExpandableCellTemplate({
-          dialogHeader: 'Today & Tomorrow Orders',
-          colKey: 'makeTotalCol',
-          rowData,
-          products,
-        }))}  
-        headerStyle={{...headerStyle}}
-      />
-    </DataTable>
+      <h2>Pretzels</h2>
+      <DataTable 
+        value={WTM.pretzelData.filter(row => 
+          ['ptz', 'pzb', 'unpz'].includes(row.productRep.prodNick)
+          || row.bakeCol.totalEa > 0
+          || row.shapeCol.orders.totalEa > 0
+          || row.bagCol.orders.totalEa > 0
+          // || true // uncomment to disable filter
+        )} 
+        size="small"
+      >
+        <Column header="Product" field="rowKey" headerStyle={{...headerStyle}}/>
+        <Column header="Bake Today" field="bakeCol.totalEa" 
+          body={(rowData => ExpandableCellTemplate({
+            dialogHeader: 'To be Baked Today',
+            colKey: 'bakeCol',
+            rowData,
+            products,
+          }))} 
+          headerStyle={{...headerStyle}} 
+        />
+        <Column header="Shape for Tomorrow" field="shapeCol.totalEa" 
+          body={(rowData => ExpandableCellTemplate({
+            dialogHeader: 'To be Baked Tomorrow',
+            colKey: 'shapeCol',
+            rowData,
+            products,
+          }))}  
+          headerStyle={{...headerStyle}}
+        />
+        <Column header="Bag EOD" field="bagCol.totalEa" 
+          body={(rowData => ExpandableCellTemplate({
+            dialogHeader: 'Bag EOD',
+            colKey: 'bagCol',
+            rowData,
+            products,
+          }))}  
+          headerStyle={{...headerStyle}}
+        />
+      </DataTable>
 
-    <h2>Pretzels</h2>
-    <DataTable 
-      value={WTM.pretzelData.filter(row => 
-        ['ptz', 'pzb', 'unpz'].includes(row.productRep.prodNick)
-        || row.bakeCol.totalEa > 0
-        || row.shapeCol.orders.totalEa > 0
-        || row.bagCol.orders.totalEa > 0
-        // || true // uncomment to disable filter
-      )} 
-      size="small"
-    >
-      <Column header="Product" field="rowKey" headerStyle={{...headerStyle}}/>
-      <Column header="Bake Today" field="bakeCol.totalEa" 
-        body={(rowData => ExpandableCellTemplate({
-          dialogHeader: 'To be Baked Today',
-          colKey: 'bakeCol',
-          rowData,
-          products,
-        }))} 
-        headerStyle={{...headerStyle}} 
-      />
-      <Column header="Shape for Tomorrow" field="shapeCol.totalEa" 
-        body={(rowData => ExpandableCellTemplate({
-          dialogHeader: 'To be Baked Tomorrow',
-          colKey: 'shapeCol',
-          rowData,
-          products,
-        }))}  
-        headerStyle={{...headerStyle}}
-      />
-      <Column header="Bag EOD" field="bagCol.totalEa" 
-        body={(rowData => ExpandableCellTemplate({
-          dialogHeader: 'Bag EOD',
-          colKey: 'bagCol',
-          rowData,
-          products,
-        }))}  
-        headerStyle={{...headerStyle}}
-      />
-    </DataTable>
-
-    <h2>Make For Freezer</h2>
-    <DataTable value={WTM.freezerData} size="small">
-      <Column header="Product" field="rowKey" headerStyle={{...headerStyle}} />
-      <Column header="Total Deliv" field="totalDelivCol.totalEa" 
-        body={(rowData => ExpandableCellTemplate({
-          dialogHeader: 'Deliveries',
-          colKey: 'totalDelivCol',
-          rowData,
-          products,
-        }))}  
-        headerStyle={{...headerStyle}}
-      />
-      <Column header="Need Early" 
-        field="needEarlyCol.totalEa" 
-        headerStyle={{...headerStyle}}
-      />
-      <Column header="Make Total" field="makeTotalCol.totalEa" 
-        body={(rowData => ExpandableCellTemplate({
-          dialogHeader: 'Today & Tomorrow Orders',
-          colKey: 'makeTotalCol',
-          rowData,
-          products,
-        }))}  
-        headerStyle={{...headerStyle}}
-      />
-    </DataTable>
+      <h2>Make For Freezer</h2>
+      <DataTable value={WTM.freezerData} size="small">
+        <Column header="Product" field="rowKey" headerStyle={{...headerStyle}} />
+        <Column header="Total Deliv" field="totalDelivCol.totalEa" 
+          body={(rowData => ExpandableCellTemplate({
+            dialogHeader: 'Deliveries',
+            colKey: 'totalDelivCol',
+            rowData,
+            products,
+          }))}  
+          headerStyle={{...headerStyle}}
+        />
+        <Column header="Need Early" 
+          field="needEarlyCol.totalEa" 
+          headerStyle={{...headerStyle}}
+        />
+        <Column header="Make Total" field="makeTotalCol.totalEa" 
+          body={(rowData => ExpandableCellTemplate({
+            dialogHeader: 'Today & Tomorrow Orders',
+            colKey: 'makeTotalCol',
+            rowData,
+            products,
+          }))}  
+          headerStyle={{...headerStyle}}
+        />
+      </DataTable>
 
   
-  </div>)
-
+    </div>
+    </div>
+  )
 }
 
 
@@ -388,4 +406,22 @@ const ExpandableCellTemplate = ({
       </DataTable>
     </Dialog>
   </>
+}
+
+
+
+const DevCalendar = ({ reportDate, setReportDate }) => {
+
+  const value = DateTime
+    .fromFormat(reportDate, 'yyyy-MM-dd', { zone: 'America/Los_Angeles' })
+    .toJSDate()
+
+  const handleChange = e => {
+    setReportDate(DateTime.fromJSDate(e.value).toFormat('yyyy-MM-dd'))
+
+  } 
+
+  return (
+    <Calendar value={value} onChange={handleChange} />
+  )
 }

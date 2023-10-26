@@ -100,7 +100,7 @@ const compNorth = new ComposeNorthList();
 
 const clonedeep = require("lodash.clonedeep");
 
-function CroixCountLegacy() {
+function CroixCount() {
   const [delivDate, setDelivDate] = useState(todayPlus()[0]);
   const [mod, setMod] = useState(false);
   const [modType, setModType] = useState();
@@ -597,31 +597,31 @@ function CroixCountLegacy() {
   );
 }
 
-const CroixCount = () => {
-  const [showLegacy, setShowLegacy] = useState()
+// const CroixCount = () => {
+//   const [showLegacy, setShowLegacy] = useState()
 
-  return (<>
-    <Button label="Use Old Version" 
-      onClick={() => setShowLegacy(true)}
-      style={{margin: "1rem"}}
-    />
-    <Button label="Use New Version" 
-      onClick={() => setShowLegacy(false)}
-      style={{margin: "1rem"}}
-    />
+//   return (<>
+//     <Button label="Use Old Version" 
+//       onClick={() => setShowLegacy(true)}
+//       style={{margin: "1rem"}}
+//     />
+//     <Button label="Use New Version" 
+//       onClick={() => setShowLegacy(false)}
+//       style={{margin: "1rem"}}
+//     />
     
-    <div style={{marginTop: "2rem"}}>
-      {showLegacy === true && <CroixCountLegacy />}
-      {showLegacy === false && 
-        <div style={{
-          display: "flex",
-          justifyContent: "center"
-        }}>
-          <CroixCountNew />
-        </div>
-      }
-    </div>
-  </>)
-}
+//     <div style={{marginTop: "2rem"}}>
+//       {showLegacy === true && <CroixCountLegacy />}
+//       {showLegacy === false && 
+//         <div style={{
+//           display: "flex",
+//           justifyContent: "center"
+//         }}>
+//           <CroixCountNew />
+//         </div>
+//       }
+//     </div>
+//   </>)
+// }
 
 export default CroixCount;
