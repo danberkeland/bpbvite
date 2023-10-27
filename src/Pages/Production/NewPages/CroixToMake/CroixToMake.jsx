@@ -162,7 +162,7 @@ export const CroixToMake = () => {
   const submitSheets = async () => {
 
     const updateInputs = tableRows
-      .filter(row => row.sheetMake !== sheetMake[row.countNick])
+      //.filter(row => row.sheetMake !== sheetMake[row.countNick])
       .map(row => {
         const { countNick, freezerCount, batchSize, C } = row
         const eodCount = freezerCount 
