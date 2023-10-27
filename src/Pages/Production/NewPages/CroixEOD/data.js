@@ -6,12 +6,11 @@
 // out anyway.
 
 import { DateTime } from "luxon"
-import { useT0T7ProdOrders } from "../../../../data/useT0T7ProdOrders"
+import { useProdOrdersByDate, useT0T7ProdOrders } from "../../../../data/useT0T7ProdOrders"
 import { useListData } from "../../../../data/_listData"
 import { useMemo } from "react"
-import { keyBy} from "lodash"
 
-import { flow, pickBy, mapValues, mapKeys, groupBy, sumBy, merge, filter, map } from "lodash/fp"
+import { flow, keyBy, pickBy, mapValues, mapKeys, groupBy, sumBy, filter, map } from "lodash/fp"
 
 // maps different croissant type products back to their original shaped type.
 // we label orders by these 'shapeNicks' to help us aggregate qtys.
@@ -29,110 +28,299 @@ const mapToShapeNick = (prodNick) => shapeNickMap[prodNick]
 const isBakedCroix = (product) => product.packGroup === "baked pastries" 
   && product.doughNick === "Croissant"
 
+// *** BPBN Frozen Croix ***
 
-// can take any superset of T0 & T1 orders. Holding orders are not required.
-const calculateCroixSentNorth = ({ T0T1Orders, products }) => {
-  console.log("products", products)
+const isBpbnFrozenCroixOrder = (order, product) => {
+  return product.packGroup === "frozen pastries"
+    && product.doughNick === "Croissant"
+    && order.isStand !== false
+    && order.routeMeta.route.RouteDepart === "Carlton"
 
-  const freezerCounts = flow(
-    pickBy(isBakedCroix),
-    mapValues(product => ({ total: product.freezerNorth })),
-    mapKeys(mapToShapeNick),
-  )(products)  
-
-  const emptyData = mapValues(P => ({ total: 0, items: []}))(freezerCounts)
-
-  const isT0FrozenNorthCroixOrder = (order) => {
-    const product = products[order.prodNick]
-
-    return order.relDate === 0
-      && product.packGroup === "frozen pastries"
-      && product.doughNick === "Croissant"
-      && order.isStand !== false
-      && order.routeMeta.route.RouteDepart === "Carlton"
-  }
-
-  const _frozenOrders = flow(
-    filter(isT0FrozenNorthCroixOrder),
-    map(order => ({ ...order, shapeNick: shapeNickMap[order.prodNick] })),
-    groupBy('shapeNick'),
-    mapValues(group => ({ total: sumBy('qty')(group), items: group }))
-  )(T0T1Orders)
-  const frozenOrders = { ...emptyData, ..._frozenOrders }
-
-  const isT1BakedNorthCroixOrder = (order) => {
-    const product = products[order.prodNick]
-
-    return order.relDate === 1
-      && product.packGroup === "baked pastries"
-      && product.doughNick === "Croissant"
-      && order.isStand !== false
-      && order.routeMeta.route.RouteDepart === "Carlton"
-
-  }
-
-  const _bakedOrders = flow(
-    filter(isT1BakedNorthCroixOrder),
-    map(order => ({ ...order, shapeNick: shapeNickMap[order.prodNick] })),
-    groupBy('shapeNick'),
-    mapValues(group => ({ total: sumBy('qty')(group), items: group }))
-  )(T0T1Orders)
-  const bakedOrders = { ...emptyData, ..._bakedOrders }
-  
-
-  const calculateSendNorthTotal = (value, shapeNickKey) => {
-    const fr = frozenOrders[shapeNickKey].total
-    const bk = bakedOrders[shapeNickKey].total
-    const stock = freezerCounts[shapeNickKey].total
-
-    return Math.ceil(Math.max(fr + bk - stock, 0) / 12) * 12
-  }
-
-  console.log("emptyData", emptyData)
-  const northEodCounts = 
-    mapValues.convert({cap: false})(calculateSendNorthTotal)(emptyData)
-
-  return {
-    bakedOrders,
-    freezerCounts,
-    frozenOrders,
-    northEodCounts,
-  }
 }
 
+const getBpbnFrozenCroixOrders = ({ prodOrders, products }) => {
+  return flow(
+    filter(order => isBpbnFrozenCroixOrder(order, products[order.prodNick])),
+    groupBy('prodNick'),
+    mapValues(group => ({ total: sumBy('qty')(group), items: group }))
+  )(prodOrders)
 
+}
 
-
-export const useNorthEodData = () => {
-  const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
-
-  const { data:orders } = useT0T7ProdOrders({ 
-    shouldFetch: true, 
-    reportDate: todayDT.toFormat('yyyy-MM-dd'),
+// returns a "sparse" data object. If there are no orders for a certain type,
+// it wont show up as an object key.
+const useBpbnFrozenCroixOrders = ({ 
+  dateISO, 
+  shouldFetch, 
+}) => {
+  const { data:prodOrders } = useProdOrdersByDate({ 
+    reportDate:dateISO, 
+    shouldFetch, 
   })
   const { data:PRD } = useListData({ 
     tableName: "Product", 
     shouldFetch: true 
   })
- 
 
+  const calculateValue = () => {
+    if (!prodOrders || !PRD) return undefined
+
+    return getBpbnFrozenCroixOrders({ 
+      prodOrders, 
+      products: keyBy('prodNick')(PRD)
+    })
+
+  }
+
+  return { data: useMemo(calculateValue, [prodOrders, PRD]) }
+
+}
+
+const getBpbnBakedCroixOrders = ({ prodOrders, products }) => {
+  const isBpbnBakedCroixOrder = (order) => {
+    const product = products[order.prodNick]
+
+    return product.packGroup === "baked pastries"
+      && product.doughNick === "Croissant"
+      && order.isStand !== false
+      && order.routeMeta.route.RouteDepart === "Carlton"
+  }
+
+  return flow(
+    filter(isBpbnBakedCroixOrder),
+    groupBy('prodNick'),
+    mapValues(group => ({ total: sumBy('qty')(group), items: group }))
+  )(prodOrders)
+}
+
+const useBpbnBakedCroixOrders = ({ dateISO, shouldFetch }) => {
+  const { data:prodOrders } = useProdOrdersByDate({ reportDate:dateISO, shouldFetch })
+  const { data:PRD } = useListData({ tableName: "Product", shouldFetch: true })
 
   const calculateValue = () => {
     if (!orders || !PRD) return undefined
 
-    const products = keyBy(PRD, 'prodNick')
-    
-    console.log(products, orders)
-    const croixSentNorth = 
-      calculateCroixSentNorth({ T0T1Orders: orders, products })
-    console.log("croixSentNorth:", croixSentNorth)
-
-
-
+    return getBpbnBakedCroixOrders({
+      prodOrders, 
+      products: keyBy('prodNick')(PRD)
+    })
 
   }
 
+  return { data: useMemo(calculateValue, [orders, PRD]) }
 
-
-  return { data: useMemo(calculateValue, [orders, PRD])}
 }
+
+
+export const useBpbnCroixCounts = ({ dateISO, shouldFetch=true }={}) => {
+
+  const dateDT = dateISO 
+    ? DateTime.fromFormat(dateISO, 'yyyy-MM-dd', { zone: 'America/Los_Angeles' })
+    : DateTime.now().setZone('America/Los_Angeles').startOf('day')
+
+  const t0 = dateISO ?? dateDT.toFormat('yyyy-MM-dd')
+  const t1 = dateDT.plus({ days: 1 }).toFormat('yyyy-MM-dd')
+
+  const { data:PRD } = useListData({ tableName: "Product", shouldFetch })
+  const { data:_frozenOrders } = useBpbnFrozenCroixOrders({ dateISO: t0, shouldFetch })
+  const { data:_bakedOrders } = useBpbnBakedCroixOrders({ dateISO: t1, shouldFetch })
+
+  const calculateValue = () => {
+    if (!PRD || !_frozenOrders || !_bakedOrders) return undefined
+
+    const products = keyBy('prodNick')(PRD)
+
+    const freezerCounts = flow(
+      pickBy(isBakedCroix),
+      mapValues(product => ({ total: product.freezerNorth })),
+      mapKeys(mapToShapeNick),
+    )(products)  
+  
+    const emptyData = mapValues(P => ({ total: 0, items: []}))(freezerCounts)
+
+    const frozenOrders = { 
+      ...emptyData, 
+      ...mapKeys(mapToShapeNick)(_frozenOrders) 
+    }
+    const bakedOrders = { 
+      ...emptyData, 
+      ...mapKeys(mapToShapeNick)(_bakedOrders )
+    }
+
+    // keys are 'shapeNick' values for all data objects
+    const shapedCroixInflow = 
+      mapValues.convert({cap: false})((_, key) => {
+        const fr = frozenOrders[key].total
+        const bk = bakedOrders[key].total
+        const stock = freezerCounts[key].total
+    
+        return Math.ceil(Math.max(fr + bk - stock, 0) / 12) * 12
+    
+      })(emptyData)
+  
+    const shapedCroixOutflow = 
+      mapValues.convert({cap: false})((_, key) => {
+        const fr = frozenOrders[key].total
+        const bk = bakedOrders[key].total
+    
+        return fr + bk
+    
+      })(emptyData)
+
+    const eodProjections = 
+      mapValues.convert({cap: false})((_, key) => {
+        const outflow = shapedCroixOutflow[key]
+        const inflow = shapedCroixInflow[key]
+        const stock = freezerCounts[key].total
+    
+        return stock + inflow - outflow
+
+      })(emptyData)
+
+    const northEodData = mapValues.convert({cap: false})((_, key) => {
+      return {
+        frozenOrders: frozenOrders[key],
+        bakedOrders: bakedOrders[key],
+        freezerCount: freezerCounts[key],
+        inflow: shapedCroixInflow[key],
+        outflow: shapedCroixOutflow[key],
+        eodProjection: eodProjections[key],
+      }
+    })(emptyData)
+
+    return northEodData
+
+  }
+
+  return { data: useMemo(calculateValue, [PRD, _frozenOrders, _bakedOrders])}
+
+}
+
+// // can take any superset of T0 & T1 orders. Holding orders are not required.
+// const calculateCroixInventoryMovement = ({ T0T1Orders, products }) => {
+//   console.log("products", products)
+
+//   const freezerCounts = flow(
+//     pickBy(isBakedCroix),
+//     mapValues(product => ({ total: product.freezerNorth })),
+//     mapKeys(mapToShapeNick),
+//   )(products)  
+
+//   const emptyData = mapValues(P => ({ total: 0, items: []}))(freezerCounts)
+
+//   const isT0FrozenNorthCroixOrder = (order) => {
+//     const product = products[order.prodNick]
+
+//     return order.relDate === 0
+//       && product.packGroup === "frozen pastries"
+//       && product.doughNick === "Croissant"
+//       && order.isStand !== false
+//       && order.routeMeta.route.RouteDepart === "Carlton"
+//   }
+
+//   const _frozenOrders = flow(
+//     filter(isT0FrozenNorthCroixOrder),
+//     map(order => ({ ...order, shapeNick: shapeNickMap[order.prodNick] })),
+//     groupBy('shapeNick'),
+//     mapValues(group => ({ total: sumBy('qty')(group), items: group }))
+//   )(T0T1Orders)
+//   const frozenOrders = { ...emptyData, ..._frozenOrders }
+
+//   const isT1BakedNorthCroixOrder = (order) => {
+//     const product = products[order.prodNick]
+
+//     return order.relDate === 1
+//       && product.packGroup === "baked pastries"
+//       && product.doughNick === "Croissant"
+//       && order.isStand !== false
+//       && order.routeMeta.route.RouteDepart === "Carlton"
+
+//   }
+//   const _bakedOrders = flow(
+//     filter(isT1BakedNorthCroixOrder),
+//     map(order => ({ ...order, shapeNick: shapeNickMap[order.prodNick] })),
+//     groupBy('shapeNick'),
+//     mapValues(group => ({ total: sumBy('qty')(group), items: group }))
+//   )(T0T1Orders)
+//   const bakedOrders = { ...emptyData, ..._bakedOrders }
+  
+//   const calculateInflow = (value, shapeNickKey) => {
+//     const fr = frozenOrders[shapeNickKey].total
+//     const bk = bakedOrders[shapeNickKey].total
+//     const stock = freezerCounts[shapeNickKey].total
+
+//     return Math.ceil(Math.max(fr + bk - stock, 0) / 12) * 12
+
+//   }
+
+//   const shapedCroixInflow = 
+//     mapValues.convert({cap: false})(calculateInflow)(emptyData)
+
+//   // Carlton's "outflow" for the day
+//   const calculateOutflow = (value, shapeNickKey) => {
+//     const fr = frozenOrders[shapeNickKey].total
+//     const bk = bakedOrders[shapeNickKey].total
+
+//     return fr + bk
+
+//   }
+
+//   const shapedCroixOutflow = 
+//     mapValues.convert({cap: false})(calculateOutflow)(emptyData)
+
+//   const calculateEOD = (value, shapeNickKey) => {
+//     const outflow = shapedCroixOutflow[shapeNickKey]
+//     const inflow = shapedCroixInflow[shapeNickKey]
+//     const stock = freezerCounts[shapeNickKey].total
+
+//     return stock + inflow - outflow
+//   }
+//   const eodProjections = 
+//     mapValues.convert({cap: false})(calculateEOD)(emptyData)
+
+//   const northEodData = mapValues.convert({cap: false})((V, shapeNick) => {
+//     return {
+//       frozenOrders: frozenOrders[shapeNick],
+//       bakedOrders: bakedOrders[shapeNick],
+//       freezerCount: freezerCounts[shapeNick],
+//       inflow: shapedCroixInflow[shapeNick],
+//       outflow: shapedCroixOutflow[shapeNick],
+//       eodProjection: eodProjections[shapeNick],
+//     }
+//   })(emptyData)
+
+//   return northEodData
+
+// }
+
+
+
+
+// export const useNorthCroixCountData = () => {
+//   const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+
+//   const { data:orders } = useT0T7ProdOrders({ 
+//     shouldFetch: true, 
+//     reportDate: todayDT.toFormat('yyyy-MM-dd'),
+//   })
+//   const { data:PRD } = useListData({ 
+//     tableName: "Product", 
+//     shouldFetch: true 
+//   })
+
+//   const calculateValue = () => {
+//     if (!orders || !PRD) return undefined
+
+//     const products = keyBy('prodNick')(PRD)
+   
+//     const croixInventoryData = 
+//       calculateCroixInventoryMovement({ T0T1Orders: orders, products })
+
+//     console.log("croixInventoryData:", croixInventoryData)
+
+//     return croixInventoryData
+
+//   }
+
+//   return { data: useMemo(calculateValue, [orders, PRD])}
+// }
