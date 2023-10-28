@@ -101,6 +101,8 @@ function SpecialOrders() {
     setColumnsSouth(colSouth.columns);
   };
 
+  console.log("BPBSSpecialOrders", BPBSSpecialOrders)
+  console.log("columnsSouth", columnsSouth)
  
   const exportListPdfNorth = () => {
     let finalY;
