@@ -102,7 +102,6 @@ export const CartSubmitButton = ({
   const noRouteAvailableFlag = cartItems.some(item =>
     !products[item.prodNick].meta.assignedRouteSummary.routeOption.routeIsAvailable 
   )
-  console.log("CART META:", cartMeta)
 
   const inProdFlag = cartItems.some(item => 
     item.qty > cartMeta[item.prodNick].maxQty 
