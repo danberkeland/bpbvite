@@ -13,7 +13,7 @@ import WhoBake from "../Pages/Production/WhoBake";
 import WhoShape from "../Pages/Production/WhoShape";
 import { default as SetOutV1 } from "../Pages/Production/BPBNSetout";
 import Production from "../Pages/Production/Production";
-import Products from "../Pages/Products/Products";
+import { default as ProductsV1 } from "../Pages/Products/Products";
 import Settings from "../Pages/Settings/Settings";
 import Billing from "../Pages/Billing/Billing";
 import EODCounts from "../Pages/EODCounts/EODCounts";
@@ -32,14 +32,14 @@ import { UserHeaderMenu } from "./UserHeaderMenu";
 import { default as BPBSWhatToMakeV1 } from "../Pages/Production/BPBSWhatToMake";
 import BPBSWhatToMakeBackup from "../Pages/Production/BPBSWhatToMakeBackup";
 import BPBSMixPocket from "../Pages/Production/BPBSMixPocket";
-import { default as CroixCountLegacy } from "../Pages/Production/CroixCount";
+import { default as CroixCountV1 } from "../Pages/Production/CroixCount";
 import CroixToMake from "../Pages/Production/CroixToMake";
 import BPBNBuckets from "../Pages/Production/BPBNBuckets";
 import ByProduct from "../Pages/Logistics/ByProduct/ByProduct";
 import NorthList from "../Pages/Logistics/NorthLists";
 import AMPastry from "../Pages/Logistics/AMPastry";
 import RetailBags from "../Pages/Logistics/RetailBags";
-import { default as SpecialOrdersLegacy} from "../Pages/Logistics/SpecialOrders";
+import { default as SpecialOrdersV1} from "../Pages/Logistics/SpecialOrders";
 import FreezerThaw from "../Pages/Logistics/FreezerThaw";
 import DelivOrder from "../Pages/Settings/delivOrder/delivOrder";
 import EditDoughs from "../Pages/Settings/editDough/editDough";
@@ -54,6 +54,7 @@ import { BPBSWhatToMake } from "../Pages/Production/NewPages/BPBSWhatToMake/BPBS
 import { BPBSSetout } from "../Pages/Production/NewPages/BPBSSetout/Setout";
 import { CroixCount } from "../Pages/Production/NewPages/CroixEOD/CroixCount";
 import { SpecialOrders } from "../Pages/Logistics/NewPages/SpecialOrders/SpecialOrders";
+import { Products } from "../Pages/Products/NewPage/Products";
 
 function AnimatedRoutes({ Routes, Route, useLocation }) {
   const authClass = useSettingsStore((state) => state.authClass);
@@ -110,13 +111,11 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
               element={<SpecialPacking />}
             />
 
-            <Route path="/Production/CroixCount" element={<CroixCountLegacy />} />
+            <Route path="/Production/CroixCount" element={<CroixCountV1 />} />
             <Route path="/Production/CroixCount/v2" element={<CroixCount />} />
-            <Route path="/Production/CroixCount/v1" element={<CroixCountLegacy />} />
+            <Route path="/Production/CroixCount/v1" element={<CroixCountV1 />} />
             
             <Route path="/Production/CroixToMake" element={<CroixToMake />} />
-
-            <Route path="/Products" element={<Products />} />
             <Route path="/Settings" element={<Settings />} />
 
             <Route path="/Billing" element={<Billing />} />
@@ -131,11 +130,16 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
 
             <Route path="/Logistics/SpecialOrders" element={<SpecialOrders />} />
             <Route path="/Logistics/SpecialOrders/v2" element={<SpecialOrders />} />
-            <Route path="/Logistics/SpecialOrders/v1" element={<SpecialOrdersLegacy />} />
+            <Route path="/Logistics/SpecialOrders/v1" element={<SpecialOrdersV1 />} />
 
             <Route path="/Logistics/FreezerThaw" element={<FreezerThaw />} />
             <Route path="/Locations" element={<LocationsNew />} />
             <Route path="/Locations/v1" element={<Locations />} />
+
+            <Route path="/Products" element={<ProductsV1 />} />
+            <Route path="/Products/v2" element={<Products />} />
+            <Route path="/Products/v1" element={<ProductsV1 />} />
+
             <Route
               path="/Settings/ManageCustomers"
               element={<ManageCustomers />}
