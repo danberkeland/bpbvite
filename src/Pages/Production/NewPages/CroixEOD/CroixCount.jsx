@@ -1,7 +1,3 @@
-import useSWR from 'swr'
-import gqlFetcher from "../../../../data/_fetchers"
-import { getProduct } from "../../../../data/swr2.x.x/gqlQueries/queries"
-
 import { useListData } from "../../../../data/_listData"
 import { cloneDeep, isEqual, keyBy, sortBy } from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
@@ -11,8 +7,6 @@ import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
 import { InputNumber } from 'primereact/inputnumber'
 import { DateTime } from 'luxon'
-import { useNorthEodData } from './data'
-
 
 const countProdNicks = ['ch', 'mb', 'mini', 'pg', 'pl', 'sf']
 const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
@@ -30,7 +24,7 @@ const useCroixProductData = () => {
 
   const composeData = () => {
 
-    if (!PRD) return  undefined 
+    if (!PRD) return undefined 
 
     const croixProducts = PRD.filter(P => 
       countProdNicks.includes(P.prodNick)
@@ -56,14 +50,16 @@ const useCroixProductData = () => {
 
 
 export const CroixCount = () => {
+
   const { 
     data:countData, 
     submitMutations, 
     updateLocalData 
   } = useCroixProductData()
+  console.log("countData", countData)
 
-  const { data:northEodData } = useNorthEodData()
-  console.log(northEodData)
+  // const { data:bpbnCounts } = useBpbnCroixCounts()
+  // console.log("bpbnCounts", bpbnCounts)
 
   const [editMode, setEditMode] = useState('none')
   const [counts, setCounts] = useState()

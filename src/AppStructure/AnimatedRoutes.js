@@ -39,7 +39,7 @@ import ByProduct from "../Pages/Logistics/ByProduct/ByProduct";
 import NorthList from "../Pages/Logistics/NorthLists";
 import AMPastry from "../Pages/Logistics/AMPastry";
 import RetailBags from "../Pages/Logistics/RetailBags";
-import SpecialOrders from "../Pages/Logistics/SpecialOrders";
+import { default as SpecialOrdersLegacy} from "../Pages/Logistics/SpecialOrders";
 import FreezerThaw from "../Pages/Logistics/FreezerThaw";
 import DelivOrder from "../Pages/Settings/delivOrder/delivOrder";
 import EditDoughs from "../Pages/Settings/editDough/editDough";
@@ -53,6 +53,7 @@ import { RouteGrid } from "../Pages/Logistics/NewPages/RouteGrid/RouteGrid";
 import { BPBSWhatToMake } from "../Pages/Production/NewPages/BPBSWhatToMake/BPBSWhatToMake";
 import { BPBSSetout } from "../Pages/Production/NewPages/BPBSSetout/Setout";
 import { CroixCount } from "../Pages/Production/NewPages/CroixEOD/CroixCount";
+import { SpecialOrders } from "../Pages/Logistics/NewPages/SpecialOrders/SpecialOrders";
 
 function AnimatedRoutes({ Routes, Route, useLocation }) {
   const authClass = useSettingsStore((state) => state.authClass);
@@ -112,6 +113,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             <Route path="/Production/CroixCount" element={<CroixCountLegacy />} />
             <Route path="/Production/CroixCount/v2" element={<CroixCount />} />
             <Route path="/Production/CroixCount/v1" element={<CroixCountLegacy />} />
+            
             <Route path="/Production/CroixToMake" element={<CroixToMake />} />
 
             <Route path="/Products" element={<Products />} />
@@ -126,13 +128,14 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             <Route path="/Logistics/NorthLists" element={<NorthList />} />
             <Route path="/Logistics/AMPastry" element={<AMPastry />} />
             <Route path="/Logistics/RetailBags" element={<RetailBags />} />
-            <Route
-              path="/Logistics/SpecialOrders"
-              element={<SpecialOrders />}
-            />
+
+            <Route path="/Logistics/SpecialOrders" element={<SpecialOrders />} />
+            <Route path="/Logistics/SpecialOrders/v2" element={<SpecialOrders />} />
+            <Route path="/Logistics/SpecialOrders/v1" element={<SpecialOrdersLegacy />} />
+
             <Route path="/Logistics/FreezerThaw" element={<FreezerThaw />} />
             <Route path="/Locations" element={<LocationsNew />} />
-            <Route path="/Locations/Old" element={<Locations />} />
+            <Route path="/Locations/v1" element={<Locations />} />
             <Route
               path="/Settings/ManageCustomers"
               element={<ManageCustomers />}
