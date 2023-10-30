@@ -1,5 +1,6 @@
 import * as yup from 'yup'
 import { useListData } from '../../../data/_listData'
+import { set } from 'lodash'
 
 
 export const useProductSchema = ({ editMode }) => {
@@ -7,6 +8,12 @@ export const useProductSchema = ({ editMode }) => {
   const { data:PRD=[] } = useListData({ tableName: "Product", shouldFetch: true })
   const prodNicks = PRD.map(P => P.prodNick)
   const prodNames = PRD.map(P => P.prodName)
+
+  const { data:DGH=[] } = useListData({ tableName: "DoughBackup", shouldFetch: !!editMode })
+  const doughNicks = DGH.map(D => D.doughName).concat('')
+  console.log(doughNicks)
+
+  const hubOptions = ['Prado', 'Carlton']
 
   const productSchema = yup.object().shape({
     prodNick: yup.string()
@@ -19,13 +26,28 @@ export const useProductSchema = ({ editMode }) => {
       .max(13, "Location ID must have at most 13 characters")
       .required("Required")
       .default('')
-      .meta({ category: 'ID'}),
+      .meta({ 
+        category: 'ID',
+        input: {
+          disableWhen: ['update']
+        }
+      }),
     squareID: yup.string()
       .default('xxx')
-      .meta({ category: 'ID'}),
+      .meta({ 
+        category: 'ID',
+        input: {
+          disableWhen: ['create', 'update'],
+        }
+      }),
     qbID: yup.string()
       .default('')
-      .meta({ category: 'ID'}),
+      .meta({ 
+        category: 'ID',
+        input: {
+          disableWhen: ['create', 'update'],
+        }
+      }),
 
     isRetail: yup.bool()
       .required()
@@ -53,7 +75,12 @@ export const useProductSchema = ({ editMode }) => {
       })
       .required("Required")
       .default('')
-      .meta({ category: 'Wholesale'}),
+      .meta({ 
+        category: 'Wholesale',
+        input: {
+          disableWhen: ['update']
+        }
+      }),
     descrip: yup.string()
       .default('description')
       .meta({ category: 'Wholesale'}),
@@ -65,8 +92,15 @@ export const useProductSchema = ({ editMode }) => {
       .meta({ category: 'Wholesale'}),
 
     doughNick: yup.string()
+      .oneOf(doughNicks)
       .default('')
-      .meta({ category: 'Specs'}),
+      .meta({ 
+        category: 'Specs',
+        input: {
+          name: 'singleSelect',
+          props: { options: doughNicks },
+        }
+      }),
     packGroup: yup.string()
       .default('')
       .meta({ category: 'Specs'}),
@@ -87,14 +121,22 @@ export const useProductSchema = ({ editMode }) => {
       .meta({ category: 'Production'}),
     daysAvailable: yup.array().of(yup.number().integer())
       .default([1,1,1,1,1,1,1])
-      .meta({ category: 'Production'}),
+      .meta({ 
+        category: 'Production',
+      }),
     readyTime: yup.number()
       .required()
       .default(null)
       .meta({ category: 'Production'}),
-    bakedWhere: yup.array().of(yup.string().oneOf(['Prado', 'Carlton']))
-      .default([['Prado']])
-      .meta({ category: 'Production'}),
+    bakedWhere: yup.array().of(yup.string().oneOf(hubOptions))
+      .default(['Prado'])
+      .meta({ 
+        category: 'Production',
+        input: {
+          name: 'multiSelect',
+          props: { options: hubOptions },
+        }
+      }),
     batchSize: yup.number().integer()
       .default(1)
       .meta({ category: 'Production'}),
@@ -112,14 +154,19 @@ export const useProductSchema = ({ editMode }) => {
       .nullable()
       .default(null)
       .meta({ category: 'Inventory:EOD'}),
-    updatedAt: yup.string()
-      .nullable()
-      .default(null)
-      .meta({ category: 'Inventory:EOD' }),
     updateFreezerDate: yup.string()
       .nullable()
       .default(null)
       .meta({ category: 'Inventory:EOD'}),
+    updatedAt: yup.string()
+      .nullable()
+      .default(null)
+      .meta({ 
+        category: 'Inventory:EOD',
+        input: {
+          disableWhen: ['create']
+        }
+      }),
     whoCountedLast: yup.string()
       .nullable()
       .default(null)
@@ -163,17 +210,20 @@ export const useProductSchema = ({ editMode }) => {
       .default(null)
       .meta({ category: 'Inventory:Preshape'}),
 
-    // others
-    picURL: yup
-      .string()
-      .default('')
-      .meta({ category: 'Other'}),
-
-    Type: yup
-      .string()
+    Type: yup.string()
       .required()
       .default('Product')
       .meta({ category: 'Other'}),
+    picURL: yup.string()
+      .default('')
+      .meta({ category: 'Other'}),
+    createdAt: yup.string()
+      .meta({ 
+        category: 'Other',
+        input: {
+          disableWhen: ['create', 'update']
+        }
+      }),
 
     guarantee: yup.string(),
     transferStage: yup.string(),
@@ -191,7 +241,7 @@ export const useProductSchema = ({ editMode }) => {
     bpbssetoutpre: yup.number().integer(),
     bpbssetout: yup.number().integer(),
 
-    createdAt: yup.string()
+
 
   }).meta({
     categories: [
@@ -210,4 +260,33 @@ export const useProductSchema = ({ editMode }) => {
 
   return productSchema
 
+}
+
+/**
+ * Enhances the default validation of formik's validationSchema 
+ * integration with yup, allowing us to pass a context object.
+ * 
+ * This lets us use .when() in our schema, allowing for different
+ * validation requirements in create vs. update contexts.
+ * 
+ * Source: https://www.fullstacklabs.co/blog/how-to-use-yup-context-variables-in-formik-validation#:~:text=The%20validation%20library%20Yup%20allows,instance%20of%20the%20other%20object.
+ */
+export const validateWithContext = (schema, values, context) => {
+  try {
+    schema.validateSync(values, {
+      abortEarly: false,
+      context,
+    })
+  } catch (error) {
+    if (error.name !== "ValidationError") {
+      throw error;
+    }
+
+    return error.inner.reduce((errors, currentError) => {
+      errors = set(errors, currentError.path, currentError.message);
+      return errors;
+    }, {})
+  }
+
+  return {}
 }

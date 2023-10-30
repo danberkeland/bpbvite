@@ -11,6 +11,7 @@ import { TabMenu } from "primereact/tabmenu"
 import { useProductSchema } from "./schema"
 import { useState } from "react"
 import { ProductForm } from "./Form"
+import { bodyTemplates } from "./TableTempates"
 
 export const Products = () => {
 
@@ -24,37 +25,47 @@ export const Products = () => {
   const tableData = rankedSearch({ 
     data: PRD, 
     onFields: ['prodNick', 'prodName'], 
-    query
+    query,
+    nResults: 20
   })
 
   const schema = useProductSchema({ editMode })
   const schemaDescription = schema.describe()
+  console.log("schema description:", schemaDescription)
 
   const tabModel = schemaDescription.meta.categories.map(cat => ({ label: cat }))
-  const activeColumnCategory = schemaDescription.meta.categories[activeIndex]
-  // console.log("activeIndex", activeIndex)
-  // console.log("activeColumnCategory", activeColumnCategory)
+  const activeCategory = schemaDescription.meta.categories[activeIndex]
 
-  const attributesByCategory = !!schemaDescription.fields
-    ? flow(
-        groupBy(key => schemaDescription.fields[key].meta?.category),
-        //mapKeys(key => key === 'undefined' ? 'Other' : key),
-      )(Object.keys(schemaDescription.fields))
-    : []
+  const fieldsByCategory = groupBy(field => 
+    schemaDescription.fields[field].meta?.category
+  )(Object.keys(schemaDescription?.fields ?? []))
 
-  const columnsByCategory = mapValues(attributes => attributes.map(att => {
-    return <Column key={att} header={att} body={row => truncate(25)(JSON.stringify(row[att]))} />
+  const columnsByCategory = mapValues(fields => fields.map(field => {
+    const dataType = schemaDescription.fields[field]?.type
+
+    return <Column 
+      key={field} 
+      header={field} 
+      body={row => {
+        const template = bodyTemplates[field]
+          ?? bodyTemplates[dataType]
+          ?? bodyTemplates['default']
+        
+        return template(row[field], row)
+      }} 
+    />
   })
-  )(attributesByCategory)
+  )(fieldsByCategory)
 
   const CreateButtonTemplate = () => {
     const [show, setShow] = useState(false)
     const dialogProps = {
       initialValues: schema.default(), 
       schema, 
-      show, 
-      setShow, 
-      setEditMode
+      schemaDescription,
+      fieldsByCategory,
+      show, setShow, 
+      editMode, setEditMode
     }
 
     return <div>
@@ -71,7 +82,14 @@ export const Products = () => {
 
   const UpdateButtonTemplate = ({ rowData }) => {
     const [show, setShow] = useState(false)
-    const dialogProps = {initialValues:rowData, schema, show, setShow, setEditMode}
+    const dialogProps = {
+      initialValues:rowData, 
+      schema, 
+      schemaDescription,
+      fieldsByCategory,
+      show, setShow, 
+      editMode, setEditMode
+    }
 
     return <div>
       <Button icon="pi pi-pencil" 
@@ -126,7 +144,7 @@ export const Products = () => {
           // style={{flex: "1 0 13rem"}}
           style={{width: "14rem"}}
         />        
-        {columnsByCategory[activeColumnCategory]}
+        {columnsByCategory[activeCategory]}
       </DataTable>
     </div>
   )
@@ -134,9 +152,6 @@ export const Products = () => {
 
 }
 
-
-
-// const TextSearch = ({}) => {}
 
 
 
@@ -161,27 +176,34 @@ const levenshteinDistance = (s, t) => {
   return arr[t.length][s.length];
 };
 
-const getBestMatchScore = (query, item, onFields) => {
-  // const d1 = levenshteinDistance(location.locNick, query)
-  // const d2 = levenshteinDistance(location.locName.toLowerCase(), query) 
-  // return Math.min(d1, d2)
-  const distances = onFields.map(f => levenshteinDistance(item[f], query))
+const getBestMatchScore = (queries, item, onFields) => {
+  const distances = onFields.map(f => 
+    min(queries.map(query => 
+      levenshteinDistance(
+        item[f].replace(/\s/g, '').toLowerCase(), 
+        query
+      )
+    ))
+  )
   return min(distances)
 }
 
-const rankedSearch = ({ query, data, onFields }) => {
+const rankedSearch = ({ query, data, onFields, nResults=10 }) => {
   if (!query) return data
 
-  const q = query.toLowerCase().replace(/\s/g, '')
+  // const q = query.toLowerCase().replace(/\s/g, '')
+  const queries = query.replace(/\s/g, '').toLowerCase().split(',').filter(q => !!q)
 
   let substrMatches = data.filter(item => 
     onFields.some(field => 
-      item[field].replace(/\s/g, '').toLowerCase().includes(q)
+      queries.some(q => 
+        item[field].replace(/\s/g, '').toLowerCase().includes(q)
+      )
     )
   )
 
   return substrMatches.length
-    ? sortBy(item => getBestMatchScore(query, item, onFields, ))(substrMatches).slice(0,10)
-    : sortBy(item => getBestMatchScore(query, item, onFields))(data).slice(0,10)
+    ? sortBy(item => getBestMatchScore(queries, item, onFields))(substrMatches).slice(0, nResults)
+    : sortBy(item => getBestMatchScore(queries, item, onFields))(data).slice(0, nResults)
 
 }
