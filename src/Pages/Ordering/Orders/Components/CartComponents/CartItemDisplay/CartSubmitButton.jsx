@@ -96,8 +96,13 @@ export const CartSubmitButton = ({
     item.qty > cartMeta[item.prodNick].maxQty 
   )
   const invalidRouteFlag = cartItems.some(item =>
-    !cartMeta[item.prodNick].routeIsValid && item.qty !== 0
+    // !cartMeta[item.prodNick].routeIsValid && item.qty !== 0
+    !cartMeta[item.prodNick].routeIsValid && item.qty !== item.baseQty
   )
+  const noRouteAvailableFlag = cartItems.some(item =>
+    !products[item.prodNick].meta.assignedRouteSummary.routeOption.routeIsAvailable 
+  )
+
   const inProdFlag = cartItems.some(item => 
     item.qty > cartMeta[item.prodNick].maxQty 
     && cartMeta[item.prodNick].productIsInProd
@@ -164,8 +169,8 @@ export const CartSubmitButton = ({
           }
         </div>
         <div>{delivDateDT.toFormat('EEEE, MMM d')} {relativeDateString}</div>
-        {invalidRouteFlag && user.authClass === 'bpbfull' && 
-          <div><WarnIcon /> Invalid route <WarnIcon /></div>
+        {noRouteAvailableFlag && user.authClass === 'bpbfull' && 
+          <div><WarnIcon /> Route: 'NOT ASSIGNED' <WarnIcon /></div>
         }
         {inProdFlag && user.authClass === 'bpbfull' &&
           <div><WarnIcon /> Over in-prod max <WarnIcon /></div>
