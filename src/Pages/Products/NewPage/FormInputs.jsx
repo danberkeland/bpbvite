@@ -20,6 +20,17 @@ import { flatten } from "lodash"
 import { MultiSelect } from "primereact/multiselect"
 import { Checkbox } from "primereact/checkbox"
 
+/**Just a formatting component for error text */
+const ErrorMessage = ({ errors }) => {
+  return (
+    <div style={{width: "15rem"}}>
+      <p><small style={{display: "block"}}>
+        {errors}
+      </small></p>
+    </div>
+  )
+}
+
 const FormikText = ({ 
   labelText, 
   field, 
@@ -36,11 +47,14 @@ const FormikText = ({
         id={field}
         name={field}
         value={formik.values[field]} 
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
+        onChange={e => formik.setFieldValue(field, e.value)}
+        onBlur={e => {
+          formik.setFieldValue(field, e.target.value.trim())
+            .then(() => formik.handleBlur(e))
+        }}
         style={{
           display: "block",
-          width: "15rem", 
+          // width: "15rem", 
           marginTop: ".25rem",
           backgroundColor: "var(--bpb-orange-vibrant-020)",
         }}
@@ -50,7 +64,7 @@ const FormikText = ({
     </label>
     {(touched && errors.length) 
       ? <div>{errors.map((error, idx) => 
-          <small key={`${field}-err-${idx}`} style={{display: "block"}}>{error}</small>
+          <small key={`${field}-err-${idx}`} style={{display: "block", width: "15rem"}}>{error}</small>
         )}</div>
       : null 
     }
@@ -75,10 +89,13 @@ const FormikTextarea = ({
         name={field}
         value={formik.values[field]} 
         onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
+        onBlur={e => {
+          formik.handleBlur(e)
+          formik.setFieldValue(field, e.target.value.trim())
+        }}
         style={{
           display: "block",
-          width: "15rem", 
+          // width: "15rem", 
           marginTop: ".25rem",
           backgroundColor: "var(--bpb-orange-vibrant-020)"
         }} 
@@ -87,7 +104,7 @@ const FormikTextarea = ({
         disabled={disabled}
       />
     </label>
-      {(touched && errors) && <small>{errors}</small>}
+      {(touched && errors) && <ErrorMessage errors={errors} />}
     </div>
   )
 }
@@ -102,7 +119,7 @@ const FormikNumber = ({
   const touched = formik.touched[field]
 
   return (<div key={`form-${field}-input`} style={{minHeight: "6rem"}}>
-    <label style={{display:"block", }}>
+    <label style={{display:"block"}}>
       {labelText ?? field}
       <InputNumber 
         inputId={field}
@@ -113,7 +130,7 @@ const FormikNumber = ({
         onBlur={formik.handleBlur}
         style={{
           display: "block",
-          width: "15rem", 
+          // width: "15rem", 
           marginTop: ".25rem",
         }} 
         inputStyle={{backgroundColor: "var(--bpb-orange-vibrant-020)"}}
@@ -121,7 +138,7 @@ const FormikNumber = ({
         disabled={disabled}
       />
     </label>
-    {(touched && errors) && <small>{errors}</small>}
+    {(touched && errors) && <ErrorMessage errors={errors} />}
     </div>
   )
 }
@@ -136,22 +153,28 @@ const FormikBoolean = ({
   const errors = formik.errors[field]
   const touched = formik.touched[field]
 
-  return (<div key={`form-${field}-input`} style={{height: "4rem"}}>
+  return (<div key={`form-${field}-input`} style={{minHeight: "6rem"}}>
     <label style={{
       display:"flex", 
       justifyContent: "space-between", 
       alignItems: "center", 
-      maxWidth: "15rem"
+      // maxWidth: "15rem"
     }}>
       {labelText ?? field}
       <ToggleButton 
         id={field}
         name={field}
         checked={formik.values[field]} 
-        onChange={e => (typeof onChange === 'function')
-          ? onChange(e)
-          : formik.setFieldValue(field, e.value)
-        }
+        onChange={e => {
+          if (typeof onChange === 'function') {
+            onChange(e)
+              .then(() => formik.validateForm())
+          } else {
+            formik.setFieldValue(field, e.value)
+            .then(() => formik.validateForm())
+          }
+          
+        }}
         //onBlur={formik.handleBlur}
         style={{
           display: "block",
@@ -159,11 +182,10 @@ const FormikBoolean = ({
           marginTop: ".25rem"
         }} 
         className={errors && touched ? "p-invalid" : ''}
-        autoResize
         disabled={disabled}
       />
     </label>
-    {(touched && errors) && <small>{errors}</small>}
+    {(touched && errors) && <ErrorMessage errors={errors} />}
     </div>
   )
 }
@@ -196,7 +218,7 @@ const FormikSingleOption = ({
             onBlur={formik.handleBlur}
             style={{
               backgroundColor: "var(--bpb-orange-vibrant-020)",
-              width: "15rem", 
+              // width: "15rem", 
               marginTop: ".25rem"
             }} 
             className={errors && touched ? "p-invalid" : ''}
@@ -204,7 +226,7 @@ const FormikSingleOption = ({
           />
         </div>
       </label>
-      {(touched && errors) && <small>{errors}</small>}
+      {(touched && errors) && <ErrorMessage errors={errors} />}
     </div>
   )
 }
@@ -237,7 +259,7 @@ const FormikMultiOption = ({
             onBlur={formik.handleBlur}
             style={{
               backgroundColor: "var(--bpb-orange-vibrant-020)",
-              width: "16rem", 
+              // width: "16rem", 
               marginTop: ".25rem"
             }} 
             className={errors && touched ? "p-invalid" : ''}
@@ -246,7 +268,7 @@ const FormikMultiOption = ({
           />
         </div>
       </label>
-      {(touched && errors) && <small>{errors}</small>}
+      {(touched && errors) && <ErrorMessage errors={errors} />}
     </div>
   )
 }
@@ -268,7 +290,7 @@ const FormikDaysAvailable = ({
       <div style={{display:"block"}}>
         {labelText ?? field}
         <div style={{
-          width: "15rem", 
+          // width: "15rem", 
           display: "flex", 
           justifyContent: "space-between",
           backgroundColor: "var(--bpb-orange-vibrant-020)",
@@ -298,8 +320,8 @@ const FormikDaysAvailable = ({
                   onChange={e => {
                     formik.setFieldValue(
                       field, 
-                      Object.assign([...value], { [idx]: e.checked })
-                    )
+                      Object.assign([...value], { [idx]: e.checked ? 1 : 0 })
+                    ).then(() => formik.validateForm())
                   }}
                   disabled={disabled}
                 />
@@ -308,7 +330,7 @@ const FormikDaysAvailable = ({
           })}
         </div>
       </div>
-      {(touched && errors) && <small>{errors}</small>}
+      {(touched && errors) && <ErrorMessage errors={errors} />}
     </div>
   )
 }

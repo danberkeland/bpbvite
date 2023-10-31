@@ -29,7 +29,6 @@ const boolTemplate = (boolValue) => {
       : ''
 }
 
-
 const hoursTemplate = (timeFloat) => {
   const hour = Math.floor(Number(timeFloat)) || 0
   const minute = round((Number(timeFloat) - hour) * 60) || 0

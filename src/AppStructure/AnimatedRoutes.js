@@ -136,7 +136,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             <Route path="/Locations" element={<LocationsNew />} />
             <Route path="/Locations/v1" element={<Locations />} />
 
-            <Route path="/Products" element={<ProductsV1 />} />
+            <Route path="/Products" element={<Products />} />
             <Route path="/Products/v2" element={<Products />} />
             <Route path="/Products/v1" element={<ProductsV1 />} />
 

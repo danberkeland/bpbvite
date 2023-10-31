@@ -4,43 +4,76 @@ import { Button } from "primereact/button"
 import { Badge } from "primereact/badge"
 import { ScrollPanel } from "primereact/scrollpanel"
 
-import { 
-  FormikText, 
-  FormikTextarea,
-  FormikNumber,
-  FormikBoolean,
-  FormikDropdown,
-} from "./FormInputs"
-
 import { useFormik } from "formik"
 import { validateWithContext } from "./schema"
 
-import { useSettingsStore } from "../../../Contexts/SettingsZustand"
-import { useListData } from "../../../data/_listData"
-import { checkQBValidation_v2 } from "../../../helpers/QBHelpers"
+import { createProduct, updateProduct } from "./formSubmit"
 
-import axios from "axios"
+import { useSettingsStore } from "../../../Contexts/SettingsZustand"
+
 import { formInputs } from "./FormInputs"
+import { isEqual } from "lodash/fp"
 
 export const ProductForm =({
   initialValues, 
   schema, 
   schemaDescription,
   fieldsByCategory,
+  listDataCache,
   show, setShow, 
   editMode, setEditMode
 }) => {
-  // const isLoading = useSettingsStore((state) => state.isLoading)
-  // const setIsLoading = useSettingsStore((state) => state.setIsLoading)
+  const isLoading = useSettingsStore((state) => state.isLoading)
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading)
 
   const formik = useFormik({
     initialValues,
     validate: values => validateWithContext(schema, values, { editMode }),
     validateOnChange: false,
     validateOnBlur: true,
-    onSubmit: () => {console.log("Submitting...")}
+    onSubmit: values => {
+      if (editMode === 'create') { 
+        setIsLoading(true)
+        createProduct({
+          values,
+          initialValues,
+          listDataCache,
+        })
+      }
+      else {
+        setIsLoading(true)
+        updateProduct({
+          values,
+          initialValues,
+          listDataCache,
+        })
+      }
+      formik.setSubmitting(false)
+      setIsLoading(false)
+    }
   })
 
+  const formHeaderTemplate = () => {
+    const formHasError = Object.keys(schemaDescription.fields).some(field =>
+      !!formik.errors[field] && formik.touched[field]
+    )
+    const headerText = editMode === 'create' 
+      ? 'Create New Product'
+      : initialValues.prodName
+    return (<>
+      <span>{headerText}</span>
+      {formHasError &&
+        <span className="p-overlay-badge">
+          <Badge 
+            className="p-badge-sm" 
+            severity="danger" 
+            style={{transform: "translate(120%,-50%)"}} 
+          />
+        </span>
+      }
+    </>)
+
+  }
   const tabHeaderTemplate = (cKey) => {
     const categoryHasError = fieldsByCategory[cKey].some(
       field => !!formik.errors[field] && formik.touched[field]
@@ -60,23 +93,31 @@ export const ProductForm =({
     </>)
   }
 
+  const dialogFooter = () => <div>
+    <Button 
+      label={(formik.isSubmitting || isLoading) ? "Submitting..." : "Submit"}
+      type="submit" 
+      form="product-form"
+      onClick={formik.handleSubmit}
+      disabled={isEqual(initialValues, formik.values) || isLoading}
+    />
+  </div>
+
   return (
     <Dialog
-      header={editMode === 'create' 
-        ? 'Create New Product' 
-        : initialValues.prodName
-      }
+      header={formHeaderTemplate}
+      footer={dialogFooter}
       visible={show}
       onHide={() => {
         setShow(false)
         setEditMode('')
       }}
-      // style={{height: "50rem"}}
+      style={{height: "50rem"}}
     >
-      <form id="location-form" onSubmit={formik.handleSubmit}>
+      <form id="product-form" onSubmit={formik.handleSubmit}>
       <TabView 
         scrollable 
-        style={{maxWidth: "31rem"}}
+        style={{maxWidth: "40rem"}}
       >
         {Object.keys(fieldsByCategory).map(categoryKey => {
           
@@ -86,30 +127,29 @@ export const ProductForm =({
               key={`form-${categoryKey}-panel`} 
             >
               <ScrollPanel style={{height: "45rem"}}>
-              {/* {fieldsByCategory[categoryKey].map(field => {
-                return <div key={`form-field-${field}`}>{field}: {initialValues[field]}</div>
-              })} */}
-              {fieldsByCategory[categoryKey].map(field => {
-                const fieldDescription = schemaDescription.fields[field]
-                const FormikInput = formInputs[field]                // input made specifically for this field
-                  ?? formInputs[fieldDescription.meta?.input?.name]  // for fields that want to use an alternate input, eg textarea instead of text
-                  ?? formInputs[fieldDescription.type]               // the "usual" input field based on data type
-                  ?? formInputs['default']                           // something wasn't set up correctly; display "Error"
+              <div style={{marginLeft: ".25rem", width: "16rem"}}>
+                {fieldsByCategory[categoryKey].map(field => {
+                  const fieldDescription = schemaDescription.fields[field]
+                  const { type, meta } = fieldDescription
+                  const FormikInput = formInputs[field]     // input made specifically for this field
+                    ?? formInputs[meta?.input?.name]        // for fields that want to use an alternate input, eg textarea instead of text
+                    ?? formInputs[type]                     // the "usual" input field based on data type
+                    ?? formInputs['default']                // something wasn't set up correctly; display "Error"
+                  const disabled = 
+                    (meta?.input?.disableWhen ?? []).includes(editMode)
 
-                const disabled = 
-                  (fieldDescription.meta?.input?.disableWhen ?? []).includes(editMode)
-
-                return (
-                  <FormikInput 
-                    field={field} 
-                    formik={formik}
-                    disabled={disabled}
-                    // options={fieldDescription.meta?.input?.props?.options}
-                    {...fieldDescription.meta?.input?.props}
-                  />
-                )
-              })}
-            </ScrollPanel>
+                  return (
+                    <FormikInput 
+                      key={`fmk-input-${field}`}
+                      field={field} 
+                      formik={formik}
+                      disabled={disabled}
+                      {...fieldDescription.meta?.input?.props}
+                    />
+                  )
+                })}
+              </div>
+              </ScrollPanel>
             </TabPanel>
           )
         })}
@@ -118,6 +158,3 @@ export const ProductForm =({
     </Dialog>
   )
 }
-
-
-

@@ -1,17 +1,19 @@
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 import { Button } from "primereact/button"
-import { MultiSelect } from "primereact/multiselect"
+// import { MultiSelect } from "primereact/multiselect"
 import { InputText } from "primereact/inputtext"
 
 import { useListData } from "../../../data/_listData"
 
-import { debounce, flow, groupBy, mapValues, min, sortBy, truncate } from "lodash/fp"
+import { debounce,  flow,  groupBy, mapValues, min, pickBy, sortBy } from "lodash/fp"
 import { TabMenu } from "primereact/tabmenu"
 import { useProductSchema } from "./schema"
 import { useState } from "react"
 import { ProductForm } from "./Form"
 import { bodyTemplates } from "./TableTempates"
+
+const pickByWithKey = pickBy.convert({ 'cap': false })
 
 export const Products = () => {
 
@@ -21,7 +23,8 @@ export const Products = () => {
   const [query, setQuery] = useState('')
   const dbSetQuery = debounce(120)(setQuery)
   
-  const { data:PRD=[] } = useListData({ tableName: "Product", shouldFetch: "true" })
+  const productCache = useListData({ tableName: "Product", shouldFetch: "true" })
+  const { data:PRD=[] } = productCache
   const tableData = rankedSearch({ 
     data: PRD, 
     onFields: ['prodNick', 'prodName'], 
@@ -31,80 +34,87 @@ export const Products = () => {
 
   const schema = useProductSchema({ editMode })
   const schemaDescription = schema.describe()
-  console.log("schema description:", schemaDescription)
+  // console.log("schema description:", schemaDescription)
 
   const tabModel = schemaDescription.meta.categories.map(cat => ({ label: cat }))
   const activeCategory = schemaDescription.meta.categories[activeIndex]
 
-  const fieldsByCategory = groupBy(field => 
-    schemaDescription.fields[field].meta?.category
+  const fieldsByCategory = flow(
+    groupBy(field => schemaDescription.fields[field].meta?.category),
+    pickByWithKey((_, category) => 
+      schemaDescription.meta.categories.includes(category)
+    )
   )(Object.keys(schemaDescription?.fields ?? []))
+  //console.log("fieldsByCategory", fieldsByCategory)
 
   const columnsByCategory = mapValues(fields => fields.map(field => {
     const dataType = schemaDescription.fields[field]?.type
+    const bodyTemplate = bodyTemplates[field]
+      ?? bodyTemplates[dataType]
+      ?? bodyTemplates['default']
 
-    return <Column 
-      key={field} 
-      header={field} 
-      body={row => {
-        const template = bodyTemplates[field]
-          ?? bodyTemplates[dataType]
-          ?? bodyTemplates['default']
-        
-        return template(row[field], row)
-      }} 
-    />
+    return (
+      <Column 
+        key={field} 
+        header={field} 
+        body={row => bodyTemplate(row[field], row)} 
+      />
+    )
   })
   )(fieldsByCategory)
 
-  const CreateButtonTemplate = () => {
+  const FormButton = ({ 
+    initialValues, 
+    icon, 
+    buttonClassName, 
+    editModeValue,
+  }) => {
     const [show, setShow] = useState(false)
     const dialogProps = {
-      initialValues: schema.default(), 
+      initialValues, 
       schema, 
       schemaDescription,
       fieldsByCategory,
+      listDataCache: productCache,
       show, setShow, 
       editMode, setEditMode
     }
 
-    return <div>
-      <Button icon="pi pi-plus" 
-        className="p-button-rounded" 
-        onClick={() => {
-          setEditMode('create')
-          setShow(true)
-        }}
-      />
-      {show && <ProductForm {...dialogProps} />}
-    </div>
+    return (
+      <div>
+        <Button 
+          icon={icon}
+          className={buttonClassName}
+          onClick={() => {
+            setEditMode(editModeValue)
+            setShow(true)
+          }}
+        />
+        {show && <ProductForm {...dialogProps} />}
+      </div>
+    )
   }
 
-  const UpdateButtonTemplate = ({ rowData }) => {
-    const [show, setShow] = useState(false)
-    const dialogProps = {
-      initialValues:rowData, 
-      schema, 
-      schemaDescription,
-      fieldsByCategory,
-      show, setShow, 
-      editMode, setEditMode
-    }
+  const CreateButton = ({ initialValues }) => {
+    return FormButton({ 
+      initialValues, 
+      icon: "pi pi-plus",
+      buttonClassName: "p-button-rounded",
+      editModeValue: 'create'
+    })
+  }
 
-    return <div>
-      <Button icon="pi pi-pencil" 
-        className="p-button-rounded p-button-outlined" 
-        onClick={() => {
-          setEditMode('update')
-          setShow(true)
-        }}
-      />
-      {show && <ProductForm {...dialogProps} />}
-    </div>
+  const UpdateButton = ({ initialValues }) => {
+    return FormButton({ 
+      initialValues, 
+      icon: "pi pi-pencil",
+      buttonClassName: "p-button-rounded p-button-outlined",
+      editModeValue: 'update'
+    })
   }
 
   return (
-    <div style={{padding: "6rem" }}>
+    <div style={{paddingInline: "6rem" }}>
       <h1>Products</h1>
       <TabMenu 
         model={tabModel} 
@@ -114,18 +124,16 @@ export const Products = () => {
       <DataTable 
         value={tableData}
         scrollable
-        scrollHeight="600px"
+        scrollHeight="50rem"
         responsiveLayout="scroll"
       >
         <Column frozen
-          header={CreateButtonTemplate()} 
-          body={rowData => UpdateButtonTemplate({ rowData })} 
+          header={() => CreateButton({ initialValues: schema.default() })} 
+          body={rowData => UpdateButton({ initialValues: rowData })} 
           style={{flex: "0 0 4.5rem"}}
           headerStyle={{height: "5.1rem"}}
         />
         <Column 
-          frozen
-          // header="Product"
           header={() => {
             return <span className="p-input-icon-right" style={{flex: "1 .5 9rem"}}>
               <i className="pi pi-fw pi-search" />
@@ -142,6 +150,7 @@ export const Products = () => {
             <div style={{fontSize: ".8rem", fontFamily: "monospace" }}>{R.prodNick}</div>
           </div>}
           // style={{flex: "1 0 13rem"}}
+          frozen
           style={{width: "14rem"}}
         />        
         {columnsByCategory[activeCategory]}
