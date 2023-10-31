@@ -1,12 +1,12 @@
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 import { Button } from "primereact/button"
-// import { MultiSelect } from "primereact/multiselect"
+import { MultiSelect } from "primereact/multiselect"
 import { InputText } from "primereact/inputtext"
 
 import { useListData } from "../../../data/_listData"
 
-import { debounce,  flow,  groupBy, mapValues, min, pickBy, sortBy } from "lodash/fp"
+import { debounce,  flow,  groupBy, identity, map, mapValues, min, pickBy, sortBy, uniqBy } from "lodash/fp"
 import { TabMenu } from "primereact/tabmenu"
 import { useProductSchema } from "./schema"
 import { useState } from "react"
@@ -15,6 +15,12 @@ import { bodyTemplates } from "./TableTempates"
 
 const pickByWithKey = pickBy.convert({ 'cap': false })
 
+const triState = [
+  { icon: "pi pi-fw pi-question-circle", value: null},
+  { icon: "pi pi-fw pi-check-circle", value: true},
+  { icon: "pi pi-fw pi-times", value: false}
+]
+
 export const Products = () => {
 
   const [activeIndex, setActiveIndex] = useState(0)
@@ -22,11 +28,34 @@ export const Products = () => {
 
   const [query, setQuery] = useState('')
   const dbSetQuery = debounce(120)(setQuery)
+
+  // state for table filtering
+  const [selectedDoughNicks, setSelectedDoughNicks] = useState([])
+  const [selectedPackGroups, setSelectedPackGroups] = useState([])
+  const [isWholeTsIdx, setIsWholeTsIdx] = useState(0)
+  const [defaultIncludeTsIdx, setDefaultIncludeTsIdx] = useState(0)
+
+  const [triStateIdxByField, setTriStateIdxByField] = useState({})
   
   const productCache = useListData({ tableName: "Product", shouldFetch: "true" })
   const { data:PRD=[] } = productCache
+
+  const _filteredPRD = PRD.filter(P => 
+    (!selectedDoughNicks.length || selectedDoughNicks.includes(P.doughNick))
+    && (!selectedPackGroups.length || selectedPackGroups.includes(P.packGroup))
+    && (isWholeTsIdx === 0 || P.isWhole === triState[isWholeTsIdx].value)
+    && (
+      Object.keys(triStateIdxByField).every(field => {
+        const currentIdx = triStateIdxByField[field]
+
+        return [undefined, 0].includes(currentIdx)
+          || P[field] === triState[currentIdx].value
+
+      })
+    )
+  )
   const tableData = rankedSearch({ 
-    data: PRD, 
+    data: _filteredPRD, 
     onFields: ['prodNick', 'prodName'], 
     query,
     nResults: 20
@@ -46,22 +75,6 @@ export const Products = () => {
     )
   )(Object.keys(schemaDescription?.fields ?? []))
   //console.log("fieldsByCategory", fieldsByCategory)
-
-  const columnsByCategory = mapValues(fields => fields.map(field => {
-    const dataType = schemaDescription.fields[field]?.type
-    const bodyTemplate = bodyTemplates[field]
-      ?? bodyTemplates[dataType]
-      ?? bodyTemplates['default']
-
-    return (
-      <Column 
-        key={field} 
-        header={field} 
-        body={row => bodyTemplate(row[field], row)} 
-      />
-    )
-  })
-  )(fieldsByCategory)
 
   const FormButton = ({ 
     initialValues, 
@@ -112,6 +125,88 @@ export const Products = () => {
       editModeValue: 'update'
     })
   }
+
+  // Custom Table Headers
+  const doughNicks = flow(
+    map(P => P.doughNick),
+    sortBy(identity),
+    uniqBy(identity),
+  )(PRD)
+
+  const doughNickHeader = (field) => {
+    return (
+      <MultiSelect 
+        placeholder={field}
+        options={doughNicks}
+        value={selectedDoughNicks}
+        onChange={e => setSelectedDoughNicks(e.value ?? [])}
+      />
+    )
+  }
+
+  const packGroups = flow(
+    map(P => P.packGroup),
+    sortBy(identity),
+    uniqBy(identity),
+  )(PRD)
+
+  const packGroupHeader = (field) => {
+    return (
+      <MultiSelect 
+        placeholder={field}
+        options={packGroups}
+        value={selectedPackGroups}
+        onChange={e => setSelectedPackGroups(e.value ?? [])}
+      />
+    )
+  }
+
+  const triStateHeader = (field) => {
+    const tsIdx = triStateIdxByField[field] !== undefined
+      ? triStateIdxByField[field]
+      : 0
+
+    const handleClick = () => setTriStateIdxByField({
+        ...triStateIdxByField,
+        [field]: (tsIdx + 1) % 3
+      })
+
+    return (
+      <div onClick={handleClick}>
+        {field} <i className={triState[tsIdx].icon} />
+      </div>
+    ) 
+  }
+
+  const headerTemplates = {
+    'default': fieldName => fieldName,
+    'doughNick': doughNickHeader,
+    'packGroup': packGroupHeader,
+    'isRetail': triStateHeader,
+    'isWhole': triStateHeader,
+    'defaultInclude': triStateHeader,
+    'isEOD': triStateHeader,
+  }
+
+  // "Dynamic" Columns
+  const columnsByCategory = mapValues(fields => fields.map(field => {
+    const dataType = schemaDescription.fields[field]?.type
+    const bodyTemplate = bodyTemplates[field]
+      ?? bodyTemplates[dataType]
+      ?? bodyTemplates['default']
+
+    const headerTemplate = headerTemplates[field]
+      ?? headerTemplates['default']
+
+    return (
+      <Column 
+        key={field} 
+        header={headerTemplate(field)} 
+        body={row => bodyTemplate(row[field], row)} 
+      />
+    )
+  })
+  )(fieldsByCategory)
 
   return (
     <div style={{paddingInline: "6rem" }}>
