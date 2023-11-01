@@ -1,16 +1,22 @@
 import jsPDF from "jspdf"
 import "jspdf-autotable"
-import { sortBy, uniqBy, groupBy } from "lodash"
+import { sortBy, uniqBy, groupBy, orderBy } from "lodash"
 import { checkQBValidation_v2 } from "../../../../helpers/QBHelpers"
 import axios from "axios"
 import { downloadPDF } from "../../../../functions/legacyFunctions/helpers/PDFHelpers"
 
 /** Designed to work with the gridData object made with the useRouteGrid hook. */
 export const exportRouteGridPdf = ({ gridData, reportDateDT, fileName }) => {
-    
+
+  const sortedRouteNicks = orderBy(
+    Object.keys(gridData), 
+    routeNick => gridData[routeNick].printOrder,
+    'asc'
+  )
+
   const doc = new jsPDF("l", "mm", "a4")
   let isFirstPage = true
-  for (let routeNick of Object.keys(gridData)) {
+  for (let routeNick of sortedRouteNicks) {
 
     const { columns, body } = gridData[routeNick]
     
@@ -20,7 +26,7 @@ export const exportRouteGridPdf = ({ gridData, reportDateDT, fileName }) => {
     // **** Janky Hack to deal with large BPB Orders ***
 
     // separates bpb type rows into their own table so that pivot columns
-    // don't become too cluttered.
+    // don't become too cluttered and break formatting.
 
     const _body = body.filter(row => 
       !['backporch', 'bpbkit', 'bpbextras'].includes(row.locNick) 
@@ -93,7 +99,7 @@ export const exportInvoicePdf = async ({
 
   const orderedRouteNicks = sortBy(
     Object.keys(gridData), 
-    routeNick => routes[routeNick].printOrder
+    routeNick => routes[routeNick].printOrder ?? 0
   )
 
   // body rows are already sorted by delivOrder in the data hook
