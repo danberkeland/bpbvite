@@ -15,7 +15,8 @@ import { default as SetOutV1 } from "../Pages/Production/BPBNSetout";
 import Production from "../Pages/Production/Production";
 import { default as ProductsV1 } from "../Pages/Products/Products";
 import Settings from "../Pages/Settings/Settings";
-import Billing from "../Pages/Billing/Billing";
+import { default as BillingV1} from "../Pages/Billing/Billing";
+import { Billing as BillingV2 } from "../Pages/Billing/v2/Billing";
 import EODCounts from "../Pages/EODCounts/EODCounts";
 import Logistics from "../Pages/Logistics/Logistics";
 import ByRoute from "../Pages/Logistics/ByRoute/ByRoute";
@@ -118,7 +119,9 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             <Route path="/Production/CroixToMake" element={<CroixToMake />} />
             <Route path="/Settings" element={<Settings />} />
 
-            <Route path="/Billing" element={<Billing />} />
+            <Route path="/Billing" element={<BillingV1 />} />
+            <Route path="/Billing/v2" element={<BillingV2 />} />
+            <Route path="/Billing/v1" element={<BillingV1 />} />
             <Route path="/EODCounts" element={<EODCounts />} />
             <Route path="/Logistics" element={<Logistics />} />
             <Route path="/Logistics/ByRoute/Legacy" element={<ByRoute />} />

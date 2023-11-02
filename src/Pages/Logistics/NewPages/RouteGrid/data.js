@@ -48,7 +48,8 @@ export const useRouteGrid = ({ reportDate, shouldFetch }) => {
     // anyway.
     //
     // We change the logic here to only check the logistics part -- if there is
-    // a route that could theoretically get the item to its destination,
+    // a route that could theoretically get the item to its destination, then
+    // we assign it.
     const ordersByRoute = groupBy(
       orders, 
       order => order.routeMeta.routeIsAvailable 
@@ -58,13 +59,13 @@ export const useRouteGrid = ({ reportDate, shouldFetch }) => {
 
     // console.log("ordersByRoute", ordersByRoute)
 
-     // pivot columns have full order object values
     const ordersByRouteByLocation = mapValues(
       ordersByRoute,
       routeGroup => ({
         routeNick: routeGroup[0].routeMeta.routeNick,
         driver: routes[routeGroup[0].routeMeta.routeNick].driver,
-        prodNickList: orderBy(
+        printOrder: routes[routeGroup[0].routeMeta.routeNick].printOrder ?? 0,
+        prodNickList: sortBy(
           uniqBy(routeGroup.map(order => order.prodNick)),
           [
             prodNick => products[prodNick].packGroup,
@@ -87,12 +88,14 @@ export const useRouteGrid = ({ reportDate, shouldFetch }) => {
       })
     )
 
+    // Making pdf pdf data...
     // pivot columns have simple qty values instead of full order objects
     const ordersByRouteByLocationFlat = mapValues(
       ordersByRoute,
       routeGroup => ({
         routeNick: routeGroup[0].routeMeta.routeNick,
         driver: routes[routeGroup[0].routeMeta.routeNick].driver,
+        printOrder: routes[routeGroup[0].routeMeta.routeNick].printOrder ?? 0,
         prodNickList: sortBy(
           uniqBy(routeGroup.map(order => order.prodNick)),
           [
@@ -120,7 +123,7 @@ export const useRouteGrid = ({ reportDate, shouldFetch }) => {
     const pdfGrids = mapValues(
       ordersByRouteByLocationFlat,
       routeDataObj => {
-        const { prodNickList, rows, routeNick, driver } = routeDataObj
+        const { prodNickList, rows, routeNick, driver, printOrder } = routeDataObj
 
         const rowLabelColumn = {
           header: "Location",
@@ -138,10 +141,11 @@ export const useRouteGrid = ({ reportDate, shouldFetch }) => {
         return {
           routeNick,
           driver,
+          printOrder,
           columns,
           body: rows.map(row => ({ 
             ...row, 
-            locNameShort: `${truncate(row.locName, { length: 15 })}`
+            locNameShort: `${truncate(row.locName, { length: 16 })}`
           })),
         }
 
