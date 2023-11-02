@@ -22,7 +22,11 @@ import axios from "axios"
 import { useSettingsStore } from "../../../Contexts/SettingsZustand"
 
 const termsOptions = ["0", "15", "30"]
-const invoicingOptions = ["daily", "weekly", "no invoice"]
+const invoicingOptions = [
+  "daily", 
+  // "weekly", not supported at the moment 
+  "no invoice"
+]
 const fulfillmentOptions = (zoneNick) => ["atownpick", "slopick"].includes(zoneNick)
   ? ["atownpick", "slopick"]
   : ["deliv", "atownpick", "slopick"]

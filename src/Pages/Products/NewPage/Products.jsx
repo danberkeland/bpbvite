@@ -32,8 +32,8 @@ export const Products = () => {
   // state for table filtering
   const [selectedDoughNicks, setSelectedDoughNicks] = useState([])
   const [selectedPackGroups, setSelectedPackGroups] = useState([])
-  const [isWholeTsIdx, setIsWholeTsIdx] = useState(0)
-  const [defaultIncludeTsIdx, setDefaultIncludeTsIdx] = useState(0)
+  // const [isWholeTsIdx, setIsWholeTsIdx] = useState(0)
+  // const [defaultIncludeTsIdx, setDefaultIncludeTsIdx] = useState(0)
 
   const [triStateIdxByField, setTriStateIdxByField] = useState({})
   
@@ -43,7 +43,7 @@ export const Products = () => {
   const _filteredPRD = PRD.filter(P => 
     (!selectedDoughNicks.length || selectedDoughNicks.includes(P.doughNick))
     && (!selectedPackGroups.length || selectedPackGroups.includes(P.packGroup))
-    && (isWholeTsIdx === 0 || P.isWhole === triState[isWholeTsIdx].value)
+    // && (isWholeTsIdx === 0 || P.isWhole === triState[isWholeTsIdx].value)
     && (
       Object.keys(triStateIdxByField).every(field => {
         const currentIdx = triStateIdxByField[field]
@@ -172,7 +172,7 @@ export const Products = () => {
       })
 
     return (
-      <div onClick={handleClick}>
+      <div onClick={handleClick} style={{cursor: "pointer", userSelect: "none"}}>
         {field} <i className={triState[tsIdx].icon} />
       </div>
     ) 
@@ -186,6 +186,7 @@ export const Products = () => {
     'isWhole': triStateHeader,
     'defaultInclude': triStateHeader,
     'isEOD': triStateHeader,
+    'freezerThaw': triStateHeader,
   }
 
   // "Dynamic" Columns
