@@ -67,6 +67,7 @@ export const locationAttributes = /* GraphQL */ `
   invoicing
   latestFirstDeliv
   latestFinalDeliv
+  dfFulfill
   webpageURL
   picURL
   gMap
