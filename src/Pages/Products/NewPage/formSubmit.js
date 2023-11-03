@@ -11,6 +11,7 @@ export const createProduct = async ({
   values,
   // initialValues,
   listDataCache,
+  toastRef,
 }) => {
 
   // submit to QB
@@ -46,15 +47,37 @@ export const createProduct = async ({
 
   if (!qbResp?.data) {
     console.warn("Item not created in QB successfully.")
+    toastRef.current.show({
+      severity: 'warn',
+      summary: "QB Error",
+      details: "Item not created successfully"
+    })
+  } else {
+    toastRef.current.show({
+      severity: 'success',
+      summary: "Created QB Item",
+    })
   }
 
   // submit to AppSync
 
   const createInputs = [{ ...values, qbID: qbResp?.data ?? "error" }]
   
-  listDataCache.updateLocalData(
-    await listDataCache.submitMutations({ createInputs })
-  )
+  const gqlResp = await listDataCache.submitMutations({ createInputs })
+  listDataCache.updateLocalData(gqlResp)
+ 
+  if (gqlResp.errors.length) {
+    toastRef.current.show({
+      severity: 'warn',
+      summary: "GraphQL Error",
+      details: "Item not created successfully"
+    })
+  } else {
+    toastRef.current.show({
+      severity: 'success',
+      summary: "Created AppSync Item",
+    })
+  }
 
 }
 
@@ -65,6 +88,7 @@ export const updateProduct = async ({
   values,
   initialValues,
   listDataCache,
+  toastRef
 }) => {
 
   const fieldHasChanged = (field) => 
@@ -125,6 +149,20 @@ export const updateProduct = async ({
 
       console.log("QB Response:", qbResp)
 
+      if (!qbResp?.data) {
+        console.warn("Item not created in QB successfully.")
+        toastRef.current.show({
+          severity: 'warn',
+          summary: "QB Error",
+          details: "Item not updated successfully"
+        })
+      } else {
+        toastRef.current.show({
+          severity: 'success',
+          summary: "Updated QB Item",
+        })
+      }
+
     } else {
       if (!SyncToken) {
         console.warn("Could not fetch sync token; submit to QB cancelled")
@@ -144,9 +182,21 @@ export const updateProduct = async ({
     const updateInputs = [{ prodNick, ...gqlSubmitValues }]
     console.log("Submitting to AppSync:", updateInputs)
 
-    listDataCache.updateLocalData(
-      await listDataCache.submitMutations({ updateInputs })
-    )
+    const gqlResp = await listDataCache.submitMutations({ updateInputs })
+    listDataCache.updateLocalData(gqlResp)
+
+    if (gqlResp.errors.length) {
+      toastRef.current.show({
+        severity: 'warn',
+        summary: "GraphQL Error",
+        details: "Item not updated successfully"
+      })
+    } else {
+      toastRef.current.show({
+        severity: 'success',
+        summary: "Updated AppSync Item",
+      })
+    }
 
   } else {
     console.log("Nothing to submit to AppSync")
