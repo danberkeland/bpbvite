@@ -159,20 +159,20 @@ export const Locations = () => {
         />
 
         {columnCategory === 'Address' && [
-          <Column header="Addr1" field="addr1" style={{flex: "1 0 10rem", maxWidth: "15rem"}} />,
-          <Column header="Addr2" field="addr2" style={{flex: "1 0 10rem", maxWidth: "15rem"}} />,
-          <Column header="City" field="city" style={{flex: ".5 0 8rem", maxWidth: "15rem"}} />,
-          <Column header="Zip" field="zip" style={{flex: "0 0 7rem"}} />,
-          <Column header="gMap" field="gMap" style={{flex: "0 0 6rem"}}
+          <Column key="addr1" header="Addr1" field="addr1" style={{flex: "1 0 10rem", maxWidth: "15rem"}} />,
+          <Column key="addr2" header="Addr2" field="addr2" style={{flex: "1 0 10rem", maxWidth: "15rem"}} />,
+          <Column key="city" header="City" field="city" style={{flex: ".5 0 8rem", maxWidth: "15rem"}} />,
+          <Column key="zip" header="Zip" field="zip" style={{flex: "0 0 7rem"}} />,
+          <Column key="gMap" header="gMap" field="gMap" style={{flex: "0 0 6rem"}}
             body={row => <GMapTemplate row={row} />}
           />,
         ]}
 
         {columnCategory === 'Contact' && [
-          <Column header="First Name" field="firstName" style={{flex: ".25 0 8rem", maxWidth: "15rem"}} />,
-          <Column header="Last Name" field="lastName" style={{flex: ".25 0 8rem", maxWidth: "15rem"}} />,
-          <Column header="Phone" field="phone" style={{flex: "0 0 9rem"}} />,
-          <Column header="Email" field="email" style={{flex: "1 0 10rem"}} bodyStyle={{overflow: "hidden"}}
+          <Column key="firstName" header="First Name" field="firstName" style={{flex: ".25 0 8rem", maxWidth: "15rem"}} />,
+          <Column key="lastName" header="Last Name" field="lastName" style={{flex: ".25 0 8rem", maxWidth: "15rem"}} />,
+          <Column key="phone" header="Phone" field="phone" style={{flex: "0 0 9rem"}} />,
+          <Column key="email" header="Email" field="email" style={{flex: "1 0 10rem"}} bodyStyle={{overflow: "hidden"}}
             body={R => <div>
               {R.email.replace(' ', '').split(",").map((email, idx) => {
                 return <div key={`email=${idx}`}>
@@ -185,12 +185,12 @@ export const Locations = () => {
         ]}
 
         {columnCategory === 'Billing' && [
-          <Column header="qbID" field="qbID" body={R => truncate(R.qbID, { length: 10 })} sortable style={{flex: "0 0 7rem"}} />,
-          <Column header="Invoice Frequency" field="invoicing"  style={{flex: "0 0 7rem"}} />,
-          <Column header="Terms" field="terms" style={{flex: "0 0 7rem"}} />,
-          <Column header="Email Invoice?" body={R => boolTemplate(R.toBeEmailed)} style={{flex: "0 0 6rem"}} />,
-          <Column header="Print Invoice?" body={R => boolTemplate(R.toBePrinted)} style={{flex: "0 0 6rem"}} />,
-          <Column header="Print Duplicate?" body={R => boolTemplate(R.printDuplicate)} style={{flex: "0 0 6rem"}} />,
+          <Column key="qbID" header="qbID" field="qbID" body={R => truncate(R.qbID, { length: 10 })} sortable style={{flex: "0 0 7rem"}} />,
+          <Column key="invoicing" header="Invoice Frequency" field="invoicing"  style={{flex: "0 0 7rem"}} />,
+          <Column key="terms" header="Terms" field="terms" style={{flex: "0 0 7rem"}} />,
+          <Column key="toBeEmailed" header="Email Invoice?" body={R => boolTemplate(R.toBeEmailed)} style={{flex: "0 0 6rem"}} />,
+          <Column key="toBePrinted" header="Print Invoice?" body={R => boolTemplate(R.toBePrinted)} style={{flex: "0 0 6rem"}} />,
+          <Column key="printDuplicate" header="Print Duplicate?" body={R => boolTemplate(R.printDuplicate)} style={{flex: "0 0 6rem"}} />,
         ]}
 
         {columnCategory === 'Fulfillment' && [
@@ -207,18 +207,18 @@ export const Locations = () => {
             />}
             style={{flex: ".15 0 10rem"}}
           />,
-          <Column header="Preferred Fulfillment" field="dfFulfill" style={{flex: ".1 0 7rem"}} />,
-          <Column header="Earliest Deliv" field="latestFirstDeliv" style={{flex: ".1 0 7rem"}} />,
-          <Column header="Latest Deliv" field="latestFinalDeliv" style={{flex: ".1 0 7rem"}} />,
-          <Column header="Deliv Order" field="delivOrder" body={R => JSON.stringify(R.delivOrder)} sortable style={{flex: ".1 0 7rem"}} />,
+          <Column key="dfFulfill" header="Preferred Fulfillment" field="dfFulfill" style={{flex: ".1 0 7rem"}} />,
+          <Column key="latestFirstDeliv" header="Earliest Deliv" field="latestFirstDeliv" style={{flex: ".1 0 7rem"}} />,
+          <Column key="latestFinalDeliv" header="Latest Deliv" field="latestFinalDeliv" style={{flex: ".1 0 7rem"}} />,
+          <Column key="delivOrder" header="Deliv Order" field="delivOrder" body={R => JSON.stringify(R.delivOrder)} sortable style={{flex: ".1 0 7rem"}} />,
         ]}
 
         {columnCategory === 'Misc' && [
-          <Column header="Is Active?" field="isActive" />,
-          <Column header="Current Balance" field="currentBalance" />,
-          <Column header="picURL" field="picURL" />,
-          <Column header="Email for Order Confirmation" field="orderCnfEmail" />,
-          <Column header="Webpage URL" field="webpageURL" />,
+          <Column key="isActive" header="Is Active?" field="isActive" />,
+          <Column key="currentBalance" header="Current Balance" field="currentBalance" />,
+          <Column key="picURL" header="picURL" field="picURL" />,
+          <Column key="Email" header="Email for Order Confirmation" field="orderCnfEmail" />,
+          <Column key="webpageURL" header="Webpage URL" field="webpageURL" />,
         ]}
 
       </DataTable>
