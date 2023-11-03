@@ -30,8 +30,17 @@ const invoicingOptions = [
   "no invoice"
 ]
 const fulfillmentOptions = (zoneNick) => ["atownpick", "slopick"].includes(zoneNick)
-  ? ["atownpick", "slopick"]
-  : ["deliv", "atownpick", "slopick"]
+  ? [
+    { label: "(auto)", value: "" },
+    { label: "atownpick", value: "atownpick" },
+    { label: "slopick", value: "slopick" },
+  ]
+  : [
+    { label: "(auto)", value: "" },
+    { label: "deliv", value: "deliv" },
+    { label: "atownpick", value: "atownpick" },
+    { label: "slopick", value: "slopick" },
+  ]
 
 const categories = {
   Id: ['locNick', 'locName'],
@@ -102,6 +111,7 @@ export const LocationForm = ({ editMode, rowData, show, setShow }) => {
       onClick={() => {
         console.log('form state:', formik.values)
         console.log('errors:', formik.errors)
+        console.log(schema.describe())
       }
     }>
       {editMode === 'update'? rowData.locName : 'Create New Location'}
@@ -113,7 +123,11 @@ export const LocationForm = ({ editMode, rowData, show, setShow }) => {
       type="submit" 
       form="location-form"
       onClick={formik.handleSubmit}
-      disabled={isEqual(rowData, formik.values) || isLoading}
+      disabled={
+        isLoading
+        || Object.keys(schema.describe().fields)
+            .every(field => isEqual(rowData[field], formik.values[field]))
+      }
     />
   </div>
   
