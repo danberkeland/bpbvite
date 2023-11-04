@@ -423,6 +423,7 @@ type Order @model (timestamps: { createdAt: "createdOn", updatedAt: "updatedOn"}
     @default(value: "Orders")
   id: ID!
   qty: Int
+  qtyShort: Int
   qtyUpdatedOn: AWSDateTime
   sameDayMaxQty: Int
   prodNick: String! @index(name: "byProd")
@@ -437,6 +438,7 @@ type Order @model (timestamps: { createdAt: "createdOn", updatedAt: "updatedOn"}
   delivDate: String @index(name: "byDelivDate", queryField: "orderByDelivDate")
   rate: Float
   route: String
+  delivFee: Float
   isLate: Int
   createdOn: AWSDateTime!
   updatedOn: AWSDateTime!

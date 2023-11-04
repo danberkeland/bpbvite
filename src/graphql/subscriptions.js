@@ -2143,6 +2143,7 @@ export const onCreateLocation = /* GraphQL */ `
           Type
           id
           qty
+          qtyShort
           qtyUpdatedOn
           sameDayMaxQty
           prodNick
@@ -2153,6 +2154,7 @@ export const onCreateLocation = /* GraphQL */ `
           delivDate
           rate
           route
+          delivFee
           isLate
           createdOn
           updatedOn
@@ -2166,6 +2168,7 @@ export const onCreateLocation = /* GraphQL */ `
           Type
           id
           qty
+          qtyShort
           qtyUpdatedOn
           sameDayMaxQty
           prodNick
@@ -2176,6 +2179,7 @@ export const onCreateLocation = /* GraphQL */ `
           delivDate
           rate
           route
+          delivFee
           isLate
           createdOn
           updatedOn
@@ -2362,6 +2366,7 @@ export const onUpdateLocation = /* GraphQL */ `
           Type
           id
           qty
+          qtyShort
           qtyUpdatedOn
           sameDayMaxQty
           prodNick
@@ -2372,6 +2377,7 @@ export const onUpdateLocation = /* GraphQL */ `
           delivDate
           rate
           route
+          delivFee
           isLate
           createdOn
           updatedOn
@@ -2385,6 +2391,7 @@ export const onUpdateLocation = /* GraphQL */ `
           Type
           id
           qty
+          qtyShort
           qtyUpdatedOn
           sameDayMaxQty
           prodNick
@@ -2395,6 +2402,7 @@ export const onUpdateLocation = /* GraphQL */ `
           delivDate
           rate
           route
+          delivFee
           isLate
           createdOn
           updatedOn
@@ -2581,6 +2589,7 @@ export const onDeleteLocation = /* GraphQL */ `
           Type
           id
           qty
+          qtyShort
           qtyUpdatedOn
           sameDayMaxQty
           prodNick
@@ -2591,6 +2600,7 @@ export const onDeleteLocation = /* GraphQL */ `
           delivDate
           rate
           route
+          delivFee
           isLate
           createdOn
           updatedOn
@@ -2604,6 +2614,7 @@ export const onDeleteLocation = /* GraphQL */ `
           Type
           id
           qty
+          qtyShort
           qtyUpdatedOn
           sameDayMaxQty
           prodNick
@@ -2614,6 +2625,7 @@ export const onDeleteLocation = /* GraphQL */ `
           delivDate
           rate
           route
+          delivFee
           isLate
           createdOn
           updatedOn
@@ -2858,6 +2870,7 @@ export const onCreateProduct = /* GraphQL */ `
           Type
           id
           qty
+          qtyShort
           qtyUpdatedOn
           sameDayMaxQty
           prodNick
@@ -2868,6 +2881,7 @@ export const onCreateProduct = /* GraphQL */ `
           delivDate
           rate
           route
+          delivFee
           isLate
           createdOn
           updatedOn
@@ -3189,6 +3203,7 @@ export const onUpdateProduct = /* GraphQL */ `
           Type
           id
           qty
+          qtyShort
           qtyUpdatedOn
           sameDayMaxQty
           prodNick
@@ -3199,6 +3214,7 @@ export const onUpdateProduct = /* GraphQL */ `
           delivDate
           rate
           route
+          delivFee
           isLate
           createdOn
           updatedOn
@@ -3520,6 +3536,7 @@ export const onDeleteProduct = /* GraphQL */ `
           Type
           id
           qty
+          qtyShort
           qtyUpdatedOn
           sameDayMaxQty
           prodNick
@@ -3530,6 +3547,7 @@ export const onDeleteProduct = /* GraphQL */ `
           delivDate
           rate
           route
+          delivFee
           isLate
           createdOn
           updatedOn
@@ -4264,6 +4282,7 @@ export const onCreateOrder = /* GraphQL */ `
       Type
       id
       qty
+      qtyShort
       qtyUpdatedOn
       sameDayMaxQty
       prodNick
@@ -4498,6 +4517,7 @@ export const onCreateOrder = /* GraphQL */ `
       delivDate
       rate
       route
+      delivFee
       isLate
       createdOn
       updatedOn
@@ -4512,6 +4532,7 @@ export const onUpdateOrder = /* GraphQL */ `
       Type
       id
       qty
+      qtyShort
       qtyUpdatedOn
       sameDayMaxQty
       prodNick
@@ -4746,6 +4767,7 @@ export const onUpdateOrder = /* GraphQL */ `
       delivDate
       rate
       route
+      delivFee
       isLate
       createdOn
       updatedOn
@@ -4760,6 +4782,7 @@ export const onDeleteOrder = /* GraphQL */ `
       Type
       id
       qty
+      qtyShort
       qtyUpdatedOn
       sameDayMaxQty
       prodNick
@@ -4994,6 +5017,7 @@ export const onDeleteOrder = /* GraphQL */ `
       delivDate
       rate
       route
+      delivFee
       isLate
       createdOn
       updatedOn
