@@ -1,3 +1,5 @@
+import * as attributes from "../standardAttributes"
+
 export const listDoughBackups = /* GraphQL */ `
   query ListDoughBackups(
     $filter: ModelDoughBackupFilterInput
@@ -6,22 +8,7 @@ export const listDoughBackups = /* GraphQL */ `
   ) {
     listDoughBackups(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        id
-        doughName
-        hydration
-        process
-        batchSize
-        mixedWhere
-        components
-        oldDough
-        isBakeReady
-        buffer
-        bucketSets
-        preBucketSets
-        updatePreBucket
-        saltInDry
-        createdAt
-        updatedAt
+        ${attributes.doughBackupAttributes}
       }
       nextToken
     }
@@ -39,13 +26,7 @@ export const listDoughComponentBackups = /* GraphQL */ `
       nextToken: $nextToken
     ) {
       items {
-        id
-        dough
-        componentType
-        componentName
-        amount
-        createdAt
-        updatedAt
+        ${attributes.doughComponentBackupAttributes}
       }
       nextToken
     }
@@ -67,15 +48,7 @@ export const listUsers = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
-        name
-        email
-        username
-        phone
-        authClass
-        sub
-        locNick
-        createdAt
-        updatedAt
+        ${attributes.userAttributes}
       }
       nextToken
     }
@@ -89,13 +62,7 @@ export const listLocationUsers = /* GraphQL */ `
   ) {
     listLocationUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        id
-        Type
-        authType
-        locNick
-        sub
-        createdAt
-        updatedAt
+        ${attributes.locationUserAttributes}
       }
       nextToken
     }
@@ -117,38 +84,7 @@ export const listLocations = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
-        Type
-        locNick
-        locName
-        zoneNick
-        addr1
-        addr2
-        city
-        zip
-        email
-        orderCnfEmail
-        phone
-        firstName
-        lastName
-        toBePrinted
-        toBeEmailed
-        printDuplicate
-        terms
-        invoicing
-        latestFirstDeliv
-        latestFinalDeliv
-        dfFulfill
-        webpageURL
-        picURL
-        gMap
-        specialInstructions
-        delivOrder
-        qbID
-        currentBalance
-        isActive
-        ttl
-        createdAt
-        updatedAt
+        ${attributes.locationAttributes}
       }
       nextToken
     }
@@ -162,24 +98,7 @@ export const listOrders = /* GraphQL */ `
   ) {
     listOrders(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        Type
-        id
-        qty
-        qtyUpdatedOn
-        sameDayMaxQty
-        prodNick
-        locNick
-        ItemNote
-        SO
-        isWhole
-        delivDate
-        rate
-        route
-        isLate
-        createdOn
-        updatedOn
-        updatedBy
-        ttl
+        ${attributes.orderAttributes}
       }
       nextToken
     }
@@ -194,20 +113,7 @@ export const listStandings = /* GraphQL */ `
   ) {
     listStandings(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        id
-        locNick
-        isWhole
-        isStand
-        dayOfWeek
-        route
-        prodNick
-        qty
-        ItemNote
-        startDate
-        endDate
-        createdAt
-        updatedAt
-        updatedBy
+        ${attributes.standingAttributes}
       }
       nextToken
     }
@@ -229,12 +135,7 @@ export const listZones = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
-        zoneNick
-        zoneName
-        description
-        zoneFee
-        createdAt
-        updatedAt
+        ${attributes.zoneAttributes}
       }
       nextToken
     }
@@ -256,17 +157,7 @@ export const listRoutes = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
-        routeNick
-        routeName
-        routeStart
-        routeTime
-        RouteDepart
-        RouteArrive
-        RouteSched
-        printOrder
-        driver
-        createdAt
-        updatedAt
+        ${attributes.routeAttributes}
       }
       nextToken
     }
@@ -280,11 +171,7 @@ export const listZoneRoutes = /* GraphQL */ `
   ) {
     listZoneRoutes(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        id
-        routeNick
-        zoneNick
-        createdAt
-        updatedAt
+        ${attributes.zoneRouteAttributes}
       }
       nextToken
     }
@@ -306,61 +193,7 @@ export const listProducts = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
-        Type
-        prodName
-        prodNick
-        packGroup
-        packSize
-        doughNick
-        freezerThaw
-        packGroupOrder
-        shapeDay
-        shapeNick
-        bakeDay
-        bakeNick
-        guarantee
-        transferStage
-        readyTime
-        bakedWhere
-        wholePrice
-        retailPrice
-        isRetail
-        retailName
-        retailDescrip
-        isWhole
-        isEOD
-        weight
-        descrip
-        picURL
-        squareID
-        forBake
-        bakeExtra
-        batchSize
-        defaultInclude
-        leadTime
-        daysAvailable
-        qbID
-        currentStock
-        whoCountedLast
-        freezerClosing
-        freezerCount
-        freezerNorth
-        freezerNorthClosing
-        freezerNorthFlag
-        prepreshaped
-        preshaped
-        updatePreDate
-        updateFreezerDate
-        backporchbakerypre
-        backporchbakery
-        bpbextrapre
-        bpbextra
-        bpbssetoutpre
-        bpbssetout
-        sheetMake
-        updatedAt
-        createdAt
-        inventoryProductId
+        ${attributes.productAttributes}
       }
       nextToken
     }
@@ -374,13 +207,7 @@ export const listTrainings = /* GraphQL */ `
   ) {
     listTrainings(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        id
-        role
-        order
-        heading
-        instruction
-        createdAt
-        updatedAt
+        ${attributes.trainingAttributes}
       }
       nextToken
     }
@@ -394,11 +221,7 @@ export const listInfoQBAuths = /* GraphQL */ `
   ) {
     listInfoQBAuths(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        id
-        infoName
-        infoContent
-        createdAt
-        updatedAt
+        ${attributes.infoQBAuthAttributes}
       }
       nextToken
     }
@@ -412,11 +235,7 @@ export const listTemplateProds = /* GraphQL */ `
   ) {
     listTemplateProds(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        id
-        locNick
-        prodNick
-        createdAt
-        updatedAt
+        ${attributes.templateProdAttributes}
       }
       nextToken
     }
@@ -434,12 +253,7 @@ export const listProdsNotAlloweds = /* GraphQL */ `
       nextToken: $nextToken
     ) {
       items {
-        id
-        isAllowed
-        locNick
-        prodNick
-        createdAt
-        updatedAt
+        ${attributes.prodsNotAllowedAttributes}
       }
       nextToken
     }
@@ -453,12 +267,7 @@ export const listAltPricings = /* GraphQL */ `
   ) {
     listAltPricings(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        id
-        wholePrice
-        locNick
-        prodNick
-        createdAt
-        updatedAt
+        ${attributes.altPricingAttributes}
       }
       nextToken
     }
@@ -472,12 +281,7 @@ export const listAltLeadTimes = /* GraphQL */ `
   ) {
     listAltLeadTimes(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        id
-        leadTime
-        locNick
-        prodNick
-        createdAt
-        updatedAt
+        ${attributes.altLeadTimeAttributes}
       }
       nextToken
     }
@@ -504,24 +308,7 @@ export const orderByDelivDate = /* GraphQL */ `
       nextToken: $nextToken
     ) {
       items {
-        Type
-        id
-        qty
-        qtyUpdatedOn
-        sameDayMaxQty
-        prodNick
-        locNick
-        ItemNote
-        SO
-        isWhole
-        delivDate
-        rate
-        route
-        isLate
-        createdOn
-        updatedOn
-        updatedBy
-        ttl
+        ${attributes.orderAttributes}
       }
       nextToken
     }
@@ -546,24 +333,7 @@ export const orderByLocByDelivDate = /* GraphQL */ `
       nextToken: $nextToken
     ) {
       items {
-        Type
-        id
-        qty
-        qtyUpdatedOn
-        sameDayMaxQty
-        prodNick
-        locNick
-        ItemNote
-        SO
-        isWhole
-        delivDate
-        rate
-        route
-        isLate
-        createdOn
-        updatedOn
-        updatedBy
-        ttl
+        ${attributes.orderAttributes}
       }
       nextToken
     }
@@ -586,20 +356,7 @@ export const standingByDayOfWeek = /* GraphQL */ `
       nextToken: $nextToken
     ) {
       items {
-        id
-        locNick
-        isWhole
-        isStand
-        dayOfWeek
-        route
-        prodNick
-        qty
-        ItemNote
-        startDate
-        endDate
-        createdAt
-        updatedAt
-        updatedBy
+        ${attributes.standingAttributes}
       }
       nextToken
     }
@@ -624,20 +381,7 @@ export const standingByLocByDayOfWeek = /* GraphQL */ `
       nextToken: $nextToken
     ) {
       items {
-        id
-        locNick
-        isWhole
-        isStand
-        dayOfWeek
-        route
-        prodNick
-        qty
-        ItemNote
-        startDate
-        endDate
-        createdAt
-        updatedAt
-        updatedBy
+        ${attributes.standingAttributes}
       }
       nextToken
     }
