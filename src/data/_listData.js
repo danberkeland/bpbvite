@@ -125,18 +125,44 @@ const batchMutate = async ({
 
 }
 
+// unfortunately I don't know a way to derive these 
+// permitted values from the constants, but this seems
+// to work best.
+/**
+ * @typedef { "Location" 
+ * | "User" 
+ * | "LocationUser" 
+ * | "Product" 
+ * | "DoughBackup" 
+ * | "DoughComponentBackup"
+ * | "Order"
+ * | "Standing"
+ * | "Zone"
+ * | "Route"
+ * | "ZoneRoute"
+ * | "Training"
+ * | "InfoQBAuth"
+ * | "TemplateProd"
+ * | "ProdsNotAllowed"
+ * | "AltPricing"
+ * | "AltLeadTime"
+ * } TableNames
+ */
 
-
+// @param {typeof LIST_TABLES[number]} input.tableName
+// @param {number} input.variables.limit Integer; default 5000. 
+//  @param {number} [input.variables.limit] Integer; default 5000. 
+//   @param {Object.<string, any>} [input.variables] Part of SWR cache key; changing this changes the cache.
 /**
  * Custom mutate functions require shouldFetch: true in order to read/update 
  * local data.
  * @function
  * @param {Object} input
- * @param {typeof LIST_TABLES[number]} input.tableName
- * @param {String} input.customQuery Advanced override to use special queries byIndex.
+ * @param {TableNames} input.tableName
  * @param {boolean} input.shouldFetch External control for when data should be fetched
- * @param {Object} input.variables Part of SWR cache key; changing this changes the cache.
- * @param {number} input.variables.limit Integer; default 5000. 
+ * @param {String} [input.customQuery] Advanced override to use special queries byIndex.
+ * @param {Object.<string, any>} [input.variables] Part of SWR cache key; changing this changes the cache.
+ * @param {Object} [input.swrOptions] - Optional override for SWR options
  * @returns {Object}
  */
 export const useListData = ({ 
