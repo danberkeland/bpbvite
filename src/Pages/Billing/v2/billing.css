@@ -1,0 +1,29 @@
+div.p-overlaypanel {
+  background: var(--bpb-surface-content);
+}
+
+.p-overlaypanel div.p-overlaypanel-content {
+  padding: 0;
+  /* background: var(--bpb-surface-content); */
+  border-radius: 3px;
+}
+
+.billing-v2-body {
+  min-width: 30rem;
+  max-width: 48rem;
+  margin: auto;
+  padding-inline: 4rem;
+}
+
+.billing-v2-body .calendar-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 2em;
+  font-weight: bold;
+  margin-block: .67em;
+}
+
+/* div.p-overlaypanel.p-component.p-overlaypanel-enter-done::before {
+  border-color: var(--bpb-surface-content);
+} */

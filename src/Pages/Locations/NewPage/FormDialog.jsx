@@ -2,6 +2,7 @@ import { TabView, TabPanel } from "primereact/tabview"
 import { Dialog } from "primereact/dialog"
 import { Button } from "primereact/button"
 import { Badge } from "primereact/badge"
+import { Toast } from "primereact/toast"
 
 import { 
   FormikText, 
@@ -20,6 +21,7 @@ import { checkQBValidation_v2 } from "../../../helpers/QBHelpers"
 
 import axios from "axios"
 import { useSettingsStore } from "../../../Contexts/SettingsZustand"
+import { useRef } from "react"
 
 const termsOptions = ["0", "15", "30"]
 const invoicingOptions = [
@@ -28,8 +30,17 @@ const invoicingOptions = [
   "no invoice"
 ]
 const fulfillmentOptions = (zoneNick) => ["atownpick", "slopick"].includes(zoneNick)
-  ? ["atownpick", "slopick"]
-  : ["deliv", "atownpick", "slopick"]
+  ? [
+    { label: "(auto)", value: "" },
+    { label: "atownpick", value: "atownpick" },
+    { label: "slopick", value: "slopick" },
+  ]
+  : [
+    { label: "(auto)", value: "" },
+    { label: "deliv", value: "deliv" },
+    { label: "atownpick", value: "atownpick" },
+    { label: "slopick", value: "slopick" },
+  ]
 
 const categories = {
   Id: ['locNick', 'locName'],
@@ -45,6 +56,7 @@ export const LocationForm = ({ editMode, rowData, show, setShow }) => {
 
   const isLoading = useSettingsStore((state) => state.isLoading)
   const setIsLoading = useSettingsStore((state) => state.setIsLoading)
+  const toastRef = useRef()
 
   const locationCache = useListData({ tableName: "Location", shouldFetch: true })
   const { data:ZNE=[] } = useListData({ tableName: "Zone", shouldFetch: true})
@@ -63,6 +75,7 @@ export const LocationForm = ({ editMode, rowData, show, setShow }) => {
           values, 
           locationCache,
           setIsLoading,
+          toastRef,
         })
       }
       if (editMode === 'update') {
@@ -72,6 +85,7 @@ export const LocationForm = ({ editMode, rowData, show, setShow }) => {
           schema, 
           locationCache,
           setIsLoading,
+          toastRef,
         })
       }
       formik.setSubmitting(false)
@@ -97,6 +111,7 @@ export const LocationForm = ({ editMode, rowData, show, setShow }) => {
       onClick={() => {
         console.log('form state:', formik.values)
         console.log('errors:', formik.errors)
+        console.log(schema.describe())
       }
     }>
       {editMode === 'update'? rowData.locName : 'Create New Location'}
@@ -108,7 +123,11 @@ export const LocationForm = ({ editMode, rowData, show, setShow }) => {
       type="submit" 
       form="location-form"
       onClick={formik.handleSubmit}
-      disabled={isEqual(rowData, formik.values) || isLoading}
+      disabled={
+        isLoading
+        || Object.keys(schema.describe().fields)
+            .every(field => isEqual(rowData[field], formik.values[field]))
+      }
     />
   </div>
   
@@ -180,6 +199,7 @@ export const LocationForm = ({ editMode, rowData, show, setShow }) => {
 
       </TabView>
       </form>
+      <Toast ref={toastRef} />
     </Dialog>
   )
 }
@@ -190,7 +210,12 @@ const qbFields =
   ['qbId', 'locName', 'email', 'phone', 'addr1', 'addr2', 'city', 'zip']
 
 
-const createLocation = async ({ values:rawValues, locationCache, setIsLoading }) => {
+const createLocation = async ({ 
+  values:rawValues, 
+  locationCache, 
+  setIsLoading,
+  toastRef,
+}) => {
   const { submitMutations, updateLocalData } = locationCache
   setIsLoading(true)
   const values = cleanLocationValues(rawValues)
@@ -203,10 +228,38 @@ const createLocation = async ({ values:rawValues, locationCache, setIsLoading })
   const qbResp = await createQBLocation({ values, accessToken })
   console.log("qbResp:", qbResp)
 
+  if (!qbResp?.data) {
+    console.warn("Item not created in QB successfully.")
+    toastRef.current.show({
+      severity: 'warn',
+      summary: "QB Error",
+      details: "Item not created successfully"
+    })
+  } else {
+    toastRef.current.show({
+      severity: 'success',
+      summary: "Created QB Item",
+    })
+  }
+
   // submit to AppSync
-  updateLocalData(
-    await submitMutations({ createInputs: [{ ...values, qbID: qbResp.data }] })
+  const gqlResp = await submitMutations({ 
+    createInputs: [{ ...values, qbID: qbResp.data }] }
   )
+  updateLocalData(gqlResp)
+
+  if (gqlResp.errors.length) {
+    toastRef.current.show({
+      severity: 'warn',
+      summary: "GraphQL Error",
+      details: "Item not created successfully"
+    })
+  } else {
+    toastRef.current.show({
+      severity: 'success',
+      summary: "Created AppSync Item",
+    })
+  }
 
   setIsLoading(false)
 }
@@ -217,6 +270,7 @@ const updateLocation = async ({
   schema, 
   locationCache,
   setIsLoading,
+  toastRef
 }) => {
   const { submitMutations, updateLocalData } = locationCache
   setIsLoading(true)
@@ -257,6 +311,20 @@ const updateLocation = async ({
   
       const qbResp = await updateQBLocation({ values, SyncToken, accessToken })
       console.log("qbResp:", qbResp)
+
+      if (!qbResp?.data) {
+        console.warn("Item not created in QB successfully.")
+        toastRef.current.show({
+          severity: 'warn',
+          summary: "QB Error",
+          details: "Item not updated successfully"
+        })
+      } else {
+        toastRef.current.show({
+          severity: 'success',
+          summary: "Updated QB Item",
+        })
+      }
   
     } else {
       console.error("Cannot submit to QB")
@@ -274,9 +342,23 @@ const updateLocation = async ({
       "Changes to submit to AppSync:", 
       JSON.stringify(updateValues, null, 2)
     )
-    updateLocalData( 
-      await submitMutations({ updateInputs: [updateValues] })
-    )
+    const gqlResp = await submitMutations({ 
+      updateInputs: [updateValues] 
+    })
+    updateLocalData(gqlResp)
+
+    if (gqlResp.errors.length) {
+      toastRef.current.show({
+        severity: 'warn',
+        summary: "GraphQL Error",
+        details: "Item not updated successfully"
+      })
+    } else {
+      toastRef.current.show({
+        severity: 'success',
+        summary: "Updated AppSync Item",
+      })
+    }
 
   } else {
     console.log("Nothing to submit to AppSync")

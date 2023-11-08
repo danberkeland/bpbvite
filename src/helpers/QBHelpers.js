@@ -36,7 +36,7 @@ export const checkQBValidation_v2 = async () => {
 
   const fetchURL = "https://28ue1wrzng.execute-api.us-east-2.amazonaws.com/done"
   
-  const accessToken = axios.get(fetchURL)
+  const accessTokenResponse = axios.get(fetchURL)
     .then(response => {
       if (!response) {
         throw new Error("QB Auth not valid")
@@ -58,7 +58,7 @@ export const checkQBValidation_v2 = async () => {
       return undefined
     })
 
-  return accessToken   
+  return accessTokenResponse // a Promise
 }
 
 

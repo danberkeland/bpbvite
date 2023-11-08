@@ -3,6 +3,7 @@ import { Dialog } from "primereact/dialog"
 import { Button } from "primereact/button"
 import { Badge } from "primereact/badge"
 import { ScrollPanel } from "primereact/scrollpanel"
+import { Toast } from "primereact/toast"
 
 import { useFormik } from "formik"
 import { validateWithContext } from "./schema"
@@ -13,6 +14,7 @@ import { useSettingsStore } from "../../../Contexts/SettingsZustand"
 
 import { formInputs } from "./FormInputs"
 import { isEqual } from "lodash/fp"
+import { useRef } from "react"
 
 export const ProductForm =({
   initialValues, 
@@ -26,6 +28,8 @@ export const ProductForm =({
   const isLoading = useSettingsStore((state) => state.isLoading)
   const setIsLoading = useSettingsStore((state) => state.setIsLoading)
 
+  const toastRef = useRef()
+
   const formik = useFormik({
     initialValues,
     validate: values => validateWithContext(schema, values, { editMode }),
@@ -38,7 +42,9 @@ export const ProductForm =({
           values,
           initialValues,
           listDataCache,
+          toastRef,
         })
+
       }
       else {
         setIsLoading(true)
@@ -46,7 +52,9 @@ export const ProductForm =({
           values,
           initialValues,
           listDataCache,
+          toastRef,
         })
+
       }
       formik.setSubmitting(false)
       setIsLoading(false)
@@ -155,6 +163,7 @@ export const ProductForm =({
         })}
       </TabView>
       </form>
+      <Toast ref={toastRef} />
     </Dialog>
   )
 }

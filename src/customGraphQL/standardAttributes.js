@@ -67,6 +67,7 @@ export const locationAttributes = /* GraphQL */ `
   invoicing
   latestFirstDeliv
   latestFinalDeliv
+  dfFulfill
   webpageURL
   picURL
   gMap
@@ -143,6 +144,7 @@ export const orderAttributes = /* GraphQL */ `
   Type
   id
   qty
+  qtyShort
   qtyUpdatedOn
   sameDayMaxQty
   prodNick
@@ -153,6 +155,7 @@ export const orderAttributes = /* GraphQL */ `
   delivDate
   rate
   route
+  delivFee
   isLate
   createdOn
   updatedOn

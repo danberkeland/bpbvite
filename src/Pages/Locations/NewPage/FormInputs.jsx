@@ -29,7 +29,6 @@ export const FormikText = ({
           marginTop: ".25rem",
           backgroundColor: "var(--bpb-orange-vibrant-020)",
         }}
-        sty
         className={errors.length && touched ? "p-invalid" : ''}
         disabled={disabled}
       />
