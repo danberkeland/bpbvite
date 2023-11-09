@@ -253,7 +253,7 @@ export const Billing = () => {
 
     const invoiceNum = selectedDateDT.toFormat('MMddyyyy') + rowKey.slice(0,13)
     const headerText = invoicing === "no invoice"
-      ? "(no invoice)"
+      ? "(Does not get invoiced)"
       : "Invoice #" + invoiceNum 
 
     const disableDelivFeeEditor = 
@@ -477,7 +477,7 @@ export const Billing = () => {
         {dialogContent &&
           <pre style={{margin: "0"}}>
             {(JSON.stringify(resultSummary, null, 3))
-              ?.replace(/[{}"]/g, '')
+              ?.replace(/[{}",]/g, '')
             }
           </pre>
         }

@@ -21,7 +21,6 @@ export const useRouteGrid = ({ reportDate, shouldFetch }) => {
     const locations = keyBy(LOC, 'locNick')
     const products = keyBy(PRD, 'prodNick')
     const routes = keyBy(RTE, 'routeNick')
-    // console.log("ROUtESSSSSS", routes)
 
     const orders = orderBy(
       prodOrders.filter(order =>

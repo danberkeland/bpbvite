@@ -109,6 +109,12 @@ export const useBillingDataByDate = ({ reportDate, shouldFetch }) => {
     const products = keyBy('prodNick')(PRD)
     const altPrices = keyBy(apr =>`${apr.locNick}#${apr.prodNick}`)(APR)
 
+    /**
+     * 
+     * @param {Object} input
+     * @param {Object} input.cartOrder - billing data object produced by useBillingDataByDate, representing a single customer's complete order. 
+     * @returns 
+     */
     const convertOrderToInvoice = ({ cartOrder }) => makeInvoice({
       cartOrder, 
       location: locations[cartOrder.header.locNick], 

@@ -1,91 +1,8 @@
 import { groupBy, isEqual, pickBy, set, truncate } from "lodash"
-import { checkQBValidation_v2, emailQBInvoice, getQBInvIDandSyncToken } from "../../../helpers/QBHelpers"
 import { getTimeToLive } from "../../../functions/dateAndTime"
 
-import "./billing.css"
-import axios from "axios"
+import { QB } from "./qbApiFunctions"
 import { downloadPDF } from "../../../functions/legacyFunctions/helpers/PDFHelpers"
-
-const qbEndpoints = {
-  get: "https://unfaeakk8g.execute-api.us-east-2.amazonaws.com/done",
-  create: "https://9u7sp5khrc.execute-api.us-east-2.amazonaws.com/done",
-  delete: "https://63m47lgp1b.execute-api.us-east-2.amazonaws.com/done",
-  getPdf: "https://47i7i665dd.execute-api.us-east-2.amazonaws.com/done",
-  sendEmail: "https://uhjpmnpz12.execute-api.us-east-2.amazonaws.com/emailQBInvoice"
-}
-
-/**
- * @param {Object} input
- * @param {string} input.DocNumber - ex: '08152023high'
- * @param {string} input.accessToken 
- * @returns 
- */
-const getInvoice = ({ DocNumber, accessToken }) => axios.post(       
-    qbEndpoints.get, 
-    { doc: DocNumber, accessCode: "Bearer " + accessToken }
-  )
-
-/**
- * @param {Object} input
- * @param {Object} input.invoice
- * @param {string} input.accessToken  
- * @returns 
- */
-const createInvoice = ({ invoice, accessToken }) => axios.post(
-    qbEndpoints.create, 
-    { invInfo: invoice, accessCode: "Bearer " + accessToken }
-  )
-
-/**
- * @param {Object} input
- * @param {string} input.Id - InvoiceId
- * @param {string} input.SyncToken
- * @param {string} input.accessToken  
- * @returns 
- */
-const deleteInvoice = ({ Id, SyncToken, accessToken }) => axios.post(
-  qbEndpoints.delete, 
-  { invInfo: { Id, SyncToken }, accessCode: "Bearer " + accessToken }
-)
-
-/**
- * @param {Object} input
- * @param {string} input.CustomerId - in our system, a locations qbID value
- * @param {string} input.delivDate - 'yyyy-MM-dd' formatted date string
- * @param {string} input.accessToken
- * @returns 
- */
-const getPdf = ({ CustomerId, delivDate, accessToken }) => axios.post(
-    qbEndpoints.getPdf, 
-    { 
-      accessCode: "Bearer " + accessToken, 
-      delivDate, 
-      custID: CustomerId 
-    }
-  )
-
-/**
- * @param {Object} input
- * @param {string} input.InvoiceId - found in a retrieved invoices .Id value
- * @param {string} input.accessToken  
- * @returns 
- */
-const sendEmail = ({ InvoiceId, accessToken }) => axios.post(
-  qbEndpoints.sendEmail, 
-  { accessCode: "Bearer " + accessToken, docNum: InvoiceId } // "docNum" is misleading; it's actually the invoice's id.
-)
-
-// functions to reduce code in batch routines, but also to standardize inputs.
-const QB = {
-  getAccessToken: checkQBValidation_v2,
-  invoice: {
-    get: getInvoice,
-    create: createInvoice,
-    delete: deleteInvoice,
-    getPdf: getPdf,
-    sendEmail: sendEmail,
-  }
-}
 
 
 /** Submit to AppSync */
@@ -381,7 +298,7 @@ export const batchSubmitQbInvoices = async ({
   console.log("Access Token:", truncate(accessToken, {length:16}))
 
   const noInvoiceResults = noInvoiceLocNicks.map(locNick => ({
-    locNick, action: "none", result: "Does not get invoiced"
+    locNick, action: "no action", result: "does not get invoiced"
   }))
 
   const deleteResults = deleteLocNicks.map(locNick => {
@@ -393,7 +310,7 @@ export const batchSubmitQbInvoices = async ({
       .get({ DocNumber: invoice.DocNumber, accessToken })
       .then(response => {
         if (!response?.data?.Id) {
-          return { locNick, action: "none", result: "no invoice/order"}
+          return { locNick, action: "no action", result: "has no invoice/order"}
         }
         const { Id, SyncToken } = response.data
 
@@ -472,7 +389,8 @@ const handleDeleteResponse = ({ response, locNick }) => {
     if (response === null) return { 
       locNick, 
       action: "get", 
-      result: "no invoice" }
+      result: "no invoice" 
+    }
     const data = response?.data
     if (!data) {
       return { 
