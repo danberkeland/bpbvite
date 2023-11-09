@@ -1,24 +1,25 @@
-import { get, groupBy, isEqual, round, set, sumBy, min, sortBy } from "lodash"
+import React, { useEffect, useRef, useState } from "react"
+import { get, groupBy, isEqual, round, set, sumBy, sortBy, mapValues, countBy } from "lodash"
 import { DateTime } from "luxon"
 
-import { OverlayPanel } from 'primereact/overlaypanel'
 import { Button } from "primereact/button"
 import { Calendar } from "primereact/calendar"
+import { Column } from "primereact/column"
 import { DataTable } from "primereact/datatable"
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog"
-import React, { useEffect, useRef, useState } from "react"
-import { Column } from "primereact/column"
+import { Dialog } from "primereact/dialog"
+import { OverlayPanel } from 'primereact/overlaypanel'
 import { InputNumber } from "primereact/inputnumber"
 
 import { SearchBar, rankedSearch } from "./searchBar"
 
-import { useBillingDataByDate } from "./data"
 import { useListData } from "../../../data/_listData"
+import { useBillingDataByDate } from "./data"
 
-import { submitAndPrintInvoice, submitOrder, submitQBInvoices } from "./submitFunctions"
+import { batchSubmitQbInvoices, submitAndPrintInvoice, submitOrder } from "./submitFunctions"
 
 import "./billing.css"
-import { checkQBValidation_v2 } from "../../../helpers/QBHelpers"
+import { useSettingsStore } from "../../../Contexts/SettingsZustand"
 
 let USDollar = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -26,6 +27,7 @@ let USDollar = new Intl.NumberFormat('en-US', {
 })
 
 export const Billing = () => {
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading)
   const [expandedRows, setExpandedRows] = useState()
   const [selectedDateJS, setSelectedDateJS] = useState(new Date())
   const selectedDateDT = DateTime.fromJSDate(selectedDateJS)
@@ -40,6 +42,13 @@ export const Billing = () => {
 
   const [query, setQuery] = useState('')
   const opRef = useRef()
+
+  const [showDialog, setShowDialog] = useState(false)
+  const [dialogContent, setDialogContent] = useState()
+  const resultSummary = mapValues(
+    groupBy((dialogContent ?? []), 'action'),
+    actionGroup => countBy(actionGroup, 'result')
+  )
 
   const { 
     data:billingDataByLocNick, 
@@ -71,7 +80,73 @@ export const Billing = () => {
     'locName'
   )
 
-  const dataHasChanges = !isEqual(billingDataByLocNick, billingValues)
+  
+
+    /**
+     * @param {Object} input
+     * @param {boolean} input.shouldSendEmail 
+     * @param {Object} input.data
+     * @param {Object} input.locations
+     * @returns 
+     */
+  const handleBatchSubmit = async ({ 
+    shouldSendEmail,
+    data,
+    locations,
+  }) => { 
+
+    const doTheThing = async () => {
+      setIsLoading(true)
+      const resultPromises = await batchSubmitQbInvoices({
+        billingDataByLocNick: data,
+        convertOrderToInvoice,
+        locations,
+        shouldSendEmail
+      })
+
+      const results = await Promise.allSettled(resultPromises)
+      setIsLoading(false)
+      setDialogContent(results.map(r => r.value))
+      setShowDialog(true)
+    }
+
+    const unsavedChangeMsg = !isEqual(billingDataByLocNick, billingValues)
+      ? ["Unsaved Changes will be ignored"]
+      : []
+    const notTodayMsg = todayISO !== reportDate
+      ? ["This is NOT TODAY's report"]
+      : []
+    const checkEntriesMsg = shouldSendEmail
+      ? ["Check entries before sending emails"]
+      : []
+
+    const cnfMessages = [...unsavedChangeMsg, ...notTodayMsg, ...checkEntriesMsg]
+    console.log(cnfMessages)
+
+    if (cnfMessages.length) {
+      confirmDialog({
+        header: 'Confirm ' + (shouldSendEmail ? "Send Email" : "Export"),
+        message: () => {
+          return (
+            <ul style={{fontSize: "1rem"}}>
+              {cnfMessages.map((msg, idx) => 
+                <li key={`cnf-msg-${idx}`}>{msg}</li>)
+              }
+            </ul>
+          )
+        },
+        accept: () => doTheThing(),
+        acceptLabel: "Continue",
+        rejectLabel: "Cancel",
+        style: {width: "25rem"}
+      })
+
+    } else {
+      doTheThing()
+
+    }
+
+  }
 
   const setFieldValue = (fieldPath, newValue) => {
     let newValues = structuredClone(billingValues)
@@ -248,39 +323,20 @@ export const Billing = () => {
           </div>
         </div>
         <div className={"test-qb-functions"}>
-          <ConfirmDialog />
           {rowKey === 'aaatest' &&
             <Button label="Adjust & print invoice"
-              onClick={() => {
+              onClick={async () => {
                 const invoice = convertOrderToInvoice({ 
                   cartOrder: billingValues?.[rowKey]}
                 )
-                console.log(invoice)
-
-                if (!isEqual(billingValues?.[rowKey], billingDataByLocNick?.[rowKey])) {
-                  confirmDialog({
-                    header: "Confirm",
-                    message: "Unsaved changes will not be submitted to QB. Continue?",
-                    accept: () => {
-                      // submitQBInvoices({ invoices: [invoice] })
-                      submitAndPrintInvoice({ 
-                        values: billingValues?.[rowKey], 
-                        initial: billingDataByLocNick?.[rowKey], 
-                        orderCache, 
-                        invoice 
-                      })
-                    },
-                    style: {width:"18rem"},
-                  })
-                } else {
-                  // submitQBInvoices({ invoices: [invoice] })
-                  submitAndPrintInvoice({ 
-                    values: billingValues?.[rowKey], 
-                    initial: billingDataByLocNick?.[rowKey], 
-                    orderCache, 
-                    invoice 
-                  })
-                }
+                setIsLoading(true)
+                await submitAndPrintInvoice({ 
+                  values: billingValues?.[rowKey], 
+                  initial: billingDataByLocNick?.[rowKey], 
+                  orderCache, 
+                  invoice 
+                })
+                setIsLoading(false)
               }}
             />
           }
@@ -326,12 +382,39 @@ export const Billing = () => {
         </div>
       </div>
 
-      <div style={{marginBlock: "1rem"}}>
-        <Button label="Make QB Invoices" />
-        <Button label="Make & Send Email" 
-          disabled={reportDate !== todayISO}
-          style={{marginLeft: "1rem"}}
-          onClick={() => batchSubmitQbInvoices()}
+      <div style={{
+        marginBlock: "1rem", 
+        display: "flex", 
+        justifyContent: "flex-end", gap: "1rem"
+      }}>
+        <ConfirmDialog />
+        <Button label="Export CSV" 
+          onClick={() => handleBatchSubmit({ 
+            data: billingDataByLocNick,
+            shouldSendEmail: false,
+            locations
+          })}
+        />
+        <Button label="Email Invoices" 
+          onClick={() => {
+            // if (!billingDataByLocNick?.aaatest) {
+            //   console.log("todays invoices don't include aaatest")
+            //   return 
+            // }
+            // const testData = { aaatest: billingDataByLocNick.aaatest }
+            // const testLocation = { 
+            //   aaatest: {
+            //     invoicing: "daily", // 'no invoice'|'daily'
+            //     toBeEmailed: true,
+            //   }
+            // }
+            handleBatchSubmit({ 
+              data: billingDataByLocNick, // testData,
+              shouldSendEmail: true,
+              locations // : testLocation
+            })}
+          }
+          //disabled={reportDate !== todayISO}
         />
       </div>
 
@@ -346,28 +429,36 @@ export const Billing = () => {
       >
         <Column expander style={{ flex: "0 0 3rem", paddingRight: "0" }} />
         <Column 
-          header={() => 
-            SearchBar({ query, setQuery, inputProps: { placeholder: "Customer"}})
+          header={() => SearchBar({ 
+            query, setQuery, inputProps: { placeholder: "Customer"}})
           }
-          body={locNick => <div 
-            onClick={() => {
-              console.log(billingValues[locNick])
-              console.log(convertOrderToInvoice({ cartOrder: billingDataByLocNick?.[locNick] }))
-            }}
-            style={!isEqual(billingValues[locNick], billingDataByLocNick?.[locNick])
-              ? {fontWeight: "bold"}
-              : undefined
-            }
-          >
-            <div>{locations?.[locNick]?.locName ?? locNick}</div>
-            <div style={{fontSize: ".8rem", fontFamily: "monospace" }}>{locNick}</div>
-          </div>}
+          body={locNick => {
+            const logData = () => console.log(
+              "form changes:", billingValues?.[locNick]
+            )
+            const orderHasChanges = !isEqual(
+              billingValues?.[locNick], billingDataByLocNick?.[locNick]
+            )
+            return (
+              <div 
+                onClick={logData}
+                style={orderHasChanges ? {fontWeight: "bold"} : undefined}
+              >
+                <div>
+                  {locations?.[locNick]?.locName ?? locNick}
+                </div>
+                <div style={{fontSize: ".8rem", fontFamily: "monospace" }}>
+                  {locNick}
+                </div>
+              </div>
+            )
+          }}
           style={{flex: "1 0 12rem"}}
         />
         <Column header="Total" 
           body={rowKey => {
             const total = sumBy(
-              billingValues[rowKey].items, 
+              billingValues?.[rowKey].items, 
               item => (item.qty - (item.qtyShort ?? 0)) * item.rate
             )
 
@@ -376,81 +467,23 @@ export const Billing = () => {
           style={{flex: "0.25 0 6rem"}}
         />
       </DataTable>
+      <Dialog 
+        header={`Export Complete (${dialogContent?.length} item${dialogContent?.length !== 1 ? 's' : ''})`}
+        visible={showDialog} 
+        onHide={() => setShowDialog(false)}
+        style={{minWidth: "20rem"}}
+        footer={<Button label="Got it" onClick={() => setDialogContent()} />}
+      >
+        {dialogContent &&
+          <pre style={{margin: "0"}}>
+            {(JSON.stringify(resultSummary, null, 3))
+              ?.replace(/[{}"]/g, '')
+            }
+          </pre>
+        }
+      </Dialog>
     </div>
   )
 }
 
 
-/**
- * @param {Object} kwargs
- * @param {Object} kwargs.billingDataByLocNick - Data as produced by useBillingDataByDate
- * @param {Function} kwargs.convertOrderToInvoice - as produced by useBillingDataByDate 
- * @param {Object} kwargs.locations - Data produced by useListData, keyed by locNick
- * @param {boolean} [kwargs.shouldSendEmail] - flag to send emails after submitting invoices
- */
-const batchSubmitQbInvoices = async ({ 
-  billingDataByLocNick,
-  convertOrderToInvoice,
-  locations,
-  shouldSendEmail=false,
-}) => {
-
-    const { true:noInvLocNicks=[], false:invLocNicks=[] } = groupBy(
-      Object.keys(billingDataByLocNick),
-      locNick => locations[locNick].invoicing === "no invoice"
-    )
-
-    console.log("No invoicing for:", noInvLocNicks)
-    
-    const invoices = invLocNicks.map(locNick => 
-      convertOrderToInvoice({ cartOrder: billingDataByLocNick?.[locNick]})
-    )
-
-
-    const accessToken = await checkQBValidation_v2()
-    const qbResults = submitQBInvoices({ invoices, accessToken })
-
-    const successes = invLocNicks.filter((locNick, idx) => qbResults[idx])
-    const failures = invLocNicks.filter((locNick, idx) => !qbResults[idx])
-
-    if (!shouldSendEmail) return
-
-    // dont send email if location doesn't request it, or if their order
-    // was set to be deleted (i.e. all items have 0 qty)
-    const invoicesToEmail = invLocNicks.filter(locNick => 
-      locations[locNick].toBeEmailed === true
-      && billingDataByLocNick[locNick].items.some(item => item.qty > 0)
-    )
-    
-
-    
-}
-
-// better name would be 'getInvoiceByDocNumber' -- returns full invoice object
-// const foo = await getQBInvIDandSyncToken(accessToken, invoice.DocNumber)
-
-// if (email) {
-//   /* Begin email module */
-
-//   let DocNum = inv.invNum;
-  
-//   let invID = await getQBInvIDandSyncToken(access, DocNum);
- 
-//   if (Number(invID.data.Id) > 0) {
-//     invID = invID.data.Id;
-//     let custo =
-//       customers[
-//         customers.findIndex((cust) => cust.custName === inv.custName)
-//       ];
-//     if (custo.toBeEmailed) {
-//       let didItEmail = await emailQBInvoice(access, invID);
-//       showSuccessEmail(inv.custName, didItEmail.status);
-//     } else {
-//       showDoNotMail(inv.custName);
-//     }
-//   } else {
-//     showNoEmail(inv.custName);
-//   }
-
-//   /* end email module */
-// }
