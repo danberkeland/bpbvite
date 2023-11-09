@@ -1,3 +1,5 @@
+import React, { useEffect, useRef } from "react"
+
 import { useRouteGrid } from "./data"
 import { useListData } from "../../../../data/_listData"
 
@@ -7,10 +9,11 @@ import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 import { Button } from "primereact/button"
 import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup"
+import { Dialog } from "primereact/dialog"
 
 import { useState } from "react"
 import { DateTime } from "luxon"
-import { keyBy, pickBy, sortBy } from "lodash"
+import { get, isEqual, keyBy, pickBy, set, sortBy } from "lodash"
 import { 
   exportRouteGridPdf, 
   exportInvoicePdf, 
@@ -19,6 +22,10 @@ import {
 
 import "./routeGrid.css"
 import { useSettingsStore } from "../../../../Contexts/SettingsZustand"
+import { useBillingDataByDate } from "../../../Billing/v2/data"
+import { InputNumber } from "primereact/inputnumber"
+import { submitAndPrintInvoice, submitOrder } from "../../../Billing/v2/submitFunctions"
+import { OverlayPanel } from "primereact/overlaypanel"
 
 const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
 
@@ -31,11 +38,19 @@ export const RouteGrid = () => {
     .setZone('America/Los_Angeles')
     .startOf('day')
   const reportDateISO = reportDateDT.toFormat('yyyy-MM-dd')
-  const reportWeekdayNum = (reportDateDT.toFormat('E') % 7) + 1 // in our wacky format Sun = 1, Sat = 7
+  // const reportWeekdayNum = (reportDateDT.toFormat('E') % 7) + 1 // in our wacky format Sun = 1, Sat = 7
   const reportDateIsToday = reportDateISO === todayDT.toFormat('yyyy-MM-dd')
 
+  // fortunately these both use the same order hook, so fetching is not
+  // duplicated, and mutations to the order cache will update both
   const { data:gridData } = useRouteGrid({ 
     reportDate: reportDateDT.toFormat('yyyy-MM-dd'), shouldFetch: true
+  })
+  const { 
+    data:billingDataByLocNick,
+    convertOrderToInvoice
+  } = useBillingDataByDate({
+    reportDate: reportDateDT.toFormat('yyyy-MM-dd'), shouldFetch:true 
   })
   const { data:RTE } = useListData({ tableName: "Route", shouldFetch: true })
   const { data:LOC } = useListData({ tableName: "Location", shouldFetch: true })
@@ -48,7 +63,6 @@ export const RouteGrid = () => {
   const routes = keyBy(RTE, "routeNick")
   const locations = keyBy(LOC, "locNick")
 
-  console.log("tableData", tableData)
   // console.log("pdfGrids", pdfGrids)
   // console.log(RTE)
   // console.log("LOC:", LOC)
@@ -58,49 +72,14 @@ export const RouteGrid = () => {
     routeNick => routes[routeNick]?.printOrder ?? 0 
   )
 
-  // 'partial application' technique allows us to call the function while
+  // 'partial application' allows us to call the function while
   // specifying only the inputs that change from one call to the next.
-  const exportInvoice = ({ location }) => exportSingleInvoice({
-    location, delivDate: reportDateISO, setIsLoading
-  })
   const exportInvoices = ({ gridData, fileName }) => exportInvoicePdf({
     gridData, fileName, routes, locations, reportDateDT, setIsLoading
   })
   const exportGrids = ({ gridData, fileName }) => exportRouteGridPdf({ 
     gridData, fileName, reportDateDT 
   })
-
-
-  const exportInvoiceWithConfirm = ({ event, location }) => {
-    if (location.toBePrinted === true) {
-
-      exportInvoice({ location })
-    } else {
-      
-      confirmPopup({
-        target: event.currentTarget,
-        message: <span>
-          This customer doesn't get a printed invoice. <br />Print anyway?
-        </span>,
-        icon: 'pi pi-exclamation-triangle',
-        accept: () => exportInvoice({ location }),
-      })
-    }
-  }
-
-
-  const printColumnTemplate = (row) => 
-    <i className="pi pi-fw pi-print" 
-      onClick={event => { if (routeNick !== 'NOT ASSIGNED') {
-        exportInvoiceWithConfirm({ 
-          event, location: locations[row.locNick] 
-        })
-      }}}
-      style={{ 
-        cursor: routeNick === 'NOT ASSIGNED' ? "pointer" : '',
-        opacity: routeNick === 'NOT ASSIGNED' ? '.6' : ''
-      }}
-    />
 
   return (<>
     <div style={{
@@ -204,8 +183,30 @@ export const RouteGrid = () => {
           className={reportDateIsToday ? 'today-table' : 'not-today-table'}
 
         >
-          <Column body={printColumnTemplate} style={{width: "2rem"}} frozen />
-          <Column header="Location" field="locNameShort" frozen />
+          <Column 
+            body={row => {
+              const { locNick } = row
+              const cartOrder = billingDataByLocNick?.[locNick]
+              
+              return FixInvoiceTemplate({ 
+                row,
+                cartOrder, 
+                location: locations[locNick],
+                reportDate: reportDateISO,
+                convertOrderToInvoice,
+              }) 
+            }}
+            style={{width: "2rem"}} frozen 
+          />
+          <Column 
+            header={
+              <div onClick={() => console.log("tableData:", tableData)}>
+                Location
+              </div>
+            } 
+            field="locNameShort" 
+            frozen 
+          />
           {(tableData?.[routeNick]?.prodNickList ?? []).map(prodNick => {
             return (
               <Column 
@@ -228,3 +229,161 @@ export const RouteGrid = () => {
 }
 
 
+
+
+const FixInvoiceTemplate = ({ 
+  row,
+  cartOrder, 
+  location,
+  reportDate,
+  convertOrderToInvoice,
+}) => {
+  const { routeNick } = row
+  const { locName, toBePrinted, invoicing } = location ?? {}
+  const isLoading = useSettingsStore((state) => state.isLoading)
+  const setIsLoading = useSettingsStore((state) => state.setIsLoading)
+  const opRef = useRef()
+  const [show, setShow] = useState(false)
+  const [values, setValues] = useState()
+  const hasChanges = !!values && !isEqual(values, cartOrder)
+
+  const orderCache = useListData({ 
+    tableName: "Order", 
+    customQuery: "orderByDelivDate",
+    variables: { delivDate: reportDate, limit: 5000 },
+    shouldFetch: true
+  })
+
+  useEffect(() => {
+    if (!!show) setValues(structuredClone(cartOrder))
+  }, [show, cartOrder])
+
+  const iconButton = (routeNick === 'NOT ASSIGNED'|| invoicing === 'no invoice')
+    ? <i className="pi pi-fw pi-pencil" 
+        onClick={e =>  {
+          if (invoicing === 'no invoice') {
+            opRef.current.toggle(e)
+          }
+        }}
+        style={{opacity: ".6"}}
+      />
+    : <i className="pi pi-fw pi-pencil" 
+        onClick={() => setShow(true)}
+        style={{ cursor: "pointer" }}
+      />
+
+  return (
+    <div>
+      {iconButton}
+      <OverlayPanel ref={opRef} style={{padding: "1rem"}}>
+        <i className="pi pi-fw pi-info-circle" />
+        This customer does not get invoices.
+      </OverlayPanel>
+      <Dialog
+        header={<span>Adjust Order & Invoice:<br/>{locName}</span>}
+        visible={show}
+        onHide={() => setShow(false)}
+        footer={
+          <div style={{display: "flex", justifyContent: "flex-end", alignItems: "center"}}>
+            {!!isLoading && <div style={{marginRight: "1rem"}}>Processing...</div>}
+            {/* <Button label="Save" 
+              onClick={async () => {
+                setIsLoading(true)
+                await submitOrder({ values, initial: cartOrder, orderCache })
+                setIsLoading(false)
+              }}
+              disabled={isLoading}
+            />  */}
+            <Button label="Save & get PDF" 
+              onClick={async e => {
+                if (toBePrinted) {
+                  setIsLoading(true)
+                  await submitAndPrintInvoice({
+                    values,
+                    initial: cartOrder,
+                    orderCache,
+                    invoice: convertOrderToInvoice({ cartOrder: values })
+                  })
+                  setIsLoading(false)
+                } else {
+                  confirmPopup({
+                    target: e.currentTarget,
+                    message: <span>
+                      This customer doesn't get a printed invoice.<br />
+                      Save changes to order only?
+                    </span>,
+                    icon: 'pi pi-exclamation-triangle',
+                    accept: async () => {
+                      setIsLoading(true)
+                      await submitOrder({ values, initial: cartOrder, orderCache })
+                      setIsLoading(false)
+                    },
+                  })
+                }
+              }}
+              disabled={isLoading || invoicing === 'no invoice'}
+            />
+          </div>
+        }
+      >
+        <DataTable
+          value={values?.items ?? []}
+          size="small"
+          style={{
+            border: "solid 1px var(--bpb-surface-content-border)",
+            borderBottomStyle: "none"
+          }}
+        >
+          <Column header="Product" field="prodNick" />
+          <Column header="Qty" field="qty" />
+          <Column header="qty Short"
+            body={(row, options) => QtyShortInput({
+              values,
+              setValues,
+              fieldPath: `items[${options.rowIndex}].qtyShort`,
+              row, 
+              disabled: isLoading
+            })}
+          
+          />
+          <Column header="total delivered" body={row => row.qty - row.qtyShort} />
+        </DataTable>
+      </Dialog>
+    </div>
+  )
+}
+
+const QtyShortInput = ({ 
+  values,
+  setValues, 
+  fieldPath, 
+  row, 
+  disabled 
+}) => <InputNumber
+  value={get(values, fieldPath)}
+  inputStyle={{width: "4rem"}}
+  max={row.qty}
+  disabled={disabled}
+  onChange={e => {
+    const newValue = e.value === null ? null : Math.min(e.value, row.qty)
+    let newValues = structuredClone(values)
+    set(newValues, fieldPath, newValue)
+    setValues(newValues)
+  }}
+  onKeyDown={e => {
+    if (e.key === "Escape") {
+      const newValue = get(values, fieldPath)
+      let newValues = structuredClone(values)
+      set(newValues, fieldPath, newValue)
+      setValues(newValues)
+      e.target.blur()
+    }
+  }}
+  onBlur={e => {
+    if (e.target.value === "0") {
+      let newValues = structuredClone(values)
+      set(newValues, fieldPath, null)
+      setValues(newValues)
+    }
+  }}
+/>
