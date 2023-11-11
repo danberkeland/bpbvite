@@ -108,6 +108,8 @@ export const Billing = () => {
       setIsLoading(false)
       setDialogContent(results.map(r => r.value))
       setShowDialog(true)
+
+      console.log("Results:", groupBy(results.map(r => r.value), 'result'))
     }
 
     const unsavedChangeMsg = !isEqual(billingDataByLocNick, billingValues)
@@ -472,7 +474,12 @@ export const Billing = () => {
         visible={showDialog} 
         onHide={() => setShowDialog(false)}
         style={{minWidth: "20rem"}}
-        footer={<Button label="Got it" onClick={() => setDialogContent()} />}
+        footer={<Button 
+          label="Got it" 
+          onClick={() => {
+            setShowDialog(false)
+          }} 
+        />}
       >
         {dialogContent &&
           <pre style={{margin: "0"}}>
