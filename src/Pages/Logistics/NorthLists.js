@@ -409,7 +409,9 @@ function NorthList() {
         <h3>Driver Notes</h3>
         <DataTable value={notes} className="p-datatable-sm">
           <Column field="when" header="Date"></Column>
-          <Column field="note" header="Note"></Column>
+          <Column header="Note" 
+            body={row => <div style={{whiteSpace: "pre-wrap"}}>{row.note}</div>}
+          />
         </DataTable>
         <h3>Frozen and Baked Croix</h3>
         <DataTable value={croixNorth} className="p-datatable-sm">
