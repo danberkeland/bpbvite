@@ -146,6 +146,7 @@ const batchMutate = async ({
  * | "ProdsNotAllowed"
  * | "AltPricing"
  * | "AltLeadTime"
+ * | "Notes"
  * } TableNames
  */
 
@@ -180,7 +181,12 @@ export const useListData = ({
     )
   }
 
-  const queryName = customQuery || `list${tableName}s`
+  // const queryName = customQuery || `list${tableName}s`
+  const queryName = customQuery 
+    || (
+      'list' + tableName 
+      + (['s', 'S'].includes(tableName.slice(-1)) ? '' : 's')
+    )
   const query = listQueries[queryName]
   if (!!shouldFetch && !query) { console.error('query lookup failed') }
 
