@@ -27,6 +27,7 @@ export const TABLE_PKS = /** @type {const} */ ({
   ProdsNotAllowed: "id",
   AltPricing: "id",
   AltLeadTime: "id",
+  Notes: "id",
 })
 
 export const LIST_TABLES = /** @type {const} */ ([
@@ -47,6 +48,7 @@ export const LIST_TABLES = /** @type {const} */ ([
   "ProdsNotAllowed",
   "AltPricing",
   "AltLeadTime",
+  "Notes",
 ])
 
 // ***Tables that have been set up so far***
@@ -97,5 +99,4 @@ export const LIST_TABLES = /** @type {const} */ ([
 // ActualSetOut
 // CroixSheetCount
 // OldDough
-// Notes
 // EventLog

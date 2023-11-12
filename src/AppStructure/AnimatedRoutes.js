@@ -46,7 +46,8 @@ import DelivOrder from "../Pages/Settings/delivOrder/delivOrder";
 import EditDoughs from "../Pages/Settings/editDough/editDough";
 import EditZones2 from "../Pages/Settings/editZones/editZones2";
 import EditRoutes from "../Pages/Settings/editRoutes/editRoutes";
-import Notes2 from "../Pages/Settings/notes/Notes2";
+import { default as NotesV2} from "../Pages/Settings/notes/Notes2";
+import { Notes as NotesV3 } from "../Pages/Settings/notes/v3/Notes";
 import Remap from "../Pages/EODCounts/EODCountsRempas";
 import TopNav from "./Auth/TopNav";
 import { SpecialPacking } from "../Pages/Production/NewPages/SpecialPacking";
@@ -156,7 +157,9 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             <Route path="/Settings/editDough" element={<EditDoughs />} />
             <Route path="/Settings/editRoutes" element={<EditRoutes />} />
             <Route path="/Settings/editZones" element={<EditZones2 />} />
-            <Route path="/Settings/Notes" element={<Notes2 />} />
+            <Route path="/Settings/Notes" element={<NotesV3 />} />
+            <Route path="/Settings/Notes/v3" element={<NotesV3 />} />
+            <Route path="/Settings/Notes/v2" element={<NotesV2 />} />
           </React.Fragment>
         )}
 
