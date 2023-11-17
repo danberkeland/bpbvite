@@ -57,6 +57,10 @@ import { BPBSSetout } from "../Pages/Production/NewPages/BPBSSetout/Setout";
 import { CroixCount } from "../Pages/Production/NewPages/CroixEOD/CroixCount";
 import { SpecialOrders } from "../Pages/Logistics/NewPages/SpecialOrders/SpecialOrders";
 import { Products } from "../Pages/Products/NewPage/Products";
+import { Bpbn1 } from "../Pages/Production/NewPages/BPBN/Baker1/BpbnBaker1";
+import { Bpbn2 } from "../Pages/Production/NewPages/BPBN/Baker2/BpbnBaker2";
+
+
 
 function AnimatedRoutes({ Routes, Route, useLocation }) {
   const authClass = useSettingsStore((state) => state.authClass);
@@ -64,6 +68,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
 
   return (
     <AnimatePresence>
+      <React.Fragment>
       <UserHeaderMenu />
       {authClass !== "customer" && <TopNav />}
       <Routes location={location} key={location.pathname}>
@@ -76,8 +81,12 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
         {authClass !== "customer" && (
           <React.Fragment>
             <Route path="/Production/BPBNBaker1" element={<BPBNBaker1 />} />
+            <Route path="/Production/BPBNBaker1/v2" element={<Bpbn1 />} />
+
             <Route path="/BPBNProd/BPBNBaker1Backup" element={<BPBNBaker1Backup />} />
             <Route path="/Production/BPBNBaker2" element={<BPBNBaker2 />} />
+            <Route path="/Production/BPBNBaker2/v2" element={<Bpbn2 />} />
+            <Route path="/Production/BPBNBaker2/v1" element={<BPBNBaker2 />} />
             <Route path="/Production/Production" element={<Production />} />
             <Route path="/Production/WhoBake" element={<WhoBake />} />
             <Route path="/Production/WhoShape" element={<WhoShape />} />
@@ -165,6 +174,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
 
         <Route path="/" element={<NavSide />} />
       </Routes>
+      </React.Fragment>
     </AnimatePresence>
   );
 }
