@@ -4,8 +4,8 @@ import {
   useBPBNcroixSetoutList, 
   useBPBNprepList, 
   useBPBNshapeList 
-} from "./_hooks/BPBNhooks"
-import { useListData } from "../../../data/_listData"
+} from "../_hooks/BPBNhooks"
+import { useListData } from "../../../../data/_listData"
 
 import { Button } from "primereact/button"
 import { Calendar } from "primereact/calendar"

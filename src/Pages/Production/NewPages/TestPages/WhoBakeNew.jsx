@@ -4,7 +4,7 @@ import { Button } from "primereact/button"
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 
-import { useBPBNbakeList } from "./_hooks/BPBNhooks"
+import { useBPBNbakeList } from "../_hooks/BPBNhooks"
 
 import jsPDF from "jspdf"
 import "jspdf-autotable"

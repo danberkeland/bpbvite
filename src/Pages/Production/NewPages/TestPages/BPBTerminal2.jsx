@@ -11,7 +11,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Terminal } from "primereact/terminal"
 import { TerminalService } from 'primereact/terminalservice'
-import { useListData } from "../../../data/_listData"
+import { useListData } from "../../../../data/_listData"
 
 export const BPBTerminal = () => {
   const [prompt, setPrompt] = useState("bpb $")

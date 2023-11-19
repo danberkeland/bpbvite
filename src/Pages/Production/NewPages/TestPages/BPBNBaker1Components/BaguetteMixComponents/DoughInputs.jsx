@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 
 import { InputText } from "primereact/inputtext"
 
-import { useListData } from "../../../../../data/_listData"
+import { useListData } from "../../../../../../data/_listData"
 
 import { debounce } from "lodash"
 

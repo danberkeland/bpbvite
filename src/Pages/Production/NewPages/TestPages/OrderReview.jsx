@@ -1,7 +1,7 @@
 // View all (complete) orders that have items edited today.
 
 import { DateTime } from "luxon";
-import { useListData } from "../../../data/_listData";
+import { useListData } from "../../../../data/_listData";
 import { flatten, groupBy, mapValues, maxBy, orderBy, pickBy, set, sortBy, uniqBy } from "lodash";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";

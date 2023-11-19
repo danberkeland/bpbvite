@@ -6,14 +6,14 @@ import { WhatToMake } from "./BPBNBaker1Components/WhatToMake"
 import { WhatToPrep } from "./BPBNBaker1Components/WhatToPrep"
 import { BaguetteMix } from "./BPBNBaker1Components/BaguetteMix"
 
-import { useBPBNbakeList } from "./_hooks/BPBNhooks"
-import { useBPBNprepList } from "./_hooks/BPBNhooks"
-import { useBPBNbaguetteDoughSummary } from "./_hooks/BPBNhooks"
+import { useBPBNbakeList } from "../_hooks/BPBNhooks"
+import { useBPBNprepList } from "../_hooks/BPBNhooks"
+import { useBPBNbaguetteDoughSummary } from "../_hooks/BPBNhooks"
 
 import { DateTime } from "luxon"
 import jsPDF from "jspdf"
 import "jspdf-autotable"
-import { useListData } from "../../../data/_listData"
+import { useListData } from "../../../../data/_listData"
 
 export const BPBNBaker1 = () => <div>Obsolete</div>
 

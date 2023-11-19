@@ -1,8 +1,8 @@
-import gqlFetcher from "../../../data/_fetchers"
+import gqlFetcher from "../../../../data/_fetchers"
 
 import useSWR from 'swr'
-import { getProduct } from "../../../data/swr2.x.x/gqlQueries/queries"
-import { useListData } from "../../../data/_listData"
+import { getProduct } from "../../../../data/swr2.x.x/gqlQueries/queries"
+import { useListData } from "../../../../data/_listData"
 import { DateTime } from "luxon"
 import { useMemo } from "react"
 import { flatten, groupBy, map, mapValues, orderBy, round, set, sum, sumBy } from "lodash"

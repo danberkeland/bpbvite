@@ -8,7 +8,7 @@ import { Button } from "primereact/button"
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 
-import { useBPBNshapeList } from "./_hooks/BPBNhooks"
+import { useBPBNshapeList } from "../_hooks/BPBNhooks"
 
 import jsPDF from "jspdf"
 import "jspdf-autotable"

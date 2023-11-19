@@ -622,12 +622,12 @@
 // }
 
 import { Dropdown } from "primereact/dropdown"
-import { LIST_TABLES } from "../../../data/_constants"
+import { LIST_TABLES } from "../../../../data/_constants"
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 import { MultiSelect } from "primereact/multiselect"
 import { useEffect, useRef, useState } from "react"
-import { useListData } from "../../../data/_listData"
+import { useListData } from "../../../../data/_listData"
 import { Button } from "primereact/button"
 
 export const Database = () => {

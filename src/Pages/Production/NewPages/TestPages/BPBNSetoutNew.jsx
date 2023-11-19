@@ -20,12 +20,12 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog"
 import { 
   useBPBNcroixSetoutList, 
   useBPBNpastryPrepList 
-} from "./_hooks/BPBNhooks"
+} from "../_hooks/BPBNhooks"
 
 import jsPDF from "jspdf"
 import "jspdf-autotable"
 import { DateTime } from "luxon"
-import { useListData } from "../../../data/_listData";
+import { useListData } from "../../../../data/_listData";
 
 export const BPBNSetout = () => <div>Obsoleted</div>
 
