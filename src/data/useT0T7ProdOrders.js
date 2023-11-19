@@ -2,6 +2,8 @@ import { keyBy,  sortBy } from "lodash"
 import { DateTime } from "luxon"
 import { useMemo } from "react"
 
+import { preDBOverrides } from "./_productOverrides"
+
 import { useListData } from "./_listData"
 import { getRouteOptions } from "../Pages/Ordering/Orders/data/productHooks"
 
@@ -66,20 +68,28 @@ export const useT0T7ProdOrders = ({ shouldFetch, reportDate }) => {
 
 }
 
-
-
-/** report date in yyyy-MM-dd format */
+/** 
+ * 'report Date' targets cart orders with the same delivDate, standing/holding
+ * orders with an equivalent dayOfWeek.
+ * @param {Object} input
+ * @param {string} input.reportDate - 'yyyy-MM-dd' format
+ * @param {boolean} input.shouldFetch
+ * @param {boolean} [input.shouldAddRoutes] - true by default
+ * @returns 
+ */
 export const useProdOrdersByDate = ({ 
   reportDate, 
   shouldFetch,
   shouldAddRoutes=true,
 }) => {
-
-  const dayOfWeek = DateTime.fromFormat(
+  const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+  const reportDateDT = DateTime.fromFormat(
     reportDate, 
     'yyyy-MM-dd', 
     { zone: 'America/Los_Angeles'}
-  ).toFormat('EEE')
+  ).startOf('day')
+  const dayOfWeek = reportDateDT.toFormat('EEE')
+  const relDate = reportDateDT.diff(todayDT, 'days')?.days
 
   const { data:cart } = useListData({ 
     tableName: "Order", 
@@ -119,13 +129,18 @@ export const useProdOrdersByDate = ({
       return undefined
     }
 
-    console.log("cart length:", cart.length)
-    console.log("standing length:", standing.length)
+    if(cart.length > 4096 || standing.length > 4096) {
+      console.log("cart length:", cart.length)
+      console.log("standing length:", standing.length)
+    }
 
-    const reportDateDT = DateTime.fromFormat(
-      reportDate, 'yyyy-MM-dd', { zone: 'America/Los_Angeles'}
-    )
-    const dateList = makeDateList({ startDateDT: reportDateDT, nDays:1 })
+    // hooking into old code...
+    const dateList = [{
+      delivDate: reportDate,
+      dayOfWeek: dayOfWeek,
+      weekdayNum: reportDateDT.toFormat('E') % 7,
+      relDate: relDate,
+    }]
 
     const combinedOrders = combineOrdersOnDates({ dateList, cart, standing })
 
@@ -138,12 +153,6 @@ export const useProdOrdersByDate = ({
     } else {
       return combinedOrders
     }
-
-
-    
-    // return combineOrdersOnDates({ 
-    //   dateList, cart, standing, PRD, LOC, RTE, ZRT 
-    // })
 
   }
 
@@ -226,7 +235,12 @@ const getPickupOverride = (locNick, route) => ({
 const addRoutesToOrders = ({ 
   orders, PRD, LOC, RTE, ZRT  
 }) => {
-  const products = keyBy(PRD, 'prodNick')
+  
+  // changes readytimes, lead times to work with newer route assignment logic
+  // eventually should commit these values to database entries.
+  const _PRD = PRD.map(P => ({ ...P, ...preDBOverrides[P.prodNick]}))
+
+  const products = keyBy(_PRD, 'prodNick')
   const locations = keyBy(LOC, 'locNick')
   const routes = keyBy(RTE, 'routeNick')
   const zoneRoutes = sortBy(ZRT, 'routeStart')
