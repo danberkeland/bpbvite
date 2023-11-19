@@ -243,6 +243,10 @@ export const OrderReview = () => {
           const displayValue = rowData.qty
           return <FormattedRow rowData={rowData}>{displayValue}</FormattedRow>
         }}/>
+        <Column header="Qty Short" body={rowData => {
+          const displayValue = rowData.qtyShort
+          return <FormattedRow rowData={rowData}>{displayValue}</FormattedRow>
+        }}/>
         <Column header="Changed By" body={rowData => {
           const displayValue = rowData.updatedBy
           return <FormattedRow rowData={rowData}>{displayValue}</FormattedRow>
