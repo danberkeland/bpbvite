@@ -40,8 +40,10 @@ const dedupeCart = (cartOrders) => {
   const keyedCart = mapValues(
     groupedData,
     group => {
-      if (group.length > 1) {console.log('duplicate cart found')}
       const orderedGroup = orderBy(group, 'updatedOn', 'desc')
+      if (group.length > 1) {
+        console.log('duplicate cart found:', orderedGroup)
+      }
       return orderedGroup[0]
 
     }
