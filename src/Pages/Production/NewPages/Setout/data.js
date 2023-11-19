@@ -158,7 +158,7 @@ export const useSetoutData = ({
         orders: row,
       }
     })
-    console.log("nonAlmondCroixSouth", nonAlmondCroixSouth)
+    // console.log("nonAlmondCroixSouth", nonAlmondCroixSouth)
 
     // Almond Types *********************************************************
     // BPBS only

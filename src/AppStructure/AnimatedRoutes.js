@@ -50,7 +50,7 @@ import { default as NotesV2} from "../Pages/Settings/notes/Notes2";
 import { Notes as NotesV3 } from "../Pages/Settings/notes/v3/Notes";
 import Remap from "../Pages/EODCounts/EODCountsRempas";
 import TopNav from "./Auth/TopNav";
-import { SpecialPacking } from "../Pages/Production/NewPages/TestPages/SpecialPacking";
+import { SpecialPacking } from "../Pages/Production/NewPages/BPBS/SpecialPacking/SpecialPacking";
 import { RouteGrid } from "../Pages/Logistics/NewPages/RouteGrid/RouteGrid";
 import { BPBSWhatToMake } from "../Pages/Production/NewPages/BPBS/WhatToMake/WhatToMake";
 import { CroixCount } from "../Pages/Production/NewPages/Croix/CroixEOD/CroixCount";
@@ -80,13 +80,20 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
         <Route path="/remap" element={<Remap />} />
         {authClass !== "customer" && (
           <React.Fragment>
-            <Route path="/Production/BPBNBaker1" element={<BPBNBaker1 />} />
+            <Route path="/Production/BPBNBaker1" element={<Bpbn1 />} />
             <Route path="/Production/BPBNBaker1/v2" element={<Bpbn1 />} />
+            <Route path="/Production/BPBNBaker1/v1" element={<BPBNBaker1 />} />
 
-            <Route path="/BPBNProd/BPBNBaker1Backup" element={<BPBNBaker1Backup />} />
-            <Route path="/Production/BPBNBaker2" element={<BPBNBaker2 />} />
+            <Route path="/BPBNProd/BPBNBaker1Backup" 
+              element={<Bpbn1 initialDateOption="tomorrow" />} 
+            
+            />
+            <Route path="/BPBNProd/BPBNBaker1Backup/v1" element={<BPBNBaker1Backup />} />
+
+            <Route path="/Production/BPBNBaker2" element={<Bpbn2 />} />
             <Route path="/Production/BPBNBaker2/v2" element={<Bpbn2 />} />
             <Route path="/Production/BPBNBaker2/v1" element={<BPBNBaker2 />} />
+
             <Route path="/Production/Production" element={<Production />} />
             <Route path="/Production/WhoBake" element={<WhoBake />} />
             <Route path="/Production/WhoShape" element={<WhoShape />} />
@@ -98,19 +105,25 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
               path="/Production/BPBSBuckets"
               element={<BPBNBuckets loc={"Prado"} />}
             />
-            <Route path="/Production/BPBNSetOut" element={<SetOutV1 loc={"Carlton"} />} />
+            <Route path="/Production/BPBNSetOut" element={<BPBNSetout />} />
             <Route path="/Production/BPBNSetOut/v2" element={<BPBNSetout />} />
             <Route path="/Production/BPBNSetOut/v1" element={<SetOutV1 loc={"Carlton"} />} />
 
-            <Route path="/Production/BPBSSetOut" element={<SetOutV1 loc={"Prado"} />} />
+            <Route path="/Production/BPBSSetOut" element={<BPBSSetout />} />
             <Route path="/Production/BPBSSetOut/v2" element={<BPBSSetout />} />
             <Route path="/Production/BPBSSetOut/v1" element={<SetOutV1 loc={"Prado"} />} />
 
             <Route path="/Production/BPBSWhatToMake" element={<BPBSWhatToMake />} />
             <Route path="/Production/BPBSWhatToMake/v2" element={<BPBSWhatToMake />} />
             <Route path="/Production/BPBSWhatToMake/v1" element={<BPBSWhatToMakeV1 />} />
-            <Route
-              path="/BPBSProd/BPBSWhatToMakeBackup"
+
+            <Route path="/BPBSProd/BPBSWhatToMakeBackup"
+              element={<BPBSWhatToMake initialDateOption="tomorrow" />}
+            />
+            <Route path="/BPBSProd/BPBSWhatToMakeBackup/v2"
+              element={<BPBSWhatToMake initialDateOption="tomorrow" />}
+            />
+            <Route path="/BPBSProd/BPBSWhatToMakeBackup/v1"
               element={<BPBSWhatToMakeBackup />}
             />
             <Route

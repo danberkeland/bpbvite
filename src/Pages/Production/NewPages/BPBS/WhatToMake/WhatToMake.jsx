@@ -21,6 +21,7 @@ const flexSplitStyle = {
 
 const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
 const today = todayDT.toFormat('yyyy-MM-dd')
+const tomorrow = todayDT.plus({ days: 1 }).toFormat('yyyy-MM-dd')
 const todayDisplay = todayDT.toFormat('MM/dd/yyyy')
 
 /**takes a decimal number representation of time and formats as a sring
@@ -33,11 +34,20 @@ const formatHours = (timeFloat) => {
   return DateTime.fromObject({ hour, minute }).toFormat('h:mm')
 }
 
-export const BPBSWhatToMake = () => {
+/**
+ * 
+ * @param {Object} [input] 
+ * @param {'today'|'tomorrow'} [input.initialDateOption='today']
+ */
+export const BPBSWhatToMake = ({ initialDateOption='today' }={}) => {
 
-  const [reportDate, setReportDate] = useState(today)
-  const [reportRelDate, setReportRelDate] = useState(0)
-  console.log(reportRelDate)
+  const [reportDate, setReportDate] = useState(
+    initialDateOption === 'today' ? today : tomorrow
+  )
+  const [reportRelDate, setReportRelDate] = useState(
+    initialDateOption === 'today' ? 0 : 1
+  )
+  // console.log(reportRelDate)
   const reportDateDT = todayDT.plus({ days: reportRelDate })
   const reportDateISO = reportDateDT.toFormat('yyyy-MM-dd')
   const reportDateUS = reportDateDT.toFormat('MM/dd/yyyy')

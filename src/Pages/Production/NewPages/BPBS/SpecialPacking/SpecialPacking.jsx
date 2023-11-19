@@ -13,9 +13,9 @@ import { Card } from "primereact/card"
 import { groupBy, mapValues, round, sortBy } from "lodash"
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
-import { useOrderReportByDate } from "../../../../data/productionData"
-import { getRouteOptions } from "../../../Ordering/Orders/data/productHooks"
-import { useWindowSizeDetector } from "../../../../functions/detectWindowSize"
+import { useOrderReportByDate } from "../../../../../data/productionData"
+import { getRouteOptions } from "../../../../Ordering/Orders/data/productHooks"
+import { useWindowSizeDetector } from "../../../../../functions/detectWindowSize"
 
 const prodNicks = ['pz', 'unpz', 'lgpz', 'pzsl']
 // const qtyPlaceholders = Object.fromEntries(prodNicks.map(pn => [pn, 0]))

@@ -28,6 +28,10 @@ const dateList = [0, 1, 2, 3, 4, 5, 6, 7].map(daysAhead => {
 
 })
 
+/**
+ * @param {Object} input
+ * @param {boolean} input.shouldFetch  
+ */
 export const useT0T7Data = ({ shouldFetch }) => {
   const { data:cart } = useListData({ tableName: "Order", shouldFetch })
   const { data:standing } = useListData({ tableName: "Standing", shouldFetch })

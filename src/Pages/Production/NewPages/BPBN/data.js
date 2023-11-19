@@ -52,6 +52,7 @@ const getListType = (product) => {
   else if (['al', 'fral'].includes(prodNick)) return "almond"
   else if (doughNick === "Croissant") return "croix"
   else if (packGroup !== "cafe menu") return "otherPrep"
+  else if (packGroup === "cafe menu") return "cafe"
   else return undefined
 
 }

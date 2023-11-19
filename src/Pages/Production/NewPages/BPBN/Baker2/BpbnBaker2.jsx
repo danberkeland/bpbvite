@@ -1,13 +1,19 @@
-import { DataTable } from "primereact/datatable"
-import { useBpbn2Data } from "../data"
-import { Column } from "primereact/column"
+import React from "react"
+
 import { DateTime } from "luxon"
-import { Button } from "primereact/button"
-import { useListData } from "../../../../../data/_listData"
-import { DrilldownCellTemplate } from "../_components/DrilldownCellTemplate"
 import { keyBy } from "lodash/fp"
-import { exportBpbn2Pdf } from "./exportPdf"
+
+import { DataTable } from "primereact/datatable"
+import { Column } from "primereact/column"
+import { Button } from "primereact/button"
+
+import { DrilldownCellTemplate } from "../_components/DrilldownCellTemplate"
+
 import { useSettingsStore } from "../../../../../Contexts/SettingsZustand"
+import { useListData } from "../../../../../data/_listData"
+import { useBpbn2Data } from "../data"
+import { exportBpbn2Pdf } from "./exportPdf"
+import { useCheckUpdates } from "../../../Utils/useCheckUpdates"
 
 
 
@@ -68,7 +74,7 @@ export const Bpbn2 = () => {
   const isLoading = useSettingsStore((state) => state.isLoading);
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
 
-  const data = useBpbn2Data({ 
+  const bpbn2data = useBpbn2Data({ 
     reportDate,
     shouldShowZeroes: false,
     shouldFetch:true 
@@ -79,7 +85,7 @@ export const Bpbn2 = () => {
     croixData=[], 
     otherPrepData=[],
     productRepsByListTypeByForBake={}, // consistent product list for mutations
-  } = data ?? {}
+  } = bpbn2data ?? {}
 
   const { 
     data:PRD,
@@ -88,9 +94,10 @@ export const Bpbn2 = () => {
   } = useListData({ tableName: "Product", shouldFetch: true})
   const products = keyBy('prodNick')(PRD ?? {})
 
+  useCheckUpdates()
   
   const handleExportPdf = async () => {
-    if (!data) {
+    if (!bpbn2data) {
       console.log("Data not found.")
       return
     }
@@ -105,8 +112,9 @@ export const Bpbn2 = () => {
 
     const updateInputs = getUpdateInputs({ 
       rusticData, 
-      productsToUpdate: productRepsByListTypeByForBake.rustic
+      productsToUpdate: productRepsByListTypeByForBake.rustic,
     })
+
     console.log("updateInputs", updateInputs)
     updateProductCache( await submitProducts({ updateInputs }) )
     setIsLoading(false)

@@ -40,7 +40,7 @@ export const ProductForm =({
         setIsLoading(true)
         createProduct({
           values,
-          initialValues,
+          // initialValues,
           listDataCache,
           toastRef,
         })

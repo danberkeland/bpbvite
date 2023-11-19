@@ -17,10 +17,16 @@ import { DoughInputs } from "./DoughInputs"
 
 import "./bpbnBaker1.css"
 import { useExportBpbn1 } from "./useExport"
+import { useCheckUpdates } from "../../../Utils/useCheckUpdates"
 
-export const Bpbn1 = () => {
+
+/**
+ * @param {Object} input
+ * @param {'today'|'tomorrow'} [input.initialDateOption='today'] 
+ */
+export const Bpbn1 = ({ initialDateOption='today' }) => {
   const [dateOption, setDateOption] = 
-      useState(/**@type {('today'|'tomorrow')}*/('today'))
+      useState(/**@type {('today'|'tomorrow')}*/(initialDateOption))
   const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
   const shouldFetch = true
 
@@ -49,12 +55,10 @@ export const Bpbn1 = () => {
   const { data:PRD } = useListData({ tableName: "Product", shouldFetch })
   const products = keyBy('prodNick')(PRD ?? [])
 
-
+  useCheckUpdates()
 
   const exportBpbn1 = useExportBpbn1({ reportDate, shouldFetch })
   
-
-
   const DateOptionButtons = () => {
     return (
       <div style={{
@@ -231,3 +235,5 @@ export const Bpbn1 = () => {
     </div>
   )
 }
+
+export const Bpbn1Backup = () => Bpbn1({ initialDateOption: 'tomorrow'})

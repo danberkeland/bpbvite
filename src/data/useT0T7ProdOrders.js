@@ -39,8 +39,10 @@ export const useT0T7ProdOrders = ({ shouldFetch, reportDate }) => {
   const calculateValue = () => {
     if (!cart || !standing || !PRD || !LOC || !RTE || !ZRT) return undefined
 
-    console.log("cart length:", cart.length)
-    console.log("standing length:", standing.length)
+    if(cart.length > 4096 || standing.length > 4096) {
+      console.log("cart length:", cart.length)
+      console.log("standing length:", standing.length)
+    }
 
     const reportDateDT = DateTime.fromFormat(
       reportDate, 'yyyy-MM-dd', { zone: 'America/Los_Angeles'}
@@ -270,80 +272,3 @@ const addRoutesToOrders = ({
   }).filter(order => order.qty !== 0)
   
 }
-
-
-
-// /**
-//  * Standing data and cart data for matching days need to be present
-//  * to combine correctly.
-// */
-// const combineOrdersOnDates = ({ 
-//   dateList, cart, standing, PRD, LOC, RTE, ZRT 
-// }) => {
-
-//   const products = keyBy(PRD, 'prodNick')
-//   const locations = keyBy(LOC, 'locNick')
-//   const routes = keyBy(RTE, 'routeNick')
-//   const zoneRoutes = sortBy(ZRT, 'routeStart')
-
-//   const ordersByDate = dateList.map(dateObj => {
-//     const { delivDate, dayOfWeek, relDate, weekdayNum } = dateObj
-
-//     const cartDict = keyBy(
-//       cart.filter(C => C.delivDate === delivDate),
-//       item => `${item.locNick}#${item.prodNick}`
-//     )
-//     const standingDict = keyBy(
-//       standing.filter(S => S.isStand === true && S.dayOfWeek === dayOfWeek), 
-//       item => `${item.locNick}#${item.prodNick}`
-//     )
-//     const holdingDict = keyBy(
-//       standing.filter(S => S.isStand === false && S.dayOfWeek === dayOfWeek), 
-//       item => `${item.locNick}#${item.prodNick}`
-//     )
-
-//     const orders = { ...holdingDict, ...standingDict, ...cartDict }
-
-//     return Object.values(orders).map(order => {
-
-//       // simulate a pickup location for retail orders, or when a deliv customer
-//       // chooses a pickup alternate option
-//       const pickupOverride = {
-//         locNick: order.locNick, 
-//         locName: order.locNick, 
-//         latestFirstDeliv: 7, 
-//         latestFinalDeliv: 13,
-//         zoneNick: order.route === 'atownpick' ? 'atownpick' : 'slopick'
-//       }
-
-//       const routeMeta = getRouteOptions({
-//         product: products[order.prodNick],
-//         location: order.isWhole && order.route === 'deliv' 
-//           ? locations[order.locNick]
-//           : pickupOverride,
-//         routeDict: routes,
-//         ZRT: zoneRoutes
-//       })[weekdayNum % 7][0]
-
-//       const delivLeadTime = 
-//         routeMeta.adjustedLeadTime - products[order.prodNick].leadTime
-//       const bakeRelDate = relDate - delivLeadTime
-
-//       return {
-//         ...order,
-//         delivDate,
-//         dayOfWeek,
-//         weekdayNum,
-//         relDate,
-//         routeMeta,
-//         bakeRelDate,
-//         delivLeadTime,
-//         forBake: products[order.prodNick].forBake
-//       }
-//     }).filter(order => order.qty !== 0)
-
-//   })
-
-//   return flatten(ordersByDate)
-
-// }
