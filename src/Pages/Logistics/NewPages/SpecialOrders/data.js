@@ -68,6 +68,7 @@ const makePivotData = ({ data, rowKey, pivotColumnAttribute }) => {
   const rows = flow(
     groupBy(rowKey),
     mapValues(rowGroup => ({ 
+      isSquareOrder: rowGroup[0][rowKey].includes("__") ? "*" : "",
       rowKey: rowGroup[0][rowKey], 
       ...keyBy(pivotColumnAttribute)(rowGroup)
     })),
@@ -85,18 +86,11 @@ const makePivotData = ({ data, rowKey, pivotColumnAttribute }) => {
 const convertToPdfData = (tableData) => {
 
   const columns = [
-    {
-      dataKey: 'rowKey',
-      field: 'rowKey',
-      header: "Customer",
-      width: { width: '70px' },
-    }, 
-    ...tableData.pivotColumnKeys.map(colKey => ({
-      dataKey: colKey,
-      field: colKey,
-      header: colKey,
-      width: { width: '30px' },
-    }))
+    { dataKey: 'isSquareOrder', header: "Square Order?" }, 
+    { dataKey: 'rowKey', header: "Customer" }, 
+    ...tableData.pivotColumnKeys.map(colKey => (
+      { dataKey: colKey, header: colKey }
+    ))
   ]
 
   const body = tableData.rows.map(row => 
