@@ -113,6 +113,12 @@ const SpecialOrderTable = ({ tableData, keyString }) => {
       responsiveLayout="scroll"
     >
       <Column 
+        header={<span>Square <br/>Order?</span>}
+        field="isSquareOrder"
+        style={{width: "4rem"}}
+        bodyStyle={{textAlign: "center"}}
+      />
+      <Column 
         header="Customer" 
         body={row => truncate(row.rowKey, { length: 16 })} 
         style={{width: "10rem"}}
