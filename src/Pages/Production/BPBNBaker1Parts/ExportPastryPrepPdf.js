@@ -8,7 +8,9 @@ import { getMixInfo } from "./GetMixInfo";
 import { binInfo } from "./BinInfo";
 import { panAmount } from "./PanAmount";
 import { bucketAmount } from "./BucketAmount";
-import { updateDough } from "../../../graphql/mutations";
+import { 
+  // updateDough, 
+  updateDoughBackup } from "../../../graphql/mutations";
 
 import { API, graphqlOperation } from "aws-amplify";
 
@@ -35,6 +37,8 @@ const buildTable = (title, doc, body, col) => {
 
 export const ExportPastryPrepPdf = async (delivDate, doughs, infoWrap, doobieStuff) => {
   
+  // 'doughs' is an array containing only the baguette dough object.
+  // can probably rewrite in a more 
   for (let dgh of doughs) {
     console.log("dgh",dgh)
     let addDetails = {
@@ -44,7 +48,8 @@ export const ExportPastryPrepPdf = async (delivDate, doughs, infoWrap, doobieStu
 
     try {
       await API.graphql(
-        graphqlOperation(updateDough, { input: { ...addDetails } })
+        // graphqlOperation(updateDough, { input: { ...addDetails } })
+        graphqlOperation(updateDoughBackup, { input: { ...addDetails } })
       );
     } catch (error) {
       console.log("error on updating product", error);
