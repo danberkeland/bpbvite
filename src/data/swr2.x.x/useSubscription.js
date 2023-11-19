@@ -33,6 +33,25 @@ const useGenericSubscription = (queryName, variables) => useSWRSubscription(
   }
 )
 
+const useGenericSubscription_v2 = (queryName, variables) => {
+
+  const subFn = ([query, variables], { next }) => {
+    const sub = API.graphql({ query, variables }).subscribe({ 
+      next: ({ provider, value }) => next(null, prev => {
+            console.log({ provider, value })
+            return (prev || []).concat(value.data[queryName])
+          }
+        ),
+      error: (err) => next( console.warn(err), null ),
+    })
+  
+    return () => sub.unsubscribe()
+  }
+
+  return useSWRSubscription([subscriptions[queryName], variables], subFn)
+
+}
+
 
 
 // Capure a 'stream' of table mutations. We add a label describing the
