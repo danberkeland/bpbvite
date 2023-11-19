@@ -26,8 +26,6 @@ import "jspdf-autotable";
 import styled from "styled-components";
 import { set } from "lodash";
 
-import { CroixCount as CroixCountNew } from "./NewPages/CroixEOD/CroixCount";
-
 
 const WholeBox = styled.div`
   display: flex;
@@ -596,32 +594,5 @@ function CroixCount() {
     </React.Fragment>
   );
 }
-
-// const CroixCount = () => {
-//   const [showLegacy, setShowLegacy] = useState()
-
-//   return (<>
-//     <Button label="Use Old Version" 
-//       onClick={() => setShowLegacy(true)}
-//       style={{margin: "1rem"}}
-//     />
-//     <Button label="Use New Version" 
-//       onClick={() => setShowLegacy(false)}
-//       style={{margin: "1rem"}}
-//     />
-    
-//     <div style={{marginTop: "2rem"}}>
-//       {showLegacy === true && <CroixCountLegacy />}
-//       {showLegacy === false && 
-//         <div style={{
-//           display: "flex",
-//           justifyContent: "center"
-//         }}>
-//           <CroixCountNew />
-//         </div>
-//       }
-//     </div>
-//   </>)
-// }
 
 export default CroixCount;

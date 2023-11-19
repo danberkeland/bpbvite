@@ -27,157 +27,161 @@ import "jspdf-autotable"
 import { DateTime } from "luxon"
 import { useListData } from "../../../data/_listData";
 
-const TODAY = DateTime.now().setZone('America/Los_Angeles').startOf('day')
-const dateDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
-const displayDate = dateDT.toLocaleString({
-  month: '2-digit', day: '2-digit', year: 'numeric'
-})
+export const BPBNSetout = () => <div>Obsoleted</div>
 
-export const BPBNSetout = () => {
-  const setoutData = useBPBNcroixSetoutList({ 
-    dateDT, format: 'groupedByProdNick'
-  })
+// const TODAY = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+// const dateDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+// const displayDate = dateDT.toLocaleString({
+//   month: '2-digit', day: '2-digit', year: 'numeric'
+// })
 
-  if (!!setoutData) console.log('setout data:', setoutData)
+// export const BPBNSetout = () => {
+//   const setoutData = useBPBNcroixSetoutList({ 
+//     dateDT, format: 'groupedByProdNick'
+//   })
 
-  const setoutTotals = useBPBNcroixSetoutList({ 
-    dateDT, format: 'prodNickTotals'
-  })
+//   if (!!setoutData) console.log('setout data:', setoutData)
 
-  const pastryPrepTotals = useBPBNpastryPrepList({
-    dateDT, format: 'prodNickTotals'
-  })
+//   const setoutTotals = useBPBNcroixSetoutList({ 
+//     dateDT, format: 'prodNickTotals'
+//   })
 
-  const { submitMutations, updateLocalData } = useListData({ 
-    tableName: "InfoQBAuth", 
-    shouldFetch: true 
-  })
+//   const pastryPrepTotals = useBPBNpastryPrepList({
+//     dateDT, format: 'prodNickTotals'
+//   })
 
-  // try both updating and creating the record
-  const commitSetoutTime = async () => {
-    let addDetails = {
-      id: dateDT.toISODate() + "Carlton" + "setoutTime",
-      infoContent: "updated",
-      infoName: "Carlton" + "setoutTime",
-    }
+//   const { submitMutations, updateLocalData } = useListData({ 
+//     tableName: "InfoQBAuth", 
+//     shouldFetch: true 
+//   })
 
-    const uResp = await submitMutations({ updateInputs: [addDetails] })
-    if (uResp.errors.length) {
-      console.log("Update failed", uResp.errors)
-      const cResp = await submitMutations({ createInputs: [addDetails] })
+//   // try both updating and creating the record
+//   const commitSetoutTime = async () => {
+//     let addDetails = {
+//       id: dateDT.toISODate() + "Carlton" + "setoutTime",
+//       infoContent: "updated",
+//       infoName: "Carlton" + "setoutTime",
+//     }
 
-      if (cResp.errors.length) {
-        console.error("Create Failed", cResp.errors)
-      }
-      else {
-        updateLocalData(cResp)
-        console.log("created")
-      }
-    } else {
-      updateLocalData(uResp)
-      console.log("updated")
-    }
+//     const uResp = await submitMutations({ updateInputs: [addDetails] })
+//     if (uResp.errors.length) {
+//       console.log("Update failed", uResp.errors)
+//       const cResp = await submitMutations({ createInputs: [addDetails] })
 
-  }
+//       if (cResp.errors.length) {
+//         console.error("Create Failed", cResp.errors)
+//       }
+//       else {
+//         updateLocalData(cResp)
+//         console.log("created")
+//       }
+//     } else {
+//       updateLocalData(uResp)
+//       console.log("updated")
+//     }
 
-  const confirmExport = () => {
-    confirmDialog({
-      message:
-        "This is not the list for TODAY. "
-        + "Are you sure this is the one you want to print?",
-      header: "Confirmation",
-      icon: "pi pi-exclamation-triangle",
-      accept: () => {
-        commitSetoutTime()
-        exportPastryPrepPDF(displayDate, setoutTotals, pastryPrepTotals)
-      }
-    })
-  }
-  return (<>
-    <h1>{`BPBN Set Out ${displayDate}`}</h1>
+//   }
 
-    <h2>Set Out</h2>
-    <Button type="button"
-      label={`Print Carlton Prep List`}
-      onClick={() => {
-        if (TODAY.toMillis() !== dateDT.toMillis()) confirmExport()
-        else {
-          commitSetoutTime()
-          exportPastryPrepPDF(displayDate, setoutTotals, pastryPrepTotals)
-        }
-      }}
-      data-pr-tooltip="PDF"
-      style={{width: "fit-content", marginBlock: "1rem"}}
-    />
-    <DataTable size="small" value={setoutTotals}>
-      <Column header="Product" field="prodNick" />
-      <Column header="Qty" field="qty" />
-      <Column header="Pans" field="pans" />
-      <Column header="+" field="panRemainder" />
-    </DataTable>
+//   const confirmExport = () => {
+//     confirmDialog({
+//       message:
+//         "This is not the list for TODAY. "
+//         + "Are you sure this is the one you want to print?",
+//       header: "Confirmation",
+//       icon: "pi pi-exclamation-triangle",
+//       accept: () => {
+//         commitSetoutTime()
+//         exportPastryPrepPDF(displayDate, setoutTotals, pastryPrepTotals)
+//       }
+//     })
+//   }
+//   return (<>
+//     <h1>{`BPBN Set Out ${displayDate}`}</h1>
 
-    <h2>Pastry Prep</h2>
-    <DataTable size="small" value={pastryPrepTotals}>
-      <Column header="Product" field="prodNick" />
-      <Column header="Qty" field="qty" />
-    </DataTable>
+//     <h2>Set Out</h2>
+//     <Button type="button"
+//       label={`Print Carlton Prep List`}
+//       onClick={() => {
+//         if (TODAY.toMillis() !== dateDT.toMillis()) confirmExport()
+//         else {
+//           commitSetoutTime()
+//           exportPastryPrepPDF(displayDate, setoutTotals, pastryPrepTotals)
+//         }
+//       }}
+//       data-pr-tooltip="PDF"
+//       style={{width: "fit-content", marginBlock: "1rem"}}
+//     />
+//     <DataTable size="small" value={setoutTotals}>
+//       <Column header="Product" field="prodNick" />
+//       <Column header="Qty" field="qty" />
+//       <Column header="Pans" field="pans" />
+//       <Column header="+" field="panRemainder" />
+//     </DataTable>
 
-    <ConfirmDialog />
-  </>)
+//     <h2>Pastry Prep</h2>
+//     <DataTable size="small" value={pastryPrepTotals}>
+//       <Column header="Product" field="prodNick" />
+//       <Column header="Qty" field="qty" />
+//     </DataTable>
 
-}
+//     <ConfirmDialog />
+//   </>)
+
+// }
 
 
-const exportPastryPrepPDF = (displayDate, setoutTotals, pastryPrepTotals) => {
-  let finalY;
-  let pageMargin = 60;
-  let tableToNextTitle = 12;
-  let titleToNextTable = tableToNextTitle + 4;
-  let tableFont = 11;
-  let titleFont = 14;
+// const exportPastryPrepPDF = (displayDate, setoutTotals, pastryPrepTotals) => {
+//   let finalY;
+//   let pageMargin = 60;
+//   let tableToNextTitle = 12;
+//   let titleToNextTable = tableToNextTitle + 4;
+//   let tableFont = 11;
+//   let titleFont = 14;
 
-  const doc = new jsPDF("p", "mm", "a4");
-  doc.setFontSize(20);
-  doc.text(
-    pageMargin,
-    20,
-    `Carlton Pastry Prep ${displayDate}`
-  );
+//   const doc = new jsPDF("p", "mm", "a4");
+//   doc.setFontSize(20);
+//   doc.text(
+//     pageMargin,
+//     20,
+//     `Carlton Pastry Prep ${displayDate}`
+//   );
 
-  finalY = 20;
+//   finalY = 20;
 
-  doc.setFontSize(titleFont);
-  doc.text(pageMargin, finalY + tableToNextTitle, `Set Out`);
+//   doc.setFontSize(titleFont);
+//   doc.text(pageMargin, finalY + tableToNextTitle, `Set Out`);
 
-  doc.autoTable({
-    body: setoutTotals,
-    margin: pageMargin,
-    columns: [
-      { header: "Frozen Croissants", dataKey: "prodNick" },
-      { header: "Qty", dataKey: "qty" },
-      { header: "Pans", dataKey: "pans" },
-      { header: "+", dataKey: "panRemainder" },
-    ],
-    startY: finalY + titleToNextTable,
-    styles: { fontSize: tableFont },
-    theme: "grid",
-    headStyles: { fillColor: "#dddddd", textColor: "#111111" },
-  });
+//   doc.autoTable({
+//     body: setoutTotals,
+//     margin: pageMargin,
+//     columns: [
+//       { header: "Frozen Croissants", dataKey: "prodNick" },
+//       { header: "Qty", dataKey: "qty" },
+//       { header: "Pans", dataKey: "pans" },
+//       { header: "+", dataKey: "panRemainder" },
+//     ],
+//     startY: finalY + titleToNextTable,
+//     styles: { fontSize: tableFont },
+//     theme: "grid",
+//     headStyles: { fillColor: "#dddddd", textColor: "#111111" },
+//   });
 
-  finalY = doc.previousAutoTable.finalY;
+//   finalY = doc.previousAutoTable.finalY;
 
-  doc.autoTable({
-    body: pastryPrepTotals,
-    margin: pageMargin,
-    columns: [
-      { header: "Pastry Prep", dataKey: "prodNick" },
-      { header: "Qty", dataKey: "qty" },
-    ],
-    startY: finalY + titleToNextTable,
-    styles: { fontSize: tableFont },
-    theme: "grid",
-    headStyles: { fillColor: "#dddddd", textColor: "#111111" },
-  });
+//   doc.autoTable({
+//     body: pastryPrepTotals,
+//     margin: pageMargin,
+//     columns: [
+//       { header: "Pastry Prep", dataKey: "prodNick" },
+//       { header: "Qty", dataKey: "qty" },
+//     ],
+//     startY: finalY + titleToNextTable,
+//     styles: { fontSize: tableFont },
+//     theme: "grid",
+//     headStyles: { fillColor: "#dddddd", textColor: "#111111" },
+//   });
 
-  doc.save(`SetOutCarlton${displayDate}.pdf`);
-};
+//   doc.save(`SetOutCarlton${displayDate}.pdf`);
+// };
+
+

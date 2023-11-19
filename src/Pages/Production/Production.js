@@ -6,7 +6,8 @@ import { BPBNSetout } from "./NewPages/BPBNSetoutNew";
 import { BPBTerminal } from "./NewPages/BPBTerminal2";
 import { WhoBake } from "./NewPages/WhoBakeNew";
 import { WhoShape } from "./NewPages/WhoShapeNew";
-import { CroixToMake } from "./NewPages/CroixToMake/CroixToMake";
+import { CroixToMake } from "./NewPages/Croix/CroixToMake/CroixToMake";
+import { CroixCount } from "./NewPages/Croix/CroixEOD/CroixCount";
 import { SevenDayList } from "./NewPages/SevenDayList";
 import { Database } from "./NewPages/Database";
 import { BPBNBuckets } from "./NewPages/BPBNBucketsNew";
@@ -15,21 +16,20 @@ import { Sandbox } from "./NewPages/_Sandbox";
 import { BriocheCalc } from "./NewPages/BriocheCalc";
 import { SpecialPacking } from "./NewPages/SpecialPacking";
 import { OrderReview } from "./NewPages/OrderReview";
-import { CroixCount } from "./NewPages/CroixEOD/CroixCount";
-import { BPBSWhatToMake } from "./NewPages/BPBSWhatToMake/BPBSWhatToMake";
-import { BPBSSetout } from "./NewPages/BPBSSetout/Setout";
+import { BPBSWhatToMake } from "./NewPages/BPBS/WhatToMake/WhatToMake";
+import { BPBSSetout } from "./NewPages/Setout/Setout";
 import { RouteGrid } from "../Logistics/NewPages/RouteGrid/RouteGrid";
 
 const bpbnPages = [
   {name: "Sandbox", component: <Sandbox />},
-  {name: "BPBNBaker1", component: <BPBNBaker1 />},
-  {name: "BPBNBaker2", component: <BPBNBaker2 />},
-  {name: "BPBNSetout", component: <BPBNSetout />},
+  // {name: "BPBNBaker1", component: <BPBNBaker1 />},
+  // {name: "BPBNBaker2", component: <BPBNBaker2 />},
+  // {name: "BPBNSetout", component: <BPBNSetout />},
   {name: "BPBNBuckets", component: <BPBNBuckets />},
   {name: "WhoBake", component: <WhoBake />},
   {name: "WhoShape", component: <WhoShape />},
-  {name: "BPBSWhatToMake", component: <BPBSWhatToMake />},
-  {name: "BPBSSetout", component: <BPBSSetout />},
+  // {name: "BPBSWhatToMake", component: <BPBSWhatToMake />},
+  // {name: "BPBSSetout", component: <BPBSSetout />},
   {name: "Croix To Make", component: <CroixToMake />},
   {name: "Croix Count", component: <CroixCount />},
   {name: "Terminal", component: <BPBTerminal />},
@@ -39,7 +39,7 @@ const bpbnPages = [
   {name: "Brioche Calculator", component: <BriocheCalc />},
   {name: "Special Pack Lists", component: <SpecialPacking />},
   {name: "Order Review", component: <OrderReview />},
-  {name: "Route Grid", component: <RouteGrid />},
+  // {name: "Route Grid", component: <RouteGrid />},
 ]
 
 const Production = () => {

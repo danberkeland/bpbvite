@@ -11,7 +11,7 @@ import BPBNBaker1Backup from "../Pages/Production/BPBNBaker1Backup";
 import BPBNBaker2 from "../Pages/Production/BPBNBaker2";
 import WhoBake from "../Pages/Production/WhoBake";
 import WhoShape from "../Pages/Production/WhoShape";
-import { default as SetOutV1 } from "../Pages/Production/BPBNSetout";
+import BPBNSetOut, { default as SetOutV1 } from "../Pages/Production/BPBNSetout";
 import Production from "../Pages/Production/Production";
 import { default as ProductsV1 } from "../Pages/Products/Products";
 import Settings from "../Pages/Settings/Settings";
@@ -52,13 +52,13 @@ import Remap from "../Pages/EODCounts/EODCountsRempas";
 import TopNav from "./Auth/TopNav";
 import { SpecialPacking } from "../Pages/Production/NewPages/SpecialPacking";
 import { RouteGrid } from "../Pages/Logistics/NewPages/RouteGrid/RouteGrid";
-import { BPBSWhatToMake } from "../Pages/Production/NewPages/BPBSWhatToMake/BPBSWhatToMake";
-import { BPBSSetout } from "../Pages/Production/NewPages/BPBSSetout/Setout";
-import { CroixCount } from "../Pages/Production/NewPages/CroixEOD/CroixCount";
+import { BPBSWhatToMake } from "../Pages/Production/NewPages/BPBS/WhatToMake/WhatToMake";
+import { CroixCount } from "../Pages/Production/NewPages/Croix/CroixEOD/CroixCount";
 import { SpecialOrders } from "../Pages/Logistics/NewPages/SpecialOrders/SpecialOrders";
 import { Products } from "../Pages/Products/NewPage/Products";
 import { Bpbn1 } from "../Pages/Production/NewPages/BPBN/Baker1/BpbnBaker1";
 import { Bpbn2 } from "../Pages/Production/NewPages/BPBN/Baker2/BpbnBaker2";
+import { BPBNSetout, BPBSSetout } from "../Pages/Production/NewPages/Setout/Setout";
 
 
 
@@ -99,8 +99,8 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
               element={<BPBNBuckets loc={"Prado"} />}
             />
             <Route path="/Production/BPBNSetOut" element={<SetOutV1 loc={"Carlton"} />} />
-            <Route path="/Production/BPBSSetOut/v2" element={<BPBSSetout />} />
-            <Route path="/Production/BPBSSetOut/v1" element={<SetOutV1 loc={"Carlton"} />} />
+            <Route path="/Production/BPBNSetOut/v2" element={<BPBNSetout />} />
+            <Route path="/Production/BPBNSetOut/v1" element={<SetOutV1 loc={"Carlton"} />} />
 
             <Route path="/Production/BPBSSetOut" element={<SetOutV1 loc={"Prado"} />} />
             <Route path="/Production/BPBSSetOut/v2" element={<BPBSSetout />} />

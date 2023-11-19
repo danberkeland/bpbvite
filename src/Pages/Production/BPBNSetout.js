@@ -27,7 +27,7 @@ import { WholeBox, ButtonContainer, ButtonWrapper, h1Style, h2Style } from "./_s
 import { 
   BPBSSetout as BPBSSetoutNew, 
   BPBNSetout as BPBNSetoutNew 
-} from "./NewPages/BPBSSetout/Setout";
+} from "./NewPages/Setout/Setout";
 
 
 let today = todayPlus()[0];
