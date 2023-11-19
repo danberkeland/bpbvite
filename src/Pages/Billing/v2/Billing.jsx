@@ -319,7 +319,7 @@ export const Billing = () => {
               })}
               disabled={
                 isEqual(billingValues?.[rowKey], billingDataByLocNick?.[rowKey])
-                || rowKey !== 'aaatest'
+                //|| rowKey !== 'aaatest'
               }
             />
           </div>
