@@ -31,10 +31,9 @@ export const SpecialOrders = () => {
 
   return (
     <div style={{
-      maxWidth: "50rem", 
+      maxWidth: "70rem", 
       margin: "auto", 
-      marginTop: "5rem", 
-      marginBottom: "10rem"
+      padding: "5rem",
     }}>
       <div style={{
         display:"flex",
@@ -112,6 +111,12 @@ const SpecialOrderTable = ({ tableData, keyString }) => {
       showGridlines
       responsiveLayout="scroll"
     >
+      <Column 
+        header={<span>Square <br/>Order?</span>}
+        field="isSquareOrder"
+        style={{width: "4rem"}}
+        bodyStyle={{textAlign: "center"}}
+      />
       <Column 
         header="Customer" 
         body={row => truncate(row.rowKey, { length: 16 })} 

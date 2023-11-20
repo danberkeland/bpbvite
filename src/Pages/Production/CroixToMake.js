@@ -4,7 +4,7 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { CroixToMake as CroixToMakeNew } from "./NewPages/CroixToMake/CroixToMake";
+import { CroixToMake as CroixToMakeNew } from "./NewPages/Croix/CroixToMake/CroixToMake";
 
 import ComposeCroixInfo from "./BPBSWhatToMakeUtils/composeCroixInfo";
 

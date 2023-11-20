@@ -27,7 +27,7 @@ import styled from "styled-components";
 import { API, graphqlOperation } from "aws-amplify";
 import { DateTime } from "luxon";
 
-import { BPBSWhatToMake as BPBSWhatToMakeNew } from "./NewPages/BPBSWhatToMake/BPBSWhatToMake";
+import { BPBSWhatToMake as BPBSWhatToMakeNew } from "./NewPages/BPBS/WhatToMake/WhatToMake";
 
 const WholeBox = styled.div`
   display: flex;

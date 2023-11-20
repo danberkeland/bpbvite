@@ -34,6 +34,10 @@ export const exportSpecialOrderPdf = ({
     columns: data.columns,
     startY: finalY + titleToNextTable,
     styles: { fontSize: tableFont },
+    columnStyles: {
+      isSquareOrder: { cellWidth: 20, halign: 'center' },
+      rowKey: { cellWidth: 40 }
+    },
     theme: "grid"
   });
 

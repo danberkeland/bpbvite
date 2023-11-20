@@ -81,7 +81,7 @@ export const useProductSchema = ({ editMode }) => {
     isWhole: yup.bool()
       .typeError('Unexpected null value')
       .required()
-      .default('true')
+      .default(true)
       .meta({ category: 'Wholesale'}),
     prodName: yup.string()      
       .when("$editMode", {
@@ -253,7 +253,6 @@ export const useProductSchema = ({ editMode }) => {
           disableWhen: ['create', 'update']
         },
       }),
-
     guarantee: yup.string().nullable(),
     transferStage: yup.string().nullable(),
 

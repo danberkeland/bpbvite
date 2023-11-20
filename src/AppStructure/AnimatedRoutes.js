@@ -11,7 +11,7 @@ import BPBNBaker1Backup from "../Pages/Production/BPBNBaker1Backup";
 import BPBNBaker2 from "../Pages/Production/BPBNBaker2";
 import WhoBake from "../Pages/Production/WhoBake";
 import WhoShape from "../Pages/Production/WhoShape";
-import { default as SetOutV1 } from "../Pages/Production/BPBNSetout";
+import BPBNSetOut, { default as SetOutV1 } from "../Pages/Production/BPBNSetout";
 import Production from "../Pages/Production/Production";
 import { default as ProductsV1 } from "../Pages/Products/Products";
 import Settings from "../Pages/Settings/Settings";
@@ -50,13 +50,17 @@ import { default as NotesV2} from "../Pages/Settings/notes/Notes2";
 import { Notes as NotesV3 } from "../Pages/Settings/notes/v3/Notes";
 import Remap from "../Pages/EODCounts/EODCountsRempas";
 import TopNav from "./Auth/TopNav";
-import { SpecialPacking } from "../Pages/Production/NewPages/SpecialPacking";
+import { SpecialPacking } from "../Pages/Production/NewPages/BPBS/SpecialPacking/SpecialPacking";
 import { RouteGrid } from "../Pages/Logistics/NewPages/RouteGrid/RouteGrid";
-import { BPBSWhatToMake } from "../Pages/Production/NewPages/BPBSWhatToMake/BPBSWhatToMake";
-import { BPBSSetout } from "../Pages/Production/NewPages/BPBSSetout/Setout";
-import { CroixCount } from "../Pages/Production/NewPages/CroixEOD/CroixCount";
+import { BPBSWhatToMake } from "../Pages/Production/NewPages/BPBS/WhatToMake/WhatToMake";
+import { CroixCount } from "../Pages/Production/NewPages/Croix/CroixEOD/CroixCount";
 import { SpecialOrders } from "../Pages/Logistics/NewPages/SpecialOrders/SpecialOrders";
 import { Products } from "../Pages/Products/NewPage/Products";
+import { Bpbn1 } from "../Pages/Production/NewPages/BPBN/Baker1/BpbnBaker1";
+import { Bpbn2 } from "../Pages/Production/NewPages/BPBN/Baker2/BpbnBaker2";
+import { BPBNSetout, BPBSSetout } from "../Pages/Production/NewPages/Setout/Setout";
+
+
 
 function AnimatedRoutes({ Routes, Route, useLocation }) {
   const authClass = useSettingsStore((state) => state.authClass);
@@ -64,6 +68,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
 
   return (
     <AnimatePresence>
+      <React.Fragment>
       <UserHeaderMenu />
       {authClass !== "customer" && <TopNav />}
       <Routes location={location} key={location.pathname}>
@@ -75,9 +80,20 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
         <Route path="/remap" element={<Remap />} />
         {authClass !== "customer" && (
           <React.Fragment>
-            <Route path="/Production/BPBNBaker1" element={<BPBNBaker1 />} />
-            <Route path="/BPBNProd/BPBNBaker1Backup" element={<BPBNBaker1Backup />} />
-            <Route path="/Production/BPBNBaker2" element={<BPBNBaker2 />} />
+            <Route path="/Production/BPBNBaker1" element={<Bpbn1 />} />
+            <Route path="/Production/BPBNBaker1/v2" element={<Bpbn1 />} />
+            <Route path="/Production/BPBNBaker1/v1" element={<BPBNBaker1 />} />
+
+            <Route path="/BPBNProd/BPBNBaker1Backup" 
+              element={<Bpbn1 initialDateOption="tomorrow" />} 
+            
+            />
+            <Route path="/BPBNProd/BPBNBaker1Backup/v1" element={<BPBNBaker1Backup />} />
+
+            <Route path="/Production/BPBNBaker2" element={<Bpbn2 />} />
+            <Route path="/Production/BPBNBaker2/v2" element={<Bpbn2 />} />
+            <Route path="/Production/BPBNBaker2/v1" element={<BPBNBaker2 />} />
+
             <Route path="/Production/Production" element={<Production />} />
             <Route path="/Production/WhoBake" element={<WhoBake />} />
             <Route path="/Production/WhoShape" element={<WhoShape />} />
@@ -89,19 +105,25 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
               path="/Production/BPBSBuckets"
               element={<BPBNBuckets loc={"Prado"} />}
             />
-            <Route path="/Production/BPBNSetOut" element={<SetOutV1 loc={"Carlton"} />} />
-            <Route path="/Production/BPBSSetOut/v2" element={<BPBSSetout />} />
-            <Route path="/Production/BPBSSetOut/v1" element={<SetOutV1 loc={"Carlton"} />} />
+            <Route path="/Production/BPBNSetOut" element={<BPBNSetout />} />
+            <Route path="/Production/BPBNSetOut/v2" element={<BPBNSetout />} />
+            <Route path="/Production/BPBNSetOut/v1" element={<SetOutV1 loc={"Carlton"} />} />
 
-            <Route path="/Production/BPBSSetOut" element={<SetOutV1 loc={"Prado"} />} />
+            <Route path="/Production/BPBSSetOut" element={<BPBSSetout />} />
             <Route path="/Production/BPBSSetOut/v2" element={<BPBSSetout />} />
             <Route path="/Production/BPBSSetOut/v1" element={<SetOutV1 loc={"Prado"} />} />
 
             <Route path="/Production/BPBSWhatToMake" element={<BPBSWhatToMake />} />
             <Route path="/Production/BPBSWhatToMake/v2" element={<BPBSWhatToMake />} />
             <Route path="/Production/BPBSWhatToMake/v1" element={<BPBSWhatToMakeV1 />} />
-            <Route
-              path="/BPBSProd/BPBSWhatToMakeBackup"
+
+            <Route path="/BPBSProd/BPBSWhatToMakeBackup"
+              element={<BPBSWhatToMake initialDateOption="tomorrow" />}
+            />
+            <Route path="/BPBSProd/BPBSWhatToMakeBackup/v2"
+              element={<BPBSWhatToMake initialDateOption="tomorrow" />}
+            />
+            <Route path="/BPBSProd/BPBSWhatToMakeBackup/v1"
               element={<BPBSWhatToMakeBackup />}
             />
             <Route
@@ -165,6 +187,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
 
         <Route path="/" element={<NavSide />} />
       </Routes>
+      </React.Fragment>
     </AnimatePresence>
   );
 }

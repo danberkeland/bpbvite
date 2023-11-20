@@ -1,0 +1,4 @@
+.p-datatable.not-today .p-datatable-thead > tr > th {
+  background-color: rgb(191, 210, 218);
+  /* border-color: rgb(150, 150, 150); */
+}

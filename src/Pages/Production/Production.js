@@ -1,35 +1,30 @@
 import React, { useState } from "react";
 
-import { BPBNBaker1 } from "./NewPages/BPBNBaker1New";
-import { BPBNBaker2 } from "./NewPages/BPBNBaker2New";
-import { BPBNSetout } from "./NewPages/BPBNSetoutNew";
-import { BPBTerminal } from "./NewPages/BPBTerminal2";
-import { WhoBake } from "./NewPages/WhoBakeNew";
-import { WhoShape } from "./NewPages/WhoShapeNew";
-import { CroixToMake } from "./NewPages/CroixToMake/CroixToMake";
-import { SevenDayList } from "./NewPages/SevenDayList";
-import { Database } from "./NewPages/Database";
-import { BPBNBuckets } from "./NewPages/BPBNBucketsNew";
-import { Routing } from "./NewPages/Routing";
-import { Sandbox } from "./NewPages/_Sandbox";
-import { BriocheCalc } from "./NewPages/BriocheCalc";
-import { SpecialPacking } from "./NewPages/SpecialPacking";
-import { OrderReview } from "./NewPages/OrderReview";
-import { CroixCount } from "./NewPages/CroixEOD/CroixCount";
-import { BPBSWhatToMake } from "./NewPages/BPBSWhatToMake/BPBSWhatToMake";
-import { BPBSSetout } from "./NewPages/BPBSSetout/Setout";
-import { RouteGrid } from "../Logistics/NewPages/RouteGrid/RouteGrid";
+import { BPBTerminal } from "./NewPages/TestPages/BPBTerminal2";
+import { WhoBake } from "./NewPages/TestPages/WhoBakeNew";
+import { WhoShape } from "./NewPages/TestPages/WhoShapeNew";
+import { CroixToMake } from "./NewPages/Croix/CroixToMake/CroixToMake";
+import { CroixCount } from "./NewPages/Croix/CroixEOD/CroixCount";
+import { SevenDayList } from "./NewPages/TestPages/SevenDayList";
+import { Database } from "./NewPages/TestPages/Database";
+import { BPBNBuckets } from "./NewPages/TestPages/BPBNBucketsNew";
+import { Routing } from "./NewPages/TestPages/Routing";
+import { Sandbox } from "./NewPages/TestPages/_Sandbox";
+import { BriocheCalc } from "./NewPages/TestPages/BriocheCalc";
+import { OrderReview } from "./NewPages/TestPages/OrderReview";
+// import { BPBNBaker1 } from "./NewPages/TestPages/BPBNBaker1New";
+// import { BPBNBaker2 } from "./NewPages/TestPages/BPBNBaker2New";
+// import { BPBNSetout } from "./NewPages/TestPages/BPBNSetoutNew";
+// import { SpecialPacking } from "./NewPages/BPBS/SpecialPacking/SpecialPacking";
+// import { BPBSWhatToMake } from "./NewPages/BPBS/WhatToMake/WhatToMake";
+// import { BPBSSetout } from "./NewPages/Setout/Setout";
+// import { RouteGrid } from "../Logistics/NewPages/RouteGrid/RouteGrid";
 
 const bpbnPages = [
   {name: "Sandbox", component: <Sandbox />},
-  {name: "BPBNBaker1", component: <BPBNBaker1 />},
-  {name: "BPBNBaker2", component: <BPBNBaker2 />},
-  {name: "BPBNSetout", component: <BPBNSetout />},
   {name: "BPBNBuckets", component: <BPBNBuckets />},
   {name: "WhoBake", component: <WhoBake />},
   {name: "WhoShape", component: <WhoShape />},
-  {name: "BPBSWhatToMake", component: <BPBSWhatToMake />},
-  {name: "BPBSSetout", component: <BPBSSetout />},
   {name: "Croix To Make", component: <CroixToMake />},
   {name: "Croix Count", component: <CroixCount />},
   {name: "Terminal", component: <BPBTerminal />},
@@ -37,9 +32,14 @@ const bpbnPages = [
   {name: "Seven Day List", component: <SevenDayList />},
   {name: "Order Routing", component: <Routing />},
   {name: "Brioche Calculator", component: <BriocheCalc />},
-  {name: "Special Pack Lists", component: <SpecialPacking />},
   {name: "Order Review", component: <OrderReview />},
-  {name: "Route Grid", component: <RouteGrid />},
+  // {name: "BPBNBaker1", component: <BPBNBaker1 />},
+  // {name: "BPBNBaker2", component: <BPBNBaker2 />},
+  // {name: "BPBNSetout", component: <BPBNSetout />},
+  // {name: "BPBSWhatToMake", component: <BPBSWhatToMake />},
+  // {name: "BPBSSetout", component: <BPBSSetout />},
+  // {name: "Special Pack Lists", component: <SpecialPacking />},
+  // {name: "Route Grid", component: <RouteGrid />},
 ]
 
 const Production = () => {
