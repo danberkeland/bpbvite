@@ -21,8 +21,8 @@ const flexSplitStyle = {
 
 const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
 const today = todayDT.toFormat('yyyy-MM-dd')
-const tomorrow = todayDT.plus({ days: 1 }).toFormat('yyyy-MM-dd')
-const todayDisplay = todayDT.toFormat('MM/dd/yyyy')
+// const tomorrow = todayDT.plus({ days: 1 }).toFormat('yyyy-MM-dd')
+// const todayDisplay = todayDT.toFormat('MM/dd/yyyy')
 
 /**takes a decimal number representation of time and formats as a sring
  * 
@@ -41,9 +41,9 @@ const formatHours = (timeFloat) => {
  */
 export const BPBSWhatToMake = ({ initialDateOption='today' }={}) => {
 
-  const [reportDate, setReportDate] = useState(
-    initialDateOption === 'today' ? today : tomorrow
-  )
+  // misleading; report date should be today in all realistic contexts.
+  // Changing this value allows us to pretend that 'today' is some other day.
+  const [reportDate, setReportDate] = useState(today)
   const [reportRelDate, setReportRelDate] = useState(
     initialDateOption === 'today' ? 0 : 1
   )
@@ -169,12 +169,16 @@ export const BPBSWhatToMake = ({ initialDateOption='today' }={}) => {
 
         <div>
           <Button label="Today" 
-            onClick={() => setReportRelDate(0)}
+            onClick={() => {
+              setReportRelDate(0)
+            }}
             className={reportRelDate === 0 ? '' : 'p-button-outlined'}
           />
       
           <Button label="Tomorrow" 
-            onClick={() => setReportRelDate(1)}
+            onClick={() => {
+              setReportRelDate(1)
+            }}
             className={reportRelDate === 1 ? '' : 'p-button-outlined'}
             style={{marginLeft: "1rem"}}
           />
