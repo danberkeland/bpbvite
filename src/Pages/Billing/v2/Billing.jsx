@@ -115,15 +115,18 @@ export const Billing = () => {
     const unsavedChangeMsg = !isEqual(billingDataByLocNick, billingValues)
       ? ["Unsaved Changes will be ignored"]
       : []
-    const notTodayMsg = todayISO !== reportDate
-      ? ["This is NOT TODAY's report"]
-      : []
+    const notTodayMsg = 
+      todayDT.plus({ days: 1 }).toFormat('yyyy-MM-dd') === reportDate
+        ? ["This is the report for TOMORROW"]
+        : todayISO !== reportDate
+          ? ["This is NOT TODAY's report"]
+          : []
     const checkEntriesMsg = shouldSendEmail
       ? ["Check entries before sending emails"]
       : []
 
     const cnfMessages = [...unsavedChangeMsg, ...notTodayMsg, ...checkEntriesMsg]
-    console.log(cnfMessages)
+    // console.log(cnfMessages)
 
     if (cnfMessages.length) {
       confirmDialog({
@@ -428,6 +431,7 @@ export const Billing = () => {
         rowExpansionTemplate={rowExpansionTemplate} 
         scrollable
         scrollHeight="55rem"
+        className={reportDate !== todayISO ? 'not-today-table' : ''}
       >
         <Column expander style={{ flex: "0 0 3rem", paddingRight: "0" }} />
         <Column 

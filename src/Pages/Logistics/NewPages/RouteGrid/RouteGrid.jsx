@@ -183,21 +183,23 @@ export const RouteGrid = () => {
           className={reportDateIsToday ? 'today-table' : 'not-today-table'}
 
         >
-          <Column 
-            body={row => {
-              const { locNick } = row
-              const cartOrder = billingDataByLocNick?.[locNick]
-              
-              return FixInvoiceTemplate({ 
-                row,
-                cartOrder, 
-                location: locations[locNick],
-                reportDate: reportDateISO,
-                convertOrderToInvoice,
-              }) 
-            }}
-            style={{width: "2rem"}} frozen 
-          />
+          {reportDateIsToday && 
+            <Column 
+              body={row => {
+                const { locNick } = row
+                const cartOrder = billingDataByLocNick?.[locNick]
+                
+                return FixInvoiceTemplate({ 
+                  row,
+                  cartOrder, 
+                  location: locations[locNick],
+                  reportDate: reportDateISO,
+                  convertOrderToInvoice,
+                }) 
+              }}
+              style={{width: "2rem"}} frozen 
+            />
+          }
           <Column 
             header={
               <div onClick={() => console.log("tableData:", tableData)}>
