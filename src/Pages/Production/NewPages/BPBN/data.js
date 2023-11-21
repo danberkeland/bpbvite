@@ -81,14 +81,14 @@ const partitionBpbnOrdersByListType = ({ bpbnOrders, products }) => {
  * @typedef {Object} FlagOptions 
  * @property {boolean} useRustics
  * @property {boolean} useCroix
- * @property {boolean} usePastry
+ * @property {boolean} useOtherPrep
 */
 
 /**@type {FlagOptions} */
 const defaultFlags = {
   useRustics: true,
   useCroix: true,
-  usePastry: true,
+  useOtherPrep: true,
 }
 
 /**
@@ -122,7 +122,7 @@ const useBpbnData = ({
 
   // fetching T0 data is a minimum if anything is to be fetched at all
   const _shouldFetch = shouldFetch 
-    && (flags.useRustics || flags.useCroix || flags.usePastry)
+    && (flags.useRustics || flags.useCroix || flags.useOtherPrep)
     
   const { data:T0 } = useProdOrdersByDate({ 
     reportDate,
@@ -130,7 +130,7 @@ const useBpbnData = ({
     shouldAddRoutes: true 
   })
 
-  const shouldFetchT1 = shouldFetch && flags.useRustics
+  const shouldFetchT1 = shouldFetch && (flags.useRustics || flags.useOtherPrep)
   const { data:T1 } = useProdOrdersByDate({ 
     reportDate: reportDateDT.plus({ days: 1 }).toFormat('yyyy-MM-dd'), 
     shouldFetch: shouldFetchT1, 
@@ -300,7 +300,7 @@ const useBpbnData = ({
         : _croixData
     )
 
-    const _otherPrepTemplate = !flags.usePastry ? [] : flow( 
+    const _otherPrepTemplate = !flags.useOtherPrep ? [] : flow( 
       mapValues(product => {
 
         return {
@@ -312,7 +312,7 @@ const useBpbnData = ({
       }),
     )(preshapes.other)
 
-    const _otherPrepData = !flags.usePastry ? [] : flow( 
+    const _otherPrepData = !flags.useOtherPrep ? [] : flow( 
       groupBy('prodNick'),
       mapValuesWithKeys((orderGroup, key) => {
 
@@ -379,7 +379,11 @@ const useBpbnData = ({
 // especially if you plan to use rustic data.
 
 /**For Bpbn1 report */
-export const useBpbn1Data = ({ reportDate, shouldShowZeroes, shouldFetch }) => useBpbnData({ 
+export const useBpbn1Data = ({ 
+  reportDate, 
+  shouldShowZeroes, 
+  shouldFetch 
+}) => useBpbnData({ 
   reportDate, 
   shouldFetch, 
   shouldShowZeroes,
@@ -387,7 +391,7 @@ export const useBpbn1Data = ({ reportDate, shouldShowZeroes, shouldFetch }) => u
   flags: {
     useRustics: true,
     useCroix: false,
-    usePastry: true,
+    useOtherPrep: true,
   }
 })
 
@@ -396,17 +400,47 @@ export const useBpbn2Data =({
   reportDate, 
   shouldShowZeroes, 
   shouldFetch 
-}) => useBpbnData({
-  reportDate: isoToDT(reportDate).plus({ days: 1 }).toFormat('yyyy-MM-dd'),
-  shouldShowZeroes,
-  shouldFetch,
-  shouldIncludeHolding: true,
-  flags: {
-    useRustics: true,
-    useCroix: true,
-    usePastry: true,
+}) => {
+
+  const { otherPrepData } = useBpbnData({
+    reportDate,
+    shouldShowZeroes,
+    shouldFetch,
+    shouldIncludeHolding: false,
+    flags: {
+      useRustics: false,
+      useCroix: false,
+      useOtherPrep: true,
+    }
+  })
+
+  const { 
+    rusticData, 
+    croixData,
+    productRepsByListTypeByForBake
+  } = useBpbnData({
+    reportDate: isoToDT(reportDate).plus({ days: 1 }).toFormat('yyyy-MM-dd'),
+    shouldShowZeroes,
+    shouldFetch,
+    shouldIncludeHolding: true,
+    flags: {
+      useRustics: true,
+      useCroix: true,
+      useOtherPrep: false,
+    }
+  })
+
+  if (!otherPrepData || !rusticData) return undefined
+  
+  return {    
+    rusticData, 
+    otherPrepData,
+    croixData,
+    productRepsByListTypeByForBake
   }
-})
+
+}
+
 
 /**For BPBNSetout report */
 export const useBpbnCroixSetoutData = ({ reportDate, shouldFetch }) => useBpbnData({
@@ -416,6 +450,6 @@ export const useBpbnCroixSetoutData = ({ reportDate, shouldFetch }) => useBpbnDa
   flags: {
     useRustics: false,
     useCroix: true,
-    usePastry: true,
+    useOtherPrep: true,
   }
 })

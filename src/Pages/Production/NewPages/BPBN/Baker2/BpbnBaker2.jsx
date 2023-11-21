@@ -87,6 +87,8 @@ export const Bpbn2 = () => {
     productRepsByListTypeByForBake={}, // consistent product list for mutations
   } = bpbn2data ?? {}
 
+  console.log("other prep data", otherPrepData)
+
   const { 
     data:PRD,
     submitMutations: submitProducts,

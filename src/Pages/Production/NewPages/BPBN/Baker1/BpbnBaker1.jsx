@@ -41,6 +41,8 @@ export const Bpbn1 = ({ initialDateOption='today' }) => {
     shouldFetch,
   })
 
+  console.log("other prep data", otherPrepData)
+
   const doobieStuff = useDoobieStuff({ reportDate })
 
   const { data:baguetteData } = useBaguetteData({ reportDate, shouldFetch })
