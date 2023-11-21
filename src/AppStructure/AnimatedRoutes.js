@@ -59,6 +59,7 @@ import { Products } from "../Pages/Products/NewPage/Products";
 import { Bpbn1 } from "../Pages/Production/NewPages/BPBN/Baker1/BpbnBaker1";
 import { Bpbn2 } from "../Pages/Production/NewPages/BPBN/Baker2/BpbnBaker2";
 import { BPBNSetout, BPBSSetout } from "../Pages/Production/NewPages/Setout/Setout";
+import { BpbnBuckets } from "../Pages/Production/NewPages/BPBN/Buckets/BpbnBuckets";
 
 
 
@@ -85,8 +86,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             <Route path="/Production/BPBNBaker1/v1" element={<BPBNBaker1 />} />
 
             <Route path="/BPBNProd/BPBNBaker1Backup" 
-              element={<Bpbn1 initialDateOption="tomorrow" />} 
-            
+              element={<Bpbn1 initialDateOption="tomorrow" />}
             />
             <Route path="/BPBNProd/BPBNBaker1Backup/v1" element={<BPBNBaker1Backup />} />
 
@@ -101,6 +101,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
               path="/Production/BPBNBuckets"
               element={<BPBNBuckets loc={"Carlton"} />}
             />
+            <Route path="/Production/BPBNBuckets/v2" element={<BpbnBuckets />} />
             <Route
               path="/Production/BPBSBuckets"
               element={<BPBNBuckets loc={"Prado"} />}
@@ -145,10 +146,14 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             <Route path="/Billing" element={<BillingV1 />} />
             <Route path="/Billing/v2" element={<BillingV2 />} />
             <Route path="/Billing/v1" element={<BillingV1 />} />
+
             <Route path="/EODCounts" element={<EODCounts />} />
             <Route path="/Logistics" element={<Logistics />} />
-            <Route path="/Logistics/ByRoute/Legacy" element={<ByRoute />} />
+
             <Route path="/Logistics/ByRoute" element={<RouteGrid />} />
+            <Route path="/Logistics/ByRoute/v2" element={<RouteGrid />} />
+            <Route path="/Logistics/ByRoute/v1" element={<ByRoute />} />
+
             <Route path="/Logistics/ByProduct" element={<ByProduct />} />
             <Route path="/Logistics/NorthLists" element={<NorthList />} />
             <Route path="/Logistics/AMPastry" element={<AMPastry />} />
@@ -160,6 +165,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
 
             <Route path="/Logistics/FreezerThaw" element={<FreezerThaw />} />
             <Route path="/Locations" element={<LocationsNew />} />
+            <Route path="/Locations/v2" element={<LocationsNew />} />
             <Route path="/Locations/v1" element={<Locations />} />
 
             <Route path="/Products" element={<Products />} />
