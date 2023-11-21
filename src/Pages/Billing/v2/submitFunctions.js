@@ -4,6 +4,41 @@ import { getTimeToLive } from "../../../functions/dateAndTime"
 import { QB } from "./qbApiFunctions"
 import { downloadPDF } from "../../../functions/legacyFunctions/helpers/PDFHelpers"
 
+const hasTimeout = (response) => 
+  !!response?.data?.errorMessage?.includes?.("Task timed out")
+
+/**
+ * Configurable wrapper for submit functions. This retry pattern is specific
+ * to the QB serverless functions mediated by API Gateway. We detect timeouts
+ * from error message text in the response body, and retry on those errors
+ * specifically.
+ */
+const retryOnTimeout = ({ submitFn, nAttempts, delayMs }) => {
+
+  return submitFn.then(response => {
+    if (!!response.data) {
+      return response
+    }
+    else if (nAttempts > 0 && hasTimeout(response)) {
+      console.log(`Timed out; ${nAttempts - 1} attempts remaining...`)
+      return setTimeout(
+        retryOnTimeout({ submitFn, nAttempts: nAttempts - 1, delayMs }),
+        delayMs
+      )
+    } else {
+      if (nAttempts === 0) {
+        console.warn(`All retry attempts timed out`)
+      }
+      return response
+    }
+  })
+
+}
+
+/**Implements retryOnTimeout for our needs */
+const withRetry = (submitFn) => 
+  retryOnTimeout({ submitFn, nAttempts: 3, delayMs: 1000 })
+
 
 /** Submit to AppSync */
 export const submitOrder = async ({ values:_values, initial, orderCache }) => {
@@ -129,13 +164,19 @@ export const submitOrder = async ({ values:_values, initial, orderCache }) => {
   // - .value.data.errorMessage,  ex: "Request failed with status code 400" << 400 indicates bad request body, 401 is bad access code
   // - .value.data.errorType,     ex: "Error"
   // - .value.data.trace          has an array of strings
+
 /**
- * Submit invoice objects to Quickbooks. Depreciated
+ * DEPRECIATED
+ * 
+ * Submit invoice objects to Quickbooks. 
  * @param {Object}    input - kwargs.
- * @param {Object[]}  input.invoices - An array of invoice objects. Should have all necessary attributes except the customer's qbID and SyncToken.
+ * @param {Object[]}  input.invoices - An array of invoice objects. Should 
+ * have all necessary attributes except the customer's qbID and SyncToken.
  * @param {string}    input.accessToken 
- * @param {boolean}  [input.deleteEmptyInvoices=true] - (default: true) When false, submits an invoice with no items/charges instead
- * @returns {Promise<any[]>} - Resolves to an array containing QB responses, or null values when no order & no invoice exists
+ * @param {boolean}  [input.deleteEmptyInvoices=true] - (default: true) 
+ * When false, submits an invoice with no items/charges instead.
+ * @returns {Promise<any[]>} - Resolves to an array containing QB responses, 
+ * or null values when no order & no invoice exists.
  */
 const submitQBInvoices = async ({ 
   invoices, 
@@ -177,14 +218,20 @@ const submitQBInvoices = async ({
 }
 
 
-// todo: replace submitQBInvoices with more up to date code. model after batch submit function
+// todo: replace submitQBInvoices with more up to date code. 
+// model after batch submit function
 /** 
- * Submit a single order to AppSync, then to QB, then generate a PDF invoice when not deleting an invoice.
+ * Submit a single order to AppSync, then to QB, then generate a PDF invoice 
+ * when not deleting an invoice.
  * @param {Object} input - kwargs
- * @param {Object} input.values - billing object representing the form changes for a customer's order
- * @param {Object} input.initial - billing object representig inital form state.
- * @param {Object} input.orderCache - Produced by useListData. Used to submit and update cache
- * @param {Object} input.invoice - qb invoice object produced by convertOrderToInvoice(values).
+ * @param {Object} input.values - 
+ * billing object representing the form changes for a customer's order
+ * @param {Object} input.initial - 
+ * billing object representig inital form state.
+ * @param {Object} input.orderCache - 
+ * Produced by useListData. Used to submit and update cache
+ * @param {Object} input.invoice - 
+ * qb invoice object produced by convertOrderToInvoice(values).
  */
 export const submitAndPrintInvoice = async ({ 
   values, 
@@ -254,15 +301,10 @@ export const submitAndPrintInvoice = async ({
 
 }
 
-const hasTimeout = (response) => 
-  !! response?.data?.errorMessage?.includes?.("Task timed out")
-
-
-
-
-
 
 /**
+ * Take a batch of orders form our system and save them as Invoices in QB.
+ * Designed to work with data produced for the billing page.
  * @param {Object} kwargs
  * @param {Object} kwargs.billingDataByLocNick - Data as produced by useBillingDataByDate
  * @param {Function} kwargs.convertOrderToInvoice - as produced by useBillingDataByDate 
@@ -314,9 +356,9 @@ export const batchSubmitQbInvoices = async ({
         }
         const { Id, SyncToken } = response.data
 
-        return QB.invoice
-          .delete({ Id, SyncToken, accessToken })
-          .then(response =>  handleDeleteResponse({ response, locNick }))
+        return withRetry(
+          QB.invoice.delete({ Id, SyncToken, accessToken })
+        ).then(response =>  handleDeleteResponse({ response, locNick }))
 
       })
 
@@ -335,10 +377,10 @@ export const batchSubmitQbInvoices = async ({
       // console.log("GET response", response)
       const { Id, SyncToken } = response?.data ?? {}
       
-      return QB.invoice.create({ 
+      return withRetry(QB.invoice.create({ 
         invoice: Id ? { ...invoice, Id, SyncToken } : invoice,
         accessToken 
-      }).then(response => {
+      })).then(response => {
         // console.log("CREATE resp", response)
 
         const data = response?.data
@@ -356,10 +398,11 @@ export const batchSubmitQbInvoices = async ({
             return QB.invoice.sendEmail({ 
               InvoiceId: response.data.Invoice.Id, 
               accessToken 
-            }).then(response => 
+            }).then(response => {
               // console.log("EMAIL resp", response)
-              handleEmailResponse({ response, locNick })
-            )
+              const result = handleEmailResponse({ response, locNick })
+              return result
+            })
 
           } else {
             return { locNick, action: "create only", result: "success"}
@@ -440,3 +483,9 @@ const handleEmailResponse = ({ response, locNick }) => {
     result: "success" 
   }
 }
+
+
+
+
+
+
