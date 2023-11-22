@@ -353,17 +353,22 @@ const makeInvoice = ({ cartOrder, location, products, zoneFee }) => {
  */
 const makeCartOrder = ({ orderItems, location }) => {
 
-  const { Orders:cart, undefined:standing } = groupBy(orderItems, 'Type')
-
+  const { Orders:cart, undefined:standing } = groupBy('Type')(orderItems)
+  
   const { delivDate, locNick, isWhole } = orderItems[0]
   const ItemNote = cart?.[0]?.ItemNote ?? ''
   const delivFee = cart?.[0]?.delvFee ?? null
   
   const standardFulfillment = 
-    ['atownpick', 'slopick'].includes(location.zoneNick)
-      ? location.zoneNick
-      : 'deliv'
-
+  ['atownpick', 'slopick'].includes(location.zoneNick)
+  ? location.zoneNick
+  : 'deliv'
+  
+  if (orderItems[0].locNick === 'tooth'){ 
+    console.log("ITEMS", orderItems)
+    console.log(cart)
+    console.log(standing)
+  }
   const route = cart?.[0]?.route || location.dfFulfill || standardFulfillment
 
   const header = { locNick, delivDate, ItemNote, delivFee, route, isWhole }
