@@ -31,7 +31,7 @@ export const SpecialOrders = () => {
 
   return (
     <div style={{
-      maxWidth: "70rem", 
+      maxWidth: "90rem", 
       margin: "auto", 
       padding: "5rem",
     }}>

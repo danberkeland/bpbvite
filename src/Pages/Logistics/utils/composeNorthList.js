@@ -28,7 +28,15 @@ import {
     productReadyBeforeRouteStarts,
     customerIsOpen,
   } from "../ByRoute/Parts/utils/utils";
+import { DateTime } from "luxon";
+import { flow, map, orderBy, sortBy } from "lodash/fp";
   
+  const incrementDate = (isoDate, nDays) => DateTime
+    .fromISO(isoDate, { zone: 'America/Los_Angeles' })
+    .startOf('day')
+    .plus({ days: nDays })
+    .toFormat('yyyy-MM-dd')
+
   const clonedeep = require("lodash.clonedeep");
   let tomorrow = todayPlus()[1];
   let today = todayPlus()[0];
@@ -132,13 +140,20 @@ import {
     fullOrder = zerosDelivFilter(fullOrder, delivDate, database);
     fullOrder = buildGridOrderArray(fullOrder, database);
     fullOrder = addRoutes(delivDate, fullOrder, database);
+    console.log("FULL:", fullOrder)
     
     let orderArray = [];
     for (let cust of custNames) {
+      const orderMatch = fullOrder.find(order => order.custName === cust)
+      const route = routes.find(R => R.routeName === orderMatch.route)
+      const isLongDriver = route.driver === 'Long Driver'
+
       let custItem = {};
       custItem = {
         customer: cust,
-        customerShort: cust.length>10 ? cust.substring(0,15)+"..." : cust
+        customerShort: cust.length>10 ? cust.substring(0,15)+"..." : cust,
+        routeName: orderMatch.route,
+        isLongDriver,
       };
       for (let prod of prodNames) {
         let pro = products[products.findIndex((pr) => pr.nickName === prod)]
@@ -217,13 +232,13 @@ import {
   export default class ComposeNorthList {
     returnNorthBreakDown = (delivDate, database) => {
       let croixNorth = this.returnCroixNorth(delivDate, database);
-      let shelfProdsNorth = this.returnShelfProdsNorth(database);
-      let pocketsNorth = this.returnPocketsNorth(database);
-      let CarltonToPrado = this.returnCarltonToPrado(database);
-      let Baguettes = this.returnBaguettes(database);
-      let otherRustics = this.returnOtherRustics(database);
-      let retailStuff = this.returnRetailStuff(database);
-      let earlyDeliveries = this.returnEarlyDeliveries(database);
+      let shelfProdsNorth = this.returnShelfProdsNorth(delivDate, database);
+      let pocketsNorth = this.returnPocketsNorth(delivDate, database);
+      let CarltonToPrado = this.returnCarltonToPrado(delivDate, database);
+      let Baguettes = this.returnBaguettes(delivDate, database);
+      let otherRustics = this.returnOtherRustics(delivDate, database);
+      let retailStuff = this.returnRetailStuff(delivDate, database);
+      let earlyDeliveries = this.returnEarlyDeliveries(delivDate, database);
       let columnsShelfProdsNorth = this.returnColumnsShelfProdsNorth(
         delivDate,
         database
@@ -640,8 +655,9 @@ import {
       return grid;
     };
   
-    returnPocketsNorth = (database) => {
-      let shelfProds = makeOrders(today, database, this.pocketsNorthFilter);
+    returnPocketsNorth = (delivDate, database) => {
+      // let shelfProds = makeOrders(today, database, this.pocketsNorthFilter);
+      let shelfProds = makeOrders(delivDate, database, this.pocketsNorthFilter);
       return shelfProds;
     };
   
@@ -653,8 +669,9 @@ import {
       );
     };
   
-    returnShelfProdsNorth = (database) => {
-      let shelfProds = makeOrdersShelf(today, database, this.shelfProdsFilter);
+    returnShelfProdsNorth = (delivDate, database) => {
+      // let shelfProds = makeOrdersShelf(today, database, this.shelfProdsFilter);
+      let shelfProds = makeOrdersShelf(delivDate, database, this.shelfProdsFilter);
       console.log('shelfProds', shelfProds)
       return shelfProds;
     };
@@ -668,8 +685,9 @@ import {
       );
     };
   
-    returnCarltonToPrado = (database) => {
-      let shelfProds = makeOrders(today, database, this.CarltonToPradoFilter);
+    returnCarltonToPrado = (delivDate, database) => {
+      // let shelfProds = makeOrders(today, database, this.CarltonToPradoFilter);
+      let shelfProds = makeOrders(delivDate, database, this.CarltonToPradoFilter);
       return shelfProds;
     };
   
@@ -680,9 +698,18 @@ import {
       return fil;
     };
   
-    returnBaguettes = (database) => {
-      let shelfProds = makeOrders(today, database, this.BaguettesFilter);
-      return shelfProds;
+    returnBaguettes = (delivDate, database) => {
+      // let shelfProds = makeOrders(today, database, this.BaguettesFilter);
+      let shelfProds = makeOrders(delivDate, database, this.BaguettesFilter);
+      return flow(
+        orderBy(['isLongDriver', 'routeName'], ['desc', 'asc']),
+        map(row => ({ 
+          ...row, 
+          customerShort: row.isLongDriver 
+            ? row.customerShort
+            : "* " + row.customerShort
+        }))
+      )(shelfProds);
     };
   
     BaguettesFilter = (ord) => {
@@ -694,9 +721,18 @@ import {
       );
     };
   
-    returnOtherRustics = (database) => {
-      let shelfProds = makeOrders(today, database, this.otherRusticsFilter);
-      return shelfProds;
+    returnOtherRustics = (delivDate, database) => {
+      // let shelfProds = makeOrders(today, database, this.otherRusticsFilter);
+      let shelfProds = makeOrders(delivDate, database, this.otherRusticsFilter);
+      return flow(
+        orderBy(['isLongDriver', 'routeName'], ['desc', 'asc']),
+        map(row => ({ 
+          ...row, 
+          customerShort: row.isLongDriver 
+            ? row.customerShort
+            : "* " + row.customerShort
+        }))
+      )(shelfProds);
     };
   
     otherRusticsFilter = (ord) => {
@@ -710,9 +746,18 @@ import {
       );
     };
   
-    returnRetailStuff = (database) => {
-      let shelfProds = makeOrders(today, database, this.retailStuffFilter);
-      return shelfProds;
+    returnRetailStuff = (delivDate, database) => {
+      // let shelfProds = makeOrders(today, database, this.retailStuffFilter);
+      let shelfProds = makeOrders(delivDate, database, this.retailStuffFilter);
+      return flow(
+        orderBy(['isLongDriver', 'routeName'], ['desc', 'asc']),
+        map(row => ({ 
+          ...row, 
+          customerShort: row.isLongDriver 
+            ? row.customerShort
+            : "* " + row.customerShort
+        }))
+      )(shelfProds);
     };
   
     retailStuffFilter = (ord) => {
@@ -722,9 +767,18 @@ import {
         ord.route === "Pick up SLO");
     };
   
-    returnEarlyDeliveries = (database) => {
-      let shelfProds = makeOrders(tomorrow, database, this.earlyDeliveriesFilter);
-      return shelfProds;
+    returnEarlyDeliveries = (delivDate, database) => {
+      // let shelfProds = makeOrders(tomorrow, database, this.earlyDeliveriesFilter);
+      let shelfProds = makeOrders(delivDate, database, this.earlyDeliveriesFilter);
+      return flow(
+        orderBy(['isLongDriver', 'routeName'], ['desc', 'asc']),
+        map(row => ({ 
+          ...row, 
+          customerShort: row.isLongDriver 
+            ? row.customerShort
+            : "* " + row.customerShort
+        }))
+      )(shelfProds);
     };
   
     earlyDeliveriesFilter = (ord) => {
