@@ -18,6 +18,8 @@ import { useLegacyFormatDatabase } from "../../data/legacyData";
 import { checkForUpdates } from "../../helpers/databaseFetchers";
 import { API, graphqlOperation } from "aws-amplify";
 import { listNotes } from "../../graphql/queries";
+import { DateTime } from "luxon";
+import { Calendar } from "primereact/calendar";
 
 const WholeBox = styled.div`
   display: flex;
@@ -113,7 +115,9 @@ function NorthList() {
 
   const [notes, setNotes] = useState([]);
 
-  let delivDate = todayPlus()[0];
+  const [calendarDate, setCalendarDate] = useState(new Date())
+  const delivDate = DateTime.fromJSDate(calendarDate).toFormat('yyyy-MM-dd')
+  // let delivDate = todayPlus()[1];
 
   const createDynamic = (cols) => {
     const dynamicColumns = cols.map((col, i) => {
@@ -157,7 +161,7 @@ function NorthList() {
         delivDate,
         setIsLoading
       ).then((db) => gatherMakeInfo(db, delivDate));
-  }, [database]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [database, delivDate]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     notesData().then((notes) => {
@@ -384,8 +388,14 @@ function NorthList() {
     doc.save(`LongDriverSouth${delivDate}.pdf`);
   };
 
+  console.log("database", database)
+  console.log(Baguettes, otherRustics, retailStuff, earlyDeliveries)
   return (
     <React.Fragment>
+
+      {/* <Calendar value={calendarDate}
+        onChange={e => setCalendarDate(e.value)}
+      /> */}
       <WholeBox>
         <h1>LONG DRIVER</h1>
         <ButtonWrapper>
