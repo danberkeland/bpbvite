@@ -12,6 +12,9 @@ import { keyBy, round, set, sumBy } from "lodash"
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog"
 import { exportBpbsWtmPdf } from "./exportPdf"
 import { useCheckUpdates } from "../../../Utils/useCheckUpdates"
+import { getTodayDT, isoToDT } from "../../BPBN/utils"
+
+const SHOW_CALENDAR = false
 
 const flexSplitStyle = {
   display: "flex",
@@ -19,7 +22,7 @@ const flexSplitStyle = {
   alignItems: "flex-start",
 }
 
-const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+const todayDT = getTodayDT()
 const today = todayDT.toFormat('yyyy-MM-dd')
 // const tomorrow = todayDT.plus({ days: 1 }).toFormat('yyyy-MM-dd')
 // const todayDisplay = todayDT.toFormat('MM/dd/yyyy')
@@ -73,6 +76,8 @@ export const BPBSWhatToMake = ({ initialDateOption='today' }={}) => {
     submitMutations:submitProducts,
     updateLocalData:updateProductCache,
   } = useListData({ tableName: "Product", shouldFetch: true })
+
+  if (!!WTM) console.log("pretzel data", WTM.pretzelData)
 
   const frenchPocketDict = keyBy(WTM?.frenchPocketData, 'prodNick')
   const products = keyBy(PRD, 'prodNick')
@@ -160,7 +165,12 @@ export const BPBSWhatToMake = ({ initialDateOption='today' }={}) => {
       marginBottom: "10rem", 
       flex: "0 0 35rem",
     }}>
-      {/* <DevCalendar reportDate={reportDate} setReportDate={setReportDate} /> */}
+      {SHOW_CALENDAR &&
+        <DevCalendar 
+          reportDate={reportDate} 
+          setReportDate={setReportDate} 
+        />
+      }
       <div style={flexSplitStyle}>
         <h1 style={{marginTop: "0"}}>
           BPBS What to Make <br />
@@ -236,7 +246,7 @@ export const BPBSWhatToMake = ({ initialDateOption='today' }={}) => {
         />
       </DataTable>
 
-      <h2>Make Fresh</h2>
+      <h2 onClick={() => console.log(WTM?.freshData)}>Make Fresh</h2>
       <DataTable value={WTM.freshData} size="small">
         <Column header="Product" field="rowKey" headerStyle={{...headerStyle}}/>
         <Column header="Total Deliv" field="makeTotalCol.totalEa"
@@ -268,7 +278,7 @@ export const BPBSWhatToMake = ({ initialDateOption='today' }={}) => {
         />
       </DataTable>
 
-      <h2>Make For Shelf</h2>
+      <h2 onClick={() => console.log(WTM?.shelfData)}>Make For Shelf</h2>
       <DataTable value={WTM.shelfData} size="small">
         <Column header="Product" field="rowKey"headerStyle={{...headerStyle}} />
         <Column header="Total Deliv" field="totalDelivCol.totalEa" 
@@ -295,13 +305,13 @@ export const BPBSWhatToMake = ({ initialDateOption='today' }={}) => {
         />
       </DataTable>
 
-      <h2>Pretzels</h2>
+      <h2 onClick={() => console.log(WTM?.pretzelData)}>Pretzels</h2>
       <DataTable 
         value={WTM.pretzelData.filter(row => 
           ['ptz', 'pzb', 'unpz'].includes(row.productRep.prodNick)
           || row.bakeCol.totalEa > 0
-          || row.shapeCol.orders.totalEa > 0
-          || row.bagCol.orders.totalEa > 0
+          || row.shapeCol.totalEa > 0
+          || row.bagCol.totalEa > 0
           // || true // uncomment to disable filter
         )} 
         size="small"
