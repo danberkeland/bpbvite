@@ -3,7 +3,7 @@ import { useProdOrdersByDate } from "../../../../data/useT0T7ProdOrders"
 import { useMemo } from "react"
 import { useListData } from "../../../../data/_listData"
 import { flow, groupBy, keyBy, sumBy, mapValues, sortBy, uniqBy, values } from "lodash/fp"
-import { isoToDT } from "./utils"
+import { getTodayDT, isoToDT } from "./utils"
 
 // *** 1. util fns ****
 const mapValuesWithKeys = mapValues.convert({ 'cap': false })
@@ -101,6 +101,8 @@ const defaultFlags = {
 
 /**
  * @param {Object} input
+ * @param {string} [input.currentDate] - optional override for 'today'; 
+ * simulates local system date.
  * @param {string} input.reportDate
  * @param {boolean} input.shouldFetch
  * @param {boolean} [input.shouldIncludeHolding=false]
@@ -110,13 +112,14 @@ const defaultFlags = {
  * @returns {BpbnDataReturn} 
  */
 const useBpbnData = ({ 
+  currentDate,
   reportDate, 
   shouldFetch,
   shouldIncludeHolding=false,
   shouldShowZeroes=false,
   flags=defaultFlags
 }) => {
-  const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+  const todayDT = !!currentDate ? isoToDT(currentDate) : getTodayDT()
   const reportDateDT = isoToDT(reportDate)
   const reportRelDate = reportDateDT.diff(todayDT, 'days').days
 
@@ -125,6 +128,7 @@ const useBpbnData = ({
     && (flags.useRustics || flags.useCroix || flags.useOtherPrep)
     
   const { data:T0 } = useProdOrdersByDate({ 
+    currentDate,
     reportDate,
     shouldFetch: _shouldFetch, 
     shouldAddRoutes: true 
@@ -132,6 +136,7 @@ const useBpbnData = ({
 
   const shouldFetchT1 = shouldFetch && (flags.useRustics || flags.useOtherPrep)
   const { data:T1 } = useProdOrdersByDate({ 
+    currentDate,
     reportDate: reportDateDT.plus({ days: 1 }).toFormat('yyyy-MM-dd'), 
     shouldFetch: shouldFetchT1, 
     shouldAddRoutes: true 
@@ -193,9 +198,9 @@ const useBpbnData = ({
         const { 
           prodNick, forBake, weight, doughNick, preshaped, prepreshaped
         } = product
-        const preshapedQty = reportRelDate === 0 ? preshaped
-          : reportRelDate === 1 ? prepreshaped
-          : 0
+        const preshapedQty = reportRelDate === 0 
+          ? preshaped
+          : prepreshaped
 
         return {
           prodNick,
@@ -219,9 +224,9 @@ const useBpbnData = ({
         const { prodNick, preshaped, prepreshaped, weight, doughNick } 
           = preshapes.rustic[key]
 
-        const preshapedQty = reportRelDate === 0 ? preshaped
-          : reportRelDate === 1 ? prepreshaped
-          : 0
+        const preshapedQty = reportRelDate === 0 
+          ? preshaped
+          : prepreshaped
 
         const shortQty = totalQty - preshapedQty
         const shortText = 
@@ -380,10 +385,12 @@ const useBpbnData = ({
 
 /**For Bpbn1 report */
 export const useBpbn1Data = ({ 
+  currentDate,
   reportDate, 
   shouldShowZeroes, 
   shouldFetch 
 }) => useBpbnData({ 
+  currentDate,
   reportDate, 
   shouldFetch, 
   shouldShowZeroes,
