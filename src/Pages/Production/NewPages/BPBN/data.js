@@ -2,7 +2,7 @@ import { DateTime } from "luxon"
 import { useProdOrdersByDate } from "../../../../data/useT0T7ProdOrders"
 import { useMemo } from "react"
 import { useListData } from "../../../../data/_listData"
-import { flow, groupBy, keyBy, sumBy, mapValues, sortBy, uniqBy, values } from "lodash/fp"
+import { flow, groupBy, keyBy, sumBy, mapValues, sortBy, uniqBy, values, map } from "lodash/fp"
 import { getTodayDT, isoToDT } from "./utils"
 
 // *** 1. util fns ****
@@ -287,6 +287,10 @@ const useBpbnData = ({
 
 
     const _croixData = !flags.useCroix ? [] : flow(
+      map(order => order.locNick === 'backporch' 
+        ? ({ ...order, qty: Math.ceil(order.qty / 2)})
+        : order
+      ),
       groupBy(order => products[order.prodNick].forBake),
       mapValuesWithKeys((orderGroup, key) => {
 
