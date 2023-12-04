@@ -1,3 +1,4 @@
+import { error } from "console";
 
 /**class that models time interval behavior */
 export class Period {
@@ -9,8 +10,9 @@ export class Period {
    * unbounded on that side.
    */
   constructor(min, max) {
-    this.min = min;
-    this.max = max;
+    if (max < min) throw new error("max cannot be less than min")
+    this.min = min
+    this.max = max
   }
 
   get value() { return [this.min, this.max] }

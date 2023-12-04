@@ -39,10 +39,10 @@
 //      
 //
 
-import { keyBy } from "lodash/fp"
 import { useListData } from "../../_listData"
 import { useCallback } from "react"
 import { Period } from "./period.mjs"
+import { flow } from "lodash/fp"
 
 
 /**Pre-Loads the required Route, ZoneRoute data to make route assignment work */
@@ -66,49 +66,123 @@ const useGetRouteOptions = () => {
 }
 
 
-/**
- * For internal use, we would rather use a fixed length (7) array
- * with truthy/falsy values (1 and 0) to model a route's schedule,
- * where indexes 0 - 6 correspond to Sun - Sat.
- */
+
+const weekdaysEEE = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const legacyWeekdays = ['1', '2', '3', '4', '5', '6', '7']
-const weekdays = [0, 1, 2, 3, 4, 5, 6]
+const weekdays = [0, 1, 2, 3, 4, 5, 6] // JS Date format
+
+/**
+ * @typedef {Object} Result 
+ * @property {Object} tests
+ * @property {Array} errors
+ */
+
+// Boost up a regular boolean test function to one that takes/returns a 'result'
+const applyTest = (test, errorMsg) => {
+
+  /**
+   * @param {Result} resultObj 
+   * @returns {Result}
+   */
+  const wrappedTestFn = (resultObj) => {
+    const { tests, errors } = resultObj
+
+    const testName = Object.keys({test})[0]
+    const testValue = typeof test === 'function' ? !!test() : !!test
+
+    return {
+      tests: Object.assign(tests, { [testName]: testValue }),
+      errors: testValue ? [...errors] : errors.concat(errorMsg)
+    }
+  }
+
+  return wrappedTestFn
+
+}
+
+
+
+
+/**
+ * Very much an in-house solution, streamlined for our exact setup.
+ * For future, we may want to use a full graph traversal.
+ */
+function getFulfillmentPath(route, bakedWhere, RTE) {
+  
+  // Very much a rule just for our current setup. We have no rule/strategy 
+  // in place for scenarios involving more than 2 bake locations.
+  const actualBakedWhere = bakedWhere.includes(route.RouteDepart)
+    ? route.RouteDepart
+    : bakedWhere[0] 
+
+  const needsTransfer = actualBakedWhere !== route.RouteDepart
+  const transferRoute = needsTransfer
+    ? RTE.find(R => 
+        R.RouteDepart === actualBakedWhere 
+        && R.routeArrive === route.RouteDepart
+      )
+    : undefined
+
+  if (needsTransfer && transferRoute === undefined) return []
+  if (needsTransfer) return [transferRoute.routeNick, route.routeNick]
+  return [route.routeNick]
+}
 
 const _getRouteOptions = ({ product, location, RTE, ZRT }) => { 
 
-  const {latestFirstDeliv, latestFinalDeliv} = location
-  const validDropoffPeriod = new Period(latestFirstDeliv, latestFinalDeliv)
-  
-
-  // Test only routes that serve the target zone
-  // We do some transformations to make future computations clearer
-  const routes = RTE
-    .filter(R => ZRT.some(zr => 
-      zr.routeNick === R.routeNick && zr.zoneNick === location.zoneNick
-    ))
-    .map(R => ({ 
-      ...R, 
-      RouteSched: legacyWeekdays.map(weekdayNum => 
-        R.RouteSched.includes(weekdayNum) ? 1 : 0
-      ),
-      fulfillmentPeriod: new Period(R.routeStart, R.routeStart + R.routeTime)
-    }))
-
   // routes that can move products from one shop/hub to another
   const transferRoutes = RTE.filter(R => R.RouteDepart !== R.RouteArrive)
+  
+  const { zoneNick, latestFirstDeliv, latestFinalDeliv } = location
+  const { bakedWhere, daysAvailable, readyTime } = product
+  
+  const validDropoffPeriod = new Period(latestFirstDeliv, latestFinalDeliv)
 
 
 
-  // summarize on all { routes } X { weekdays } (Cartesian Product)
-  const summaryByRouteByWeekday = routes.map(route => {
+  // We take a 'test all the things' approach so that we can always return a
+  // summary that easily/reliably tells us *why* a route fails to be valid.
+  // If we would rather not test some routes, we should control the list passed
+  // to the function.
+  const summaryByRouteByWeekday = RTE.map(route => {
+
+    const { RouteSched, RouteDepart, RouteArrive, routeStart, routeTime } = route
+    const delivPeriod = new Period(routeStart, routeStart + routeTime)
+    const _RouteSched = legacyWeekdays.map(weekday => 
+      RouteSched.includes(weekday)  
+    )
+
     // Things that don't depend on the day/date:
-    // 1. Decide if transfer is necessary. Our strategy is to bake at the 
-    //    departure hub whenever the product allows it.
+    const routeServesZone = ZRT.some(zr => 
+      zr.zoneNick === location.zoneNick && zr.routeNick === route.routeNick  
+    )
+    const locationIsAvailable = delivPeriod.intersects(validDropoffPeriod)
+      || delivPeriod.joins(validDropoffPeriod)
+    
+    const routeResult = flow(
+      applyTest(routeServesZone, 'zone not served'),
+      applyTest(locationIsAvailable, 'location not available'),
+    )({ tests: {}, errors: [] })
 
-    const needsTransfer = !product.bakedWhere.includes(route.RouteDepart)
+    // returns a list of routes that 'spatially' connect a product from where
+    // it's baked to the target zone. Further checks are required to 
+    // test if valid under timing constraints.
+    const fulfillmentPath = getFulfillmentPath(route, bakedWhere, RTE)
+
 
     // Test by weekday
     const summaryByWeekday = weekdays.map(weekdayNum => {
+      const routeIsScheduled = _RouteSched[weekdayNum]
+      const productIsReady = readyTime < delivPeriod.min
+
+      const weekdayResult = flow(
+        applyTest(
+          routeIsScheduled, 
+          `route not available ${weekdaysEEE[weekdayNum]}`
+        ),
+        
+      )(routeResult)
+
 
 
 
@@ -353,5 +427,110 @@ const adjustSummaries = (routeSummaries, product) => {
   }
 
   return adjustedRouteSummaries
+
+}
+
+
+/**
+ * Find valid paths that spatially connect a baked product to the target
+ * zoneNick. We avoid hub-to-hub movements ('transfer') whenever baking at
+ * a certain hub makes that possible.
+ * 
+ * For future, if we want to consider ALL possibilites, we can enumerate those
+ * sub-optimal paths as well.
+ * 
+ * Also for future, if our logistics setup becomes more complicated, we may
+ * want to swap this logic for a full-on graph traversal algorithm.
+ */
+const enumeratePaths = (zoneNick, bakedWhere, RTE, ZRT) => {
+  
+  const transferRoutes = RTE.filter(R => 
+    R.RouteDepart !== R.RouteArrive
+  )
+  const routesToTest = RTE.filter(R => ZRT.some(zr => 
+    zr.routeNick === R.routeNick 
+    && zr.zoneNick === zoneNick
+  ))
+
+  const paths = routesToTest.map(route => {
+
+    // Idiosyncratic buisness logic that works because there are only
+    // 2 bake locations
+    const assignedBakedWhere = bakedWhere.includes(route.RouteDepart)
+      ? route.RouteDepart
+      : bakedWhere[0]
+
+    const needsTransfer = assignedBakedWhere !== route.RouteDepart
+
+    // yet more idiosyncratic buisness logic that works because there is always
+    // exactly 1 transfer route that can (spatially) complete the path
+    const transferRoute = needsTransfer
+      ? [transferRoutes.find(R => R.routeArrive === route.routeDepart)]
+      : []
+
+    return transferRoute.concat(route)
+  })
+  
+  return paths
+}
+
+// path traversal can be thought of as a sequence of events,
+//   ex: 
+//     * The product is ready, 
+//     * The product is transferred to another hub,
+//     * The product goes out on its final route
+//
+// modeling as an array of events will naturally extend backwards in time
+// to describe production tasks that lead up to the final bake.
+// These event sequences have the same structure every day of the week, but
+// may get flagged as invalid on later tests if thee product or route isn't 
+// available on a particular day.
+const getFulfillmentEvents = (paths, readyTime) => {
+
+  // model the readyTime as the end of a 1 hr (baking) task period.
+  // For future we may want to model the bake process as a task with duration.
+  const E0 = {
+    name: "product ready",
+    time: new Period(readyTime - 1, readyTime),
+    bakeRelDate: 0
+  }
+
+  const eventSequences = paths.map(path => {
+    
+    const pathEventSequence = path.map(route => ({
+      name: route.RouteDepart !== route.RouteArrive ? 'transfer' : 'deliver',
+      time: new Period(route.routeStart, route.routeStart + route.routeTime)
+    }))
+    const events = [E0].concat(pathEventSequence)
+
+    return events.map((event, idx, self) => {
+      if (idx === 0) return event
+
+      const prevEvent = self[idx - 1]
+      const bakeRelDate = 
+        prevEvent.time.before(event.time) || prevEvent.time.meets(event.time)
+          ? prevEvent.bakeRelDate
+          : prevEvent.bakeRelDate + 1
+
+      return { ...event, bakeRelDate }
+    })
+
+  })
+
+  return eventSequences
+
+}
+
+
+const getAllRouteOptions = (location, product, RTE, ZRT) => {
+  const { zoneNick, latestFirstDeliv, latestFinalDeliv } = location
+  const { bakedWhere, daysAvailable, readyTime } = product
+
+  const pathsToTest = enumeratePaths(zoneNick, bakedWhere, RTE, ZRT)
+
+  const pathEventSequences = getFulfillmentEvents(pathsToTest, readyTime)
+
+  const 
+
 
 }
