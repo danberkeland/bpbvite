@@ -221,7 +221,10 @@ export const Notes = () => {
 
 
 const dateCellTemplate = (date, nItemsByDate) => {
-  const dateISO = `${date.year}-${date.month + 1}-${date.day}`
+  const yyyy = date.year
+  const MM = ('0' + (date.month + 1)).slice(-2)
+  const dd = ('0' + date.day).slice(-2)
+  const dateISO = `${yyyy}-${MM}-${dd}`
   const hasItems = nItemsByDate[dateISO] > 0
   const templateStyle = {
     padding: "1rem",
