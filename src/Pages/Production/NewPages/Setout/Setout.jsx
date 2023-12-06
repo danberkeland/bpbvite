@@ -59,12 +59,14 @@ const SetoutByLocation = ({ reportLocation }) => {
             reportDateISO: todayISO,
             data: reportLocation === "Prado" ? south : north
           })
-          submitPrepreshaped({ 
-            croixData: reportLocation === "Prado"
-              ? setoutData?.south?.nonAlmondCroix
-              : setoutData?.north?.nonAlmondCroix, 
-            productCache 
-          })
+
+          // scream test commencing 12-02-2023:
+          // submitPrepreshaped({ 
+          //   croixData: reportLocation === "Prado"
+          //     ? setoutData?.south?.nonAlmondCroix
+          //     : setoutData?.north?.nonAlmondCroix, 
+          //   productCache 
+          // })
         }}
       />
       

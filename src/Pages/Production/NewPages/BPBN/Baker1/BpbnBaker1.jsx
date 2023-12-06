@@ -18,7 +18,12 @@ import { DoughInputs } from "./DoughInputs"
 import "./bpbnBaker1.css"
 import { useExportBpbn1 } from "./useExport"
 import { useCheckUpdates } from "../../../Utils/useCheckUpdates"
+import { getTodayDT, isoToDT } from "../utils"
 
+const SKIP_DATES = ['12-24']
+const adjustDateTime = (dt) => SKIP_DATES.includes(dt.toFormat('MM-dd'))
+  ? dt.plus({ days: 1 })
+  : dt
 
 /**
  * @param {Object} input
@@ -27,15 +32,21 @@ import { useCheckUpdates } from "../../../Utils/useCheckUpdates"
 export const Bpbn1 = ({ initialDateOption='today' }) => {
   const [dateOption, setDateOption] = 
       useState(/**@type {('today'|'tomorrow')}*/(initialDateOption))
-  const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+  
   const shouldFetch = true
+  // const _todayDT = isoToDT('2023-12-23')
+  const _todayDT = getTodayDT()
+  const _reportDateDT = dateOption === 'today'
+    ? _todayDT
+    : _todayDT.plus({ days: 1 })
+  const todayDT = adjustDateTime(_todayDT)
+  const reportDateDT = adjustDateTime(_reportDateDT)
 
-  const reportDateDT = dateOption === 'today'
-    ? todayDT
-    : todayDT.plus({ days: 1 })
+  const today = todayDT.toFormat('yyyy-MM-dd')
   const reportDate = reportDateDT.toFormat('yyyy-MM-dd')
 
   const { rusticData, otherPrepData } = useBpbn1Data({
+    currentDate: today,
     reportDate,
     shouldShowZeroes: false,
     shouldFetch,
@@ -45,7 +56,11 @@ export const Bpbn1 = ({ initialDateOption='today' }) => {
 
   const doobieStuff = useDoobieStuff({ reportDate })
 
-  const { data:baguetteData } = useBaguetteData({ reportDate, shouldFetch })
+  const { data:baguetteData } = useBaguetteData({ 
+    currentDate: today,
+    reportDate, 
+    shouldFetch 
+  })
   const { 
     doughSummary, 
     mixes, 

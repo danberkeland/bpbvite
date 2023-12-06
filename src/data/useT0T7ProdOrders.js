@@ -6,6 +6,7 @@ import { preDBOverrides } from "./_productOverrides"
 
 import { useListData } from "./_listData"
 import { getRouteOptions } from "../Pages/Ordering/Orders/data/productHooks"
+import { getTodayDT, isoToDT } from "../Pages/Production/NewPages/BPBN/utils"
 
 // A hook to power all production/logistics reports. A bit overpowered for 
 // some reports, but with programmatic routing we can view several reports
@@ -74,17 +75,20 @@ export const useT0T7ProdOrders = ({ shouldFetch, reportDate }) => {
  * 'report Date' targets cart orders with the same delivDate, standing/holding
  * orders with an equivalent dayOfWeek.
  * @param {Object} input
+ * @param {string} [input.currentDate] - optional override for when we wish
+ * to simulate the current date as something other than today.
  * @param {string} input.reportDate - 'yyyy-MM-dd' format
  * @param {boolean} input.shouldFetch
  * @param {boolean} [input.shouldAddRoutes] - true by default
  * @returns 
  */
 export const useProdOrdersByDate = ({ 
+  currentDate,
   reportDate, 
   shouldFetch,
   shouldAddRoutes=true,
 }) => {
-  const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+  const todayDT = currentDate ? isoToDT(currentDate) : getTodayDT()
   const reportDateDT = DateTime.fromFormat(
     reportDate, 
     'yyyy-MM-dd', 

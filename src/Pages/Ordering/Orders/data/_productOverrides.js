@@ -108,6 +108,7 @@ export const postDBOverrides = {
   "high#lgbz": { leadTime: 0 },
   "high#wwbz": { leadTime: 0 },
   'high#sic': { leadTime: 0 },
+  'high#hok': { leadTime: 0 },
 
   'hios#hok': { leadTime: 0 },
   'hios#sic': { leadTime: 0 },

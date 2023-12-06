@@ -19,7 +19,7 @@ const mapValuesWithKeys = mapValues.convert({ 'cap': false })
 /** 
  * @typedef {Object} BaguetteDataReturn
  * @property {Object|undefined} data
- * @property {Object} data.BakeTomorrowOrders
+ * @property {Object} data.bakeTomorrowOrders
  * @property {Object} data.doughSummary
  * @property {Object[]} data.mixes
  * @property {Object[]} data.bins
@@ -29,15 +29,21 @@ const mapValuesWithKeys = mapValues.convert({ 'cap': false })
 
 /**
  * @param {Object} input
- * @param {string} input.reportDate
+ * @param {string} [input.currentDate] - ISO Date string. Optional override for
+ * simulating the current date as something other than today. Affects relative
+ * date calculations.
+ * @param {string} input.reportDate - Should be set to 0 or 1 days ahead of
+ * 'today', or the simulated current date (though simulating may get calculated
+ * incorrectly)
  * @param {boolean} input.shouldFetch 
  * @returns {BaguetteDataReturn}
  */
 export const useBaguetteData = ({
+  currentDate,
   reportDate,
   shouldFetch
 }) => {
-  const todayDT = getTodayDT()
+  const todayDT = !!currentDate ? isoToDT(currentDate) : getTodayDT()
   const reportDateDT = isoToDT(reportDate)
   const reportRelDate = reportDateDT.diff(todayDT, 'days').days
 
@@ -45,10 +51,10 @@ export const useBaguetteData = ({
     reportDateDT.plus({ days: daysAhead }).toFormat('yyyy-MM-dd')
   ) 
 
-  const { data:T0 } = useProdOrdersByDate({ reportDate: t0, shouldFetch })
-  const { data:T1 } = useProdOrdersByDate({ reportDate: t1, shouldFetch })
-  const { data:T2 } = useProdOrdersByDate({ reportDate: t2, shouldFetch })
-  const { data:T3 } = useProdOrdersByDate({ reportDate: t3, shouldFetch })
+  const { data:T0 } = useProdOrdersByDate({ currentDate, reportDate: t0, shouldFetch })
+  const { data:T1 } = useProdOrdersByDate({ currentDate, reportDate: t1, shouldFetch })
+  const { data:T2 } = useProdOrdersByDate({ currentDate, reportDate: t2, shouldFetch })
+  const { data:T3 } = useProdOrdersByDate({ currentDate, reportDate: t3, shouldFetch })
 
   const { data:DGH } = useListData({  tableName: "DoughBackup", shouldFetch })
   const { data:PRD } = useListData({  tableName: "Product", shouldFetch })
@@ -140,9 +146,10 @@ export const useBaguetteData = ({
     // const nMixes = Math.ceil(mixTotal / 210)
     const totalBucketSets = reportRelDate === 0
       ? doughs['Baguette'].bucketSets
-      : reportRelDate === 1
-        ? doughs['Baguette'].preBucketSets
-        : 0 // hook shouldn't be executed for days other than today/tomorrow
+      : doughs['Baguette'].preBucketSets
+      // : reportRelDate === 1
+      //   ? doughs['Baguette'].preBucketSets
+      //   : 0 // hook shouldn't be executed for days other than today/tomorrow
     
     const mixes = getMixes({ 
       requiredTotal,
@@ -172,7 +179,7 @@ export const useBaguetteData = ({
 
     return {
       doughSummary,
-      BakeTomorrowOrders: B1,
+      bakeTomorrowOrders: B1,
       mixes,
       bins,
       pans,

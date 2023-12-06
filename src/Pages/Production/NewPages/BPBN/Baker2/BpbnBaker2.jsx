@@ -1,6 +1,5 @@
 import React from "react"
 
-import { DateTime } from "luxon"
 import { keyBy } from "lodash/fp"
 
 import { DataTable } from "primereact/datatable"
@@ -14,6 +13,7 @@ import { useListData } from "../../../../../data/_listData"
 import { useBpbn2Data } from "../data"
 import { exportBpbn2Pdf } from "./exportPdf"
 import { useCheckUpdates } from "../../../Utils/useCheckUpdates"
+import { getTodayDT } from "../utils"
 
 
 
@@ -68,7 +68,7 @@ const getUpdateInputs = ({
 
 
 export const Bpbn2 = () => {
-  const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+  const todayDT = getTodayDT()
   const reportDate = todayDT.toFormat('yyyy-MM-dd')
 
   const isLoading = useSettingsStore((state) => state.isLoading);
@@ -153,11 +153,51 @@ export const Bpbn2 = () => {
         />
 
       </DataTable>
+
+      {/*
+
+      <h1>Other Prep</h1>
+      <DataTable 
+        value={otherPrepData}
+        size="small"
+        responsiveLayout="scroll"
+        style={{marginTop: "1rem"}}
+      >
+        <Column header="Product" field="prodName"   />
+        <Column header="Qty"
+          body={rowData => DrilldownCellTemplate({
+            dialogHeader: `${rowData.forBake} Orders to be Shaped`,
+            cellValue: rowData.qty,
+            tableData: rowData.items,
+            products
+          })}
+          style={{width: "6rem"}}
+        />
+
+      </DataTable>
+
+      <h1>Croissant Setout</h1>
+      <DataTable 
+        value={croixData}
+        size="small"
+        responsiveLayout="scroll"
+        style={{marginTop: "1rem"}}
+      >
+        <Column header="Product" field="forBake"   />
+        <Column header="Qty"
+          body={rowData => DrilldownCellTemplate({
+            dialogHeader: `${rowData.forBake} Orders to be Shaped`,
+            cellValue: rowData.qty,
+            tableData: rowData.items,
+            products
+          })}
+          style={{width: "6rem"}}
+        />
+
+      </DataTable>
+
+      */}
+
     </div>
   )
 }
-
-
-
-
-

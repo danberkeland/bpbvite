@@ -12,6 +12,7 @@ import { Routing } from "./NewPages/TestPages/Routing";
 import { Sandbox } from "./NewPages/TestPages/_Sandbox";
 import { BriocheCalc } from "./NewPages/TestPages/BriocheCalc";
 import { OrderReview } from "./NewPages/TestPages/OrderReview";
+import { OrderDomain } from "./NewPages/TestPages/OrderDomain";
 // import { BPBNBaker1 } from "./NewPages/TestPages/BPBNBaker1New";
 // import { BPBNBaker2 } from "./NewPages/TestPages/BPBNBaker2New";
 // import { BPBNSetout } from "./NewPages/TestPages/BPBNSetoutNew";
@@ -22,6 +23,7 @@ import { OrderReview } from "./NewPages/TestPages/OrderReview";
 
 const bpbnPages = [
   {name: "Sandbox", component: <Sandbox />},
+  {name: "Order Domain", component: <OrderDomain />},
   {name: "BPBNBuckets", component: <BPBNBuckets />},
   {name: "WhoBake", component: <WhoBake />},
   {name: "WhoShape", component: <WhoShape />},
