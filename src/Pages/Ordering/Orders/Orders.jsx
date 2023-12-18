@@ -108,6 +108,7 @@ export const Orders = ({ useTestAuth }) => {
     || -1 * Interval.fromDateTimes(delivDateDT, todayDT).length('days')
   const isDelivDate = orderLeadTime === 0
   const isPastDeliv = isNaN(orderLeadTime)
+  const isXmas = delivDateDT.toFormat('MM-dd') === '12-25'
   const dateUpdated = useRef(false) // just a flag for controling state
   const dateProps = { 
     ORDER_DATE_DT, todayDT,
@@ -341,6 +342,7 @@ export const Orders = ({ useTestAuth }) => {
 
   const disableInputs = (user.authClass !== 'bpbfull' && !(orderLeadTime > 0))
     || isLoading 
+    || (user.authClass !== 'bpbfull' && isXmas)
   const deactivated = (user.authClass !== 'bpbfull' && location?.isActive === false)
 
   // Warn before navigating away with unsaved changes
@@ -540,7 +542,7 @@ export const Orders = ({ useTestAuth }) => {
                 />
               }
               
-              {!!products && !!cartItems && !!delivDateJS &&
+              {!!products && !!cartItems && !!delivDateJS && (!isXmas || user.authClass === 'bpbfull') &&
                 <CartItemDisplay
                   {...cartProps}
                   cartCache={cartCache}

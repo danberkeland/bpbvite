@@ -58,6 +58,26 @@ export const CartHeaderSummary = ({
       ? `For Today ${user.authClass !== 'bpbfull' ? "― Read Only" : ""}`
       : `Yesterday ${user.authClass !== 'bpbfull' ? "― Read Only" : ""}`
 
+  if (delivDateDT.toFormat('MM-dd') === '12-25' && user.authClass !== 'bpbfull') {
+    return (
+      <div className="cart-ui-summary"
+        style={{
+          color: "hsl(37, 100%, 5%)",
+          background: "var(--bpb-surface-content-header)",
+          padding: "1px 1rem .75rem 1rem",
+          marginBottom: "1rem",
+          borderRadius: "3px",
+          boxShadow: "0 2px 1px -1px rgba(0, 0, 0, 0.2),"
+            + " 0 1px 1px 0 rgba(0, 0, 0, 0.14),"
+            + " 0 1px 3px 0 rgba(0, 0, 0, 0.12)",
+        }}
+      >
+        <h2>We're Taking a Break...</h2>
+        <p>Orders will resume on the 26th</p>
+      </div>
+    )
+  }
+
   return(
     <div className="cart-ui-summary"
       style={{

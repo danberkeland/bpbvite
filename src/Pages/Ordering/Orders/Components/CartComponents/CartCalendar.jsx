@@ -13,6 +13,14 @@ const minDate = getWorkingDateTime('NOW')
   .minus({ days: 1 }).toJSDate()
 const maxDate = getWorkingDateTime('NOW').plus({ months: 2 }).endOf('month')
   .minus({ days: 1 }).toJSDate()
+
+
+
+const xmasStyle = { 
+  background: "repeating-linear-gradient(45deg,#ea3746 0px,#ea3746 6px,#ffffff 6px,#ffffff 10px, #ea3746 10px, #ea3746 11px, #ffffff 11px, #ffffff 13px, #ea3746 13px, #ea3746 14px,#ffffff 14px,#ffffff 19px", 
+  opacity: "0.6"
+}
+const backgroundDeleteStyle = { background: "rgba(255, 0, 0, .25)" }
   
 export const CartCalendar = ({ 
   locNick, 
@@ -45,6 +53,7 @@ export const CartCalendar = ({
     const hasStanding = orderSummary?.byDay?.[dayOfWeek]?.hasStanding
       || orderSummary?.byDate?.[calendarDate]?.hasStanding // for placeholders
 
+    const isXmas = date.month + 1 === 12 && date.day === 25
     const isRecentDelete = orderSummary?.byDate?.[calendarDate]?.isRecentDelete
 
     const fulfillment = orderSummary?.byDate?.[calendarDate]?.fulfillment
@@ -61,10 +70,14 @@ export const CartCalendar = ({
               ? "bpb-date-cell-standing" 
               : "bpb-date-cell-none"
         }
-        style={{background: isRecentDelete ? "rgba(255, 0, 0, .25)" : ""}}
+        style={
+          isXmas ? xmasStyle 
+            : isRecentDelete ? backgroundDeleteStyle 
+            : {}
+        }
         //onClick={() => console.log(calendarDate, hasCart, hasStanding)}
       >
-        {date.day}{}
+        {date.day}
       </div>
     )
   }
