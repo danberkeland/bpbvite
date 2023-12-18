@@ -1,8 +1,8 @@
 // Combined orders are where we start when collecting info from the Order and
 // Standing tables for production/ordering/billing purposes. They are a mostly
 // 'raw' representation of customer's effective orders for a given date; the
-// only augmentation is we ensure that all items have both delivDate and
-// dayOfWeek attributes with equivalent values.
+// only augmentation is we ensure that items have both delivDate and dayOfWeek 
+// attributes with equivalent values.
 //
 // The main point is to apply 'override' logic so that when holding, standing,
 // and cart items collide on the same order, we pick the correct one to 
