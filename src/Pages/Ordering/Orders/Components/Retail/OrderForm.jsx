@@ -110,7 +110,9 @@ export const OrderForm = ({
         <div style={{fontSize: ".9rem", marginBottom: "1rem"}}>
           Token: {currentOrder?.header.locNick.split('__')[1]}
         </div>
-
+        <div style={{fontSize: "1.25rem", marginBottom: ".25rem"}}>
+          Date: {delivDateDT.toFormat('M/d/yyyy')}
+        </div>
         
         
       </div>
