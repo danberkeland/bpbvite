@@ -2,6 +2,9 @@ import { groupBy, keyBy, sortBy, sumBy } from "lodash"
 import { useT0T7ProdOrders } from "../../../../data/useT0T7ProdOrders"
 import { useMemo } from "react"
 import { useListData } from "../../../../data/_listData"
+import { isoToDT } from "../BPBN/utils"
+import { HOLIDAYS } from "../_constants/holidays"
+import { scheduleForwardOnHolidays } from "../_utils/holidayScheduling"
 
 /**For croissant orders, maps back to the shaped type consumed at setout*/
 const prodNickToSetoutKey = {
@@ -56,14 +59,24 @@ export const useSetoutData = ({
     
     const products = keyBy(PRD, 'prodNick')
 
-    const prodOrders = _prodOrders.filter(order => 
-      isPastry(products[order.prodNick])
-        && [0, 1, 2, 3].includes(order.relDate)
-        && order.locNick !== "bpbextras"
-    ).map(order => ({
-      ...order,
-      setoutKey: prodNickToSetoutKey[order.prodNick],
-    }))
+    const reportDateDT = isoToDT(reportDate)
+    const adjustedRelDates = 
+      [0].concat(scheduleForwardOnHolidays(
+        [1,2,3,4,5].map(daysAhead => reportDateDT.plus({ days: daysAhead }))
+      ).map(dt => 
+        dt.diff(reportDateDT, 'days').days
+      ))
+
+    const prodOrders = _prodOrders
+      .filter(order => 
+        isPastry(products[order.prodNick])
+          // && [0,1,2,3].includes(order.relDate)
+          && order.locNick !== "bpbextras"
+      ).map(order => ({
+        ...order,
+        setoutKey: prodNickToSetoutKey[order.prodNick],
+        qty: HOLIDAYS.includes(order.delivDate.slice(5)) ? 0 : order.qty
+      }))
     //console.log("prodOrders", prodOrders)
 
     // Non-almond Croissant Setout ******************************************
@@ -96,10 +109,10 @@ export const useSetoutData = ({
 
     // Almond-Type orders farther into the future will add to plain setout.
     const T2Fral = prodOrders.filter(order =>
-      order.relDate === 2 && order.prodNick === 'fral'  
+      order.relDate === adjustedRelDates[2] && order.prodNick === 'fral'  
     )
     const T2SouthAl = prodOrders.filter(order =>
-      order.relDate === 2 
+      order.relDate === adjustedRelDates[2]
       && order.prodNick === 'al'  
       && (
         order.routeMeta.route.RouteDepart === 'Prado'
@@ -114,7 +127,7 @@ export const useSetoutData = ({
 
     
     const T3NorthAl = prodOrders.filter(order =>
-      order.relDate === 3 
+      order.relDate === adjustedRelDates[3]
       && order.prodNick === 'al'  
       && (
         order.routeMeta.route.RouteDepart === 'Carlton'
@@ -144,7 +157,11 @@ export const useSetoutData = ({
     // setout key groups almond types with plain, unmb with mb
     const nonAlmondCroixSouth = Object.values(
       groupBy(
-        [...T1NonAlmondCroixSouth, ...T2Fral, ...T2SouthAl, ...T3NorthAl],
+        [...T1NonAlmondCroixSouth, ...T2Fral, ...T2SouthAl, ...T3NorthAl]
+          .map(order => HOLIDAYS.includes(reportDateDT.plus({days: 1}).toFormat('MM-dd'))
+            ? { ...order, qty: 0 }
+            : order
+          ),
         'setoutKey'
       )
     ).map(row => {
@@ -162,9 +179,11 @@ export const useSetoutData = ({
 
     // Almond Types *********************************************************
     // BPBS only
+    // For almond prep task, not setout
+    // orders for this task are scheduled forward for holidays
     
     const T1SouthAl = prodOrders.filter(order =>
-      order.relDate === 1 && order.prodNick === 'al'  
+      order.relDate === adjustedRelDates[1] && order.prodNick === 'al'  
       && (
         order.routeMeta.route.RouteDepart === 'Prado'
         || order.locNick === 'backporch'
@@ -177,11 +196,11 @@ export const useSetoutData = ({
     }))
       
     const T1Fral = prodOrders.filter(order =>
-      order.relDate === 1 && order.prodNick === 'fral'  
+      order.relDate === adjustedRelDates[1] && order.prodNick === 'fral'  
     )
 
     const T2NorthAl = prodOrders.filter(order =>
-      order.relDate === 2 && order.prodNick === 'al'  
+      order.relDate === adjustedRelDates[2] && order.prodNick === 'al'  
       && (
         order.routeMeta.route.RouteDepart === 'Carlton'
         || order.locNick === 'backporch'
@@ -215,7 +234,10 @@ export const useSetoutData = ({
       order.relDate === 1
       && products[order.prodNick].packGroup === "baked pastries"
       && products[order.prodNick].doughNick !== "Croissant"
-    )
+    ).map(order => ({
+      ...order,
+      qty: HOLIDAYS.includes(order.delivDate.slice(5)) ? 0 : order.qty
+    }))
 
     const T1OthersSouth = T1OtherPastryOrders.filter(order => 
       isExclusiveSouthProduct(products[order.prodNick])
@@ -268,6 +290,6 @@ export const useSetoutData = ({
 
   } // end composeData
   
-  return { data:useMemo(composeData, [_prodOrders, PRD]) }
+  return { data:useMemo(composeData, [_prodOrders, reportDate, PRD]) }
 
 }

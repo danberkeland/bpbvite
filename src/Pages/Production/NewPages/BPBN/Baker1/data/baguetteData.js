@@ -13,6 +13,7 @@ import { useProdOrdersByDate } from "../../../../../../data/useT0T7ProdOrders"
 import { getTodayDT, isoToDT } from "../../utils"
 import { useMemo } from "react"
 import { round } from "lodash"
+import { isHoliday, scheduleForwardOnHolidays } from "../../../_utils/holidayScheduling"
 
 const mapValuesWithKeys = mapValues.convert({ 'cap': false })
 
@@ -47,9 +48,12 @@ export const useBaguetteData = ({
   const reportDateDT = isoToDT(reportDate)
   const reportRelDate = reportDateDT.diff(todayDT, 'days').days
 
-  const [t0, t1, t2, t3] = [0,1,2,3].map(daysAhead => 
-    reportDateDT.plus({ days: daysAhead }).toFormat('yyyy-MM-dd')
-  ) 
+  const [t0, t1, t2, t3] = scheduleForwardOnHolidays(
+    [0,1,2,3].map(daysAhead => 
+      reportDateDT.plus({ days: daysAhead })
+    ) 
+  ).map(dt => dt.toFormat('yyyy-MM-dd'))
+  //console.log('[t0, t1, t2, t3]', [t0, t1, t2, t3])
 
   const { data:T0 } = useProdOrdersByDate({ currentDate, reportDate: t0, shouldFetch })
   const { data:T1 } = useProdOrdersByDate({ currentDate, reportDate: t1, shouldFetch })
@@ -85,13 +89,27 @@ export const useBaguetteData = ({
       products[order.prodNick].doughNick === "Baguette"  
     )
 
-    // Bake Totals for relative dates, each grouped by forBake
-    const { 0:B0, 1:B1, 2:B2 } = flow(
-      groupBy('bakeRelDate'),
-      mapValues(orderGroup => 
-        groupBy(order => products[order.prodNick].forBake)(orderGroup)
-      ),
-    )(baguetteOrders)
+    const isSameDayBagOrder = order => order.delivLeadTime === 0
+      && products[order.prodNick].doughNick === "Baguette"
+    const isDelayedBagOrder = order => order.delivLeadTime === 1
+      && products[order.prodNick].doughNick === "Baguette"
+
+    const B0 = groupBy(order => products[order.prodNick].forBake)(
+      _T0.filter(isSameDayBagOrder).concat(T1.filter(isDelayedBagOrder))
+    )
+    const B1 = groupBy(order => products[order.prodNick].forBake)(
+      T1.filter(isSameDayBagOrder).concat(T2.filter(isDelayedBagOrder))
+    )
+    const B2 = groupBy(order => products[order.prodNick].forBake)(
+      T2.filter(isSameDayBagOrder).concat(T3.filter(isDelayedBagOrder))
+    )
+    // // Bake Totals for relative dates, each grouped by forBake
+    // const { 0:B0, 1:B1, 2:B2 } = flow(
+    //   groupBy('bakeRelDate'),
+    //   mapValues(orderGroup => 
+    //     groupBy(order => products[order.prodNick].forBake)(orderGroup)
+    //   ),
+    // )(baguetteOrders)
     
     const calcWeight = (order) => {
       const { packSize, weight } = products[order.prodNick]
@@ -136,11 +154,12 @@ export const useBaguetteData = ({
     const T0ShortTotal = round(sum(Object.values(doughShort)), 1)
     const bufferWeight = doughs['Baguette'].buffer ?? 0
     
+    console.log('REPROT DATE:', reportDate)
     const requiredTotal = round(D1Total + bufferWeight + T0ShortTotal, 1)
     
     // const T0ScrapTotal = round(sum(Object.values(doughSurplus)), 1)
     // const scrapToUse = Math.min(T0ScrapTotal, D1Total * 0.2)
-    const scrapToUse = Math.min(doughs['Baguette'].oldDough, D1Total * 2)
+    const scrapToUse = Math.min(doughs['Baguette'].oldDough, D1Total * 0.2)
 
     // const mixTotal = requiredTotal - scrapToUse
     // const nMixes = Math.ceil(mixTotal / 210)
@@ -170,10 +189,10 @@ export const useBaguetteData = ({
     ]
 
     const doughSummary = {
-      T1Needed: round(D1Total, 2),
-      buffer: bufferWeight,
-      T0Short: T0ShortTotal,
-      stickerTotal: requiredTotal,
+      T1Needed: isHoliday(reportDate) ? 0 : round(D1Total, 2),
+      buffer: isHoliday(reportDate) ? 0 : bufferWeight,
+      T0Short: isHoliday(reportDate) ? 0 : T0ShortTotal,
+      stickerTotal: isHoliday(reportDate) ? 0 : requiredTotal,
       //T0Scrap: T0ScrapTotal,
     }
 

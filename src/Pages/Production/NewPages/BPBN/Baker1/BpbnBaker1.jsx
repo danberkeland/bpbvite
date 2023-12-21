@@ -6,7 +6,7 @@ import { DataTable } from "primereact/datatable"
 import { Button } from "primereact/button"
 import { Divider } from "primereact/divider"
 
-import { useBpbn1Data } from "../data"
+import { useBpbn1Data } from "../data/data"
 import { useDoobieStuff } from "./data/doobieStuff"
 import { useBaguetteData } from "./data/baguetteData"
 
@@ -20,10 +20,10 @@ import { useExportBpbn1 } from "./useExport"
 import { useCheckUpdates } from "../../../Utils/useCheckUpdates"
 import { getTodayDT, isoToDT } from "../utils"
 
-const SKIP_DATES = ['12-24']
-const adjustDateTime = (dt) => SKIP_DATES.includes(dt.toFormat('MM-dd'))
-  ? dt.plus({ days: 1 })
-  : dt
+// const SKIP_DATES = ['12-24']
+// const adjustDateTime = (dt) => SKIP_DATES.includes(dt.toFormat('MM-dd'))
+//   ? dt.plus({ days: 1 })
+//   : dt
 
 /**
  * @param {Object} input
@@ -35,15 +35,19 @@ export const Bpbn1 = ({ initialDateOption='today' }) => {
   
   const shouldFetch = true
   // const _todayDT = isoToDT('2023-12-23')
+  
   const _todayDT = getTodayDT()
   const _reportDateDT = dateOption === 'today'
     ? _todayDT
     : _todayDT.plus({ days: 1 })
-  const todayDT = adjustDateTime(_todayDT)
-  const reportDateDT = adjustDateTime(_reportDateDT)
+
+  const todayDT = _todayDT //adjustDateTime(_todayDT)
+  const reportDateDT = _reportDateDT //adjustDateTime(_reportDateDT)
 
   const today = todayDT.toFormat('yyyy-MM-dd')
   const reportDate = reportDateDT.toFormat('yyyy-MM-dd')
+
+  console.log('today', today)
 
   const { rusticData, otherPrepData } = useBpbn1Data({
     currentDate: today,

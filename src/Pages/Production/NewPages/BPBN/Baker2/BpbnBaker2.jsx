@@ -10,7 +10,7 @@ import { DrilldownCellTemplate } from "../_components/DrilldownCellTemplate"
 
 import { useSettingsStore } from "../../../../../Contexts/SettingsZustand"
 import { useListData } from "../../../../../data/_listData"
-import { useBpbn2Data } from "../data"
+import { useBpbn2Data } from "../data/data"
 import { exportBpbn2Pdf } from "./exportPdf"
 import { useCheckUpdates } from "../../../Utils/useCheckUpdates"
 import { getTodayDT } from "../utils"
@@ -87,7 +87,7 @@ export const Bpbn2 = () => {
     productRepsByListTypeByForBake={}, // consistent product list for mutations
   } = bpbn2data ?? {}
 
-  console.log("other prep data", otherPrepData)
+  // console.log("other prep data", otherPrepData)
 
   const { 
     data:PRD,
@@ -154,7 +154,6 @@ export const Bpbn2 = () => {
 
       </DataTable>
 
-      {/*
 
       <h1>Other Prep</h1>
       <DataTable 
@@ -196,7 +195,7 @@ export const Bpbn2 = () => {
 
       </DataTable>
 
-      */}
+
 
     </div>
   )

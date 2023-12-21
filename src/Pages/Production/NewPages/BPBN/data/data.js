@@ -1,79 +1,15 @@
 import { DateTime } from "luxon"
-import { useProdOrdersByDate } from "../../../../data/useT0T7ProdOrders"
+import { useProdOrdersByDate } from "../../../../../data/useT0T7ProdOrders"
 import { useMemo } from "react"
-import { useListData } from "../../../../data/_listData"
-import { flow, groupBy, keyBy, sumBy, mapValues, sortBy, uniqBy, values, map } from "lodash/fp"
-import { getTodayDT, isoToDT } from "./utils"
+import { useListData } from "../../../../../data/_listData"
+import { flow, groupBy, keyBy, sumBy, mapValues, sortBy, uniqBy, values, map, filter } from "lodash/fp"
+import { getTodayDT, isoToDT } from "../utils"
+import { getListType, partitionBpbnOrdersByListType, partitionOrdersByBakeLocation } from "./partitionFns"
+import { isHoliday, scheduleForwardOnHolidays } from "../../_utils/holidayScheduling"
+import { HOLIDAYS } from "../../_constants/holidays"
 
 // *** 1. util fns ****
 const mapValuesWithKeys = mapValues.convert({ 'cap': false })
-
-// *** 2. procedural 'chunks' for main calculation ***
-
-const partitionOrdersByBakeLocation = ({ orders, products, routes }) => {
-  // Business Logic: Where do we bake an item?
-  // If an item is only baked 'exclusively' at 1 shop location, 
-  // then pick that location. Otherwise we pick based on where the product 
-  // is fulfilled from, and choose that as the location. 
-  //
-  // This is a very simplified (jank) logic that works for us only. 
-  // Not generally applicable.
-  const assignBakeLocation = order => {
-    const { bakedWhere } = products[order.prodNick]
-    const { RouteDepart } = routes[order.routeMeta.routeNick]
-    
-    return bakedWhere.length === 1 ? bakedWhere[0] : RouteDepart
-  }
-
-  const { 
-    Prado:bpbsOrders=[], 
-    Carlton:bpbnOrders=[], 
-    undefined: unhandledOrders,
-  } = groupBy(assignBakeLocation)(orders)
-
-  if (!!unhandledOrders) console.warn("Unhandled orders:", unhandledOrders)
-
-  return { bpbsOrders, bpbnOrders }
-
-}
-
-/**
- * Almond croix dont show up anywhere in the bpbn lists, so we separate them
- * from the 'croix' category.
-*/
-const getListType = (product) => {
-  let { prodNick, bakedWhere, isWhole, packGroup, doughNick } = product
-
-  if( !bakedWhere.includes('Carlton') || !isWhole ) {
-    return undefined
-  } 
-
-  if (["rustic breads", "retail"].includes(packGroup)) return "rustic"
-  else if (['al', 'fral'].includes(prodNick)) return "almond"
-  else if (doughNick === "Croissant") return "croix"
-  else if (packGroup !== "cafe menu") return "otherPrep"
-  else if (packGroup === "cafe menu") return "cafe"
-  else return undefined
-
-}
-
-const partitionBpbnOrdersByListType = ({ bpbnOrders, products }) => {
-
-  const { 
-    rustic=[], 
-    croix=[], 
-    otherPrep=[],
-    almond=[],
-    undefined:unknownListType,
-  } = groupBy(order  => getListType(products[order.prodNick]))(bpbnOrders)
-
-  if (!!unknownListType) {
-    console.warn("unhandled BPBN orders:", unknownListType)
-  }
-
-  return { rustic, croix, otherPrep, unknownListType }
-
-}
 
 // *** Main data hook ***
 
@@ -120,16 +56,21 @@ const useBpbnData = ({
   flags=defaultFlags
 }) => {
   const todayDT = !!currentDate ? isoToDT(currentDate) : getTodayDT()
+  const today = todayDT.toISODate()
   const reportDateDT = isoToDT(reportDate)
   const reportRelDate = reportDateDT.diff(todayDT, 'days').days
 
   // fetching T0 data is a minimum if anything is to be fetched at all
   const _shouldFetch = shouldFetch 
     && (flags.useRustics || flags.useCroix || flags.useOtherPrep)
+
+  const fetchDates = scheduleForwardOnHolidays(
+    [0,1].map(daysAhead => reportDateDT.plus({ days: daysAhead }))
+  )
     
   const { data:T0 } = useProdOrdersByDate({ 
     currentDate,
-    reportDate,
+    reportDate: fetchDates[0].toFormat('yyyy-MM-dd'),
     shouldFetch: _shouldFetch, 
     shouldAddRoutes: true 
   })
@@ -137,7 +78,7 @@ const useBpbnData = ({
   const shouldFetchT1 = shouldFetch && (flags.useRustics || flags.useOtherPrep)
   const { data:T1 } = useProdOrdersByDate({ 
     currentDate,
-    reportDate: reportDateDT.plus({ days: 1 }).toFormat('yyyy-MM-dd'), 
+    reportDate: fetchDates[1].toFormat('yyyy-MM-dd'), 
     shouldFetch: shouldFetchT1, 
     shouldAddRoutes: true 
   })
@@ -161,9 +102,12 @@ const useBpbnData = ({
     /**multiply order quantity by pack size */
     const getQtyEa = (order) => order.qty * products[order.prodNick].packSize
 
-    const bakeOrders = [...(T0 ?? []), ...(T1 ?? [])].filter(order => 
-      order.bakeRelDate === reportRelDate 
-      && order.qty !== 0
+    const bakeOrders = [
+      ...(T0 ?? []).filter(order => order.delivLeadTime === 0), 
+      ...(T1 ?? []).filter(order => order.delivLeadTime === 1)
+    ].filter(order => 
+      //order.bakeRelDate === reportRelDate 
+      order.qty !== 0
       && (shouldIncludeHolding || order.isStand !== false)
     )
 
@@ -176,7 +120,7 @@ const useBpbnData = ({
 
     // More accurately, 'preshapesByListTypeByForBake'
     //
-    // preshapes maybe be used for multiple products. 
+    // preshapes can be be used for multiple products. 
     // Bucketing products by preshape type is the same as grouping by 
     // their 'forBake' name, at least with bpbn products...
     //
@@ -218,6 +162,10 @@ const useBpbnData = ({
     )(preshapes.rustic)
 
    const _rusticData = !flags.useRustics ? [] : flow(
+      map(order => isHoliday(order.delivDate) || isHoliday(today)
+        ? ({ ...order, qty: 0})
+        : order
+      ),
       groupBy(order => products[order.prodNick].forBake),
       mapValuesWithKeys((rowGroup, key) => {
         const totalQty = sumBy(getQtyEa)(rowGroup)
@@ -284,13 +232,20 @@ const useBpbnData = ({
         }
       })
     )(preshapes.croix)
-
-
+    
+    // console.log(fetchDates.map(dt => dt.toISODate()))
+    // console.log("bake orders", bakeOrders.filter(order => order.prodNick === 'pg').map(order => order.delivDate))
+    // console.log("CROIX DATA:", croix.map(order => [order.delivDate, order.prodNick, order.locNick]))
     const _croixData = !flags.useCroix ? [] : flow(
       map(order => order.locNick === 'backporch' 
         ? ({ ...order, qty: Math.ceil(order.qty / 2)})
         : order
       ),
+      map(order => isHoliday(order.delivDate)
+        ? ({...order, qty:0})
+        : order
+      ),
+      filter(order => order.delivDate === reportDate),
       groupBy(order => products[order.prodNick].forBake),
       mapValuesWithKeys((orderGroup, key) => {
 
@@ -322,6 +277,10 @@ const useBpbnData = ({
     )(preshapes.other)
 
     const _otherPrepData = !flags.useOtherPrep ? [] : flow( 
+      map(order => isHoliday(order.delivDate) || isHoliday(today)
+        ? ({...order, qty:0})
+        : order
+      ),
       groupBy('prodNick'),
       mapValuesWithKeys((orderGroup, key) => {
 

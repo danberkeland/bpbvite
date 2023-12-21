@@ -4,6 +4,8 @@ import { useMemo } from "react"
 
 import { useListData } from "../../../../../data/_listData"
 import { useT0T7ProdOrders } from "../../../../../data/useT0T7ProdOrders"
+import { isHoliday, scheduleForwardOnHolidays } from "../../_utils/holidayScheduling"
+import { isoToDT } from "../../BPBN/utils"
 
 /** 'Rectified Linear Unit' function -- converts negative numbers to 0 */
 const relu = (x) => x > 0 ? x : 0
@@ -108,12 +110,21 @@ export const useBpbsWtmData = ({ shouldFetch, reportDate, reportRelDate }) => {
       canSendPocketsNorth(row.productRep)
     )
 
+    const reportDateDT = isoToDT(reportDate)
+    const adjustedRelDates =  
+      [0].concat(scheduleForwardOnHolidays(
+        [1,2,3,4,5]
+          .map(daysAhead => reportDateDT.plus({ days: daysAhead })))
+          .map(dt => dt.diff(reportDateDT, 'days').days
+      ))
+
     // We only ever need to look at orders for the given day and the next day.
     // holding orders for the given date should be excluded.
     const __prodOrders = _prodOrders
       .filter(order => 
-        (reportRelDate <= order.relDate || order.relDate <= reportRelDate + 2)
-        && !(order.relDate === reportRelDate && isHoldingOrder(order)) 
+        // (reportRelDate <= order.relDate || order.relDate <= reportRelDate + 2)
+        // && !(order.relDate === reportRelDate && isHoldingOrder(order)) 
+        !(order.relDate === reportRelDate && isHoldingOrder(order)) 
       ).map(order => ({
         ...order, 
         listType: assignListType(products[order.prodNick]),
@@ -146,6 +157,9 @@ export const useBpbsWtmData = ({ shouldFetch, reportDate, reportRelDate }) => {
         order.relDate === reportRelDate
         && order.delivLeadTime === 0
         && shouldSendPocketsNorth(products[order.prodNick], order)
+      ).map(order => isHoliday(order.delivDate)
+        ? { ...order, qty: 0 }
+        : order
       )
       return {
         ...row,
@@ -166,7 +180,7 @@ export const useBpbsWtmData = ({ shouldFetch, reportDate, reportRelDate }) => {
       const T0TotalEa = sumBy(T0Orders, order => calcEa(order))
 
       const T1Orders = (ordersByRowKey[row.rowKey] || []).filter(order => 
-        order.relDate === reportRelDate + 1
+        order.relDate === reportRelDate + adjustedRelDates[1]
         && order.delivLeadTime === 1
         && !shouldSendPocketsNorth(products[order.prodNick], order)
       )

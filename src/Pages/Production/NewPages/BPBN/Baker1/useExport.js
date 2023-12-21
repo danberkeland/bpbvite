@@ -1,7 +1,7 @@
 import { isoToDT } from "../utils"
 
 import { useListData } from "../../../../../data/_listData"
-import { useBpbn1Data } from "../data"
+import { useBpbn1Data } from "../data/data"
 import { useBaguetteData } from "./data/baguetteData"
 import { useDoobieStuff } from "./data/doobieStuff"
 
