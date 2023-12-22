@@ -75,14 +75,14 @@ export const useSetoutData = ({
       ).map(order => ({
         ...order,
         setoutKey: prodNickToSetoutKey[order.prodNick],
-        qty: HOLIDAYS.includes(order.delivDate.slice(5)) ? 0 : order.qty
+        // qty: HOLIDAYS.includes(order.delivDate.slice(5)) ? 0 : order.qty
       }))
     //console.log("prodOrders", prodOrders)
 
     // Non-almond Croissant Setout ******************************************
 
     const T1BakedNotAlmond = prodOrders.filter(order => 
-      order.relDate === 1
+      order.relDate === adjustedRelDates[1]
       && isBakedCroix(products[order.prodNick])   
       && !isAlmondType(products[order.prodNick])  
     )
@@ -157,11 +157,11 @@ export const useSetoutData = ({
     // setout key groups almond types with plain, unmb with mb
     const nonAlmondCroixSouth = Object.values(
       groupBy(
-        [...T1NonAlmondCroixSouth, ...T2Fral, ...T2SouthAl, ...T3NorthAl]
-          .map(order => HOLIDAYS.includes(reportDateDT.plus({days: 1}).toFormat('MM-dd'))
-            ? { ...order, qty: 0 }
-            : order
-          ),
+        [...T1NonAlmondCroixSouth, ...T2Fral, ...T2SouthAl, ...T3NorthAl],
+          // .map(order => HOLIDAYS.includes(reportDateDT.plus({days: 1}).toFormat('MM-dd'))
+          //   ? { ...order, qty: 0 }
+          //   : order
+          // ),
         'setoutKey'
       )
     ).map(row => {
@@ -231,13 +231,14 @@ export const useSetoutData = ({
     // I guess these counts DO include bpbextras orders, 
     // so filter from _prodOrders instead of prodOrders.
     const T1OtherPastryOrders = _prodOrders.filter(order =>
-      order.relDate === 1
+      order.relDate === adjustedRelDates[1]
       && products[order.prodNick].packGroup === "baked pastries"
       && products[order.prodNick].doughNick !== "Croissant"
-    ).map(order => ({
-      ...order,
-      qty: HOLIDAYS.includes(order.delivDate.slice(5)) ? 0 : order.qty
-    }))
+    )
+    // .map(order => ({
+    //   ...order,
+    //   qty: HOLIDAYS.includes(order.delivDate.slice(5)) ? 0 : order.qty
+    // }))
 
     const T1OthersSouth = T1OtherPastryOrders.filter(order => 
       isExclusiveSouthProduct(products[order.prodNick])
