@@ -64,13 +64,17 @@ const useBpbnData = ({
   const _shouldFetch = shouldFetch 
     && (flags.useRustics || flags.useCroix || flags.useOtherPrep)
 
-  const fetchDates = scheduleForwardOnHolidays(
-    [0,1].map(daysAhead => reportDateDT.plus({ days: daysAhead }))
-  )
+  const fetchDates = [reportDateDT]
+    .concat(scheduleForwardOnHolidays([reportDateDT.plus({ days: 1 })]))
+    .map(dt => dt.toFormat('yyyy-MM-dd'))
+
+  // const fetchDates = scheduleForwardOnHolidays(
+  //   [0,1].map(daysAhead => reportDateDT.plus({ days: daysAhead }))
+  // )
     
   const { data:T0 } = useProdOrdersByDate({ 
     currentDate,
-    reportDate: fetchDates[0].toFormat('yyyy-MM-dd'),
+    reportDate: fetchDates[0], //.toFormat('yyyy-MM-dd'),
     shouldFetch: _shouldFetch, 
     shouldAddRoutes: true 
   })
@@ -78,7 +82,7 @@ const useBpbnData = ({
   const shouldFetchT1 = shouldFetch && (flags.useRustics || flags.useOtherPrep)
   const { data:T1 } = useProdOrdersByDate({ 
     currentDate,
-    reportDate: fetchDates[1].toFormat('yyyy-MM-dd'), 
+    reportDate: fetchDates[1], //.toFormat('yyyy-MM-dd'), 
     shouldFetch: shouldFetchT1, 
     shouldAddRoutes: true 
   })
@@ -241,10 +245,10 @@ const useBpbnData = ({
         ? ({ ...order, qty: Math.ceil(order.qty / 2)})
         : order
       ),
-      map(order => isHoliday(order.delivDate)
-        ? ({...order, qty:0})
-        : order
-      ),
+      // map(order => isHoliday(order.delivDate)
+      //   ? ({...order, qty:0})
+      //   : order
+      // ),
       filter(order => order.delivDate === reportDate),
       groupBy(order => products[order.prodNick].forBake),
       mapValuesWithKeys((orderGroup, key) => {
@@ -371,9 +375,13 @@ export const useBpbn2Data =({
   shouldShowZeroes, 
   shouldFetch 
 }) => {
+  const reportDateDT = isoToDT(reportDate)
+  const [R0, R1] = [reportDateDT]
+    .concat(scheduleForwardOnHolidays([reportDateDT.plus({ days: 1 })]))
+    .map(dt => dt.toFormat('yyyy-MM-dd'))
 
   const { otherPrepData } = useBpbnData({
-    reportDate,
+    reportDate: R0,
     shouldShowZeroes,
     shouldFetch,
     shouldIncludeHolding: false,
@@ -389,7 +397,8 @@ export const useBpbn2Data =({
     croixData,
     productRepsByListTypeByForBake
   } = useBpbnData({
-    reportDate: isoToDT(reportDate).plus({ days: 1 }).toFormat('yyyy-MM-dd'),
+    // reportDate: isoToDT(reportDate).plus({ days: 1 }).toFormat('yyyy-MM-dd'),
+    reportDate: R1,
     shouldShowZeroes,
     shouldFetch,
     shouldIncludeHolding: true,

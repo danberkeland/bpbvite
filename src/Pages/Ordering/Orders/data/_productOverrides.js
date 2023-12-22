@@ -16,7 +16,8 @@ export const applyOverridesForRouteAssignment = ({
   let overrides = {}
 
   // Lincoln Exception
-  const lincolnProductNeedsDelay = ['dtch', 'fr'].includes(product.prodNick)
+  const lincolnProductNeedsDelay = 
+    ['dtch', 'fr', 'brsl'].includes(product.prodNick)
 
   if (location.locNick === 'lincoln' && lincolnProductNeedsDelay) {
      overrides = { readyTime: 8.5 }

@@ -47,7 +47,7 @@ export const Bpbn1 = ({ initialDateOption='today' }) => {
   const today = todayDT.toFormat('yyyy-MM-dd')
   const reportDate = reportDateDT.toFormat('yyyy-MM-dd')
 
-  console.log('today', today)
+  // console.log('today', today)
 
   const { rusticData, otherPrepData } = useBpbn1Data({
     currentDate: today,
@@ -56,7 +56,7 @@ export const Bpbn1 = ({ initialDateOption='today' }) => {
     shouldFetch,
   })
 
-  console.log("other prep data", otherPrepData)
+  // console.log("other prep data", otherPrepData)
 
   const doobieStuff = useDoobieStuff({ reportDate })
 
@@ -71,7 +71,11 @@ export const Bpbn1 = ({ initialDateOption='today' }) => {
     bins, 
     pans, 
     buckets, 
+    bakeTomorrowOrders
   } = baguetteData ?? {}
+
+  console.log("Bake Tomorrow Orders:", bakeTomorrowOrders)
+
   
   const { data:PRD } = useListData({ tableName: "Product", shouldFetch })
   const products = keyBy('prodNick')(PRD ?? [])
