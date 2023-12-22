@@ -213,16 +213,28 @@ export const useBpbsWtmData = ({ shouldFetch, reportDate, reportRelDate }) => {
         const { batchSize, currentStock, packSize } = row.productRep
         const currentStockEa = (currentStock ?? 0) * packSize
 
+        const _T0Fresh = (ordersByRowKey[row.rowKey] ?? []).filter(order =>
+          isFreshProduct(products[order.prodNick])
+          && order.relDate === reportRelDate  
+        ) ?? []
+        const T0BaggedOrders = (ordersByRowKey[row.rowKey] ?? []).filter(order =>
+          !isFreshProduct(products[order.prodNick])
+          && order.relDate === reportRelDate  
+        ) ?? []
+        const T1BaggedOrders = (ordersByRowKey[row.rowKey] ?? []).filter(order =>
+          !isFreshProduct(products[order.prodNick])
+          && order.relDate === reportRelDate + adjustedRelDates[1]
+        ) ?? []
 
-        const { 
-          'true.0':_T0Fresh=[], 
-          'false.0':T0BaggedOrders=[],
-          'false.1':T1BaggedOrders=[], 
-        } = groupBy(
-          ordersByRowKey[row.rowKey], 
-          order => `${isFreshProduct(products[order.prodNick])}`
-           + '.' + `${order.relDate - reportRelDate}`
-        )
+        // const { 
+        //   'true.0':_T0Fresh=[], 
+        //   'false.0':T0BaggedOrders=[],
+        //   'false.1':T1BaggedOrders=[], 
+        // } = groupBy(
+        //   ordersByRowKey[row.rowKey], 
+        //   order => `${isFreshProduct(products[order.prodNick])}`
+        //    + '.' + `${order.relDate - reportRelDate}`
+        // )
 
         const T0FreshOrders = _T0Fresh.filter(order => 
           order.delivLeadTime === 0
@@ -275,12 +287,17 @@ export const useBpbsWtmData = ({ shouldFetch, reportDate, reportRelDate }) => {
       const rowOrders = ordersByRowKey[row.rowKey] || []
 
       const T0Bake = rowOrders.filter(order => 
-        order.bakeRelDate === reportRelDate
+        (order.relDate === reportRelDate && order.delivLeadTime === 0)
+        || (
+          order.relDate === reportRelDate + adjustedRelDates[1]
+          && order.delivLeadTime === 1
+        )
       )
       const T0BakeTotalEa = sumBy(T0Bake, order => calcEa(order))
 
       const T1Bake = rowOrders.filter(order => 
-        order.bakeRelDate === reportRelDate + 1
+        order.relDate === reportRelDate + adjustedRelDates[1] && order.delivLeadTime === 0
+        || order.relDate === reportRelDate + adjustedRelDates[2] && order.delivLeadTime === 1
       )
       const T1BakeTotalEa = sumBy(T1Bake, order => calcEa(order))
 

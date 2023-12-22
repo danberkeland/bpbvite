@@ -1,3 +1,3 @@
-const xmas = '12-24'
+const XMAS = '12-25'
 
-export const HOLIDAYS = [xmas]
+export const HOLIDAYS = [XMAS]
