@@ -97,8 +97,8 @@ function BPBNBuckets({ loc }) {
 
   useEffect(() => {
     console.log("todayPlus", todayPlus()[0]);
-    if (todayPlus()[0] === "2022-12-23") {
-      setDelivDate("2022-12-24");
+    if (todayPlus()[0] === "2023-12-23") {
+      setDelivDate("2023-12-24");
     } else {
       setDelivDate(todayPlus()[0]);
     }
