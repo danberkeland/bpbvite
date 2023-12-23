@@ -45,8 +45,8 @@ function BPBNSetOut({ loc }) {
 
   useEffect(() => {
     console.log("todayPlus", todayPlus()[0]);
-    if (todayPlus()[0] === "2022-12-24") {
-      setDelivDate("2022-12-25");
+    if (todayPlus()[0] === "2023-12-24") {
+      setDelivDate("2023-12-25");
     } else {
       setDelivDate(todayPlus()[0]);
     }
