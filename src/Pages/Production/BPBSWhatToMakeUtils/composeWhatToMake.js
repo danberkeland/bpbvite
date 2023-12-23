@@ -67,7 +67,7 @@ const ORDERS = 4
     returnMakeBreakDown = (database, delivDate) => {
       const [products, customers, routes, standing, orders] = database
 
-      let T1 = delivDate !== "2023-12-24"
+      let T1 = delivDate !== "2022-12-24"
         ? tomBasedOnDelivDate(delivDate)
         : TwodayBasedOnDelivDate(delivDate)
       let T2 = TwodayBasedOnDelivDate(delivDate)
@@ -114,7 +114,7 @@ const ORDERS = 4
       const products = database[PRODUCTS]
       const routes = database[ROUTES]
 
-      let T1 = delivDate !== "2023-12-24"
+      let T1 = delivDate !== "2022-12-24"
         ? tomBasedOnDelivDate(delivDate)
         : TwodayBasedOnDelivDate(delivDate)
       let T2 = TwodayBasedOnDelivDate(delivDate)
