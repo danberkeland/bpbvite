@@ -1,6 +1,5 @@
 // Route Assignment is powered by table data that is slightly customized on the
-// front end for convenience. typedefs here describe the specification for this
-// context.
+// front end. typedefs here describe the specification for this context.
 //
 // Types that aren't 100% the same as fetched from the DB are prefixed with
 // 'Routing' to signify a special usage for this context
@@ -37,7 +36,8 @@ const to_Product = product => ({
   bakedWhere: product.bakedWhere,
   readyTime: product.readyTime,
   // @ts-ignore
-  validDays: product.daysAvailable.map(dValue => !!dValue)
+  validDays: product.daysAvailable?.map(dValue => !!dValue) 
+    || [true,true,true,true,true,true,true]
 })
 
 const legacyWeekdays = ['1','2','3','4','5','6','7']
@@ -57,7 +57,7 @@ const to_Routes = (routes, zoneRoutes) => {
     validDays: legacyWeekdays.map(wd => route.RouteSched.includes(wd)),
     hubStart: route.RouteDepart,
     hubFinis: route.RouteArrive,
-    zonesServed: zrByRouteNick[route.routeNick].map(zr => zr.zoneNick) ?? []
+    zonesServed: zrByRouteNick[route.routeNick]?.map(zr => zr.zoneNick) ?? []
   }))
 
 }
