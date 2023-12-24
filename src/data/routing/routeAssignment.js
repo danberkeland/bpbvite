@@ -4,6 +4,7 @@ import { flow, groupBy, keyBy, mapValues, sortBy } from "lodash/fp"
 import { useRoutingData } from "./hooks"
 
 import { RoutingLocation, _RoutingLocation, RoutingProduct, _RoutingProduct, RoutingRoute, _RoutingRoute, ZoneRoute } from "./types.d.js"
+import { useMemo } from "react"
 
 
 
@@ -272,21 +273,26 @@ export const useGetRouteOptionsByLocation = (locNick) => {
   const products = useRoutingData.products()
   const routes = useRoutingData.routes()
 
-  if (location && products && routes) {
-    return (prodNick, weekday) => {
-      const product = products.find(P => P.prodNick === prodNick)
+  const buildFunction = () => {
+    if (location && products && routes) {
+      return (prodNick, weekday) => {
+        const product = products.find(P => P.prodNick === prodNick)
 
-      if (!product) return undefined
-      else return getRouteOptions({
-        location, 
-        product, 
-        weekday, 
-        routes
-      })
+        if (!product) return undefined
+        else return getRouteOptions({
+          location, 
+          product, 
+          weekday, 
+          routes
+        })
+
+      }
 
     }
 
   }
+
+  return useMemo(buildFunction, [locNick, location, products, routes])
   
 
 }

@@ -27,6 +27,7 @@
 import { flatten, flow, groupBy, map, mapValues, sortBy, values } from "lodash/fp"
 import { getTodayDT, isoToDT } from "../../Pages/Production/NewPages/BPBN/utils"
 import { useListData } from "../_listData"
+import { useMemo } from "react"
 
 
 /**When duplicates exist, pick the most recently updated item*/
@@ -124,35 +125,38 @@ export const useCombinedOrders = ({ shouldFetch=true }) => {
 
 }
 
+// query doesnt seem to be working...
 
-export const useCombinedOrdersByLocNickByDelivDate = ({
-  locNick, delivDate, shouldFetch=true
-}) => {
-  const dayOfWeek = isoToDT(delivDate).toFormat('EEE')
+// export const useCombinedOrdersByLocNickByDelivDate = ({
+//   locNick, delivDate, shouldFetch=true
+// }) => {
+//   const dayOfWeek = isoToDT(delivDate).toFormat('EEE')
+//   console.log(locNick, delivDate, dayOfWeek)
 
-  const { data:ORD } = useListData({ 
-    tableName: "Order", 
-    customQuery: "orderByLocByDelivDate",
-    variables: { locNick, delivDate, limit: 5000 },
-    shouldFetch, 
-  })
-  const { data:STND } = useListData({ 
-    tableName: "Standing", 
-    customQuery: "standingByLocByDayOfWeek",
-    variables: { locNick, dayOfWeek, limit: 5000 },
-    shouldFetch,
-  })
+//   const { data:ORD } = useListData({ 
+//     tableName: "Order", 
+//     customQuery: "orderByLocByDelivDate",
+//     variables: { locNick, delivDate, limit: 5000 },
+//     shouldFetch, 
+//   })
+//   const { data:STND } = useListData({ 
+//     tableName: "Standing", 
+//     customQuery: "standingByLocByDayOfWeek",
+//     variables: { locNick, dayOfWeek, limit: 5000 },
+//     shouldFetch,
+//   })
 
-  const [combinedOrders, duplicateOrders] = 
-    combineOrdersOnDates(ORD ?? [], STND ?? [], [delivDate])
+//   console.log(ORD, STND)
+//   const [combinedOrders, duplicateOrders] = 
+//     combineOrdersOnDates(ORD ?? [], STND ?? [], [delivDate])
 
-  if (duplicateOrders.length) {
-    console.warn('duplicates found:', duplicateOrders)
-  }
+//   if (duplicateOrders.length) {
+//     console.warn('duplicates found:', duplicateOrders)
+//   }
 
-  return combinedOrders
+//   return combinedOrders
 
-}
+// }
 
 export const useCombinedOrdersByDelivDate = ({
   delivDate, shouldFetch=true
@@ -185,9 +189,7 @@ export const useCombinedOrdersByDelivDate = ({
 
 export const useCombinedOrdersByLoc = ({ locNick, shouldFetch=true }) => {
   const todayDT = getTodayDT()
-  const dates = [0,1,2,3,4,5,6,7].map(daysAhead => 
-    todayDT.plus({ days: daysAhead }).toFormat('yyyy-MM-dd')
-  )
+
 
   const { data:ORD } = useListData({ 
     tableName: "Order", 
@@ -202,14 +204,22 @@ export const useCombinedOrdersByLoc = ({ locNick, shouldFetch=true }) => {
     shouldFetch,
   })
 
-  const [combinedOrders, duplicateOrders] = 
-    combineOrdersOnDates(ORD ?? [], STND ?? [], dates)
 
-  if (duplicateOrders.length) {
-    console.warn('duplicates found:', duplicateOrders)
+  // if (duplicateOrders.length) {
+  //   console.warn('duplicates found:', duplicateOrders)
+  // }
+
+  const calculateValue = () => {
+    if (!ORD || !STND) return undefined
+
+    const dates = [0,1,2,3,4,5,6,7].map(daysAhead => 
+      todayDT.plus({ days: daysAhead }).toFormat('yyyy-MM-dd')
+    )
+    return combineOrdersOnDates(ORD, STND, dates)
+
   }
 
-  return combinedOrders
+  return useMemo(calculateValue, [ORD, STND])
 
 }
 

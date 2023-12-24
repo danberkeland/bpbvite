@@ -1,8 +1,7 @@
 import React from "react"
 import { getTodayDT } from "../BPBN/utils"
-import { useCombinedOrdersByDelivDate, useCombinedOrdersByLoc } from "../../../../data/orders/combinedOrders"
-import { useListData } from "../../../../data/_listData"
-import { useRoutedOrdersByLocNickByDelivDate } from "../../../../data/orders/routedOrders"
+import { useCombinedOrdersByLoc } from "../../../../data/orders/combinedOrders"
+import { useRoutedOrdersByLocNick } from "../../../../data/orders/routedOrders"
 
 
 
@@ -19,9 +18,9 @@ export const OrderDomain = () => {
   // const { data:products } = useRoutedProducts({ locNick: 'slopro' })
 
 
-  const routedOrders = useRoutedOrdersByLocNickByDelivDate({
-    locNick: 'slopro',
-    delivDate: today
+  const routedOrders = useRoutedOrdersByLocNick({
+    locNick: 'backporch',
+    shouldFetch: true
   })
 
   console.log(routedOrders)
