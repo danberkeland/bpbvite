@@ -77,7 +77,7 @@ export const BPBSWhatToMake = ({ initialDateOption='today' }={}) => {
     updateLocalData:updateProductCache,
   } = useListData({ tableName: "Product", shouldFetch: true })
 
-  if (!!WTM) console.log("pretzel data", WTM.pretzelData)
+  //if (!!WTM) console.log("pretzel data", WTM.pretzelData)
 
   const frenchPocketDict = keyBy(WTM?.frenchPocketData, 'prodNick')
   const products = keyBy(PRD, 'prodNick')

@@ -112,11 +112,15 @@ export const useBpbsWtmData = ({ shouldFetch, reportDate, reportRelDate }) => {
 
     const reportDateDT = isoToDT(reportDate)
     const adjustedRelDates =  
-      [0].concat(scheduleForwardOnHolidays(
-        [1,2,3,4,5]
-          .map(daysAhead => reportDateDT.plus({ days: daysAhead })))
-          .map(dt => dt.diff(reportDateDT, 'days').days
-      ))
+      [0].concat(
+        scheduleForwardOnHolidays(
+          [1,2,3,4,5].map(daysAhead => reportDateDT.plus({ days: reportRelDate + daysAhead }))
+        ).map(dt => 
+          dt.diff(reportDateDT, 'days').days - reportRelDate
+        )
+      )
+    
+    //console.log("ADJUSTEDRELDATES", adjustedRelDates)
 
     // We only ever need to look at orders for the given day and the next day.
     // holding orders for the given date should be excluded.

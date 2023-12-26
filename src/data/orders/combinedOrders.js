@@ -36,7 +36,7 @@ const keyOrdersWithDupes = (delivDate, itemList) => {
     groupBy(I => `${delivDate}#${I.locNick}#${I.prodNick}`),
     mapValues(grp => sortBy(I => I.updatedOn || I.updatedAt)(grp)),
   )(itemList)
-  console.log('groupedItems', groupedItems)
+  //console.log('groupedItems', groupedItems)
 
   /**@type {Object} */
   const keyedItems = mapValues(grp => grp[grp.length - 1])(groupedItems)

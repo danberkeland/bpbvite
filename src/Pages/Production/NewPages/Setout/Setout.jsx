@@ -16,10 +16,10 @@ import { recordSetoutTime, submitPrepreshaped } from "./submitFunctions"
 import { DrilldownCellTemplate } from "../BPBN/_components/DrilldownCellTemplate"
 import { useCheckUpdates } from "../../Utils/useCheckUpdates"
 
-const _todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
-const todayDT = _todayDT.toFormat('MM-dd') === '12-24'
-  ? _todayDT.plus({ days: 1 }) : _todayDT
-console.log(_todayDT.toFormat('MM-dd'))
+const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
+// const todayDT = _todayDT.toFormat('MM-dd') === '12-24'
+//   ? _todayDT.plus({ days: 1 }) : _todayDT
+//console.log(_todayDT.toFormat('MM-dd'))
 const todayISO = todayDT.toFormat('yyyy-MM-dd')
 const todayUS = todayDT.toFormat('MM/dd/yyyy')
 

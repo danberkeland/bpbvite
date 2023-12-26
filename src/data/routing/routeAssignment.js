@@ -267,16 +267,17 @@ export const getRouteOptions = ({
 
 
 
-const useGetRouteOptionsByLocation = (locNick) => {
+export const useGetRouteOptionsByLocation = (locNick) => {
   const location = useRoutingData.location({ locNick })
   const products = useRoutingData.products()
   const routes = useRoutingData.routes()
 
-  if (location) {
+  if (location && products && routes) {
     return (prodNick, weekday) => {
       const product = products.find(P => P.prodNick === prodNick)
 
-      return getRouteOptions({
+      if (!product) return undefined
+      else return getRouteOptions({
         location, 
         product, 
         weekday, 
