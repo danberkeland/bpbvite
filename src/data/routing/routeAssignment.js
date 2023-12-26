@@ -33,10 +33,11 @@ const modulo = (n, m) => ((n % m) + m) % m
 // Assumes intervals are closed on both ends, '[ , ]' - style.
 // Better setup would be to use half open, '[ , )' - style intervals, but
 // this matches prior logic more cleanly.
-const intervalContainsPoint = (w, point) => w <= point && point <= w
-const intervalsIntersect = (w1, w2) => 
-  intervalContainsPoint(w1, w2[0])
-  || intervalContainsPoint(w2, w1[0])
+
+const intervalContainsPoint = (I, point) => I[0] <= point && point <= I[1]
+const intervalsIntersect = (I1, I2) => 
+  intervalContainsPoint(I1, I2[0])
+  || intervalContainsPoint(I2, I1[0])
 
 
 const ifValidDo = (testFn, ...args) => {
@@ -120,7 +121,7 @@ const getFulfillmentPlan = (route, product, weekday, transferRoutes) => {
   }
 
   if (transferRoute === null) { // no transfer needed
-    return { fultillmentPlan: [{ ..._route }] }
+    return { fulfillmentPlan: [{ ..._route }] }
 
   }
 
@@ -154,6 +155,8 @@ const getFulfillmentPlan = (route, product, weekday, transferRoutes) => {
 }
 
 const getProductionPlan = (product, fulfillmentPlan) => {
+  //console.log("fulfillmentPlan", fulfillmentPlan)
+  if (!fulfillmentPlan.length) return { error: "no fulfillment plan" }
   const canScheduleSameDay = product.validDays[fulfillmentPlan[0].weekday] 
     && product.readyTime < fulfillmentPlan[0].timeStart
 
@@ -256,10 +259,11 @@ export const getRouteOptions = ({
 
   return {
     deliv: sortBy([
-      summary => summary.productionPlan[0].dateOffset * -1,
-      summary => summary.fulfillmentPlan[-1].timeStart
+      summary => summary.error === null ? 0 : 1, 
+      summary => summary.productionPlan.at(0).dateOffset * -1,
+      summary => summary.fulfillmentPlan.at(-1).timeStart
     ])(delivSummaries.filter(summary => summary.error === null)),
-    ...keyBy('locNick')(pickupSummaries)
+    ...keyBy('routeNick')(pickupSummaries)
   }
 
 }
@@ -275,6 +279,8 @@ export const useGetRouteOptionsByLocation = (locNick) => {
 
   const buildFunction = () => {
     if (location && products && routes) {
+
+      console.log(location, products, routes)
       return (prodNick, weekday) => {
         const product = products.find(P => P.prodNick === prodNick)
 

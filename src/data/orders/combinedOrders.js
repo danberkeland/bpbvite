@@ -187,6 +187,7 @@ export const useCombinedOrdersByDelivDate = ({
 
 }
 
+
 export const useCombinedOrdersByLoc = ({ locNick, shouldFetch=true }) => {
   const todayDT = getTodayDT()
 
@@ -219,6 +220,7 @@ export const useCombinedOrdersByLoc = ({ locNick, shouldFetch=true }) => {
 
   }
 
+  // [combinedOrders, duplicateOrders]
   return useMemo(calculateValue, [ORD, STND])
 
 }

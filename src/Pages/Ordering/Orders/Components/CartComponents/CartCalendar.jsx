@@ -70,11 +70,11 @@ export const CartCalendar = ({
               ? "bpb-date-cell-standing" 
               : "bpb-date-cell-none"
         }
-        style={
-          isXmas ? xmasStyle 
-            : isRecentDelete ? backgroundDeleteStyle 
-            : {}
-        }
+        // style={
+        //   isXmas ? xmasStyle 
+        //     : isRecentDelete ? backgroundDeleteStyle 
+        //     : {}
+        // }
         //onClick={() => console.log(calendarDate, hasCart, hasStanding)}
       >
         {date.day}

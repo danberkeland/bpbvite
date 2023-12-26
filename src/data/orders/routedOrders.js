@@ -48,11 +48,12 @@ export const useRoutedOrdersByLocNick = ({
   locNick,
 }) => {
 
-  const combinedOrders = useCombinedOrdersByLoc({
+  const [combinedOrders, duplicateOrders] = useCombinedOrdersByLoc({
     locNick,
     shouldFetch: true
-  })
+  }) ?? []
 
+  // function is "loaded" with location/route/zoneRoute data
   const getOptions = useGetRouteOptionsByLocation(locNick)
 
   const calculateValue = () => {
