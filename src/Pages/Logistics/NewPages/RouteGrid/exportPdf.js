@@ -14,7 +14,10 @@ export const exportRouteGridPdf = ({ gridData, reportDateDT, fileName }) => {
     'asc'
   )
 
-  const doc = new jsPDF("l", "mm", "a4")
+  const doc = new jsPDF({
+    orientation: 'landscape',
+    format: "letter"
+  })//"l", "mm", "a4")
   let isFirstPage = true
   for (let routeNick of sortedRouteNicks) {
 

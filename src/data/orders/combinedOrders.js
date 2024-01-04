@@ -24,13 +24,45 @@
 // use that data to trigger automatic deletions.
 
 
-import { flatten, flow, groupBy, map, mapValues, sortBy, values } from "lodash/fp"
+import { filter, flatten, flow, groupBy, keyBy, map, mapValues, sortBy, sortedUniqBy, uniqBy, values } from "lodash/fp"
 import { getTodayDT, isoToDT } from "../../Pages/Production/NewPages/BPBN/utils"
 import { useListData } from "../_listData"
 import { useMemo } from "react"
+import { useGetRouteOptionsByLocation } from "../routing/routeAssignment"
 
 
-/**When duplicates exist, pick the most recently updated item*/
+export const dedupeOrders = orderItems => {
+  const orderGroups = flow(
+    groupBy(I => `${I.delivDate}#${I.locNick}#${I.prodNick}`),
+    values,
+    map(grp => sortBy(I => I.updatedOn || I.updatedAt)(grp)),
+  )(orderItems)
+
+  const items = orderGroups.map(grp => grp.at(-1))
+  const dupes = orderGroups.flatMap(grp => grp.slice(0, -1))
+
+  return [items, dupes]
+
+}
+
+export const dedupeStandings = standingItems => {
+  const standingGroups = flow(
+    groupBy(I => `${I.isStand}#${I.dayOfWeek}#${I.locNick}#${I.prodNick}`),
+    values,
+    map(grp => sortBy(I => I.updatedOn || I.updatedAt)(grp)),
+  )(standingItems)
+
+  const items = standingGroups.map(grp => grp.at(-1))
+  const dupes = standingGroups.flatMap(grp => grp.slice(0, -1))
+
+  return [items, dupes]
+
+}
+
+/** 
+ * When duplicates exist, pick the most recently updated item, 
+ * and place the rest in the duplicate bucket
+*/
 const keyOrdersWithDupes = (delivDate, itemList) => {
 
   const groupedItems = flow(
@@ -86,7 +118,11 @@ const combineOrdersOnDates = (
     const combined = values({ ...holdDict, ...standDict, ...orderDict })
       .map(order => ({ ...order, delivDate, dayOfWeek }))
     
-    const dupes = [ ...orderDupes, ...standDupes, ...holdDupes ]
+    const dupes = {
+      order: orderDupes,
+      standing: standDupes,
+      holding: holdDupes
+    }
 
     return [combined, dupes]
 
@@ -96,6 +132,45 @@ const combineOrdersOnDates = (
   const duplicateOrders = combinedOrdersWithDupesByDate.flatMap(item => item[1])
   
   return [combinedOrders, duplicateOrders]
+
+}
+
+/**
+ * Compiles order & standing data. Does not handle duplicate records for the
+ * same location, product, & day/date, so make sure data is 'cleaned' first.
+ * @param {Object[]} orderItems - as produced from querying Order table
+ * @param {Object[]} standingItems - as produced from querying Standing table
+ * @param {string[]} dates - list of 'yyyy-MM-dd' date strings.
+ */
+export const combineOrdersOnDates2 = (
+  orderItems, 
+  standingItems, 
+  dates, 
+) => {
+
+  const dateTimes = dates.map(date => isoToDT(date))
+  const { standing=[], holding=[] } = 
+    groupBy(I => I.isStand ? 'standing' : 'holding')(standingItems)
+
+  const ordersByDate = keyBy('delivDate')(orderItems)
+  const standingByDay = keyBy('dayOfWeek')(standing)
+  const holdingByDay = keyBy('dayOfWeek')(holding)
+
+  const combinedOrders = dateTimes.flatMap(DT => {
+    const delivDate = DT.toFormat('yyyy-MM-dd')
+    const dayOfWeek = DT.toFormat('EEE')
+
+    const locProdKey = order => `${order.locNick}#${order.prodNick}`
+
+    return values({ 
+      ...keyBy(locProdKey)(holdingByDay[dayOfWeek]), 
+      ...keyBy(locProdKey)(standingByDay[dayOfWeek]), 
+      ...keyBy(locProdKey)(ordersByDate[delivDate]) 
+    }).map(order => ({ ...order, delivDate, dayOfWeek }))
+
+  })
+  
+  return combinedOrders
 
 }
 
@@ -226,3 +301,56 @@ export const useCombinedOrdersByLoc = ({ locNick, shouldFetch=true }) => {
 }
 
 
+/** For ordering interface by location */
+export const useOrderingDataByLoc = ({ locNick, shouldFetch=true }) => {
+
+  const { data:ORD } = useListData({ 
+    tableName: "Order", 
+    customQuery: "orderByLocByDelivDate",
+    variables: { locNick, limit: 5000 },
+    shouldFetch, 
+  })
+  const { data:STND } = useListData({ 
+    tableName: "Standing", 
+    customQuery: "standingByLocByDayOfWeek",
+    variables: { locNick, limit: 5000 },
+    shouldFetch,
+  })
+
+  const getOptions = useGetRouteOptionsByLocation(locNick)
+
+  const calculateValue = () => {
+    if (!ORD || !STND || !getOptions) return undefined
+
+    const [orders, orderDupes] = dedupeOrders(ORD)
+    const [standing, standingDupes] = dedupeStandings(STND)
+
+
+    const dates = flow(
+      sortedUniqBy('delivDate'),
+      map(order => order.delivDate),
+    )(orders)
+    
+    const combinedOrders = combineOrdersOnDates2(
+      orders, 
+      standing, 
+      dates
+    )
+
+    if (orderDupes) {
+      console.log("duplicates orders found", orderDupes)
+    }
+    if (standingDupes) {
+      console.log("duplicate standing orders found", standingDupes)
+    }
+
+    return {
+      cart: combinedOrders,
+      standing: standing
+    }
+
+  }
+
+  return useMemo(calculateValue, [ORD, STND, getOptions])
+
+} 
