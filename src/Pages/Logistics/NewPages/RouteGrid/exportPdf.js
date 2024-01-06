@@ -14,16 +14,13 @@ export const exportRouteGridPdf = ({ gridData, reportDateDT, fileName }) => {
     'asc'
   )
 
-  const doc = new jsPDF({
-    orientation: 'landscape',
-    format: "letter"
-  })//"l", "mm", "a4")
+  const doc = new jsPDF({ format: 'letter', orientation: 'landscape' }) // ("l", "mm", "a4")
   let isFirstPage = true
   for (let routeNick of sortedRouteNicks) {
 
     const { columns, body } = gridData[routeNick]
     
-    if (!isFirstPage) doc.addPage("a4", "l") 
+    if (!isFirstPage) doc.addPage('letter', 'landscape') //("a4", "l") 
     isFirstPage = false
 
     // **** Janky Hack to deal with large BPB Orders ***
