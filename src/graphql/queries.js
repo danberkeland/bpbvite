@@ -4532,10 +4532,13 @@ export const getNotes = /* GraphQL */ `
   query GetNotes($id: ID!) {
     getNotes(id: $id) {
       id
-      note
+      Type
+      ref
+      when
       forWhom
       byWhom
-      when
+      note
+      ttl
       createdAt
       updatedAt
     }
@@ -4550,10 +4553,13 @@ export const listNotes = /* GraphQL */ `
     listNotes(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        note
+        Type
+        ref
+        when
         forWhom
         byWhom
-        when
+        note
+        ttl
         createdAt
         updatedAt
       }
@@ -7994,6 +8000,101 @@ export const internalByBakeryLoc = /* GraphQL */ `
         intLocNick
         bakeryLoc
         intLocDescrip
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const notesByType = /* GraphQL */ `
+  query NotesByType(
+    $Type: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelNotesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    notesByType(
+      Type: $Type
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        Type
+        ref
+        when
+        forWhom
+        byWhom
+        note
+        ttl
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const notesByTypeByRef = /* GraphQL */ `
+  query NotesByTypeByRef(
+    $Type: String!
+    $ref: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelNotesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    notesByTypeByRef(
+      Type: $Type
+      ref: $ref
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        Type
+        ref
+        when
+        forWhom
+        byWhom
+        note
+        ttl
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const notesByRef = /* GraphQL */ `
+  query NotesByRef(
+    $ref: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelNotesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    notesByRef(
+      ref: $ref
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        Type
+        ref
+        when
+        forWhom
+        byWhom
+        note
+        ttl
         createdAt
         updatedAt
       }

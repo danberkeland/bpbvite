@@ -213,12 +213,15 @@ export const infoQBAuthAttributes =/* GraphQL */ `
 
 export const notesAttributes = /* GraphQL */ `
   id
+  Type
+  ref
+  when
   note
   forWhom
   byWhom
-  when
   createdAt
   updatedAt
+  ttl
 `
 
 export const templateProdAttributes = /* GraphQL */ `

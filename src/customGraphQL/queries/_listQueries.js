@@ -295,13 +295,7 @@ export const listNotes = /* GraphQL */ `
   ) {
     listNotes(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        id
-        note
-        forWhom
-        byWhom
-        when
-        createdAt
-        updatedAt
+        ${attributes.notesAttributes}
       }
       nextToken
     }
@@ -402,6 +396,75 @@ export const standingByLocByDayOfWeek = /* GraphQL */ `
     ) {
       items {
         ${attributes.standingAttributes}
+      }
+      nextToken
+    }
+  }
+`;
+
+export const notesByType = /* GraphQL */ `
+  query NotesByType(
+    $Type: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelNotesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    notesByType(
+      Type: $Type
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        ${attributes.notesAttributes}
+      }
+      nextToken
+    }
+  }
+`;
+export const notesByTypeByRef = /* GraphQL */ `
+  query NotesByTypeByRef(
+    $Type: String!
+    $ref: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelNotesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    notesByTypeByRef(
+      Type: $Type
+      ref: $ref
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        ${attributes.notesAttributes}
+      }
+      nextToken
+    }
+  }
+`;
+export const notesByRef = /* GraphQL */ `
+  query NotesByRef(
+    $ref: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelNotesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    notesByRef(
+      ref: $ref
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        ${attributes.notesAttributes}
       }
       nextToken
     }

@@ -8240,10 +8240,13 @@ export const onCreateNotes = /* GraphQL */ `
   subscription OnCreateNotes($filter: ModelSubscriptionNotesFilterInput) {
     onCreateNotes(filter: $filter) {
       id
-      note
+      Type
+      ref
+      when
       forWhom
       byWhom
-      when
+      note
+      ttl
       createdAt
       updatedAt
     }
@@ -8253,10 +8256,13 @@ export const onUpdateNotes = /* GraphQL */ `
   subscription OnUpdateNotes($filter: ModelSubscriptionNotesFilterInput) {
     onUpdateNotes(filter: $filter) {
       id
-      note
+      Type
+      ref
+      when
       forWhom
       byWhom
-      when
+      note
+      ttl
       createdAt
       updatedAt
     }
@@ -8266,10 +8272,13 @@ export const onDeleteNotes = /* GraphQL */ `
   subscription OnDeleteNotes($filter: ModelSubscriptionNotesFilterInput) {
     onDeleteNotes(filter: $filter) {
       id
-      note
+      Type
+      ref
+      when
       forWhom
       byWhom
-      when
+      note
+      ttl
       createdAt
       updatedAt
     }
