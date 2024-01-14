@@ -628,10 +628,15 @@ type OldDough @model {
 
 type Notes @model {
   id: ID!
-  note: String
-  forWhom: String
-  byWhom: String
-  when: String
+  Type: String
+    @index(name: "byType", queryField: "notesByType") # the topic category, hinting at which page the data should be fetched for, e.g. "customer, order, product, bpbnbaker1, ..."
+    @index(name: "byTypeByRef", sortKeyFields: ["ref"], queryField: "notesByTypeByRef")
+  ref: String @index(name: "byRef", queryField: "notesByRef") # foreign key or other 'reference' for more fine-grained filtering, e.g. a locNick, prodNick, "long driver"...
+  when: String # specify an applicable date if needed
+  forWhom: String # who, if someone in particular, should see the note 
+  byWhom: String # who created/updated the note
+  note: String # content of the note
+  ttl: Int # particularly for notes with a "when" value that should auto-delete
 }
 
 type EventLog @model {

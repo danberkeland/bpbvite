@@ -5,6 +5,7 @@ import { useRoutingData } from "./hooks"
 
 import { RoutingLocation, _RoutingLocation, RoutingProduct, _RoutingProduct, RoutingRoute, _RoutingRoute, ZoneRoute } from "./types.d.js"
 import { useMemo } from "react"
+import { HOLIDAYS } from "../../constants/constants.js"
 
 
 
@@ -47,17 +48,21 @@ const ifValidDo = (testFn, ...args) => {
 }
 
 const routingErrorMsgs = {
-  0: "route not scheduled on weekday",
   1: "route does not serve zone",
   2: "location not available during delivery",
   3: "transfer route not found",
   4: "could not schedule transfer in time",
   5: "could not schedule product in time",
+  6: "route not scheduled on weekday",
+  7: "closed for holiday",
 }
 
-const testWeekday = (route, weekday) => {
-  const isValid = route.validDays[weekday]
-  return { error: isValid ? null : 0 }
+const testDay = (route, weekday, delivDate) => {
+  const weekdayError = route.validDays[weekday] ? null : 6
+  const holidayError = !HOLIDAYS.includes(delivDate) ? null : 7
+  const error = weekdayError || holidayError || null
+  
+  return { error }
 }
 
 const testZone = (route, location) => {
@@ -82,8 +87,9 @@ const testTimePeriod = (route, location) => {
  * @param {_RoutingRoute[]} transferRoutes 
  */
 const getFulfillmentPlan = (route, product, weekday, transferRoutes) => {
-  const _route = { 
+  const fulfillEvent = { 
     ...route, 
+    name: "fulfillment",
     isValid: true,
     weekday, 
     dateOffset: 0
@@ -110,27 +116,28 @@ const getFulfillmentPlan = (route, product, weekday, transferRoutes) => {
         hubStart: bakeHub,
         hubFinis: route.hubStart,
         zonesServed: [],
+        name: "transfer",
         isValid: false, 
         weekday,
         dateOffset: 0,
       },
-      { ..._route }
+      { ...fulfillEvent }
     ]
 
     return { error: 3, fulfillmentPlan }
   }
 
   if (transferRoute === null) { // no transfer needed
-    return { fulfillmentPlan: [{ ..._route }] }
+    return { fulfillmentPlan: [{ ...fulfillEvent }] }
 
   }
 
   // need to schedule/validate transfer
-  const canScheduleSameDay = transferRoute.validDays[_route.weekday] === true
+  const canScheduleSameDay = transferRoute.validDays[fulfillEvent.weekday] === true
     && transferRoute.timeFinis < route.timeStart
 
   const canSchedulePreviousDay = 
-    transferRoute.validDays[modulo(_route.weekday - 1, 7)] === true
+    transferRoute.validDays[modulo(fulfillEvent.weekday - 1, 7)] === true
 
   const daysBeforeNextStep = canScheduleSameDay ? 0
     : canSchedulePreviousDay ? 1
@@ -139,11 +146,12 @@ const getFulfillmentPlan = (route, product, weekday, transferRoutes) => {
   const fulfillmentPlan = [
     { 
       ...transferRoute, 
+      name: "transfer",
       isValid: canScheduleSameDay || canSchedulePreviousDay, 
-      weekday: modulo(_route.weekday - daysBeforeNextStep, 7),
-      dateOffset: _route.dateOffset - daysBeforeNextStep
+      weekday: modulo(fulfillEvent.weekday - daysBeforeNextStep, 7),
+      dateOffset: fulfillEvent.dateOffset - daysBeforeNextStep
     },
-    { ..._route }
+    { ...fulfillEvent }
   ]
 
   return { 
@@ -169,10 +177,12 @@ const getProductionPlan = (product, fulfillmentPlan) => {
 
   const productionPlan = [{
     ...product,
+    name: "finished",
     isValid: canScheduleSameDay || canSchedulePreviousDay,
     weekday: modulo(fulfillmentPlan[0].weekday - daysBeforeNextStep, 7),
     dateOffset: fulfillmentPlan[0].dateOffset - daysBeforeNextStep
   }]
+  
   
 
   return {
@@ -191,6 +201,7 @@ const getProductionPlan = (product, fulfillmentPlan) => {
  * @param {_RoutingProduct} input.product
  * @param {_RoutingRoute} input.route
  * @param {number} input.weekday
+ * @param {string|null} input.delivDate
  * @param {_RoutingRoute[]} input.transferRoutes
  */
 const getRouteSummary = ({
@@ -198,6 +209,7 @@ const getRouteSummary = ({
   product,
   route,
   weekday,
+  delivDate=null,
   transferRoutes
 }) => {
 
@@ -210,7 +222,7 @@ const getRouteSummary = ({
   }
 
   const finalSummary = flow(
-    ifValidDo(testWeekday, route, weekday),
+    ifValidDo(testDay, route, weekday, delivDate),
     ifValidDo(testZone, route, location),
     ifValidDo(testTimePeriod, route, location),
     ifValidDo(getFulfillmentPlan, route, product, weekday, transferRoutes),
@@ -223,16 +235,21 @@ const getRouteSummary = ({
 
 
 /**
+ * One of the main logic units for route assignment. Returns valid fulfillment
+ * plans, plus a final production event (baking), along with date info to aid
+ * work orchestration.
  * @param {Object} input
  * @param {_RoutingLocation} input.location 
  * @param {_RoutingProduct} input.product
  * @param {number} input.weekday
+ * @param {string|null} input.delivDate
  * @param {_RoutingRoute[]} input.routes
  */
 export const getRouteOptions = ({
   location,
   product,
   weekday,
+  delivDate,
   routes,
 }) => {
 
@@ -241,7 +258,7 @@ export const getRouteOptions = ({
   const pickupRoutes = routes.filter(route => route.routeNick.includes("Pick up"))
 
   const delivSummaries = delivRoutes.map(route => getRouteSummary({
-    location, product, route, weekday, transferRoutes
+    location, product, route, weekday, delivDate, transferRoutes
   }))
 
   const pickupSummaries = pickupRoutes.map(route => getRouteSummary({
@@ -254,6 +271,7 @@ export const getRouteOptions = ({
     product,
     route,
     weekday,
+    delivDate,
     transferRoutes
   }))
 
@@ -271,7 +289,12 @@ export const getRouteOptions = ({
 
 
 
-
+/**
+ * Returns a function tailored for the input locNick, with specific location
+ * data, plus product & route data pre-bound. The returned function produces
+ * produciton/fulfillment options for the location given an input product
+ * and weekday number.
+ */
 export const useGetRouteOptionsByLocation = (locNick) => {
   const location = useRoutingData.location({ locNick })
   const products = useRoutingData.products()
@@ -281,7 +304,7 @@ export const useGetRouteOptionsByLocation = (locNick) => {
     if (location && products && routes) {
 
       console.log(location, products, routes)
-      return (prodNick, weekday) => {
+      return (prodNick, weekday, delivDate) => {
         const product = products.find(P => P.prodNick === prodNick)
 
         if (!product) return undefined
@@ -289,6 +312,7 @@ export const useGetRouteOptionsByLocation = (locNick) => {
           location, 
           product, 
           weekday, 
+          delivDate,
           routes
         })
 

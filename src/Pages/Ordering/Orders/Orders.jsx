@@ -32,6 +32,9 @@ import { API, graphqlOperation } from "aws-amplify"
 import * as subscriptions from "../../../customGraphQL/subscriptions"
 import { Button } from "primereact/button"
 import { Toast } from "primereact/toast"
+import { useOrderNotesByCustomer } from "./data/noteHooks"
+import { Dialog } from "primereact/dialog"
+import { OrderNotes } from "./Components/OrderNotes/OrderNotes"
 
 
 
@@ -144,75 +147,75 @@ export const Orders = ({ useTestAuth }) => {
   // primary hook used to build the above useFullOrderByDate
   // we're calling this in to pass the mutate functions to the submit button
   const cartCache = useCartDataByLocation({ locNick, shouldFetch })
-  const { updateLocalData } = cartCache
+  // const { updateLocalData } = cartCache
 
-  const updateQueue = useRef({
-    createdItems: [],
-    updatedItems: [],
-    deletedItems: [],
-  })
+  // const updateQueue = useRef({
+  //   createdItems: [],
+  //   updatedItems: [],
+  //   deletedItems: [],
+  // })
 
-  const debouncedUpdate = debounce(({
-    createdItems=[], updatedItems=[], deletedItems=[],
-  }) => {
-    updateLocalData({ createdItems, updatedItems, deletedItems })
-    updateQueue.current = { createdItems: [],updatedItems: [],deletedItems: [] }
-  }, 500)
+  // const debouncedUpdate = debounce(({
+  //   createdItems=[], updatedItems=[], deletedItems=[],
+  // }) => {
+  //   updateLocalData({ createdItems, updatedItems, deletedItems })
+  //   updateQueue.current = { createdItems: [],updatedItems: [],deletedItems: [] }
+  // }, 500)
 
 
-  useEffect(() => {
-    let createOrderSub
-    let updateOrderSub
+  // useEffect(() => {
+  //   let createOrderSub
+  //   let updateOrderSub
 
-    if (user.authClass === 'bpbfull') {
-      const subVariables = { filter: { 
-        locNick: { eq: locNick ?? '' } 
-      }}
+  //   if (user.authClass === 'bpbfull') {
+  //     const subVariables = { filter: { 
+  //       locNick: { eq: locNick ?? '' } 
+  //     }}
   
-      createOrderSub = API.graphql(
-        graphqlOperation(
-          subscriptions.onCreateOrder,
-          subVariables
-        )
-      ).subscribe({
-        next: ({ provider, value }) => {
-          console.log({ provider, value })
-          updateQueue.current = ({
-            ...updateQueue.current,
-            createdItems: updateQueue.current.createdItems
-              .concat(value.data.onCreateOrder),
-          })
-          debouncedUpdate(updateQueue.current)
-        },
-        error: error => console.warn(error)
-      })
+  //     createOrderSub = API.graphql(
+  //       graphqlOperation(
+  //         subscriptions.onCreateOrder,
+  //         subVariables
+  //       )
+  //     ).subscribe({
+  //       next: ({ provider, value }) => {
+  //         console.log({ provider, value })
+  //         updateQueue.current = ({
+  //           ...updateQueue.current,
+  //           createdItems: updateQueue.current.createdItems
+  //             .concat(value.data.onCreateOrder),
+  //         })
+  //         debouncedUpdate(updateQueue.current)
+  //       },
+  //       error: error => console.warn(error)
+  //     })
   
-      updateOrderSub = API.graphql(
-        graphqlOperation(
-          subscriptions.onUpdateOrder,
-          subVariables
-        )
-      ).subscribe({
-        next: ({ provider, value }) => {
-          console.log({ provider, value })
-          updateQueue.current = ({
-            ...updateQueue.current,
-            updatedItems: updateQueue.current.updatedItems
-              .concat(value.data.onUpdateOrder),
-          })
-          debouncedUpdate(updateQueue.current)
-        },
-        error: error => console.warn(error)
-      })
+  //     updateOrderSub = API.graphql(
+  //       graphqlOperation(
+  //         subscriptions.onUpdateOrder,
+  //         subVariables
+  //       )
+  //     ).subscribe({
+  //       next: ({ provider, value }) => {
+  //         console.log({ provider, value })
+  //         updateQueue.current = ({
+  //           ...updateQueue.current,
+  //           updatedItems: updateQueue.current.updatedItems
+  //             .concat(value.data.onUpdateOrder),
+  //         })
+  //         debouncedUpdate(updateQueue.current)
+  //       },
+  //       error: error => console.warn(error)
+  //     })
 
-    }
+  //   }
 
-    return () => {
-      createOrderSub?.unsubscribe()
-      updateOrderSub?.unsubscribe()
-    }
+  //   return () => {
+  //     createOrderSub?.unsubscribe()
+  //     updateOrderSub?.unsubscribe()
+  //   }
 
-  }, [locNick, user.authClass, debouncedUpdate])
+  // }, [locNick, user.authClass, debouncedUpdate])
 
 
 
@@ -371,6 +374,14 @@ export const Orders = ({ useTestAuth }) => {
   //   };
   // }, [orderHasChanges]);
 
+  // Notes
+
+  const [showNotesMenu, setShowNotesMenu] = useState(false)
+  const { data:notes } = useOrderNotesByCustomer({
+    locNick: locNick,
+    shouldFetch: user.authClass === 'bpbfull'
+  })
+
   return (
     <div className='ordering-page' 
       style={{
@@ -384,7 +395,12 @@ export const Orders = ({ useTestAuth }) => {
 
       {/* {user.authClass === 'bpbfull' &&  */}
       {defaultAuth === 'bpbfull' && 
-        <div style={{ paddingBlock: "1rem" }}>
+        <div style={{
+          display: "flex",
+          gap: "1rem",
+          alignItems: "flex-end", 
+          paddingBlock: "1rem" 
+        }}>
           <LocationDropdown
             locNick={locNick}
             setLocNick={setLocNick}
@@ -393,7 +409,24 @@ export const Orders = ({ useTestAuth }) => {
             setDelivDateJS={setDelivDateJS}
             todayDT={todayDT}
             disabled={activeIndex === 2}
-          />     
+          />
+
+          <Button label={`Notes (${!!notes?.length ? notes.length - 1 : 0})`}
+            icon="pi pi-pencil"
+            className="p-button-rounded" 
+            style={{ height: "46px" }} 
+            onClick={() => setShowNotesMenu(true)}
+          />
+
+          <Dialog 
+            visible={showNotesMenu}
+            onHide={() => setShowNotesMenu(false)}
+            header={`Notes for ${location?.locName ?? "..."}`}
+            headerStyle={{gap: "1rem"}}
+            //style={{ width: "26rem" }}
+          >
+            <OrderNotes locNick={locNick} user={user} />
+          </Dialog>
         </div>
       }
 

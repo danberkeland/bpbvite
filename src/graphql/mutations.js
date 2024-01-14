@@ -8432,10 +8432,13 @@ export const createNotes = /* GraphQL */ `
   ) {
     createNotes(input: $input, condition: $condition) {
       id
-      note
+      Type
+      ref
+      when
       forWhom
       byWhom
-      when
+      note
+      ttl
       createdAt
       updatedAt
     }
@@ -8448,10 +8451,13 @@ export const updateNotes = /* GraphQL */ `
   ) {
     updateNotes(input: $input, condition: $condition) {
       id
-      note
+      Type
+      ref
+      when
       forWhom
       byWhom
-      when
+      note
+      ttl
       createdAt
       updatedAt
     }
@@ -8464,10 +8470,13 @@ export const deleteNotes = /* GraphQL */ `
   ) {
     deleteNotes(input: $input, condition: $condition) {
       id
-      note
+      Type
+      ref
+      when
       forWhom
       byWhom
-      when
+      note
+      ttl
       createdAt
       updatedAt
     }

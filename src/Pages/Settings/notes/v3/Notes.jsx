@@ -9,6 +9,8 @@ import { Calendar } from "primereact/calendar"
 import { Column } from "primereact/column"
 import { DataTable } from "primereact/datatable"
 import { InputTextarea } from "primereact/inputtextarea"
+import { useSettingsStore } from "../../../../Contexts/SettingsZustand"
+import { isoToDT } from "../../../Production/NewPages/BPBN/utils"
 
 const jsToFormat = (jsDate, formatToken) => DateTime.fromJSDate(jsDate)
   .setZone('America/Los_Angeles')
@@ -23,6 +25,9 @@ const isoToFormat = (isoDate, formatToken) => DateTime
 const jsToIso = jsDate => jsToFormat(jsDate, 'yyyy-MM-dd')
 
 export const Notes = () => {
+  const user = {
+    name: useSettingsStore(state => state.user)
+  }
   const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
   const todayISO = todayDT.toFormat('yyyy-MM-dd')
 
@@ -34,7 +39,12 @@ export const Notes = () => {
     data:NTE,
     submitMutations,
     updateLocalData,
-  } = useListData({ tableName: "Notes", shouldFetch: true })
+  } = useListData({ 
+    tableName: "Notes", 
+    customQuery: "notesByTypeByRef",
+    shouldFetch: true,
+    variables: { limit: 5000, Type: "logistics", ref: { eq: "longdriver" } }
+  })
   const noteCountsByDate = countBy(NTE, 'when')
 
   const makeNotes = () => {
@@ -62,6 +72,7 @@ export const Notes = () => {
     : noteValues.filter(note => 
         note.when === calendarDateISO || !note.id
       )
+  console.log(noteValues)
   
   return(<div style={{maxWidth: "64rem", margin:"auto"}}>
     
@@ -144,11 +155,17 @@ export const Notes = () => {
 
 
             const handleCreate = async () => {
-              const { note, forWhom, byWhom } = noteValues[row._idx]
+              const { note, Type, ref, forWhom, byWhom } = noteValues[row._idx]
               const createItem = {
+                Type: "logistics",
+                ref: "longdriver",
+                forWhom,
+                byWhom: user.name, 
                 note: note.trim(),
-                byWhom, forWhom,
-                when: calendarDateISO
+                when: calendarDateISO,
+                ttl: isoToDT(calendarDateISO)
+                  .plus({ days: 30 })
+                  .toSeconds()
               }
               setIsSubmitting(true)
               updateLocalData(
@@ -159,7 +176,18 @@ export const Notes = () => {
 
             const handleUpdate = async () => {
               const { id, note, forWhom, byWhom, when } = noteValues[row._idx]
-              const updateItem = { id, note: note.trim(), forWhom, byWhom, when }
+              const updateItem = { 
+                id, 
+                Type: "logistics",
+                ref: "longdriver",
+                note: note.trim(), 
+                forWhom, 
+                byWhom: user.name, 
+                when,
+                ttl: isoToDT(calendarDateISO)
+                  .plus({ days: 30 })
+                  .toSeconds()
+              }
               setIsSubmitting(true)
               updateLocalData(
                 await submitMutations({ updateInputs: [updateItem]})

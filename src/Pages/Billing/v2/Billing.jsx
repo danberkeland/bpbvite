@@ -21,6 +21,7 @@ import { batchSubmitQbInvoices, submitAndPrintInvoice, submitOrder } from "./sub
 import "./billing.css"
 import { useSettingsStore } from "../../../Contexts/SettingsZustand"
 
+const SHOW_PRINT = true
 let USDollar = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
@@ -328,7 +329,7 @@ export const Billing = () => {
           </div>
         </div>
         <div className={"test-qb-functions"}>
-          {rowKey === 'aaatest' &&
+          {SHOW_PRINT &&
             <Button label="Adjust & print invoice"
               onClick={async () => {
                 const invoice = convertOrderToInvoice({ 

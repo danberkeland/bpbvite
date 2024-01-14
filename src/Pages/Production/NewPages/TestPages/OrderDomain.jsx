@@ -18,10 +18,7 @@ export const OrderDomain = () => {
   // const { data:products } = useRoutedProducts({ locNick: 'slopro' })
 
 
-  const routedOrders = useRoutedOrdersByLocNick({
-    locNick: 'backporch',
-    shouldFetch: true
-  })
+  const routedOrders = useRoutedOrdersByLocNick({ locNick: 'lincoln' })
 
   console.log(routedOrders)
   
