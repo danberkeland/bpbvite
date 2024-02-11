@@ -277,7 +277,7 @@ const itemsAuth1 = itemsAuth2b.concat([
   },
 ]);
 
-function Pages({ Routes, Route, useLocation }) {
+function Pages() {
   const setItems = useSettingsStore((state) => state.setItems);
   const authClass = useSettingsStore((state) => state.authClass);
   useEffect(() => {
@@ -295,15 +295,12 @@ function Pages({ Routes, Route, useLocation }) {
     >
       {({ signOut, user }) => {
         return (
-          <>
+          <div className='main-block'>
             <AnimatedRoutes
               signOut={signOut}
               user={user}
-              Routes={Routes}
-              Route={Route}
-              useLocation={useLocation}
             />
-          </>
+          </div>
         );
       }}
     </Authenticator>

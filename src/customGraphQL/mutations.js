@@ -816,3 +816,36 @@ export const deleteTraining = /* GraphQL */ `
     }
   }
 `;
+
+
+
+export const createLocationProductOverride = /* GraphQL */ `
+  mutation CreateLocationProductOverride(
+    $input: CreateLocationProductOverrideInput!
+    $condition: ModelLocationProductOverrideConditionInput
+  ) {
+    createLocationProductOverride(input: $input, condition: $condition) {
+      ${attributes.locationProductOverrideAttributes}
+    }
+  }
+`;
+export const updateLocationProductOverride = /* GraphQL */ `
+  mutation UpdateLocationProductOverride(
+    $input: UpdateLocationProductOverrideInput!
+    $condition: ModelLocationProductOverrideConditionInput
+  ) {
+    updateLocationProductOverride(input: $input, condition: $condition) {
+      ${attributes.locationProductOverrideAttributes}
+    }
+  }
+`;
+export const deleteLocationProductOverride = /* GraphQL */ `
+  mutation DeleteLocationProductOverride(
+    $input: DeleteLocationProductOverrideInput!
+    $condition: ModelLocationProductOverrideConditionInput
+  ) {
+    deleteLocationProductOverride(input: $input, condition: $condition) {
+      ${attributes.locationProductOverrideAttributes}
+    }
+  }
+`;

@@ -2,6 +2,7 @@ import React from "react";
 
 // import Ordering from "../Pages/Ordering/Ordering";
 import Ordering2 from "../Pages/Ordering/Ordering2";
+import { OrdersPage } from "../Pages/Ordering/v2/Ordering";
 import CustomerNews from "../Pages/CustomerNews/CustomerNews";
 import CustomerBilling from "../Pages/CustomerBilling/CustomerBilling";
 import CustomerSettings from "../Pages/CustomerSettings/CustomerSettings";
@@ -24,7 +25,8 @@ import Locations from "../Pages/Locations/Locations";
 import { Locations as LocationsNew } from "../Pages/Locations/NewPage/Locations";
 import ManageCustomers from "../Pages/Settings/ManageCustomers/ManageCustomers";
 import ManageTraining from "../Pages/Settings/ManageTraining/ManageTraining";
-import CustProds from "../Pages/Settings/custProds/custProds";
+import { default as CustProds } from "../Pages/Settings/custProds/custProds";
+import { LocationProductOverrides } from "../Pages/Settings/custProds/v2/LocationProductOverrides";
 import { NavSide } from "./Nav";
 
 import { AnimatePresence } from "framer-motion";
@@ -61,26 +63,36 @@ import { Bpbn2 } from "../Pages/Production/NewPages/BPBN/Baker2/BpbnBaker2";
 import { BPBNSetout, BPBSSetout } from "../Pages/Production/NewPages/Setout/Setout";
 import { BpbnBuckets } from "../Pages/Production/NewPages/BPBN/Buckets/BpbnBuckets";
 
+import {
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 
-
-function AnimatedRoutes({ Routes, Route, useLocation }) {
+function AnimatedRoutes() {
   const authClass = useSettingsStore((state) => state.authClass);
   const location = useLocation();
 
   return (
     <AnimatePresence>
       <React.Fragment>
-      <UserHeaderMenu />
-      {authClass !== "customer" && <TopNav />}
+      {(authClass === 'bpbfull' || authClass === 'bpbcrew') && 
+        <div className="top-nav-container">
+          <TopNav />
+        </div>
+      }
       <Routes location={location} key={location.pathname}>
         <Route path="/Ordering" element={<Ordering2 />} />
+        <Route path="/Ordering/v2" element={<OrdersPage />} />
         <Route path="/CustomerNews" element={<CustomerNews />} />
         <Route path="/CustomerBilling" element={<CustomerBilling />} />
         <Route path="/CustomerSettings" element={<CustomerSettings />} />
         <Route path="/CustomerProducts" element={<CustomerProducts />} />
         <Route path="/remap" element={<Remap />} />
-        {authClass !== "customer" && (
+        {/* {authClass !== "customer" && */}
+        {(authClass === 'bpbfull' || authClass === 'bpbcrew') &&
           <React.Fragment>
+            {/* <Route path="/Ordering/v2" element={<OrdersPage />} /> */}
             <Route path="/Production/BPBNBaker1" element={<Bpbn1 />} />
             <Route path="/Production/BPBNBaker1/v2" element={<Bpbn1 />} />
             <Route path="/Production/BPBNBaker1/v1" element={<BPBNBaker1 />} />
@@ -181,6 +193,10 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
               element={<ManageTraining />}
             />
             <Route path="/Settings/custProds" element={<CustProds />} />
+            <Route 
+              path="/Settings/custProds/v2" 
+              element={<LocationProductOverrides />} 
+            />
             <Route path="/Settings/DelivOrder" element={<DelivOrder />} />
             <Route path="/Settings/editDough" element={<EditDoughs />} />
             <Route path="/Settings/editRoutes" element={<EditRoutes />} />
@@ -189,7 +205,7 @@ function AnimatedRoutes({ Routes, Route, useLocation }) {
             <Route path="/Settings/Notes/v3" element={<NotesV3 />} />
             <Route path="/Settings/Notes/v2" element={<NotesV2 />} />
           </React.Fragment>
-        )}
+        }
 
         <Route path="/" element={<NavSide />} />
       </Routes>

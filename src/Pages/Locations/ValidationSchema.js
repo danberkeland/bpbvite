@@ -9,7 +9,7 @@ export const validationSchema = (locationList) => {
   return yup.object().shape({
     locNick: yup
       .string()
-      .matches(/^[a-z]+$/, "must contain only lowercase letters")
+      .matches(/^[a-z0-9]+$/, "must contain only lowercase letters or numbers")
       .notOneOf(locNicks, "this id is not available.")
       .min(2, "Location ID must have at least 2 characters")
       .required("Required"),

@@ -1,29 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { Menubar } from "primereact/menubar";
-import { TabMenu } from "primereact/tabmenu";
-
-import "primereact/resources/themes/saga-blue/theme.css";
-import "primereact/resources/primereact.min.css";
-import "primeicons/primeicons.css";
-
-import styled from "styled-components";
-
-const BackGround = styled.div`
-  display: flex;
-  width: 100%;
-  background-color: white;
-`;
-
-const TopBar = styled.div`
-  display: grid;
-  grid-template-columns: 10fr 1fr;
-  background-color: var(--bpb-background-5);
-`;
 
 function TopNav() {
-  const [selectedMenu, setSelectedMenu] = useState("");
-
   const items = [
     {
       label: "Production",
@@ -308,14 +287,11 @@ function TopNav() {
     },
   ];
 
-  return (
-    <div className="card">
-      <TopBar>
-        <Menubar model={items} />
-        
-      </TopBar>
-    </div>
-  );
+  return <Menubar 
+    model={items} 
+    //id="bpb-top-nav"
+    style={{borderRadius: "0px", height: "4rem"}}     
+  />
 }
 
 export default TopNav;

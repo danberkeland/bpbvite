@@ -80,6 +80,7 @@ export const Orders = ({ useTestAuth }) => {
     locNick: useSettingsStore(state => state.currentLoc),
     // locNick: "high",
   }
+
   const isLoading = useSettingsStore((state) => state.isLoading)
 
   const tabModel = user.authClass === 'bpbfull'

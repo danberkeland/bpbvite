@@ -3,12 +3,7 @@ import React, { useEffect } from "react";
 import { Amplify, Hub } from "aws-amplify";
 import awsmobile from "./aws-exports";
 
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 
 // import { Splash } from "./AppStructure/Auth/Splash2";
 // import { UserApplyForm } from "./AppStructure/Auth/UserApplyForm";
@@ -17,7 +12,7 @@ import {
 // import { VerifyEmail } from "./AppStructure/Auth/VerifyEmail";
 // import { ForgotPassword } from "./AppStructure/Auth/ForgotPassword";
 
-import { NavBottom } from "./AppStructure/Nav";
+// import { NavBottom } from "./AppStructure/Nav";
 
 import Pages from "./AppStructure/Pages";
 
@@ -30,6 +25,7 @@ import "primeicons/primeicons.css";
 import { checkUser } from "./AppStructure/Auth/AuthHelpers";
 import Loader from "./AppStructure/Loader";
 import { useSettingsStore } from "./Contexts/SettingsZustand";
+import { UserHeaderMenu } from "./AppStructure/UserHeaderMenu";
 
 Amplify.configure(awsmobile);
 
@@ -106,13 +102,20 @@ export function App() {
   return (
     <React.Fragment>
       {isLoading && <Loader />}
-      <div className="headerBlock"></div>
+      <div className="headerBlockContainer">
+        <div 
+          className="headerBlock" 
+          onClick={() => window.location = "/"}
+          style={{cursor: "pointer"}}
+        />
+      </div>
+      <UserHeaderMenu />
 
       <Router>
       
           <React.Fragment>
-            {authClass === "customer" && <NavBottom />}
-            <Pages Routes={Routes} Route={Route} useLocation={useLocation} />
+            {/* {authClass === "customer" && <NavBottom />} */}
+            <Pages />
           </React.Fragment>
        
       </Router>

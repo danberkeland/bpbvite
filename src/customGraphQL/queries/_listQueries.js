@@ -68,7 +68,8 @@ export const listLocationUsers = /* GraphQL */ `
     }
   }
 `;
-export const listLocations = /* GraphQL */ `
+export const listLocations = (atts) =>
+  /* GraphQL */ `
   query ListLocations(
     $locNick: String
     $filter: ModelLocationFilterInput
@@ -83,9 +84,7 @@ export const listLocations = /* GraphQL */ `
       nextToken: $nextToken
       sortDirection: $sortDirection
     ) {
-      items {
-        ${attributes.locationAttributes}
-      }
+      items {${!!atts ? atts.join(',') : attributes.locationAttributes}}
       nextToken
     }
   }
@@ -177,7 +176,8 @@ export const listZoneRoutes = /* GraphQL */ `
     }
   }
 `;
-export const listProducts = /* GraphQL */ `
+export const listProducts = (atts) =>
+  /* GraphQL */ `
   query ListProducts(
     $prodNick: String
     $filter: ModelProductFilterInput
@@ -192,9 +192,7 @@ export const listProducts = /* GraphQL */ `
       nextToken: $nextToken
       sortDirection: $sortDirection
     ) {
-      items {
-        ${attributes.productAttributes}
-      }
+      items {${!!atts ? atts.join(', ') : attributes.productAttributes}}
       nextToken
     }
   }
@@ -301,7 +299,24 @@ export const listNotes = /* GraphQL */ `
     }
   }
 `;
-
+export const listLocationProductOverrides = /* GraphQL */ `
+  query ListLocationProductOverrides(
+    $filter: ModelLocationProductOverrideFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listLocationProductOverrides(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        ${attributes.locationProductOverrideAttributes}
+      }
+      nextToken
+    }
+  }
+`;
 // *****************************************************************************
 // Special queries -- by index
 // *****************************************************************************
@@ -465,6 +480,51 @@ export const notesByRef = /* GraphQL */ `
     ) {
       items {
         ${attributes.notesAttributes}
+      }
+      nextToken
+    }
+  }
+`;
+export const locationProductOverridesByLocNick = /* GraphQL */ `
+  query LocationProductOverridesByLocNick(
+    $locNick: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelLocationProductOverrideFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    locationProductOverridesByLocNick(
+      locNick: $locNick
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        ${attributes.locationProductOverrideAttributes}
+      }
+      nextToken
+    }
+  }
+`;
+
+export const templateProdsByLocNick = /* GraphQL */ `
+  query TemplateProdsByLocNick(
+    $locNick: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelTemplateProdFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    templateProdsByLocNick(
+      locNick: $locNick
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        ${attributes.templateProdAttributes}
       }
       nextToken
     }

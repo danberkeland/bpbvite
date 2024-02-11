@@ -12700,6 +12700,60 @@ export const onDeleteAltLeadTime = /* GraphQL */ `
     }
   }
 `;
+export const onCreateLocationProductOverride = /* GraphQL */ `
+  subscription OnCreateLocationProductOverride(
+    $filter: ModelSubscriptionLocationProductOverrideFilterInput
+  ) {
+    onCreateLocationProductOverride(filter: $filter) {
+      id
+      locNick
+      prodNick
+      defaultInclude
+      leadTime
+      readyTime
+      daysAvailable
+      wholePrice
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateLocationProductOverride = /* GraphQL */ `
+  subscription OnUpdateLocationProductOverride(
+    $filter: ModelSubscriptionLocationProductOverrideFilterInput
+  ) {
+    onUpdateLocationProductOverride(filter: $filter) {
+      id
+      locNick
+      prodNick
+      defaultInclude
+      leadTime
+      readyTime
+      daysAvailable
+      wholePrice
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteLocationProductOverride = /* GraphQL */ `
+  subscription OnDeleteLocationProductOverride(
+    $filter: ModelSubscriptionLocationProductOverrideFilterInput
+  ) {
+    onDeleteLocationProductOverride(filter: $filter) {
+      id
+      locNick
+      prodNick
+      defaultInclude
+      leadTime
+      readyTime
+      daysAvailable
+      wholePrice
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateTraining = /* GraphQL */ `
   subscription OnCreateTraining($filter: ModelSubscriptionTrainingFilterInput) {
     onCreateTraining(filter: $filter) {

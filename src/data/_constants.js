@@ -28,6 +28,7 @@ export const TABLE_PKS = /** @type {const} */ ({
   AltPricing: "id",
   AltLeadTime: "id",
   Notes: "id",
+  LocationProductOverride: "id",
 })
 
 export const LIST_TABLES = /** @type {const} */ ([
@@ -49,6 +50,7 @@ export const LIST_TABLES = /** @type {const} */ ([
   "AltPricing",
   "AltLeadTime",
   "Notes",
+  "LocationProductOverride"
 ])
 
 // ***Tables that have been set up so far***

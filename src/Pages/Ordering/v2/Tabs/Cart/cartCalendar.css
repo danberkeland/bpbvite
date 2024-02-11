@@ -1,0 +1,21 @@
+div#bpb-date-cell-none {
+  color: var(--bpb-text-color);
+  background: var(--bpb-surface-content);
+  padding: 2rem;
+}
+div#bpb-date-cell-cart {
+  color: var(--bpb-text-color);
+  background: hsl(37, 9%, 65%);
+  padding: 2rem;
+}
+div#bpb-date-cell-standing {
+  color: var(--bpb-text-color);
+  background: hsl(37, 9%, 80%);
+  padding: 2rem;
+}
+div#bpb-date-cell-custom-today {
+  background: var(--bpb-background-1);
+  color: hsl(37, 100%, 95%);
+  border-color: none;
+  padding: 2rem;
+}

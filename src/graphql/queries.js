@@ -6744,6 +6744,49 @@ export const listAltLeadTimes = /* GraphQL */ `
     }
   }
 `;
+export const getLocationProductOverride = /* GraphQL */ `
+  query GetLocationProductOverride($id: ID!) {
+    getLocationProductOverride(id: $id) {
+      id
+      locNick
+      prodNick
+      defaultInclude
+      leadTime
+      readyTime
+      daysAvailable
+      wholePrice
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listLocationProductOverrides = /* GraphQL */ `
+  query ListLocationProductOverrides(
+    $filter: ModelLocationProductOverrideFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listLocationProductOverrides(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        locNick
+        prodNick
+        defaultInclude
+        leadTime
+        readyTime
+        daysAvailable
+        wholePrice
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getTraining = /* GraphQL */ `
   query GetTraining($id: ID!) {
     getTraining(id: $id) {
@@ -8102,6 +8145,125 @@ export const notesByRef = /* GraphQL */ `
     }
   }
 `;
+export const templateProdsByLocNick = /* GraphQL */ `
+  query TemplateProdsByLocNick(
+    $locNick: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelTemplateProdFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    templateProdsByLocNick(
+      locNick: $locNick
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        locNick
+        prodNick
+        location {
+          Type
+          locNick
+          locName
+          zoneNick
+          dfFulfill
+          addr1
+          addr2
+          city
+          zip
+          email
+          orderCnfEmail
+          phone
+          firstName
+          lastName
+          toBePrinted
+          toBeEmailed
+          printDuplicate
+          terms
+          invoicing
+          latestFirstDeliv
+          latestFinalDeliv
+          webpageURL
+          picURL
+          gMap
+          specialInstructions
+          delivOrder
+          qbID
+          currentBalance
+          isActive
+          ttl
+          requests
+          createdAt
+          updatedAt
+          locationCreditAppId
+        }
+        product {
+          Type
+          prodName
+          prodNick
+          packGroup
+          packSize
+          doughNick
+          freezerThaw
+          packGroupOrder
+          shapeDay
+          shapeNick
+          bakeDay
+          bakeNick
+          guarantee
+          transferStage
+          readyTime
+          bakedWhere
+          wholePrice
+          retailPrice
+          isRetail
+          retailName
+          retailDescrip
+          isWhole
+          isEOD
+          weight
+          descrip
+          picURL
+          squareID
+          forBake
+          bakeExtra
+          batchSize
+          defaultInclude
+          leadTime
+          daysAvailable
+          qbID
+          currentStock
+          whoCountedLast
+          freezerClosing
+          freezerCount
+          freezerNorth
+          freezerNorthClosing
+          freezerNorthFlag
+          prepreshaped
+          preshaped
+          updatePreDate
+          updateFreezerDate
+          backporchbakerypre
+          backporchbakery
+          bpbextrapre
+          bpbextra
+          bpbssetoutpre
+          bpbssetout
+          sheetMake
+          updatedAt
+          createdAt
+          inventoryProductId
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const locUsersByAuthType = /* GraphQL */ `
   query LocUsersByAuthType(
     $Type: String!
@@ -8172,6 +8334,37 @@ export const locUsersByAuthType = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const locationProductOverridesByLocNick = /* GraphQL */ `
+  query LocationProductOverridesByLocNick(
+    $locNick: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelLocationProductOverrideFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    locationProductOverridesByLocNick(
+      locNick: $locNick
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        locNick
+        prodNick
+        defaultInclude
+        leadTime
+        readyTime
+        daysAvailable
+        wholePrice
         createdAt
         updatedAt
       }

@@ -12928,6 +12928,63 @@ export const deleteAltLeadTime = /* GraphQL */ `
     }
   }
 `;
+export const createLocationProductOverride = /* GraphQL */ `
+  mutation CreateLocationProductOverride(
+    $input: CreateLocationProductOverrideInput!
+    $condition: ModelLocationProductOverrideConditionInput
+  ) {
+    createLocationProductOverride(input: $input, condition: $condition) {
+      id
+      locNick
+      prodNick
+      defaultInclude
+      leadTime
+      readyTime
+      daysAvailable
+      wholePrice
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateLocationProductOverride = /* GraphQL */ `
+  mutation UpdateLocationProductOverride(
+    $input: UpdateLocationProductOverrideInput!
+    $condition: ModelLocationProductOverrideConditionInput
+  ) {
+    updateLocationProductOverride(input: $input, condition: $condition) {
+      id
+      locNick
+      prodNick
+      defaultInclude
+      leadTime
+      readyTime
+      daysAvailable
+      wholePrice
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteLocationProductOverride = /* GraphQL */ `
+  mutation DeleteLocationProductOverride(
+    $input: DeleteLocationProductOverrideInput!
+    $condition: ModelLocationProductOverrideConditionInput
+  ) {
+    deleteLocationProductOverride(input: $input, condition: $condition) {
+      id
+      locNick
+      prodNick
+      defaultInclude
+      leadTime
+      readyTime
+      daysAvailable
+      wholePrice
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createTraining = /* GraphQL */ `
   mutation CreateTraining(
     $input: CreateTrainingInput!
