@@ -99,6 +99,7 @@
   --bpb-contrast-color: hsl(240, 18%, 34%);
 
   --bpb-hilight-color: hsl(214, 75%, 75%);
+  --bpb-hilight-color2: hsl(214, 75%, 87%);
   --bpb-hilight-color-text: var(--bpb-orange-vibrant-900);
 
   --bpb-button-color: var(--bpb-contrast-color);
@@ -459,7 +460,7 @@ div.read-only-button > .p-disabled, .p-component:disabled {
 
 .p-autocomplete-panel {
   /* background: #ffffff; */
-  background: var(--bpb-orange-vibrant-020);
+  background: var(--bpb-orange-vibrant-050);
   color: #495057;
   /* color: var(--bpb-text-color); */
   border: 0 none;
@@ -487,7 +488,8 @@ div.read-only-button > .p-disabled, .p-component:disabled {
 .p-autocomplete-panel .p-autocomplete-items .p-autocomplete-item.p-highlight {
   /* color: #495057; */
   color: var(--bpb-text-color-heavy);
-  background: #E3F2FD;
+  background: var(--bpb-hilight-color2);
+  /* background: #E3F2FD; */
 }
 .p-autocomplete-panel .p-autocomplete-items .p-autocomplete-item-group {
   margin: 0;

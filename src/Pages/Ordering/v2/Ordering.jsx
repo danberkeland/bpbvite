@@ -18,6 +18,7 @@ import { useWindowSize } from "../../../utils/useWindowSize.js"
 import "./ordering.css"
 import { DateObj } from "./orderingTypes.d.js"
 import { getSelectedDateList } from "./orderingPageCalcs.js"
+import { isEqual } from "lodash"
 
 const OrdersPage = () => {
   const user = useSettingsStore(state => ({
@@ -106,6 +107,58 @@ const OrdersPage = () => {
 
   const [cartChanges, setCartChanges] = useState()
   useEffect(() => setCartChanges(structuredClone(cartOrders)), [cartOrders])
+
+  // const headerHasChangesByIdx = !!cartOrders && !!cartChanges 
+  //   ? cartChanges.map((ccOrder, idx) => 
+  //     !isEqual(ccOrder.header, cartOrders?.[idx].header)
+  //   )
+  //   : []
+  // const headerChangeExists = headerHasChangesByIdx.some(flag => flag === true)
+
+  // const itemsHaveChangesByIdx = !!cartOrders && !!cartChanges 
+  //   ? cartChanges.map((ccOrder, idx) => 
+  //       ccOrder.items.some((item, itemIdx) => {
+  //         const baseItem = cartOrders[idx].items[itemIdx] ?? null
+  //         return (!baseItem && item.qty !== 0) || (!!baseItem && baseItem.qty !== item.qty) 
+  //       })
+  //   )
+  //   : []
+  // const itemChangeExists = itemsHaveChangesByIdx.some(flag => flag === true)
+
+  // const changeDetected = headerChangeExists || itemChangeExists
+
+  const cartInfo = cartChanges?.map((changeOrder, orderIdx) => {
+    const baseOrder = cartOrders?.[orderIdx]
+
+    const headerHasChange = !!baseOrder && !isEqual(changeOrder.header, baseOrder.header)
+    const itemSummaries = changeOrder.items.map((item, itemIdx) => {
+      const baseItem = baseOrder?.items[itemIdx]
+      const hasChange = (!baseItem && item.qty !== 0) || (!!baseItem && baseItem.qty !== item.qty) 
+
+      const maxQty = ''
+      const shouldDisableQtyInput = ''
+
+
+      return {
+        hasChange,
+        maxQty,
+        shouldDisableQtyInput,
+      }
+
+    })
+
+    return {
+      hasChange: headerHasChange || itemSummaries.some(item => item.hasChange),
+      header: {
+        hasChange: headerHasChange
+      },
+      items: itemSummaries,
+      
+    }
+  }) ?? []
+
+  const changeDetected = cartInfo.some(orderSummary => orderSummary.hasChange)
+
 
   /**
    * for admin control
@@ -268,7 +321,7 @@ const OrdersPage = () => {
         style={{paddingBottom: "1rem", maxWidth: "58rem", margin: "auto"}}
       />
 
-      {activeIndex === 0 && 
+      {activeIndex === 0 && <>
         <CartTab 
           isMobile={isMobile}
           cartProps={cartProps}
@@ -284,7 +337,8 @@ const OrdersPage = () => {
             adminControlsComponent
           }
         </CartTab>
-      }
+        {changeDetected && <div>CHANGE DETECTED</div>}
+      </>}
       {activeIndex === 1 && 
         <StandingTab 
         

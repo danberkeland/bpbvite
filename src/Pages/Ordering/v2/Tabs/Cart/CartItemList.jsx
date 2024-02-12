@@ -81,7 +81,7 @@ const CartItemList = ({
       inProduction,
     } = productInfo?.[selectedProduct?.prodNick]?.[0] ?? {}
   
-    console.log("ASSIGNED ROUTE", assignedRoute)
+    // console.log("ASSIGNED ROUTE", assignedRoute)
   
     const inCart = !!selectedProduct?.prodNick && 
       tableData.some(item => item.prodNick === selectedProduct?.prodNick)
@@ -112,14 +112,14 @@ const CartItemList = ({
             }
              
             {inCart && <div>In Cart</div>}
-            {selectedProduct?.defaultInclude === false && authClass === 'bpbfull' && <>
+            {selectedProduct?.defaultInclude === false && authClass === 'bpbfull' && <div>
               <Tag 
                 severity='danger' 
                 value="Not Allowed" 
                 icon="pi pi-fw pi-exclamation-circle"
                 style={{background: dangerColor}}
               /> - Special cases only
-            </>}
+            </div>}
             
             {/* This is Wrong. need to check the date baked (may not be the deliv date) */}
             {/* {!availableOnFinishDay && <div>Product not available</div>} */}
@@ -261,7 +261,7 @@ const ProductColumnBody = ({
   const delivDateReached = orderDT.toMillis() === selectedDates?.[0].DT.toMillis()
   const sameDayMaxApplies = DT.fromIsoTs(row.qtyUpdatedOn).plus({ hours: 4 }).startOf('day').toMillis() === orderDT.toMillis()
   const maxQty = pastDelivDate ? 0
-    : authClass === 'bpbfull' ? 999
+    : (authClass === 'bpbfull' || assignedRoute?.error === 'cannot fulfill in time') ? 999
     : (!assignedRoute || !!assignedRoute.error || delivDateReached) ? 0
     : (inProduction && sameDayMaxApplies) ? row.sameDayMaxQty 
     : inProduction ? row.qty
@@ -271,19 +271,31 @@ const ProductColumnBody = ({
     ? row.qty !== baseRow.qty
     : row.qty !== 0 
 
-  return <div style={{fontSize: ".9rem", opacity: row.qty === 0 ? ".8" : "1"}}>
-    <div style={{fontSize: "1rem", fontWeight: "bold"}}>{reformattedProdName ?? ""}</div>
-    {(assignedRoute?.error === 'cannot fulfill in time' || assignedRoute?.error === 'route not scheduled') &&
-      <div style={{display:"flex", alignItems:"center"}}><i className="pi pi-fw pi-exclamation-triangle" /> {fflOptionMap[cartChanges?.[0].header.route]} not available {selectedDates[0].DT.toFormat('EEEE')}s</div>
-    }
+  const infoIcon = <i className="pi pi-fw pi-info-circle" 
+    style={{color: row.qty !== 0 ? infoColor : undefined }} 
+  />
+  const warnIcon = <i className="pi pi-fw pi-exclamation-triangle" 
+    style={{color: row.qty !== 0 ? warnColor : undefined}} 
+  />
+  const errorIcon = <i className="pi pi-fw pi-times" 
+    style={{color: row.qty !== 0 ? dangerColor : undefined }} 
+  />
 
-    {
-      pastDelivDate ? <div><i className="pi pi-fw pi-info-circle" />Past delivery date (read only)</div>
-      : delivDateReached ? <div><i className="pi pi-fw pi-info-circle" />Delivery date reached{authClass !== 'bpbfull' && ` (read only)`}</div>
-      : inProduction && maxQty !== 0 ? <div><i className="pi pi-fw pi-info-circle" />In Production{maxQty < 999 && ` (max ${maxQty})`}</div>
-      : inProduction ? <div><i className="pi pi-fw pi-times" />In Production {`(earliest ${orderDT.plus({ days: effectiveLeadTime}).toFormat('EEE, MMM d')})`}</div>
+  const infoStyle = {display: "flex"} //, alignItems: "center"}
+
+  return <div style={{fontSize: ".9rem", opacity: row.qty === 0 ? ".8" : "1"}}>
+    <div style={{fontSize: "1rem", fontWeight: "bold", fontStyle: qtyChanged ? "italic" : undefined}}>{reformattedProdName ?? ""}</div>
+    {/* {(assignedRoute?.error === 'cannot fulfill in time' || assignedRoute?.error === 'route not scheduled') &&
+      <div style={{...infoStyle, fontWeight: qtyChanged ? "bold" : undefined}}>{warnIcon} {fflOptionMap[cartChanges?.[0].header.route]} not available {selectedDates[0].DT.toFormat('EEEE')}s</div>
+    } */}
+
+    {/* {
+      pastDelivDate ? <div style={infoStyle}>{infoIcon}Past delivery date (read only)</div>
+      : delivDateReached ? <div style={infoStyle}>{infoIcon}Delivery date reached{authClass !== 'bpbfull' && ` (read only)`}</div>
+      : inProduction && maxQty !== 0 ? <div style={infoStyle}>{infoIcon}In Production{maxQty < 999 && ` (max ${maxQty})`}</div>
+      : inProduction ? <div style={infoStyle}>{errorIcon}In Production {`(earliest ${orderDT.plus({ days: effectiveLeadTime}).toFormat('EEE, MMM d')})`}</div>
       : null
-    }
+    } */}
 
     {product?.defaultInclude === false && ( 
       authClass === 'bpbfull'
@@ -295,9 +307,7 @@ const ProductColumnBody = ({
               style={{background: dangerColor}}
             /> Special cases only
           </>
-        : <>
-            <i className="pi pi-fw pi-info-circle" /><span>Special order (read only)</span>
-          </>
+        : <><div style={infoStyle}>{infoIcon}Special order (read only)</div></>
     )}
     
     {/* {!!assignedRoute?.error && <div>{assignedRoute.error}</div>} */}
@@ -333,7 +343,7 @@ const QtyColumnBody = ({
   const delivDateReached = orderDT.toMillis() === selectedDates?.[0].DT.toMillis()
   const sameDayMaxApplies = DT.fromIsoTs(row.qtyUpdatedOn).plus({ hours: 4 }).startOf('day').toMillis() === orderDT.toMillis()
   const maxQty = pastDelivDate ? 0
-    : authClass === 'bpbfull' ? 999
+    : (authClass === 'bpbfull' || assignedRoute?.error === 'cannot fulfill in time' || assignedRoute?.error === 'route not scheduled') ? 999
     : (!assignedRoute || !!assignedRoute.error || delivDateReached) ? 0
     : (inProduction && sameDayMaxApplies) ? row.sameDayMaxQty 
     : inProduction ? row.qty
@@ -390,6 +400,8 @@ const QtyColumnBody = ({
     <InputText 
       ref={el => getRefByKey(el, rowIndex.toString())}//itemsRef.current[rowIndex] = el}
       value={input}
+      inputMode="numeric"
+      autoComplete="name"
       onChange={e => {
         const eValue = e.target.value
         if (/^[+-]?\d{0,3}?$/.test(eValue)) {
@@ -456,6 +468,7 @@ const QtyColumnBody = ({
     }
     {/* <div>{maxQty}</div>
     <div>{authClass}</div> */}
+    <div>{assignedRoute?.error}</div>
   </>
 
 }

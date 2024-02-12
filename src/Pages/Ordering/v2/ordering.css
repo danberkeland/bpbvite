@@ -16,11 +16,11 @@
 
 }
 
-.cart-header-sticky {
+/* .cart-header-sticky {
   position: sticky;
   z-index: 50;
   top: -45px;
-}
+} */
 
 .cart-header {
   border-radius: 3px;
@@ -141,6 +141,8 @@
 }
 
 .cart-submit-container {
+  color: var(--bpb-text-color);
+  font-weight: bold;
   margin-top: 1rem;
   padding: 1rem;
   border-radius: 3px;
