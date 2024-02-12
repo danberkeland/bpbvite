@@ -24,7 +24,7 @@ const isoToFormat = (isoDate, formatToken) => DateTime
 
 const jsToIso = jsDate => jsToFormat(jsDate, 'yyyy-MM-dd')
 
-export const Notes = () => {
+const Notes = () => {
   const user = {
     name: useSettingsStore(state => state.user)
   }
@@ -378,3 +378,5 @@ const EditCellTemplate = ({
     </div>
   )
 }
+
+export { Notes as default }

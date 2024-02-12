@@ -313,7 +313,7 @@ const LocationProductOverrides = () => {
   )
 }
 
-export { LocationProductOverrides }
+export { LocationProductOverrides as default }
 
 
 const locNickInput = ({ data, setData, locations, overrideList }) => {

@@ -98,7 +98,7 @@ const compNorth = new ComposeNorthList();
 
 const clonedeep = require("lodash.clonedeep");
 
-function CroixCount() {
+function CroixCountV1() {
   const [delivDate, setDelivDate] = useState(todayPlus()[0]);
   const [mod, setMod] = useState(false);
   const [modType, setModType] = useState();
@@ -595,4 +595,4 @@ function CroixCount() {
   );
 }
 
-export default CroixCount;
+export default CroixCountV1;

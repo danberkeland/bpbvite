@@ -29,7 +29,7 @@ import { getTodayDT, isoToDT } from "../utils"
  * @param {Object} input
  * @param {'today'|'tomorrow'} [input.initialDateOption='today'] 
  */
-export const Bpbn1 = ({ initialDateOption='today' }) => {
+const Bpbn1 = ({ initialDateOption='today' }) => {
   const [dateOption, setDateOption] = 
       useState(/**@type {('today'|'tomorrow')}*/(initialDateOption))
   
@@ -261,4 +261,6 @@ export const Bpbn1 = ({ initialDateOption='today' }) => {
   )
 }
 
-export const Bpbn1Backup = () => Bpbn1({ initialDateOption: 'tomorrow'})
+// const Bpbn1Backup = () => Bpbn1({ initialDateOption: 'tomorrow'})
+
+export { Bpbn1 as default }

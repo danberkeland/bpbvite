@@ -50,7 +50,7 @@ const useCroixProductData = () => {
 }
 
 
-export const CroixCount = () => {
+const CroixCount = () => {
 
   const { 
     data:countData, 
@@ -254,3 +254,6 @@ const CancelButton = ({ onClick }) => <Button
   style={{marginLeft: ".5rem"}}
   onClick={onClick}
 />
+
+
+export { CroixCount as default }

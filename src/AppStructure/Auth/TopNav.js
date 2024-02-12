@@ -1,8 +1,11 @@
 import React from "react";
 
 import { Menubar } from "primereact/menubar";
+import { useNavigate } from "react-router-dom";
 
 function TopNav() {
+  const navigate = useNavigate()
+
   const items = [
     {
       label: "Production",
@@ -11,96 +14,29 @@ function TopNav() {
         {
           label: "BPBN",
           items: [
-            {
-              label: "BPBN Baker 1",
-              command: () => {
-                window.location = "/Production/BPBNBaker1";
-              },
-            },
-            {
-              label: "BPBN Baker 2",
-              command: () => {
-                window.location = "/Production/BPBNBaker2";
-              },
-            },
-            {
-              label: "BPBN Set Out",
-              command: () => {
-                window.location = "/Production/BPBNSetOut";
-              },
-            },
-            {
-              label: "BPBN Buckets",
-              command: () => {
-                window.location = "/Production/BPBNBuckets";
-              },
-            },
-            {
-              label: "Who Bake",
-              command: () => {
-                window.location = "/Production/WhoBake";
-              },
-            },
-            {
-              label: "WhoShape",
-              command: () => {
-                window.location = "/Production/WhoShape";
-              },
-            },
+            { label: "BPBN Baker 1", command: () => navigate("/Production/BPBNBaker1") },
+            { label: "BPBN Baker 2", command: () => navigate("/Production/BPBNBaker2") },
+            { label: "BPBN Set Out", command: () => navigate("/Production/BPBNSetOut") },
+            { label: "BPBN Buckets", command: () => navigate("/Production/BPBNBuckets") },
+            { label: "Who Bake", command: () => navigate("/Production/WhoBake") },
+            { label: "WhoShape", command: () => navigate("/Production/WhoShape") },
           ],
         },
         {
           label: "BPBS",
           items: [
-            {
-              label: "BPBS What To Make",
-              command: () => {
-                window.location = "/Production/BPBSWhatToMake";
-              },
-            },
-            {
-              label: "BPBS Mix/Pocket",
-              command: () => {
-                window.location = "/Production/BPBSMixPocket";
-              },
-            },
-            {
-              label: "BPBS Set Out",
-              command: () => {
-                window.location = "/Production/BPBSSetOut";
-              },
-            },
-            {
-              label: "BPBS Buckets",
-              command: () => {
-                window.location = "/Production/BPBSBuckets";
-              },
-            },
-            {
-              label: "Special Packing",
-              command: () => {
-                window.location = "/Production/BPBSPacking";
-              },
-            },
-            
-            
+            { label: "BPBS What To Make", command: () => navigate("/Production/BPBSWhatToMake") },
+            { label: "BPBS Mix/Pocket",   command: () => navigate("/Production/BPBSMixPocket") },
+            { label: "BPBS Set Out",      command: () => navigate("/Production/BPBSSetOut") },
+            { label: "BPBS Buckets",      command: () => navigate("/Production/BPBSBuckets") },
+            { label: "Special Packing",   command: () => navigate("/Production/BPBSPacking") },
           ],
         },
         {
           label: "Croix",
           items: [
-            {
-              label: "What Croix to shape",
-              command: () => {
-                window.location = "/Production/CroixToMake";
-              },
-            },
-            {
-              label: "Croix EOD Count",
-              command: () => {
-                window.location = "/Production/CroixCount";
-              },
-            },
+            { label: "What Croix to shape", command: () => navigate("/Production/CroixToMake") },
+            { label: "Croix EOD Count",     command: () => navigate("/Production/CroixCount") },
           ],
         },
       ],
@@ -109,69 +45,20 @@ function TopNav() {
       label: "Logistics",
       icon: "pi pi-fw pi-map",
       items: [
-        {
-          label: "By Route",
-          command: () => {
-            window.location = "/logistics/byRoute";
-          },
-        },
-        {
-          label: "By Filter",
-          command: () => {
-            window.location = "/logistics/byProduct";
-          },
-        },
-        {
-          label: "North Driver Lists",
-          command: () => {
-            window.location = "/logistics/NorthLists";
-          },
-        },
-        {
-          label: "AM Pastry Pack",
-          command: () => {
-            window.location = "/logistics/AMPastry";
-          },
-        },
-        {
-          label: "Retail Bags",
-          command: () => {
-            window.location = "/logistics/RetailBags";
-          },
-        },
-        {
-          label: "Special Orders",
-          command: () => {
-            window.location = "/logistics/SpecialOrders";
-          },
-        },
-        {
-          label: "Freezer Thaw",
-          command: () => {
-            window.location = "/logistics/FreezerThaw";
-          },
-        },
-        /*
-        {
-          label: "Voice",
-          command: () => {
-            window.location = "/settings/voice";
-          },
-        },
-        */
+        { label: "By Route",           command: () => navigate("/logistics/byRoute") },
+        { label: "By Filter",          command: () => navigate("/logistics/byProduct") },
+        { label: "North Driver Lists", command: () => navigate("/logistics/NorthLists") },
+        { label: "AM Pastry Pack",     command: () => navigate("/logistics/AMPastry") },
+        { label: "Retail Bags",        command: () => navigate("/logistics/RetailBags") },
+        { label: "Special Orders",     command: () => navigate("/logistics/SpecialOrders") },
+        { label: "Freezer Thaw",       command: () => navigate("/logistics/FreezerThaw") },
       ],
     },
     {
       label: "EOD Counts",
       icon: "pi pi-fw pi-map",
       items: [
-       
-        {
-          label: "BPBS",
-          command: () => {
-            window.location = "/EODCounts";
-          },
-        },
+        { label: "BPBS", command: () => navigate("/EODCounts") },
       ],
     },
     /*
@@ -186,100 +73,40 @@ function TopNav() {
     {
       label: "Ordering",
       icon: "pi pi-fw pi-shopping-cart",
-      command: () => {
-        window.location = "/Ordering";
-      },
+      command: () => navigate("/Ordering")
     },
     {
       label: "Locations",
       icon: "pi pi-fw pi-users",
-      command: () => {
-        window.location = "/Locations";
-      },
+      command: () => navigate("/Locations")
     },
     {
       label: "Products",
       icon: "pi pi-fw pi-tags",
-      command: () => {
-        window.location = "/Products";
-      },
+      command: () => navigate("/Products")
     },
     {
       label: "Billing",
       icon: "pi pi-fw pi-money-bill",
-      command: () => {
-        window.location = "/Billing";
-      },
+      command: () => navigate("/Billing")
     },
     {
       label: "Settings",
       icon: "pi pi-fw pi-cog",
       items: [
-        {
-          label: "Edit Zones",
-          command: () => {
-            window.location = "/Settings/editZones";
-          },
-        },
-        {
-          label: "Edit Routes",
-          command: () => {
-            window.location = "/Settings/editRoutes";
-          },
-        },
-        {
-          label: "Edit Doughs",
-          command: () => {
-            window.location = "/Settings/editDough";
-          },
-        },
-        {
-          label: "Notes",
-          command: () => {
-            window.location = "/Settings/Notes";
-          },
-        },
-        {
-          label: "Delivery Order",
-          command: () => {
-            window.location = "/settings/DelivOrder";
-          },
-        },
-        {
-          label: "Customer Product Setup",
-          command: () => {
-            window.location = "/Settings/custProds";
-          },
-        },
-        {
-          label: "Manage Users",
-          command: () => {
-            window.location = "/Settings/ManageCustomers";
-          },
-        },
+        { label: "Edit Zones",             command: () => navigate("/Settings/editZones") },
+        { label: "Edit Routes",            command: () => navigate("/Settings/editRoutes") },
+        { label: "Edit Doughs",            command: () => navigate("/Settings/editDough") },
+        { label: "Notes",                  command: () => navigate("/Settings/Notes") },
+        { label: "Delivery Order",         command: () => navigate("/settings/DelivOrder") },
+        { label: "Customer Product Setup", command: () => navigate("/Settings/custProds") },
+        { label: "Manage Users",           command: () => navigate("/Settings/ManageCustomers") },
         {
           label: "Tomorrow Backups",
           items: [
-            {
-              label: "BPBN Baker 1",
-              command: () => {
-                window.location = "/BPBNProd/BPBNBaker1Backup";
-              },
-            },
-            // {
-            //   label: "BPBN Baker 2",
-            //   command: () => {
-            //     window.location = "/BPBNProd/BPBNBaker2Backup";
-            //   },
-            // },
-            {
-              label: "BPBS What To Make",
-              command: () => {
-                window.location = "/BPBSProd/BPBSWhatToMakeBackup";
-              },
-            },
-            
-            
+            { label: "BPBN Baker 1",      command: () => navigate("/BPBNProd/BPBNBaker1Backup") },
+            { label: "BPBS What To Make", command: () => navigate("/BPBSProd/BPBSWhatToMakeBackup") },
+            // { label: "BPBN Baker 2",      command: () => navigate("/BPBNProd/BPBNBaker2Backup") }
           ],
         }
         

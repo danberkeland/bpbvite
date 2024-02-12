@@ -367,9 +367,7 @@ const OrdersPage = () => {
 
 }
 
-export {
-  OrdersPage
-}
+export { OrdersPage as default }
 
 const locationDialogContent = (location) => {
 

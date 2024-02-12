@@ -67,7 +67,7 @@ const getUpdateInputs = ({
 
 
 
-export const Bpbn2 = () => {
+const Bpbn2 = () => {
   const todayDT = getTodayDT()
   const reportDate = todayDT.toFormat('yyyy-MM-dd')
 
@@ -200,3 +200,5 @@ export const Bpbn2 = () => {
     </div>
   )
 }
+
+export { Bpbn2 as default }

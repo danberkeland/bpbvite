@@ -3,7 +3,7 @@ import { useListData } from "../../../../../data/_listData"
 
 
 
-export const BpbnBuckets = () => {
+const BpbnBuckets = () => {
   
   const { data:DGH } = useListData({ tableName: "DoughBackup", shouldFetch: true})
   const { data:DCP } = useListData({ tableName: "DoughComponentBackup", shouldFetch: true })
@@ -15,3 +15,5 @@ export const BpbnBuckets = () => {
     <h1>Buckets</h1>
   )
 }
+
+export { BpbnBuckets as default }

@@ -136,5 +136,6 @@ const SetoutByLocation = ({ reportLocation }) => {
   )
 }
 
-export const BPBSSetout = () => <SetoutByLocation reportLocation="Prado" />
-export const BPBNSetout = () => <SetoutByLocation reportLocation="Carlton" />
+export { SetoutByLocation }
+// export const BPBSSetout = () => <SetoutByLocation reportLocation="Prado" />
+// export const BPBNSetout = () => <SetoutByLocation reportLocation="Carlton" />

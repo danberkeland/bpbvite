@@ -4,7 +4,7 @@ import { BPBTerminal } from "./NewPages/TestPages/BPBTerminal2";
 import { WhoBake } from "./NewPages/TestPages/WhoBakeNew";
 import { WhoShape } from "./NewPages/TestPages/WhoShapeNew";
 import { CroixToMake } from "./NewPages/Croix/CroixToMake/CroixToMake";
-import { CroixCount } from "./NewPages/Croix/CroixEOD/CroixCount";
+// import { CroixCount } from "./NewPages/Croix/CroixEOD/CroixCount";
 import { SevenDayList } from "./NewPages/TestPages/SevenDayList";
 import { Database } from "./NewPages/TestPages/Database";
 import { BPBNBuckets } from "./NewPages/TestPages/BPBNBucketsNew";
@@ -28,7 +28,7 @@ const bpbnPages = [
   {name: "WhoBake", component: <WhoBake />},
   {name: "WhoShape", component: <WhoShape />},
   {name: "Croix To Make", component: <CroixToMake />},
-  {name: "Croix Count", component: <CroixCount />},
+  // {name: "Croix Count", component: <CroixCount />},
   {name: "Terminal", component: <BPBTerminal />},
   {name: "Database", component: <Database />},
   {name: "Seven Day List", component: <SevenDayList />},

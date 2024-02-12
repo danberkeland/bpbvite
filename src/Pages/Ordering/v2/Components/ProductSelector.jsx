@@ -33,7 +33,9 @@ const ProductSelector = ({
 
   const showDropdownOnClick = true
   const scrollToRef = true
-  const searchFields = ['prodNick', 'prodName']
+  const searchFields = authClass === 'bpbfull' 
+    ? ['prodName', 'prodNick']
+    : ['prodName']
 
   const dropdownOptions = authClass === 'bpbfull'
     ? Object.values(products ?? {})
@@ -51,9 +53,7 @@ const ProductSelector = ({
     const inCart = 
       cartChanges?.[0]?.items?.some(item => item.prodNick === P.prodNick)
 
-    // const fav = P.meta.fav ?? null
     const fav = TMP?.find(tmp => tmp.prodNick === P.prodNick) ?? null
-    const canAddProduct = !inCart
     
     return (
       <div style={{display: "flex", justifyContent:"space-between", alignItems: "center"}}>
@@ -70,24 +70,17 @@ const ProductSelector = ({
           className="p-button-rounded p-button-text"  
           onClick={async e => {
             console.log(fav, P.prodNick)
-            // e.preventDefault()
-            // e.stopPropagation()
             if (fav === null) {
-              const createInput = {
-                locNick: location.locNick,
-                prodNick: P.prodNick,
-              }
               updateLocalData(
-                await submitMutations({ createInputs: [createInput]})
+                await submitMutations({ createInputs: [{
+                  locNick: location.locNick,
+                  prodNick: P.prodNick,
+                }]})
               )
-
-              // console.log("Creating...", createInput)
             } else {
-              const deleteInput = { id: fav.id }
               updateLocalData(
-                await submitMutations({ deleteInputs: [deleteInput]})
+                await submitMutations({ deleteInputs: [{ id: fav.id }]})
               )
-              // console.log("Deleting...", deleteInput)
             }
           }}
           disabled={!location || isValidating}
@@ -104,7 +97,7 @@ const ProductSelector = ({
     field="prodName"
     placeholder={'Search for a Product'}
     itemTemplate={productItemTemplate} 
-    delay={0}
+    delay={180}
     autoHighlight
     forceSelection
     spellCheck={false}
@@ -130,15 +123,13 @@ const ProductSelector = ({
       e.target.select() // auto-hilight query text
       //setRollbackValue(e.value)
     }} 
-    onChange={e => { // the underlying combobox's(?) 'onChange'
+    onChange={e => {
       setDisplayValue(e.value)
 
-      // Fun Javascript jank for you to try out: 
-      // typeof null evaluates to "object" for some reason...
+      // 'typeof null' evaluates to "object"
       if (e.value !== null && typeof e.value === "object") { 
         console.log(e.value)
         setValue(e.value)
-        //setValue(e.value)
       }
     }}
     onKeyUp={e => {
@@ -146,38 +137,10 @@ const ProductSelector = ({
         inputRef.current.select() // hilight text (so that you can overwrite)
       }
     }}
-    onBlur={e => {
-      // console.log(e, e.target.value)
-      setDisplayValue(value)
-    }}
+    onBlur={e => setDisplayValue(value)}
     onHide={() => !!value && addButtonRef.current.focus()}
     disabled={disabled}
   />
-  
-  // return (
-  //   <SearchBar
-  //     id="product-select"
-  //     ref={ref}
-  //     value={value}
-  //     setValue={setValue}
-  //     displayValue={displayValue}
-  //     setDisplayValue={setDisplayValue}
-  //     onValueChange={newValue => setValue(newValue)}
-  //     displayField="prodName"
-  //     data={dropdownOptions}
-  //     itemTemplate={productItemTemplate}
-  //     searchFields={['prodNick', 'prodName']}
-  //     // placeholder={disabled ? "" : undefined}
-  //     dropdown={false}
-  //     showDropdownOnClick={true}
-  //     disabled={disabled}
-  //     inputStyle={{width: "100%"}}
-  //     panelStyle={{maxWidth: "15rem", whiteSpace: "normal"}}
-  //     panelClassName='cart-product-selector-panel'
-  //     scrollToRef={bottomRef}
-  //   />
-  // )
-
 
 }
 
