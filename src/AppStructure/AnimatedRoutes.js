@@ -165,7 +165,7 @@ function AnimatedRoutes({ user, signOut }) {
         : {}
       
       const adjustedUser = { ...user, ...adjustedAttributes }
-      console.log("adjustedUser", adjustedUser)
+      // console.log("adjustedUser", adjustedUser)
       setUserObject(adjustedUser)
       setAccess(user.signInUserSession.accessToken.jwtToken)
       setFormType(!!user ? "signedIn" : "onNoUser")
