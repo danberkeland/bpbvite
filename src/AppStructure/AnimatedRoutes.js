@@ -148,6 +148,8 @@ function AnimatedRoutes({ user, signOut }) {
   const { data: user2Items } = 
     useUser2sByEmail({ shouldFetch: true, email: user.attributes.email })
 
+  console.log("user2Items", user2Items)
+
   useEffect(() => {
     if (!user2Items) return 
     const matchUser = 
@@ -163,6 +165,7 @@ function AnimatedRoutes({ user, signOut }) {
         : {}
       
       const adjustedUser = { ...user, ...adjustedAttributes }
+      console.log("adjustedUser", adjustedUser)
       setUserObject(adjustedUser)
       setAccess(user.signInUserSession.accessToken.jwtToken)
       setFormType(!!user ? "signedIn" : "onNoUser")
