@@ -24,6 +24,7 @@ export const UserHeaderMenu = () => {
     ? userAttributes['custom:name'] + '_' + userAttributes['email']
     : null
 
+  console.log("user", user)
   console.log("sub", sub)
 
   const { data: userDetails } = useUserDetails(sub, !!sub);
