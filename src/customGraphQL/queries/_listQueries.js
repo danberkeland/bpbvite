@@ -54,6 +54,20 @@ export const listUsers = /* GraphQL */ `
     }
   }
 `;
+export const listUser2s = /* GraphQL */ `
+  query ListUser2s(
+    $filter: ModelUser2FilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUser2s(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        ${attributes.user2Attributes}
+      }
+      nextToken
+    }
+  }
+`;
 export const listLocationUsers = /* GraphQL */ `
   query ListLocationUsers(
     $filter: ModelLocationUserFilterInput
@@ -525,6 +539,32 @@ export const templateProdsByLocNick = /* GraphQL */ `
     ) {
       items {
         ${attributes.templateProdAttributes}
+      }
+      nextToken
+    }
+  }
+`;
+
+export const User2byEmail = /* GraphQL */ `
+  query User2byEmail(
+    $email: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelUser2FilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    User2byEmail(
+      email: $email
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        ${attributes.user2Attributes}
+        defaultLoc {
+          locName
+        }
       }
       nextToken
     }

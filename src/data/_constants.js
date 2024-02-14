@@ -12,6 +12,7 @@ export const LIMIT = 5000
 export const TABLE_PKS = /** @type {const} */ ({ 
   Location:"locNick",
   User:"sub",
+  User2: "id",
   LocationUser:"id",
   Product: "prodNick",
   DoughBackup: "id",
@@ -34,6 +35,7 @@ export const TABLE_PKS = /** @type {const} */ ({
 export const LIST_TABLES = /** @type {const} */ ([
   "Location",
   "User",
+  "User2",
   "LocationUser",
   "Product",
   "DoughBackup",

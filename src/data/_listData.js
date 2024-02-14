@@ -131,6 +131,7 @@ const batchMutate = async ({
 /**
  * @typedef { "Location" 
  * | "User" 
+ * | "User2"
  * | "LocationUser" 
  * | "Product" 
  * | "DoughBackup" 
@@ -212,7 +213,6 @@ export const useListData = ({
     gqlFetcher,
     swrOptions
   )
-
   // const _data = data?.data[queryName].items ?? undefined
   const _data = getNestedObject(data, ['data', queryName, 'items'])
 

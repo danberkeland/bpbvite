@@ -12,18 +12,16 @@ import { getUser } from "../customGraphQL/queries/userQueries"
 /**
  * Produces a full list of locNicks/locNames.
  * @param {boolean} shouldFetch Fetches data only when true.
- * @returns {{ data: Array<{ locNick: string, locName: string }>, errors: object }} A list of locNick ID's and locName text labels.
  */
 export const useUserDetails = (sub, shouldFetch) => {
-  const { data, errors } = useSWR(
+  const { data } = useSWR(
     shouldFetch ? [getUser, { sub: sub }] : null, 
     gqlFetcher, 
     defaultSwrOptions
   )
 
   return({ 
-    data: useMemo(() => data?.data?.getUser2, [data?.data?.getUser2]), 
-    errors,
+    data: data?.data?.getUser2 //useMemo(() => data?.data?.getUser2, [data?.data?.getUser2]), 
   })
 
 }

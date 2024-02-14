@@ -46,6 +46,20 @@ export const userAttributes = /* GraphQL */ `
   updatedAt
 `
 
+export const user2Attributes = /* GraphQL */ `
+  id
+  name
+  email
+  username
+  phone
+  authClass
+  subs
+  locNick
+  request
+  createdAt
+  updatedAt
+`
+
 export const locationAttributesArray = [
   "Type",
   "locNick",

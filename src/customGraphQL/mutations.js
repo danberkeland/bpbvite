@@ -131,7 +131,36 @@ export const deleteUser = /* GraphQL */ `
     }
   }
 `;
-
+export const createUser2 = /* GraphQL */ `
+  mutation CreateUser2(
+    $input: CreateUser2Input!
+    $condition: ModelUser2ConditionInput
+  ) {
+    createUser2(input: $input, condition: $condition) {
+      ${attributes.user2Attributes}
+    }
+  }
+`;
+export const updateUser2 = /* GraphQL */ `
+  mutation UpdateUser2(
+    $input: UpdateUser2Input!
+    $condition: ModelUser2ConditionInput
+  ) {
+    updateUser2(input: $input, condition: $condition) {
+      ${attributes.user2Attributes}
+    }
+  }
+`;
+export const deleteUser2 = /* GraphQL */ `
+  mutation DeleteUser2(
+    $input: DeleteUser2Input!
+    $condition: ModelUser2ConditionInput
+  ) {
+    deleteUser2(input: $input, condition: $condition) {
+      ${attributes.user2Attributes}
+    }
+  }
+`;
 // const locationAttributes = /* GraphQL */ `
 //   Type
 //   locNick

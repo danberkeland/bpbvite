@@ -16,6 +16,9 @@ export const getUser = /* GraphQL */ `
           Type
           authType
           locNick
+          location {
+            locName
+          }
           userID
           createdAt
           updatedAt
