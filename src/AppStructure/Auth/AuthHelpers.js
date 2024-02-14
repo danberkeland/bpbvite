@@ -89,11 +89,11 @@ export const checkUser = async () => {
         email: cognitoUser.attributes.email,
       })
     );
-    // console.log(use)
-    // console.log("currentAuthenticatedUser");
-    // console.log("use.attributes.email", use.attributes.email);
-    // console.log('use.attributes.username', use.username)
-    // console.log("user2byEmail", gqlResponse.data.User2byEmail.items);
+    console.log(cognitoUser)
+    console.log("currentAuthenticatedUser");
+    console.log("use.attributes.email", cognitoUser.attributes.email);
+    console.log('use.attributes.username', cognitoUser.username)
+    console.log("user2byEmail", gqlResponse.data.User2byEmail.items);
 
     const userItems = gqlResponse.data.User2byEmail.items
     const matchUser = userItems.find(item => 
