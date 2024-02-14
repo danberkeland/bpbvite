@@ -13,6 +13,7 @@ export const createProduct = async ({
   listDataCache,
   toastRef,
 }) => {
+  // console.log(values)
 
   // submit to QB
   const accessToken = await checkQBValidation_v2()
@@ -61,7 +62,9 @@ export const createProduct = async ({
 
   // submit to AppSync
 
-  const createInputs = [{ ...values, qbID: qbResp?.data ?? "error" }]
+  const { createdAt, updatedAt, ...createAttributes } = values
+
+  const createInputs = [{ ...createAttributes, qbID: qbResp?.data ?? "error" }]
   
   const gqlResp = await listDataCache.submitMutations({ createInputs })
   listDataCache.updateLocalData(gqlResp)

@@ -109,6 +109,34 @@ export const checkUser = async () => {
   }
 };
 
+export const checkUser2 = async (cognitoUser) => {
+  try {
+    // let cognitoUser = await Auth.currentAuthenticatedUser();
+
+    let gqlResponse = await API.graphql(
+      graphqlOperation(user2byEmail, {
+        email: cognitoUser.attributes.email,
+      })
+    );
+
+    const userItems = gqlResponse.data.User2byEmail.items
+    const matchUser = userItems.find(item => 
+      item.username === cognitoUser.username
+    ) ?? userItems[0]
+
+    cognitoUser.attributes["custom:name"] = matchUser.name
+    cognitoUser.attributes["custom:authType"] = matchUser.authClass
+    cognitoUser.attributes["custom:defLoc"] = matchUser.locNick
+    return cognitoUser
+
+  } catch (err) {
+    console.log("Error AUthenticating User", err);
+  }
+};
+
+
+
+
 // checks for and, if available, returns detailed user info from database
 export const fetchUserDetails = async (sub) => {
   try {

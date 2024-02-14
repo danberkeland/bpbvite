@@ -6,7 +6,7 @@ import { Dropdown } from "primereact/dropdown"
 
 const ProductSelector = ({ prodNick, onChange }) => {
 
-  const { data:LOC } = useListData({ 
+  const { data:PRD } = useListData({ 
     tableName: "Product", 
     shouldFetch: true 
   })
@@ -15,7 +15,7 @@ const ProductSelector = ({ prodNick, onChange }) => {
 
     <Dropdown 
       id="product-selector"
-      options={sortBy(LOC, 'prodName')}
+      options={sortBy(PRD, 'prodName')}
       value={prodNick}
       //placeholder="Select Product"
       optionValue="prodNick"

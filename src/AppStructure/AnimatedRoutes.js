@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useEffect } from "react";
 import TopNav from "./Auth/TopNav";
 import { NavSide } from "./Nav";
 import { AnimatePresence } from "framer-motion";
@@ -12,6 +12,10 @@ import CustomerNews from "../Pages/CustomerNews/CustomerNews";
 import CustomerBilling from "../Pages/CustomerBilling/CustomerBilling";
 import CustomerSettings from "../Pages/CustomerSettings/CustomerSettings";
 import { CustomerProducts } from "../Pages/CustomerProducts/CustomerProducts";
+
+import { useUser2sByEmail } from "../data/user2/useUser2s";
+
+import { UserHeaderMenu } from "./UserHeaderMenu";
 // import BPBNBaker1 from "../Pages/Production/BPBNBaker1";
 // import BPBNBaker1Backup from "../Pages/Production/BPBNBaker1Backup";
 // import BPBNBaker2 from "../Pages/Production/BPBNBaker2";
@@ -130,13 +134,52 @@ const BillingV2 = React.lazy(() => import('../Pages/Billing/v2/Billing'))
 const OrdersPage = React.lazy(() => import('../Pages/Ordering/v2/Ordering'))
 
 
-function AnimatedRoutes() {
+function AnimatedRoutes({ user, signOut }) {
+  const setFormType = useSettingsStore((state) => state.setFormType);
+  const setAuthClass = useSettingsStore((state) => state.setAuthClass);
+  const setAccess = useSettingsStore((state) => state.setAccess);
+  const setUser = useSettingsStore((state) => state.setUser);
+  const setUserObject = useSettingsStore((state) => state.setUserObject);
+  const setCurrentLoc = useSettingsStore((state) => state.setCurrentLoc);
+
   const authClass = useSettingsStore((state) => state.authClass);
+  const currentLoc = useSettingsStore((state) => state.currentLoc);
+
+  const { data: user2Items } = 
+    useUser2sByEmail({ shouldFetch: true, email: user.attributes.email })
+
+  useEffect(() => {
+    if (!user2Items) return 
+    const matchUser = 
+      user2Items.find(item => item.username == user.username) ?? user2Items[0]
+
+    if (!!matchUser) {
+      const adjustedAttributes = !!matchUser
+        ? {
+            "custom:name": matchUser.name,
+            "custom:authType": matchUser.authClass,
+            "custom:defLoc": matchUser.locNick,
+          }
+        : {}
+      
+      const adjustedUser = { ...user, ...adjustedAttributes }
+      setUserObject(adjustedUser)
+      setAccess(user.signInUserSession.accessToken.jwtToken)
+      setFormType(!!user ? "signedIn" : "onNoUser")
+        
+      setUser(matchUser.name)
+      !authClass && setAuthClass(matchUser.authClass)
+      !currentLoc && setCurrentLoc(matchUser.locNick)
+    }
+
+  }, [user2Items])
+
   const location = useLocation();
 
   return (
     <AnimatePresence>
       <React.Fragment>
+      <UserHeaderMenu />
       {(authClass === 'bpbfull' || authClass === 'bpbcrew') && 
         <div className="top-nav-container">
           <TopNav />

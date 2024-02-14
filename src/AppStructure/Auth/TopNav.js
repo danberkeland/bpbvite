@@ -1,10 +1,11 @@
 import React from "react";
 
 import { Menubar } from "primereact/menubar";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 function TopNav() {
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
+  const navigate = path => window.location = path
 
   const items = [
     {
@@ -61,37 +62,13 @@ function TopNav() {
         { label: "BPBS", command: () => navigate("/EODCounts") },
       ],
     },
-    /*
-    {
-      label: "Dough Calc",
-      icon: "pi pi-fw pi-map",
-      command: () => {
-        window.location = "/doughCalc/doughCalc";
-      },
-    },
-    */
-    {
-      label: "Ordering",
-      icon: "pi pi-fw pi-shopping-cart",
-      command: () => navigate("/Ordering")
-    },
-    {
-      label: "Locations",
-      icon: "pi pi-fw pi-users",
-      command: () => navigate("/Locations")
-    },
-    {
-      label: "Products",
-      icon: "pi pi-fw pi-tags",
-      command: () => navigate("/Products")
-    },
-    {
-      label: "Billing",
-      icon: "pi pi-fw pi-money-bill",
-      command: () => navigate("/Billing")
-    },
-    {
-      label: "Settings",
+    /* { label: "Dough Calc", icon: "pi pi-fw pi-map", command: () => window.location = "/doughCalc/doughCalc" }, */
+    { label: "Ordering",  icon: "pi pi-fw pi-shopping-cart", command: () => navigate("/Ordering") },
+    { label: "Locations", icon: "pi pi-fw pi-users",         command: () => navigate("/Locations") },
+    { label: "Products",  icon: "pi pi-fw pi-tags",          command: () => navigate("/Products") },
+    { label: "Billing",   icon: "pi pi-fw pi-money-bill",    command: () => navigate("/Billing") },
+    { 
+      label: "Settings",  
       icon: "pi pi-fw pi-cog",
       items: [
         { label: "Edit Zones",             command: () => navigate("/Settings/editZones") },
@@ -114,11 +91,7 @@ function TopNav() {
     },
   ];
 
-  return <Menubar 
-    model={items} 
-    //id="bpb-top-nav"
-    style={{borderRadius: "0px", height: "4rem"}}     
-  />
+  return <Menubar model={items} style={{borderRadius: "0px", height: "4rem"}} />
 }
 
 export default TopNav;

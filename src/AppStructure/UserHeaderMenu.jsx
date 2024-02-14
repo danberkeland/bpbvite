@@ -7,28 +7,17 @@ import { useSettingsStore } from "../Contexts/SettingsZustand";
 import { authSignOut } from "./Auth/AuthHelpers";
 
 import { useUserDetails } from "../data/users";
-import {
-  useLocationDetails,
-  useLocationListSimple,
-} from "../data/locationData";
-
-import getNestedObject from "../functions/getNestedObject";
-
-import TopNav from "./Auth/TopNav";
 
 export const UserHeaderMenu = () => {
-  //const settings = useSettingsStore()
+  // const settings = useSettingsStore()
   const user = {
     name: useSettingsStore((state) => state.user),
-    // sub: useSettingsStore((state) => state.userObject),
     authClass: useSettingsStore((state) => state.authClass),
     locNick: useSettingsStore((state) => state.currentLoc),
     userObject: useSettingsStore((state) => state.userObject)
-  };
-
+  }
   const setCurrentLoc = useSettingsStore((state) => state.setCurrentLoc);
   const setFormType = useSettingsStore((state) => state.setFormType);
-
 
   const userAttributes = user?.userObject?.attributes
   const sub = userAttributes
@@ -36,16 +25,8 @@ export const UserHeaderMenu = () => {
     : null
 
   const { data: userDetails } = useUserDetails(sub, !!sub);
-  const { data: currentLocDetails } = useLocationDetails(
-    user.locNick,
-    !!user.locNick
-  );
-  const { data: locationList } = useLocationListSimple(true);
-  // console.log('userDetails', userDetails)
 
-  const userMenu = useRef(null);
-  const locationMenu = useRef(null);
-
+  const userMenuRef = useRef(null);
   const userMenuItems = [
     {
       label: user.name,
@@ -60,22 +41,23 @@ export const UserHeaderMenu = () => {
     },
   ];
 
-  const userLocations = getNestedObject(userDetails, ["locs", "items"]) || [];
-  const locationItems = locationList
-    ? userLocations
-        .filter((i) => i.locNick !== user.locNick)
-        .map((i) => ({
-          label: locationList.find((loc) => loc.locNick === i.locNick).locName,
-          command: () => {
-            setCurrentLoc(i.locNick);
-          },
-        }))
-    : [];
+  const locationMenuRef = useRef(null);
+  const locUserItems = userDetails?.locs?.items ?? []
 
-  const locationMenuItems = [
+  const currentLocUser = locUserItems
+    .find(luItem => luItem.locNick === user.locNick)
+
+  const locationMenuItems = locUserItems
+    .filter(luItem => luItem.locNick !== user.locNick)
+    .map(luItem => ({
+      label: luItem.location.locName,
+      command: () => setCurrentLoc(luItem.locNick)
+    }))
+
+  const locationMenuModel = [
     {
       label: "Change Location...",
-      items: locationItems,
+      items: locationMenuItems,
     },
   ];
 
@@ -87,32 +69,27 @@ export const UserHeaderMenu = () => {
         padding: ".25rem",
         backgroundColor: "hsl(37, 100%, 80%)",
       }}>
-        {locationItems.length === 0
+        {locationMenuItems.length === 0
           ? <div className="read-only-button">
               <Button
-                onClick={(e) => locationMenu.current.toggle(e)}
+                onClick={e => locationMenuRef.current.toggle(e)}
                 className="p-button-text"
-                // style={{ width: "fit-content" }}
                 disabled={true}
-                // icon="pi pi-fw pi-map-marker"
-                // label={currentLocDetails?.locName}
-                // iconPos="left"
               >
                 <i className="pi pi-fw pi-map-marker" />
                 <span style={{ marginRight: ".5rem" }}>
-                  {currentLocDetails?.locName}
+                  {currentLocUser?.location?.locName}
                 </span>
               </Button>
             </div>
           : <div>
-              <Menu model={locationMenuItems} popup ref={locationMenu} />
+              <Menu model={locationMenuModel} popup ref={locationMenuRef} />
 
               <Button
-                onClick={(e) => locationMenu.current.toggle(e)}
+                onClick={(e) => locationMenuRef.current.toggle(e)}
                 className="p-button-text"
                 
                 style={{ 
-                  // width: "fit-content", 
                   textOverflow: "ellipsis",
                   overflow: "hidden",
                   whiteSpace: "nowrap",
@@ -122,7 +99,7 @@ export const UserHeaderMenu = () => {
               >
                 <i className="pi pi-fw pi-map-marker" />
                 <span style={{ marginRight: ".5rem" }}>
-                  {currentLocDetails?.locName}
+                  {currentLocUser?.location?.locName}
                 </span>{" "}
                 <i className="pi pi-chevron-down" />
               </Button>
@@ -135,9 +112,9 @@ export const UserHeaderMenu = () => {
             onClick={() => {window.location = "/"}}
             style={{marginRight: ".25rem"}}
           /> */}
-          <Menu model={userMenuItems} popup ref={userMenu} />
+          <Menu model={userMenuItems} popup ref={userMenuRef} />
           <Button
-            onClick={(e) => userMenu.current.toggle(e)}
+            onClick={(e) => userMenuRef.current.toggle(e)}
             className="p-button-text"
             style={{ width: "fit-content" }}
           >
@@ -152,7 +129,6 @@ export const UserHeaderMenu = () => {
           </Button>
         </div>
       </div>
-      {/* {userDetails?.authClass === "bpbfull" && <TopNav />} */}
     </div>
   );
 };

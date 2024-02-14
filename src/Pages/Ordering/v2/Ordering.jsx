@@ -31,6 +31,7 @@ const OrdersPage = () => {
   // Page settings
   const [authClass, setAuthClass] = useState(user.authClass)
   const [locNick,   setLocNick]   = useState(user.locNick)
+  useEffect(() => setLocNick(user.locNick), [user.locNick])
 
   const tabModel = buildTabModel(authClass, locNick)
   const [activeIndex, setActiveIndex] = useState(0)
