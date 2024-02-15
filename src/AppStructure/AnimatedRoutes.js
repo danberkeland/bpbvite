@@ -16,6 +16,7 @@ import { CustomerProducts } from "../Pages/CustomerProducts/CustomerProducts";
 import { useUser2sByEmail } from "../data/user2/useUser2s";
 
 import { UserHeaderMenu } from "./UserHeaderMenu";
+import { useUserDetails } from "../data/users";
 // import BPBNBaker1 from "../Pages/Production/BPBNBaker1";
 // import BPBNBaker1Backup from "../Pages/Production/BPBNBaker1Backup";
 // import BPBNBaker2 from "../Pages/Production/BPBNBaker2";
@@ -158,14 +159,14 @@ function AnimatedRoutes({ user, signOut }) {
     if (!!matchUser) {
       const adjustedAttributes = !!matchUser
         ? {
-            "custom:name": matchUser.name,
-            "custom:authType": matchUser.authClass,
-            "custom:defLoc": matchUser.locNick,
+            ["custom:name"]: matchUser.name,
+            ["custom:authType"]: matchUser.authClass,
+            ["custom:defLoc"]: matchUser.locNick,
           }
         : {}
       
       const adjustedUser = { ...user, ...adjustedAttributes }
-      // console.log("adjustedUser", adjustedUser)
+      console.log("adjustedUser", adjustedUser)
       setUserObject(adjustedUser)
       setAccess(user.signInUserSession.accessToken.jwtToken)
       setFormType(!!user ? "signedIn" : "onNoUser")

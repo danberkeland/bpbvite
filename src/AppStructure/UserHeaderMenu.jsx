@@ -30,6 +30,7 @@ export const UserHeaderMenu = () => {
   console.log("sub", sub)
 
   const { data: userDetails } = useUserDetails(sub, !!sub);
+  console.log("userDetails", userDetails)
 
   const userMenuRef = useRef(null);
   const userMenuItems = [
