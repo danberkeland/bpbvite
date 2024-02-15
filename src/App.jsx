@@ -12,7 +12,7 @@ import "./index.css";
 import "./bpbTheme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
-import { checkUser } from "./AppStructure/Auth/AuthHelpers";
+// import { checkUser } from "./AppStructure/Auth/AuthHelpers";
 
 
 Amplify.configure(awsmobile);
@@ -104,10 +104,10 @@ export function App() {
         setUserObject(userObject)
         setAccess(jwtToken)
         setUser(matchUser.name)
-        setAuthClass(matchUser.authType)
+        setAuthClass(matchUser.authClass)
         setCurrentLoc(matchUser.locNick)
         setFormType("signedIn");
-        window.location = "/";
+        // window.location = "/";
         
         // checkUser().then((use) => {
         //   setUserObject(use);

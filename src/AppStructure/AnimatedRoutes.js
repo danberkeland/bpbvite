@@ -184,7 +184,7 @@ function AnimatedRoutes({ user, signOut }) {
   return (
     <AnimatePresence>
       <React.Fragment>
-      <UserHeaderMenu />
+      <UserHeaderMenu signOut={signOut} />
       {(authClass === 'bpbfull' || authClass === 'bpbcrew') && 
         <div className="top-nav-container">
           <TopNav />
