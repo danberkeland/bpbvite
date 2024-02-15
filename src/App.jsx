@@ -72,13 +72,15 @@ export function App() {
           attributes, 
           signInUserSession 
         } = hubCapsule?.payload?.data ?? {}
-        //const { sub, email, identities } = signInUserSession?.idToken?.payload ?? {}
+        const { sub, email } = signInUserSession?.idToken?.payload ?? {}
         const jwtToken = signInUserSession.idToken.jwtToken
-        const { sub, email } = attributes
         console.log("PAYLOAD INFO:", username, attributes)
 
         // let cognitoUser = await Auth.currentAuthenticatedUser();
 
+        console.log("sub", sub)
+        console.log("email", email)
+        
         let gqlResponse = await API.graphql(
           graphqlOperation(user2byEmail, { email })
         );
@@ -155,5 +157,3 @@ export function App() {
 }
 
 export default App;
-
-
