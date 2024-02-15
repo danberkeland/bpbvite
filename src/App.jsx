@@ -1,5 +1,5 @@
 import React from "react";
-import { Amplify, Hub } from "aws-amplify";
+import { API, Amplify, Hub, graphqlOperation } from "aws-amplify";
 import awsmobile from "./aws-exports";
 
 import { BrowserRouter as Router } from "react-router-dom";
@@ -16,6 +16,40 @@ import { checkUser } from "./AppStructure/Auth/AuthHelpers";
 
 
 Amplify.configure(awsmobile);
+const user2byEmail = /* GraphQL */ `
+  query User2byEmail(
+    $email: String!
+   
+    $sortDirection: ModelSortDirection
+    $filter: ModelUser2FilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    User2byEmail(
+      email: $email
+      
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        email
+        username
+        phone
+        authClass
+        subs
+        locNick
+        request
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 
 
 export function App() {
@@ -27,35 +61,61 @@ export function App() {
   const setUserObject = useSettingsStore((state) => state.setUserObject);
   const setCurrentLoc = useSettingsStore((state) => state.setCurrentLoc);
 
-  Hub.listen("auth", (hubCapsule) => {
+  Hub.listen("auth",  async hubCapsule => {
     console.log("HUB:", JSON.stringify(hubCapsule, null, 2))
     switch (hubCapsule.payload.event) {
       case "signIn":
         console.log("New User Signed in");
 
-        // "payload": {
-        //   "data": {
-        //     "signInUserSession": {
-        //       "idToken": {
-        //         "payload": {
-        //           "sub": "12d9eef6-ab20-4787-a19a-4fa4635b3f4a",
-        //           "email": "backporchbakeryslo@gmail.com"
-        //         }
-        //       },
+        const { 
+          username, 
+          attributes, 
+          signInUserSession 
+        } = hubCapsule?.payload?.data ?? {}
+        //const { sub, email, identities } = signInUserSession?.idToken?.payload ?? {}
+        const jwtToken = signInUserSession.idToken.jwtToken
+        const { sub, email } = attributes
+        console.log("PAYLOAD INFO:", username, attributes)
 
-        const username = hubCapsule.payload.data.username
-        const { sub, email } = hubCapsule.payload.data.signInUserSession.idToken.payload
-        console.log("PAYLOAD INFO:", username, sub, email)
+        // let cognitoUser = await Auth.currentAuthenticatedUser();
+
+        let gqlResponse = await API.graphql(
+          graphqlOperation(user2byEmail, { email })
+        );
+
+        const userItems = gqlResponse.data.User2byEmail.items
+        const matchUser = 
+          userItems.find(item => item.username === username) ?? userItems[0]
+
+        const userObject = {
+          ...hubCapsule.payload.data,
+          attributes: {
+            ...attributes,
+            ["custom:name"]: matchUser.name,
+            ["custom:authType"]: matchUser.authClass,
+            ["custom:defLoc"]: matchUser.locNick
+          }
+        }
+
+        console.log("custom attributes:", userObject.attributes)
+
+        setUserObject(userObject)
+        setAccess(jwtToken)
+        setUser(matchUser.name)
+        setAuthClass(matchUser.authType)
+        setCurrentLoc(matchUser.locNick)
+        setFormType("signedIn");
+        window.location = "/";
         
-        checkUser().then((use) => {
-          setUserObject(use);
-          setAccess(use.signInUserSession.accessToken.jwtToken);
-          setUser(use.attributes["custom:name"]);
-          setAuthClass(use.attributes["custom:authType"]);
-          setCurrentLoc(use.attributes["custom:defLoc"]);
-          setFormType("signedIn");
-          window.location = "/";
-        });
+        // checkUser().then((use) => {
+        //   setUserObject(use);
+        //   setAccess(use.signInUserSession.accessToken.jwtToken);
+        //   setUser(use.attributes["custom:name"]);
+        //   setAuthClass(use.attributes["custom:authType"]);
+        //   setCurrentLoc(use.attributes["custom:defLoc"]);
+        //   setFormType("signedIn");
+        //   window.location = "/";
+        // });
 
         break;
       case "signOut":
