@@ -89,8 +89,8 @@ export const checkUser = async () => {
         email: cognitoUser.attributes.email,
       })
     );
-    console.log("cog resp:", cognitoUser)
-    console.log("gql resp:", gqlResponse)
+    console.log("cog resp:", JSON.stringify(cognitoUser, null, 2))
+    console.log("gql resp:", JSON.stringify(gqlResponse, null, 2))
 
 
     const userItems = gqlResponse.data.User2byEmail.items

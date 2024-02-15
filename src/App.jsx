@@ -27,11 +27,25 @@ export function App() {
   const setUserObject = useSettingsStore((state) => state.setUserObject);
   const setCurrentLoc = useSettingsStore((state) => state.setCurrentLoc);
 
-  Hub.listen("auth", (data) => {
-    console.log("HUB:", JSON.stringify(data, null, 2))
-    switch (data.payload.event) {
+  Hub.listen("auth", (hubCapsule) => {
+    console.log("HUB:", JSON.stringify(hubCapsule, null, 2))
+    switch (hubCapsule.payload.event) {
       case "signIn":
         console.log("New User Signed in");
+
+        // "payload": {
+        //   "data": {
+        //     "signInUserSession": {
+        //       "idToken": {
+        //         "payload": {
+        //           "sub": "12d9eef6-ab20-4787-a19a-4fa4635b3f4a",
+        //           "email": "backporchbakeryslo@gmail.com"
+        //         }
+        //       },
+
+        const username = hubCapsule.payload.data.username
+        const { sub, email } = hubCapsule.payload.data.signInUserSession.idToken.payload
+        console.log("PAYLOAD INFO:", username, sub, email)
         
         checkUser().then((use) => {
           setUserObject(use);
@@ -81,3 +95,5 @@ export function App() {
 }
 
 export default App;
+
+
