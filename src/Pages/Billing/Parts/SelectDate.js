@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useRef } from "react";
 
 import { Calendar } from "primereact/calendar";
 import { Button } from "primereact/button";
@@ -10,7 +10,7 @@ import styled from "styled-components";
 import {
   convertDatetoBPBDate,
   todayPlus,
-  daysOfTheWeek,
+  // daysOfTheWeek,
 } from "../../../helpers/dateTimeHelpers";
 
 import {
@@ -38,18 +38,29 @@ const printButtonStyle = {
   fontSize: "1.25rem",
 }
 
-let today = todayPlus()[0];
-let Sunday = daysOfTheWeek()[0];
-let Sunday15due = daysOfTheWeek()[7];
+// let today = todayPlus()[0];
+// let Sunday = daysOfTheWeek()[0];
+// let Sunday15due = daysOfTheWeek()[7];
 
-const SelectDate = ({ database, dailyInvoices }) => {
+const SelectDate = ({ 
+  database, 
+  dailyInvoices,
+  delivDate,
+  setDelivDate,
+}) => {
   
-  const [products = [], customers = [], routes = [], standing = [], orders = []] = database || [];
+  const [
+    products = [], 
+    customers = [], 
+    routes = [], 
+    standing = [], 
+    orders = []
+  ] = database || [];
  
   
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
-  const delivDate = useSettingsStore((state) => state.delivDate);
-  const setDelivDate = useSettingsStore((state) => state.setDelivDate);
+  // const delivDate = useSettingsStore((state) => state.delivDate);
+  // const setDelivDate = useSettingsStore((state) => state.setDelivDate);
   
 
   const toast = useRef(null);
@@ -90,9 +101,9 @@ const SelectDate = ({ database, dailyInvoices }) => {
     });
   };
 
-  useEffect(() => {
-    setDelivDate(today);
-  }, []);
+  // useEffect(() => {
+  //   setDelivDate(today);
+  // }, []);
 
   const setDate = (date) => {
     const dt2 = DateTime.fromJSDate(date);

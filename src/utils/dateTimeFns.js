@@ -5,6 +5,8 @@ const BPB_ZONE = 'America/Los_Angeles'
 
 const localNow = () => DateTime.now()
 const now = () => DateTime.now().setZone(BPB_ZONE)
+
+/** Truncates time to start of day, in the BPB IANA Zone. */
 const today = () => DateTime.now().setZone(BPB_ZONE).startOf('day')
 
 
