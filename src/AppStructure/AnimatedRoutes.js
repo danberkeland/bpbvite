@@ -162,6 +162,7 @@ function AnimatedRoutes({ user, signOut }) {
             ["custom:name"]: matchUser.name,
             ["custom:authType"]: matchUser.authClass,
             ["custom:defLoc"]: matchUser.locNick,
+            username: matchUser.username,
           }
         : {}
       

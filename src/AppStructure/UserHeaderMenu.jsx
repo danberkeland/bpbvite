@@ -21,10 +21,8 @@ export const UserHeaderMenu = () => {
 
   const userAttributes = user?.userObject?.attributes
   const sub = userAttributes
-    ? user.name + '_' + userAttributes['email']
+    ? user.userObject?.username + '_' + userAttributes['email']
     : null
-    // ? userAttributes['custom:name'] + '_' + userAttributes['email']
-    // : null
 
   console.log("user", user)
   console.log("sub", sub)
