@@ -89,11 +89,9 @@ export const checkUser = async () => {
         email: cognitoUser.attributes.email,
       })
     );
-    // console.log(cognitoUser)
-    // console.log("currentAuthenticatedUser");
-    // console.log("use.attributes.email", cognitoUser.attributes.email);
-    // console.log('use.attributes.username', cognitoUser.username)
-    // console.log("user2byEmail", gqlResponse.data.User2byEmail.items);
+    console.log("cog resp:", cognitoUser)
+    console.log("gql resp:", gqlResponse)
+
 
     const userItems = gqlResponse.data.User2byEmail.items
     const matchUser = userItems.find(item => 
@@ -104,6 +102,7 @@ export const checkUser = async () => {
     cognitoUser.attributes["custom:authType"] = matchUser.authClass;
     cognitoUser.attributes["custom:defLoc"] = matchUser.locNick;
     return cognitoUser;
+    
   } catch (err) {
     console.log("Error AUthenticating User", err);
   }

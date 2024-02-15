@@ -28,23 +28,11 @@ export function App() {
   const setCurrentLoc = useSettingsStore((state) => state.setCurrentLoc);
 
   Hub.listen("auth", (data) => {
-    console.log("HUB:", data)
+    console.log("HUB:", JSON.stringify(data, null, 2))
     switch (data.payload.event) {
-    //   case "signInWithRedirect":
-    //     console.log("New User Signed in With Redirect");
-    //     checkUser().then((use) => {
-    //       setUserObject(use);
-    //       setAccess(use.signInUserSession.accessToken.jwtToken);
-    //       setUser(use.attributes["custom:name"]);
-    //       setAuthClass(use.attributes["custom:authType"]);
-    //       setCurrentLoc(use.attributes["custom:defLoc"]);
-    //       setFormType("signedIn");
-    //       window.location = "/";
-    //     });
-
-    //     break;
       case "signIn":
         console.log("New User Signed in");
+        
         checkUser().then((use) => {
           setUserObject(use);
           setAccess(use.signInUserSession.accessToken.jwtToken);
