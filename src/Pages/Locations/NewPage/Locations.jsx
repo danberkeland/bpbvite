@@ -61,7 +61,7 @@ const searchLocations = (locations, query) => {
 
 }
 
-export const Locations = () => {
+const LocationsNew = () => {
 
   const [activeIndex, setActiveIndex] = useState(0)
   const [columnCategory, setColumnCategory] = useState('Address')
@@ -272,3 +272,6 @@ const boolTemplate = (boolValue) => boolValue === true
   : boolValue === false 
     ? <i className="pi pi-times" style={{opacity: ".35"}} />
     : JSON.stringify(boolValue, null, 2)
+
+
+export { LocationsNew as default}

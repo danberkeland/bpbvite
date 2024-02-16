@@ -15,7 +15,7 @@ const flexSplitStyle = {
 }
 
 
-export const SpecialOrders = () => {
+const SpecialOrders = () => {
   const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
   const todayISO = todayDT.toFormat('yyyy-MM-dd')
 
@@ -134,3 +134,5 @@ const SpecialOrderTable = ({ tableData, keyString }) => {
     </DataTable>
   )
 }
+
+export { SpecialOrders as default }

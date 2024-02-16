@@ -651,7 +651,7 @@ type EventLog @model {
 
 type TemplateProd @model {
   id: ID!
-  locNick: String! @index(name: "byLoc")
+  locNick: String! @index(name: "byLoc", queryField: "templateProdsByLocNick")
   prodNick: String! @index(name: "byProd")
   location: Location! @belongsTo(fields: ["locNick"])
   product: Product! @belongsTo(fields: ["prodNick"])
@@ -716,6 +716,18 @@ type AltLeadTime @model {
   product: Product! @belongsTo(fields: ["prodNick"])
 }
 
+# For internal control; TemplateProds are for customer product settings.
+type LocationProductOverride @model{
+  id: ID!
+  locNick: String! @index(name: "byLocNick", queryField: "locationProductOverridesByLocNick")
+  prodNick: String!
+  defaultInclude: Boolean
+  leadTime: Int
+  readyTime: Float
+  daysAvailable: [Int]
+  wholePrice: Float
+}
+
 type Training @model {
   id: ID!
   role: String
@@ -723,4 +735,3 @@ type Training @model {
   heading: String
   instruction: String
 }
-

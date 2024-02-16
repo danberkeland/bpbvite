@@ -27,19 +27,15 @@ const LoaderBack = styled.div`
 const Loader = () => {
   const isLoading = useSettingsStore((state) => state.isLoading);
 
-  return (
-    <React.Fragment>
-      {isLoading ? (
-        <LoaderBack>
-          <LoaderSetup>
-            <ProgressSpinner />
-          </LoaderSetup>
-        </LoaderBack>
-      ) : (
-        ""
-      )}
-    </React.Fragment>
-  );
-};
+  return isLoading ? (
+    <LoaderBack>
+      <LoaderSetup>
+        <ProgressSpinner />
+      </LoaderSetup>
+    </LoaderBack>
+  ) : (
+    ""
+  )
+}
 
 export default Loader;

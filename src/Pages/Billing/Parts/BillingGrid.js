@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
@@ -8,7 +8,7 @@ import { calcInvoiceTotal } from "../helpers";
 
 import { ExpandedBillingRows } from "./Parts/ExpandedBillingRows";
 import { DeleteInvoice } from "./Parts/DeleteInvoice";
-import { useSettingsStore } from "../../../Contexts/SettingsZustand";
+// import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 
 const BillingGrid = ({
   database,
@@ -16,6 +16,7 @@ const BillingGrid = ({
   dailyInvoices,
   setDailyInvoices,
   zones,
+  delivDate,
 }) => {
   const [products = [], customers = [], routes = [], standing = [], orders = [], d = [], dd = [], altPricing = []] =
     database || [];
@@ -24,7 +25,7 @@ const BillingGrid = ({
   const [pickedRate, setPickedRate] = useState();
   const [pickedQty, setPickedQty] = useState();
 
-  const delivDate = useSettingsStore((state) => state.delivDate);
+  // const delivDate = useSettingsStore((state) => state.delivDate);
  
   
   useEffect(() => {

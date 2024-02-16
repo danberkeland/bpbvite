@@ -271,8 +271,8 @@ export const CartItemAutoComplete = ({
 
 
 /**
- * @param {String} s - Input String 
- * @param {Int} w - Column width; Max # of characters per line 
+ * @param {string} s - Input String 
+ * @param {number} w - Column width; Max # of characters per line 
  * @returns String with newlines inserted 
  */
 const wrapText = (s, w) => s.replace(

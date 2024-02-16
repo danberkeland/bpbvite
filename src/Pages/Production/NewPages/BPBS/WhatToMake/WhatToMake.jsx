@@ -42,7 +42,7 @@ const formatHours = (timeFloat) => {
  * @param {Object} [input] 
  * @param {'today'|'tomorrow'} [input.initialDateOption='today']
  */
-export const BPBSWhatToMake = ({ initialDateOption='today' }={}) => {
+const BPBSWhatToMake = ({ initialDateOption='today' }={}) => {
 
   // misleading; report date should be today in all realistic contexts.
   // Changing this value allows us to pretend that 'today' is some other day.
@@ -449,3 +449,5 @@ const DevCalendar = ({ reportDate, setReportDate }) => {
     <Calendar value={value} onChange={handleChange} />
   )
 }
+
+export { BPBSWhatToMake as default }

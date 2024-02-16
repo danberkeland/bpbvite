@@ -228,7 +228,7 @@ const usePackData = () => {
 
 }
 
-export const SpecialPacking = () => {
+const SpecialPacking = () => {
   const { data } = usePackData()
   const windowSize = useWindowSizeDetector()
 
@@ -400,3 +400,5 @@ const TableTemplate = ({ key, value, prodNicks, showDepartsFrom=false }) => {
 
   )
 }
+
+export { SpecialPacking as default }

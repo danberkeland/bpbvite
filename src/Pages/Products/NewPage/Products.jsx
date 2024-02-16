@@ -21,7 +21,7 @@ const triState = [
   { icon: "pi pi-fw pi-times", value: false}
 ]
 
-export const Products = () => {
+const Products = () => {
 
   const [activeIndex, setActiveIndex] = useState(0)
   const [editMode, setEditMode] = useState('')
@@ -312,3 +312,5 @@ const rankedSearch = ({ query, data, onFields, nResults=10 }) => {
     : sortBy(item => getBestMatchScore(queries, item, onFields))(data).slice(0, nResults)
 
 }
+
+export { Products as default }

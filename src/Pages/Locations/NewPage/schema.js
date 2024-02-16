@@ -15,7 +15,7 @@ export const useLocationSchema = ({ editMode }) => {
     Type: yup.string(),
     locNick: yup
       .string()
-      .matches(/^[a-z]+$/, "must contain only lowercase letters")
+      .matches(/^[a-z0-9]+$/, "must contain only lowercase letters or numbers.")
       .when("$editMode", {
         is: 'create',
         then: schema => schema.notOneOf(locNicks, "this id is not available.")

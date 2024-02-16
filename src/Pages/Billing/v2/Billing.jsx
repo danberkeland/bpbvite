@@ -27,7 +27,7 @@ let USDollar = new Intl.NumberFormat('en-US', {
   currency: 'USD',
 })
 
-export const Billing = () => {
+const BillingV2 = () => {
   const setIsLoading = useSettingsStore((state) => state.setIsLoading)
   const [expandedRows, setExpandedRows] = useState()
   const [selectedDateJS, setSelectedDateJS] = useState(new Date())
@@ -499,3 +499,4 @@ export const Billing = () => {
 }
 
 
+export { BillingV2 as default }

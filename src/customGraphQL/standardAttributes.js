@@ -46,6 +46,55 @@ export const userAttributes = /* GraphQL */ `
   updatedAt
 `
 
+export const user2Attributes = /* GraphQL */ `
+  id
+  name
+  email
+  username
+  phone
+  authClass
+  subs
+  locNick
+  request
+  createdAt
+  updatedAt
+`
+
+export const locationAttributesArray = [
+  "Type",
+  "locNick",
+  "locName",
+  "zoneNick",
+  "addr1",
+  "addr2",
+  "city",
+  "zip",
+  "email",
+  "orderCnfEmail",
+  "phone",
+  "firstName",
+  "lastName",
+  "toBePrinted",
+  "toBeEmailed",
+  "printDuplicate",
+  "terms",
+  "invoicing",
+  "latestFirstDeliv",
+  "latestFinalDeliv",
+  "dfFulfill",
+  "webpageURL",
+  "picURL",
+  "gMap",
+  "specialInstructions",
+  "delivOrder",
+  "qbID",
+  "currentBalance",
+  "isActive",
+  "ttl",
+  "createdAt",
+  "updatedAt",
+  "locationCreditAppId",
+]
 export const locationAttributes = /* GraphQL */ `
   Type
   locNick
@@ -81,6 +130,64 @@ export const locationAttributes = /* GraphQL */ `
   updatedAt
   locationCreditAppId
 `
+
+export const productAttributesArray = [
+  "Type",
+  "prodName",
+  "prodNick",
+  "packGroup",
+  "packSize",
+  "doughNick",
+  "freezerThaw",
+  "packGroupOrder",
+  "shapeDay",
+  "shapeNick",
+  "bakeDay",
+  "bakeNick",
+  "guarantee",
+  "transferStage",
+  "readyTime",
+  "bakedWhere",
+  "wholePrice",
+  "retailPrice",
+  "isRetail",
+  "retailName",
+  "retailDescrip",
+  "isWhole",
+  "isEOD",
+  "weight",
+  "descrip",
+  "picURL",
+  "squareID",
+  "forBake",
+  "bakeExtra",
+  "batchSize",
+  "defaultInclude",
+  "leadTime",
+  "daysAvailable",
+  "qbID",
+  "currentStock",
+  "whoCountedLast",
+  "freezerClosing",
+  "freezerCount",
+  "freezerNorth",
+  "freezerNorthClosing",
+  "freezerNorthFlag",
+  "prepreshaped",
+  "preshaped",
+  "updatePreDate",
+  "updateFreezerDate",
+  "backporchbakerypre",
+  "backporchbakery",
+  "bpbextrapre",
+  "bpbextra",
+  "bpbssetoutpre",
+  "bpbssetout",
+  "sheetMake",
+  "updatedAt",
+  "createdAt",
+  "inventoryProductId",
+]
 
 export const productAttributes = /* GraphQL */ `
   Type
@@ -283,6 +390,19 @@ export const trainingAttributes = /* GraphQL */ `
   order
   heading
   instruction
+  createdAt
+  updatedAt
+`
+
+export const locationProductOverrideAttributes = /* GraphQL */ `
+  id
+  locNick
+  prodNick
+  defaultInclude
+  leadTime
+  readyTime
+  daysAvailable
+  wholePrice
   createdAt
   updatedAt
 `

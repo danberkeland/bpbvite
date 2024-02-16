@@ -4,7 +4,7 @@ import ProductList from "./ProductList";
 import ProductDetails from "./ProductDetails";
 import { withFadeIn } from "../../hoc/withFadeIn";
 
-function Products() {
+function ProductsV1() {
   const [selectedProduct, setSelectedProduct] = useState("");
 
   const handleProdClick = () => {
@@ -34,4 +34,4 @@ function Products() {
   );
 }
 
-export default Products;
+export default ProductsV1;

@@ -29,47 +29,47 @@ const user2byEmail = /* GraphQL */ `
         authClass
         subs
         locNick
-        defaultLoc {
-          Type
-          locNick
-          locName
-          zoneNick
-          addr1
-          addr2
-          city
-          zip
-          email
-          orderCnfEmail
-          phone
-          firstName
-          lastName
-          toBePrinted
-          toBeEmailed
-          printDuplicate
-          terms
-          invoicing
-          latestFirstDeliv
-          latestFinalDeliv
-          webpageURL
-          picURL
-          gMap
-          specialInstructions
-          delivOrder
-          qbID
-          currentBalance
-          isActive
-          ttl
-          requests
-          createdAt
-          updatedAt
-          locationCreditAppId
-        }
-        locs {
-          items {
-            locNick
-          }
-          nextToken
-        }
+        # defaultLoc {
+        #   Type
+        #   locNick
+        #   locName
+        #   zoneNick
+        #   addr1
+        #   addr2
+        #   city
+        #   zip
+        #   email
+        #   orderCnfEmail
+        #   phone
+        #   firstName
+        #   lastName
+        #   toBePrinted
+        #   toBeEmailed
+        #   printDuplicate
+        #   terms
+        #   invoicing
+        #   latestFirstDeliv
+        #   latestFinalDeliv
+        #   webpageURL
+        #   picURL
+        #   gMap
+        #   specialInstructions
+        #   delivOrder
+        #   qbID
+        #   currentBalance
+        #   isActive
+        #   ttl
+        #   requests
+        #   createdAt
+        #   updatedAt
+        #   locationCreditAppId
+        # }
+        # locs {
+        #   items {
+        #     locNick
+        #   }
+        #   nextToken
+        # }
         request
         createdAt
         updatedAt
@@ -82,29 +82,59 @@ const user2byEmail = /* GraphQL */ `
 //  Checks for and, if exists, returns full Cognito object for user
 export const checkUser = async () => {
   try {
-    console.log("currentAuthenticatedUser");
-    let use = await Auth.currentAuthenticatedUser();
-    console.log("use.attributes.email", use.attributes.email);
-    console.log('use.attributes.username', use.username)
-    let user = await API.graphql(
+    let cognitoUser = await Auth.currentAuthenticatedUser();
+
+    let gqlResponse = await API.graphql(
       graphqlOperation(user2byEmail, {
-        email: use.attributes.email,
+        email: cognitoUser.attributes.email,
       })
     );
-    console.log("user2byEmail", user.data.User2byEmail.items);
-    let ind = user.data.User2byEmail.items.findIndex(item => item.username === use.username)
-    if (ind<0){
-      ind = 0
-    }
-    use.attributes["custom:name"] = user.data.User2byEmail.items[ind].name;
-    use.attributes["custom:authType"] =
-      user.data.User2byEmail.items[ind].authClass;
-    use.attributes["custom:defLoc"] = user.data.User2byEmail.items[ind].locNick;
-    return use;
+    console.log("cog resp:", JSON.stringify(cognitoUser, null, 2))
+    console.log("gql resp:", JSON.stringify(gqlResponse, null, 2))
+
+
+    const userItems = gqlResponse.data.User2byEmail.items
+    const matchUser = userItems.find(item => 
+      item.username === cognitoUser.username
+    ) ?? userItems[0]
+
+    cognitoUser.attributes["custom:name"] = matchUser.name;
+    cognitoUser.attributes["custom:authType"] = matchUser.authClass;
+    cognitoUser.attributes["custom:defLoc"] = matchUser.locNick;
+    return cognitoUser;
+    
   } catch (err) {
     console.log("Error AUthenticating User", err);
   }
 };
+
+export const checkUser2 = async (cognitoUser) => {
+  try {
+    // let cognitoUser = await Auth.currentAuthenticatedUser();
+
+    let gqlResponse = await API.graphql(
+      graphqlOperation(user2byEmail, {
+        email: cognitoUser.attributes.email,
+      })
+    );
+
+    const userItems = gqlResponse.data.User2byEmail.items
+    const matchUser = userItems.find(item => 
+      item.username === cognitoUser.username
+    ) ?? userItems[0]
+
+    cognitoUser.attributes["custom:name"] = matchUser.name
+    cognitoUser.attributes["custom:authType"] = matchUser.authClass
+    cognitoUser.attributes["custom:defLoc"] = matchUser.locNick
+    return cognitoUser
+
+  } catch (err) {
+    console.log("Error AUthenticating User", err);
+  }
+};
+
+
+
 
 // checks for and, if available, returns detailed user info from database
 export const fetchUserDetails = async (sub) => {

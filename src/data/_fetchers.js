@@ -1,5 +1,10 @@
 import { API } from "aws-amplify"
+import { GraphQLResult } from '@aws-amplify/api-graphql'
 
+/**
+ * @template T
+ * @returns {Promise<GraphQLResult<T>>}
+ */
 const gqlFetcher = async ([query, variables]) => {
  
   const data = await API.graphql({

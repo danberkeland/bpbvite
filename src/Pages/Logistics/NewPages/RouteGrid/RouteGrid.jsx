@@ -29,7 +29,7 @@ import { OverlayPanel } from "primereact/overlaypanel"
 
 const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
 
-export const RouteGrid = () => {
+const RouteGrid = () => {
   
   const [routeNick, setRouteNick] = useState('AM Pastry')
 
@@ -389,3 +389,5 @@ const QtyShortInput = ({
     }
   }}
 />
+
+export { RouteGrid as default }

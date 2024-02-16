@@ -1,18 +1,17 @@
 // Route Assignment is powered by table data that is slightly customized on the
-// front end. typedefs here describe the specification for this context.
+// front end. typedefs here specify the shape.
 //
 // Types that aren't 100% the same as fetched from the DB are prefixed with
 // 'Routing' to signify a special usage for this context
 
-import { API } from "aws-amplify"
-import { useListData } from "../_listData"
-import { locationAttributes } from "../../customGraphQL/standardAttributes"
-import { groupBy, mapValues } from "lodash/fp"
+import { useListData } from "../../_listData.js"
+import { locationAttributes } from "../../../customGraphQL/standardAttributes.js"
+import { groupBy } from "lodash/fp"
 
 import { RoutingLocation, _RoutingLocation, RoutingProduct, _RoutingProduct, RoutingRoute, _RoutingRoute, ZoneRoute } from "./types.d.js"
 import useSWR from "swr"
-import gqlFetcher from "../_fetchers.js"
-import { defaultSwrOptions } from "../_constants.js"
+import gqlFetcher from "../../_fetchers.js"
+import { defaultSwrOptions } from "../../_constants.js"
 
 /** @typedef {boolean[]} WeekdayFlags */
 

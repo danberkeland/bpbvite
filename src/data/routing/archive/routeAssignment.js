@@ -5,36 +5,15 @@ import { useRoutingData } from "./hooks"
 
 import { RoutingLocation, _RoutingLocation, RoutingProduct, _RoutingProduct, RoutingRoute, _RoutingRoute, ZoneRoute } from "./types.d.js"
 import { useMemo } from "react"
-import { HOLIDAYS } from "../../constants/constants.js"
+import { HOLIDAYS } from "../../../constants/constants.js"
 
 
 
 const modulo = (n, m) => ((n % m) + m) % m
 
-// const reversedFrom = (array, position) => {
-//   const P = modulo(position + 1, array.length)
-//   return [...array.slice(P), ...array.slice(0, P)].reverse()
-// }
-
-// /**
-//  * Takes at least one step back from the initial index. Error (no valid day found)
-//  * is signaled when the second return value (nDaysBefore) is 0.
-//  * @param {boolean[]} scheduleArray 
-//  * @param {number} fromWeekdayIdx 
-//  * @returns {[number, number]} [(previous weekday), (# days before start day)]
-//  */
-// const backSchedule = (scheduleArray, fromWeekdayIdx) => {
-//   const nDaysBefore = reversedFrom(scheduleArray, fromWeekdayIdx).indexOf(true) + 1
-//   const prevWeekday = modulo(fromWeekdayIdx - nDaysBefore, scheduleArray.length)
-//   return [prevWeekday, nDaysBefore]
-// }
-
-
-
 // Assumes intervals are closed on both ends, '[ , ]' - style.
 // Better setup would be to use half open, '[ , )' - style intervals, but
 // this matches prior logic more cleanly.
-
 const intervalContainsPoint = (I, point) => I[0] <= point && point <= I[1]
 const intervalsIntersect = (I1, I2) => 
   intervalContainsPoint(I1, I2[0])
@@ -301,24 +280,22 @@ export const useGetRouteOptionsByLocation = (locNick) => {
   const routes = useRoutingData.routes()
 
   const buildFunction = () => {
-    if (location && products && routes) {
+    if (!location || !products || !routes) return undefined
 
-      console.log(location, products, routes)
-      return (prodNick, weekday, delivDate) => {
-        const product = products.find(P => P.prodNick === prodNick)
+    return (prodNick, weekday, delivDate) => {
+      const product = products.find(P => P.prodNick === prodNick)
 
-        if (!product) return undefined
-        else return getRouteOptions({
-          location, 
-          product, 
-          weekday, 
-          delivDate,
-          routes
-        })
-
-      }
+      if (!product) return undefined
+      else return getRouteOptions({
+        location, 
+        product, 
+        weekday, 
+        delivDate,
+        routes
+      })
 
     }
+
 
   }
 

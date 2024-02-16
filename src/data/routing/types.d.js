@@ -1,88 +1,55 @@
-/** @typedef {boolean[]} WeekdayFlags */
+// Routing is a relatively complex part of our application logic,
+// a mini domain of its own. We define some context-specific types 
+// that strip database items down to the essientials as they enter 
+// 'routing land' in the hopes of keeping things clean.
 
-/**
- * @typedef {Object} RoutingLocation 
+/**@typedef {import('../types.d.js').DBRoute}     DBRoute */
+/**@typedef {import('../types.d.js').DBZoneRoute} DBZoneRoute */
+/**@typedef {import('../types.d.js').DBLocation}  DBLocation */
+/**@typedef {import('../types.d.js').DBProduct}   DBProduct */
+
+
+/** @typedef {boolean[]} */ let WeekdayFlags
+
+
+/** 
+ * @typedef {Object} 
  * @property {string} locNick
  * @property {string} zoneNick
- * @property {number} latestFirstDeliv
- * @property {number} latestFinalDeliv
+ * @property {number} timeBegin aka latestFirstDeliv; time at which the location is first available for delivery
+ * @property {number} timeEnd   aka latestFinalDeliv; time at which the location is no longer available for delivery
  */
+let RoutingLocation
 
 /** 
- * @typedef {Object} _RoutingLocation
- * @property {string} locNick
- * @property {string} zoneNick
- * @property {number} delivTimeStart
- * @property {number} delivTimeFinis
- *
- */
-
-/**
- * @typedef {Object} RoutingProduct
+ * @typedef {Object} 
  * @property {string} prodNick
- * @property {string[]} bakedWhere
+ * @property {string[]} bakeHub
  * @property {number} readyTime
- * @property {number[]} daysAvailable
+ * @property {WeekdayFlags} validDays aka daysAvailable
  */
+let RoutingProduct
 
 /** 
- * @typedef {Object} _RoutingProduct
- * @property {string} prodNick
- * @property {string[]} bakedWhere
- * @property {number} readyTime
- * @property {WeekdayFlags} validDays
- */
-
-/** 
- * @typedef {Object} RoutingRoute
+ * @typedef {Object} 
  * @property {string} routeNick
- * @property {string[]} RouteSched
- * @property {number} routeStart
- * @property {number} routeTime
- * @property {string} RouteDepart
- * @property {string} RouteArrive 
+ * @property {WeekdayFlags} validDays aka RouteSched
+ * @property {number} timeBegin       aka routeStart
+ * @property {number} timeEnd         derived value = routeStart + routeTime
+ * @property {string} hubBegin        aka RouteDepart
+ * @property {string} hubEnd          aka RouteArrive
+ * @property {string[]} zonesServed   derived from DBZoneRoute data
  */
+let RoutingRoute
 
-/** 
- * @typedef {Object} _RoutingRoute
- * @property {string} routeNick
- * @property {number} timeStart
- * @property {number} timeFinis
- * @property {WeekdayFlags} validDays
- * @property {string} hubStart
- * @property {string} hubFinis
- * @property {string[]} zonesServed
- */
+// unchanged, but we'll rename to signal that it's safe for routing-land.
+// Future changes may require a converion here.
+/**@typedef {DBZoneRoute} */ let RoutingZoneRoute 
 
-/** 
- * @typedef {Object} ZoneRoute
- * @property {string} id
- * @property {string} zoneNick
- * @property {string} routeNick
- */
-
-/** @type {RoutingLocation} */ let RoutingLocation
-/** @type {_RoutingLocation} */ let _RoutingLocation
-/** @type {RoutingProduct} */ let RoutingProduct
-/** @type {_RoutingProduct} */ let _RoutingProduct
-/** @type {RoutingRoute} */ let RoutingRoute
-/** @type {_RoutingRoute} */ let _RoutingRoute
-/** @type {ZoneRoute} */ let ZoneRoute
-
-
-module.exports = {
-  // @ts-ignore
+export {
   RoutingLocation,
-  // @ts-ignore
-  _RoutingLocation,
-  // @ts-ignore
   RoutingProduct,
-  // @ts-ignore
-  _RoutingProduct,
-  // @ts-ignore
   RoutingRoute,
-  // @ts-ignore
-  _RoutingRoute,
-  // @ts-ignore
-  ZoneRoute
+  RoutingZoneRoute,
+  WeekdayFlags,
 }

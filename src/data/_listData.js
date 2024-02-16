@@ -131,6 +131,7 @@ const batchMutate = async ({
 /**
  * @typedef { "Location" 
  * | "User" 
+ * | "User2"
  * | "LocationUser" 
  * | "Product" 
  * | "DoughBackup" 
@@ -147,7 +148,18 @@ const batchMutate = async ({
  * | "AltPricing"
  * | "AltLeadTime"
  * | "Notes"
+ * | "LocationProductOverride"
  * } TableNames
+ */
+
+/**
+ * @typedef {Object} ListDataCache
+ * @property {Object[]} data
+ * @property {boolean} isLoading
+ * @property {boolean} isValidating
+ * @property {function} mutate
+ * @property {function} submitMutations
+ * @property {function} updateLocalData
  */
 
 // @param {typeof LIST_TABLES[number]} input.tableName
@@ -164,7 +176,9 @@ const batchMutate = async ({
  * @param {String} [input.customQuery] Advanced override to use special queries byIndex.
  * @param {Object.<string, any>} [input.variables] Part of SWR cache key; changing this changes the cache.
  * @param {Object} [input.swrOptions] - Optional override for SWR options
- * @returns {Object}
+ * @param {string[]} [input.projection] - EXPERIMENTAL! Product and Location tables only.
+ * 
+ * @returns {ListDataCache}
  */
 export const useListData = ({ 
   tableName, 
@@ -172,6 +186,7 @@ export const useListData = ({
   shouldFetch = false, 
   variables = { limit: LIMIT }, 
   swrOptions = defaultSwrOptions,
+  projection
 }) => {
 
   if (!!shouldFetch && !LIST_TABLES.includes(tableName)) {
@@ -181,13 +196,14 @@ export const useListData = ({
     )
   }
 
-  // const queryName = customQuery || `list${tableName}s`
-  const queryName = customQuery 
-    || (
-      'list' + tableName 
-      + (['s', 'S'].includes(tableName.slice(-1)) ? '' : 's')
-    )
-  const query = listQueries[queryName]
+  const queryName = customQuery || (
+    'list' + tableName 
+    + (['s', 'S'].includes(tableName.slice(-1)) ? '' : 's')
+  )
+  const query = tableName !== "Location" && tableName !== "Product"
+    ? listQueries[queryName]
+    : (listQueries[queryName])(projection)
+
   if (!!shouldFetch && !query) { console.error('query lookup failed') }
 
   const pkAtt = TABLE_PKS[tableName]
@@ -197,7 +213,6 @@ export const useListData = ({
     gqlFetcher,
     swrOptions
   )
-
   // const _data = data?.data[queryName].items ?? undefined
   const _data = getNestedObject(data, ['data', queryName, 'items'])
 

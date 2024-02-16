@@ -10,6 +10,7 @@ import { useLegacyFormatDatabase } from "../../data/legacyData";
 import { API, graphqlOperation } from "aws-amplify";
 import { listZones } from "../../graphql/queries";
 import { sortAtoZDataByIndex } from "../../helpers/sortDataHelpers";
+import { DT } from "../../utils/dateTimeFns";
 
 const BasicContainer = styled.div`
   display: flex;
@@ -32,6 +33,8 @@ function Billing() {
   const [nextInv, setNextInv] = useState(0);
   const [dailyInvoices, setDailyInvoices] = useState([]);
   const [zones, setZones] = useState([]);
+  const [delivDate, setDelivDate] = useState(DT.today().toFormat('yyyy-MM-dd'))
+
 
   
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
@@ -78,10 +81,12 @@ function Billing() {
       <BasicContainer>
         <SelectDate
           database={database}
-          nextInv={nextInv}
-          setNextInv={setNextInv}
           dailyInvoices={dailyInvoices}
-          setDailyInvoices={setDailyInvoices}
+          delivDate={delivDate}
+          setDelivDate={setDelivDate}
+          // nextInv={nextInv}
+          // setNextInv={setNextInv}
+          // setDailyInvoices={setDailyInvoices}
         />
       </BasicContainer>
 
@@ -93,6 +98,7 @@ function Billing() {
           dailyInvoices={dailyInvoices}
           setDailyInvoices={setDailyInvoices}
           zones={zones}
+          delivDate={delivDate}
         />
       </BasicContainer>
     </React.Fragment>

@@ -23,13 +23,13 @@ import { DateTime, Interval } from "luxon"
 import { useWindowSizeDetector } from "../../../functions/detectWindowSize"
 import { getWorkingDateTime } from "../../../functions/dateAndTime"
 import { useLocationDetails } from "./data/locationHooks"
-import { debounce } from "lodash"
+// import { debounce } from "lodash"
 import { StandingItemDisplay } from "./Components/StandingComponents/StandingItemDisplay"
 import { CartHeaderSummary } from "./Components/CartComponents/CartHeaderSummary"
 import { RetailOrders } from "./Components/Retail/RetailOrders"
-import { API, graphqlOperation } from "aws-amplify"
+// import { API, graphqlOperation } from "aws-amplify"
 
-import * as subscriptions from "../../../customGraphQL/subscriptions"
+// import * as subscriptions from "../../../customGraphQL/subscriptions"
 import { Button } from "primereact/button"
 import { Toast } from "primereact/toast"
 import { useOrderNotesByCustomer } from "./data/noteHooks"
@@ -80,6 +80,7 @@ export const Orders = ({ useTestAuth }) => {
     locNick: useSettingsStore(state => state.currentLoc),
     // locNick: "high",
   }
+
   const isLoading = useSettingsStore((state) => state.isLoading)
 
   const tabModel = user.authClass === 'bpbfull'
@@ -89,6 +90,7 @@ export const Orders = ({ useTestAuth }) => {
       : cartTabModel.concat(standingTabModel, helpTabModel)
 
   const [locNick, setLocNick] = useState(user.locNick)
+  useEffect(() => setLocNick(user.locNick), [user.locNick])
 
   // Date data
   const nowDT = DateTime.now().setZone('America/Los_Angeles')
