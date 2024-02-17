@@ -99,6 +99,7 @@ const RouteGrid = React.lazy(() => import('../Pages/Logistics/NewPages/RouteGrid
 const ByRoute = React.lazy(() => import('../Pages/Logistics/ByRoute/ByRoute'))
 const ByProduct = React.lazy(() => import('../Pages/Logistics/ByProduct/ByProduct'))
 const NorthList = React.lazy(() => import('../Pages/Logistics/NorthLists'))
+const NorthListV2 = React.lazy(() => import('../Pages/Logistics/NorthLists/v2/NorthLists'))
 const AMPastry = React.lazy(() => import('../Pages/Logistics/AMPastry'))
 const SpecialOrders = React.lazy(() => import('../Pages/Logistics/NewPages/SpecialOrders/SpecialOrders'))
 
@@ -278,6 +279,7 @@ function AnimatedRoutes({ user, signOut }) {
 
             <Route path="/Logistics/ByProduct" element={<ByProduct />} />
             <Route path="/Logistics/NorthLists" element={<NorthList />} />
+            <Route path="/Logistics/NorthLists/v2" element={<NorthListV2 />} />
             <Route path="/Logistics/AMPastry" element={<AMPastry />} />
             <Route path="/Logistics/RetailBags" element={<RetailBags />} />
 

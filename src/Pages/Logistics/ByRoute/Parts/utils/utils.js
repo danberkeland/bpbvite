@@ -166,6 +166,8 @@ export const routeRunsThatDay = (rte, dayNum) => {
     return false;
   };
 
+  const PRETZEL_EXCEPTIONS = ["Pretzel", "Unsalted Pretzel"]
+
   export const productReadyBeforeRouteStarts = (
     products,
     customers,
@@ -173,24 +175,31 @@ export const routeRunsThatDay = (rte, dayNum) => {
     grd,
     rte
   ) => {
-    if (
-      products[
-        products.findIndex((prod) => prod["prodName"] === grd["prodName"])
-      ]["readyTime"] <
-        routes[routes.findIndex((rt) => rt["routeName"] === rte["routeName"])][
-          "routeStart"
-        ] ||
-      products[
-        products.findIndex((prod) => prod["prodName"] === grd["prodName"])
-      ]["readyTime"] >
-        customers[
-          customers.findIndex((cust) => cust["custName"] === grd["custName"])
-        ]["latestFinalDeliv"]
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+    const product = products.find(P => P.prodName === grd.prodName)
+    const customer = customers.find(C => C.custName === grd.custName)
+    const route = routes.find(R => R.routeName === rte.routeName)
+    
+    return product.readyTime < route.routeStart
+      || product.readyTime > customer.latestFinalDeliv
+      || PRETZEL_EXCEPTIONS.includes(product.prodName)
+    // if (
+    //   products[
+    //     products.findIndex((prod) => prod["prodName"] === grd["prodName"])
+    //   ]["readyTime"] <
+    //     routes[routes.findIndex((rt) => rt["routeName"] === rte["routeName"])][
+    //       "routeStart"
+    //     ] ||
+    //   products[
+    //     products.findIndex((prod) => prod["prodName"] === grd["prodName"])
+    //   ]["readyTime"] >
+    //     customers[
+    //       customers.findIndex((cust) => cust["custName"] === grd["custName"])
+    //     ]["latestFinalDeliv"]
+    // ) {
+    //   return true;
+    // } else {
+    //   return false;
+    // }
   };
 
   export const customerIsOpen = (customers, grd, routes, rte) => {

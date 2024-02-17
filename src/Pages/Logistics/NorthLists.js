@@ -98,7 +98,7 @@ const fetchFromDataBase = async (baseFunc, base, limit) => {
 
 function NorthList() {
   const [croixNorth, setCroixNorth] = useState([]);
-  const [shelfProdsNorth, setShelfProdsNorth] = useState([]);
+  const [shelfProdsNorth, setShelfProdsNorth] = useState([]); console.log("shelfProdsNorth", shelfProdsNorth)
   const [pocketsNorth, setPocketsNorth] = useState([]);
   const [CarltonToPrado, setCarltonToPrado] = useState([]);
   const [Baguettes, setBaguettes] = useState([]);

@@ -9,7 +9,7 @@ import { PICKUP_ZONES, WEEKDAYS_EEE, WEEKDAYS_NUM } from "../../../constants/con
 import { reformatProdName } from "../utils/reformatProdName.js"
 
 
-const getSelectedDateList = (delivDtBegin, delivDtEnd) => {
+const getSelectedDateList = (delivDtBegin, delivDtEnd, orderDT) => {
   const ddFirst = delivDtBegin
   const ddLast = delivDtEnd ?? delivDtBegin
   const nDays = ddLast.diff(ddFirst, "days").days + 1
@@ -25,6 +25,7 @@ const getSelectedDateList = (delivDtBegin, delivDtEnd) => {
     iso: dt.toFormat('yyyy-MM-dd'),
     wdEEE: dt.toFormat('EEE'),
     wdNum: dt.weekday % 7,
+    relDate: dt.diff(orderDT, 'days').days || orderDT.diff(dt, 'days').days * -1
   }))
 }
 

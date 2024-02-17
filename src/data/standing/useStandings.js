@@ -102,7 +102,7 @@ const useStandingsByDayOfWeek = ({ shouldFetch, dayOfWeek }) =>
     shouldFetch: shouldFetch && !!dayOfWeek,
     customQuery: "standingByDayOfWeek",
     variables: {
-      dayOfWeek: { eq: dayOfWeek },
+      dayOfWeek,
       limit: 5000
     }
   })

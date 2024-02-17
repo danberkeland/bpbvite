@@ -103,7 +103,7 @@ const combineOrders = (orders, standingOrders, optDates) =>
 
 /**
  * Intended for use with data returned by useOrders/useStandings-type hooks.
- * Orders remain grouped as a nested array.
+ * Orders remain grouped by date as a nested array.
  * 
  * Does not filter out holding orders.
  * @param {DBOrder[]} orders 

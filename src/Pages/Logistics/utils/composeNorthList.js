@@ -385,11 +385,12 @@ import { flow, map, orderBy, sortBy } from "lodash/fp";
   
       // need to remove the 'fr' so that it matches bakedOrder attribute
       frozenToday = convertFrozenAttrToPlainAttr(frozenToday);
+      console.log("frozen today:", frozenToday)
   
       // combine product lists
       frozenToday = frozenToday.concat(bakedOrdersList);
   
-      console.log("forzenToday",frozenToday)
+      console.log("frozenToday",frozenToday)
   
       // create array { prod, qty }
       let frozenArray = [];
@@ -674,6 +675,9 @@ import { flow, map, orderBy, sortBy } from "lodash/fp";
       let shelfProds = makeOrdersShelf(delivDate, database, this.shelfProdsFilter);
       console.log('shelfProds', shelfProds)
       return shelfProds;
+      // const T0Orders = getFullOrders(delivDate, database)
+      // console.log("T0Orders", T0Orders)
+      // return []
     };
   
     shelfProdsFilter = (ord) => {
