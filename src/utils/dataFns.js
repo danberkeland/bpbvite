@@ -292,6 +292,20 @@ const _groupBy = iterFn => (prev, curr) => {
 
   return prev
 }
+/**
+ * @function
+ * @param {function} iterFn 
+ */
+const _bucketBy = iterFn => (prev, curr) => {
+  const currIterValue = iterFn(curr)
+  const matchIdx = prev.findIndex(group => iterFn(group[0]) === currIterValue)
+
+  if (matchIdx > -1) prev[matchIdx].push(curr)
+  else prev.push([curr])
+
+  return prev
+
+}
 
 /**
  * sumBy variant for use with Array.prototype.reduce().
@@ -365,6 +379,7 @@ export const Data = {
   compareBy,
   _uniqBy,
   _groupBy,
+  _bucketBy,
   _keyBy,
   _sumBy,
   nestedBucketByEntries,

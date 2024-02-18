@@ -9,6 +9,7 @@ import { Data } from "../../../../../utils/dataFns"
 import { constructCartItem } from "../../../../../data/cartOrder/cartOrders"
 import { Tag } from "primereact/tag"
 import { DT, IsoDate } from "../../../../../utils/dateTimeFns"
+import { isEqual } from "lodash"
 
 const infoColor = 'hsl(218, 65%, 50%)'
 const warnColor = 'hsl(45, 96%, 35%)'
@@ -26,6 +27,7 @@ const CartItemList = ({
   delivDates,
   cartOrders,
   cartChanges,
+  // cartInfo,
   templateOrderItems,
   products,
   productInfo,
@@ -61,7 +63,47 @@ const CartItemList = ({
       item.Type === "Orders" && item.id === '' ? item.meta.idx : -1)
     )
 
+  const tableInfo = tableData.map(rowItem => {
+    const baseIndex = rowItem.meta.idx
+    const baseItem = cartOrders?.[0]?.items[baseIndex]
+    const delivRelDate = selectedDates[0].relDate
 
+    const product = products?.[rowItem.prodNick] ?? {}
+    const pInfo = productInfo?.[rowItem.prodNick]?.[0] ?? {}
+    const { assignedRoute, inProduction } = pInfo
+
+    const hasChange = rowItem.qty !== (baseItem?.qty ?? 0)
+    const sameDayMaxApplies = 
+      DT.fromIsoTs(rowItem.qtyUpdatedOn).plus({ hours: 4 }).startOf('day').toMillis() === orderDT.toMillis()
+    const maxQty = delivRelDate < 0 ? 0
+      : (
+        authClass === 'bpbfull' 
+        || assignedRoute?.error === 'cannot fulfill in time' 
+        || assignedRoute?.error === 'route not scheduled'
+      ) ? 999 // these types of 'errors' are treated as warnings; can possibly change the ffl option to make the qty valid.
+      : (
+        !assignedRoute || 
+        !!assignedRoute?.error || 
+        delivRelDate === 0
+      ) ? 0
+      : (inProduction && sameDayMaxApplies) ? rowItem.sameDayMaxQty 
+      : inProduction ? (baseItem?.qty ?? 0)
+      : 999
+
+    console.log(maxQty)
+    const isSample = rowItem.rate === 0 && product.wholePrice !== 0
+    const isSpecialOrder = product.defaultInclude === false
+    const shouldDisableQtyInput = maxQty === 0
+      || ( authClass !== 'bpbfull' && (isSample || isSpecialOrder) )
+
+    return {
+      hasChange,
+      maxQty,
+      isSample,
+      isSpecialOrder,
+      shouldDisableQtyInput,
+    }
+  })
 
   const productSelectorRef = useRef(null)
   const addProductButtonRef = useRef(null)
@@ -197,14 +239,16 @@ const CartItemList = ({
         }}>
           Products
         </div>}
-        body={row => <ProductColumnBody 
+        body={(row, props) => <ProductColumnBody 
           row={row} 
+          rowIndex={props.rowIndex}
           baseRow={cartOrders?.[0]?.items[row.meta.idx]}
           product={products?.[row.prodNick] ?? {}}
           pInfo={productInfo?.[row.prodNick]?.[0] ?? {}}
           authClass={authClass}
           fflOptionMap={fflOptionMap}
           cartChanges={cartChanges}
+          tableInfo={tableInfo}
           selectedDates={selectedDates}
           orderDT={orderDT}
         />}
@@ -223,6 +267,7 @@ const CartItemList = ({
           baseItemIdx={row.meta.idx}
           baseRow={cartOrders?.[0]?.items[row.meta.idx]}
           cartOrder={cartOrders?.[0]}
+          tableInfo={tableInfo}
           orderIdx={0}
           packSize={products?.[row.prodNick]?.packSize ?? 1}
           updateCartItemQty={updateCartItemQty}
@@ -241,6 +286,8 @@ const CartItemList = ({
 
 const ProductColumnBody = ({
   row, 
+  rowIndex,
+  tableInfo,
   baseRow,
   orderIdx,
   product,
@@ -257,19 +304,15 @@ const ProductColumnBody = ({
     effectiveLeadTime, 
     inProduction,
   } = pInfo
-  const pastDelivDate = orderDT.toMillis() > selectedDates?.[0].DT.toMillis()
-  const delivDateReached = orderDT.toMillis() === selectedDates?.[0].DT.toMillis()
-  const sameDayMaxApplies = DT.fromIsoTs(row.qtyUpdatedOn).plus({ hours: 4 }).startOf('day').toMillis() === orderDT.toMillis()
-  const maxQty = pastDelivDate ? 0
-    : (authClass === 'bpbfull' || assignedRoute?.error === 'cannot fulfill in time') ? 999
-    : (!assignedRoute || !!assignedRoute.error || delivDateReached) ? 0
-    : (inProduction && sameDayMaxApplies) ? row.sameDayMaxQty 
-    : inProduction ? row.qty
-    : 999
+  // const sameDayMaxApplies = DT.fromIsoTs(row.qtyUpdatedOn).plus({ hours: 4 }).startOf('day').toMillis() === orderDT.toMillis()
 
-  const qtyChanged = !!baseRow
-    ? row.qty !== baseRow.qty
-    : row.qty !== 0 
+  const itemInfo = tableInfo?.[rowIndex] ?? {}
+  const delivRelDate = selectedDates[0].relDate
+  const { maxQty, shouldDisableQtyInput } = itemInfo
+  // const minQty = 0
+
+  const qtyChanged = !!baseRow && row.qty !== baseRow.qty
+    || !baseRow &&  row.qty !== 0 
 
   const infoIcon = <i className="pi pi-fw pi-info-circle" 
     style={{color: row.qty !== 0 ? infoColor : undefined }} 
@@ -285,17 +328,17 @@ const ProductColumnBody = ({
 
   return <div style={{fontSize: ".9rem", opacity: row.qty === 0 ? ".8" : "1"}}>
     <div style={{fontSize: "1rem", fontWeight: "bold", fontStyle: qtyChanged ? "italic" : undefined}}>{reformattedProdName ?? ""}</div>
-    {/* {(assignedRoute?.error === 'cannot fulfill in time' || assignedRoute?.error === 'route not scheduled') &&
+    {(assignedRoute?.error === 'cannot fulfill in time' || assignedRoute?.error === 'route not scheduled') &&
       <div style={{...infoStyle, fontWeight: qtyChanged ? "bold" : undefined}}>{warnIcon} {fflOptionMap[cartChanges?.[0].header.route]} not available {selectedDates[0].DT.toFormat('EEEE')}s</div>
-    } */}
+    }
 
-    {/* {
-      pastDelivDate ? <div style={infoStyle}>{infoIcon}Past delivery date (read only)</div>
-      : delivDateReached ? <div style={infoStyle}>{infoIcon}Delivery date reached{authClass !== 'bpbfull' && ` (read only)`}</div>
+    {
+      delivRelDate < 0 ? <div style={infoStyle}>{infoIcon}Past delivery date (read only)</div>
+      : delivRelDate === 0 ? <div style={infoStyle}>{infoIcon}Delivery date reached{authClass !== 'bpbfull' && ` (read only)`}</div>
       : inProduction && maxQty !== 0 ? <div style={infoStyle}>{infoIcon}In Production{maxQty < 999 && ` (max ${maxQty})`}</div>
       : inProduction ? <div style={infoStyle}>{errorIcon}In Production {`(earliest ${orderDT.plus({ days: effectiveLeadTime}).toFormat('EEE, MMM d')})`}</div>
       : null
-    } */}
+    }
 
     {product?.defaultInclude === false && ( 
       authClass === 'bpbfull'
@@ -309,14 +352,19 @@ const ProductColumnBody = ({
           </>
         : <><div style={infoStyle}>{infoIcon}Special order (read only)</div></>
     )}
+    {shouldDisableQtyInput && <div>(read only)</div>}
     
     {/* {!!assignedRoute?.error && <div>{assignedRoute.error}</div>} */}
+    <div>rel date {String(delivRelDate)}</div>
+    <div>assigned? {JSON.stringify(!!assignedRoute)}</div>
+    <div>error? {JSON.stringify(!!assignedRoute?.error)}</div>
   </div>
 }
 
 const QtyColumnBody = ({
   row,
   itemsRef,
+  tableInfo,
   getRefByKey,
   rowIndex,
   nRows,
@@ -339,17 +387,22 @@ const QtyColumnBody = ({
     effectiveLeadTime, 
     inProduction,
   } = pInfo
-  const pastDelivDate = orderDT.toMillis() > selectedDates?.[0].DT.toMillis()
-  const delivDateReached = orderDT.toMillis() === selectedDates?.[0].DT.toMillis()
-  const sameDayMaxApplies = DT.fromIsoTs(row.qtyUpdatedOn).plus({ hours: 4 }).startOf('day').toMillis() === orderDT.toMillis()
-  const maxQty = pastDelivDate ? 0
-    : (authClass === 'bpbfull' || assignedRoute?.error === 'cannot fulfill in time' || assignedRoute?.error === 'route not scheduled') ? 999
-    : (!assignedRoute || !!assignedRoute.error || delivDateReached) ? 0
-    : (inProduction && sameDayMaxApplies) ? row.sameDayMaxQty 
-    : inProduction ? row.qty
-    : 999
+  // const pastDelivDate = orderDT.toMillis() > selectedDates?.[0].DT.toMillis()
+  // const delivDateReached = orderDT.toMillis() === selectedDates?.[0].DT.toMillis()
+  // const sameDayMaxApplies = DT.fromIsoTs(row.qtyUpdatedOn).plus({ hours: 4 }).startOf('day').toMillis() === orderDT.toMillis()
+  // const maxQty = pastDelivDate ? 0
+  //   : (authClass === 'bpbfull' || assignedRoute?.error === 'cannot fulfill in time' || assignedRoute?.error === 'route not scheduled') ? 999
+  //   : (!assignedRoute || !!assignedRoute.error || delivDateReached) ? 0
+  //   : (inProduction && sameDayMaxApplies) ? row.sameDayMaxQty 
+  //   : inProduction ? row.qty
+  //   : 999
 
+  const itemInfo = tableInfo?.[rowIndex] ?? {}
+  const { maxQty, shouldDisableQtyInput } = itemInfo
   const minQty = 0
+  const qtyChanged = !!baseRow && row.qty !== baseRow.qty
+    || !baseRow && row.qty !== 0
+
   // const maxQty = 999
 
   // TODO: lift these state variable up 1 level and combine
@@ -391,10 +444,16 @@ const QtyColumnBody = ({
     } else {
       newValue = Math.min(Math.max(Number(input), minQty), maxQty)
     }
-
+    console.log("min", minQty, "max", maxQty, "newValue", newValue)
     setNewQty(newValue)
   }
 
+  let style = { width: "3.5rem" }
+  if (row.qty === 0) style.opacity = ".8"
+  if (qtyChanged) {
+    style.fontWeight = "bold"
+    style.backgroundColor = "var(--bpb-orange-vibrant-020)"
+  }
 
   return <>
     <InputText 
@@ -415,6 +474,7 @@ const QtyColumnBody = ({
         // setRollbackValue(row.qty)
         setRollbackValue(row.qty)
         console.log(row)
+        console.log("ASSIGNED ROUTE:", assignedRoute)
       }}
       onKeyDown={e => {
         // console.log(e.key)
@@ -455,20 +515,21 @@ const QtyColumnBody = ({
         }
       }}
       onBlur={() => {
-        evaluateInput()
+        if (!shouldDisableQtyInput) evaluateInput()
         // console.log(itemsRef.current)
       }}
-      style={{width: "3.5rem"}}  
-      readOnly={maxQty === 0}
+      style={style}  
+      readOnly={shouldDisableQtyInput}
     />
     {packSize > 1 &&
       <div style={{textAlign: "center", fontSize: ".9rem"}}>
         {row.qty * packSize} ea
       </div>
     }
-    {/* <div>{maxQty}</div>
-    <div>{authClass}</div> */}
-    <div>{assignedRoute?.error}</div>
+    <div>{JSON.stringify(maxQty)}</div>
+    <div>{authClass}</div>
+    <div>{!!assignedRoute?.error}</div>
+    <div>{JSON.stringify(shouldDisableQtyInput)}</div>
   </>
 
 }
@@ -476,3 +537,63 @@ const QtyColumnBody = ({
 export {
   CartItemList
 }
+
+
+
+// const cartInfo = cartChanges?.map((changeOrder, orderIdx) => {
+//   const baseOrder = cartOrders?.[orderIdx]
+//   const delivRelDate = selectedDates[orderIdx].relDate
+
+//   const headerHasChange = !!baseOrder && !isEqual(changeOrder.header, baseOrder.header)
+//   const itemSummaries = changeOrder.items.map((item, itemIdx) => {
+//     const product = products?.[item.prodNick] ?? {}
+    
+//     const pInfo = productInfo?.[item.prodNick]?.[orderIdx] ?? {}
+//     // console.log(pInfo)
+//     const { assignedRoute, inProduction } = pInfo
+//     // const baseItem = baseOrder?.items?.[itemIdx]
+
+//     // const hasChange = (!baseItem && item.qty !== 0) || (!!baseItem && baseItem.qty !== item.qty) 
+//     const sameDayMaxApplies = DT.fromIsoTs(item.qtyUpdatedOn).plus({ hours: 4 }).startOf('day').toMillis() === orderDT.toMillis()
+
+//     // console.log("AAAAAAAAAAAAAAAA", item.sameDayMaxQty)
+//     const maxQty = delivRelDate < 0 ? 0
+//       : (authClass === 'bpbfull' || assignedRoute?.error === 'cannot fulfill in time' || assignedRoute?.error === 'route not scheduled') ? 999 // these types of 'errors' are treated as warnings; user can change ffl option to make the qty valid.
+//       : (
+//         !assignedRoute || 
+//         !!assignedRoute?.error || 
+//         delivRelDate === 0
+//       ) ? 0
+//       : (inProduction && sameDayMaxApplies) ? item.sameDayMaxQty 
+//       : inProduction ? baseOrder?.items?.[itemIdx].qty ?? 0
+//       : 999
+
+//     const isSample = item.rate === 0 && product.wholePrice !== 0
+//     const isSpecialOrder = product.defaultInclude === false
+//     const shouldDisableQtyInput = maxQty === 0
+//       || (
+//         authClass !== 'bpbfull' && (
+//           isSample
+//           || isSpecialOrder
+//         )
+//       )
+
+//     return {
+//       // hasChange,
+//       maxQty,
+//       isSample,
+//       isSpecialOrder,
+//       shouldDisableQtyInput,
+//     }
+
+//   })
+
+//   return {
+//     hasChange: headerHasChange || itemSummaries.some(item => item.hasChange),
+//     header: {
+//       hasChange: headerHasChange
+//     },
+//     items: itemSummaries,
+    
+//   }
+// }) ?? []

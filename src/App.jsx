@@ -76,8 +76,6 @@ export function App() {
         const jwtToken = signInUserSession.idToken.jwtToken
         console.log("PAYLOAD INFO:", username, attributes)
 
-        // let cognitoUser = await Auth.currentAuthenticatedUser();
-
         console.log("sub", sub)
         console.log("email", email)
         
@@ -108,16 +106,6 @@ export function App() {
         setCurrentLoc(matchUser.locNick)
         setFormType("signedIn");
         // window.location = "/";
-        
-        // checkUser().then((use) => {
-        //   setUserObject(use);
-        //   setAccess(use.signInUserSession.accessToken.jwtToken);
-        //   setUser(use.attributes["custom:name"]);
-        //   setAuthClass(use.attributes["custom:authType"]);
-        //   setCurrentLoc(use.attributes["custom:defLoc"]);
-        //   setFormType("signedIn");
-        //   window.location = "/";
-        // });
 
         break;
       case "signOut":

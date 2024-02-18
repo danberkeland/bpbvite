@@ -46,7 +46,7 @@ type DBLocationAttribute =
  * @param {boolean} input.shouldFetch 
  * @param {DBLocationAttribute[]} input.projection
  */
-const useLocations = ({ shouldFetch, projection }: { shouldFetch:boolean, projection:DBLocationAttribute[] }) => {
+const useLocations = ({ shouldFetch, projection }: { shouldFetch:boolean, projection?:DBLocationAttribute[] }) => {
     const { data, ...otherCacheItems} = 
       useListData({ 
         tableName: "Location", 
