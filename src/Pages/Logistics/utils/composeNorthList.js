@@ -2,8 +2,8 @@ import {
     convertDatetoBPBDate,
     todayPlus,
     tomBasedOnDelivDate,
-    TwodayBasedOnDelivDate,
-    ThreedayBasedOnDelivDate,
+    // TwodayBasedOnDelivDate,
+    // ThreedayBasedOnDelivDate,
   } from "../../../helpers/dateTimeHelpers";
   
   import {
@@ -16,9 +16,9 @@ import {
   
   import {
     sortZtoADataByIndex,
-    addTwoGrids,
-    subtractGridFromGrid,
-    combineTwoGrids,
+    // addTwoGrids,
+    // subtractGridFromGrid,
+    // combineTwoGrids,
   } from "../../../helpers/sortDataHelpers";
   
   import {
@@ -28,25 +28,34 @@ import {
     productReadyBeforeRouteStarts,
     customerIsOpen,
   } from "../ByRoute/Parts/utils/utils";
-import { DateTime } from "luxon";
-import { flow, map, orderBy, sortBy } from "lodash/fp";
+// import { DateTime } from "luxon";
+import { flow, map, orderBy } from "lodash/fp";
+import { groupByObject } from "../../../utils/collectionFns/groupByObject";
+import { mapValues } from "../../../utils/objectFns/mapValues";
+import { groupByArray } from "../../../utils/collectionFns/groupByArray";
+import { sumBy } from "../../../utils/collectionFns/sumBy";
+import { objProject } from "../../../utils/objectFns/objProject";
+import { uniqBy } from "../../../utils/collectionFns/uniqBy";
+import { truncate } from "lodash";
+import { compareBy } from "../../../utils/collectionFns/compareBy";
   
-  const incrementDate = (isoDate, nDays) => DateTime
-    .fromISO(isoDate, { zone: 'America/Los_Angeles' })
-    .startOf('day')
-    .plus({ days: nDays })
-    .toFormat('yyyy-MM-dd')
+  // const incrementDate = (isoDate, nDays) => DateTime
+  //   .fromISO(isoDate, { zone: 'America/Los_Angeles' })
+  //   .startOf('day')
+  //   .plus({ days: nDays })
+  //   .toFormat('yyyy-MM-dd')
 
-  const clonedeep = require("lodash.clonedeep");
+  // const clonedeep = require("lodash.clonedeep");
+
   let tomorrow = todayPlus()[1];
   let today = todayPlus()[0];
   let convertedToday = convertDatetoBPBDate(today);
-  let convertedTomorrow = convertDatetoBPBDate(tomorrow);
+  // let convertedTomorrow = convertDatetoBPBDate(tomorrow);
   
   const addRoutes = (delivDate, prodGrid, database) => {
     const [products, customers, routes, standing, orders] = database;
-    sortZtoADataByIndex(routes, "routeStart");
-    for (let rte of routes) {
+    // sortZtoADataByIndex(routes, "routeStart");
+    for (let rte of routes.sort(compareBy(R => R.routeStart))) {
       for (let grd of prodGrid) {
         let dayNum = calcDayNum(delivDate);
   
@@ -140,7 +149,7 @@ import { flow, map, orderBy, sortBy } from "lodash/fp";
     fullOrder = zerosDelivFilter(fullOrder, delivDate, database);
     fullOrder = buildGridOrderArray(fullOrder, database);
     fullOrder = addRoutes(delivDate, fullOrder, database);
-    console.log("FULL:", fullOrder)
+    // console.log("FULL:", fullOrder)
     
     let orderArray = [];
     for (let cust of custNames) {
@@ -175,60 +184,95 @@ import { flow, map, orderBy, sortBy } from "lodash/fp";
     return orderArray;
   };
   
-  const makeOrdersShelf = (delivDate, database, filter) => {
-    const [products, customers, routes, standing, orders] = database;
-    let prodNames = getProdNickNames(delivDate, database, filter);
-    let custNames = getCustNames(delivDate, database, filter);
-    let fullOrder = getFullOrders(delivDate, database);
-    fullOrder = zerosDelivFilter(fullOrder, delivDate, database);
-    fullOrder = buildGridOrderArray(fullOrder, database);
-    fullOrder = addRoutes(delivDate, fullOrder, database);
+  // const makeOrdersShelf = (delivDate, database, filter) => {
+  //   const [products, customers, routes, standing, orders] = database;
+  //   let prodNames = getProdNickNames(delivDate, database, filter);
+  //   let custNames = getCustNames(delivDate, database, filter);
+
+  //   // let fullOrder = getFullOrders(delivDate, database);
+  //   // fullOrder = zerosDelivFilter(fullOrder, delivDate, database);
+  //   // fullOrder = buildGridOrderArray(fullOrder, database);
+  //   // fullOrder = addRoutes(delivDate, fullOrder, database);
+
+  //   const T0Orders = getOrdersList(delivDate, database)
     
-    let orderArray = [];
-    for (let cust of custNames) {
-      let custItem = {};
-      custItem = {
-        customer: cust,
-        customerShort: cust.length>10 ? cust.substring(0,15)+"..." : cust
-      };
-      for (let prod of prodNames) {
-        let pro = products[products.findIndex((pr) => pr.nickName === prod)]
-        let prodFullName =
-          pro.prodName;
-        try {
-          custItem[prod] =
-            fullOrder[
-              fullOrder.findIndex(
-                (ord) => ord.prodName === prodFullName && ord.custName === cust && (ord.prodNick === "fic" ? ord.route !== "Pick up Carlton" : true)
-              )
-            ].qty * pro.packSize;
-        } catch {
-          custItem[prod] = null;
-        }
-      }
-      orderArray.push(custItem);
-    }
-    return orderArray;
-  };
+  //   let orderArray = [];
+  //   for (let cust of custNames) {
+  //     let custItem = {};
+  //     custItem = {
+  //       customer: cust,
+  //       customerShort: cust.length>10 ? cust.substring(0,15)+"..." : cust
+  //     };
+  //     for (let prod of prodNames) {
+  //       let pro = products[products.findIndex((pr) => pr.nickName === prod)]
+  //       let prodFullName =
+  //         pro.prodName;
+  //       try {
+  //         custItem[prod] =
+  //           T0Orders[
+  //             T0Orders.findIndex(
+  //               (ord) => ord.prodName === prodFullName && ord.custName === cust && (ord.prodNick === "fic" ? ord.route !== "Pick up Carlton" : true)
+  //             )
+  //           ].qty * pro.packSize;
+  //       } catch {
+  //         custItem[prod] = null;
+  //       }
+  //     }
+  //     orderArray.push(custItem);
+  //   }
+  //   return orderArray;
+  // };
   
-  const addUp = (acc, val) => {
-    return acc + val;
-  };
+  // const addUp = (acc, val) => {
+  //   return acc + val;
+  // };
   
-  const convertFrozenAttrToPlainAttr = (data) => {
-    try {
-      for (let d of data) {
-        d.prod = d.prod.substring(2);
-      }
-    } catch {
-      for (let d of data) {
-        d = d.substring(2);
-      }
-    }
+  // const convertFrozenAttrToPlainAttr = (data) => {
+  //   try {
+  //     for (let d of data) {
+  //       d.prod = d.prod.substring(2);
+  //     }
+  //   } catch {
+  //     for (let d of data) {
+  //       d = d.substring(2);
+  //     }
+  //   }
   
-    return data;
-  };
-  
+  //   return data;
+  // };
+
+  /** 
+   * shapeType is the prodNick of some representative product.
+   * Products with the same shapeType consume the same croissant item
+   * from freezer inventory. They are labelled using baked croix prodNicks 
+   * despite being frozen items themselves.
+   */
+  const prodNickToShapeTypeMap = {
+    al: "al",
+    fral: "al",
+    ch: "ch",
+    frch: "ch",
+    pg: "pg",
+    frpg: "frpg",
+    mb: "mb",
+    unmb: "mb",
+    frmb: "mb",
+    pl: "pl",
+    frpl: "pl",
+    sf: "sf",
+    frsf: "sf",
+    mini: "mini",
+    frmni: "mini",
+  }
+
+  const summaryAttributes = ['prodNick', 'custNick', 'delivDate', 'qty', 'route']
+
+  // *************************************************************************
+  // Main
+  // *************************************************************************
+
+
+
   export default class ComposeNorthList {
     returnNorthBreakDown = (delivDate, database) => {
       let croixNorth = this.returnCroixNorth(delivDate, database);
@@ -282,255 +326,451 @@ import { flow, map, orderBy, sortBy } from "lodash/fp";
     };
   
     returnCroixNorth = (delivDate, database) => {
+      const [products, customers, routes, standing, orders, d, dd, alt, QBInfo] = database;
+
+      const T0Orders = getOrdersList(delivDate, database)
+        .map(order => ({...order, delivDate }))
+
+      const T1Orders = getOrdersList(tomBasedOnDelivDate(delivDate), database)
+        .map(order => ({ ...order, delivDate: tomBasedOnDelivDate(delivDate)}))
+
+      console.log(T0Orders)
       
-      // Create Frozens needed North { prod, qty }
-      let currentFreezerNumbers = this.getCurrentFreezerNumbers(
-        delivDate,
-        database
-      );
-      console.log("currentFreezerNumbers", currentFreezerNumbers);
-      let frozensLeavingCarlton = this.getFrozensLeavingCarlton(
-        delivDate,
-        database
-      );
-      console.log("frozensLeavingCarlton", frozensLeavingCarlton);
-      let bakedTomorrowAtCarlton = this.getBakedTomorrowAtCarlton(
-        delivDate,
-        database
-      );
-      console.log("bakedTomorrowAtCarlton", bakedTomorrowAtCarlton);
-      let currentFrozenNeed = addTwoGrids(
-        frozensLeavingCarlton,
-        bakedTomorrowAtCarlton
-      );
-      console.log("bakedTodayAtCarlton", bakedTomorrowAtCarlton);
-      let clone = clonedeep(currentFrozenNeed);
-      console.log("currentFrozenNeedFirst", clone);
-      let almondQty = 0;
-      try {
-        almondQty = clone[clone.findIndex((cl) => cl.prod === "al")].qty;
-      } catch {}
+      let croixRows = [
+        { forBake: "Almond", prodNick: "al",   prod: "al",   frozenQty: 0, frozen: {}, bakedQty: 0, baked: {} },
+        { forBake: "ch",     prodNick: "ch",   prod: "ch",   frozenQty: 0, frozen: {}, bakedQty: 0, baked: {} },
+        { forBake: "pg",     prodNick: "pg",   prod: "pg",   frozenQty: 0, frozen: {}, bakedQty: 0, baked: {} },
+        { forBake: "mb",     prodNick: "mb",   prod: "mb",   frozenQty: 0, frozen: {}, bakedQty: 0, baked: {} },
+        { forBake: "pl",     prodNick: "pl",   prod: "pl",   frozenQty: 0, frozen: {}, bakedQty: 0, baked: {} },
+        { forBake: "sf",     prodNick: "sf",   prod: "sf",   frozenQty: 0, frozen: {}, bakedQty: 0, baked: {} },
+        { forBake: "mini",   prodNick: "mini", prod: "mini", frozenQty: 0, frozen: {}, bakedQty: 0, baked: {} },
+      ]
+
+      const T0NorthFrozenOrders = T0Orders.filter(order => 1
+        && order.packGroup === "frozen pastries"
+        && order.doughType === "Croissant"
+        && (0
+          || order.route === "Pick up Carlton" 
+          || order.routeDepart === "Carlton"
+        )
+      )
+      const T0BakedOrders = T0Orders.filter(order => 1
+        && order.where.includes("Mixed")
+        && order.packGroup === "baked pastries"
+        && order.doughType === "Croissant"
+      )
+      const T1NorthBakedOrders = T1Orders.filter(order => 1
+        && order.where.includes("Mixed")
+        && order.packGroup === "baked pastries"
+        && order.doughType === "Croissant"
+        && (0 
+          || order.route === "Pick up Carlton" 
+          || order.routeDepart === "Carlton"
+        )
+      )
+
+      for (let row of croixRows) {
+        // Frozen Column
+        const freezerNorth = 
+          products.find(P => P.forBake === row.forBake).freezerNorth ?? 0
+        row.frozen.freezerNorth = freezerNorth
+
+        const frozenOrderItems = T0NorthFrozenOrders.filter(order => 
+          prodNickToShapeTypeMap[order.prodNick] === row.prodNick
+        )
+        .map(order => objProject(order, summaryAttributes))
+
+        const frozenOrderQty = sumBy(frozenOrderItems, order => order.qty)
+        row.frozen.frozenOrderItems = frozenOrderItems
+        row.frozen.frozenOrderQty   = frozenOrderQty
+
+        const bakedOrderItems = T1NorthBakedOrders.filter(order =>
+          prodNickToShapeTypeMap[order.prodNick] === row.prodNick
+        )
+        .map(order => 
+          order.custName === "Back Porch Bakery"
+            ? { ...order, qty: Math.ceil(order.qty / 2) }
+            : order
+        )
+        .map(order => objProject(order, summaryAttributes))
+
+        const bakedOrderQty = sumBy(bakedOrderItems, order => order.qty)
+
+        row.frozen.bakedOrderItems = bakedOrderItems
+        row.frozen.bakedOrderQty =   bakedOrderQty
+          
+        const qtyNeeded = frozenOrderQty + bakedOrderQty - freezerNorth
+        const adjustedQtyNeeded = row.prodNick === "al"
+          ? Math.max(0, qtyNeeded)
+          : row.prodNick === "mini" 
+            ? Math.max(0, Math.ceil(qtyNeeded / 12) * 12)
+            : Math.max(0, Math.ceil(qtyNeeded / 12) * 12 + 12)
+            
+        row.frozenQty = adjustedQtyNeeded
+
+        // Baked Column
+
+        const backporchOrders = T0BakedOrders.filter(order => 1
+          && order.custNick === "backporch"
+          && prodNickToShapeTypeMap[order.prodNick] === row.prodNick  
+        ).map(order => 
+          objProject(order, summaryAttributes)
+        )
+        const backporchQty = sumBy(backporchOrders, order => order.qty) // vulnerable to duplicate items
+        row.baked.backporchOrders = backporchOrders
+        row.baked.backporchQty    = backporchQty
+
+        const bpbextrasOrders = T0BakedOrders.filter(order => 1
+          && order.custNick === "bpbextras"
+          && prodNickToShapeTypeMap[order.prodNick] === row.prodNick  
+        ).map(order => 
+          objProject(order, summaryAttributes)
+        )
+        const bpbextrasQty = sumBy(bpbextrasOrders, order => order.qty) // vulnerable to duplicate items
+        row.baked.bpbextrasOrders = bpbextrasOrders
+        row.baked.bpbextrasQty    = bpbextrasQty
+
+        // Just applies a fancy filter to retail orders
+        const afterDeadlineOrders = this
+          .getOrdersPlacedAfterDeadline(delivDate, orders, QBInfo)
+          .filter(order => order.prodNick === row.prodNick)
+          .map(order => objProject(order, summaryAttributes))
+        const afterDeadlineQty = sumBy(afterDeadlineOrders, order => order.qty)
+        row.baked.afterDeadlineOrders = afterDeadlineOrders
+        row.baked.afterDeadlineQty    = afterDeadlineQty
+
+        // not the original usage; here we feed the method only orders for the
+        // given product instead of filling out the full grid. should return
+        // just 1 row.
+        const bakedQty = this.createBakedGoingNorth(
+          backporchOrders,
+          bpbextrasOrders,
+          afterDeadlineOrders,  
+        )
+        row.bakedQty = bakedQty?.[0]?.qty ?? 0
+
+      }
+
+      return croixRows.filter(row => 0
+        || row.prodNick !== "mini"
+        || row.bakedQty  !== 0
+        || row.frozenQty !== 0  
+      )
+
+      // // Create Frozens needed North { prod, qty }
+      // let currentFreezerNumbers = this.getCurrentFreezerNumbers(products);
+
+      // // console.log("currentFreezerNumbers", currentFreezerNumbers);
+      // let frozensLeavingCarlton = this.getFrozensLeavingCarlton(
+      //   T0Orders
+      // );
+      // // console.log("frozensLeavingCarlton", frozensLeavingCarlton);
+      // let bakedTomorrowAtCarlton = this.getBakedTomorrowAtCarlton(
+      //   delivDate,
+      //   database,
+      //   T1Orders
+      // );
+      // // console.log("bakedTomorrowAtCarlton", bakedTomorrowAtCarlton);
+      // let currentFrozenNeed = addTwoGrids(
+      //   frozensLeavingCarlton,
+      //   bakedTomorrowAtCarlton
+      // );
+      // // console.log("bakedTodayAtCarlton", bakedTomorrowAtCarlton);
+
+      // // If almond, just use the needed amt w/o subtracting inventory
+      // // otherwise, subtract inventory and 'adjust' that amount
+
+      // let clone = clonedeep(currentFrozenNeed);
+      // // console.log("currentFrozenNeedFirst", clone);
+      // let almondQty = 0;
+      // try {
+      //   almondQty = clone[clone.findIndex((cl) => cl.prod === "al")].qty;
+      // } catch {}
   
-      currentFrozenNeed = subtractGridFromGrid(
-        currentFreezerNumbers,
-        currentFrozenNeed
-      );
-      let clone2 = clonedeep(currentFrozenNeed);
-      console.log("currentFrozenNeedSecond", clone2);
+      // currentFrozenNeed = subtractGridFromGrid(
+      //   currentFreezerNumbers,
+      //   currentFrozenNeed
+      // );
+      // let clone2 = clonedeep(currentFrozenNeed);
+      // // console.log("currentFrozenNeedSecond", clone2);
   
-      currentFrozenNeed = this.adjustForPackSize(currentFrozenNeed);
-      try {
-        let almondInd = currentFrozenNeed.findIndex((cu) => cu.prod === "al");
-        currentFrozenNeed[almondInd].qty = almondQty;
+      // currentFrozenNeed = this.adjustForPackSize(currentFrozenNeed);
+      // try {
+      //   let almondInd = currentFrozenNeed.findIndex((cu) => cu.prod === "al");
+      //   currentFrozenNeed[almondInd].qty = almondQty;
        
-      } catch {}
+      // } catch {}
   
      
   
-      // Create Baked needed North { prod, qty }
-      let ordersPlacedAfterDeadline = this.getOrdersPlacedAfterDeadline(
-        delivDate,
-        database
-      );
-      let backPorchBakeryOrders = this.getBackPorchBakeryOrders(
-        delivDate,
-        database
-      );
-      let bpbExtraOrders = this.getBpbExtraOrders(delivDate, database);
+      // // Create Baked needed North { prod, qty }
+      // let ordersPlacedAfterDeadline = 
+      //   this.getOrdersPlacedAfterDeadline(delivDate, orders, QBInfo);
+      // let backPorchBakeryOrders = this.getBackPorchBakeryOrders(
+      //   delivDate,
+      //   database
+      // );
+      // let bpbExtraOrders = this.getBpbExtraOrders(delivDate, database);
   
-      let bakedGoingNorth = this.createBakedGoingNorth(
-        backPorchBakeryOrders,
-        bpbExtraOrders,
-        ordersPlacedAfterDeadline
-      );
+      // let bakedGoingNorth = this.createBakedGoingNorth(
+      //   backPorchBakeryOrders,
+      //   bpbExtraOrders,
+      //   ordersPlacedAfterDeadline
+      // );
   
-      console.log("bakedGoingNorth",bakedGoingNorth)
+      // // console.log("bakedGoingNorth",bakedGoingNorth)
   
-      // Combine Frozens and Baked { prod, bakedQty, frozenQty }
-      let combo = combineTwoGrids(
-        bakedGoingNorth,
-        currentFrozenNeed,
-        "bakedQty",
-        "frozenQty"
-      );
+      // // Combine Frozens and Baked { prod, bakedQty, frozenQty }
+      // let combo = combineTwoGrids(
+      //   bakedGoingNorth,
+      //   currentFrozenNeed,
+      //   "bakedQty",
+      //   "frozenQty"
+      // );
   
-      return combo;
+      // return croixRows.filter(row => 0
+      //   || row.prodNick !== "mini"
+      //   || row.bakedQty  !== 0
+      //   || row.frozenQty !== 0  
+      // )
+      // return combo;
     };
   
-    getCurrentFreezerNumbers = (delivDate, database) => {
-      const products = database[0];
+    // getCurrentFreezerNumbers = (products) => {  
+    //   // // create Product List of tomorrow's croissant Bake at Carlton
+    //   // let bakedOrdersList = getOrdersList(
+    //   //   tomBasedOnDelivDate(delivDate),
+    //   //   database
+    //   // );
+    //   // bakedOrdersList = Array.from(
+    //   //   new Set(
+    //   //     bakedOrdersList
+    //   //       .filter((frz) => this.NorthCroixBakeFilter(frz))
+    //   //       .map((pr) => pr.forBake)
+    //   //   )
+    //   // );
   
-      // create Product List of tomorrow's croissant Bake at Carlton
-      let bakedOrdersList = getOrdersList(
-        tomBasedOnDelivDate(delivDate),
-        database
-      );
-      bakedOrdersList = Array.from(
-        new Set(
-          bakedOrdersList
-            .filter((frz) => this.NorthCroixBakeFilter(frz))
-            .map((pr) => pr.forBake)
-        )
-      );
+    //   // // create Product List of frozen croissant deliveries leaving Carlton
+    //   // let frozenToday = getOrdersList(delivDate, database);
+    //   // frozenToday = Array.from(
+    //   //   new Set(
+    //   //     frozenToday
+    //   //       .filter((frz) => this.frzNorthFilter(frz))
+    //   //       .map((pr) => pr.forBake)
+    //   //   )
+    //   // );
   
-      // create Product List of frozen croissant deliveries leaving Carlton
-      let frozenToday = getOrdersList(delivDate, database);
-      frozenToday = Array.from(
-        new Set(
-          frozenToday
-            .filter((frz) => this.frzNorthFilter(frz))
-            .map((pr) => pr.forBake)
-        )
-      );
+    //   // // need to remove the 'fr' so that it matches bakedOrder attribute
+    //   // frozenToday = convertFrozenAttrToPlainAttr(frozenToday);
+    //   // // console.log("frozen today:", frozenToday)
   
-      // need to remove the 'fr' so that it matches bakedOrder attribute
-      frozenToday = convertFrozenAttrToPlainAttr(frozenToday);
-      console.log("frozen today:", frozenToday)
+    //   // // combine product lists
+    //   // frozenToday = frozenToday.concat(bakedOrdersList);
   
-      // combine product lists
-      frozenToday = frozenToday.concat(bakedOrdersList);
+    //   // console.log("frozenToday",frozenToday)
   
-      console.log("frozenToday",frozenToday)
+    //   // // create array { prod, qty }
+    //   // let frozenArray = [];
+    //   // for (let fr of frozenToday) {
+    //   //   let ind = products.findIndex((prod) => prod.forBake === fr);
+    //   //   let qty = products[ind].freezerNorth;
+    //   //   let prod = products[ind].nickName;
+    //   //   let item = {
+    //   //     prod: prod,
+    //   //     qty: qty ? qty : 0,
+    //   //   };
+    //   //   frozenArray.push(item);
+    //   // }
+
+    //   // frozen stock counts are held in the baked croissant's Product record.
+    //   // search by the products forBake, but make sure the product list is
+    //   // sorted by prodName (ascending) first. The product list called from
+    //   // 'database' is already sorted this way.
+    //   const croissantProducts = products.filter(P => (1
+    //     && P.packGroup === "baked pastries"
+    //     && P.doughType === "Croissant"
+    //   ))
+
+    //   const inventoryKeys = listUniq(croissantProducts.map(P => P.forBake))
+    //   const frozenArray2 = inventoryKeys.map(forBakeKey => {
+    //     const productRepresentative = products.find(P => P.forBake === forBakeKey)
+    //     const { nickName, freezerNorth } = productRepresentative ?? {}
+
+    //     return {
+    //       prod: nickName,
+    //       qty: freezerNorth ?? 0
+    //     }
+    //   })
+
   
-      // create array { prod, qty }
-      let frozenArray = [];
-      for (let fr of frozenToday) {
-        let ind = products.findIndex((prod) => prod.forBake === fr);
-        let qty = products[ind].freezerNorth;
-        let prod = products[ind].nickName;
-        let item = {
-          prod: prod,
-          qty: qty ? qty : 0,
-        };
-        frozenArray.push(item);
-      }
+    //   // console.log("frozenArray",frozenArray)
+    //   console.log("frozenArray2",frozenArray2)
   
-      console.log("frozenArray",frozenArray)
+    //   return frozenArray2;
+    // };
   
-      return frozenArray;
-    };
+    // NorthCroixBakeFilter = (ord) => {
+    //   return (
+    //     ord.where.includes("Mixed") &&
+    //     ord.packGroup === "baked pastries" &&
+    //     ord.doughType === "Croissant" &&
+    //     (ord.route === "Pick up Carlton" || ord.routeDepart === "Carlton")
+    //   );
+    // };
   
-    NorthCroixBakeFilter = (ord) => {
-      return (
-        ord.where.includes("Mixed") &&
-        ord.packGroup === "baked pastries" &&
-        ord.doughType === "Croissant" &&
-        (ord.route === "Pick up Carlton" || ord.routeDepart === "Carlton")
-      );
-    };
-  
-    getFrozensLeavingCarlton = (delivDate, database) => {
-      let frozenToday = getOrdersList(delivDate, database);
-      let fr = clonedeep(frozenToday);
+    // getFrozensLeavingCarlton = (T0Orders) => {
+    //   // let frozenToday = getOrdersList(delivDate, database);
+    //   // let fr = clonedeep(frozenToday);
       
-      frozenToday = Array.from(
-        new Set(frozenToday.filter((frz) => this.frzNorthFilter(frz)))
-      );
-      frozenToday = this.makeAddFrozenQty(frozenToday);
-      frozenToday = convertFrozenAttrToPlainAttr(frozenToday);
-      return frozenToday;
-    };
-  
-    frzNorthFilter = (ord) => {
-      return (
-        ord.packGroup === "frozen pastries" &&
-        ord.doughType === "Croissant" &&
-        (ord.route === "Pick up Carlton" || ord.routeDepart === "Carlton")
-      );
-    };
-  
-    makeAddFrozenQty = (frozenToday) => {
-      let makeList = frozenToday.map((mk) => ({
-        prod: mk.forBake,
-        nick: mk.prodNick,
-        qty: 0,
-      }));
-  
-      for (let make of makeList) {
-        console.log("frozenToday", frozenToday);
-        console.log("make", make);
-        let qtyAccToday = 0;
-        let qtyToday = frozenToday
-          .filter((frz) => make.prod === frz.forBake)
-          .map((ord) => ord.qty);
-  
-        if (qtyToday.length > 0) {
-          qtyAccToday = qtyToday.reduce(addUp);
-        }
-        make.qty = qtyAccToday;
-      }
-  
-      for (let make of makeList) {
-        make.prod = make.nick;
-        if (make.nick.substring(0, 2) === "fr") {
-          make.nick = make.nick.substring(2);
-        }
-        delete make.nick;
-      }
-  
-      return makeList;
-    };
-  
-    getBakedTomorrowAtCarlton = (delivDate, database) => {
-      let bakedOrdersList = getOrdersList(
-        tomBasedOnDelivDate(delivDate),
-        database
-      );
+    //   // frozenToday = Array.from(
+    //   //   new Set(frozenToday.filter((frz) => this.frzNorthFilter(frz)))
+    //   // );
+    //   // frozenToday = this.makeAddFrozenQty(frozenToday);
+    //   // frozenToday = convertFrozenAttrToPlainAttr(frozenToday);
+    //   // return frozenToday;
+
+    //   const T0FrozenOrders = T0Orders.filter(order => 1
+    //     && order.packGroup === "frozen pastries"
+    //     && order.doughType === "Croissant"
+    //     && (0
+    //       || order.route === "Pick up Carlton" 
+    //       || order.routeDepart === "Carlton"
+    //     )
+    //   )
       
-      let bakedTomorrow = bakedOrdersList.filter((frz) =>
-        this.NorthCroixBakeFilter(frz)
-      );
+    //   const frozenGrid = 
+    //     groupByArray(T0FrozenOrders, order => order.forBake)
+    //       .map(forBakeGroup => ({
+    //         prod: forBakeGroup[0].forBake,
+    //         nick: forBakeGroup[0].prodNick,
+    //         qty: sumBy(forBakeGroup, order => order.qty),
+    //         items: forBakeGroup.map(order => ({
+    //           custNick: order.custNick,
+    //           prodNick: order.prodNick,
+    //           qty: order.qty
+    //         }))
+    //       }))
+
+    //   return frozenGrid
+
+    // };
   
-      for (let baked of bakedTomorrow){
-        if (baked.custName === "Back Porch Bakery"){
-          baked.qty = Math.ceil(baked.qty/2)
-        }
-      }
-     
-      bakedTomorrow = this.makeAddQty(bakedTomorrow);
+    // frzNorthFilter = (ord) => {
+    //   return (
+    //     ord.packGroup === "frozen pastries" &&
+    //     ord.doughType === "Croissant" &&
+    //     (ord.route === "Pick up Carlton" || ord.routeDepart === "Carlton")
+    //   );
+    // };
   
-      return bakedTomorrow;
-    };
+    // makeAddFrozenQty = (frozenToday) => {
+    //   let makeList = frozenToday.map((mk) => ({
+    //     prod: mk.forBake,
+    //     nick: mk.prodNick,
+    //     qty: 0,
+    //   }));
   
-    makeAddQty = (bake) => {
-      let makeList2 = Array.from(new Set(bake.map((prod) => prod.prodNick))).map(
-        (mk) => ({
-          prod: mk,
-          qty: 0,
-        })
-      );
-      for (let make of makeList2) {
-        make.qty = 1;
+    //   for (let make of makeList) {
+    //     // console.log("frozenToday", frozenToday);
+    //     // console.log("make", make);
+    //     let qtyAccToday = 0;
+    //     let qtyToday = frozenToday
+    //       .filter((frz) => make.prod === frz.forBake)
+    //       .map((ord) => ord.qty);
   
-        let qtyAccToday = 0;
+    //     if (qtyToday.length > 0) {
+    //       qtyAccToday = qtyToday.reduce(addUp);
+    //     }
+    //     make.qty = qtyAccToday;
+    //   }
   
-        let qtyToday = bake
-          .filter((frz) => make.prod === frz.prodNick)
-          .map((ord) => ord.qty);
+    //   for (let make of makeList) {
+    //     make.prod = make.nick;
+    //     if (make.nick.substring(0, 2) === "fr") {
+    //       make.nick = make.nick.substring(2);
+    //     }
+    //     delete make.nick;
+    //   }
+    //   // console.log("MAKELIST ASEIKHGFWSIEKHGTWE", makeList)
   
-        if (qtyToday.length > 0) {
-          qtyAccToday = qtyToday.reduce(addUp);
-        }
-        make.qty = qtyAccToday;
-      }
-      return makeList2;
-    };
+    //   return makeList;
+    // };
   
-    adjustForPackSize = (data) => {
-      console.log("data", data);
-      for (let d of data) {
-        d.qty = Math.ceil(d.qty / 12) * 12 + 12;
-        if (d.qty < 0) {
-          d.qty = 0;
-        }
-      }
+    // getBakedTomorrowAtCarlton = (delivDate, database, T1Orders) => {
+    //   // let bakedOrdersList = getOrdersList(
+    //   //   tomBasedOnDelivDate(delivDate),
+    //   //   database
+    //   // );
+      
+    //   // let bakedTomorrow = bakedOrdersList.filter((frz) =>
+    //   //   this.NorthCroixBakeFilter(frz)
+    //   // );
   
-      return data;
-    };
+    //   // for (let baked of bakedTomorrow){
+    //   //   if (baked.custName === "Back Porch Bakery"){
+    //   //     baked.qty = Math.ceil(baked.qty/2)
+    //   //   }
+    //   // }
+
+    //   // bakedTomorrow = this.makeAddQty(bakedTomorrow);
+
+    //   const bakedTomorrowOrders = T1Orders.filter(order => (1
+    //     && order.where.includes("Mixed")
+    //     && order.packGroup === "baked pastries"
+    //     && order.doughType === "Croissant"
+    //     && (0 
+    //       || order.route === "Pick up Carlton" 
+    //       || order.routeDepart === "Carlton"
+    //     )
+    //   )).map(order => order.custName === "Back Porch Bakery"
+    //     ? { ...order, qty: Math.ceil(order.qty / 2) }
+    //     : order
+    //   )
+
+    //   const bakedTomorrow = this.makeAddQty(bakedTomorrowOrders);
   
-    getOrdersPlacedAfterDeadline = (delivDate, database) => {
-      const [products, customers, routes, standing, orders, d, dd, alt, QBInfo] =
-        database;
+    //   return bakedTomorrow;
+    // };
+  
+    // makeAddQty = (bake) => {
+    //   let makeList2 = Array.from(new Set(bake.map((prod) => prod.prodNick))).map(
+    //     (mk) => ({
+    //       prod: mk,
+    //       qty: 0,
+    //     })
+    //   );
+    //   for (let make of makeList2) {
+    //     make.qty = 1;
+  
+    //     let qtyAccToday = 0;
+  
+    //     let qtyToday = bake
+    //       .filter((frz) => make.prod === frz.prodNick)
+    //       .map((ord) => ord.qty);
+  
+    //     if (qtyToday.length > 0) {
+    //       qtyAccToday = qtyToday.reduce(addUp);
+    //     }
+    //     make.qty = qtyAccToday;
+    //   }
+    //   return makeList2;
+    // };
+  
+    // adjustForPackSize = (data) => {
+    //   // console.log("data", data);
+    //   for (let d of data) {
+    //     d.qty = Math.ceil(d.qty / 12) * 12 + 12;
+    //     if (d.qty < 0) {
+    //       d.qty = 0;
+    //     }
+    //   }
+  
+    //   return data;
+    // };
+  
+    getOrdersPlacedAfterDeadline = (delivDate, orders, QBInfo) => {
+      // const [products, customers, routes, standing, orders, d, dd, alt, QBInfo] =
+      //   database;
       console.log("QBInfo", QBInfo);
       let qbidS = tomBasedOnDelivDate(delivDate) + "PradosetoutTime";
       let qbidN = tomBasedOnDelivDate(delivDate) + "CarltonsetoutTime";
@@ -561,20 +801,20 @@ import { flow, map, orderBy, sortBy } from "lodash/fp";
       return todayOrders;
     };
   
-    getBackPorchBakeryOrders = (delivDate, database) => {
-      let BackPorchOrders = getOrdersList(today, database).filter(
-        (ord) =>
-          ord.custName === "Back Porch Bakery" && ord.doughType === "Croissant"
-      );
-      return BackPorchOrders;
-    };
+    // getBackPorchBakeryOrders = (delivDate, database) => {
+    //   let BackPorchOrders = getOrdersList(today, database).filter(
+    //     (ord) =>
+    //       ord.custName === "Back Porch Bakery" && ord.doughType === "Croissant"
+    //   );
+    //   return BackPorchOrders;
+    // };
   
-    getBpbExtraOrders = (delivDate, database) => {
-      let BPBExtraOrders = getOrdersList(today, database).filter(
-        (ord) => ord.custName === "BPB Extras" && ord.doughType === "Croissant"
-      );
-      return BPBExtraOrders;
-    };
+    // getBpbExtraOrders = (delivDate, database) => {
+    //   let BPBExtraOrders = getOrdersList(today, database).filter(
+    //     (ord) => ord.custName === "BPB Extras" && ord.doughType === "Croissant"
+    //   );
+    //   return BPBExtraOrders;
+    // };
   
     createBakedGoingNorth = (
       backPorchBakeryOrders,
@@ -583,25 +823,20 @@ import { flow, map, orderBy, sortBy } from "lodash/fp";
     ) => {
       let bakedGoingNorth = [];
       for (let back of backPorchBakeryOrders) {
+
+        // backporch qty
         let qtyback = back.qty;
-        let extraInd = bpbExtraOrders.findIndex(
-          (bpb) => bpb.prodName === back.prodName
-        );
-        let ordersInd = ordersPlacedAfterDeadline.findIndex(
-          (ord) => ord.prodName === back.prodName
-        );
-        let qtyex, qtyord;
-        try {
-          qtyex = Number(bpbExtraOrders[extraInd].qty);
-        } catch {
-          qtyex = 0;
-        }
-        try {
-          qtyord = Number(ordersPlacedAfterDeadline[ordersInd].qty);
-        } catch {
-          qtyord = 0;
-        }
-  
+
+        // bpbextras qty
+        let qtyex = bpbExtraOrders.find(item => 
+          item.prodName === back.prodName
+        )?.qty ?? 0
+
+        // retail-after-deadline qty
+        let qtyord = ordersPlacedAfterDeadline.find(item => 
+          item.prodName === back.prodName
+        )?.qty ?? 0
+
         let factor = 1 - qtyex / qtyback;
         let start = qtyback - qtyord;
         let qty = start * factor;
@@ -614,47 +849,49 @@ import { flow, map, orderBy, sortBy } from "lodash/fp";
   
         bakedGoingNorth.push(item);
       }
+
       return bakedGoingNorth;
+
     };
   
-    combineGrids = (obj1, obj2) => {
-      let firstObject = clonedeep(obj1);
-      let secondObject = clonedeep(obj2);
-      for (let first of firstObject) {
-        for (let sec of secondObject) {
-          if (first.prodNick === sec.prodNick) {
-            first.qty += sec.qty;
-          }
-        }
-      }
+    // combineGrids = (obj1, obj2) => {
+    //   let firstObject = clonedeep(obj1);
+    //   let secondObject = clonedeep(obj2);
+    //   for (let first of firstObject) {
+    //     for (let sec of secondObject) {
+    //       if (first.prodNick === sec.prodNick) {
+    //         first.qty += sec.qty;
+    //       }
+    //     }
+    //   }
   
-      for (let sec of secondObject) {
-        for (let first of firstObject) {
-          if (sec.prodNick === first.prodNick) {
-            sec.qty = first.qty;
-            continue;
-          }
-        }
-        sec.prodNick = "fr" + sec.prodNick;
-      }
+    //   for (let sec of secondObject) {
+    //     for (let first of firstObject) {
+    //       if (sec.prodNick === first.prodNick) {
+    //         sec.qty = first.qty;
+    //         continue;
+    //       }
+    //     }
+    //     sec.prodNick = "fr" + sec.prodNick;
+    //   }
   
-      return secondObject;
-    };
+    //   return secondObject;
+    // };
   
-    subtractCurrentStock = (products, grid) => {
-      for (let gr of grid) {
-        let short = gr.prodNick.substring(2);
-        let subQty =
-          products[products.findIndex((prod) => prod.nickName === short)]
-            .freezerNorth;
+    // subtractCurrentStock = (products, grid) => {
+    //   for (let gr of grid) {
+    //     let short = gr.prodNick.substring(2);
+    //     let subQty =
+    //       products[products.findIndex((prod) => prod.nickName === short)]
+    //         .freezerNorth;
   
-        gr.qty -= subQty;
-        if (gr.qty < 0) {
-          gr.qty = 0;
-        }
-      }
-      return grid;
-    };
+    //     gr.qty -= subQty;
+    //     if (gr.qty < 0) {
+    //       gr.qty = 0;
+    //     }
+    //   }
+    //   return grid;
+    // };
   
     returnPocketsNorth = (delivDate, database) => {
       // let shelfProds = makeOrders(today, database, this.pocketsNorthFilter);
@@ -671,36 +908,55 @@ import { flow, map, orderBy, sortBy } from "lodash/fp";
     };
   
     returnShelfProdsNorth = (delivDate, database) => {
-      // let shelfProds = makeOrdersShelf(today, database, this.shelfProdsFilter);
-      let shelfProds = makeOrdersShelf(delivDate, database, this.shelfProdsFilter);
-      console.log('shelfProds', shelfProds)
-      return shelfProds;
-      // const T0Orders = getFullOrders(delivDate, database)
-      // console.log("T0Orders", T0Orders)
-      // return []
+      const shelfOrders = getOrdersList(delivDate, database)
+        .filter(order => 1
+          && order.packGroup !== "frozen pastries"
+          && order.where.includes("Prado")
+          // && (order.where.includes("Prado") || (order.prodNick === "fic"))
+          && (order.routeDepart === "Carlton" || order.route === "Pick up Carlton")
+          && order.prodNick !== "fic"
+          && order.prodNick !== "mdch"
+        )
+      console.log("shelfOrders", shelfOrders)
+
+      const shelfProdNicks = 
+        uniqBy(shelfOrders, order => order.prodNick).map(order => order.prodNick)
+
+      const shelfProductColumnTemplate = 
+        Object.fromEntries(shelfProdNicks.map(pn => [pn, null]))
+
+      console.log("shelfProductColumnTemplate", shelfProductColumnTemplate)
+
+      const shelfOrderRows = 
+        groupByArray(shelfOrders, order => order.custNick).map(row => {
+          const pivotedRow = groupByObject(row, order => order.prodNick)
+
+          return {
+            customer: row[0].custName,
+            customerShort: truncate(row[0].custName, { length: 18 }),
+            ...shelfProductColumnTemplate,
+            ...mapValues(pivotedRow, prodNickGroup => prodNickGroup[0].qty * prodNickGroup[0].packSize)
+          }
+        })
+      console.log("shelfOrderRows", shelfOrderRows)
+    
+      return shelfOrderRows
+      // return makeOrdersShelf(delivDate, database, this.shelfProdsFilter);
+
     };
   
-    shelfProdsFilter = (ord) => {
-      return (
-        (ord.where.includes("Prado") || (ord.prodNick === "fic")) &&
-        
-        ord.packGroup !== "frozen pastries" &&
-        (ord.routeDepart === "Carlton" || ord.route === "Pick up Carlton")
-      );
-    };
-  
+    shelfProdsFilter = (ord) => (1
+      && (ord.where.includes("Prado")   || ord.prodNick === "fic")
+      && (ord.routeDepart === "Carlton" || ord.route === "Pick up Carlton")
+      && ord.packGroup !== "frozen pastries"
+    )
+    
     returnCarltonToPrado = (delivDate, database) => {
-      // let shelfProds = makeOrders(today, database, this.CarltonToPradoFilter);
       let shelfProds = makeOrders(delivDate, database, this.CarltonToPradoFilter);
       return shelfProds;
     };
   
-    CarltonToPradoFilter = (ord) => {
-      let fil =
-        ord.delivDate === convertedToday && ord.route === "Carlton to Prado";
-  
-      return fil;
-    };
+    CarltonToPradoFilter = (ord) => ord.delivDate === convertedToday && ord.route === "Carlton to Prado"
   
     returnBaguettes = (delivDate, database) => {
       // let shelfProds = makeOrders(today, database, this.BaguettesFilter);
