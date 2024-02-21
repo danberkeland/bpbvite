@@ -271,17 +271,17 @@ export const subtractGridFromGrid = (gr1, gr2) => {
 
 
 export const combineTwoGrids = (grid1, grid2, att1, att2) => {
-  console.log("grid1",grid1)
-  console.log("grid2",grid2)
+  // console.log("grid1",grid1)
+  // console.log("grid2",grid2)
 
-  console.log("keys",Object.keys(grid1[0]))
+  // console.log("keys",Object.keys(grid1[0]))
   let finalArray = []
   let prodsgr1 = grid1.map(gr => gr[Object.keys(grid1[0])[0]])
   let prodsgr2 = grid1.map(gr => gr[Object.keys(grid1[0])[0]])
   let allprods = Array.from(new Set(prodsgr1.concat(prodsgr2)))
-  console.log("allprods",allprods)
+  // console.log("allprods",allprods)
   for (let all of allprods){
-    console.log("all",all)
+    // console.log("all",all)
     let num1 = grid1[grid1.findIndex(gr => gr[Object.keys(grid1[0])[0]] === all)].qty
     let num2 = grid2[grid2.findIndex(gr => gr[Object.keys(grid2[0])[0]] === all)].qty
     let item = {
