@@ -10,7 +10,7 @@ export const useProductSchema = ({ editMode }) => {
   const prodNames = PRD.map(P => P.prodName)
 
   const { data:DGH=[] } = useListData({ tableName: "DoughBackup", shouldFetch: !!editMode })
-  const doughNicks = DGH.map(D => D.doughName).concat('')
+  const doughNicks = DGH.map(D => D.doughName).concat(['Croissant', ''])
 
   const hubOptions = ['Prado', 'Carlton']
 
