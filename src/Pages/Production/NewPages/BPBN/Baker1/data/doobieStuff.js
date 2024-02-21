@@ -33,7 +33,7 @@ export const useDoobieStuff = ({ reportDate }) => {
     {
       Prod: "Siciliano",
       Bucket: "YES",
-      Mix: yes ? "YES" : "YES",
+      Mix: yes ? "NO" : "NO",
       Bake: yes ? "YES" : "YES",
     },
   ]
