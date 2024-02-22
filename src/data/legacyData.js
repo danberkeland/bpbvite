@@ -83,6 +83,12 @@ export const useLegacyDoughComponents = () => {
   return { data: useMemo(calculateValue, [DCP]) }
 }
 
+export const useLegacyInfoQBAuths = () => {
+  const { data:IQB } = useListData({ tableName: "InfoQBAuth", shouldFetch })
+  
+  return { data: IQB }
+}
+
 /**
  * Fetches data from the current database and transforms it to
  * Legacy format. The intent is to make the translation here so
@@ -106,14 +112,16 @@ export const useLegacyFormatDatabase = () => {
   const { data:ORD } = useLegacyOrders()
   const { data:DGH } = useLegacyDoughs()
   const { data:DCP } = useLegacyDoughComponents()
+  // alt?? codebase shows reference to another table here, but not sure if it's used
+  const { data:IQB } = useLegacyInfoQBAuths()
 
   // order is important! original order:
   // [products, customers, routes, standing, orders, doughs, doughComponents]
-  const calcValue = () => (PRD && CUS && RTE && STD && ORD && DGH && DCP)
-    ? [PRD, CUS, RTE, STD, ORD, DGH, DCP]
+  const calcValue = () => (PRD && CUS && RTE && STD && ORD && DGH && DCP && IQB)
+    ? [PRD, CUS, RTE, STD, ORD, DGH, DCP, [], IQB]
     : undefined
    
-  return ({ data: useMemo(calcValue, [PRD, CUS, RTE, STD, ORD, DGH, DCP]) })
+  return ({ data: useMemo(calcValue, [PRD, CUS, RTE, STD, ORD, DGH, DCP, IQB]) })
 
 }
 

@@ -4,6 +4,8 @@ import { DBLocationProductOverride, DBProduct } from "../types.d";
 /**
  * Non-null valued override properties are applied to
  * product properties of the same key.
+ * 
+ * Does nothing if override is undefined (falsy).
  * @param {DBProduct} product 
  * @param {DBLocationProductOverride | undefined} override
  * @returns {DBProduct}

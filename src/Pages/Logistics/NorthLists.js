@@ -20,6 +20,7 @@ import { API, graphqlOperation } from "aws-amplify";
 import { listNotes } from "../../graphql/queries";
 import { DateTime } from "luxon";
 import { Calendar } from "primereact/calendar";
+import { sumBy } from "../../utils/collectionFns/sumBy";
 
 const WholeBox = styled.div`
   display: flex;
@@ -97,15 +98,15 @@ const fetchFromDataBase = async (baseFunc, base, limit) => {
 
 
 function NorthList() {
-  const [croixNorth, setCroixNorth] = useState([]);
-  const [shelfProdsNorth, setShelfProdsNorth] = useState([]); console.log("shelfProdsNorth", shelfProdsNorth)
+  const [croixNorth, setCroixNorth] = useState([]); //if (croixNorth.length) { console.log("CROIX NORTH:", croixNorth)}
+  const [shelfProdsNorth, setShelfProdsNorth] = useState([]); if (shelfProdsNorth.length) {console.log("shelfProdsNorth", shelfProdsNorth)}
   const [pocketsNorth, setPocketsNorth] = useState([]);
   const [CarltonToPrado, setCarltonToPrado] = useState([]);
   const [Baguettes, setBaguettes] = useState([]);
   const [otherRustics, setOtherRustics] = useState([]);
   const [retailStuff, setRetailStuff] = useState([]);
   const [earlyDeliveries, setEarlyDeliveries] = useState([]);
-  const [columnsShelfProdsNorth, setColumnsShelfProdsNorth] = useState([]);
+  const [columnsShelfProdsNorth, setColumnsShelfProdsNorth] = useState([]); if (columnsShelfProdsNorth.length) {console.log(columnsShelfProdsNorth)}
   const [columnsPocketsNorth, setColumnsPocketsNorth] = useState([]);
   const [columnsCarltonToPrado, setColumnsCarltonToPrado] = useState([]);
   const [columnsBaguettes, setColumnsBaguettes] = useState([]);
@@ -134,6 +135,10 @@ function NorthList() {
     return dynamicColumns;
   };
 
+
+  const shelfProdNicks = Object.keys(shelfProdsNorth[0] ?? {})
+    .filter(key => !["customer", "customerShort"].includes(key))
+
   const dynamicColumnsShelfProdsNorth = createDynamic(columnsShelfProdsNorth);
   const dynamicColumnsPocketsNorth = createDynamic(columnsPocketsNorth);
   const dynamicColumnsCarltonToPrado = createDynamic(columnsCarltonToPrado);
@@ -152,7 +157,7 @@ function NorthList() {
   const { data: database } = useLegacyFormatDatabase();
 
   useEffect(() => {
-    console.log("databaseTest", database);
+    // console.log("databaseTest", database);
     database &&
       checkForUpdates(
         database,
@@ -165,8 +170,8 @@ function NorthList() {
 
   useEffect(() => {
     notesData().then((notes) => {
-      console.log("notes", notes);
-      console.log('NotesdelivDate', delivDate)
+      // console.log("notes", notes);
+      // console.log('NotesdelivDate', delivDate)
       setNotes(
         notes.filter((note) => note.when === delivDate)
       );
@@ -260,26 +265,27 @@ function NorthList() {
     });
 
     if (columnsShelfProdsNorth.length > 0) {
+      console.log("columnsShelfProdsNorth", columnsShelfProdsNorth)
       finalY = doc.previousAutoTable.finalY;
 
       doc.setFontSize(titleFont);
       doc.text(pageMargin, finalY + tableToNextTitle, `Shelf Products`);
 
-      console.log("columnsShelf", columnsShelfProdsNorth);
-      console.log("shelfProds", shelfProdsNorth);
-      let footStyle = ["TOTAL"];
+      // console.log("columnsShelf", columnsShelfProdsNorth);
+      // console.log("shelfProds", shelfProdsNorth);
+      let footer = ["TOTAL"]
       for (let prod of columnsShelfProdsNorth) {
         let comp = prod.field;
-        console.log("comp", comp);
+        // console.log("comp", comp);
         let tot = 0;
         for (let sh of shelfProdsNorth) {
           if (sh[comp] && sh[comp] !== "customer") {
-            console.log(sh[comp]);
+            // console.log(sh[comp]);
             tot = tot + Number(sh[comp]);
           }
         }
         if (prod.field !== "customer" && prod.field !== "customerShort") {
-          footStyle.push(tot);
+          footer.push(tot);
         }
       }
 
@@ -287,7 +293,7 @@ function NorthList() {
         body: shelfProdsNorth,
         theme: "grid",
         headStyles: { fillColor: "#dddddd", textColor: "#111111" },
-        foot: [footStyle],
+        foot: [footer],
         footStyles: { fillColor: "#dddddd", textColor: "#111111" },
 
         margin: {
@@ -388,8 +394,8 @@ function NorthList() {
     doc.save(`LongDriverSouth${delivDate}.pdf`);
   };
 
-  console.log("database", database)
-  console.log(Baguettes, otherRustics, retailStuff, earlyDeliveries)
+  // console.log("database", database)
+  // console.log(Baguettes, otherRustics, retailStuff, earlyDeliveries)
   return (
     <React.Fragment>
 
@@ -448,7 +454,16 @@ function NorthList() {
               className="p-datatable-gridlines p-datatable-sm p-datatable-striped"
               value={shelfProdsNorth}
             >
-              {dynamicColumnsShelfProdsNorth}
+              <Column header="customer" field="customerShort" style={{ width: "70px" }} />
+              {shelfProdNicks.map(prodNick => (
+                <Column 
+                  header={prodNick} 
+                  field={prodNick} 
+                  key={prodNick} 
+                  style={{width: "30px" }} 
+                /> 
+              ))}
+              {/* {dynamicColumnsShelfProdsNorth} */}
             </DataTable>
           </React.Fragment>
         )}

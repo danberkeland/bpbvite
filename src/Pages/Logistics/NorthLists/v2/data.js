@@ -1,21 +1,18 @@
 import { useMemo } from "react";
-import { combineOrders } from "../../../../data/cartOrder/combineOrders";
 import { useLocations } from "../../../../data/location/useLocations.ts";
-import { useOrdersByDelivDate } from "../../../../data/order/useOrders";
 import { useProducts } from "../../../../data/product/useProducts";
-import { useLoadedGetRouteOptions } from "../../../../data/routing/useRouting";
-import { useStandingsByDayOfWeek } from "../../../../data/standing/useStandings";
 import { Data } from "../../../../utils/dataFns";
-import { DT } from "../../../../utils/dateTimeFns";
 import { DateTime } from "luxon";
 import { DBLocation, DBProduct } from "../../../../data/types.d.js";
-import { useRoutes } from "../../../../data/route/useRoutes.js";
+import { useCombinedRoutedOrdersByDate } from "../../../../data/production/useProductionData.js";
+import { useInfoQBAuths } from "../../../../data/infoQBAuths/useInfoQBAuths.js";
+import { DT } from "../../../../utils/dateTimeFns.js";
 
 // These equivalences cannot be queried directly from DB records;
 // better to hard code the values for now.
 
 /** maps ProdNicks to the forBake of some representative product */
-const croissantShapeTypeMap = {
+const prodNickToForBakeMap = {
   al: "Almond",
   fral: "Almond",
   ch: "ch",
@@ -32,162 +29,169 @@ const croissantShapeTypeMap = {
   mini: "mini",
   frmni: "mini",
 }
+
 const croissantRowKeys = ["Almond", "ch", "pg", "mb", "pl", "sf", "mini"]
 
-
-const useCombinedRoutedOrdersByDate = ({ delivDT }) => {
-  const delivDate = delivDT.toFormat('yyyy-MM-dd')
-  const dayOfWeek = delivDT.toFormat('EEE')
-  const shouldFetch = true
-
-  const { data:ORD } = useOrdersByDelivDate({ delivDate, shouldFetch })
-  const { data:STD } = useStandingsByDayOfWeek({ dayOfWeek, shouldFetch })
-  const { data:LOC } = useLocations({ shouldFetch })
-  const { data:PRD } = useProducts({ shouldFetch })
-  const { data:RTE } = useRoutes({ shouldFetch })
-  const getRoutes = useLoadedGetRouteOptions({ shouldFetch })
-
-  const calcRoutedOrders = () => {
-    if (!ORD || !STD || !LOC || !PRD || !RTE || !getRoutes) return []
-
-    const locations = LOC.reduce(Data._keyBy(L => L.locNick), {})
-    const products = PRD.reduce(Data._keyBy(P => P.prodNick), {})
-
-    console.log(STD)
-    const combinedOrders = combineOrders(
-      ORD, 
-      STD.filter(std => std.isStand === true)
-    )
-
-    const routedOrders = combinedOrders.map(order => {
-      const location = order.isWhole
-        ? locations[order.locNick]
-        : {
-            locNick: order.locNick,
-            locName: order.locNick,
-            zoneNick: order.route,
-            latestFirstDeliv: 7,
-            latestFinalDeliv: 11,
-          }
-      const product = products[order.prodNick]
-      const routeOptions = getRoutes(location, product, dayOfWeek)
-      const routePlan = routeOptions?.[order.route]?.[0]
-      const routeNick = routeOptions?.[order.route]?.[0]?.routeNick ?? "NOT ASSIGNED"
-      const route = RTE.find(R => R.routeNick === routeNick)
-      return { 
-        ...order, 
-        meta: { 
-          routePlan,
-          routeNick,
-          route,
-          location: {
-            locName: location.locName.split("__")[0]
-          }
-        }
-      }
-
-    })
-   
-    return routedOrders
-  }
-
-  return { data: useMemo(calcRoutedOrders, [ORD, STD, LOC, PRD, RTE, getRoutes])}
-
-}
+// forBake is mostly used to find the product holding freezerNorth inventory counts.
+const initialCroissantRows = [
+  { forBake: "Almond", prodNick: "al" },
+  { forBake: "ch",     prodNick: "ch" },
+  { forBake: "pg",     prodNick: "pg" },
+  { forBake: "mb",     prodNick: "mb" },
+  { forBake: "pl",     prodNick: "pl" },
+  { forBake: "mini",   prodNick: "mini" },
+]
 
 /**
  * 
  * @param {Object} input
  * @param {DateTime} input.delivDT
  * @returns 
- */
+ */ 
 const useNorthListData = ({
   delivDT
 }) => {
   const { data:LOC } = useLocations({ shouldFetch: true })
   const { data:PRD } = useProducts({ shouldFetch: true })
-
-  const { data:T0Orders } = useCombinedRoutedOrdersByDate({ delivDT: delivDT })
-  const { data:T1Orders } = useCombinedRoutedOrdersByDate({ delivDT: delivDT.plus({ days: 1 })})
-
-  console.log("foo")
+  const { data:IQB }  = useInfoQBAuths({ shouldFetch: true })
+  const { data:T0Orders } = useCombinedRoutedOrdersByDate({ delivDT, useHolding: false })
+  const { data:T1Orders } = useCombinedRoutedOrdersByDate({ delivDT: delivDT.plus({ days: 1 }), useHolding: true })
+  
   const calcNorthLists = () => {
-    if (!LOC || !PRD || !T0Orders || !T1Orders) return []
+    if (!LOC || !PRD || !IQB || !T0Orders || !T1Orders) return []
+    console.log([LOC, PRD, IQB, T0Orders, T1Orders])
+    
 
-    /** @type {Object<string, DBLocation>} */
-    const locations = LOC.reduce(Data._keyBy(L => L.locNick), {})
+    // /** @type {Object<string, DBLocation>} */
+    // const locations = LOC.reduce(Data._keyBy(L => L.locNick), {})
 
     /** @type {Object<string, DBProduct>} */
     const products = PRD.reduce(Data._keyBy(P => P.prodNick), {})
-
-    const sortedProducts = PRD.sort(Data.compareBy(P => P.prodName))
+    
 
     // ***** Croissant List *****
-    console.log("T0Orders", T0Orders)
-    // IMPORTANT rule: product list must be sorted (ascending) 
-    // by prodName when we find by forBake
-    const freezerNorthInventory = croissantRowKeys.map(forBake => {
-      const productRep = sortedProducts.find(P => P.forBake === forBake)
+
+    // Frozen
+
+    // IMPORTANT rule: product list must be sorted by prodName (ascending) 
+    // when we find by forBake
+    const sortedProducts = PRD.sort(Data.compareBy(P => P.prodName))
+    const freezerNorthInventory = initialCroissantRows.map(row => {
+      const productRep = sortedProducts.find(P => P.forBake === row.forBake)
 
       return {
-        rowKey: forBake,
-        prodNick: productRep?.prodNick ?? "",
+        forBake: row.forBake, 
+        prodNick: row.prodNick, 
         qty: productRep?.freezerNorth ?? 0
       }
     })
     console.log(freezerNorthInventory)
 
-    const T0Frozen = T0Orders.filter(order => {
-      const product = products[order.prodNick]
-      const route = order.meta.route
-
-      return product.packGroup === "frozen pastries" 
-        && product.doughNick === "Croissant"
-        && product.bakedWhere.length > 1
-        && !!route && route.RouteDepart === "Carlton"
-
-    })
+    const T0Frozen = T0Orders.filter(order => 1
+      && products[order.prodNick].bakedWhere.length > 1
+      && products[order.prodNick].packGroup === "frozen pastries"
+      && products[order.prodNick].doughNick === "Croissant"
+      && order.meta.route?.RouteDepart      === "Carlton"
+    )
     console.log("T0Frozen", T0Frozen)
 
-    console.log("T1Orders", T1Orders)
-    const T1Baked = T1Orders
-      .filter(order => {
-        const product = products[order.prodNick]
-        const route = order.meta.route
-
-        return product.packGroup === "baked pastries"
-          && product.doughNick === "Croissant"
-          && product.bakedWhere.length > 1
-          && !!route && route.RouteDepart === "Carlton"
-
-      })
-      .map(order => order.prodNick === 'backporch'
-        ? { ...order, qty: Math.ceil(order.qty/2) }
-        : order
-      )
+    const T1Baked = T1Orders.filter(order => 1
+      && products[order.prodNick].bakedWhere.length > 1
+      && products[order.prodNick].packGroup === "baked pastries"
+      && products[order.prodNick].doughNick === "Croissant"
+      && order.meta.route?.RouteDepart      === "Carlton"
+    )   
     console.log("T1Baked", T1Baked)
 
-    const frozensNeededbuckets = [...T0Frozen, ...T1Baked]
-      .reduce(Data._bucketBy(order => croissantShapeTypeMap[order.prodNick]), [])
+    const frozensNeeded = [...T0Frozen, ...T1Baked]
+      .reduce(Data._bucketBy(order => prodNickToForBakeMap[order.prodNick]), [])
+      .map(shapeTypeGroup => {
 
-      console.log("frozensNeededbuckets", frozensNeededbuckets )
-
-    const frozensNeeded = frozensNeededbuckets.map(shapeTypeGroup => {
-        const rowKey = croissantShapeTypeMap[shapeTypeGroup[0].prodNick]
         const qty = shapeTypeGroup.reduce(Data._sumBy(order => 
           order.qty * products[order.prodNick].packSize), 0
         )
 
-        return { rowKey, qty, items: shapeTypeGroup }
-
+        return { 
+          forBake: prodNickToForBakeMap[shapeTypeGroup[0].prodNick],
+          qty, 
+          items: shapeTypeGroup 
+        }
       })
 
     console.log("frozensNeeded", frozensNeeded)
+
+    // Baked
+    // Baked::orders after deadline
+    
+    const T1Iso = delivDT.plus({ days: 1}).toFormat('yyyy-MM-dd')
+
+    const bpbsSetoutRecord = 
+      IQB.find(item => item.id === T1Iso + "PradosetoutTime")?.updatedAt
+    
+    const bpbsSetoutTimestamp = bpbsSetoutRecord
+      ? DT.fromIsoTs(bpbsSetoutRecord).toMillis()
+      : undefined
+
+
+    const afterDeadlineOrders = T0Orders.filter(order => (
+      order.isWhole && (
+        order.route === "slopick"
+      )
+    ))
+
+
+    // backporch orders
+    // getBackPorchBakeryOrders = (delivDate, database) => {
+    //   let BackPorchOrders = getOrdersList(today, database).filter(
+    //     (ord) =>
+    //       ord.custName === "Back Porch Bakery" && ord.doughType === "Croissant"
+    //   );
+    //   return BackPorchOrders;
+    // };
+    // const backporchOrders = T0Orders.filter(order => (1
+    //   && products[order.prodNick].packGroup === "baked pastries"
+    //   && products[order.prodNick].doughNick === "Croissant"  
+    // ))
+
   
   }
 
-  return { data: useMemo(calcNorthLists, [LOC, PRD, T0Orders, T1Orders])}
+  return { data: useMemo(calcNorthLists, [LOC, PRD, IQB, T0Orders, T1Orders])}
 
 }
 
 export { useNorthListData }
+
+
+// getOrdersPlacedAfterDeadline = (delivDate, database) => {
+//   const [products, customers, routes, standing, orders, d, dd, alt, QBInfo] =
+//     database;
+//   console.log("QBInfo", QBInfo);
+//   let qbidS = tomBasedOnDelivDate(delivDate) + "PradosetoutTime";
+//   let qbidN = tomBasedOnDelivDate(delivDate) + "CarltonsetoutTime";
+//   let southCompare = new Date();
+//   let northCompare = new Date();
+//   try {
+//     southCompare = new Date(
+//       QBInfo[QBInfo.findIndex((qb) => qb.id === qbidS)].updatedAt
+//     );
+//   } catch {}
+//   try {
+//     northCompare = new Date(
+//       QBInfo[QBInfo.findIndex((qb) => qb.id === qbidN)].updatedAt
+//     );
+//   } catch {}
+
+//   let todayOrders = orders.filter(
+//     (ord) =>
+//       (ord.route === "slopick" &&
+//         ord.delivDate === convertDatetoBPBDate(delivDate) &&
+//         new Date(ord.updatedAt) > southCompare &&
+//         ord.isWhole === false) ||
+//       (ord.route === "atownpick" &&
+//         ord.delivDate === convertDatetoBPBDate(delivDate) &&
+//         new Date(ord.updatedAt) > northCompare &&
+//         ord.isWhole === false)
+//   );
+//   return todayOrders;
+// };
