@@ -1,4 +1,4 @@
-import { convertDatetoBPBDate, todayPlus } from "../helpers/dateTimeHelpers";
+import { convertDatetoBPBDate } from "../helpers/dateTimeHelpers";
 import { sortAtoZDataByIndex } from "../helpers/sortDataHelpers";
 
 import { wildcardRegExp } from "wildcard-regex";
@@ -7,10 +7,12 @@ const { DateTime } = require("luxon");
 
 const clonedeep = require("lodash.clonedeep");
 
-const today = todayPlus()[0];
+// const today = todayPlus()[0];
 
 export const getFullOrders = (delivDate, database) => {
-  const [products, customers, routes, standing, orders] = database;
+  // const [products, customers, routes, standing, orders] = database;
+  const standing = database[3]
+  const orders = database[4]
   let buildOrders = buildCartList("*", delivDate, orders);
   let buildStand = buildStandList("*", delivDate, standing);
   let fullOrder = compileFullOrderList(buildOrders, buildStand);
@@ -19,7 +21,9 @@ export const getFullOrders = (delivDate, database) => {
 };
 
 export const getFullProdOrders = (delivDate, database) => {
-  const [products, customers, routes, standing, orders] = database;
+  // const [products, customers, routes, standing, orders] = database;
+  const standing = database[3]
+  const orders = database[4]
   let buildOrders = buildCartList("*", delivDate, orders);
   let buildStand = buildProdStandList("*", delivDate, standing);
   let fullOrder = compileFullOrderList(buildOrders, buildStand);
@@ -112,7 +116,7 @@ const convertStandListtoStandArray = (
 
 export const compileOrderList = (cartList, standList) => {
   let orderList = cartList.concat(standList);
-  let clone = clonedeep(orderList)
+  // let clone = clonedeep(orderList)
  
 
   // Remove old cart order from orders if it exists
@@ -133,7 +137,7 @@ export const compileOrderList = (cartList, standList) => {
   console.log("orderList2",clone2)
   sortAtoZDataByIndex(orderList, "prodName");
   orderList = orderList.filter(ord => ord.prodName !== '')
-  let clone3 = clonedeep(orderList)
+  // let clone3 = clonedeep(orderList)
  
  
   

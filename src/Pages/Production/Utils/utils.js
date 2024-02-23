@@ -1,4 +1,8 @@
-import { pocketFilter, whatToMakeFilter, baker1PocketFilter } from "./filters";
+import { 
+  whatToMakeFilter, 
+  // pocketFilter, 
+  // baker1PocketFilter 
+} from "./filters";
 
 import { sortZtoADataByIndex } from "../../../helpers/sortDataHelpers";
 
@@ -37,7 +41,8 @@ export const DayTwoFilter = (ord, loc) => {
 };
 
 export const addProdAttr = (fullOrder, database) => {
-  const [products, customers, routes, standing, orders] = database;
+  // const [products, customers, routes, standing, orders] = database;
+  const [products, customers] = database;
   let fullToFix = clonedeep(fullOrder);
 
   fullToFix = fullToFix.map((full) => ({
@@ -129,7 +134,7 @@ const update = (order, products, customers) => {
 };
 
 export const addRoutes = (delivDate, prodGrid, database) => {
-  const [products, customers, routes, standing, orders] = database;
+  const [products, customers, routes] = database;
   sortZtoADataByIndex(routes, "routeStart");
   for (let rte of routes) {
    
@@ -223,7 +228,7 @@ export const makePocketQty = (bakedTomorrow) => {
 };
 
 export const whatToMakeList = (database, delivDate) => {
-  let [products, customers, routes, standing, orders] = database;
+  // let [products, customers, routes, standing, orders] = database;
   let whatToMakeList = getOrdersList(delivDate, database, true);
   return whatToMakeList.filter((set) => whatToMakeFilter(set));
 };
@@ -273,7 +278,7 @@ export const buildTable = (title, doc, body, col, finalY) => {
 };
 
 export const addAttr = (fullOrder, database) => {
-  const [products, customers, routes, standing, orders] = database;
+  // const [products, customers, routes, standing, orders] = database;
   let fullToFix = clonedeep(fullOrder);
 
   fullToFix = fullToFix.map((full) => ({

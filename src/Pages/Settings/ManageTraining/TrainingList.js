@@ -8,7 +8,8 @@ import { Column } from "primereact/column";
 import TrainingDetails from "./TrainingDetails";
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 import { withFadeIn } from "../../../hoc/withFadeIn"; 
-import { useTrainingListFull } from "../../../data/trainingData"; 
+// import { useTrainingListFull } from "../../../data/trainingData.mjs"; 
+import { useListData } from "../../../data/_listData";
 
 const initialState = {
   id:"",
@@ -27,7 +28,13 @@ function TrainingList({ selectedTraining, setSelectedTraining }) {
     role: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
 
-  const { data:trainingList, errors:trainingListErrors } = useTrainingListFull(true);
+  // const { data:trainingList, errors:trainingListErrors } = useTrainingListFull(true);
+
+  const { data:trainingList, error:trainingListErrors } = 
+    useListData({ tableName: "Training", shouldFetch: true })
+
+  console.log("TRAINING LIST:", trainingList)
+  console.log("ERRORS:", trainingListErrors)
   
   const formKeys = Object.keys(initialState)
   const tableData = trainingList?.map(item => {

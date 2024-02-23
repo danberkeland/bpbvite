@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
@@ -86,7 +86,10 @@ const clonedeep = require("lodash.clonedeep");
 
 function CroixToMakeLegacy() {
 
-  const [delivDate, setDelivDate] = useState(todayPlus()[0]);
+  const [
+    delivDate, 
+    // setDelivDate
+  ] = useState(todayPlus()[0]);
   const [mod, setMod] = useState(false);
   const [modType, setModType] = useState();
   const [openingCount, setOpeningCount] = useState();

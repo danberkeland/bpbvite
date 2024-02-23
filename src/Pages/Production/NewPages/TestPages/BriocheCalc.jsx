@@ -1,14 +1,14 @@
 import gqlFetcher from "../../../../data/_fetchers"
 
 import useSWR from 'swr'
-import { getProduct } from "../../../../data/swr2.x.x/gqlQueries/queries"
-import { useListData } from "../../../../data/_listData"
+import { getProduct } from "../../../../customGraphQL/queries/_getQueries"
 import { DateTime } from "luxon"
 import { useMemo } from "react"
-import { flatten, groupBy, map, mapValues, orderBy, round, set, sum, sumBy } from "lodash"
+import { flatten, groupBy, mapValues, orderBy, round, set, sumBy } from "lodash"
 import { DataTable } from "primereact/datatable"
 import { TreeTable } from 'primereact/treetable'
 import { Column } from "primereact/column"
+import { useListData } from "../../../../data/_listData"
 
 const briocheProdNicks = ['bz', 'lgbz', 'brsl', 'bri', 'zdog']
 const qtyPlaceholder = { bz: 0, lgbz: 0, brsl: 0, bri: 0 }

@@ -8,7 +8,7 @@ import { CroixToMake } from "./NewPages/Croix/CroixToMake/CroixToMake";
 import { SevenDayList } from "./NewPages/TestPages/SevenDayList";
 import { Database } from "./NewPages/TestPages/Database";
 import { BPBNBuckets } from "./NewPages/TestPages/BPBNBucketsNew";
-import { Routing } from "./NewPages/TestPages/Routing";
+// import { Routing } from "./NewPages/TestPages/Routing";
 import { Sandbox } from "./NewPages/TestPages/_Sandbox";
 import { BriocheCalc } from "./NewPages/TestPages/BriocheCalc";
 import { OrderReview } from "./NewPages/TestPages/OrderReview";
@@ -32,7 +32,7 @@ const bpbnPages = [
   {name: "Terminal", component: <BPBTerminal />},
   {name: "Database", component: <Database />},
   {name: "Seven Day List", component: <SevenDayList />},
-  {name: "Order Routing", component: <Routing />},
+  // {name: "Order Routing", component: <Routing />},
   {name: "Brioche Calculator", component: <BriocheCalc />},
   {name: "Order Review", component: <OrderReview />},
   // {name: "BPBNBaker1", component: <BPBNBaker1 />},

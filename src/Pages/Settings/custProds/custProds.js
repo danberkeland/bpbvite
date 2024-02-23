@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
@@ -47,7 +47,10 @@ const CustProds = () => {
   console.log("products", products);
   console.log("customers", customers);
 
-  const [altPricing, setAltPricing] = useState([]);
+  const [
+    altPricing, 
+    // setAltPricing
+  ] = useState([]);
 
   const customerGroup = customers;
   useEffect(() => {

@@ -1,7 +1,7 @@
 import { Auth } from "aws-amplify";
 import axios from "axios";
 import { checkUser } from "./AppStructure/Auth/AuthHelpers";
-import { sendCognitoSignupEmail } from "./Pages/Ordering/Orders/functions/sendEmailConfirmation";
+// import { sendCognitoSignupEmail } from "./Pages/Ordering/Orders/functions/sendEmailConfirmation";
 import { checkQBValidation, getQBProdSyncToken } from "./helpers/QBHelpers";
 
 const API_bpbrouterAuth =
@@ -318,28 +318,28 @@ export const submitAuth = async (props, fns) => {
   const {
     setIsLoading,
     setFormType,
-    setShowMessage,
+    // setShowMessage,
     setUserObject,
-    setResetPassword,
+    // setResetPassword,
   } = fns;
 
-  const emailCheck = [
-    "danberkeland@gmail.com",
-    "eat@highstdeli.com",
-    "osos@highstdeli.com",
-    "slo@highstdeli.com",
-    "kreuzberg.mgr@poorbutsexy.biz",
-    "kraken.avila.mgr@poorbutsexy.biz",
-    "kraken.bonetti.mgr@poorbutsexy.biz",
-    "kraken.pismo.mgr@poorbutsexy.biz",
-    "loshel@live.com",
-    "reneerose11@gmail.com",
-    "tara@scoutcoffeeco.com",
-    "ryan@scoutcoffeeco.com",
-    "peter@sloprovisions.com",
-    "trixybliss@att.net",
-    "james@poorbutsexy.biz",
-  ];
+  // const emailCheck = [
+  //   "danberkeland@gmail.com",
+  //   "eat@highstdeli.com",
+  //   "osos@highstdeli.com",
+  //   "slo@highstdeli.com",
+  //   "kreuzberg.mgr@poorbutsexy.biz",
+  //   "kraken.avila.mgr@poorbutsexy.biz",
+  //   "kraken.bonetti.mgr@poorbutsexy.biz",
+  //   "kraken.pismo.mgr@poorbutsexy.biz",
+  //   "loshel@live.com",
+  //   "reneerose11@gmail.com",
+  //   "tara@scoutcoffeeco.com",
+  //   "ryan@scoutcoffeeco.com",
+  //   "peter@sloprovisions.com",
+  //   "trixybliss@att.net",
+  //   "james@poorbutsexy.biz",
+  // ];
 
   console.log("submitProps", props);
 
@@ -412,7 +412,11 @@ export const sendForgottenPasswordEmail = async (email) => {
 
 export const resetPassword = async (props, fns) => {
   const { email, code, passwordNew } = props;
-  const { setIsLoading, setFormType, userObject } = fns;
+  const { 
+    setIsLoading, 
+    setFormType, 
+    // userObject 
+  } = fns;
   console.log("fns", fns);
   console.log("props", props);
   console.log("code", code);

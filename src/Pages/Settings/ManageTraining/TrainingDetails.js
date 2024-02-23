@@ -4,24 +4,62 @@ import { CustomInputs } from "../../../FormComponents/CustomInputs";
 import { validationSchema } from "./ValidationSchema";
 
 // import { deleteLocation, updateLocation, createLocation } from "../../restAPIs";
-import {
-  createTraining,
-  updateTraining,
-  deleteTraining,
-} from "../../../data/trainingData";
+// import {
+//   createTraining,
+//   updateTraining,
+//   deleteTraining,
+// } from "../../../data/trainingData.mjs";
 import { withFadeIn } from "../../../hoc/withFadeIn";
 import { withBPBForm } from "../../../hoc/withBPBForm";
 import { GroupBox } from "../../../CommonStyles";
 import { compose } from "../../../utils";
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
+import { useListData } from "../../../data/_listData";
 // import { useSimpleZoneList } from "../../swr";
+import * as yup from "yup"
+
+const createTrainingSchema = yup.object().shape({
+  Type: yup.string().default("Training"),
+  role: yup.string().required("Required"),
+
+  header: yup
+    .string()
+
+    .required("Required"),
+
+  order: yup.number().required("Required"),
+  instruction: yup.string(),
+});
+
 
 const BPB = new CustomInputs();
 
 function TrainingDetails({ initialState }) {
 
   const isEdit = useSettingsStore((state) => state.isEdit);
+  const TRAIN = useListData({ tableName: "Training", shouldFetch: true })
 
+  const createTraining = async createTrainingInput => {
+    if (!createTrainingSchema.isValid(createTrainingInput)) {
+      TRAIN.updateLocalData(
+        await TRAIN.submitMutations({ deleteInputs: [createTrainingInput]})
+      )
+    } else {
+      console.log("createTraining validation failed")
+      return
+    }
+  }  
+  const updateTraining = async updateTrainingInput => {
+    TRAIN.updateLocalData(
+      await TRAIN.submitMutations({ deleteInputs: [updateTrainingInput]})
+    )
+  }
+  const deleteTraining = async deleteTrainingInput => {
+    TRAIN.updateLocalData(
+      await TRAIN.submitMutations({ deleteInputs: [deleteTrainingInput]})
+    )
+  }
+  
 
   const BPBTrainingForm = compose(
     withBPBForm,

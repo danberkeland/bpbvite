@@ -4,11 +4,12 @@ import DOMPurify from 'dompurify';
 // Components
 
 import { Accordion, AccordionTab } from "primereact/accordion";
-import { useTrainingListFull } from "../../data/trainingData";
+// import { useTrainingListFull } from "../../data/trainingData";
+import { useListData } from "../../data/_listData";
 
 function LogisticsTraining() {
-  const { data: trainingList, errors: trainingListErrors } =
-    useTrainingListFull(true);
+  const { data: trainingList, error: trainingListErrors } =
+    useListData({ tableName: "Training", shouldFetch: true })
 
   if (trainingListErrors) {
     return <div>Error loading data</div>;

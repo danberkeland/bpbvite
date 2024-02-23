@@ -16,7 +16,7 @@ import useSWR from 'swr'
 import gqlFetcher, { gqlFetcherNoAwait } from './_fetchers'
 import { defaultSwrOptions, LIMIT, LIST_TABLES, TABLE_PKS } from './_constants'
 import * as listQueries from '../customGraphQL/queries/_listQueries'
-import * as mutations from '../customGraphQL/mutations'
+import * as mutations from '../customGraphQL/mutations.mjs'
 import getNestedObject from '../functions/getNestedObject'
 
 
@@ -155,6 +155,7 @@ const batchMutate = async ({
 /**
  * @typedef {Object} ListDataCache
  * @property {Object[]} data
+ * @property {any} error
  * @property {boolean} isLoading
  * @property {boolean} isValidating
  * @property {function} mutate

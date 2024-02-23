@@ -1,6 +1,5 @@
 import React from "react";
 import "../../index.css";
-import bpblogo from "../../bpblogo.jpg";
 import { motion } from "framer-motion";
 
 function CustomerNews() {
@@ -13,7 +12,7 @@ function CustomerNews() {
         exit={{ opacity: 0, x: "0" }}
         className="photoBox"
       >
-        <img src={bpblogo} alt="Back Porch Bakery Logo" width="100%" />
+        <img src="/bpblogo.jpg" alt="Back Porch Bakery Logo" width="100%" />
       </motion.div>
     </React.Fragment>
   );

@@ -3,50 +3,349 @@ import { defaultSwrOptions } from "./_constants"
 
 import { useMemo } from "react"
 
-import dynamicSort from "../functions/dynamicSort"
+// import dynamicSort from "../functions/dynamicSort"
 import getNestedObject from "../functions/getNestedObject"
 
 import gqlFetcher from "./_fetchers"
 
-import * as queries from "../customGraphQL/queries/locationQueries"
-import * as mutations from "../customGraphQL/mutations/locationMutations"
+// import * as queries from "../customGraphQL/queries/locationQueries.mjs"
+// import * as mutations from "../customGraphQL/mutations/locationMutations"
 
 import * as yup from "yup"
 import { sortBy } from "lodash"
 
-
-/******************
- * QUERIES/CACHES *
- ******************/
-
-/**
- * Produces a full list of locNicks/locNames.
- * @param {boolean} shouldFetch Fetches data only when true.
- * @returns {{ data: Array<{ locNick: string, locName: string }>, errors: object }} A list of locNick ID's and locName text labels.
- */
-export const useLocationListSimple = (shouldFetch) => {
-  const { data, errors, isValidating } = useSWR(
-    shouldFetch ? [queries.listLocationsSimple, { limit: 1000 }] : null, 
-    gqlFetcher, 
-    defaultSwrOptions
-  )
-
-  const transformData = () => {
-    if (!data) return undefined
-    return getNestedObject(data, ['data', 'listLocations', 'items']).sort(dynamicSort("locName"))
+const listLocationsSimple = /* GraphQL */ `
+  query ListLocations(
+    $locNick: String
+    $filter: ModelLocationFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listLocations(
+      locNick: $locNick
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        locNick
+        locName
+        ttl
+      }
+    }
   }
-  const _data = useMemo(transformData, [data])
+`;
 
-  // const _data = getNestedObject(data, ['data', 'listLocations', 'items'])
-  // _data?.sort(dynamicSort("locName"))
+const listLocationsFull = /* GraphQL */ `
+  query ListLocations(
+    $locNick: String
+    $filter: ModelLocationFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listLocations(
+      locNick: $locNick
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        Type
+        locNick
+        locName
+        subs {
+          items {
+            sub
+          }
+        }
+        zoneNick
+        addr1
+        addr2
+        city
+        zip
+        email
+        phone
+        firstName
+        lastName
+        toBePrinted
+        toBeEmailed
+        printDuplicate
+        terms
+        invoicing
+        latestFirstDeliv
+        latestFinalDeliv
+        webpageURL
+        picURL
+        gMap
+        specialInstructions
+        delivOrder
+        qbID
+        currentBalance
+        isActive
+        createdAt
+        updatedAt
+        locationCreditAppId
+        prodsNotAllowed {
+          items {
+            id
+            isAllowed
+            product {
+              prodNick
+              prodName
+            }
+           
+          }
+          nextToken
+        }
+        customProd {
+          
+          items {
+            id
+            wholePrice
+            product {
+              prodNick
+              prodName
+            }
+          }
+          nextToken
+        }
+        templateProd {
+          
+          items {
+            id
+            product {
+              prodName
+            }
+          }
+          nextToken
+        }
+      }
+      nextToken
+    }
+  }
+`;
+const getLocationDetails = /* GraphQL */ `
+  query GetLocation($locNick: String!) {
+    getLocation(locNick: $locNick) {
+      Type
+      locNick
+      locName
+      subs {
+        items {
+          id
+          Type
+          authType
+          locNick
+          sub
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      zoneNick
+      zone {
+        zoneNick
+        zoneName
+        description
+        zoneFee
+        zoneRoute {
+          items {
+            routeNick
+          }
+        }
+        createdAt
+        updatedAt
+      }
+      creditApp {
+        id
+        firstName
+        lastName
+        companyName
+        phone
+        email
+        addr1
+        addr2
+        city
+        state
+        zip
+        locAddr1
+        locAddr2
+        locCity
+        locState
+        locZip
+        startDate
+        businessType
+        bankName
+        bankPhone
+        refName
+        refAddr1
+        refAddr2
+        refCity
+        refZip
+        refPhone
+        refEmail
+        refDescrip
+        signture
+        sigDate
+        sigName
+        sigTitle
+        createdAt
+        updatedAt
+      }
+      addr1
+      addr2
+      city
+      zip
+      email
+      orderCnfEmail
+      phone
+      firstName
+      lastName
+      toBePrinted
+      toBeEmailed
+      printDuplicate
+      terms
+      invoicing
+      latestFirstDeliv
+      latestFinalDeliv
+      webpageURL
+      picURL
+      gMap
+      specialInstructions
+      delivOrder
+      qbID
+      currentBalance
+      isActive
+      ttl
+      prodsNotAllowed {
+        items {
+          id
+          isAllowed
+          locNick
+          prodNick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      customProd {
+        items {
+          id
+          wholePrice
+          locNick
+          prodNick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      templateProd {
+        items {
+          id
+          locNick
+          prodNick
+          product {
+            prodNick
+            prodName
+            wholePrice
+            retailPrice
+            daysAvailable
+            leadTime
+            packSize
+          }
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      altLeadTimeByProduct {
+        items {
+          id
+          leadTime
+          locNick
+          prodNick
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      locationCreditAppId
+    }
+  }
+`;
 
-  return({
-    data: _data,
-    errors: errors,
-    isValidating: isValidating,
-  })
+const createLocationMutation = /* GraphQL */ `
+  mutation CreateLocation(
+    $input: CreateLocationInput!
+    $condition: ModelLocationConditionInput
+  ) {
+    createLocation(input: $input, condition: $condition) {
+      locNick
+      createdAt
+    }
+  }
+`;
+const updateLocationMutation = /* GraphQL */ `
+  mutation UpdateLocation(
+    $input: UpdateLocationInput!
+    $condition: ModelLocationConditionInput
+  ) {
+    updateLocation(input: $input, condition: $condition) {
+      locNick
+      createdAt
+    }
+  }
+`;
+const deleteLocationMutation = /* GraphQL */ `
+  mutation DeleteLocation(
+    $input: DeleteLocationInput!
+    $condition: ModelLocationConditionInput
+  ) {
+    deleteLocation(input: $input, condition: $condition) {
+      locNick
+      createdAt
+    }
+  }
+`;
 
-}
+// /******************
+//  * QUERIES/CACHES *
+//  ******************/
+
+// /**
+//  * Produces a full list of locNicks/locNames.
+//  * @param {boolean} shouldFetch Fetches data only when true.
+//  * @returns {{ data: Array<{ locNick: string, locName: string }>, errors: object }} A list of locNick ID's and locName text labels.
+//  */
+// export const useLocationListSimple = (shouldFetch) => {
+//   const { data, errors, isValidating } = useSWR(
+//     shouldFetch ? [queries.listLocationsSimple, { limit: 1000 }] : null, 
+//     gqlFetcher, 
+//     defaultSwrOptions
+//   )
+
+//   const transformData = () => {
+//     if (!data) return undefined
+//     return getNestedObject(data, ['data', 'listLocations', 'items']).sort(dynamicSort("locName"))
+//   }
+//   const _data = useMemo(transformData, [data])
+
+//   // const _data = getNestedObject(data, ['data', 'listLocations', 'items'])
+//   // _data?.sort(dynamicSort("locName"))
+
+//   return({
+//     data: _data,
+//     errors: errors,
+//     isValidating: isValidating,
+//   })
+
+// }
 
 /** 
  * Can be called whenever locationListSimple data is affected by a mutation.
@@ -54,7 +353,7 @@ export const useLocationListSimple = (shouldFetch) => {
  */
 export const revalidateLocationListSimple = () => {
   mutate(
-    [queries.listLocationsSimple, { limit: 1000 }], 
+    [listLocationsSimple, { limit: 1000 }], 
     null, 
     { revalidate: true}
   )
@@ -68,7 +367,7 @@ export const revalidateLocationListSimple = () => {
  */
 export const useLocationListFull = (shouldFetch) => {
   const { data, ...otherReturns } = useSWR(
-    shouldFetch ? [queries.listLocationsFull, { limit: 1000 }] : null, 
+    shouldFetch ? [listLocationsFull, { limit: 1000 }] : null, 
     gqlFetcher, 
     defaultSwrOptions
   )
@@ -90,7 +389,7 @@ export const useLocationListFull = (shouldFetch) => {
  */
 export const revalidateLocationListFull = () => {
   mutate(
-    [queries.listLocationsFull, { limit: 1000 }], 
+    [listLocationsFull, { limit: 1000 }], 
     null, 
     { revalidate: true}
   )
@@ -108,7 +407,7 @@ export const revalidateLocationListFull = () => {
 export const useLocationDetails = (locNick, shouldFetch) => {
 
   const { data, errors, mutate, isValidating } = useSWR(
-    shouldFetch ? [queries.getLocationDetails, { locNick: locNick }] : null, 
+    shouldFetch ? [getLocationDetails, { locNick: locNick }] : null, 
     gqlFetcher, 
     defaultSwrOptions
   )
@@ -137,7 +436,7 @@ export const useLocationDetails = (locNick, shouldFetch) => {
  */
 export const revalidateLocationDetails = (locNick) => {
   mutate(
-    [queries.getLocationDetails, { locNick: locNick }],
+    [getLocationDetails, { locNick: locNick }],
     null,
     { revalidate: true }
   )
@@ -162,7 +461,7 @@ export const createLocation = async (createLocationInput) => {
   }
 
   const response = await gqlFetcher([
-    mutations.createLocation, 
+    createLocationMutation, 
     { input: createLocationInput }
   ])
   if (LOGGING) console.log("Create location response: ", response)
@@ -173,7 +472,7 @@ export const createLocation = async (createLocationInput) => {
 export const updateLocation = async (updateLocationInput) => {
   if (LOGGING) console.log("Update location input: ", updateLocationInput)
   const response = await gqlFetcher([
-    mutations.updateLocation, 
+    updateLocationMutation, 
     { input: updateLocationInput }
   ])
   if (LOGGING) console.log("Update location response: ", response)
@@ -184,7 +483,7 @@ export const updateLocation = async (updateLocationInput) => {
 export const deleteLocation = async (deleteLocationInput) => {
   if (LOGGING) console.log("Delete location input: ", deleteLocationInput)
   const response = await gqlFetcher([
-    mutations.deleteLocation,
+    deleteLocationMutation,
     { input: deleteLocationInput }
   ])
   if (LOGGING) console.log("Delete location response: ", response)

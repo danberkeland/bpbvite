@@ -33,8 +33,9 @@ import {
   createNewStanding,
 } from "./StandingHelpers";
 
-import { useProductListSimple } from "../../data/productData"
-import { useLocationListSimple } from "../../data/locationData";
+// import { useProductListSimple } from "../../data/productData"
+// import { useLocationListSimple } from "../../data/locationData";
+import { useListData } from "../../data/_listData";
 
 const remapProduct = (custList, prodList) => {
 
@@ -130,20 +131,38 @@ const remapStanding = (custList, prodList) => {
 
 
 function Remap() {
+  // let custList = useLocationListSimple(true)
+  // let prodList = useProductListSimple(true)
 
-  let custList = useLocationListSimple(true)
-  let prodList = useProductListSimple(true)
+  // const handleRemapOrders = () => {
+  //   console.log('custList', custList.data)
+  //   console.log('prodList', prodList.data)
+  //   remapOrders(custList.data, prodList.data)
+  // }
+
+  // const handleRemapStanding = () => {
+  //   console.log('custList', custList.data)
+  //   console.log('prodList', prodList.data)
+  //   remapStanding(custList.data, prodList.data)
+  // }
+
+  const { data:custList } = useListData({ tableName: "Location", shouldFetch: true })
+  const { data:prodList } = useListData({ tableName: "Product", shouldFetch: true})
 
   const handleRemapOrders = () => {
-    console.log('custList', custList.data)
-    console.log('prodList', prodList.data)
-    remapOrders(custList.data, prodList.data)
+    if (!!custList && !!prodList) {
+      console.log('custList', custList)
+      console.log('prodList', prodList)
+      remapOrders(custList, prodList)
+    }
   }
 
   const handleRemapStanding = () => {
-    console.log('custList', custList.data)
-    console.log('prodList', prodList.data)
-    remapStanding(custList.data, prodList.data)
+    if (!!custList && !!prodList) {
+      console.log('custList', custList)
+      console.log('prodList', prodList)
+      remapStanding(custList, prodList)
+    }
   }
 
 

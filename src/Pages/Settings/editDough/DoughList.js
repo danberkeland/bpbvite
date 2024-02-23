@@ -1,13 +1,14 @@
-import React, { useEffect, useContext } from "react";
+import React from "react";
+// import React, { useEffect, useContext } from "react";
 
-import { fetchDoughs, fetchDoughComponents } from "./InfoParts/utils";
+// import { fetchDoughs, fetchDoughComponents } from "./InfoParts/utils";
 
 import styled from "styled-components";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { ScrollPanel } from "primereact/scrollpanel";
-import { useDoughComponents, useDoughFull } from "../../../data/doughData";
+// import { useDoughComponents, useDoughFull } from "../../../data/doughData";
 
 const ListWrapper = styled.div`
   font-family: "Montserrat", sans-serif;

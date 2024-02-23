@@ -4,6 +4,10 @@
  */
 
 /**
+ * @typedef {((a: any) => number)|((a: any) => string)|((a: any) => boolean)} CompareCallbackFn
+ */
+
+/**
  * @type {CompareFn}
  */
 const stdCompare = (a, b) => 
@@ -13,13 +17,13 @@ const stdCompare = (a, b) =>
 
 /**
  * Used directly in Array.prototype.sort()
- * @param {function} callback Function should a single value type of either string, number, or boolean.
- * @param {boolean} [reverse=false] Default is false. If true, reverses the sort order.
+ * @param {CompareCallbackFn} callback Function should a single value type of either string, number, or boolean.
+ * @param {'asc'|'desc'} direction='asc' Default: ascending.
  * @returns {CompareFn}
  */
-export function compareBy(callback, reverse=false) {
-  return reverse 
+export function compareBy(callback, direction='asc') {
+  return direction === 'desc'
     ? (a, b) => stdCompare(callback(b), callback(a))
     : (a, b) => stdCompare(callback(a), callback(b))
 
-}  
+}

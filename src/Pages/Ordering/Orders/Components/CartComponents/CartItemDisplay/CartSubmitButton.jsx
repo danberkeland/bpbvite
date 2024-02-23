@@ -4,7 +4,7 @@ import { Button } from "primereact/button"
 import { Toast } from "primereact/toast"
 
 import { confirmDialog, ConfirmDialog } from 'primereact/confirmdialog'
-import { reformatProdName } from '../../../../Orders10/_utils/reformatProdName'
+import { reformatProdName } from '../../../../../Ordering/utils/reformatProdName'
 import { submitCartOrder } from '../../../functions/submitCartOrder'
 import { useSettingsStore } from '../../../../../../Contexts/SettingsZustand'
 import { Dialog } from 'primereact/dialog'

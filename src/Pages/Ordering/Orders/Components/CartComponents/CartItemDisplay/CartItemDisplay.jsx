@@ -6,7 +6,7 @@ import { DataTable } from "primereact/datatable"
 
 import TimeAgo from "timeago-react"
 import { maxBy, sortBy, sumBy } from "lodash"
-import { reformatProdName } from "../../../../Orders10/_utils/reformatProdName"
+import { reformatProdName } from "../../../../../Ordering/utils/reformatProdName"
 
 import { CartQtyInput } from "./CartQtyInput"
 import { CartSubmitButton } from "./CartSubmitButton"

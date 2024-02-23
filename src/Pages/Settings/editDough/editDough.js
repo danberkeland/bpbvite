@@ -1,11 +1,12 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import styled from "styled-components";
 
 import DoughList from "./DoughList";
 import Info from "./Info";
 import Buttons from "./Buttons";
-import { useDoughComponents, useDoughFull } from "../../../data/doughData";
+// import { useDoughComponents, useDoughFull } from "../../../data/doughData";
+import { useListData } from "../../../data/_listData";
 
 const MainWrapper = styled.div`
   display: grid;
@@ -38,8 +39,10 @@ function EditDoughs() {
   const [isModified, setIsModified] = useState(null);
   const [doughComponents, setDoughComponents ] = useState([])
 
-  const { data: doughs } = useDoughFull({ shouldFetch: true });
-  const { data: doughComps } = useDoughComponents({ shouldFetch: true });
+  // const { data: doughs } = useDoughFull({ shouldFetch: true });
+  // const { data: doughComps } = useDoughComponents({ shouldFetch: true });
+  const { data:doughs } = useListData({ tableName: "DoughBackup", shouldFetch: true })
+  const { data:doughComps } = useListData({ tableName: "DoughComponentBackup", shouldFetch: true })
 
   useEffect(() => {
     setDoughComponents(doughComps)

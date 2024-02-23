@@ -454,16 +454,16 @@ function NorthList() {
               className="p-datatable-gridlines p-datatable-sm p-datatable-striped"
               value={shelfProdsNorth}
             >
-              <Column header="customer" field="customerShort" style={{ width: "70px" }} />
-              {shelfProdNicks.map(prodNick => (
+              {/* <Column header="customer" field="customerShort" style={{ width: "70px" }} /> */}
+              {/* {shelfProdNicks.map(prodNick => (
                 <Column 
                   header={prodNick} 
                   field={prodNick} 
                   key={prodNick} 
                   style={{width: "30px" }} 
                 /> 
-              ))}
-              {/* {dynamicColumnsShelfProdsNorth} */}
+              ))} */}
+              {dynamicColumnsShelfProdsNorth}
             </DataTable>
           </React.Fragment>
         )}

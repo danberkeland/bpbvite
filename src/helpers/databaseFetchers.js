@@ -1,12 +1,12 @@
 import {
-  convertDatetoBPBDate,
+  // convertDatetoBPBDate,
   todayPlus,
   tomBasedOnDelivDate,
 } from "../helpers/dateTimeHelpers";
 
 import {
   updateProduct,
-  updateDough,
+  // updateDough,
   updateDoughBackup,
 } from "../graphql/mutations";
 
@@ -20,22 +20,22 @@ import { listNotes } from "../graphql/queries";
 
 import { getOrdersList } from "../Pages/Production/Utils/utils";
 import ComposeNorthList from "../Pages/Logistics/utils/composeNorthList";
-import ComposeCroixInfo from "../Pages/Logistics/utils/composeCroixInfo";
+// import ComposeCroixInfo from "../Pages/Logistics/utils/composeCroixInfo";
 import { getTimeToLive, getTtl } from "../functions/dateAndTime";
-import { groupBy, keyBy, filter, flow, mapKeys, mapValues, sumBy, uniqBy, sortBy, map, identity } from "lodash/fp";
+import { groupBy, keyBy, filter, flow, mapValues, sumBy, uniqBy, sortBy, map, identity } from "lodash/fp";
 
 const clonedeep = require("lodash.clonedeep");
 const { DateTime } = require("luxon");
 
-const composer = new ComposeCroixInfo();
+// const composer = new ComposeCroixInfo();
 const compose = new ComposeNorthList();
 
 let tomorrow = todayPlus()[1];
 let today = todayPlus()[0];
-let yesterday2 = todayPlus()[4];
-let weekAgo = todayPlus()[5];
+// let yesterday2 = todayPlus()[4];
+// let weekAgo = todayPlus()[5];
 
-let yesterday = convertDatetoBPBDate(todayPlus()[4]);
+// let yesterday = convertDatetoBPBDate(todayPlus()[4]);
 
 const fetchFromDataBase = async (baseFunc, base, limit) => {
   try {
@@ -82,8 +82,10 @@ export const checkForUpdates = async (
 ) => {
   setIsLoading(true);
 
-  const [products, customers, routes, standing, orders, doughs, altPricing] =
-    db;
+  // const [products, customers, routes, standing, orders, doughs, altPricing] = db;
+  const products = db[0]
+  const orders = db[4]
+  const doughs = db[5]
 
   console.log("Checking if Orders Have been changed");
   let prodsToUpdate = clonedeep(products);
@@ -432,36 +434,37 @@ const NorthCroixBakeFilter = (ord) => {
 // We should be able to use combined order data for the current day, or from
 // a range of days so that we can use whatever SWR cache is available,
 // so filter orders by date!
-const freezerNorthFlip = async ({ productCache, orders }) => {
 
-  const { data: PRD } = productCache
+// const freezerNorthFlip = async ({ productCache, orders }) => {
 
-  const todayDT = DateTime.now.setZone('America/Los_Angeles').startOf('day')
-  const tomorrowDT = todayDT.plus({ days: 1 })
+//   const { data: PRD } = productCache
 
-  // freezerNorth
+//   const todayDT = DateTime.now.setZone('America/Los_Angeles').startOf('day')
+//   const tomorrowDT = todayDT.plus({ days: 1 })
 
-  const updateItems = PRD.filter(product => 
+//   // freezerNorth
 
-    product.packGroup === "baked pastries" 
-    && product.doughNick === "Croissant"
-    && product.freezerNorthFlag !== tomorrowDT.toFormat('yyyy-MM-dd')
-  ).map(product => {
+//   const updateItems = PRD.filter(product => 
+
+//     product.packGroup === "baked pastries" 
+//     && product.doughNick === "Croissant"
+//     && product.freezerNorthFlag !== tomorrowDT.toFormat('yyyy-MM-dd')
+//   ).map(product => {
 
 
 
-    return {
-      prodNick: product.prodNick,
-      freezerCount: product.freezerClosing,
-      freezerNorth: product.freezerNorthClosing,
-      // freezerClosing: '???'
-      freezerNorthClosing: "???", // prod.freezerNorthClosing,
-      freezerNorthFlag: tomorrowDT.toFormat('yyyy-MM-dd'),
-      sheetMake: 0,
-    }
-  })
+//     return {
+//       prodNick: product.prodNick,
+//       freezerCount: product.freezerClosing,
+//       freezerNorth: product.freezerNorthClosing,
+//       // freezerClosing: '???'
+//       freezerNorthClosing: "???", // prod.freezerNorthClosing,
+//       freezerNorthFlag: tomorrowDT.toFormat('yyyy-MM-dd'),
+//       sheetMake: 0,
+//     }
+//   })
 
-}
+// }
 
 
 
@@ -893,8 +896,9 @@ export const croixCountFlip = ({ orderCache, productCache }) => {
 
 export const testLegacyCroixFlip = (db) => {
 
-    const [products, customers, routes, standing, orders, doughs, altPricing] =
-    db;
+    // const [products, customers, routes, standing, orders, doughs, altPricing] =
+    // db;
+    const products = db[0]
 
     console.log("Checking if Orders Have been changed");
     let prodsToUpdate = clonedeep(products);

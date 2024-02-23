@@ -1,4 +1,4 @@
-import { todayPlus, tomBasedOnDelivDate, TwodayBasedOnDelivDate } from "../../../helpers/dateTimeHelpers";
+import { tomBasedOnDelivDate, TwodayBasedOnDelivDate } from "../../../helpers/dateTimeHelpers";
 
 import {
   getOrdersList,
@@ -14,7 +14,7 @@ import {
   pocketFilterTwoDay,
   baker1PocketFilter,
   baguette,
-  noBaguette,
+  // noBaguette,
   bag
 } from "./filters";
 import { sortAtoZDataByIndex } from "../../../helpers/sortDataHelpers";
@@ -26,7 +26,7 @@ const clonedeep = require("lodash.clonedeep");
 export default class ComposeDough {
   returnDoughBreakDown = (database, loc,deliv) => {
     let twoDay = TwodayBasedOnDelivDate(deliv)
-    let oneDay = tomBasedOnDelivDate(deliv)
+    // let oneDay = tomBasedOnDelivDate(deliv)
     let tomorrow = tomBasedOnDelivDate(deliv)
     console.log("delivtomorrow",tomorrow)
     let today = deliv
@@ -137,7 +137,7 @@ export default class ComposeDough {
         }
       }
     }
-    let clone2 = clonedeep(pocketsLateToday)
+    // let clone2 = clonedeep(pocketsLateToday)
     //console.log("pocketsLateTodayClone2",clone2)
 
     for (let item of pocketsToday) {
@@ -150,7 +150,7 @@ export default class ComposeDough {
       }
     }
 
-    let clone3 = clonedeep(pocketsToday)
+    // let clone3 = clonedeep(pocketsToday)
     //console.log("clone3",clone3)
 
     let products = database[0]

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
@@ -24,33 +24,31 @@ const DelivOrder = () => {
     (state) => state.setOrdersHasBeenChanged
   );
   const { data: database } = useLegacyFormatDatabase();
-  
-  const [products = [], customers = [], routes = [], standing = [], orders = []] = database || [];
- 
-
+  // const [products = [], customers = [], routes = [], standing = [], orders = []] = database || [];
 
   useEffect(() => {
-    console.log('customers', customers)
-    let custFilt;
-    custFilt = customers.filter(
-      (cust) =>
-        cust.zoneName !== "slopick" &&
-        cust.zoneName !== "atownpick" &&
-        cust.zoneName !== "Prado Retail" &&
-        cust.zoneName !== "Carlton Retail"
-    );
-    sortAtoZDataByIndex(custFilt,"delivOrder")
-    setCustomerList(custFilt);
-  }, [customers]);
+    if (!!database) {
+      const customers = database[1]
+      console.log('customers', customers)
+      let custFilt;
+      custFilt = customers.filter(
+        (cust) =>
+          cust.zoneName !== "slopick" &&
+          cust.zoneName !== "atownpick" &&
+          cust.zoneName !== "Prado Retail" &&
+          cust.zoneName !== "Carlton Retail"
+      );
+      sortAtoZDataByIndex(custFilt,"delivOrder")
+      setCustomerList(custFilt);
+    }
+  }, [database]);
 
-  
-
-  const columns = [
-    { field: "custName", header: "Customer" },
-    { field: "zoneName", header: "Zone" },
-    { field: "addr1", header: "Address" },
-    { field: "city", header: "City" },
-  ];
+  // const columns = [
+  //   { field: "custName", header: "Customer" },
+  //   { field: "zoneName", header: "Zone" },
+  //   { field: "addr1", header: "Address" },
+  //   { field: "city", header: "City" },
+  // ];
 
   
 

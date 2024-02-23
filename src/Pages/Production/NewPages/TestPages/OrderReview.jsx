@@ -2,7 +2,7 @@
 
 import { DateTime } from "luxon";
 import { useListData } from "../../../../data/_listData";
-import { flatten, groupBy, mapValues, maxBy, orderBy, pickBy, set, sortBy, uniqBy } from "lodash";
+import { flatten, groupBy, mapValues, maxBy, orderBy, pickBy, set } from "lodash";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
@@ -99,16 +99,16 @@ const nestStandingOrders = (standingOrders) => {
   return nestedObj
 }
 
-const makeTreeData = (data, keyAttribute, parentKey) => {
+// const makeTreeData = (data, keyAttribute, parentKey) => {
 
-  const groupedData = groupBy(data, keyAttribute)
+//   const groupedData = groupBy(data, keyAttribute)
 
-  return Object.keys(groupedData).map(groupKey => ({
-    key: parentKey ? `${parentKey}#${groupKey}` : groupKey,
-    data: groupedData[groupKey]
-  }))
+//   return Object.keys(groupedData).map(groupKey => ({
+//     key: parentKey ? `${parentKey}#${groupKey}` : groupKey,
+//     data: groupedData[groupKey]
+//   }))
 
-}
+// }
 
 
 
