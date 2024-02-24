@@ -8,8 +8,9 @@ import { Column } from "primereact/column";
 import LocationDetails from "./LocationDetails";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { withFadeIn } from "../../hoc/withFadeIn";
-import { useLocationListFull } from "../../data/locationData";
+// import { useLocationListFull } from "../../data/locationData";
 import { Button } from "primereact/button";
+import { useListData } from "../../data/_listData";
 
 const initialState = {
   Type: "Location",
@@ -49,7 +50,10 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
     locName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
 
-  const { data:locationList, errors:locationListErrors } = useLocationListFull(true);
+  // const { data:locationList, errors:locationListErrors } = useLocationListFull(true);
+  const { data:locationList, error:locationListErrors } = 
+    useListData({ tableName: "Location", shouldFetch: true })
+    
   const formKeys = Object.keys(initialState)
   const tableData = locationList?.map(item => {
     let cleanedItem = formKeys.reduce((cItem, key) => {

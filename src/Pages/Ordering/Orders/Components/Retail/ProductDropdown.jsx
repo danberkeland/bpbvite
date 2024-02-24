@@ -3,7 +3,7 @@ import { useListData } from "../../../../../data/_listData"
 import { useState } from "react"
 import { sortBy } from "lodash"
 import { reformatProdName } from "../../functions/reformatProdName"
-import { wrapText } from "../../functions/wrapText"
+import { wrapText } from "../../../utils/wrapText"
 
 
 export const ProductDropdown = ({

@@ -8,13 +8,252 @@ import getNestedObject from "../functions/getNestedObject"
 
 import gqlFetcher from "./_fetchers"
 
-import * as queries from "../customGraphQL/queries/productQueries"
-import * as mutations from "../customGraphQL/mutations/productMutations"
+// import * as mutations from "../customGraphQL/mutations/productMutations"
 
 import { useLocationDetails } from "./locationData"
 import { sortBy } from "lodash"
 
 // import * as yup from "yup"
+
+/** Get all primary attributes for a product. Does not include attributes of '@connected' types. */
+// const getProductDetails = /* GraphQL */ `
+//   query GetProduct($prodNick: String!) {
+//     getProduct(prodNick: $prodNick) {
+//       Type
+//       prodName
+//       prodNick
+//       packGroup
+//       packSize
+//       doughNick
+//       freezerThaw
+//       packGroupOrder
+//       shapeDay
+//       shapeNick
+//       bakeDay
+//       bakeNick
+//       guarantee
+//       transferStage
+//       readyTime
+//       bakedWhere
+//       wholePrice
+//       retailPrice
+//       isRetail
+//       retailName
+//       retailDescrip
+//       isWhole
+//       isEOD
+//       weight
+//       descrip
+//       picURL
+//       squareID
+//       forBake
+//       bakeExtra
+//       batchSize
+//       defaultInclude
+//       leadTime
+//       qbID
+//       createdAt
+//       updatedAt
+//       inventoryProductId
+//     }
+//   }
+// `;
+
+const listProductsSimple = /* GraphQL */ `
+  query ListProducts(
+    $prodNick: String
+    $filter: ModelProductFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listProducts(
+      prodNick: $prodNick
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        prodName
+        prodNick
+      }
+    }
+  }
+`;
+
+const listProductsFull = /* GraphQL */ `
+  query ListProducts(
+    $prodNick: String
+    $filter: ModelProductFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listProducts(
+      prodNick: $prodNick
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        Type
+        prodName
+        prodNick
+        packGroup
+        packSize
+        doughNick
+        freezerThaw
+        packGroupOrder
+        shapeDay
+        shapeNick
+        bakeDay
+        bakeNick
+        guarantee
+        transferStage
+        readyTime
+        bakedWhere
+        wholePrice
+        retailPrice
+        isRetail
+        retailName
+        retailDescrip
+        isWhole
+        isEOD
+        weight
+        descrip
+        picURL
+        squareID
+        forBake
+        bakeExtra
+        batchSize
+        defaultInclude
+        leadTime
+        daysAvailable
+        qbID
+        currentStock
+        whoCountedLast
+        freezerClosing
+        freezerCount
+        freezerNorth
+        freezerNorthClosing
+        freezerNorthFlag
+        prepreshaped
+        preshaped
+        updatePreDate
+        updateFreezerDate
+        backporchbakerypre
+        backporchbakery
+        bpbextrapre
+        bpbextra
+        bpbssetoutpre
+        bpbssetout
+        sheetMake
+        createdAt
+        updatedAt
+        inventoryProductId
+      }
+    }
+  }
+`;
+
+/** Product list that returns extra attributes to assist with order selection. */
+// const listProductsForOrders = /* GraphQL */ `
+//   query ListProducts(
+//     $prodNick: String
+//     $filter: ModelProductFilterInput
+//     $limit: Int
+//     $nextToken: String
+//     $sortDirection: ModelSortDirection
+//   ) {
+//     listProducts(
+//       prodNick: $prodNick
+//       filter: $filter
+//       limit: $limit
+//       nextToken: $nextToken
+//       sortDirection: $sortDirection
+//     ) {
+//       items {
+//         prodName
+//         prodNick
+//         packSize
+//         doughNick
+//         guarantee
+//         readyTime
+//         bakedWhere
+//         isWhole
+//         descrip
+//         wholePrice
+//         isRetail
+//         retailName
+//         retailDescrip
+//         retailPrice
+//         weight
+//         picURL
+//         squareID
+//         defaultInclude
+//         leadTime
+//         # retailLoc {    <-- may want to integrate these attributes in the future...
+//         #   nextToken
+//         # }
+//         # altPricing {
+//         #   nextToken
+//         # }
+//         # templateProd {
+//         #   nextToken
+//         # }
+//         # prodsNotAllowed {
+//         #   nextToken
+//         # }
+//         # productVendor {
+//         #   nextToken
+//         # }
+//         # altLeadTimeByLocation {
+//         #   nextToken
+//         # }
+//         createdAt
+//         updatedAt
+//       }
+//       nextToken
+//     }
+//   }
+// `;
+
+const createProductMutation = /* GraphQL */ `
+  mutation CreateProduct(
+    $input: CreateProductInput!
+    $condition: ModelProductConditionInput
+  ) {
+    createProduct(input: $input, condition: $condition) {
+      prodName
+      prodNick
+    }
+  }
+`;
+const updateProductMutation = /* GraphQL */ `
+  mutation UpdateProduct(
+    $input: UpdateProductInput!
+    $condition: ModelProductConditionInput
+  ) {
+    updateProduct(input: $input, condition: $condition) {
+      prodName
+      prodNick
+    }
+  }
+`;
+const deleteProductMutation = /* GraphQL */ `
+  mutation DeleteProduct(
+    $input: DeleteProductInput!
+    $condition: ModelProductConditionInput
+  ) {
+    deleteProduct(input: $input, condition: $condition) {
+      prodName
+      prodNick
+    }
+  }
+`;
+
 
 
 /******************
@@ -27,8 +266,8 @@ import { sortBy } from "lodash"
  * @returns {{ data: Array<{ locNick: string, locName: string }>, errors: object }} A list of locNick ID's and locName text labels.
  */
 export const useProductListSimple = (shouldFetch) => {
-  const { data, errors } = useSWR(
-    shouldFetch ? [queries.listProductsSimple, { limit: 1000 }] : null, 
+  const { data, error } = useSWR(
+    shouldFetch ? [listProductsSimple, { limit: 1000 }] : null, 
     gqlFetcher, 
     defaultSwrOptions
   )
@@ -41,7 +280,7 @@ export const useProductListSimple = (shouldFetch) => {
 
   return({
     data: _data,
-    errors: errors
+    errors: error
   })
 
 }
@@ -65,7 +304,7 @@ export const useProductListSimple = (shouldFetch) => {
  */
 export const useProductListFull = (shouldFetch) => {
   const { data, ...otherReturns } = useSWR(
-    shouldFetch ? [queries.listProductsFull, { limit: 1000 }] : null, 
+    shouldFetch ? [listProductsFull, { limit: 1000 }] : null, 
     gqlFetcher, 
     defaultSwrOptions
   )
@@ -87,7 +326,7 @@ export const useProductListFull = (shouldFetch) => {
  */
 export const revalidateProductListFull = () => {
   mutate(
-    [queries.listProductsFull, { limit: 1000 }], 
+    [listProductsFull, { limit: 1000 }], 
     null, 
     { revalidate: true}
   )
@@ -238,7 +477,7 @@ export const createProduct = async (createProductInput) => {
   if (LOGGING) console.log("Create product input: ", createProductInput)
 
   const response = await gqlFetcher([
-    mutations.createProduct, 
+    createProductMutation, 
     { input: createProductInput }
   ])
   if (LOGGING) console.log("Create product response: ", response)
@@ -250,7 +489,7 @@ export const updateProduct = async (updateProductInput) => {
   if (LOGGING) console.log("Update product nput: ", updateProductInput)
 
   const response = await gqlFetcher([
-    mutations.updateProduct, 
+    updateProductMutation, 
     { input: updateProductInput }
   ])
   if (LOGGING) console.log("Update product response: ", response)
@@ -262,7 +501,7 @@ export const deleteProduct = async (deleteProductInput) => {
 
   if (LOGGING) console.log("Delete product input: ", deleteProductInput)
   const response = await gqlFetcher([
-    mutations.deleteProduct,
+    deleteProductMutation,
     { input: deleteProductInput }
   ])
   if (LOGGING) console.log("Delete product response: ", response)

@@ -44,7 +44,10 @@ const handleDeleteCustLoc = (values, arrayHelpers, index) => {
 
 function LocationDescription(props) {
   const { simpleCustomerList } = useSimpleCustomerList();
-  const [chosenLoc, setChosenLoc] = useState();
+  const [
+    chosenLoc, 
+    //setChosenLoc
+  ] = useState();
 
   const isCreate = useSettingsStore((state) => state.isCreate);
   const op = useRef(null);

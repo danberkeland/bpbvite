@@ -18,7 +18,8 @@ export const removeDoubles = (orderList) => {
 };
 
 export const zerosDelivFilter = (orderList, delivDate, database) => {
-  const [products, customers, routes, standing, orders] = database;
+  // const [products, customers, routes, standing, orders] = database;
+  const customers = database[1]
   let noZeroDelivDateOrderList = orderList.filter(
     (ord) =>
       Number(ord["qty"]) !== 0 &&
@@ -72,7 +73,7 @@ const buildCustName = (ord, customers) => {
 
 export const buildGridOrderArray = (filterServe, database) => {
 
-  const [products, customers, routes, standing, orders] = database;
+  const [products, customers] = database;
   let gridOrderArray;
   gridOrderArray = filterServe.map((ord) => ({
     prodName: ord["prodName"],

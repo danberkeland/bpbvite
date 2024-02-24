@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import { useListData } from "../../../../../data/_listData";
-import { flatten, groupBy, keyBy, mapKeys, mapValues, set, sortBy, sumBy } from "lodash";
+import { flatten, groupBy, keyBy, mapValues, sortBy, sumBy } from "lodash";
 import { useMemo } from "react";
 
 import { getRouteOptions } from "../../../../Ordering/Orders/data/productHooks"
@@ -116,7 +116,7 @@ export const useT0T7Data = ({ shouldFetch }) => {
       })).filter(order => order.locNick !== 'bpbextras') // WHYYYY?????????????? Just legacy code things.
     })
 
-    const orders = flatten(ordersByDate)
+    // const orders = flatten(ordersByDate)
     // console.log("ORDERS:", orders)
 
     const frozenCroixProdNicks = PRD.filter(P => 

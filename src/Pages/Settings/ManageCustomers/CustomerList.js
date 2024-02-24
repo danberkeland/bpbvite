@@ -7,7 +7,7 @@ import { Column } from "primereact/column";
 import { TabMenu } from "primereact/tabmenu";
 import { useCustomerList } from "../../../swr";
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
-import { withFadeIn } from "../../../hoc/withFadeIn";
+// import { withFadeIn } from "../../../hoc/withFadeIn";
 
 import CustomerDetails from "./CustomerDetails";
 import InviteUser from "./InviteUser";

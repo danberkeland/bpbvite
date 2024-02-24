@@ -15,7 +15,8 @@ import { GroupBox, DefLabel, FlexSpaceBetween } from "../../../CommonStyles";
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 import { FieldArray } from "formik";
 import { Dropdown } from "primereact/dropdown";
-import { useLocationListSimple } from "../../../data/locationData"
+// import { useLocationListSimple } from "../../../data/locationData"
+import { useListData } from "../../../data/_listData";
 
 const BPB = new CustomInputs();
 
@@ -71,9 +72,14 @@ const handleDeleteCustLoc = (values, arrayHelpers, index) => {
 };
 
 function CustomerDescription(props) {
-  const { data:locationList } = useLocationListSimple(true)
+  // const { data:locationList } = useLocationListSimple(true)
+  const { data:locationList } = useListData({ tableName: "Location", shouldFetch: true})
   
-  const [chosenLoc, setChosenLoc] = useState();
+
+  const [
+    chosenLoc, 
+    // setChosenLoc
+  ] = useState();
 
   const isCreate = useSettingsStore((state) => state.isCreate);
   const op = useRef(null);

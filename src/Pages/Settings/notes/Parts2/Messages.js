@@ -9,7 +9,7 @@ import { ConfirmDialog } from "primereact/confirmdialog";
 import { API, graphqlOperation } from "aws-amplify";
 import { createNotes, deleteNotes, updateNotes } from "../../../../graphql/mutations";
 import { revalidateNotes } from "../../../../data/notesData";
-import { sortAtoZDataByIndex } from "../../../../helpers/sortDataHelpers";
+// import { sortAtoZDataByIndex } from "../../../../helpers/sortDataHelpers";
 
 const Messages = ({ notes, delivDate }) => {
   const [selectedMessage, setSelectedMessage] = useState(null);

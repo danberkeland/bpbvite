@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Calendar } from "primereact/calendar";
 import {
   dateToMmddyyyy,
-  dateToYyyymmdd,
+  // dateToYyyymmdd,
   getWorkingDateTime,
-  yyyymmddToWeekday,
+  // yyyymmddToWeekday,
 } from "../../../../functions/dateAndTime";
 
 export const NotesCalendar = ({ delivDate, setDelivDate, notes }) => {
@@ -15,7 +15,7 @@ export const NotesCalendar = ({ delivDate, setDelivDate, notes }) => {
     const calendarDate = `${date.year}-${
       "0" + String(date.month + 1).slice(-2)
     }-${("0" + String(date.day)).slice(-2)}`;
-    const dayOfWeek = yyyymmddToWeekday(calendarDate);
+    // const dayOfWeek = yyyymmddToWeekday(calendarDate);
     console.log('calendarDate', calendarDate)
     const style = { padding: "2rem", backgroundColor: "white", color: "black" };
     const isToday = today === calendarDate

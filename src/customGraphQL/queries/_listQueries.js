@@ -1,4 +1,4 @@
-import * as attributes from "../standardAttributes"
+import * as attributes from "../standardAttributes.js"
 
 export const listDoughBackups = /* GraphQL */ `
   query ListDoughBackups(

@@ -1,6 +1,6 @@
 /* eslint-disable no-eval */
 import { useField } from "formik";
-import React, { useEffect } from "react";
+import React from "react";
 
 import { useSettingsStore } from "../Contexts/SettingsZustand";
 

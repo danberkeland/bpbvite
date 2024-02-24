@@ -7,16 +7,17 @@ import { useLocUserList } from "../../swr";
 // Components
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Button } from "primereact/button";
+// import { Button } from "primereact/button";
 import { Card } from "primereact/card";
-import { Accordion, AccordionTab } from "primereact/accordion";
+// import { Accordion, AccordionTab } from "primereact/accordion";
 
 import { Dropdown } from "primereact/dropdown";
-import { BreadCrumb, Breadcrumb } from "primereact/breadcrumb";
+// import { BreadCrumb, Breadcrumb } from "primereact/breadcrumb";
 
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
-import { useLocationListFull } from "../../data/locationData";
-import { useZoneListFull } from "../../data/zoneData";
+// import { useLocationListFull } from "../../data/locationData";
+import { useListData } from "../../data/_listData";
+// import { useZoneListFull } from "../../data/zoneData";
 import dynamicSort from "../../functions/dynamicSort";
 import LogisticsTraining from "./LogisticsTraining";
 
@@ -29,10 +30,12 @@ function Logistics() {
   const readAuthorized =
     user.authClass === "bpbmgr" || user.authClass === "bpbfull";
 
-  const { data: locationData } = useLocationListFull(readAuthorized);
-  const { data: zoneData } = useZoneListFull({
-    shouldFetch: readAuthorized
-  })
+  // const { data: locationData } = useLocationListFull(readAuthorized);
+  // const { data: zoneData } = useZoneListFull({
+  //   shouldFetch: readAuthorized
+  // })
+  const { data: locationData } = useListData({ tableName: "Location", shouldFetch: true })
+  const { data: zoneData } = useListData({ tableName: "Zone", shouldFetch:readAuthorized })
 
   const [zone, setZone] = useState(null);
   const [loc, setLoc] = useState(null);
@@ -42,9 +45,9 @@ function Logistics() {
   const gMapLink = makeLink(location?.gMap)
   const tableData = makeTableData(locationData, zone, loc)
   const directionsString = tableData
-  .map(loc => getGMapEntity(loc.gMap))
-  .filter(item => item !== '')
-  .join('/')
+    .map(loc => getGMapEntity(loc.gMap))
+    .filter(item => item !== '')
+    .join('/')
 
   const os = getMobileOperatingSystem()
 
