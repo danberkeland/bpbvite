@@ -24,11 +24,11 @@ export const UserHeaderMenu = ({ signOut }) => {
     ? user.userObject?.username + '_' + userAttributes['email']
     : null
 
-  console.log("user", user)
-  console.log("sub", sub)
+  // console.log("user", user)
+  // console.log("sub", sub)
 
   const { data: userDetails } = useUserDetails(sub, !!sub);
-  console.log("userDetails", userDetails)
+  // console.log("userDetails", userDetails)
 
   const userMenuRef = useRef(null);
   const userMenuItems = [

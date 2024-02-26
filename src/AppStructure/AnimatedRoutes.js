@@ -155,7 +155,7 @@ function AnimatedRoutes({ user, signOut }) {
   const { data: user2Items } = 
     useUser2sByEmail({ shouldFetch: true, email: user.attributes.email })
 
-  console.log("user2Items", user2Items)
+  // console.log("user2Items", user2Items)
 
   useEffect(() => {
     if (!user2Items) return 
