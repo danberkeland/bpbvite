@@ -131,20 +131,20 @@ const generateBasicPivotAndColumns = (orderList) => {
  * despite being frozen items themselves.
  */
 const prodNickToShapeTypeMap = {
-  al: "al",
-  fral: "al",
-  ch: "ch",
-  frch: "ch",
-  pg: "pg",
-  frpg: "frpg",
-  mb: "mb",
-  unmb: "mb",
-  frmb: "mb",
-  pl: "pl",
-  frpl: "pl",
-  sf: "sf",
-  frsf: "sf",
-  mini: "mini",
+  al:    "al",
+  fral:  "al",
+  ch:    "ch",
+  frch:  "ch",
+  pg:    "pg",
+  frpg:  "frpg",
+  mb:    "mb",
+  unmb:  "mb",
+  frmb:  "mb",
+  pl:    "pl",
+  frpl:  "pl",
+  sf:    "sf",
+  frsf:  "sf",
+  mini:  "mini",
   frmni: "mini",
 }
 
@@ -159,6 +159,7 @@ const summaryAttributes = ['prodNick', 'custNick', 'delivDate', 'qty', 'route']
 export default class ComposeNorthList {
   returnNorthBreakDown = (delivDate, database) => {
     let croixNorth = this.returnCroixNorth(delivDate, database);
+    // console.log("croixNorth", croixNorth)
 
     const todayOrders = getOrdersList(delivDate, database)
 
@@ -272,8 +273,6 @@ export default class ComposeNorthList {
 
     const T1Orders = getOrdersList(tomBasedOnDelivDate(delivDate), database)
       .map(order => ({ ...order, delivDate: tomBasedOnDelivDate(delivDate)}))
-
-    console.log(T0Orders)
     
     let croixRows = [
       { forBake: "Almond", prodNick: "al",   prod: "al",   frozenQty: 0, frozen: {}, bakedQty: 0, baked: {} },
@@ -323,20 +322,20 @@ export default class ComposeNorthList {
       row.frozen.frozenOrderItems = frozenOrderItems
       row.frozen.frozenOrderQty   = frozenOrderQty
 
+      // Baked tomorrow
       const bakedOrderItems = T1NorthBakedOrders.filter(order =>
         prodNickToShapeTypeMap[order.prodNick] === row.prodNick
-      )
-      .map(order => 
-        order.custName === "Back Porch Bakery"
-          ? { ...order, qty: Math.ceil(order.qty / 2) }
-          : order
-      )
-      .map(order => objProject(order, summaryAttributes))
+
+      ).map(order => order.custName === "Back Porch Bakery"
+        ? { ...order, qty: Math.ceil(order.qty / 2) }
+        : order
+
+      ).map(order => objProject(order, summaryAttributes))
 
       const bakedOrderQty = sumBy(bakedOrderItems, order => order.qty)
 
       row.frozen.bakedOrderItems = bakedOrderItems
-      row.frozen.bakedOrderQty =   bakedOrderQty
+      row.frozen.bakedOrderQty   = bakedOrderQty // << equal to the old getBakedTomorrowAtCarlton qty
         
       const qtyNeeded = frozenOrderQty + bakedOrderQty - freezerNorth
       const adjustedQtyNeeded = row.prodNick === "al"
@@ -465,4 +464,139 @@ export default class ComposeNorthList {
 
   };
 
+  // *************************************************************
+  // * DEPRECATED
+  // *************************************************************
+
+  getFrozensLeavingCarlton = (delivDate, database) => {
+    let frozenToday = getOrdersList(delivDate, database);
+    // let fr = clonedeep(frozenToday);
+    
+    frozenToday = Array.from(
+      new Set(frozenToday.filter((frz) => this.#frzNorthFilter(frz)))
+    );
+    frozenToday = this.#makeAddFrozenQty(frozenToday);
+    frozenToday = convertFrozenAttrToPlainAttr(frozenToday);
+    return frozenToday;
+  };
+
+
+  #frzNorthFilter = (ord) => {
+    return (
+      ord.packGroup === "frozen pastries" &&
+      ord.doughType === "Croissant" &&
+      (ord.route === "Pick up Carlton" || ord.routeDepart === "Carlton")
+    );
+  };
+
+  #makeAddFrozenQty = (frozenToday) => {
+    let makeList = frozenToday.map((mk) => ({
+      prod: mk.forBake,
+      nick: mk.prodNick,
+      qty: 0,
+    }));
+
+    for (let make of makeList) {
+      // console.log("frozenToday", frozenToday);
+      // console.log("make", make);
+      let qtyAccToday = 0;
+      let qtyToday = frozenToday
+        .filter((frz) => make.prod === frz.forBake)
+        .map((ord) => ord.qty);
+
+      if (qtyToday.length > 0) {
+        qtyAccToday = qtyToday.reduce(addUp);
+      }
+      make.qty = qtyAccToday;
+    }
+
+    for (let make of makeList) {
+      make.prod = make.nick;
+      if (make.nick.substring(0, 2) === "fr") {
+        make.nick = make.nick.substring(2);
+      }
+      delete make.nick;
+    }
+
+    return makeList;
+  };
+
+  getBakedTomorrowAtCarlton = (delivDate, database) => {
+    let bakedOrdersList = getOrdersList(
+      tomBasedOnDelivDate(delivDate),
+      database
+    );
+    
+    let bakedTomorrow = bakedOrdersList.filter((frz) =>
+      this.#NorthCroixBakeFilter(frz)
+    );
+
+    for (let baked of bakedTomorrow){
+      if (baked.custName === "Back Porch Bakery"){
+        baked.qty = Math.ceil(baked.qty/2)
+      }
+    }
+   
+    bakedTomorrow = this.#makeAddQty(bakedTomorrow);
+
+    return bakedTomorrow;
+  };
+
+  #makeAddQty = (bake) => {
+    let makeList2 = Array.from(new Set(bake.map((prod) => prod.prodNick))).map(
+      (mk) => ({
+        prod: mk,
+        qty: 0,
+      })
+    );
+    for (let make of makeList2) {
+      make.qty = 1;
+
+      let qtyAccToday = 0;
+
+      let qtyToday = bake
+        .filter((frz) => make.prod === frz.prodNick)
+        .map((ord) => ord.qty);
+
+      if (qtyToday.length > 0) {
+        qtyAccToday = qtyToday.reduce(addUp);
+      }
+      make.qty = qtyAccToday;
+    }
+    return makeList2;
+  };
+
+  #NorthCroixBakeFilter = (ord) => {
+    return (
+      ord.where.includes("Mixed") &&
+      ord.packGroup === "baked pastries" &&
+      ord.doughType === "Croissant" &&
+      (ord.route === "Pick up Carlton" || ord.routeDepart === "Carlton")
+    );
+  };
+
 }
+
+
+
+// *****************************************
+// * DEPRECATED
+// *****************************************
+
+const addUp = (acc, val) => {
+  return acc + val;
+};
+
+const convertFrozenAttrToPlainAttr = (data) => {
+  try {
+    for (let d of data) {
+      d.prod = d.prod.substring(2);
+    }
+  } catch {
+    for (let d of data) {
+      d = d.substring(2);
+    }
+  }
+
+  return data;
+};
