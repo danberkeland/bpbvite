@@ -8,14 +8,16 @@ import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import './Notes.css'
-import { useNotesList } from "../../../data/notesData";
+import { useListData } from "../../../data/_listData";
 
 function Notes2() {
   const [delivDate, setDelivDate] = useState(
     new Date(getWorkingDateTime("NOW").plus({ days: 1 }).toISO())
   );
 
-  const { data:notes } = useNotesList(true);
+  // const { data:notes } = useNotesList(true);
+  const { data:notes } = useListData({ tableName: "Notes", shouldFetch: true })
+
   console.log('notes', notes)
 
   return (
