@@ -16,7 +16,7 @@ import useSWR from 'swr'
 import gqlFetcher, { gqlFetcherNoAwait } from './_fetchers'
 import { defaultSwrOptions, LIMIT, LIST_TABLES, TABLE_PKS } from './_constants'
 import * as listQueries from '../customGraphQL/queries/_listQueries'
-import * as mutations from '../customGraphQL/mutations.mjs'
+import * as mutations from '../customGraphQL/mutations.js'
 import getNestedObject from '../functions/getNestedObject'
 
 
