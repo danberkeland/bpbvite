@@ -1,0 +1,9 @@
+{
+  "_comment": "compiler options enable us to import via absolute file paths. We define special import syntax for specific paths using the @ character.",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/utils/*": ["utils/*"]
+    }
+  }
+}
