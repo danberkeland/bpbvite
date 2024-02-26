@@ -10,7 +10,7 @@ import { submitConfirm } from "../../restAPIs";
 import { withFadeIn } from "../../hoc/withFadeIn";
 import { withBPBForm } from "../../hoc/withBPBForm";
 import { GroupBox } from "../../CommonStyles";
-import { compose } from "../../utils";
+import { compose } from "../../utils/_deprecated/utils";
 import { Title } from "../../CommonStyles";
 import "./Splash.css";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";

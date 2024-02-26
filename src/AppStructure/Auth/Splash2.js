@@ -10,7 +10,7 @@ import { submitAuth, sendForgottenPasswordEmail } from "../../restAPIs";
 import { withFadeIn } from "../../hoc/withFadeIn";
 import { withBPBForm } from "../../hoc/withBPBForm";
 import { GroupBox, Title } from "../../CommonStyles";
-import { compose } from "../../utils";
+import { compose } from "../../utils/_deprecated/utils";
 import "./Splash.css";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 

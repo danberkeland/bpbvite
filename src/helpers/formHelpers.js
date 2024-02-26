@@ -1,4 +1,4 @@
-import { sortAtoZDataByIndex } from "./sortDataHelpers";
+import { sortAtoZDataByIndex } from "../utils/_deprecated/utils";
 
 const clonedeep = require("lodash.clonedeep");
 

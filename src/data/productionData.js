@@ -7,24 +7,18 @@ import gqlFetcher from "./_fetchers"
 // import * as queries from "../customGraphQL/queries/productionQueries"
 
 import { dateToYyyymmdd, getWeekday } from "../functions/dateAndTime"
-import { 
-  combineOrdersByDate 
-} from "../functions/orderingFunctions/combineOrders"
+
 import { buildRouteMatrix, buildRouteMatrix_test } from "../functions/routeFunctions/buildRouteMatrix"
 import { 
   assignDelivRoute, 
   calculateValidRoutes, 
   calculateValidRoutes_test
 } from "../functions/routeFunctions/assignDelivRoute"
-// import { useLocationDetails } from "./locationData"
-// import { useProductListFull } from "./productData"
-// import { useRouteListFull } from "./routeData"
-import { getDuplicates } from "../functions/detectDuplicates"
-import { groupBy } from "../functions/groupBy"
-import { useListData } from "./_listData"
-import { sortBy } from "lodash"
 
-// import { preDBOverrides } from "./_productOverrides"
+import { getDuplicates } from "../functions/detectDuplicates"
+import { useListData } from "./_listData"
+import { groupBy, sortBy } from "lodash"
+
 
 const LIMIT = 5000
 
@@ -880,7 +874,7 @@ export const useLogisticsDimensionData = (shouldFetch) => {
     const routes = Object.fromEntries(data.data.listRoutes.items.map(i => [i.routeNick, i]))
     const zoneRoutes = data.data.listZoneRoutes.items.sort((zrA, zrB) => routes[zrA.routeNick].routeStart - routes[zrB.routeNick].routeStart)
     const doughs = Object.fromEntries(data.data.listDoughBackups.items.map(i => [i.doughName, i]))
-    const doughComponents = groupBy(data.data.listDoughComponentBackups.items, ['dough'])
+    const doughComponents = groupBy(data.data.listDoughComponentBackups.items, 'dough')
 
     // zoneRoutes contains all routes that serve the location's zone, ordered by start time.
     const locations = Object.fromEntries(
@@ -1143,8 +1137,7 @@ export const useOrderReportByDate = ({ delivDateJS, includeHolding, shouldFetch 
  * function will return null.
  */
 export const useCalculateRoutesByLocation = (locNick, shouldFetch, useTest=false) => {
-  // const { data:locationData } = useLocationDetails(locNick, shouldFetch)
-  // const { data:productData } = useProductListFull(shouldFetch)
+
   const { data:locationData } = useListData({ tableName: "Location", shouldFetch: true })
   const { data:productData } = useListData({ tableName: "Product", shouldFetch: true })
   const { data:routeData } = useListData({ tableName: "Route", shouldFetch: true })
@@ -1191,3 +1184,76 @@ const pickupLocationDict = {
   "slopick" : { locNick: "slopick", latestFirstDeliv: 5, latestFinalDeliv: 12, zoneRoutes: ['Pick up SLO']},
   "atownpick" :  { locNick: "atownpick", latestFirstDeliv: 5, latestFinalDeliv: 12, zoneRoutes: ['Pick up Carlton']}
 }
+
+
+
+/**
+ * Combines cart and standing orders so that cart items override any matching
+ * standing items. Returns an array of order items. Returned cart and standing 
+ * items are left in their original fetched shape 
+ * (see customGraphQL/queries/productionQueries).
+ * 
+ * Assumptions:
+ * 
+ * 1. Cart and standing orders are filtered to a single equivalent day/date. 
+ * 
+ * 2. Standing orders do not contain holding order items.
+ * 
+ * DOES NOT REMOVE 0 QTY ORDERS!
+ */
+export const combineOrdersByDate = (cartOrdersbyDate, standingOrdersbyDay) => {
+  // We forego the simple Object.fromEntries construction and build our objects by
+  // looping, allowing us to record any duplicate items. Because of prior
+  // filtering, 'duplicate' means two+ cart orders for the same product/location
+  // or two+ standing orders for the same product/location
+
+  // Current behavior keeps treats the first record as 'normal'. Subsequent 
+  // duplicates get added to the 'duplicates' array, but not along with the 
+  // original item. So we'll be easily alerted to the existence of duplicates,
+  // but not be able to compare all of them side-by-side easily.
+  
+  const keyedStanding = { items: {}, duplicates: [] }
+  for (let item of standingOrdersbyDay) {
+    let dataKey = `${item.locNick}#${item.prodNick}`
+    if (dataKey in keyedStanding.items) {
+      keyedStanding.duplicates.push(item)
+    } else {
+      keyedStanding.items[dataKey] = item
+    }
+
+  }
+  
+  const keyedOrders = { items: {}, duplicates: [] }
+  for (let item of cartOrdersbyDate) {
+    let dataKey = `${item.locNick}#${item.prodNick}`
+    if (dataKey in keyedOrders.items) {
+      keyedOrders.duplicates.push(item)
+    } else {
+      keyedOrders.items[dataKey] = item
+    }
+
+  }
+
+  if (keyedStanding.duplicates.length) {
+    console.log("Duplicate standing orders:", keyedStanding.duplicates)
+  }
+  if (keyedOrders.duplicates.length) {
+    console.log("Duplicate cart orders:", keyedOrders.duplicates)
+  }
+
+  return Object.values({ ...keyedStanding.items, ...keyedOrders.items })
+
+}
+
+// General-purpose function "bucketing" data
+// by matching values across one or more
+// attrubutes.
+// 
+// Returns an object keyed by observed 
+// combinations of attribute values, delimited 
+// with the '#' character. Values are 'bucket'
+// arrays containing all items matching the key
+// values.
+//
+// Supports specifying nested properties with
+// lodash-like "." separators.

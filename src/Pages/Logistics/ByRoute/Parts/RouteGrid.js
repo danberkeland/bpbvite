@@ -16,8 +16,8 @@ import {
 } from "../../../../helpers/delivGridHelpers";
 
 import styled from "styled-components";
-import { downloadPDF } from "../../../../functions/legacyFunctions/helpers/PDFHelpers";
-import { sortAtoZDataByIndex } from "../../../../helpers/sortDataHelpers";
+import { downloadPDF } from "../../../../utils/pdf/downloadPDF";
+import { sortAtoZDataByIndex } from "../../../../utils/_deprecated/utils";
 import {
   convertDatetoBPBDate,
   todayPlus,

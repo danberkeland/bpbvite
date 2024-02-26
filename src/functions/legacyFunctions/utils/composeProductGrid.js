@@ -3,7 +3,7 @@ import {
   zerosDelivFilter,
   buildGridOrderArray,
 } from "../helpers/delivGridHelpers";
-import { sortAtoZDataByIndex, sortZtoADataByIndex } from "../helpers/sortDataHelpers";
+import { sortAtoZDataByIndex, sortZtoADataByIndex } from "../../../utils/_deprecated/utils";
 import {
   calcDayNum,
   routeRunsThatDay,

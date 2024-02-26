@@ -1,23 +1,14 @@
-import React, { useEffect, useState } from "react";
-import Loader from "../../AppStructure/Loader";
-
-// State Management
-import { useLocUserList } from "../../swr";
+import React, { useState } from "react";
 
 // Components
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-// import { Button } from "primereact/button";
 import { Card } from "primereact/card";
-// import { Accordion, AccordionTab } from "primereact/accordion";
 
 import { Dropdown } from "primereact/dropdown";
-// import { BreadCrumb, Breadcrumb } from "primereact/breadcrumb";
 
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
-// import { useLocationListFull } from "../../data/locationData";
 import { useListData } from "../../data/_listData";
-// import { useZoneListFull } from "../../data/zoneData";
 import dynamicSort from "../../functions/dynamicSort";
 import LogisticsTraining from "./LogisticsTraining";
 

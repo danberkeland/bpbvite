@@ -274,7 +274,8 @@ export const useProductListSimple = (shouldFetch) => {
 
   const transformData = () => {
     if (!data) return undefined
-    return getNestedObject(data, ['data', 'listProducts', 'items']).sort(dynamicSort("locName"))
+    // return getNestedObject(data, ['data', 'listProducts', 'items']).sort(dynamicSort("locName"))
+    return data?.data?.listProducts?.items?.sort(dynamicSort("locName"))
   }
   const _data = useMemo(transformData, [data])
 
@@ -402,111 +403,111 @@ export const revalidateProductListFull = () => {
 /**
  * Compound data hook + transformation. Returns a detailed product list modified
  * with Location-specific settings. Intended to use for Ordering
-*/
-export const useProductDataWithLocationCustomization = (locNick) => {
-  const { 
-    data:productData, 
-    errors:productErrors, 
-    isValidating:productsAreValidating 
-  } = useProductListFull(true)
+// */
+// export const useProductDataWithLocationCustomization = (locNick) => {
+//   const { 
+//     data:productData, 
+//     errors:productErrors, 
+//     isValidating:productsAreValidating 
+//   } = useProductListFull(true)
 
-  const { 
-      altPrices, 
-      templateProds, 
-      prodsNotAllowed, 
-      altLeadTimes, 
-      errors:locationErrors, 
-      isValidating:locationIsValidating,
-    } = useLocationDetails(locNick, !!locNick)
+//   const { 
+//       altPrices, 
+//       templateProds, 
+//       prodsNotAllowed, 
+//       altLeadTimes, 
+//       errors:locationErrors, 
+//       isValidating:locationIsValidating,
+//     } = useLocationDetails(locNick, !!locNick)
 
-  const applyCustomizations = () => {
-    if (!productData || !altPrices || !templateProds || !prodsNotAllowed || !altLeadTimes) return undefined
+//   const applyCustomizations = () => {
+//     if (!productData || !altPrices || !templateProds || !prodsNotAllowed || !altLeadTimes) return undefined
 
-    return productData.filter(item => {
-      let override = prodsNotAllowed.find(i => i.prodNick === item.prodNick)
-      //return override ? override.isAllowed : item.defaultInclude // 'override rule'
-      return override ? !item.defaultInclude : item.defaultInclude // 'negate rule'
+//     return productData.filter(item => {
+//       let override = prodsNotAllowed.find(i => i.prodNick === item.prodNick)
+//       //return override ? override.isAllowed : item.defaultInclude // 'override rule'
+//       return override ? !item.defaultInclude : item.defaultInclude // 'negate rule'
 
-    }).map(item => {
-      let override = altPrices.find(i => i.prodNick === item.prodNick)
-      return override ? { ...item, wholePrice: override.wholePrice } : { ...item }
+//     }).map(item => {
+//       let override = altPrices.find(i => i.prodNick === item.prodNick)
+//       return override ? { ...item, wholePrice: override.wholePrice } : { ...item }
 
-    }).map(item => {
-      let override = altLeadTimes.find(i => i.prodNick === item.prodNick)
-      return override ? { ...item, leadTime: override.leadTime } : { ...item }
+//     }).map(item => {
+//       let override = altLeadTimes.find(i => i.prodNick === item.prodNick)
+//       return override ? { ...item, leadTime: override.leadTime } : { ...item }
 
-    }).map(item => {
-      let favorite = templateProds.find(i => i.prodNick === item.prodNick)
-      return { ...item, templateProd: (favorite ? favorite.id : null)}
+//     }).map(item => {
+//       let favorite = templateProds.find(i => i.prodNick === item.prodNick)
+//       return { ...item, templateProd: (favorite ? favorite.id : null)}
 
-    }).sort(
-      dynamicSort("prodName")
+//     }).sort(
+//       dynamicSort("prodName")
 
-    ).sort( (a, b) => {
-      let _a = a.templateProd !== null ? 0 : 1
-      let _b = b.templateProd !== null ? 0 : 1
-      return _a - _b
+//     ).sort( (a, b) => {
+//       let _a = a.templateProd !== null ? 0 : 1
+//       let _b = b.templateProd !== null ? 0 : 1
+//       return _a - _b
 
-    })
+//     })
   
-  }
+//   }
 
-  const productsForLocation = useMemo(
-    applyCustomizations, 
-    [productData, altPrices, templateProds, prodsNotAllowed, altLeadTimes]
-  )
+//   const productsForLocation = useMemo(
+//     applyCustomizations, 
+//     [productData, altPrices, templateProds, prodsNotAllowed, altLeadTimes]
+//   )
 
-  return ({
-    data: productsForLocation,
-    errors: {
-      product: productErrors,
-      location: locationErrors
-    },
-    isValidating: (productsAreValidating || locationIsValidating)
-  })
+//   return ({
+//     data: productsForLocation,
+//     errors: {
+//       product: productErrors,
+//       location: locationErrors
+//     },
+//     isValidating: (productsAreValidating || locationIsValidating)
+//   })
 
-}
+// }
 
-/*************
- * MUTATIONS *
- *************/
+// /*************
+//  * MUTATIONS *
+//  *************/
 
-const LOGGING = true
+// const LOGGING = true
 
-export const createProduct = async (createProductInput) => {
-  if (LOGGING) console.log("Create product input: ", createProductInput)
+// export const createProduct = async (createProductInput) => {
+//   if (LOGGING) console.log("Create product input: ", createProductInput)
 
-  const response = await gqlFetcher([
-    createProductMutation, 
-    { input: createProductInput }
-  ])
-  if (LOGGING) console.log("Create product response: ", response)
+//   const response = await gqlFetcher([
+//     createProductMutation, 
+//     { input: createProductInput }
+//   ])
+//   if (LOGGING) console.log("Create product response: ", response)
 
-}
-
-
-export const updateProduct = async (updateProductInput) => {
-  if (LOGGING) console.log("Update product nput: ", updateProductInput)
-
-  const response = await gqlFetcher([
-    updateProductMutation, 
-    { input: updateProductInput }
-  ])
-  if (LOGGING) console.log("Update product response: ", response)
-
-}
+// }
 
 
-export const deleteProduct = async (deleteProductInput) => {
+// export const updateProduct = async (updateProductInput) => {
+//   if (LOGGING) console.log("Update product nput: ", updateProductInput)
 
-  if (LOGGING) console.log("Delete product input: ", deleteProductInput)
-  const response = await gqlFetcher([
-    deleteProductMutation,
-    { input: deleteProductInput }
-  ])
-  if (LOGGING) console.log("Delete product response: ", response)
+//   const response = await gqlFetcher([
+//     updateProductMutation, 
+//     { input: updateProductInput }
+//   ])
+//   if (LOGGING) console.log("Update product response: ", response)
 
-}
+// }
+
+
+// export const deleteProduct = async (deleteProductInput) => {
+
+//   if (LOGGING) console.log("Delete product input: ", deleteProductInput)
+//   const response = await gqlFetcher([
+//     deleteProductMutation,
+//     { input: deleteProductInput }
+//   ])
+//   if (LOGGING) console.log("Delete product response: ", response)
+
+// }
 
 
 /***********

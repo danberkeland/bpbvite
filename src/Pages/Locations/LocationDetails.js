@@ -8,7 +8,7 @@ import { validationSchema } from "./ValidationSchema";
 import { withFadeIn } from "../../hoc/withFadeIn";
 import { withBPBForm } from "../../hoc/withBPBForm";
 import { GroupBox } from "../../CommonStyles";
-import { compose } from "../../utils";
+import { compose } from "../../utils/_deprecated/utils";
 // import { useZoneListFull } from "../../data/zoneData";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { createLocation, deleteLocation, updateLocation } from "../../restAPIs";

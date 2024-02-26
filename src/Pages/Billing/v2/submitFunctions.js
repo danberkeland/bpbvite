@@ -2,7 +2,7 @@ import { groupBy, isEqual, pickBy, set, truncate } from "lodash"
 import { getTimeToLive } from "../../../functions/dateAndTime"
 
 import { QB } from "./qbApiFunctions"
-import { downloadPDF } from "../../../functions/legacyFunctions/helpers/PDFHelpers"
+import { downloadPDF } from "../../../utils/pdf/downloadPDF"
 
 const hasTimeout = (response) => 
   !!response?.data?.errorMessage?.includes?.("Task timed out")

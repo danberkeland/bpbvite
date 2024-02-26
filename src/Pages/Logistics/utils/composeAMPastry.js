@@ -6,7 +6,7 @@ import {
 
 import { getFullOrders } from "../../../helpers/CartBuildingHelpers";
 
-import { sortZtoADataByIndex } from "../../../helpers/sortDataHelpers";
+import { sortZtoADataByIndex } from "../../../utils/_deprecated/utils";
 import {
   calcDayNum,
   routeRunsThatDay,

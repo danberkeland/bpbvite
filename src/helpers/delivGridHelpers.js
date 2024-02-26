@@ -1,5 +1,5 @@
 import { convertDatetoBPBDate } from "./dateTimeHelpers";
-import { sortZtoADataByIndex, sortAtoZDataByIndex } from "./sortDataHelpers";
+import { sortZtoADataByIndex, sortAtoZDataByIndex } from "../utils/_deprecated/utils";
 
 const { DateTime } = require("luxon");
 
