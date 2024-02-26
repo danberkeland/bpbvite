@@ -6,7 +6,7 @@ import { deleteUser, updateUser, createUser } from "../../../restAPIs";
 import { withFadeIn } from "../../../hoc/withFadeIn";
 import { withBPBForm } from "../../../hoc/withBPBForm";
 
-import { compose } from "../../../utils";
+import { compose } from "../../../utils/_deprecated/utils";
 
 import CustomerDescription from "./CustomerDescription";
 import LocationDescription from "./LocationDescription";

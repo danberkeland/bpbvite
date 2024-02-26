@@ -5,10 +5,8 @@ import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import ToolBar from "../Production/BPBNBaker1Parts/Toolbar";
 
-import {
-  convertDatetoBPBDate,
-  todayPlus,
-} from "../../functions/legacyFunctions/helpers/dateTimeHelpers";
+import { convertDatetoBPBDate } from "../../utils/_deprecated/convertDatetoBPBDate.js";
+import { todayPlus } from "../../utils/_deprecated/todayPlus.js";
 import { checkForUpdates } from "../../helpers/databaseFetchers";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
 

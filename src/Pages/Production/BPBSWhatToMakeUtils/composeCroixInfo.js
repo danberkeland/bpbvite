@@ -1,4 +1,4 @@
-import { sortAtoZDataByIndex } from "../../../helpers/sortDataHelpers";
+import { sortAtoZDataByIndex } from "../../../utils/_deprecated/utils";
 
 import { getOrdersList, addUp } from "../Utils/utils";
 

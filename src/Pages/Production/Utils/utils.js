@@ -4,7 +4,7 @@ import {
   // baker1PocketFilter 
 } from "./filters";
 
-import { sortZtoADataByIndex } from "../../../helpers/sortDataHelpers";
+import { sortZtoADataByIndex } from "../../../utils/_deprecated/utils";
 
 import {
   zerosDelivFilter,
