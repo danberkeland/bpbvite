@@ -118,7 +118,7 @@ export function tablePivot(
     uniqBy(data, item => item[pivotColumnAttribute])
       .map(item => [item[pivotColumnAttribute], { items: [], value: null }])
   )
-  console.log("pivotColumnsTemplate", pivotColumnsTemplate)
+  // console.log("pivotColumnsTemplate", pivotColumnsTemplate)
   
 
   const preppedRows = data.map(row => ({
