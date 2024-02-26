@@ -1,5 +1,10 @@
-import { groupBy } from "./groupBy"
+import { groupBy } from "lodash"
 
+
+const groupByNAtts = (data, keyAtts) => groupBy(
+  data,
+  item => keyAtts.map(att => String(item[att])).join("#")
+)
 
 // items with matching values along key attributes are returned
 // in array buckets. if objectArray has no duplicates, returns
@@ -13,7 +18,7 @@ import { groupBy } from "./groupBy"
  * 
  */
 export const getDuplicates = (objectArray, keyAtts) => {
-  const buckets = groupBy(objectArray, keyAtts)
+  const buckets = groupByNAtts(objectArray, keyAtts)
   return Object.values(buckets).filter(group => group.length > 1)
 
 }
