@@ -1,11 +1,11 @@
 import React, { useState } from "react"
 
 import { Button } from "primereact/button"
-import { Dropdown } from "primereact/dropdown"
+// import { Dropdown } from "primereact/dropdown"
 import { AutoComplete } from "primereact/autocomplete"
 import { Tag } from "primereact/tag"
 import { sortBy } from "lodash"
-import { reformatProdName } from "../../../../Orders10/_utils/reformatProdName"
+import { reformatProdName } from "../../../../../Ordering/utils/reformatProdName"
 import { useListData } from "../../../../../../data/_listData"
 // import { getWorkingDateTime } from "../../../../../../functions/dateAndTime"
 
