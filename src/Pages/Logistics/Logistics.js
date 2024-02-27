@@ -9,10 +9,11 @@ import { Dropdown } from "primereact/dropdown";
 
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { useListData } from "../../data/_listData";
-import dynamicSort from "../../functions/dynamicSort";
+// import dynamicSor_t from "../../functions/dynamicSor_t";
 import LogisticsTraining from "./LogisticsTraining";
 
 import DOMPurify from 'dompurify';
+import { compareBy } from "../../utils/collectionFns/compareBy";
 
 function Logistics() {
   const { currentLoc: locNick, user: name, authClass } = useSettingsStore();
@@ -58,7 +59,7 @@ function Logistics() {
           <div style={{padding: "0.5rem"}} className="p-fluid">
             <Dropdown 
               className="p-column-filter"
-              options={zoneData?.sort(dynamicSort("zoneName"))}
+              options={zoneData?.sort(compareBy(Z => Z.zoneName))}
               optionLabel="zoneName"
               optionValue="zoneNick"
               placeholder="Filter by Zone"
@@ -194,11 +195,11 @@ export default Logistics;
 
 const makeTableData = (locationData, zone, loc) => {
   if (!locationData) return [];
-  if (!zone && !loc) return locationData.sort(dynamicSort("prodName"));
+  if (!zone && !loc) return locationData.sort(compareBy(item => item.prodName)) // dynamicSor_t("prodName"));
   return locationData
     .filter((item) => !zone || item.zoneNick === zone)
     .filter((item) => !loc || item.locNick === loc)
-    .sort(dynamicSort("delivOrder"));
+    .sort(compareBy(item => item.delivOrder)) //(dynamicSor_t("delivOrder"));
 };
 
 /**

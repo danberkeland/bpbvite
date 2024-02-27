@@ -5,7 +5,7 @@
 // import { Button } from "primereact/button"
 // import TimeAgo from "timeago-react";
 // import { flatten, groupBy, sumBy } from "lodash";
-// import dynamicSort from "../../../../functions/dynamicSort";
+// import dynamicSor_t from "../../../../functions/dynamicSor_t";
 // import { DataTable } from "primereact/datatable";
 // import { Column } from "primereact/column";
 // // import { dateToMmddyyyy } from "../../../../functions/dateAndTime";
@@ -50,7 +50,7 @@
 //     })
 //     console.log("_byProdNickByDate", _byProdNickByDate)
 
-//     return _byProdNickByDate.sort(dynamicSort('packGroup'))
+//     return _byProdNickByDate.sort(dynamicSor_t('packGroup'))
 //   }
 //   const reportData = useMemo(prepareData, [T0T7data]) ?? []
 //   const [expandedRows, setExpandedRows] = useState()
