@@ -1,5 +1,5 @@
 import { groupBy, isEqual, pickBy, set, truncate } from "lodash"
-import { getTimeToLive } from "../../../functions/dateAndTime"
+import { getTimeToLive } from "../../../utils/dateAndTime/getTimeToLive"
 
 import { QB } from "./qbApiFunctions"
 import { downloadPDF } from "../../../utils/pdf/downloadPDF"

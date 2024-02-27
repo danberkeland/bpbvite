@@ -1,11 +1,10 @@
 import React from "react";
 import { Calendar } from "primereact/calendar";
 import {
-  dateToMmddyyyy,
-  // dateToYyyymmdd,
+  // dateToMmddyyy_y,
   getWorkingDateTime,
-  // yyyymmddToWeekday,
 } from "../../../../functions/dateAndTime";
+import { DateTime } from "luxon";
 
 export const NotesCalendar = ({ delivDate, setDelivDate, notes }) => {
   const dateTemplate = (date) => {
@@ -15,7 +14,6 @@ export const NotesCalendar = ({ delivDate, setDelivDate, notes }) => {
     const calendarDate = `${date.year}-${
       "0" + String(date.month + 1).slice(-2)
     }-${("0" + String(date.day)).slice(-2)}`;
-    // const dayOfWeek = yyyymmddToWeekday(calendarDate);
     console.log('calendarDate', calendarDate)
     const style = { padding: "2rem", backgroundColor: "white", color: "black" };
     const isToday = today === calendarDate
@@ -38,7 +36,7 @@ export const NotesCalendar = ({ delivDate, setDelivDate, notes }) => {
       id="calendar"
       value={delivDate}
       viewDate={delivDate}
-      placeholder={dateToMmddyyyy(delivDate)}
+      placeholder= {DateTime.fromJSDate(delivDate).toFormat('MM/dd/yyyy')}      //{dateToMmddyyy_y(delivDate)}
       readOnlyInput={false}
       minDate={getWorkingDateTime("NOW").minus({ days: 1 }).toJSDate()}
       maxDate={getWorkingDateTime("NOW")

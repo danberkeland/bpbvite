@@ -8,8 +8,6 @@ import { defaultSwrOptions } from "./_constants"
 import gqlFetcher from "./_fetchers"
 // import * as queries from "../customGraphQL/queries/productionQueries"
 
-import { dateToYyyymmdd, getWeekday } from "../functions/dateAndTime"
-
 import { buildRouteMatrix, buildRouteMatrix_test } from "../functions/routeFunctions/buildRouteMatrix"
 import { 
   assignDelivRoute, 
@@ -29,6 +27,17 @@ const getDuplicates = (objectArray, keyAtts) => {
   const buckets = groupByNAtts(objectArray, keyAtts)
   return Object.values(buckets).filter(group => group.length > 1)
 
+}
+
+/**
+ * Convert JS date into capitalized 3 letter weekday,
+ * compatible with database entries.
+ */
+
+function getWeekday(date) {
+  if (!date) return null
+  const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+  return (weekdays[date.getDay()])
 }
 
 const LIMIT = 5000
@@ -952,7 +961,7 @@ export const useOrderDataByDate = (delivDateISO, dayOfWeek, shouldFetch) => {
  * Filters to nonzero order qtys.
  */
 export const useCombinedOrdersByDate = ({ delivDateJS, includeHolding=true, shouldFetch=false }) => {
-  const delivDateISO = dateToYyyymmdd(delivDateJS)
+  const delivDateISO = delivDateJS.toISOString().split('T')[0]
   const dayOfWeek = getWeekday(delivDateJS)
 
   const query = getAllOrdersByDate
@@ -1038,7 +1047,7 @@ export const useCombinedOrdersByDate = ({ delivDateJS, includeHolding=true, shou
 
 /**depreciating. Can use 'useOrderReportByDate with option includeHolding: false */
 export const useLogisticsDataByDate = (delivDateJS, shouldFetch) => {
-  const delivDate = dateToYyyymmdd(delivDateJS)
+  const delivDate = delivDateJS.toISOString().split('T')[0]
   const dayOfWeek = getWeekday(delivDateJS)
 
   const { data:orderData } = useOrderDataByDate(delivDate, dayOfWeek, shouldFetch)
@@ -1077,7 +1086,7 @@ export const useLogisticsDataByDate = (delivDateJS, shouldFetch) => {
  * Assigns routes and joins location, product, and route dimension data to records.
 */
 export const useOrderReportByDate = ({ delivDateJS, includeHolding, shouldFetch }) => {
-  //const delivDate = dateToYyyymmdd(delivDateJS)
+  //const delivDate = dateToYyyymmd_d(delivDateJS)
   const dayOfWeek = getWeekday(delivDateJS)
   const { data:combinedOrders } = useCombinedOrdersByDate({ delivDateJS, includeHolding, shouldFetch })
   const { data:dimensionData } = useDimensionData(shouldFetch)

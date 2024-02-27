@@ -1,7 +1,6 @@
 import { useListData } from "../../../../data/_listData";
 import { useEffect, useMemo } from "react";
 import { 
-  dateToYyyymmdd, 
   getWorkingDateTime 
 } from "../../../../functions/dateAndTime";
 import { groupBy, orderBy, sortBy, uniqBy } from "lodash";
@@ -259,7 +258,7 @@ export const useFullOrderByDate = ({ locNick, delivDateJS, shouldFetch }) => {
 
   const makeCartOrder = () => {
     if (!cart || !standing || !PRD || !location) return undefined
-    const delivDate = dateToYyyymmdd(delivDateJS)
+    const delivDate = delivDateJS.toISOString().split('T')[0]
     const dayOfWeek = weekdays[delivDateJS.getDay()]
     const products = Object.fromEntries(PRD.map(P => [P.prodNick, P]))
 

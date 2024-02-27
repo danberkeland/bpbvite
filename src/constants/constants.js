@@ -13,7 +13,7 @@ const HOLIDAYS = Object.freeze([
 
 /** 
  * Specifies when ordering app should treat placed orders
- * as if placed on the next day.
+ * as if placed on the next day. = 20
  * @type {number}
  */
 const CUTOFF_TIME_HOURS = 20 // 8:00 pm

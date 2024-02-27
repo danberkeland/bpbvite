@@ -1,13 +1,13 @@
 import React from "react";
 import { Calendar } from "primereact/calendar";
 import { 
-  dateToMmddyyyy,  
+  // dateToMmddyyy_y,  
   getWorkingDateTime, 
-  yyyymmddToWeekday 
 } from "../../../../../functions/dateAndTime";
 import { useOrderCalendarSummary } from "../../data/orderHooks";
 import { InputLabel } from "../InputLabel";
 import { DateTime } from "luxon";
+import { IsoDate } from "../../../../../utils/dateTimeFns";
 
 const minDate = getWorkingDateTime('NOW')
   .minus({ days: 1 }).toJSDate()
@@ -48,7 +48,7 @@ export const CartCalendar = ({
     const calendarDate = `${date.year}-` 
       + `${('0' + String(date.month + 1)).slice(-2)}-`
       + `${('0' + String(date.day)).slice(-2)}`
-    const dayOfWeek = yyyymmddToWeekday(calendarDate)
+    const dayOfWeek = IsoDate.toWeekdayEEE(calendarDate)
     const hasCart = orderSummary?.byDate?.[calendarDate]?.hasCart
     const hasStanding = orderSummary?.byDay?.[dayOfWeek]?.hasStanding
       || orderSummary?.byDate?.[calendarDate]?.hasStanding // for placeholders
@@ -94,7 +94,7 @@ export const CartCalendar = ({
         inline={inline}
         touchUI={!inline}
         //viewDate={delivDateJS}
-        placeholder={dateToMmddyyyy(delivDateJS)} // ***1.
+        placeholder={DateTime.fromJSDate(delivDateJS).toFormat('MM/dd/yyyy')}   //dateToMmddyyy_y(delivDateJS)} // ***1.
         readOnlyInput={!inline}
         minDate={minDate}
         maxDate={maxDate}

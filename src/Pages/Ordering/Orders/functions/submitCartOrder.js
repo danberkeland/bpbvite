@@ -1,8 +1,6 @@
 
-import { 
-  getTimeToLive, 
-  getWorkingDateTime 
-} from "../../../../functions/dateAndTime"
+import { getWorkingDateTime } from "../../../../functions/dateAndTime"
+import { getTimeToLive } from "../../../../utils/dateAndTime/getTimeToLive"
 import { APIGatewayFetcher } from "../../../../data/_fetchers"
 import { sendConfirmationEmail } from "./sendEmailConfirmation"
 import { isEqual } from "lodash"

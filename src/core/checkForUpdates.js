@@ -6,7 +6,7 @@ import { updateProduct, updateDoughBackup } from "../graphql/mutations";
 import ComposeNorthList from "../Pages/Logistics/utils/composeNorthList";
 
 import { todayPlus } from "../helpers/dateTimeHelpers";
-import { getTtl } from "../functions/dateAndTime";
+import { getTimeToLive } from "../utils/dateAndTime/getTimeToLive"
 // import { groupBy, keyBy, filter, flow, mapValues, sumBy, uniqBy, sortBy, map, identity } from "lodash/fp";
 
 const LOC_ID_BPBN = "16VS30T9E7CM9"
@@ -215,7 +215,7 @@ export const checkForUpdates = async (
       isWhole:   false,
       ItemNote:  "paid",
       prodNick:  product?.prodNick ?? "brn",
-      ttl:       delivDate ? getTtl(new Date(sqOrder.delivDate)) : null,
+      ttl:       delivDate ? getTimeToLive(delivDate) : null,
       updatedOn: new Date().toISOString(),
       updatedBy: "bpb_admin",
     }
