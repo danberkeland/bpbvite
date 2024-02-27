@@ -3,7 +3,7 @@ import "jspdf-autotable"
 import { sortBy, uniqBy, groupBy, orderBy } from "lodash"
 import { checkQBValidation_v2 } from "../../../../helpers/QBHelpers"
 import axios from "axios"
-import { downloadPDF } from "../../../../functions/legacyFunctions/helpers/PDFHelpers"
+import { downloadPDF } from "../../../../utils/pdf/downloadPDF"
 
 /** Designed to work with the gridData object made with the useRouteGrid hook. */
 export const exportRouteGridPdf = ({ gridData, reportDateDT, fileName }) => {

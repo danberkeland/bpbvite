@@ -4,7 +4,7 @@ import React from "react";
 
 // import { API, graphqlOperation } from "aws-amplify";
 
-// import { sortAtoZDataByIndex } from "../../../helpers/sortDataHelpers";
+// import { sortAtoZDataByIndex } from "../../../utils/_deprecated/utils";
 
 import styled from "styled-components";
 

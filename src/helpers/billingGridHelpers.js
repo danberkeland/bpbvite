@@ -2,7 +2,7 @@ import { daysOfBillingWeek } from "../helpers/dateTimeHelpers";
 
 import { API, graphqlOperation } from "aws-amplify";
 
-import { sortAtoZDataByIndex } from "../helpers/sortDataHelpers";
+import { sortAtoZDataByIndex } from "../utils/_deprecated/utils";
 import {
   buildCartList,
   buildStandList,

@@ -9,7 +9,7 @@ import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
 import { API, graphqlOperation } from "aws-amplify";
 import { listZones } from "../../graphql/queries";
-import { sortAtoZDataByIndex } from "../../helpers/sortDataHelpers";
+import { sortAtoZDataByIndex } from "../../utils/_deprecated/utils";
 import { DT } from "../../utils/dateTimeFns";
 
 const BasicContainer = styled.div`

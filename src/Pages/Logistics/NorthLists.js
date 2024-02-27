@@ -21,6 +21,7 @@ import { listNotes } from "../../graphql/queries";
 import { DateTime } from "luxon";
 import { Calendar } from "primereact/calendar";
 import { sumBy } from "../../utils/collectionFns/sumBy";
+import { useListData } from "../../data/_listData";
 
 const WholeBox = styled.div`
   display: flex;
@@ -56,57 +57,19 @@ const printButtonStyle = {
   fontSize: "1.25rem",
 }
 
+
 const compose = new ComposeNorthList();
-
-
-export const notesData = (setIsLoading) => {
-  const all = new Promise((resolve, reject) => {
-    resolve(fetchNotesData(setIsLoading));
-  });
-
-  return all;
-};
-
-const fetchNotesData = async (setIsLoading) => {
-  let notes = await fetchNotes();
-
-  if (!notes) {
-    return [];
-  } else {
-    return notes;
-  }
-};
-
-
-export const fetchNotes = async () => {
-  let notes = await fetchFromDataBase(listNotes, "listNotes", "1000");
-  return notes;
-};
-
-const fetchFromDataBase = async (baseFunc, base, limit) => {
-  try {
-    const data = await API.graphql(
-      graphqlOperation(baseFunc, { limit: limit })
-    );
-
-    const list = data.data[base].items;
-    return list;
-  } catch (error) {
-    console.log(`error on fetching ${base} data`, error);
-  }
-};
-
 
 function NorthList() {
   const [croixNorth, setCroixNorth] = useState([]); //if (croixNorth.length) { console.log("CROIX NORTH:", croixNorth)}
-  const [shelfProdsNorth, setShelfProdsNorth] = useState([]); if (shelfProdsNorth.length) {console.log("shelfProdsNorth", shelfProdsNorth)}
+  const [shelfProdsNorth, setShelfProdsNorth] = useState([]); // if (shelfProdsNorth.length) {console.log("shelfProdsNorth", shelfProdsNorth)}
   const [pocketsNorth, setPocketsNorth] = useState([]);
   const [CarltonToPrado, setCarltonToPrado] = useState([]);
   const [Baguettes, setBaguettes] = useState([]);
   const [otherRustics, setOtherRustics] = useState([]);
   const [retailStuff, setRetailStuff] = useState([]);
   const [earlyDeliveries, setEarlyDeliveries] = useState([]);
-  const [columnsShelfProdsNorth, setColumnsShelfProdsNorth] = useState([]); if (columnsShelfProdsNorth.length) {console.log(columnsShelfProdsNorth)}
+  const [columnsShelfProdsNorth, setColumnsShelfProdsNorth] = useState([]); // if (columnsShelfProdsNorth.length) {console.log(columnsShelfProdsNorth)}
   const [columnsPocketsNorth, setColumnsPocketsNorth] = useState([]);
   const [columnsCarltonToPrado, setColumnsCarltonToPrado] = useState([]);
   const [columnsBaguettes, setColumnsBaguettes] = useState([]);
@@ -168,15 +131,15 @@ function NorthList() {
       ).then((db) => gatherMakeInfo(db, delivDate));
   }, [database, delivDate]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const { data:notesData } = 
+    useListData({ tableName: "Notes", shouldFetch: true })
+
   useEffect(() => {
-    notesData().then((notes) => {
-      // console.log("notes", notes);
-      // console.log('NotesdelivDate', delivDate)
-      setNotes(
-        notes.filter((note) => note.when === delivDate)
-      );
-    });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    if (!!notesData) setNotes(
+      notesData.filter(note => note.when === delivDate)
+    )
+  }, [notesData])
+
 
   const gatherMakeInfo = (database) => {
     let northData = compose.returnNorthBreakDown(delivDate, database);

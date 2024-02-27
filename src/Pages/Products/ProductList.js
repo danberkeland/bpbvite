@@ -6,7 +6,6 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
 import ProductDetails from "./ProductDetails";
-// import { useProductList } from "../../swr";
 import { useProductListFull } from "../../data/productData"
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { withFadeIn } from "../../hoc/withFadeIn";

@@ -16,7 +16,7 @@ import ComposeAllOrders from "./Utils/composeAllOrders";
 // import styled from "styled-components";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
-import { sortAtoZDataByIndex } from "../../helpers/sortDataHelpers";
+import { sortAtoZDataByIndex } from "../../utils/_deprecated/utils";
 
 import { WholeBox, ButtonContainer, ButtonWrapper, h1Style, h2Style } from "./_styles";
 

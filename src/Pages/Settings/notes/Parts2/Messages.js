@@ -8,8 +8,7 @@ import { ConfirmDialog } from "primereact/confirmdialog";
 
 import { API, graphqlOperation } from "aws-amplify";
 import { createNotes, deleteNotes, updateNotes } from "../../../../graphql/mutations";
-import { revalidateNotes } from "../../../../data/notesData";
-// import { sortAtoZDataByIndex } from "../../../../helpers/sortDataHelpers";
+import { useListData } from "../../../../data/_listData";
 
 const Messages = ({ notes, delivDate }) => {
   const [selectedMessage, setSelectedMessage] = useState(null);
@@ -18,6 +17,8 @@ const Messages = ({ notes, delivDate }) => {
   const [confirmDialogVisible, setConfirmDialogVisible] = useState(false);
   const [selectedMessageToDelete, setSelectedMessageToDelete] = useState(null);
   const [showAllDates, setShowAllDates] = useState(true);
+
+  const { mutate:revalidateNotes } = useListData({ tableName: "Notes", shouldFetch: true })
 
 
   const date = new Date(delivDate);

@@ -17,7 +17,7 @@ import {
   // noBaguette,
   bag
 } from "./filters";
-import { sortAtoZDataByIndex } from "../../../helpers/sortDataHelpers";
+import { sortAtoZDataByIndex } from "../../../utils/_deprecated/utils";
 
 
 const clonedeep = require("lodash.clonedeep");

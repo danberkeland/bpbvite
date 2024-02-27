@@ -4,7 +4,7 @@ import { Button } from "primereact/button"
 import { Dropdown } from "primereact/dropdown"
 import { Tag } from "primereact/tag"
 import { sortBy } from "lodash"
-import { reformatProdName } from "../../../../Orders10/_utils/reformatProdName"
+import { reformatProdName } from "../../../../utils/reformatProdName"
 import { useListData } from "../../../../../../data/_listData"
 // import { getWorkingDateTime } from "../../../../../../functions/dateAndTime"
 

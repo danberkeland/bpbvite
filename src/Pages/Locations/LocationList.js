@@ -8,7 +8,6 @@ import { Column } from "primereact/column";
 import LocationDetails from "./LocationDetails";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { withFadeIn } from "../../hoc/withFadeIn";
-// import { useLocationListFull } from "../../data/locationData";
 import { Button } from "primereact/button";
 import { useListData } from "../../data/_listData";
 

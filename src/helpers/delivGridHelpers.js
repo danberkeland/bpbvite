@@ -1,5 +1,5 @@
 import { convertDatetoBPBDate } from "./dateTimeHelpers";
-import { sortZtoADataByIndex, sortAtoZDataByIndex } from "./sortDataHelpers";
+import { sortZtoADataByIndex, sortAtoZDataByIndex } from "../utils/_deprecated/utils";
 
 const { DateTime } = require("luxon");
 
@@ -61,117 +61,178 @@ export const filterForZoneService = (
   return filterServe;
 };
 
-const buildCustName = (ord, customers) => {
-  try {
-    return customers[
-      customers.findIndex((cust) => cust["custName"] === ord["custName"])
-    ].nickName;
-  } catch {
-    return;
-  }
-};
+// const buildCustName = (ord, customers) => {
+//   try {
+//     return customers[
+//       customers.findIndex((cust) => cust["custName"] === ord["custName"])
+//     ].nickName;
+//   } catch {
+//     return;
+//   }
+// };
 
 export const buildGridOrderArray = (filterServe, database) => {
 
   const [products, customers] = database;
-  let gridOrderArray;
-  gridOrderArray = filterServe.map((ord) => ({
-    prodName: ord["prodName"],
-    delivOrder:
-      customers.findIndex((cust) => cust.custName === ord.custName) > -1
-        ? customers[
-            customers.findIndex((cust) => cust.custName === ord.custName)
-          ].delivOrder
-        : 0,
-    prodNick:
-      products[
-        products.findIndex((prod) => prod["prodName"] === ord["prodName"])
-      ].nickName,
-    custName: ord["custName"],
-    custNick: buildCustName(ord, customers),
-    zone: ord["zoneName"],
-    //  Lincoln Market french exception
-    route: ord["route"],
-    qty: ord["qty"],
-    doughType:
-      products[
-        products.findIndex((prod) => prod["prodName"] === ord["prodName"])
-      ]["doughType"],
-    where:
-      products[
-        products.findIndex((prod) => prod["prodName"] === ord["prodName"])
-      ]["bakedWhere"],
-    when: products[
-      products.findIndex((prod) => prod["prodName"] === ord["prodName"])
-    ]["readyTime"],
-    forBake:
-      products[
-        products.findIndex((prod) => prod["prodName"] === ord["prodName"])
-      ].forBake,
-    preshaped:
-      products[
-        products.findIndex((prod) => prod["prodName"] === ord["prodName"])
-      ].preshaped,
-    prepreshaped:
-      products[
-        products.findIndex((prod) => prod["prodName"] === ord["prodName"])
-      ].prepreshaped,
-    updatePreDate:
-      products[
-        products.findIndex((prod) => prod["prodName"] === ord["prodName"])
-      ].updatePreDate,
-    prodID:
-      products[
-        products.findIndex((prod) => prod["prodName"] === ord["prodName"])
-      ].id,
-    packSize:
-      products[
-        products.findIndex((prod) => prod["prodName"] === ord["prodName"])
-      ].packSize,
-    weight:
-      products[
-        products.findIndex((prod) => prod["prodName"] === ord["prodName"])
-      ].weight,
-    currentStock:
-      products[
-        products.findIndex((prod) => prod["prodName"] === ord["prodName"])
-      ].currentStock,
-    batchSize:
-      products[
-        products.findIndex((prod) => prod["prodName"] === ord["prodName"])
-      ].batchSize,
-    bakeExtra:
-      products[
-        products.findIndex((prod) => prod["prodName"] === ord["prodName"])
-      ].bakeExtra,
-    packGroup:
-      products[
-        products.findIndex((prod) => prod["prodName"] === ord["prodName"])
-      ].packGroup,
-      freezerNorth:
-      products[
-        products.findIndex((prod) => prod["prodName"] === ord["prodName"])
-      ].freezerNorth,
-      freezerNorthClosing:
-      products[
-        products.findIndex((prod) => prod["prodName"] === ord["prodName"])
-      ].freezerNorthClosing,
-      freezerNorthFlag:
-      products[
-        products.findIndex((prod) => prod["prodName"] === ord["prodName"])
-      ].freezerNorthFlag,
-      freezerCount:
-      products[
-        products.findIndex((prod) => prod["prodName"] === ord["prodName"])
-      ].freezerCount,
-      freezerClosing:
-      products[
-        products.findIndex((prod) => prod["prodName"] === ord["prodName"])
-      ].freezerClosing,
+
+  const gridOrderArray2 = filterServe.map(order => {
+
+    const { prodName, custName, zoneName, route, qty } = order
+    const product = products.find(P => P.prodName === prodName) ?? {}
+    const customer = customers.find(C => C.custName === custName) ?? {}
+    const {
+      doughType,
+      bakedWhere,
+      readyTime,
+      forBake,
+      preshaped,
+      prepreshaped,
+      updatePreDate,
+      id,
+      packSize,
+      weight,
+      currentStock,
+      batchSize,
+      bakeExtra,
+      packGroup,
+      freezerNorth,
+      freezerNorthClosing,
+      freezerNorthFlag,
+      freezerCount,
+      freezerClosing,
+    } = product
+
+    return {
+      prodName,
+      delivOrder: customer.delivOrder ?? 0,
+      prodNick: product.nickName,
+      custName,
+      custNick: customer.nickName,
+      zone: zoneName,
+      route,
+      qty,
+      doughType,
+      where: bakedWhere,
+      when: readyTime,
+      forBake,
+      preshaped,
+      prepreshaped,
+      updatePreDate,
+      prodID: id,
+      packSize,
+      weight,
+      currentStock,
+      batchSize,
+      bakeExtra,
+      packGroup,
+      freezerNorth,
+      freezerNorthClosing,
+      freezerNorthFlag,
+      freezerCount,
+      freezerClosing,
+    }
+  })
+
+  return gridOrderArray2
+
+  // let gridOrderArray;
+  // gridOrderArray = filterServe.map((ord) => ({
+  //   prodName: ord["prodName"],
+  //   delivOrder:
+  //     customers.findIndex((cust) => cust.custName === ord.custName) > -1
+  //       ? customers[
+  //           customers.findIndex((cust) => cust.custName === ord.custName)
+  //         ].delivOrder
+  //       : 0,
+  //   prodNick:
+  //     products[
+  //       products.findIndex((prod) => prod["prodName"] === ord["prodName"])
+  //     ].nickName,
+  //   custName: ord["custName"],
+  //   custNick: buildCustName(ord, customers),
+  //   zone: ord["zoneName"],
+  //   //  Lincoln Market french exception
+  //   route: ord["route"],
+  //   qty: ord["qty"],
+  //   doughType:
+  //     products[
+  //       products.findIndex((prod) => prod["prodName"] === ord["prodName"])
+  //     ]["doughType"],
+  //   where:
+  //     products[
+  //       products.findIndex((prod) => prod["prodName"] === ord["prodName"])
+  //     ]["bakedWhere"],
+  //   when: products[
+  //     products.findIndex((prod) => prod["prodName"] === ord["prodName"])
+  //   ]["readyTime"],
+  //   forBake:
+  //     products[
+  //       products.findIndex((prod) => prod["prodName"] === ord["prodName"])
+  //     ].forBake,
+  //   preshaped:
+  //     products[
+  //       products.findIndex((prod) => prod["prodName"] === ord["prodName"])
+  //     ].preshaped,
+  //   prepreshaped:
+  //     products[
+  //       products.findIndex((prod) => prod["prodName"] === ord["prodName"])
+  //     ].prepreshaped,
+  //   updatePreDate:
+  //     products[
+  //       products.findIndex((prod) => prod["prodName"] === ord["prodName"])
+  //     ].updatePreDate,
+  //   prodID:
+  //     products[
+  //       products.findIndex((prod) => prod["prodName"] === ord["prodName"])
+  //     ].id,
+  //   packSize:
+  //     products[
+  //       products.findIndex((prod) => prod["prodName"] === ord["prodName"])
+  //     ].packSize,
+  //   weight:
+  //     products[
+  //       products.findIndex((prod) => prod["prodName"] === ord["prodName"])
+  //     ].weight,
+  //   currentStock:
+  //     products[
+  //       products.findIndex((prod) => prod["prodName"] === ord["prodName"])
+  //     ].currentStock,
+  //   batchSize:
+  //     products[
+  //       products.findIndex((prod) => prod["prodName"] === ord["prodName"])
+  //     ].batchSize,
+  //   bakeExtra:
+  //     products[
+  //       products.findIndex((prod) => prod["prodName"] === ord["prodName"])
+  //     ].bakeExtra,
+  //   packGroup:
+  //     products[
+  //       products.findIndex((prod) => prod["prodName"] === ord["prodName"])
+  //     ].packGroup,
+  //     freezerNorth:
+  //     products[
+  //       products.findIndex((prod) => prod["prodName"] === ord["prodName"])
+  //     ].freezerNorth,
+  //     freezerNorthClosing:
+  //     products[
+  //       products.findIndex((prod) => prod["prodName"] === ord["prodName"])
+  //     ].freezerNorthClosing,
+  //     freezerNorthFlag:
+  //     products[
+  //       products.findIndex((prod) => prod["prodName"] === ord["prodName"])
+  //     ].freezerNorthFlag,
+  //     freezerCount:
+  //     products[
+  //       products.findIndex((prod) => prod["prodName"] === ord["prodName"])
+  //     ].freezerCount,
+  //     freezerClosing:
+  //     products[
+  //       products.findIndex((prod) => prod["prodName"] === ord["prodName"])
+  //     ].freezerClosing,
       
-  }));
+  // }));
   
-  return gridOrderArray;
+  // return gridOrderArray;
 };
 
 export const isZoneIncludedInRoute = (

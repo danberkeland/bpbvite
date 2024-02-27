@@ -1,7 +1,7 @@
 import { Auth } from "aws-amplify";
 import axios from "axios";
 import useSWR from "swr";
-import { sortAtoZDataByIndex } from "./utils";
+import { sortAtoZDataByIndex } from "./utils/_deprecated/utils";
 
 const API_bpbrouterAuth =
   "https://8gw70qn5eb.execute-api.us-east-2.amazonaws.com/auth";
@@ -27,53 +27,53 @@ const fetcher = async (path) => {
   return res;
 };
 
-export function useLocUserList() {
-  const { data, error, mutate } = useSWR(
-    { url: "/locations/grabDetailedLocUserList" },
-    fetcher,
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: true,
-    }
-  );
+// export function useLocUserList() {
+//   const { data, error, mutate } = useSWR(
+//     { url: "/locations/grabDetailedLocUserList" },
+//     fetcher,
+//     {
+//       revalidateIfStale: false,
+//       revalidateOnFocus: false,
+//       revalidateOnReconnect: true,
+//     }
+//   );
 
-  return {
-    locationList: {
-      data: data ? sortAtoZDataByIndex(data.data.body.items, "locName") : data,
-      isLoading: !error && !data,
-      isError: error,
-      revalidate: () => mutate(),
-    },
-  };
-}
+//   return {
+//     locationList: {
+//       data: data ? sortAtoZDataByIndex(data.data.body.items, "locName") : data,
+//       isLoading: !error && !data,
+//       isError: error,
+//       revalidate: () => mutate(),
+//     },
+//   };
+// }
 
-export function useSimpleLocationList() {
-  const { data, error, mutate } = useSWR(
-    { url: "/locations/grabDetailedLocationList" },
-    fetcher,
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    }
-  );
+// export function useSimpleLocationList() {
+//   const { data, error, mutate } = useSWR(
+//     { url: "/locations/grabDetailedLocationList" },
+//     fetcher,
+//     {
+//       revalidateIfStale: false,
+//       revalidateOnFocus: false,
+//       revalidateOnReconnect: false,
+//     }
+//   );
 
-  return {
-    simpleLocationList: {
-      data: data
-        ? sortAtoZDataByIndex(data.data.body.items, "locName").map((loc) => ({
-            label: loc.locName,
-            value: loc.locNick,
+//   return {
+//     simpleLocationList: {
+//       data: data
+//         ? sortAtoZDataByIndex(data.data.body.items, "locName").map((loc) => ({
+//             label: loc.locName,
+//             value: loc.locNick,
            
-          }))
-        : data,
-      isLoading: !error && !data,
-      isError: error,
-      revalidate: () => mutate(),
-    },
-  };
-}
+//           }))
+//         : data,
+//       isLoading: !error && !data,
+//       isError: error,
+//       revalidate: () => mutate(),
+//     },
+//   };
+// }
 
 export function useProductList() {
   const { data, error, mutate } = useSWR(

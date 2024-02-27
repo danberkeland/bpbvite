@@ -8,7 +8,7 @@ import { updateLocation } from "../../../graphql/mutations";
 import { API, graphqlOperation } from "aws-amplify";
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 import { useLegacyFormatDatabase } from "../../../data/legacyData";
-import { sortAtoZDataByIndex } from "../../../helpers/sortDataHelpers";
+import { sortAtoZDataByIndex } from "../../../utils/_deprecated/utils";
 
 const DelivOrder = () => {
   

@@ -1,5 +1,5 @@
 import { convertDatetoBPBDate, todayPlus } from "../helpers/dateTimeHelpers";
-import { sortAtoZDataByIndex } from "../helpers/sortDataHelpers";
+import { sortAtoZDataByIndex } from "../../../utils/_deprecated/utils";
 
 import { wildcardRegExp } from "wildcard-regex";
 

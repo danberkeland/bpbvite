@@ -16,9 +16,7 @@ import useSWR from 'swr'
 import gqlFetcher, { gqlFetcherNoAwait } from './_fetchers'
 import { defaultSwrOptions, LIMIT, LIST_TABLES, TABLE_PKS } from './_constants'
 import * as listQueries from '../customGraphQL/queries/_listQueries'
-import * as mutations from '../customGraphQL/mutations.mjs'
-import getNestedObject from '../functions/getNestedObject'
-
+import * as mutations from '../customGraphQL/mutations.js'
 
 
 const coerceInput = (input) => input.constructor === Array ? input
@@ -214,8 +212,8 @@ export const useListData = ({
     gqlFetcher,
     swrOptions
   )
-  // const _data = data?.data[queryName].items ?? undefined
-  const _data = getNestedObject(data, ['data', queryName, 'items'])
+  const _data = data?.data?.[queryName]?.items ?? undefined
+  // const _data = getNestedObject(data, ['data', queryName, 'items'])
 
   if (_data && _data.length === LIMIT) {
     console.warn("WARNING: item limit reached")

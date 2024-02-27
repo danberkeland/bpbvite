@@ -3,7 +3,7 @@ import { listDoughComponentBackups, listDoughBackups } from "../../../../graphql
 
 import { API, graphqlOperation } from "aws-amplify";
 
-import { sortAtoZDataByIndex } from "../../../../helpers/sortDataHelpers";
+import { sortAtoZDataByIndex } from "../../../../utils/_deprecated/utils";
 const clonedeep = require("lodash.clonedeep");
 
 export const getCompList = (comp, doughComponents, selectedDough) => {

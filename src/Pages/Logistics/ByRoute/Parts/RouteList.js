@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 // import { ScrollPanel } from "primereact/scrollpanel";
-import { sortAtoZDataByIndex } from "../../../../helpers/sortDataHelpers";
+import { sortAtoZDataByIndex } from "../../../../utils/_deprecated/utils";
 
 // const ListWrapper = styled.div`
 //   font-family: "Montserrat", sans-serif;
