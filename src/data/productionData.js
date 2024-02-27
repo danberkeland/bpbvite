@@ -17,10 +17,19 @@ import {
   calculateValidRoutes_test
 } from "../functions/routeFunctions/assignDelivRoute"
 
-import { getDuplicates } from "../functions/detectDuplicates"
 import { useListData } from "./_listData"
 import { groupBy, sortBy } from "lodash"
 
+const groupByNAtts = (data, keyAtts) => groupBy(
+  data,
+  item => keyAtts.map(att => String(item[att])).join("#")
+)
+
+const getDuplicates = (objectArray, keyAtts) => {
+  const buckets = groupByNAtts(objectArray, keyAtts)
+  return Object.values(buckets).filter(group => group.length > 1)
+
+}
 
 const LIMIT = 5000
 
