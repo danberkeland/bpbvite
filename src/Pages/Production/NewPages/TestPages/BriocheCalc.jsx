@@ -1,7 +1,7 @@
 import gqlFetcher from "../../../../data/_fetchers"
 
 import useSWR from 'swr'
-import { getProduct } from "../../../../customGraphQL/queries/_getQueries"
+import { getProduct } from "../../../../graphqlCustom/queries/_getQueries"
 import { DateTime } from "luxon"
 import { useMemo } from "react"
 import { flatten, groupBy, mapValues, orderBy, round, set, sumBy } from "lodash"

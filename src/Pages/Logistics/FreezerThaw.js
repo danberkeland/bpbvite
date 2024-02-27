@@ -13,7 +13,7 @@ import styled from "styled-components";
 
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
-import { checkForUpdates } from "../../helpers/databaseFetchers";
+import { checkForUpdates } from "../../core/checkForUpdates";
 
 const WholeBox = styled.div`
   display: flex;
@@ -26,8 +26,8 @@ const WholeBox = styled.div`
 const compose = new ComposeFreezerThaw();
 
 function FreezerThaw() {
-  const [freezerThaw, setFreezerThaw] = useState([]);
-  const [allProds, setAllProds] = useState([]);
+  const [freezerThaw, setFreezerThaw] = useState([]); console.log("freezerThaw", freezerThaw)
+  const [allProds, setAllProds] = useState([]); console.log("allProds", allProds)
 
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
   const ordersHasBeenChanged = useSettingsStore(
@@ -53,10 +53,10 @@ function FreezerThaw() {
   }, [database]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const gatherFreezerThaw = (database) => {
-    let freezerThawData = compose.returnFreezerThaw(database);
+    let { freezerThaw, allProds } = compose.returnFreezerThaw(database);
 
-    setFreezerThaw(freezerThawData.allProds[0]);
-    setAllProds(freezerThawData.allProds[1]);
+    setFreezerThaw(freezerThaw);
+    setAllProds(allProds);
   };
 
   const calcTotal = (e) => {

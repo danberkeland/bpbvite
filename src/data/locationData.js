@@ -1,15 +1,12 @@
+// MARKED FOR DEPRECATION
+
 import useSWR, { mutate } from "swr"
 import { defaultSwrOptions } from "./_constants"
 
 import { useMemo } from "react"
 
-// import dynamicSort from "../functions/dynamicSort"
-import getNestedObject from "../functions/getNestedObject"
-
 import gqlFetcher from "./_fetchers"
 
-// import * as queries from "../customGraphQL/queries/locationQueries.mjs"
-// import * as mutations from "../customGraphQL/mutations/locationMutations"
 
 import * as yup from "yup"
 import { sortBy } from "lodash"

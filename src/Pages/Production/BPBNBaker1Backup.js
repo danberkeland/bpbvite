@@ -7,7 +7,7 @@ import ToolBar from "../Production/BPBNBaker1Parts/Toolbar";
 
 import { convertDatetoBPBDate } from "../../utils/_deprecated/convertDatetoBPBDate.js";
 import { todayPlus } from "../../utils/_deprecated/todayPlus.js";
-import { checkForUpdates } from "../../helpers/databaseFetchers";
+import { checkForUpdates } from "../../core/checkForUpdates";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
 
 import ComposeWhatToBake from "./Utils/composeWhatToBake";

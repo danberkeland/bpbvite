@@ -1,16 +1,16 @@
+// MARKED FOR DEPRECATION
+
 import useSWR, { mutate } from "swr"
 import { defaultSwrOptions } from "./_constants"
 
 import { useMemo } from "react"
 
 import dynamicSort from "../functions/dynamicSort"
-import getNestedObject from "../functions/getNestedObject"
 
 import gqlFetcher from "./_fetchers"
 
 // import * as mutations from "../customGraphQL/mutations/productMutations"
 
-import { useLocationDetails } from "./locationData"
 import { sortBy } from "lodash"
 
 // import * as yup from "yup"
@@ -274,7 +274,6 @@ export const useProductListSimple = (shouldFetch) => {
 
   const transformData = () => {
     if (!data) return undefined
-    // return getNestedObject(data, ['data', 'listProducts', 'items']).sort(dynamicSort("locName"))
     return data?.data?.listProducts?.items?.sort(dynamicSort("locName"))
   }
   const _data = useMemo(transformData, [data])

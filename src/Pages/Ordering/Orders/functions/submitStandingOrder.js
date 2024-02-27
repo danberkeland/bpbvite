@@ -1,5 +1,5 @@
 import { groupBy } from "lodash"
-import { orderByLocByDelivDate } from "../../../../customGraphQL/queries/_listQueries"
+import { orderByLocByDelivDate } from "../../../../graphqlCustom/queries/_listQueries"
 import gqlFetcher, { APIGatewayFetcher } from "../../../../data/_fetchers"
 import { getTimeToLive } from "../../../../functions/dateAndTime"
 

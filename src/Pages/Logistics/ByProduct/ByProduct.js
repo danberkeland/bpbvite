@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import styled from "styled-components";
 
@@ -6,8 +6,8 @@ import ProductGrid from "../ByProduct/Parts/ProductGrid";
 import ToolBar from "../ByProduct/Parts/ToolBar";
 import { todayPlus } from "../../../helpers/dateTimeHelpers";
 
-import ComposeProductGrid from "../ByRoute/Parts/utils/composeProductGrid"
-import { useSettingsStore } from "../../../Contexts/SettingsZustand";
+import ComposeProductGrid from "./composeProductGrid"
+// import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 import { useLegacyFormatDatabase } from "../../../data/legacyData";
 
 const MainWrapper = styled.div`
@@ -35,7 +35,7 @@ function ByProduct() {
   const [orderList, setOrderList] = useState();
   const [database, setDatabase] = useState();
 
-  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
+  // const setIsLoading = useSettingsStore((state) => state.setIsLoading);
   const { data: db } = useLegacyFormatDatabase();
 
   useEffect(() => {

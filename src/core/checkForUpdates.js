@@ -1,6 +1,6 @@
 import { API, graphqlOperation } from "aws-amplify";
 
-import { createOrder } from "../customGraphQL/mutations"
+import { createOrder } from "../graphqlCustom/mutations"
 import { updateProduct, updateDoughBackup } from "../graphql/mutations";
 
 import ComposeNorthList from "../Pages/Logistics/utils/composeNorthList";

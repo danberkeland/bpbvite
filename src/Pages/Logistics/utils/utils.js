@@ -16,47 +16,7 @@ export const addProdAttr = (fullOrder, database) => {
   return fullToFix;
 };
 
-export const addRetailBagQty = (
-  make,
-  fullOrders,
-  fullOrdersTomorrow,
-  products,
-  routes
-) => {
-  make.qty = 0;
 
-  let qtyAccToday = 0;
-
-  let qtyToday = fullOrders
-    .filter((full) => make.prodName === full.prodName)
-    .map((ord) => ord.qty);
-
-  if (qtyToday.length > 0) {
-    qtyAccToday = qtyToday.reduce(addUp);
-  }
-  make.qty = qtyAccToday;
-};
-
-export const addRetailBagQtyTomorrow = (
-  make,
-  fullOrders,
-  fullOrdersTomorrow,
-  products,
-  routes
-) => {
-  make.tomQty = 0;
-
-  let qtyAccToday = 0;
-
-  let qtyToday = fullOrders
-    .filter((full) => make.prodName === full.prodName)
-    .map((ord) => ord.qty);
-
-  if (qtyToday.length > 0) {
-    qtyAccToday = qtyToday.reduce(addUp);
-  }
-  make.tomQty = qtyAccToday;
-};
 
 const update = (order, database) => {
   const [products, customers, routes, standing, orders] = database;

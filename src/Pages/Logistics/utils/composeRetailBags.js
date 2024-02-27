@@ -1,54 +1,24 @@
-import { todayPlus } from "../../../helpers/dateTimeHelpers";
-import { getFullOrders } from "../../../helpers/CartBuildingHelpers";
-import { addProdAttr, addRetailBagQty, addRetailBagQtyTomorrow } from "./utils";
-
-let tomorrow = todayPlus()[1];
-let today = todayPlus()[0];
-
-const makeRetailBags = (products, filt) => {
-  let make = Array.from(
-    new Set(products.filter((prod) => filt(prod)).map((prod) => prod.prodName))
-  ).map((make) => ({
-    prodName: make,
-    qty: 0,
-    tomQty: 0,
-  }));
-  return make;
-};
-
-const getRetailBags = (delivDate, database) => {
-  let fullOrder = getFullOrders(delivDate, database);
-  fullOrder = addProdAttr(fullOrder, database); // adds forBake, packSize, currentStock
-  return fullOrder;
-};
+import { DT } from "../../../utils/dateTimeFns";
+import { getOrdersList } from "../../../core/production/getOrdersList";
+import { sumBy } from "../../../utils/collectionFns/sumBy";
 
 export default class ComposeRetailBags {
   returnRetailBags = (database) => {
-    let retailBags = this.getRetailBags(database);
+    const todayDT = DT.today()
+    const T0 = todayDT.plus({ days: 0 }).toFormat('yyyy-MM-dd')
+    const T1 = todayDT.plus({ days: 1 }).toFormat('yyyy-MM-dd')
 
-    // [freshProds, shelfProds] = handleFrenchConundrum(freshProds, shelfProds);
+    const retailProducts = database[0].filter(P => P.packGroup === "retail")
+    const T0RetailOrders = getOrdersList(T0, database).filter(order => order.packGroup === "retail")
+    const T1RetailOrders = getOrdersList(T1, database).filter(order => order.packGroup === "retail")
 
-    return {
-      retailBags: retailBags,
-    };
-  };
+    const retailBags = retailProducts.map(P => ({
+      prodName: P.prodName,
+      qty:    sumBy(T0RetailOrders.filter(order => order.prodNick === P.nickName), order => order.qty * order.packSize),
+      tomQty: sumBy(T1RetailOrders.filter(order => order.prodNick === P.nickName), order => order.qty * order.packSize),
+    }))
 
-  getRetailBags(database) {
-    const [products, customers, routes, standing, orders] = database;
-    let retailBags = makeRetailBags(products, this.retailBagsFilter);
-    let fullOrdersToday = getRetailBags(today, database);
-    let fullOrdersTomorrow = getRetailBags(tomorrow, database);
-    for (let ret of retailBags) {
-      addRetailBagQty(ret, fullOrdersToday);
-      addRetailBagQtyTomorrow(ret, fullOrdersTomorrow);
-    }
-    console.log("retail", retailBags);
+    return { retailBags }
 
-    return retailBags;
   }
-
-  retailBagsFilter = (prod) => {
-    let fil = prod.packGroup === "retail";
-    return fil;
-  };
 }

@@ -1,3 +1,5 @@
+// MARKED FOR DEPRECATION
+
 import { useMemo } from "react"
  
 import useSWR from "swr"
@@ -1181,8 +1183,8 @@ export const useCalculateRoutesByLocation = (locNick, shouldFetch, useTest=false
 }
 
 const pickupLocationDict = {
-  "slopick" : { locNick: "slopick", latestFirstDeliv: 5, latestFinalDeliv: 12, zoneRoutes: ['Pick up SLO']},
-  "atownpick" :  { locNick: "atownpick", latestFirstDeliv: 5, latestFinalDeliv: 12, zoneRoutes: ['Pick up Carlton']}
+  "slopick":    { locNick: "slopick", latestFirstDeliv: 5, latestFinalDeliv: 12, zoneRoutes: ['Pick up SLO']},
+  "atownpick":  { locNick: "atownpick", latestFirstDeliv: 5, latestFinalDeliv: 12, zoneRoutes: ['Pick up Carlton']}
 }
 
 

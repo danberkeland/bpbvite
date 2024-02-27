@@ -1,82 +1,14 @@
-import {
-  createColumns,
-  zerosDelivFilter,
-  buildGridOrderArray,
-} from "../../../helpers/delivGridHelpers";
-
-import { getFullOrders } from "../../../helpers/CartBuildingHelpers";
-
-import { sortZtoADataByIndex } from "../../../utils/_deprecated/utils";
-import {
-  calcDayNum,
-  routeRunsThatDay,
-  productCanBeInPlace,
-  productReadyBeforeRouteStarts,
-  customerIsOpen,
-} from "../ByRoute/Parts/utils/utils";
+import { createColumns } from "../../../helpers/delivGridHelpers";
 import { tablePivot, tablePivotFlatten } from "../../../utils/tablePivot";
 import { sumBy } from "../../../utils/collectionFns/sumBy";
 import { compareBy } from "../../../utils/collectionFns/compareBy";
+import { getOrdersList } from "../../../core/production/getOrdersList";
    
-const addRoutes = (delivDate, prodGrid, database) => {
-  const [products, customers, routes, standing, orders] = database;
-  sortZtoADataByIndex(routes, "routeStart");
-  for (let rte of routes) {
-    for (let grd of prodGrid) {
-      let dayNum = calcDayNum(delivDate);
 
-      if (!rte["RouteServe"].includes(grd["zone"])) {
-        continue;
-      } else {
-        if (
-          routeRunsThatDay(rte, dayNum) &&
-          productCanBeInPlace(grd, routes, customers, rte) &&
-          productReadyBeforeRouteStarts(
-            products,
-            customers,
-            routes,
-            grd,
-            rte
-          ) &&
-          customerIsOpen(customers, grd, routes, rte)
-        ) {
-          grd.route = rte.routeName;
-          grd.routeDepart = rte.RouteDepart;
-          grd.routeStart = rte.routeStart;
-          grd.routeServe = rte.RouteServe;
-          grd.routeArrive = rte.RouteArrive;
-        }
-      }
-    }
-  }
-  for (let grd of prodGrid) {
-    if (grd.zone === "slopick" || grd.zone === "Prado Retail") {
-      grd.route = "Pick up SLO";
-    }
-    if (grd.zone === "atownpick" || grd.zone === "Carlton Retail") {
-      grd.route = "Pick up Carlton";
-    }
-    if (grd.route === "slopick" || grd.route === "Prado Retail") {
-      grd.route = "Pick up SLO";
-    }
-    if (grd.route === "atownpick" || grd.route === "Carlton Retail") {
-      grd.route = "Pick up Carlton";
-    }
-    if (grd.route === "deliv") {
-      grd.route = "NOT ASSIGNED";
-    }
-  }
-
-  return prodGrid;
-};
   
 const makePivotTableAndColumns = (delivDate, database, filter) => {
-  let fullOrder 
-  fullOrder = getFullOrders(delivDate, database);
-  fullOrder = zerosDelivFilter(fullOrder, delivDate, database);
-  fullOrder = buildGridOrderArray(fullOrder, database);
-  fullOrder = addRoutes(delivDate, fullOrder, database);
-  fullOrder = fullOrder.filter(filter)
+
+  let fullOrder = getOrdersList(delivDate, database).filter(filter)
 
   const pivotTable = tablePivot(
     fullOrder,
@@ -104,6 +36,8 @@ const makePivotTableAndColumns = (delivDate, database, filter) => {
 
   return [flattenedTable, columnTemplate]
 }
+
+
 
 export default class ComposeAMPastry {
   returnAMPastryBreakDown = (delivDate, database) => {

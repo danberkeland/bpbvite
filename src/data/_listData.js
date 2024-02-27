@@ -15,8 +15,8 @@
 import useSWR from 'swr'
 import gqlFetcher, { gqlFetcherNoAwait } from './_fetchers'
 import { defaultSwrOptions, LIMIT, LIST_TABLES, TABLE_PKS } from './_constants'
-import * as listQueries from '../customGraphQL/queries/_listQueries'
-import * as mutations from '../customGraphQL/mutations.js'
+import * as listQueries from '../graphqlCustom/queries/_listQueries.js'
+import * as mutations from '../graphqlCustom/mutations.js'
 
 
 const coerceInput = (input) => input.constructor === Array ? input

@@ -16,7 +16,7 @@ import "jspdf-autotable";
 
 
 
-import { checkForUpdates } from "../../helpers/databaseFetchers";
+import { checkForUpdates } from "../../core/checkForUpdates";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
