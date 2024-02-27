@@ -20,7 +20,7 @@ import {
 } from "./data/orderHooks"
 
 import { DateTime, Interval } from "luxon"
-import { useWindowSizeDetector } from "../../../functions/detectWindowSize"
+import { useWindowSize } from "../../../utils/useWindowSize"
 import { getWorkingDateTime } from "../../../functions/dateAndTime"
 import { useLocationDetails } from "./data/locationHooks"
 // import { debounce } from "lodash"
@@ -65,7 +65,7 @@ const standingBlacklist = ['high', 'hios', 'sandos']
 // Component
 // *****************************************************************************
 export const Orders = ({ useTestAuth }) => {
-  const windowSize = useWindowSizeDetector()
+  const windowSize = useWindowSize()
   const wSize = windowSize.width >= 750 ? 'lg'
     : windowSize.width >= 440 ? 'md'
     : 'sm'

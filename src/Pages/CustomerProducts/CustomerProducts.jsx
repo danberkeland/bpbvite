@@ -3,7 +3,7 @@ import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { useCustomizedProducts } from "../Ordering/Orders/data/productHooks";
 import { Column } from "primereact/column";
 import { flattenDeep, maxBy, minBy, sortBy, uniqBy } from "lodash";
-import { useWindowSizeDetector } from "../../functions/detectWindowSize";
+import { useWindowSize } from "../../utils/useWindowSize";
 
 const USDollar = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -25,7 +25,7 @@ export const CustomerProducts = () => {
     locNick: useSettingsStore(state => state.currentLoc),
   }
 
-  const windowSize = useWindowSizeDetector()
+  const windowSize = useWindowSize()
 
   const { data:PRD } = useCustomizedProducts({ 
     locNick: user.locNick, 
