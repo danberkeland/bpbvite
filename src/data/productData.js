@@ -341,7 +341,7 @@ export const revalidateProductListFull = () => {
 
 //   const transformData = () => {
 //     if (!data) return undefined
-//     return getNestedObject(data, ['data', 'listProducts', 'items']).sort(dynamicSort("locName"))
+//     return getNestedObjec_t(data, ['data', 'listProducts', 'items']).sort(dynamicSort("locName"))
 //   }
 //   const _data = useMemo(transformData, [data])
 
@@ -378,7 +378,7 @@ export const revalidateProductListFull = () => {
 //     defaultSwrOptions
 //   )
   
-//   const _data = getNestedObject(data, ['data', 'getProduct'])
+//   const _data = getNestedObjec_t(data, ['data', 'getProduct'])
 
 //   return({ 
 //     data: _data,

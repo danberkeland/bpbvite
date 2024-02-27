@@ -213,7 +213,6 @@ export const useListData = ({
     swrOptions
   )
   const _data = data?.data?.[queryName]?.items ?? undefined
-  // const _data = getNestedObject(data, ['data', queryName, 'items'])
 
   if (_data && _data.length === LIMIT) {
     console.warn("WARNING: item limit reached")

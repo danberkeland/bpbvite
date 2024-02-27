@@ -368,11 +368,11 @@ export const revalidateLocationListFull = () => {
 //     defaultSwrOptions
 //   )
   
-//   const _data = getNestedObject(data, ['data', 'getLocation'])
-//   const _templateProds = getNestedObject(data, ['data', 'getLocation', 'templateProd', 'items'])
-//   const _prodsNotAllowed = getNestedObject(data, ['data', 'getLocation', 'prodsNotAllowed', 'items'])
-//   const _altPrices = getNestedObject(data, ['data', 'getLocation', 'customProd', 'items'])
-//   const _altLeadTimes = getNestedObject(data, ['data', 'getLocation', 'altLeadTimeByProduct', 'items'])
+//   const _data = getNestedObjec_t(data, ['data', 'getLocation'])
+//   const _templateProds = getNestedObjec_t(data, ['data', 'getLocation', 'templateProd', 'items'])
+//   const _prodsNotAllowed = getNestedObjec_t(data, ['data', 'getLocation', 'prodsNotAllowed', 'items'])
+//   const _altPrices = getNestedObjec_t(data, ['data', 'getLocation', 'customProd', 'items'])
+//   const _altLeadTimes = getNestedObjec_t(data, ['data', 'getLocation', 'altLeadTimeByProduct', 'items'])
 
 //   return({ 
 //     data: _data,
