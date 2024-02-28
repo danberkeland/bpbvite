@@ -15,7 +15,7 @@ import ComposeNorthList from "./utils/composeNorthList";
 import styled from "styled-components";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
-import { checkForUpdates } from "../../helpers/databaseFetchers";
+import { checkForUpdates } from "../../core/checkForUpdates";
 import { API, graphqlOperation } from "aws-amplify";
 import { listNotes } from "../../graphql/queries";
 import { DateTime } from "luxon";

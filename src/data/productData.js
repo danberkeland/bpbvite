@@ -1,16 +1,16 @@
+// MARKED FOR DEPRECATION
+
 import useSWR, { mutate } from "swr"
 import { defaultSwrOptions } from "./_constants"
 
 import { useMemo } from "react"
 
-import dynamicSort from "../functions/dynamicSort"
-import getNestedObject from "../functions/getNestedObject"
+// import dynamicSor_t from "../functions/dynamicSor_t"
 
 import gqlFetcher from "./_fetchers"
 
 // import * as mutations from "../customGraphQL/mutations/productMutations"
 
-import { useLocationDetails } from "./locationData"
 import { sortBy } from "lodash"
 
 // import * as yup from "yup"
@@ -274,8 +274,7 @@ export const useProductListSimple = (shouldFetch) => {
 
   const transformData = () => {
     if (!data) return undefined
-    // return getNestedObject(data, ['data', 'listProducts', 'items']).sort(dynamicSort("locName"))
-    return data?.data?.listProducts?.items?.sort(dynamicSort("locName"))
+    return sortBy(data.data.listProducts.items, ['prodName'])
   }
   const _data = useMemo(transformData, [data])
 
@@ -342,7 +341,7 @@ export const revalidateProductListFull = () => {
 
 //   const transformData = () => {
 //     if (!data) return undefined
-//     return getNestedObject(data, ['data', 'listProducts', 'items']).sort(dynamicSort("locName"))
+//     return getNestedObjec_t(data, ['data', 'listProducts', 'items']).sort(dynamicSor_t("locName"))
 //   }
 //   const _data = useMemo(transformData, [data])
 
@@ -379,7 +378,7 @@ export const revalidateProductListFull = () => {
 //     defaultSwrOptions
 //   )
   
-//   const _data = getNestedObject(data, ['data', 'getProduct'])
+//   const _data = getNestedObjec_t(data, ['data', 'getProduct'])
 
 //   return({ 
 //     data: _data,
@@ -441,7 +440,7 @@ export const revalidateProductListFull = () => {
 //       return { ...item, templateProd: (favorite ? favorite.id : null)}
 
 //     }).sort(
-//       dynamicSort("prodName")
+//       dynamicSor_t("prodName")
 
 //     ).sort( (a, b) => {
 //       let _a = a.templateProd !== null ? 0 : 1

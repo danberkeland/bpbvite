@@ -13,7 +13,7 @@ import { convertDatetoBPBDate, todayPlus } from "../../helpers/dateTimeHelpers";
 import { updateProduct } from "../../graphql/mutations";
 
 
-import { checkForUpdates } from "../../helpers/databaseFetchers";
+import { checkForUpdates } from "../../core/checkForUpdates";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 

@@ -15,7 +15,7 @@ import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 import { useOrderReportByDate } from "../../../../../data/productionData"
 import { getRouteOptions } from "../../../../Ordering/Orders/data/productHooks"
-import { useWindowSizeDetector } from "../../../../../functions/detectWindowSize"
+import { useWindowSize } from "../../../../../utils/useWindowSize"
 
 const prodNicks = ['pz', 'unpz', 'lgpz', 'pzsl']
 // const qtyPlaceholders = Object.fromEntries(prodNicks.map(pn => [pn, 0]))
@@ -230,7 +230,7 @@ const usePackData = () => {
 
 const SpecialPacking = () => {
   const { data } = usePackData()
-  const windowSize = useWindowSizeDetector()
+  const windowSize = useWindowSize()
 
   if (!data) return <div>Loading...</div>
   console.log(data)

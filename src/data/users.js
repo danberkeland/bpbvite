@@ -1,3 +1,5 @@
+// MARKED FOR DEPRECATION
+
 import useSWR from "swr"
 import { defaultSwrOptions } from "./_constants"
 

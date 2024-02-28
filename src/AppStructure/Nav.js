@@ -4,21 +4,6 @@ import { useSettingsStore } from "../Contexts/SettingsZustand";
 import { PanelMenu } from "primereact/panelmenu";
 
 import { DateTime } from "luxon";
-// import { motion } from "framer-motion";
-
-// import { TabMenu } from "primereact/tabmenu";
-// import { authSignOut } from "./Auth/AuthHelpers";
-
-// const itemsAuth4min = [
-//   { icon: "pi pi-fw pi-home", command: () => { window.location = "/" } },
-//   { icon: "pi pi-fw pi-shopping-cart", command: () => { window.location = "/Ordering"},},
-//   { icon: "pi pi-fw pi-tags", command: () => {window.location = "/CustomerOrdering"}, },
-//   { label: "More", icon: "pi pi-fw pi-bars", command: () => {window.location = "/"}, },
-// ];
-
-// const onlyHome = [
-//   { icon: "pi pi-fw pi-home", command: () => { window.location = "/" }, }
-// ];
 
 export function NavSide() {
   const user = useSettingsStore((state) => state.user);

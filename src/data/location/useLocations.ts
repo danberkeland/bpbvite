@@ -1,7 +1,7 @@
 import useSWR from "swr"
 import gqlFetcher from "../_fetchers.js"
 import { defaultSwrOptions } from "../_constants.js"
-import { getLocation } from "../../customGraphQL/queries/_getQueries.js"
+import { getLocation } from "../../graphqlCustom/queries/_getQueries.js"
 import { useListData } from "../_listData.js"
 import { DBLocation } from "../types.d.js"
 import { GraphQLResult } from '@aws-amplify/api-graphql'

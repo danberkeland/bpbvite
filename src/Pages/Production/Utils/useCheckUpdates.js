@@ -4,7 +4,7 @@ import { DateTime } from "luxon";
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 import { useListData } from "../../../data/_listData";
 import { useLegacyFormatDatabase } from "../../../data/legacyData";
-import { checkForUpdates } from "../../../helpers/databaseFetchers";
+import { checkForUpdates } from "../../../core/checkForUpdates";
 import { useState, useEffect } from "react";
 
 

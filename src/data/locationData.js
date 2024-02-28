@@ -1,15 +1,12 @@
+// MARKED FOR DEPRECATION
+
 import useSWR, { mutate } from "swr"
 import { defaultSwrOptions } from "./_constants"
 
 import { useMemo } from "react"
 
-// import dynamicSort from "../functions/dynamicSort"
-import getNestedObject from "../functions/getNestedObject"
-
 import gqlFetcher from "./_fetchers"
 
-// import * as queries from "../customGraphQL/queries/locationQueries.mjs"
-// import * as mutations from "../customGraphQL/mutations/locationMutations"
 
 import * as yup from "yup"
 import { sortBy } from "lodash"
@@ -371,11 +368,11 @@ export const revalidateLocationListFull = () => {
 //     defaultSwrOptions
 //   )
   
-//   const _data = getNestedObject(data, ['data', 'getLocation'])
-//   const _templateProds = getNestedObject(data, ['data', 'getLocation', 'templateProd', 'items'])
-//   const _prodsNotAllowed = getNestedObject(data, ['data', 'getLocation', 'prodsNotAllowed', 'items'])
-//   const _altPrices = getNestedObject(data, ['data', 'getLocation', 'customProd', 'items'])
-//   const _altLeadTimes = getNestedObject(data, ['data', 'getLocation', 'altLeadTimeByProduct', 'items'])
+//   const _data = getNestedObjec_t(data, ['data', 'getLocation'])
+//   const _templateProds = getNestedObjec_t(data, ['data', 'getLocation', 'templateProd', 'items'])
+//   const _prodsNotAllowed = getNestedObjec_t(data, ['data', 'getLocation', 'prodsNotAllowed', 'items'])
+//   const _altPrices = getNestedObjec_t(data, ['data', 'getLocation', 'customProd', 'items'])
+//   const _altLeadTimes = getNestedObjec_t(data, ['data', 'getLocation', 'altLeadTimeByProduct', 'items'])
 
 //   return({ 
 //     data: _data,

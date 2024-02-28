@@ -12,7 +12,6 @@ import "./index.css";
 import "./bpbTheme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
-// import { checkUser } from "./AppStructure/Auth/AuthHelpers";
 
 
 Amplify.configure(awsmobile);

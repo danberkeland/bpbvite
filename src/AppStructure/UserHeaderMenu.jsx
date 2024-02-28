@@ -4,12 +4,10 @@ import { Button } from "primereact/button";
 import { Menu } from "primereact/menu";
 
 import { useSettingsStore } from "../Contexts/SettingsZustand";
-// import { authSignOut } from "./Auth/AuthHelpers";
 
 import { useUserDetails } from "../data/users";
 
 export const UserHeaderMenu = ({ signOut }) => {
-  // const settings = useSettingsStore()
   const user = {
     name: useSettingsStore((state) => state.user),
     authClass: useSettingsStore((state) => state.authClass),

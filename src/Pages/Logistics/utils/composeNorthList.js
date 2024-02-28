@@ -3,95 +3,27 @@ import {
   tomBasedOnDelivDate,
 } from "../../../helpers/dateTimeHelpers";
 
-import {
-  createColumns,
-  zerosDelivFilter,
-  buildGridOrderArray,
-} from "../../../helpers/delivGridHelpers";
-
-import { getFullOrders } from "../../../helpers/CartBuildingHelpers";
-
-import {
-  calcDayNum,
-  routeRunsThatDay,
-  productCanBeInPlace,
-  productReadyBeforeRouteStarts,
-  customerIsOpen,
-} from "../ByRoute/Parts/utils/utils";
+import { createColumns } from "../../../helpers/delivGridHelpers";
 
 import { sumBy } from "../../../utils/collectionFns/sumBy";
 import { objProject } from "../../../utils/objectFns/objProject";
 import { compareBy } from "../../../utils/collectionFns/compareBy";
 import { tablePivot, tablePivotFlatten } from "../../../utils/tablePivot";
+// import { addRoutes } from "../../../core/logistics/addRoutes";
+import { getOrdersList as _getOrdersList } from "../../../core/production/getOrdersList";
   
-const addRoutes = (delivDate, prodGrid, database) => {
-  const [products, customers, routes] = database;
-  const sortedRoutes = routes.sort(compareBy(R => R.routeStart, 'desc'))
-  
-  for (let rte of sortedRoutes) {
-    for (let grd of prodGrid) {
-      let dayNum = calcDayNum(delivDate);
-
-      if (!rte["RouteServe"].includes(grd["zone"])) {
-        continue;
-      } else {
-        if (
-          routeRunsThatDay(rte, dayNum) &&
-          productCanBeInPlace(grd, routes, customers, rte) &&
-          productReadyBeforeRouteStarts(
-            products,
-            customers,
-            routes,
-            grd,
-            rte
-          ) &&
-          customerIsOpen(customers, grd, routes, rte)
-        ) {
-          grd.route = rte.routeName;
-          grd.routeDepart = rte.RouteDepart;
-          grd.routeStart = rte.routeStart;
-          grd.routeServe = rte.RouteServe;
-          grd.routeArrive = rte.RouteArrive;
-        }
-      }
-    }
-  }
-  for (let grd of prodGrid) {
-    if (grd.zone === "slopick" || grd.zone === "Prado Retail") {
-      grd.route = "Pick up SLO";
-    }
-    if (grd.zone === "atownpick" || grd.zone === "Carlton Retail") {
-      grd.route = "Pick up Carlton";
-    }
-    if (grd.route === "slopick" || grd.route === "Prado Retail") {
-      grd.route = "Pick up SLO";
-    }
-    if (grd.route === "atownpick" || grd.route === "Carlton Retail") {
-      grd.route = "Pick up Carlton";
-    }
-    if (grd.route === "deliv") {
-      grd.route = "NOT ASSIGNED";
-    }
-  }
-
-  return prodGrid;
-};
-  
-const getOrdersList = (delivDate, database) => {
+// New add routes fn might as well include driver attribute...
+const getOrdersList = (delivDate, database, includeHolding) => {
   const routes = database[2]
-  let fullOrder = getFullOrders(delivDate, database);
-  fullOrder = zerosDelivFilter(fullOrder, delivDate, database);
-  fullOrder = buildGridOrderArray(fullOrder, database);
-  fullOrder = addRoutes(delivDate, fullOrder, database);
-  fullOrder = fullOrder.map(order => {
+
+  return _getOrdersList(delivDate, database, includeHolding).map(order =>  {
     const driver = routes.find(R => R.routeName === order.route)?.driver ?? null
     return {
       ...order,
       driver
     }
   })
-  return fullOrder;
-};
+}
 
 /**
  * orderList should be pre-filtered. 

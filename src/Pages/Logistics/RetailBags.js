@@ -13,7 +13,7 @@ import ComposeRetailBags from "./utils/composeRetailBags";
 import styled from "styled-components";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
-import { checkForUpdates } from "../../helpers/databaseFetchers";
+import { checkForUpdates } from "../../core/checkForUpdates";
 
 const WholeBox = styled.div`
   display: flex;
@@ -42,6 +42,7 @@ const compose = new ComposeRetailBags();
 
 function RetailBags() {
   const [retailBags, setRetailBags] = useState();
+  if (!!retailBags) {console.log("RETAIL BAGS:", retailBags)}
 
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
   const ordersHasBeenChanged = useSettingsStore(
