@@ -39,10 +39,21 @@ const isExclusiveNorthProduct = (product) => product.bakedWhere.length === 1
 const isExclusiveSouthProduct = (product) => product.bakedWhere.length === 1
   && product.bakedWhere[0] === "Prado"
 
+/**
+ * retail brownies serve as a placeholder for cafe items shouldn't be 
+ * counted for setout. Differentiate between square retail orders & a potential
+ * special order for brownies by detecting the "__" which separates the
+ * (Square) purchaser's name from the id token string.
+ */
+const isRetailBrownie = (order) => 1
+  && order.isWhole === false
+  && order.locNick.includes("__")
+  && order.prodNick === 'brn'
+
 /**Can be baked at both locations */
 const isNonExclusiveProduct = (product) => product.bakedWhere.length > 1
 
-  
+
 
 // Main Hook ****************************************************************
 
@@ -240,14 +251,18 @@ export const useSetoutData = ({
     //   qty: HOLIDAYS.includes(order.delivDate.slice(5)) ? 0 : order.qty
     // }))
 
-    const T1OthersSouth = T1OtherPastryOrders.filter(order => 
-      isExclusiveSouthProduct(products[order.prodNick])
-      || (
-        isNonExclusiveProduct(products[order.prodNick])
-        && (
-          order.routeMeta.route.RouteDepart === "Prado"
+    const T1OthersSouth = T1OtherPastryOrders.filter(order => 0
+      || (1
+        && isExclusiveSouthProduct(products[order.prodNick])
+        && !isRetailBrownie(order)
+        )
+      || (1
+        && isNonExclusiveProduct(products[order.prodNick])
+        && (0
+          || order.routeMeta.route.RouteDepart === "Prado"
           || order.routeMeta.routeNick === "Pick up SLO"
         )
+
       )
     )
     const otherPastriesSouth = Object.values(
