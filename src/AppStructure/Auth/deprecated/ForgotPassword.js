@@ -6,7 +6,7 @@
 // import { Button } from "primereact/button";
 // import { Dialog } from "primereact/dialog";
 
-// import { resetPassword } from "../../restAPIs";
+// import { resetPasswor_d } from "./restAPI_s";
 // import { withFadeIn } from "../../hoc/withFadeIn";
 // import { withBPBForm } from "../../hoc/withBPBForm";
 // import { GroupBox } from "../../CommonStyles";

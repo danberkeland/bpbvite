@@ -1,18 +1,27 @@
 // import React, { useEffect, useState } from "react";
 // import { CustomInputs } from "../../FormComponents/CustomInputs";
 
+
 // import { validationSchema } from "./ValidationSchema";
 
 // import { Button } from "primereact/button";
 // import { Dialog } from "primereact/dialog";
 
-// import { submitAuth, sendForgottenPasswordEmail } from "../../restAPIs";
+// import { Auth } from "aws-amplify";
+// // import { submitAut_h, sendForgottenPasswordEmai_l } from "../../restAP_Is";
 // import { withFadeIn } from "../../hoc/withFadeIn";
 // import { withBPBForm } from "../../hoc/withBPBForm";
 // import { GroupBox, Title } from "../../CommonStyles";
 // import { compose } from "../../utils/_deprecated/utils";
 // import "./Splash.css";
 // import { useSettingsStore } from "../../Contexts/SettingsZustand";
+
+// const sendForgottenPasswordEmail = async (email) => {
+//   Auth.forgotPassword(email)
+//     .then((data) => console.log(data))
+//     .catch((err) => console.log(err));
+// }; 
+
 
 // const BPB = new CustomInputs();
 
