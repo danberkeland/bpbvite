@@ -21,16 +21,18 @@ const CUTOFF_TIME_HOURS = 20 // 8:00 pm
 
 /** Values: ['atownpick', 'slopick'] */
 /** 
- * @type {FulfillmentOption[]} 
+ * @type {readonly FulfillmentOption[]} 
  */
-const PICKUP_ZONES = ['atownpick', 'slopick']
+const PICKUP_ZONES = Object.freeze(['atownpick', 'slopick'])
 
 /** Values: ['Prado', 'Carlton'] */
-const HUBS = ['Prado', 'Carlton']
+const HUBS = Object.freeze(['Prado', 'Carlton'])
 
 
-const WEEKDAYS_EEE = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-const WEEKDAYS_NUM = [0, 1, 2, 3, 4, 5, 6]
+const WEEKDAYS_EEE = Object.freeze(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'])
+
+/**JS Date convention: Sun = 0; Sat = 6*/
+const WEEKDAYS_NUM = Object.freeze([0, 1, 2, 3, 4, 5, 6])
 
 export {
   PICKUP_ZONES,
