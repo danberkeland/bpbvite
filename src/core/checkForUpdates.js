@@ -1,17 +1,24 @@
 import { API, graphqlOperation } from "aws-amplify";
 
-import { createOrder } from "../graphqlCustom/mutations"
+import { createOrder } from "../graphqlCustom/mutations/mutations"
 import { updateProduct, updateDoughBackup } from "../graphql/mutations";
 
 import ComposeNorthList from "../Pages/Logistics/utils/composeNorthList";
 
-import { todayPlus } from "../helpers/dateTimeHelpers";
-import { getTimeToLive } from "../utils/dateAndTime/getTimeToLive"
-// import { groupBy, keyBy, filter, flow, mapValues, sumBy, uniqBy, sortBy, map, identity } from "lodash/fp";
+import { todayPlus } from "../utils/_deprecated/todayPlus";
+import { fetchSquareOrders, sqOrderToCreateOrderInput, sqOrderToLegacyOrder } from "../data/square/fetchSquareOrders";
+import { CreateOrderInput } from "../data/order/types.d";
+import { LegacyDatabase } from "../data/legacyData";
 
-const LOC_ID_BPBN = "16VS30T9E7CM9"
-const SQ_URL = "https://8eo1jrov6a.execute-api.us-east-2.amazonaws.com/done"
-
+/**
+ * 
+ * @param {LegacyDatabase} db 
+ * @param {boolean} ordersHasBeenChanged 
+ * @param {function} setOrdersHasBeenChanged 
+ * @param {string} delivDate 
+ * @param {function} setIsLoading 
+ * @returns 
+ */
 export const checkForUpdates = async (
   db,
   ordersHasBeenChanged,
@@ -123,7 +130,7 @@ export const checkForUpdates = async (
       
       })))
 
-      // mutate productsToUpdate item
+      // mutate productsToUpdate item to reflect expected DB changes
       product.updatePreDate = tomorrow
       product.preshaped     = product.prepreshaped
 
@@ -163,7 +170,7 @@ export const checkForUpdates = async (
         }))
       )
 
-      // mutate doughsToUpdate item
+      // mutate doughsToUpdate item to reflect expected DB changes
       dough.updatePreBucket = tomorrow
       dough.bucketSets      = dough.preBucketSets
 
@@ -186,68 +193,67 @@ export const checkForUpdates = async (
 
   // ***** Square/retail orders *****
 
-  const squareOrders = await fetch(SQ_URL).then(response => {
-    console.log("fetch sq:", response.status + (response.ok ? " ok" : ''))
-    return response.json()
+  const retailOrders = orders.filter(order => order.isWhole === false)
+  const squareOrders = await fetchSquareOrders()
+  console.log("SQ ORDERS:", squareOrders)
 
-  }).then(json => {
-    if (json?.errorMessage) {
-      console.warn(
-        "The ol' response 200 error:", 
-        json
+  /**
+   * The square order has been reformatted to align with type DBORrder
+   * 
+   * Lots of jank going on here. The square order is formatted for submitting
+   * to the new system DB, in the new format. The retails orders come from
+   * data fetched from the new system, but formatted back to the legacy format
+   * to work with all the old data functions.
+   * 
+   * This will clean up a lot if we can move away from using the legacy database.
+   * @param {CreateOrderInput} squareOrder 
+   * @returns 
+   */
+  const hasMatchInDb = squareOrder => {
+    const sqProdName = 
+      products.find(P => P.nickName = squareOrder.prodNick)?.prodName ?? "Brownie"
+
+    return retailOrders.some(dbOrder => 1
+      && squareOrder.locNick === dbOrder.custName // << this is a special case where the 'nick and 'name are equal; see sqOrderToCreateOrderInput
+      && (0
+        || dbOrder.prodName === sqProdName
+        || squareOrder.prodNick === "brn" && dbOrder.prodName === "Brownie"
       )
-      return []
-    } else return JSON.parse(json) // Yo dawg, I heard you like JSON
-
-  }).catch(error => 
-    console.error("Unhandled Error:", error)
-  )
-  
-  const sqOrderToDbOrder = (sqOrder, products) => {
-    const product = products.find(P => sqOrder.item.includes(P.squareID))
-    const delivDate = sqOrder.delivDate.split("T")[0]
-
-    return {
-      qty:       Number(sqOrder.qty),
-      delivDate,
-      locNick:   sqOrder.custName + "__" + sqOrder.id,
-      route:     sqOrder.location === LOC_ID_BPBN ? "atownpick" : "slopick",
-      isWhole:   false,
-      ItemNote:  "paid",
-      prodNick:  product?.prodNick ?? "brn",
-      ttl:       delivDate ? getTimeToLive(delivDate) : null,
-      updatedOn: new Date().toISOString(),
-      updatedBy: "bpb_admin",
-    }
+    )
 
   }
-
-  const retailOrders = orders.filter(order => order.isWhole === false)
-  const noMatchInDb = squareOrder => 
-    !retailOrders.some(dbOrder => 1
-      && squareOrder.locNick.includes(dbOrder.custName)
-      && (0
-        || dbOrder.prodName === squareOrder.prodName 
-        || dbOrder.prodName === "Brownie"
-      )
-  )
-
-  const squareInputs = squareOrders
-    .map(sqOrder => sqOrderToDbOrder(sqOrder, products))
-    .filter(reformattedOrder => noMatchInDb(reformattedOrder))
   
   let ordersToUpdate = structuredClone(orders)
   let squarePromises = []
 
-  for (let input of squareInputs) {
-    squarePromises.push(
-      API.graphql(graphqlOperation(createOrder, { input } ))
-    )
+  for (let sqOrder of squareOrders) {
 
-    // mutate ordersToUpdate
-    ordersToUpdate.push(input)
+    const sqCreateInput = sqOrderToCreateOrderInput(sqOrder, products)
+
+    if (!hasMatchInDb(sqCreateInput)) {
+      squarePromises.push(
+        API.graphql(graphqlOperation(createOrder, { input: sqCreateInput } ))
+      )
+
+      ordersToUpdate.push(sqOrderToLegacyOrder(sqOrder, products))
+    }
+
 
   }
+
+  // const squareInputs = squareOrders
+  //   .map(sqOrder => sqOrderToCreateOrderInput(sqOrder, products))
+  //   .filter(reformattedOrder => !hasMatchInDb(reformattedOrder))
+
+  // for (let input of squareInputs) {
+  //   squarePromises.push(
+  //     API.graphql(graphqlOperation(createOrder, { input } ))
+  //   )
+
+  //   // mutate ordersToUpdate to reflect expected DB changes
+  //   ordersToUpdate.push(input)
+
+  // }
 
   if (squarePromises.length) {
     await Promise.all(squarePromises).then(results => {
