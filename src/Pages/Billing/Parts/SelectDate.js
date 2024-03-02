@@ -7,18 +7,14 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 
 import styled from "styled-components";
 
-import {
-  convertDatetoBPBDate,
-  todayPlus,
-  // daysOfTheWeek,
-} from "../../../helpers/dateTimeHelpers";
+import { todayPlus, convertDatetoBPBDate } from "../../../utils/_deprecated/dateTimeHelpers";
 
 import {
   checkQBValidation,
   createQBInvoice,
   getQBInvIDandSyncToken,
   emailQBInvoice,
-} from "../../../helpers/QBHelpers";
+} from "../../../data/QBHelpers";
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 
 const { DateTime } = require("luxon");

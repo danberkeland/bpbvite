@@ -1,17 +1,17 @@
 import React, { useRef, useState } from "react";
-import { CustomInputs } from "../../../FormComponents/CustomInputs";
+import { CustomInputs } from "../../../components/FormComponents/CustomInputs";
 
 import { Button } from "primereact/button";
 import { confirmDialog } from "primereact/confirmdialog";
 import { OverlayPanel } from "primereact/overlaypanel";
 
-import { createLocationUser, deleteLocationUser } from "../../../restAPIs";
+import { createLocationUser, deleteLocationUser } from "../../../data/restAPIs";
 import { GroupBox, FlexSpaceBetween } from "../../../CommonStyles";
 
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 import { FieldArray } from "formik";
 import { Dropdown } from "primereact/dropdown";
-import { useSimpleCustomerList } from "../../../swr";
+import { useSimpleCustomerList } from "../../../data/user2/useUser2sLegacy";
 
 const BPB = new CustomInputs();
 

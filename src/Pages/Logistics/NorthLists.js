@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -8,7 +8,7 @@ import { Button } from "primereact/button";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
-import { convertDatetoBPBDate, todayPlus } from "../../helpers/dateTimeHelpers";
+import { convertDatetoBPBDate } from "../../utils/_deprecated/dateTimeHelpers";
 
 import ComposeNorthList from "./utils/composeNorthList";
 
@@ -16,11 +16,11 @@ import styled from "styled-components";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
 import { checkForUpdates } from "../../core/checkForUpdates";
-import { API, graphqlOperation } from "aws-amplify";
-import { listNotes } from "../../graphql/queries";
+// import { API, graphqlOperation } from "aws-amplify";
+// import { listNotes } from "../../graphql/queries";
 import { DateTime } from "luxon";
-import { Calendar } from "primereact/calendar";
-import { sumBy } from "../../utils/collectionFns/sumBy";
+// import { Calendar } from "primereact/calendar";
+// import { sumBy } from "../../utils/collectionFns/sumBy";
 import { useListData } from "../../data/_listData";
 
 const WholeBox = styled.div`

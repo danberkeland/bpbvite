@@ -1,4 +1,4 @@
-import { todayPlus } from '../../../helpers/dateTimeHelpers';
+import { todayPlus } from '../../../utils/_deprecated/dateTimeHelpers';
 import { getMixInfo } from './GetMixInfo'
 
 let tomorrow = todayPlus()[1]

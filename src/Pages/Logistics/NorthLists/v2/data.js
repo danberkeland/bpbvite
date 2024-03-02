@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useLocations } from "../../../../data/location/useLocations.ts";
+import { useLocations } from "../../../../data/location/useLocations";
 import { useProducts } from "../../../../data/product/useProducts";
 import { Data } from "../../../../utils/dataFns";
 import { DateTime } from "luxon";

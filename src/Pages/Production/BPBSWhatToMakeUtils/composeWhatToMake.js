@@ -1,11 +1,10 @@
 import {
-    convertDatetoBPBDate,
-    todayPlus,
-    tomBasedOnDelivDate,
-    TwodayBasedOnDelivDate,
-  } from "../../../helpers/dateTimeHelpers";
-import { getFullOrders } from "../../../helpers/CartBuildingHelpers";
-import { getFullProdOrders } from "../../../helpers/CartBuildingHelpers";
+  convertDatetoBPBDate,
+  todayPlus,
+  tomBasedOnDelivDate,
+  TwodayBasedOnDelivDate,
+} from "../../../utils/_deprecated/dateTimeHelpers";
+import { getFullOrders, getFullProdOrders } from "../../../core/production/getOrdersList";
 import {
   addProdAttr,
   addFresh,
@@ -14,8 +13,7 @@ import {
   addPretzel,
   addPocketsQty,
 } from "./utils";
-import { handleFrenchConundrum } from "./conundrums.js";
-// import { groupBy, mapValues } from "lodash";
+
 const { DateTime } = require("luxon");
 
 const PRODUCTS = 0
@@ -91,14 +89,7 @@ const ORDERS = 4
 
       let pretzels = this.#getPretzels(products, routes, delivDate, fullOrdersT0, fullOrdersT1, fullOrdersT2);
       let baguetteStuff = this.#getBaguetteStuff(database, delivDate);
-  
-      [freshProds, shelfProds] = handleFrenchConundrum(
-        freshProds,
-        shelfProds,
-        database,
-        delivDate
-      );
-  
+
       return {
         pocketsNorth: pocketsNorth,
         freshProds: freshProds,

@@ -1,21 +1,14 @@
 import React from "react";
-import { CustomInputs } from "../../../FormComponents/CustomInputs";
+import { CustomInputs } from "../../../components/FormComponents/CustomInputs";
 
 import { validationSchema } from "./ValidationSchema";
 
-// import { deleteLocation, updateLocation, createLocation } from "../../restAPIs";
-// import {
-//   createTraining,
-//   updateTraining,
-//   deleteTraining,
-// } from "../../../data/trainingData.mjs";
-import { withFadeIn } from "../../../hoc/withFadeIn";
-import { withBPBForm } from "../../../hoc/withBPBForm";
+import { withFadeIn } from "../../../components/hoc/withFadeIn";
+import { withBPBForm } from "../../../components/hoc/withBPBForm";
 import { GroupBox } from "../../../CommonStyles";
 import { compose } from "../../../utils/_deprecated/utils";
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 import { useListData } from "../../../data/_listData";
-// import { useSimpleZoneList } from "../../swr";
 import * as yup from "yup"
 
 const createTrainingSchema = yup.object().shape({

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import TrainingList from "./TrainingList";
 import TrainingDetails from "./TrainingDetails";
-import { withFadeIn } from "../../../hoc/withFadeIn";
+import { withFadeIn } from "../../../components/hoc/withFadeIn";
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 
 function ManageTraining() {

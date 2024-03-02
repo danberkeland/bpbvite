@@ -2,7 +2,7 @@ import React from "react";
 
 import { Calendar } from "primereact/calendar";
 
-import { convertDatetoBPBDate } from "../../../../helpers/dateTimeHelpers";
+import { convertDatetoBPBDate } from "../../../../utils/_deprecated/dateTimeHelpers";
 
 const { DateTime } = require("luxon");
 

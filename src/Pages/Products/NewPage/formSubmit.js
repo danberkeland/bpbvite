@@ -1,4 +1,4 @@
-import { checkQBValidation_v2 } from "../../../helpers/QBHelpers"
+import { checkQBValidation_v2 } from "../../../data/QBHelpers"
 
 import axios from "axios"
 import { truncate, isEqual, pickBy } from "lodash/fp"

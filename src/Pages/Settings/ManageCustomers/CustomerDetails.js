@@ -2,9 +2,9 @@ import React from "react";
 
 import { validationSchema } from "./ValidationSchema";
 
-import { deleteUser, updateUser, createUser } from "../../../restAPIs";
-import { withFadeIn } from "../../../hoc/withFadeIn";
-import { withBPBForm } from "../../../hoc/withBPBForm";
+import { deleteUser, updateUser, createUser } from "../../../data/restAPIs";
+import { withFadeIn } from "../../../components/hoc/withFadeIn";
+import { withBPBForm } from "../../../components/hoc/withBPBForm";
 
 import { compose } from "../../../utils/_deprecated/utils";
 

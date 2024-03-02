@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { CustomInputs } from "../../../FormComponents/CustomInputs";
+import { CustomInputs } from "../../../components/FormComponents/CustomInputs";
 
 import { Button } from "primereact/button";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
@@ -9,7 +9,7 @@ import {
   deleteUser,
   deleteLocationUser,
   createLocationUser,
-} from "../../../restAPIs";
+} from "../../../data/restAPIs";
 import { GroupBox, DefLabel, FlexSpaceBetween } from "../../../CommonStyles";
 
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
@@ -20,16 +20,16 @@ import { useListData } from "../../../data/_listData";
 const BPB = new CustomInputs();
 
 const authTypes = [
-  { label: "Admin", value: 1 },
-  { label: "Manager", value: 2 },
+  { label: "Admin",     value: 1 },
+  { label: "Manager",   value: 2 },
   { label: "Read Only", value: 3 },
 ];
 
 const authClasses = [
   { label: "BPB Admin", value: "bpbfull" },
-  { label: "BPB Mgr", value: "bpbmgr" },
-  { label: "BPB Crew", value: "bpbcrew" },
-  { label: "Customer", value: "customer" },
+  { label: "BPB Mgr",   value: "bpbmgr" },
+  { label: "BPB Crew",  value: "bpbcrew" },
+  { label: "Customer",  value: "customer" },
 ];
 
 const handleDeleteCustomer = (e, props) => {
@@ -39,9 +39,7 @@ const handleDeleteCustomer = (e, props) => {
     icon: "pi pi-exclamation-triangle",
     accept: () => {
       console.log("values", props);
-      deleteUser({ username: props.values.username, sub: props.values.sub })//.then(() => {
-        //window.location = "/Settings/ManageCustomers";
-      //});
+      deleteUser({ username: props.values.username, sub: props.values.sub })
     },
     reject: () => {
       return;
@@ -71,7 +69,6 @@ const handleDeleteCustLoc = (values, arrayHelpers, index) => {
 };
 
 function CustomerDescription(props) {
-  // const { data:locationList } = useLocationListSimple(true)
   const { data:locationList } = useListData({ tableName: "Location", shouldFetch: true})
   
 

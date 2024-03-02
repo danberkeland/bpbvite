@@ -1,4 +1,4 @@
-import { formatter } from "../../helpers/billingGridHelpers";
+import { formatter } from "./billingGridHelpers";
 
 export const calcInvoiceTotal = (data) => {
   let sum = 0;

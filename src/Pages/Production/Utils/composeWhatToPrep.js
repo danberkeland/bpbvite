@@ -1,6 +1,7 @@
-import { tomBasedOnDelivDate } from "../../../helpers/dateTimeHelpers";
+import { tomBasedOnDelivDate } from "../../../utils/_deprecated/dateTimeHelpers";
 
-import { getOrdersList, addUp } from "./utils";
+// import { getOrdersList, addUp } from "./utils";
+import { getOrdersList } from "../../../core/production/getOrdersList"
 
 import { whatToPrepFilter, whatToPrepTomFilter } from "./filters";
 
@@ -54,7 +55,7 @@ export default class ComposeWhatToMake {
         .map((ord) => ord.qty * ord.packSize);
 
       if (qtyToday.length > 0) {
-        qtyAccToday = qtyToday.reduce(addUp);
+        qtyAccToday = qtyToday.reduce((x,y)=>x+y, 0);
       }
 
       make.qty = qtyAccToday;

@@ -22,10 +22,6 @@ function Logistics() {
   const readAuthorized =
     user.authClass === "bpbmgr" || user.authClass === "bpbfull";
 
-  // const { data: locationData } = useLocationListFull(readAuthorized);
-  // const { data: zoneData } = useZoneListFull({
-  //   shouldFetch: readAuthorized
-  // })
   const { data: locationData } = useListData({ tableName: "Location", shouldFetch: true })
   const { data: zoneData } = useListData({ tableName: "Zone", shouldFetch:readAuthorized })
 

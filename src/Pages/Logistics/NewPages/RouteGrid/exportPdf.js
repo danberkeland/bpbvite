@@ -1,7 +1,7 @@
 import jsPDF from "jspdf"
 import "jspdf-autotable"
 import { sortBy, uniqBy, groupBy, orderBy } from "lodash"
-import { checkQBValidation_v2 } from "../../../../helpers/QBHelpers"
+import { checkQBValidation_v2 } from "../../../../data/QBHelpers"
 import axios from "axios"
 import { downloadPDF } from "../../../../utils/pdf/downloadPDF"
 

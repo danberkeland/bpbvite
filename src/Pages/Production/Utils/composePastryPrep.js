@@ -3,9 +3,10 @@ import {
     tomBasedOnDelivDate,
     TwodayBasedOnDelivDate,
     ThreedayBasedOnDelivDate,
-  } from "../../../helpers/dateTimeHelpers";
+  } from "../../../utils/_deprecated/dateTimeHelpers";
   
-  import { getOrdersList, addUp } from "./utils";
+  // import { getOrdersList, addUp } from "./utils";
+  import { getOrdersList } from "../../../core/production/getOrdersList"
   
   import {
     setOutFilter,
@@ -236,7 +237,7 @@ import {
           .map((ord) => ord.qty);
   
         if (qtyToday.length > 0) {
-          qtyAccToday = qtyToday.reduce(addUp);
+          qtyAccToday = qtyToday.reduce((x,y)=>x+y, 0);
         }
         make.qty = qtyAccToday;
         make.id =

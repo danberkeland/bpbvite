@@ -1,20 +1,5 @@
-import { 
-  whatToMakeFilter, 
-  // pocketFilter, 
-  // baker1PocketFilter 
-} from "./filters";
-
-import { sortZtoADataByIndex } from "../../../utils/_deprecated/utils";
-
-import {
-  zerosDelivFilter,
-  buildGridOrderArray,
-} from "../../../helpers/delivGridHelpers";
-
-import {
-  getFullOrders,
-  getFullProdOrders,
-} from "../../../helpers/CartBuildingHelpers";
+import { whatToMakeFilter } from "./filters";
+import { getOrdersList } from "../../../core/production/getOrdersList";
 
 const clonedeep = require("lodash.clonedeep");
 
@@ -131,76 +116,6 @@ const update = (order, products, customers) => {
   };
 
   return toAdd;
-};
-
-export const addRoutes = (delivDate, prodGrid, database) => {
-  const [products, customers, routes] = database;
-  sortZtoADataByIndex(routes, "routeStart");
-  for (let rte of routes) {
-   
-    for (let grd of prodGrid) {
-      let dayNum = calcDayNum(delivDate);
-
-      if (!rte["RouteServe"].includes(grd["zone"])) {
-        continue;
-      } else {
-        if (
-          routeRunsThatDay(rte, dayNum) &&
-          productCanBeInPlace(grd, routes, customers, rte) &&
-          productReadyBeforeRouteStarts(
-            products,
-            customers,
-            routes,
-            grd,
-            rte
-          ) &&
-          customerIsOpen(customers, grd, routes, rte)
-        ) {
-          grd.route = rte.routeName;
-          grd.routeDepart = rte.RouteDepart;
-          grd.routeStart = rte.routeStart;
-          grd.routeServe = rte.RouteServe;
-          grd.routeArrive = rte.RouteArrive;
-        }
-      }
-    }
-  }
-  for (let grd of prodGrid) {
-    if (grd.zone === "slopick" || grd.zone === "Prado Retail") {
-      grd.route = "Pick up SLO";
-    }
-    if (grd.zone === "atownpick" || grd.zone === "Carlton Retail") {
-      grd.route = "Pick up Carlton";
-    }
-    if (grd.route === "slopick" || grd.route === "Prado Retail") {
-      grd.route = "Pick up SLO";
-    }
-    if (grd.route === "atownpick" || grd.route === "Carlton Retail") {
-      grd.route = "Pick up Carlton";
-    }
-    if (grd.route === "deliv") {
-      grd.route = "NOT ASSIGNED";
-    }
-  }
-
-  return prodGrid;
-};
-
-export const getOrdersList = (delivDate, database, prod) => {
-  let fullOrder;
-  
-  if (prod === true) {
-    fullOrder = getFullProdOrders(delivDate, database);
-  } else {
-    fullOrder = getFullOrders(delivDate, database);
-  }
-  
-  fullOrder = zerosDelivFilter(fullOrder, delivDate, database);
-  fullOrder = buildGridOrderArray(fullOrder, database);
-  
-  fullOrder = addRoutes(delivDate, fullOrder, database);
-  
-  return fullOrder;
 };
 
 export const makePocketQty = (bakedTomorrow) => {

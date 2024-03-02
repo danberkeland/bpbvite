@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import LocationList from "./LocationList";
 import LocationDetails from "./LocationDetails";
-import { withFadeIn } from "../../hoc/withFadeIn";
+import { withFadeIn } from "../../components/hoc/withFadeIn";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { Button } from "primereact/button";
 

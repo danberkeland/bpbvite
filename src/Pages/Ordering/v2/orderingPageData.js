@@ -1,8 +1,8 @@
 import { useMemo } from "react"
-import { useLocation, useLocations } from "../../../data/location/useLocations.ts"
+import { useLocation, useLocations } from "../../../data/location/useLocations"
 import { Data } from "../../../utils/dataFns.js"
 import { useLoadedGetRouteOptions, useLoadedGetServingRoutes } from "../../../data/routing/useRouting.js"
-import { useProducts } from "../../../data/product/useProducts.js"
+import { useProducts } from "../../../data/product/useProducts"
 import { useLocationProductOverridesByLocNick } from "../../../data/locationProductOverride/useLocationProductOverrides.js"
 
 import { useOrdersByLocNick } from "../../../data/order/useOrders.js"

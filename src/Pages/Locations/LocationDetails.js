@@ -1,28 +1,20 @@
 import React from "react";
-import { CustomInputs } from "../../FormComponents/CustomInputs";
+import { CustomInputs } from "../../components/FormComponents/CustomInputs";
 
 import { validationSchema } from "./ValidationSchema";
 
-// import { deleteLocation, updateLocation, createLocation } from "../../restAPIs";
-
-import { withFadeIn } from "../../hoc/withFadeIn";
-import { withBPBForm } from "../../hoc/withBPBForm";
+import { withFadeIn } from "../../components/hoc/withFadeIn";
+import { withBPBForm } from "../../components/hoc/withBPBForm";
 import { GroupBox } from "../../CommonStyles";
 import { compose } from "../../utils/_deprecated/utils";
-// import { useZoneListFull } from "../../data/zoneData";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
-import { createLocation, deleteLocation, updateLocation } from "../../restAPIs";
+import { createLocation, deleteLocation, updateLocation } from "../../data/restAPIs";
 import { useListData } from "../../data/_listData";
-// import { useSimpleZoneList } from "../../swr";
 
 
 const BPB = new CustomInputs();
 
 function LocationDetails({ initialState }) {
-  //const { simpleZoneList } = useSimpleZoneList();
-  // const { data: simpleZoneList } = useZoneListFull({
-  //   shouldFetch: true
-  // })
   const { data:simpleZoneList } = useListData({ tableName: "Zone", shouldFetch: true })
 
   const isEdit = useSettingsStore((state) => state.isEdit);

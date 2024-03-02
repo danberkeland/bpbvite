@@ -7,7 +7,7 @@ import { Column } from "primereact/column";
 
 import LocationDetails from "./LocationDetails";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
-import { withFadeIn } from "../../hoc/withFadeIn";
+import { withFadeIn } from "../../components/hoc/withFadeIn";
 import { Button } from "primereact/button";
 import { useListData } from "../../data/_listData";
 
@@ -49,7 +49,6 @@ function LocationList({ selectedLocation, setSelectedLocation }) {
     locName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
 
-  // const { data:locationList, errors:locationListErrors } = useLocationListFull(true);
   const { data:locationList, error:locationListErrors } = 
     useListData({ tableName: "Location", shouldFetch: true })
     

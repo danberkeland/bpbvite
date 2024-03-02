@@ -1,7 +1,7 @@
-import { tomBasedOnDelivDate, TwodayBasedOnDelivDate } from "../../../helpers/dateTimeHelpers";
+import { tomBasedOnDelivDate, TwodayBasedOnDelivDate } from "../../../utils/_deprecated/dateTimeHelpers";
 
 import {
-  getOrdersList,
+  // getOrdersList,
   makePocketQty,
   addUp,
   whatToMakeList,
@@ -19,19 +19,39 @@ import {
 } from "./filters";
 import { sortAtoZDataByIndex } from "../../../utils/_deprecated/utils";
 
+import { getOrdersList } from "../../../core/production/getOrdersList"
+import { LegacyDatabase, LegacyProduct } from "../../../data/legacyData";
+import { round } from "lodash";
+import { sumBy } from "../../../utils/collectionFns/sumBy";
+import { uniqByRdc } from "../../../utils/collectionFns/uniqByRdc";
+import { sumByRdc } from "../../../utils/collectionFns/sumByRdc";
+import { groupByObject } from "../../../utils/collectionFns/groupByObject";
+import { mapValues } from "../../../utils/objectFns/mapValues";
+import { uniqBy } from "../../../utils/collectionFns/uniqBy";
+import { keyBy } from "../../../utils/collectionFns/keyBy";
+
 
 const clonedeep = require("lodash.clonedeep");
 
 
 export default class ComposeDough {
-  returnDoughBreakDown = (database, loc,deliv) => {
+
+  /**
+   * 
+   * @param {LegacyDatabase} database 
+   * @param {"Prado"|"Carlton"} loc 
+   * @param {string} deliv 
+   */
+  returnDoughBreakDown = (database, loc, deliv) => {
     let twoDay = TwodayBasedOnDelivDate(deliv)
     // let oneDay = tomBasedOnDelivDate(deliv)
     let tomorrow = tomBasedOnDelivDate(deliv)
     console.log("delivtomorrow",tomorrow)
     let today = deliv
     console.log("delivToday",today)
+
     let doughs = this.returnDoughs(bag, database, loc, tomorrow, twoDay);
+
     let doughComponents = this.returnDoughComponents(database);
     let pockets = this.returnPockets(database, loc,today, tomorrow,twoDay);
     let Baker1Dough = this.returnDoughs(baguette, database, loc, tomorrow, twoDay);
@@ -194,60 +214,144 @@ export default class ComposeDough {
     return pocketsToday;
   };
 
-  returnDoughs = (filt, database, loc, tomorrow, twoDay) => {
+  /**
+   * 
+   * @param {(a:any) => boolean} filterFn -- for pre-filtering dough list before mapping
+   * @param {LegacyDatabase} database 
+   * @param {"Prado" | "Carlton"} bakeHub 
+   * @param {string} tomorrow 
+   * @param {string} twoDay 
+   * @returns 
+   */
+  returnDoughs = (filterFn, database, bakeHub, tomorrow, twoDay) => {
+    const products = database[0]
     const doughs = database[5];
     let twoDayOrderList = getOrdersList(twoDay, database, true);
     let oneDayOrderList = getOrdersList(tomorrow, database, true);
 
-    let doughList = doughListComp(doughs, filt, loc);
+    // For reference:
+    // //     "filt" for doughlistcomp
+    // // export const bag = (ord, loc) => {
+    // //   return ord.mixedWhere === loc;
+    // // };
+
+    // // const doughListComp = (doughs, filt, loc) => {
+    // //   console.log('doughsDougList', doughs)
+    // //   return Array.from(
+    // //     new Set(doughs.filter((set) => filt(set, loc)).map((dgh) => dgh.doughName))
+    // //   ).map((dgh) => ({
+    // //     doughName: dgh,
+    // //     isBakeReady:
+    // //       doughs[doughs.findIndex((dg) => dg.doughName === dgh)].isBakeReady,
+    // //     oldDough: 0,
+    // //     buffer: 0,
+    // //     needed: 0,
+    // //     batchSize: 0,
+    // //     short: 0,
+    // //     bucketSets: 0,
+    // //   }));
+    // // };
+
+    let doughList = doughListComp(doughs, filterFn, bakeHub);
+
     let dglist = clonedeep(doughList)
     console.log("doughList",dglist)
+        
+      for (let dgh of doughList) {
+        let doughInd =
+          doughs[doughs.findIndex((d) => d.doughName === dgh.doughName)];
+        dgh.id = doughInd.id;
+        dgh.bucketSets = doughInd.bucketSets;
+        dgh.mixedWhere = doughInd.mixedWhere;
+        dgh.preBucketSets = doughInd.preBucketSets
+        dgh.updatePreBucket = doughInd.updatePreBucket
+        dgh.saltInDry = doughInd.saltInDry
+        dgh.hydration = doughInd.hydration;
+        dgh.oldDough = doughInd.oldDough;
+        dgh.buffer = doughInd.buffer;
+        dgh.batchSize = doughInd.batchSize;
+        if (dgh.isBakeReady === true) {
+          console.log(dgh.doughName+"using one Day")
+          dgh.needed = this.getDoughAmt(dgh.doughName, oneDayOrderList).toFixed(2);
+        } else {
+          console.log(dgh.doughName+"using 2 day")
+          dgh.needed = this.getDoughAmt(dgh.doughName, twoDayOrderList).toFixed(
+            2
+          );
+        }
+        let preshaped;
+        if (dgh.isBakeReady === true) {
+          preshaped = this.getPreshapedDoughAmt(
+            dgh.doughName,
+            oneDayOrderList
+          ).toFixed(2);
+        } else {
+          preshaped = this.getPreshapedDoughAmt(
+            dgh.doughName,
+            twoDayOrderList
+          ).toFixed(2);
+        }
 
-    for (let dgh of doughList) {
-      let doughInd =
-        doughs[doughs.findIndex((d) => d.doughName === dgh.doughName)];
-      dgh.id = doughInd.id;
-      dgh.bucketSets = doughInd.bucketSets;
-      dgh.mixedWhere = doughInd.mixedWhere;
-      dgh.preBucketSets = doughInd.preBucketSets
-      dgh.updatePreBucket = doughInd.updatePreBucket
-      dgh.saltInDry = doughInd.saltInDry
-      dgh.hydration = doughInd.hydration;
-      dgh.oldDough = doughInd.oldDough;
-      dgh.buffer = doughInd.buffer;
-      dgh.batchSize = doughInd.batchSize;
-      if (dgh.isBakeReady === true) {
-        console.log(dgh.doughName+"using one Day")
-        dgh.needed = this.getDoughAmt(dgh.doughName, oneDayOrderList).toFixed(
-          2
-        );
-      } else {
-        console.log(dgh.doughName+"using 2 day")
-        dgh.needed = this.getDoughAmt(dgh.doughName, twoDayOrderList).toFixed(
-          2
-        );
-      }
-      let preshaped;
-      if (dgh.isBakeReady === true) {
-        preshaped = this.getPreshapedDoughAmt(
-          dgh.doughName,
-          oneDayOrderList
-        ).toFixed(2);
-      } else {
-        preshaped = this.getPreshapedDoughAmt(
-          dgh.doughName,
-          twoDayOrderList
-        ).toFixed(2);
+        console.log("DOUGH NEEDED, PRESHAPED:", dgh.doughName, dgh.needed, preshaped)
+
+        if (Number(dgh.needed) - Number(preshaped) > 0) {
+          dgh.short = (Number(preshaped) - Number(dgh.needed)).toFixed(2);
+        } else {
+          dgh.short = 0;
+        }
       }
 
-      if (Number(dgh.needed) - Number(preshaped) > 0) {
-        dgh.short = (Number(preshaped) - Number(dgh.needed)).toFixed(2);
-      } else {
-        dgh.short = 0;
-      }
-    }
+      return doughList;
 
-    return doughList;
+    // For reference
+    // // getPreshapedDoughAmt = (doughName, orders) => {
+    // //   let qtyAccToday = 0;
+    // //   let qtyArray = orders
+    // //     .filter((ord) => ord.doughType === doughName)
+    // //     .map((ord) => Number(ord.preshaped) * ord.weight * ord.packSize);
+    // //   if (qtyArray.length > 0) {
+    // //     qtyAccToday = qtyArray.reduce(addUp);
+    // //   }
+    // //   return qtyAccToday;
+    // // };
+
+    // const getPreshapedDoughAmt = (doughName, orders) => sumBy(
+    //   orders.filter(order => order.doughType === doughName),
+    //   order => Number(order.preshaped) * order.weight * order.packSize // WTF // Betting (hoping) this never gets used...
+    // )
+
+    // In Progress
+    // /**
+    //  * 
+    //  * @param {string} doughName 
+    //  * @param {LegacyProduct[]} products 
+    //  * @returns 
+    //  */
+    // const getPreshapedDoughAmt = (doughName, products) => products
+    //   .filter(P => P.doughType === doughName)
+    //   .reduce(uniqByRdc(P => P.forBake), [])
+    //   .reduce(sumByRdc(P => P.preshaped * P.weight), 0)
+
+    // return doughs.filter(filterFn).map(D => {
+
+    //   const orderList = D.isBakeReady ? oneDayOrderList : twoDayOrderList
+
+    //   const needed = round(this.getDoughAmt(D.doughName, orderList), 2)
+    //   const preshaped = round(getPreshapedDoughAmt(D.doughName, products), 2)
+
+    //   const short = preshaped - needed < 0 ? preshaped - needed : 0
+
+    //   return {
+    //     ...D,
+    //     needed,
+    //     short,
+    //     oldDough:   0,
+    //     buffer:     0,
+    //     batchSize:  0,
+    //     bucketSets: 0,
+    //   }
+    // })
+
   };
 
   returnDoughComponents = (database) => {
@@ -256,18 +360,22 @@ export default class ComposeDough {
     return doughComponentInfo;
   };
 
-  getDoughAmt = (doughName, orders) => {
+  // getDoughAmt = (doughName, orders) => {
    
-    let qtyAccToday = 0;
-    let qtyArray = orders
-      .filter((ord) => ord.doughType === doughName)
-      .map((ord) => ord.qty * ord.weight * ord.packSize);
-    console.log("qtyArray",qtyArray)
-    if (qtyArray.length > 0) {
-      qtyAccToday = qtyArray.reduce(addUp);
-    }
-    return qtyAccToday//-61;
-  };
+  //   let qtyAccToday = 0;
+  //   let qtyArray = orders
+  //     .filter((ord) => ord.doughType === doughName)
+  //     .map((ord) => ord.qty * ord.weight * ord.packSize);
+  //   console.log("qtyArray",qtyArray)
+  //   if (qtyArray.length > 0) {
+  //     qtyAccToday = qtyArray.reduce(addUp);
+  //   }
+  //   return qtyAccToday//-61;
+  // };
+  getDoughAmt = (doughName, orders) => sumBy(
+    orders.filter(order => order.doughType === doughName),
+    order => order.qty * order.weight * order.packSize
+  )
 
   getPreshapedDoughAmt = (doughName, orders) => {
     let qtyAccToday = 0;
@@ -287,6 +395,27 @@ export default class ComposeDough {
 
     return pocketsToday//-54;
   };
+
+  /** tally up by forBake */
+  makeAddQty2 = (bakedTomorrowOrders) => {
+    const ordersByForBake = groupByObject(bakedTomorrowOrders, O => O.forBake)
+    const forBakeSums = 
+      mapValues(ordersByForBake, orderGroup => sumBy(orderGroup, O => O.qty))   // sus; should multiply by packSize? That may happen further down the pipeline...
+    
+    const keyedForBakes = keyBy(bakedTomorrowOrders, O => O.forBake)
+    const preshapedByForBake = mapValues(keyedForBakes, O => O.preshaped)
+
+    const makeList2 = Object.keys(forBakeSums).map(forBake => {
+      const orderTotal = sumBy(ordersByForBake[forBake], O => O.qty)
+
+      return {
+        forBake,
+        qty: 1,
+        short: 0,
+        needEarly: 0,
+      }
+    })
+  }
 
   makeAddQty = (bakedTomorrow) => {
     let makeList2 = Array.from(
