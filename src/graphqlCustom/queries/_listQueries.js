@@ -82,8 +82,21 @@ export const listLocationUsers = /* GraphQL */ `
     }
   }
 `;
-export const listLocations = (atts) =>
-  /* GraphQL */ `
+export const listLocationUser2s = /* GraphQL */ `
+  query ListLocationUser2s(
+    $filter: ModelLocationUser2FilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listLocationUser2s(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        ${attributes.locationUser2Attributes}
+      }
+      nextToken
+    }
+  }
+`;
+export const listLocations = (atts) => /* GraphQL */ `
   query ListLocations(
     $locNick: String
     $filter: ModelLocationFilterInput

@@ -3,7 +3,6 @@
 import useSWR from "swr"
 import { defaultSwrOptions } from "./_constants"
 
-// import { useMemo } from "react"
 import gqlFetcher from "./_fetchers"
 
 /******************
@@ -44,6 +43,7 @@ export const getUser = /* GraphQL */ `
 
 /**
  * Produces a full list of locNicks/locNames.
+ * @param {string} sub
  * @param {boolean} shouldFetch Fetches data only when true.
  */
 export const useUserDetails = (sub, shouldFetch) => {

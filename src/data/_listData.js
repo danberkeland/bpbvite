@@ -16,7 +16,7 @@ import useSWR from 'swr'
 import gqlFetcher, { gqlFetcherNoAwait } from './_fetchers'
 import { defaultSwrOptions, LIMIT, LIST_TABLES, TABLE_PKS } from './_constants'
 import * as listQueries from '../graphqlCustom/queries/_listQueries.js'
-import * as mutations from '../graphqlCustom/mutations.js'
+import * as mutations from '../graphqlCustom/mutations/mutations.js'
 
 
 const coerceInput = (input) => input.constructor === Array ? input
@@ -130,7 +130,8 @@ const batchMutate = async ({
  * @typedef { "Location" 
  * | "User" 
  * | "User2"
- * | "LocationUser" 
+ * | "LocationUser"
+ * | "LocationUser2"
  * | "Product" 
  * | "DoughBackup" 
  * | "DoughComponentBackup"

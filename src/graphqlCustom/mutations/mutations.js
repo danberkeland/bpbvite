@@ -1,4 +1,4 @@
-import * as attributes from './standardAttributes.js'
+import * as attributes from '../standardAttributes.js'
 
 
 
@@ -521,6 +521,36 @@ export const deleteLocationUser = /* GraphQL */ `
   ) {
     deleteLocationUser(input: $input, condition: $condition) {
       ${attributes.locationUserAttributes}
+    }
+  }
+`;
+export const createLocationUser2 = /* GraphQL */ `
+  mutation CreateLocationUser2(
+    $input: CreateLocationUser2Input!
+    $condition: ModelLocationUser2ConditionInput
+  ) {
+    createLocationUser2(input: $input, condition: $condition) {
+      ${attributes.locationUser2Attributes}
+    }
+  }
+`;
+export const updateLocationUser2 = /* GraphQL */ `
+  mutation UpdateLocationUser2(
+    $input: UpdateLocationUser2Input!
+    $condition: ModelLocationUser2ConditionInput
+  ) {
+    updateLocationUser2(input: $input, condition: $condition) {
+      ${attributes.locationUser2Attributes}
+    }
+  }
+`;
+export const deleteLocationUser2 = /* GraphQL */ `
+  mutation DeleteLocationUser2(
+    $input: DeleteLocationUser2Input!
+    $condition: ModelLocationUser2ConditionInput
+  ) {
+    deleteLocationUser2(input: $input, condition: $condition) {
+      ${attributes.locationUser2Attributes}
     }
   }
 `;

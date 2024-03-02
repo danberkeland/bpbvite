@@ -365,6 +365,15 @@ export const locationUserAttributes = /* GraphQL */ `
   createdAt
   updatedAt
 `
+export const locationUser2Attributes = /* GraphQL */ `
+  id
+  Type
+  authType
+  locNick
+  userID
+  createdAt
+  updatedAt
+`
 
 export const altPricingAttributes = /* GraphQL */ `
   id

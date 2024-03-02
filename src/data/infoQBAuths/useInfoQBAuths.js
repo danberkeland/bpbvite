@@ -1,6 +1,7 @@
 import { DateTime } from "luxon"
 import { useListData } from "../_listData"
 import { DT } from "../../utils/dateTimeFns"
+import { DBInfoQBAuth } from "../types.d"
 
 
 const useInfoQBAuths = ({ shouldFetch }) => {
@@ -34,7 +35,10 @@ const useInfoQBAuths = ({ shouldFetch }) => {
     }
   }
 
-  return { data }
+  /**@type {DBInfoQBAuth[] | undefined} */
+  const infoQbAuths = data
+
+  return { data:infoQbAuths }
 
 }
 

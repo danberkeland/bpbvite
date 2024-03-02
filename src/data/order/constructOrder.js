@@ -1,6 +1,7 @@
 import { DBOrder, FulfillmentOption } from "../types.d";
 
 /**
+ * initializes an order with just the essential attributes.
  * @param {'Orders'|'Standing'|'Holding'|'Template'} Type
  * @param {string} locNick
  * @param {string} prodNick

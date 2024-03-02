@@ -220,39 +220,39 @@ const listProductsFull = /* GraphQL */ `
 //   }
 // `;
 
-const createProductMutation = /* GraphQL */ `
-  mutation CreateProduct(
-    $input: CreateProductInput!
-    $condition: ModelProductConditionInput
-  ) {
-    createProduct(input: $input, condition: $condition) {
-      prodName
-      prodNick
-    }
-  }
-`;
-const updateProductMutation = /* GraphQL */ `
-  mutation UpdateProduct(
-    $input: UpdateProductInput!
-    $condition: ModelProductConditionInput
-  ) {
-    updateProduct(input: $input, condition: $condition) {
-      prodName
-      prodNick
-    }
-  }
-`;
-const deleteProductMutation = /* GraphQL */ `
-  mutation DeleteProduct(
-    $input: DeleteProductInput!
-    $condition: ModelProductConditionInput
-  ) {
-    deleteProduct(input: $input, condition: $condition) {
-      prodName
-      prodNick
-    }
-  }
-`;
+// const createProductMutation = /* GraphQL */ `
+//   mutation CreateProduct(
+//     $input: CreateProductInput!
+//     $condition: ModelProductConditionInput
+//   ) {
+//     createProduct(input: $input, condition: $condition) {
+//       prodName
+//       prodNick
+//     }
+//   }
+// `;
+// const updateProductMutation = /* GraphQL */ `
+//   mutation UpdateProduct(
+//     $input: UpdateProductInput!
+//     $condition: ModelProductConditionInput
+//   ) {
+//     updateProduct(input: $input, condition: $condition) {
+//       prodName
+//       prodNick
+//     }
+//   }
+// `;
+// const deleteProductMutation = /* GraphQL */ `
+//   mutation DeleteProduct(
+//     $input: DeleteProductInput!
+//     $condition: ModelProductConditionInput
+//   ) {
+//     deleteProduct(input: $input, condition: $condition) {
+//       prodName
+//       prodNick
+//     }
+//   }
+// `;
 
 
 

@@ -8,12 +8,12 @@ import { defaultSwrOptions } from "./_constants"
 import gqlFetcher from "./_fetchers"
 // import * as queries from "../customGraphQL/queries/productionQueries"
 
-import { buildRouteMatrix, buildRouteMatrix_test } from "../functions/routeFunctions/buildRouteMatrix"
+import { buildRouteMatrix, buildRouteMatrix_test } from "../core/logistics/_deprecated/buildRouteMatrix"
 import { 
   assignDelivRoute, 
   calculateValidRoutes, 
   calculateValidRoutes_test
-} from "../functions/routeFunctions/assignDelivRoute"
+} from "../core/logistics/_deprecated/assignDelivRoute"
 
 import { useListData } from "./_listData"
 import { groupBy, sortBy } from "lodash"

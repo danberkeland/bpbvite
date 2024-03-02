@@ -18,7 +18,7 @@ let OrderHeader
 
 /**
  * @typedef {Object}
- * @property {string} id
+ * @property {string | null} id
  * @property {'Orders'|'Standing'|'Holding'|'Template'} Type
  * @property {string} prodNick
  * 
@@ -84,7 +84,7 @@ let CartOrder
 /**
  * Template order item from the DB as fetched by useListData
  * @typedef {Object}
- * @property {string|null}  id
+ * @property {string}  id
  * @property {boolean} isStand
  * @property {boolean} isWhole
  * @property {string}  dayOfWeek
@@ -162,7 +162,7 @@ let DBZoneRoute
  * @property {number} latestFinalDeliv
  * @property {string|null} webpageURL 
  * @property {string|null} picURL
- * @property {string|null} gmap
+ * @property {string|null} gMap
  * @property {string|null} specialInstructions
  * @property {number} delivOrder
  * @property {string} qbID
@@ -259,6 +259,74 @@ let DBLocationProductOverride
  */
 let DBTemplateProd
 
+
+
+/**
+ * @typedef {Object}
+ * @property {string} Type
+ * @property {string} id
+ * @property {string} authType
+ * @property {string} locNick
+ * @property {string} userID
+ * @property {string} createdAt
+ * @property {string} updatedAt
+ */
+let DBLocationUser2
+
+/**
+ * @typedef {Object}
+ * @property {string}   id
+ * @property {string}   name
+ * @property {string}   email
+ * @property {string}   username
+ * @property {string}   phone
+ * @property {string}   authClass
+ * @property {string[]} subs
+ * @property {string}   locNick - Points to the user's default location
+ * @property {string}   request
+ * @property {string}   createdAt
+ * @property {string}   updatedAt
+ */
+let DBUser2
+
+
+/**
+ * @typedef {Object}
+ * @property {string}   id: ID!
+ * @property {string}   doughName: String
+ * @property {number}   hydration: Float
+ * @property {string[]} process: [String]
+ * @property {number}   batchSize: Float
+ * @property {string}   mixedWhere: String
+ * @property {string[]} components: [String]
+ * @property {number}   oldDough: Float
+ * @property {boolean}  isBakeReady: Boolean
+ * @property {number}   buffer: Float
+ * @property {number}   bucketSets: Int
+ * @property {number}   preBucketSets: Int
+ * @property {string}   updatePreBucket: String
+ * @property {boolean}  saltInDry: Boolean
+ */
+let DBDoughBackup
+
+/**
+ * @typedef {Object}
+ * @property {string} id: ID!
+ * @property {string} dough: String
+ * @property {string} componentType: String
+ * @property {string} componentName: String
+ * @property {number} amount: Float
+ */
+let DBDoughComponentBackup
+
+/**
+ * @typedef {Object}
+ * @property {string} id: ID!
+ * @property {string} infoName: String
+ * @property {string} infoContent: String
+ */
+let DBInfoQBAuth
+
 export {
   DBOrder,
   CartOrder,
@@ -270,6 +338,11 @@ export {
   DBLocationProductOverride,
   DBProduct,
   DBTemplateProd,
+  DBUser2,
+  DBLocationUser2,
+  DBDoughBackup,
+  DBDoughComponentBackup,
+  DBInfoQBAuth,
   BpbHub,
   FulfillmentOption,
   ExtendedOrderHeader,
