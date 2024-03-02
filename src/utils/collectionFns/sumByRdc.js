@@ -1,6 +1,6 @@
 /**
  * @template T
- * @param {(a:any) => number} iterFn
+ * @param {(t:T) => number} iterFn
  * @returns {(prev: number, curr: T) => number}
  */
 export function sumByRdc(iterFn) {
