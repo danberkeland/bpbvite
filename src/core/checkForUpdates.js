@@ -65,10 +65,15 @@ export const checkForUpdates = async (
     ) {
 
       const frozenQty = 
-        frozenDelivsArray.find(item => item.prod === prod.prodNick)?.qty ?? 0
+        frozenDelivsArray.find(item => item.prod === prod.nickName)?.qty ?? 0
+      
 
       const setoutQty = 
-        setoutArray.find(item => item.prod === prod.prodNick)?.qty ?? 0
+        setoutArray.find(item => item.prod === prod.nickName)?.qty ?? 0
+
+      console.log(prod.nickName)
+      console.log("frozenQty", frozenQty)
+      console.log("setoutQty", setoutQty)
   
       const newNorthClosingQty = 0
         + prod.freezerNorthClosing 
@@ -217,7 +222,7 @@ export const checkForUpdates = async (
       && squareOrder.locNick === dbOrder.custName // << this is a special case where the 'nick and 'name are equal; see sqOrderToCreateOrderInput
       && (0
         || dbOrder.prodName === sqProdName
-        || squareOrder.prodNick === "brn" && dbOrder.prodName === "Brownie"
+        || (squareOrder.prodNick === "brn" && dbOrder.prodName === "Brownie")
       )
     )
 
