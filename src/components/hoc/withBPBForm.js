@@ -3,10 +3,10 @@ import React, { useEffect, useRef } from "react";
 import { Button } from "primereact/button";
 
 import { Formik, Form } from "formik";
-import { useSettingsStore } from "../Contexts/SettingsZustand";
-import { FlexSpaceBetween } from "../CommonStyles";
+import { useSettingsStore } from "../../Contexts/SettingsZustand";
+import { FlexSpaceBetween } from "../../CommonStyles";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
-import { deleteLocation, deleteProduct } from "../restAPIs";
+import { deleteLocation, deleteProduct } from "../../data/restAPIs";
 
 export const withBPBForm = (Component) => (props) => {
   const isEdit = useSettingsStore((state) => state.isEdit);
