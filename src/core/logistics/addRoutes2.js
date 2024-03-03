@@ -1,6 +1,8 @@
 import { DateTime } from "luxon"
 import { compareBy } from "../../utils/collectionFns/compareBy"
 
+
+// Rewrite of legacy version
 const PRETZEL_EXCEPTIONS = Object.freeze([
   "Pretzel", 
   "Unsalted Pretzel"
@@ -57,7 +59,7 @@ const customerIsOpen = (testRoute, customer) =>
  * @param {Object[]} database - full legacy database. Only uses Product, Customers, and Route tables
  * @returns {Object[]}
  */
-const addRoutes2 = (delivDate, orderList, database) => {
+export const addRoutes = (delivDate, orderList, database) => {
 
   const [products, customers, _routes] = database
   const orders = [...orderList]
@@ -107,13 +109,9 @@ const addRoutes2 = (delivDate, orderList, database) => {
       order.route = "Pick up Carlton"
     }
     if (order.zone === "deliv") {
-      order.route === "NOT ASSIGNED"
+      order.route = "NOT ASSIGNED"
     }
   }
 
   return orders
-}
-
-export {
-  addRoutes2
 }
