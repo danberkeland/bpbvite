@@ -4,7 +4,8 @@ import { useListData } from "../_listData.js"
 import { Data } from "../../utils/dataFns.js"
 
 /**
- * Cleans incoming data by separating out any "duplicate" records.
+ * Cleans incoming data by separating out any "duplicate" records. Strategy to
+ * pick the correct one is to pick the one with the most recent update timestamp.
  * @param {Object} input
  * @param {boolean} input.shouldFetch
  * @param {'orderByDelivDate'|'orderByLocByDelivDate'} [input.customQuery]
@@ -37,7 +38,7 @@ const useOrdersGeneric = ({ shouldFetch, customQuery, variables }) => {
     const dupes = sortedGroupList.flatMap(grp => grp.slice(1))
 
     if (dupes.length) {
-      console.warn("warning: duplicates found", dupes)
+      console.warn("warning: duplicate orders found", dupes)
     }
     return { data: returnData, dupes }
 
