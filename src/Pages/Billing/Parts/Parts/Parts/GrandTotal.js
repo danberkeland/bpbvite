@@ -3,14 +3,14 @@ import { Button } from "primereact/button";
 import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
 
-import { formatter, getRate } from "../../../../../helpers/billingGridHelpers";
+import { formatter, getRate } from "../../../billingGridHelpers";
 import { API, graphqlOperation } from "aws-amplify";
 
 import { updateOrder, createOrder } from "../../../../../graphql/mutations";
 
 import styled from "styled-components";
 
-import { convertDatetoBPBDate } from "../../../../../helpers/dateTimeHelpers";
+import { convertDatetoBPBDate } from "../../../../../utils/_deprecated/dateTimeHelpers";
 import { useSettingsStore } from "../../../../../Contexts/SettingsZustand";
 
 const clonedeep = require("lodash.clonedeep");

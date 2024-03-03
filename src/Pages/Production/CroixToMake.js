@@ -8,7 +8,7 @@ import { CroixToMake as CroixToMakeNew } from "./NewPages/Croix/CroixToMake/Croi
 
 import ComposeCroixInfo from "./BPBSWhatToMakeUtils/composeCroixInfo";
 
-import { convertDatetoBPBDate, todayPlus } from "../../helpers/dateTimeHelpers";
+import { convertDatetoBPBDate, todayPlus } from "../../utils/_deprecated/dateTimeHelpers";
 
 
 import jsPDF from "jspdf";

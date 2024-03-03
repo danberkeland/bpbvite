@@ -7,7 +7,7 @@ import { Button } from "primereact/button";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
-import { convertDatetoBPBDate, todayPlus } from "../../helpers/dateTimeHelpers";
+import { convertDatetoBPBDate, todayPlus } from "../../utils/_deprecated/dateTimeHelpers";
 import ComposeRetailBags from "./utils/composeRetailBags";
 
 import styled from "styled-components";

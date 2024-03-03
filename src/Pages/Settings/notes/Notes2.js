@@ -1,7 +1,7 @@
 import React from "react";
 import { NotesCalendar } from "./Parts2/NotesCalendar";
 import { useState } from "react";
-import { getWorkingDateTime } from "../../../functions/dateAndTime";
+import { getWorkingDateTime } from "../../../utils/_deprecated/dateAndTime";
 import Messages from "./Parts2/Messages";
 
 import "primereact/resources/themes/saga-blue/theme.css";

@@ -1,7 +1,7 @@
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
-import { convertDatetoBPBDate } from "../../../helpers/dateTimeHelpers";
+import { convertDatetoBPBDate } from "../../../utils/_deprecated/dateTimeHelpers";
 import { mixFormula } from "./MixFormula";
 import { getMixInfo } from "./GetMixInfo";
 

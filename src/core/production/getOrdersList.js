@@ -1,27 +1,13 @@
 import { convertDatetoBPBDate } from "../../utils/_deprecated/convertDatetoBPBDate";
-// import { addRoutes2 } from "../logistics/addRoutes2";
 import { IsoDate } from "../../utils/dateTimeFns";
 import { uniqByN } from "../../utils/collectionFns/uniqByN";
 import { compareBy } from "../../utils/collectionFns/compareBy";
 import { addRoutes } from "../logistics/addRoutes";
 
-
-// ***** Main Function *****
-//
-// Use to replace anything that looks like:
-//
-//   getFullOrders(...);
-//   zerosDelivFilter(...);
-//   buildGridOrderArray(...);
-//   addRoutes(...);
-
-
-export const getOrdersList = (delivDate, database, includeHolding=false) => {
+const _getFullOrders = (delivDate, database, includeHolding=false) => {
   // const [products, customers, routes, standing, orders] = database;
-  const products  = database[0]
-  const customers = database[1]
 
-  const orders    = database[4].filter(order => 1
+  const orders = database[4].filter(order => 1
     && order.delivDate === convertDatetoBPBDate(delivDate)
     && order.prodName !== ''  
   )
@@ -33,42 +19,61 @@ export const getOrdersList = (delivDate, database, includeHolding=false) => {
   const standing = 
     _standing.map(standing => standingToOrder(standing, delivDate))
 
-  let fullOrder = uniqByN([...orders, ...standing], [
+  return uniqByN([...orders, ...standing], [
     order => order.prodName,
     order => order.custName,
+  ])
+  .sort(compareBy(order => order.prodName))
+  .filter(order => order.prodName !== '')
 
-  ]).sort(
-    compareBy(order => order.prodName)
+}
 
-  ).filter(order => 1
-    && order.qty !== 0 
-    && order.prodName !== ''
+/**DEPRECATED: use getOrdersList if possible */
+const getFullOrders = (delivDate, database) => 
+  _getFullOrders(delivDate, database, false)
 
-  ).map(order => {
-    const customer = customers.find(C => C.custName === order.custName)
+/**DEPRECATED: use getOrdersList if possible */
+const getFullProdOrders = (delivDate, database) => 
+  _getFullOrders(delivDate, database, true)
 
-    if (!customer) {
-      return order
-    } else {
+
+// ***** Main Function *****
+//
+// Use to replace anything that looks like:
+//
+//   getFullOrders(...);
+//   zerosDelivFilter(...);
+//   buildGridOrderArray(...);
+//   addRoutes(...);
+const getOrdersList = (delivDate, database, includeHolding=false) => {
+  // const [products, customers, routes, standing, orders] = database;
+  const products  = database[0]
+  const customers = database[1]
+
+  let fullOrder = _getFullOrders(delivDate, database, includeHolding)
+    .filter(order => order.qty !== 0)
+    .map(order => {
+      const customer = customers.find(C => C.custName === order.custName)
+
+      if (!customer) return order
+      
       const zoneName = (order.route === undefined || order.route === "deliv")
         ? customer.zoneName
         : order.route
 
       return { ...order, zoneName }
-    }
-
-  }).map(order => addDimensionPropsToOrder(
-    order, 
-    customers.find(C => C.custName === order.custName) ?? {}, 
-    products.find(P => P.prodName === order.prodName) ?? {},
-  ))
+    })
+    .map(order => addDimensionPropsToOrder(
+      order, 
+      customers.find(C => C.custName === order.custName) ?? {}, 
+      products.find(P => P.prodName === order.prodName) ?? {},
+    ))
 
 
   fullOrder = addRoutes(delivDate, fullOrder, database)
 
   return fullOrder
 }
-
 
 
 /** 
@@ -148,4 +153,10 @@ const addDimensionPropsToOrder = (order, customer={}, product={}) => {
     freezerCount,
     freezerClosing,
   }
+}
+
+export {
+  getOrdersList,
+  getFullOrders,
+  getFullProdOrders,
 }

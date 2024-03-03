@@ -13,7 +13,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 
 import styled from "styled-components";
-import { todayPlus } from "../../helpers/dateTimeHelpers";
+import { todayPlus } from "../../utils/_deprecated/dateTimeHelpers";
 import { bagStickerSet } from "./Utils/bagStickerSet";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { useLegacyFormatDatabase } from "../../data/legacyData";

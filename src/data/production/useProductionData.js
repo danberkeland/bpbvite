@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 import { useOrdersByDelivDate } from "../order/useOrders";
 import { useStandingsByDayOfWeek } from "../standing/useStandings";
-import { useLocations } from "../location/useLocations.ts";
+import { useLocations } from "../location/useLocations";
 import { useProducts } from "../product/useProducts";
 import { useRoutes } from "../route/useRoutes";
 import { useLoadedGetRouteOptions } from "../routing/useRouting";

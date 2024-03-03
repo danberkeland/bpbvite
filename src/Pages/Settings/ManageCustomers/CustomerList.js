@@ -5,7 +5,7 @@ import { FilterMatchMode } from "primereact/api";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { TabMenu } from "primereact/tabmenu";
-import { useCustomerList } from "../../../swr";
+import { useCustomerList } from "../../../data/user2/useUser2sLegacy";
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 // import { withFadeIn } from "../../../hoc/withFadeIn";
 

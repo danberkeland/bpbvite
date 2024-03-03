@@ -1,15 +1,7 @@
 import { sortAtoZDataByIndex } from "../../../utils/_deprecated/utils";
 
-import { getOrdersList, addUp } from "../Utils/utils";
-
-import {
-  todayPlus,
-  tomBasedOnDelivDate,
-  TwodayBasedOnDelivDate,
-  ThreedayBasedOnDelivDate,
-} from "../../../helpers/dateTimeHelpers";
-
-import { getFullProdOrders } from "../../../helpers/CartBuildingHelpers";
+import { getOrdersList } from "../../../core/production/getOrdersList"
+import { getFullProdOrders } from "../../../core/production/getOrdersList";
 
 import {
   setOutFilter,
@@ -21,15 +13,15 @@ import {
 import ComposePastryPrep from "../Utils/composePastryPrep";
 
 import { ceil } from "lodash";
-const { DateTime } = require("luxon");
+import { DT } from "../../../utils/dateTimeFns";
 
 const compose = new ComposePastryPrep();
 
-let today = todayPlus()[0];
-let tom = todayPlus()[1];
-let twoDay = todayPlus()[2];
-let threeDay = todayPlus()[3];
-let fourDay = todayPlus()[12];
+// let today = todayPlus()[0];
+// let tom = todayPlus()[1];
+// let twoDay = todayPlus()[2];
+// let threeDay = todayPlus()[3];
+// let fourDay = todayPlus()[12];
 
 const makeAddQty = (bakedTomorrow, products) => {
   let makeList2 = Array.from(
@@ -49,7 +41,7 @@ const makeAddQty = (bakedTomorrow, products) => {
       .map((ord) => ord.qty);
 
     if (qtyToday.length > 0) {
-      qtyAccToday = qtyToday.reduce(addUp);
+      qtyAccToday = qtyToday.reduce((x,y)=>x+y, 0);
     }
     make.qty = qtyAccToday;
     make.id =
@@ -61,9 +53,12 @@ const makeAddQty = (bakedTomorrow, products) => {
 };
 
 const returnSetOut = (database, loc, delivDate) => {
-  let tom = tomBasedOnDelivDate(delivDate);
-  let twoday = TwodayBasedOnDelivDate(delivDate);
-  let threeday = ThreedayBasedOnDelivDate(delivDate);
+  const [tom, twoday, threeday] = [1,2,3].map(daysAhead => 
+    DT.fromIso(delivDate).plus({ days: daysAhead }).toFormat('yyyy-MM-dd')  
+  )
+  // let tom = tomBasedOnDelivDat_e(delivDate);
+  // let twoday = TwodayBasedOnDelivDat_e(delivDate);
+  // let threeday = ThreedayBasedOnDelivDat_e(delivDate);
   const products = database[0];
   let setOutList = getOrdersList(tom, database, true);
   let setOutForAlmonds = getOrdersList(twoday, database, true);
@@ -276,8 +271,15 @@ export default class ComposeCroixInfo {
 
   getClosingCount = (database, delivDate, setOut, setOutNorthTom) => {
     const [products, customers, routes, standing, orders] = database;
-    let freezerDelivs = returnFreezerDelivs(database, todayPlus()[0]);
 
+    const [today, tom] = [0,1].map(daysAhead => 
+      DT.fromIso(delivDate).plus({ days: daysAhead }).toFormat('yyyy-MM-dd')  
+    )
+
+    // let freezerDelivs = returnFreezerDelivs(database, todayPlus()[0]);
+    let freezerDelivs = returnFreezerDelivs(database, today);
+
+    
     let count = products.filter(
       (prod) =>
         prod.doughType === "Croissant" && prod.packGroup === "baked pastries"
@@ -291,8 +293,8 @@ export default class ComposeCroixInfo {
     for (let prod of prods) {
       let goingOut = 0;
       // calcGoing out
-      let setOut = returnSetOut(database, "Prado", todayPlus()[0]);
-      let setOutNorthTom = returnSetOut(database, "Carlton", todayPlus()[1]);
+      let setOut = returnSetOut(database, "Prado", today);
+      let setOutNorthTom = returnSetOut(database, "Carlton", tom);
 
       //     total frozen deliveries today
 
@@ -446,6 +448,9 @@ export default class ComposeCroixInfo {
   };
 
   getProjectionCount(database, delivDate) {
+    const [today, tom, twoDay, threeDay, fourDay] = [0,1,2,3,4].map(daysAhead => 
+      DT.fromIso(delivDate).plus({ days: daysAhead }).toFormat('yyyy-MM-dd')  
+    )
     const [products, customers, routes, standing, orders] = database;
     let openingCount = this.getOpeningCount(database,delivDate)
     let makeCount = this.getMakeCount(database,delivDate)

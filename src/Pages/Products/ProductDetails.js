@@ -1,11 +1,11 @@
 import React from "react";
-import { CustomInputs } from "../../FormComponents/CustomInputs";
+import { CustomInputs } from "../../components/FormComponents/CustomInputs";
 
 import { validationSchema } from "./ValidationSchema";
 
-import { deleteProduct, updateProduct, createProduct } from "../../restAPIs";
-import { withFadeIn } from "../../hoc/withFadeIn";
-import { withBPBForm } from "../../hoc/withBPBForm";
+import { deleteProduct, updateProduct, createProduct } from "../../data/restAPIs";
+import { withFadeIn } from "../../components/hoc/withFadeIn";
+import { withBPBForm } from "../../components/hoc/withBPBForm";
 import { GroupBox } from "../../CommonStyles";
 import { compose } from "../../utils/_deprecated/utils";
 

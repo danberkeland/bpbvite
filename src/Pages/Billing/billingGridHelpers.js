@@ -1,13 +1,10 @@
-import { daysOfBillingWeek } from "../helpers/dateTimeHelpers";
+import { daysOfBillingWeek } from "../../utils/_deprecated/dateTimeHelpers";
 
 import { API, graphqlOperation } from "aws-amplify";
 
-import { sortAtoZDataByIndex } from "../utils/_deprecated/utils";
-import {
-  buildCartList,
-  buildStandList,
-  compileFullOrderList,
-} from "../helpers/CartBuildingHelpers";
+import { sortAtoZDataByIndex } from "../../utils/_deprecated/utils";
+import { getFullOrders } from "../../core/production/getOrdersList";
+
 
 export const buildCustList = (fullOrder) => {
   let custList = fullOrder.filter((ord) => ord["isWhole"] === true);
@@ -159,9 +156,11 @@ export const fetchInfo = async (operation, opString, limit) => {
 
 export const createDailyInvoices = async (delivDate,orders,standing,customers,products,altPricing,zones) => {
   
-  let buildOrders = buildCartList("*", delivDate, orders);
-  let buildStand = buildStandList("*", delivDate, standing);
-  let fullOrder = compileFullOrderList(buildOrders, buildStand);
+  // let buildOrders = buildCartLis_t("*", delivDate, orders);
+  // let buildStand = buildStandLis_t("*", delivDate, standing);
+  // let fullOrder = compileFullOrderLis_t(buildOrders, buildStand);
+
+  let fullOrder = getFullOrders(delivDate, [products, customers, undefined, standing, orders])
 
   let custListArray = buildCustList(fullOrder);
   let invList = buildInvList(custListArray, customers, delivDate);

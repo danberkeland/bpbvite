@@ -6,7 +6,6 @@ import {
   listProducts,
 } from "../../graphql/queries";
 import { updateProduct, createProduct } from "../../graphql/mutations";
-import { customCreateProduct } from "../../graphqlCustom/mutations";
 
 // *********************************
 // Helpers for current Products Page

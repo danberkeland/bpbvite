@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { CUTOFF_TIME_HOURS } from "../constants/constants";
+import { CUTOFF_TIME_HOURS } from "../../constants/constants";
 
 export const getWorkingDateTime = (isoDateTimeString) => {
   const bpbTime = isoDateTimeString === 'NOW' ?

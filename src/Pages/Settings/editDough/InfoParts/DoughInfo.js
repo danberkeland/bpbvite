@@ -5,7 +5,7 @@ import "primeflex/primeflex.css";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from 'primereact/dropdown';
 
-import { setValue, fixValue } from "../../../../helpers/formHelpers";
+// import { setValu_e, fixValu_e } from "../../../../helpers/formHelper_s";
 
 import styled from "styled-components";
 
@@ -22,6 +22,27 @@ const Title = styled.div`
   font-weight: bold;
   font-size: 1.4em;
   `
+
+
+const setValue = (value, selected) => {
+  if (value.code === "Enter") {
+    let itemToUpdate = structuredClone(selected);
+    value.target.value === "true" ? value.target.value = true : 
+    itemToUpdate[value.target.id] = value.target.value;
+    document.getElementById(value.target.id).value = "";
+    return itemToUpdate;
+  }
+};
+
+const fixValue = (value, selected) => {
+  let itemToUpdate = structuredClone(selected);
+  if (value.target.value !== "") {
+    value.target.value === "true" ? value.target.value = true : 
+    itemToUpdate[value.target.id] = value.target.value;
+  }
+  document.getElementById(value.target.id).value = "";
+  return itemToUpdate;
+};
 
 const DoughInfo = ({ selectedDough, setSelectedDough, setIsModified }) => {
   const InputStyle = {

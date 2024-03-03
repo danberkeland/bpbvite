@@ -21,7 +21,7 @@ import {
 
 import { DateTime, Interval } from "luxon"
 import { useWindowSize } from "../../../utils/useWindowSize"
-import { getWorkingDateTime } from "../../../functions/dateAndTime"
+import { getWorkingDateTime } from "../../../utils/_deprecated/dateAndTime"
 import { useLocationDetails } from "./data/locationHooks"
 // import { debounce } from "lodash"
 import { StandingItemDisplay } from "./Components/StandingComponents/StandingItemDisplay"

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
-import { createDailyInvoices } from "../../../helpers/billingGridHelpers";
+import { createDailyInvoices } from "../billingGridHelpers";
 
 import { calcInvoiceTotal } from "../helpers";
 

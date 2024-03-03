@@ -1,5 +1,5 @@
 
-import { getWorkingDateTime } from "../../../../functions/dateAndTime"
+import { getWorkingDateTime } from "../../../../utils/_deprecated/dateAndTime"
 import { getTimeToLive } from "../../../../utils/dateAndTime/getTimeToLive"
 import { APIGatewayFetcher } from "../../../../data/_fetchers"
 import { sendConfirmationEmail } from "./sendEmailConfirmation"

@@ -1,7 +1,6 @@
-import { todayPlus } from "../../../helpers/dateTimeHelpers";
-import { getFullOrders } from "../../../helpers/CartBuildingHelpers";
+import { todayPlus } from "../../../utils/_deprecated/dateTimeHelpers";
 import { addProdAttr } from "./utils";
-import { getOrdersList } from "../../../core/production/getOrdersList";
+import { getFullOrders, getOrdersList } from "../../../core/production/getOrdersList";
 import { DT } from "../../../utils/dateTimeFns";
 import { uniqBy } from "../../../utils/collectionFns/uniqBy";
 
@@ -25,7 +24,7 @@ export default class ComposeFreezerThaw {
     console.log("allProds", allProds)
     console.log("allProds2", allProds2)
 
-    // [freshProds, shelfProds] = handleFrenchConundrum(freshProds, shelfProds);
+    // [freshProds, shelfProds] = handleFrenchConundru_m(freshProds, shelfProds);
 
     return {
       freezerThaw: freezerThaw,

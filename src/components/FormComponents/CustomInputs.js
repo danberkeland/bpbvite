@@ -8,7 +8,7 @@ import { MultiSelect } from "primereact/multiselect";
 import { Password } from "primereact/password";
 import { Editor } from "primereact/editor";
 
-import { withFormComponentWrap } from "../hoc/withFormComponentWrap";
+import { withFormComponentWrap } from "../../components/hoc/withFormComponentWrap";
 
 const options = [
   { label: "Yes", value: true },

@@ -66,15 +66,18 @@ const useLocations = ({ shouldFetch, projection }: { shouldFetch:boolean, projec
  * @param {Object} input
  * @param {string} input.locNick ID value for the desired location.
  * @param {boolean} input.shouldFetch Fetches data only when true.
- * @returns {{ data:DBLocation }}
+ * @returns {{ data:(DBLocation | undefined) }}
  */
 const useLocation = ({ locNick, shouldFetch }) => {
-  const { data } = useSWR<GraphQLResult<{ getLocation: DBLocation }>>(
+  const { data } = useSWR(
     shouldFetch ? [getLocation, { locNick: locNick }] : null, 
     gqlFetcher, 
     defaultSwrOptions
   )
-  const location = data ? data.data?.getLocation : undefined
+
+  /** @returns {DBLocation | undefined} */ // JSDOC type-jank to get the return type to show DBLocation instead of 'any'
+  const getData = (data) => data?.data?.getLocation
+  const location = getData(data)
 
   return { data: location }
 }

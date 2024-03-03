@@ -1,8 +1,6 @@
-import { API, Auth, graphqlOperation } from "aws-amplify";
+import { Auth } from "aws-amplify";
 import axios from "axios";
-// import { checkUser } from "./AppStructure/Auth/AuthHelpers";
-// import { sendCognitoSignupEmail } from "./Pages/Ordering/Orders/functions/sendEmailConfirmation";
-import { checkQBValidation, getQBProdSyncToken } from "./helpers/QBHelpers";
+import { checkQBValidation, getQBProdSyncToken } from "./QBHelpers";
 
 const API_bpbrouterAuth =
   "https://8gw70qn5eb.execute-api.us-east-2.amazonaws.com/auth";
@@ -12,37 +10,65 @@ const API_cognitoUser =
 
 // NEW STUFF
 
-export const fetcher = async (event, path, fetchType) => {
-  let root;
-  let user;
-  let token;
-  let headers;
-  if (fetchType === "route") {
-    root = API_bpbrouterAuth;
-    user = await Auth.currentAuthenticatedUser();
-    token = user.signInUserSession.idToken.jwtToken;
-    headers = {
-      "content-type": "application/json",
-      Authorization: token,
-    };
-  } else if (fetchType === "cognito") {
-    root = API_cognitoUser;
-    headers = {
-      "content-type": "application/json",
-    };
+
+const bpbRouterFetcher = async (event, path) => {
+
+  const user = await Auth.currentAuthenticatedUser()
+  
+  const endpoint = API_bpbrouterAuth + path
+  const headers = {
+    "content-type": "application/json",
+    Authorization: user.signInUserSession.idToken.jwtToken,
   }
 
-  let obj;
-  try {
-    obj = await axios.post(root + path, event, {
-      headers: headers,
-    });
-  } catch (err) {
-    console.log(`Error creating ${path}`, err);
-  }
-  console.log(`${path} Response:`, obj);
-  return obj.data.body;
-};
+  const response = await axios.post(endpoint, event, { headers })
+  console.log(`${path} Response:`, response)
+  return response.data.body
+
+}
+
+const cognitoFetcher = async (event, path) => {
+
+  const endpoint = API_cognitoUser + path
+  const headers = { "content-type": "application/json" }
+
+  const response = await axios.post(endpoint, event, { headers })
+  console.log(`${path} Response:`, response)
+  return response.data.body
+
+}
+
+// const fetcher = async (event, path, fetchType) => {
+//   let root;
+//   let user;
+//   let token;
+//   let headers;
+//   if (fetchType === "route") {
+//     root = API_bpbrouterAuth;
+//     user = await Auth.currentAuthenticatedUser();
+//     token = user.signInUserSession.idToken.jwtToken;
+//     headers = {
+//       "content-type": "application/json",
+//       Authorization: token,
+//     };
+//   } else if (fetchType === "cognito") {
+//     root = API_cognitoUser;
+//     headers = {
+//       "content-type": "application/json",
+//     };
+//   }
+
+//   let obj;
+//   try {
+//     obj = await axios.post(root + path, event, {
+//       headers: headers,
+//     });
+//   } catch (err) {
+//     console.log(`Error creating ${path}`, err);
+//   }
+//   console.log(`${path} Response:`, obj);
+//   return obj.data.body;
+// };
 
 const createQBProd = async (addDetails, SyncToken) => {
   let Sync = "0";
@@ -162,7 +188,7 @@ export const createProduct = async (event) => {
 
   event.qbID = newID;
 
-  return fetcher(event, "/products/createProduct", "route");
+  return bpbRouterFetcher(event, "/products/createProduct");
 };
 
 export const updateProduct = async (event) => {
@@ -205,11 +231,11 @@ export const updateProduct = async (event) => {
   event.qbID = newID;
   console.log("newID", newID);
 
-  return fetcher(event, "/products/updateProduct", "route");
+  return bpbRouterFetcher(event, "/products/updateProduct");
 };
 
 export const deleteProduct = (event) => {
-  return fetcher(event.values, "/products/deleteProduct", "route");
+  return bpbRouterFetcher(event.values, "/products/deleteProduct");
 };
 
 export const createLocation = async (event) => {
@@ -221,7 +247,7 @@ export const createLocation = async (event) => {
   });
   console.log('newID', newID)
   event.qbID = newID;
-  return fetcher(event, "/locations/createLocation", "route");
+  return bpbRouterFetcher(event, "/locations/createLocation");
 };
 
 export const updateLocation = async (event) => {
@@ -237,11 +263,11 @@ export const updateLocation = async (event) => {
   event.qbID = newID;
   
   
-  return fetcher(event, "/locations/updateLocation", "route");
+  return bpbRouterFetcher(event, "/locations/updateLocation");
 };
 
 export const deleteLocation = (event) => {
-  return fetcher(event.values, "/locations/deleteLocation", "route");
+  return bpbRouterFetcher(event.values, "/locations/deleteLocation");
 };
 
 export const createUser = async (event) => {
@@ -249,7 +275,7 @@ export const createUser = async (event) => {
   await createCognitoUser(event)
     .then((newEvent) => {
       console.log("newEvent", newEvent);
-      fetcher(newEvent.newerEvent, "/users/createUser", "route").then((info) =>
+      bpbRouterFetcher(newEvent.newerEvent, "/users/createUser").then((info) =>
         console.log("info", info)
       );
 
@@ -266,7 +292,7 @@ export const updateUser = async (event) => {
   await updateCognitoUser(event)
     .then((newEvent) => {
       console.log("newEvent", newEvent);
-      fetcher(newEvent.newerEvent, "/users/updateUser", "route");
+      bpbRouterFetcher(newEvent.newerEvent, "/users/updateUser");
       return newEvent.newLocUser;
     })
     .then(() => {
@@ -278,225 +304,48 @@ export const updateUser = async (event) => {
 export const deleteUser = (event) => {
   console.log("eventDeleteUser", event);
   deleteCognitoUser(event);
-  return fetcher(event, "/users/deleteUser", "route");
+  return bpbRouterFetcher(event, "/users/deleteUser");
 };
 
 export const createLocationUser = (event) => {
-  return fetcher(event, "/locationUsers/createLocationUser", "route");
+  return bpbRouterFetcher(event, "/locationUsers/createLocationUser");
 };
 
 export const updateLocationUsers = (event) => {
-  return fetcher(event, "/locationUsers/updateLocationUsers", "route");
+  return bpbRouterFetcher(event, "/locationUsers/updateLocationUsers");
 };
 
 export const deleteLocationUser = (event) => {
-  return fetcher(event, "/locationUsers/deleteLocationUser", "route");
+  return bpbRouterFetcher(event, "/locationUsers/deleteLocationUser");
 };
 
-export const createCognitoUser = (event) => {
-  return fetcher(event, "/createcognitouser", "cognito");
+const createCognitoUser = (event) => {
+  return bpbRouterFetcher(event, "/createcognitouser");
 };
 
-export const updateCognitoUser = (event) => {
-  return fetcher(event, "/updatecognitouser", "cognito");
+const updateCognitoUser = (event) => {
+  return cognitoFetcher(event, "/updatecognitouser");
 };
 
-export const deleteCognitoUser = (event) => {
-  return fetcher(event, "/deletecognitouser", "cognito");
+const deleteCognitoUser = (event) => {
+  return cognitoFetcher(event, "/deletecognitouser");
 };
 
 export const getOrder = (event) => {
-  return fetcher(event, "/orders/getOrder", "route");
-};
-
-// Auth calls
-
-// export const submitAuth = async (props) => {
-// const {email, password, setIsLoading, setFormType, setShowMessage, setUserObject} = props;
-export const submitAuth = async (props, fns) => {
-  const { email, password } = props;
-  const {
-    setIsLoading,
-    setFormType,
-    // setShowMessage,
-    setUserObject,
-    // setResetPassword,
-  } = fns;
-
-  // const emailCheck = [
-  //   "danberkeland@gmail.com",
-  //   "eat@highstdeli.com",
-  //   "osos@highstdeli.com",
-  //   "slo@highstdeli.com",
-  //   "kreuzberg.mgr@poorbutsexy.biz",
-  //   "kraken.avila.mgr@poorbutsexy.biz",
-  //   "kraken.bonetti.mgr@poorbutsexy.biz",
-  //   "kraken.pismo.mgr@poorbutsexy.biz",
-  //   "loshel@live.com",
-  //   "reneerose11@gmail.com",
-  //   "tara@scoutcoffeeco.com",
-  //   "ryan@scoutcoffeeco.com",
-  //   "peter@sloprovisions.com",
-  //   "trixybliss@att.net",
-  //   "james@poorbutsexy.biz",
-  // ];
-
-  console.log("submitProps", props);
-
-  setIsLoading(true);
-  await Auth.signIn(email, password)
-    .then((use) => {
-      setUserObject(use);
-
-      if (use.challengeName === "NEW_PASSWORD_REQUIRED") {
-        setIsLoading(false);
-        setFormType("resetPassword");
-        return;
-      } else if (use.attributes.email_verified === false) {
-        setIsLoading(false);
-        setFormType("verifyEmail");
-        return;
-      } else {
-        setIsLoading(false);
-        setFormType("signedIn");
-      }
-    })
-    .catch((error) => {
-      if (error) {
-        /*
-        if (emailCheck.includes(email)){
-          setResetPassword(true)
-          return
-        }
-        setShowMessage(true);
-        */
-        setIsLoading(false);
-      }
-    });
+  return bpbRouterFetcher(event, "/orders/getOrder");
 };
 
 
 
 
 
-const user2byEmail = /* GraphQL */ `
-  query User2byEmail(
-    $email: String!
-   
-    $sortDirection: ModelSortDirection
-    $filter: ModelUser2FilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    User2byEmail(
-      email: $email
-      
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        name
-        email
-        username
-        phone
-        authClass
-        subs
-        locNick
-        request
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 
 
-//  Checks for and, if exists, returns full Cognito object for user
-const checkUser = async () => {
-  try {
-    let cognitoUser = await Auth.currentAuthenticatedUser();
 
-    let gqlResponse = await API.graphql(
-      graphqlOperation(user2byEmail, {
-        email: cognitoUser.attributes.email,
-      })
-    );
-    console.log("cog resp:", JSON.stringify(cognitoUser, null, 2))
-    console.log("gql resp:", JSON.stringify(gqlResponse, null, 2))
 
-    const userItems = gqlResponse.data.User2byEmail.items
-    const matchUser = userItems.find(item => 
-      item.username === cognitoUser.username
-    ) ?? userItems[0]
 
-    cognitoUser.attributes["custom:name"] = matchUser.name;
-    cognitoUser.attributes["custom:authType"] = matchUser.authClass;
-    cognitoUser.attributes["custom:defLoc"] = matchUser.locNick;
-    return cognitoUser;
-    
-  } catch (err) {
-    console.log("Error AUthenticating User", err);
-  }
-};
-export const submitConfirm = async (props) => {
-  checkUser()
-    .then((user) => {
-      let event = {
-        token: user.signInUserSession.accessToken.jwtToken,
-        code: props.confirm,
-      };
-      try {
-        axios.post(API_cognitoUser + "/confirmcognitoemail", event);
-      } catch (err) {
-        console.log("Error confirming code", err);
-      }
-    })
-    .then((prod) => {
-      console.log("code confirm", prod);
-      return prod;
-    });
-};
 
-export const setNewPassword = async (props, fns) => {
-  const { setIsLoading, setFormType, userObject } = fns;
-  const { passwordConfirm } = props;
-  setIsLoading(true);
-  await Auth.completeNewPassword(userObject, passwordConfirm).then((use) => {
-    setFormType("onNoUser");
-    setIsLoading(false);
-  });
-};
 
-export const sendForgottenPasswordEmail = async (email) => {
-  Auth.forgotPassword(email)
-    .then((data) => console.log(data))
-    .catch((err) => console.log(err));
-};
-
-export const resetPassword = async (props, fns) => {
-  const { email, code, passwordNew } = props;
-  const { 
-    setIsLoading, 
-    setFormType, 
-    // userObject 
-  } = fns;
-  console.log("fns", fns);
-  console.log("props", props);
-  console.log("code", code);
-  console.log("email", email);
-  console.log("passwordNew", passwordNew);
-  Auth.forgotPasswordSubmit(email, code, passwordNew)
-    .then((data) => console.log(data))
-    .catch((err) => console.log(err))
-    .then((use) => {
-      setFormType("onNoUser");
-      setIsLoading(false);
-    });
-};
 
 // OLD STUFF
 

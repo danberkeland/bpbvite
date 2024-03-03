@@ -3,7 +3,7 @@ import { Calendar } from "primereact/calendar";
 import {
   // dateToMmddyyy_y,
   getWorkingDateTime,
-} from "../../../../functions/dateAndTime";
+} from "../../../../utils/_deprecated/dateAndTime";
 import { DateTime } from "luxon";
 
 export const NotesCalendar = ({ delivDate, setDelivDate, notes }) => {

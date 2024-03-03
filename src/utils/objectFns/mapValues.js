@@ -1,8 +1,9 @@
 /**
- * 
- * @param {Object} obj 
- * @param {function} iterFn 
- * @returns {Object}
+ * @template T
+ * @template Y
+ * @param {{[k: string]: T}} obj 
+ * @param {(t: T) => Y} iterFn 
+ * @returns {{[k: string]: Y}}
  */
 export function mapValues(obj, iterFn) {
 

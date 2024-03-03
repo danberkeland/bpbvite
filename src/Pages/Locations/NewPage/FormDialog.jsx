@@ -17,7 +17,7 @@ import { cleanLocationValues, defaultLocation, useLocationSchema, validateWithCo
 
 import { useListData } from "../../../data/_listData"
 import { isEqual, pickBy, sortBy, truncate } from "lodash"
-import { checkQBValidation_v2 } from "../../../helpers/QBHelpers"
+import { checkQBValidation_v2 } from "../../../data/QBHelpers"
 
 import axios from "axios"
 import { useSettingsStore } from "../../../Contexts/SettingsZustand"

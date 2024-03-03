@@ -8,7 +8,7 @@ import { Column } from "primereact/column";
 import ComposeCroixInfo from "./BPBSWhatToMakeUtils/composeCroixInfo";
 import ComposeNorthList from "../Logistics/utils/composeNorthList";
 
-import { convertDatetoBPBDate, todayPlus } from "../../helpers/dateTimeHelpers";
+import { convertDatetoBPBDate, todayPlus } from "../../utils/_deprecated/dateTimeHelpers";
 
 import { updateProduct } from "../../graphql/mutations";
 

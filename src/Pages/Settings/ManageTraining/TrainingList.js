@@ -7,7 +7,7 @@ import { Column } from "primereact/column";
 
 import TrainingDetails from "./TrainingDetails";
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
-import { withFadeIn } from "../../../hoc/withFadeIn"; 
+import { withFadeIn } from "../../../components/hoc/withFadeIn"; 
 // import { useTrainingListFull } from "../../../data/trainingData.mjs"; 
 import { useListData } from "../../../data/_listData";
 

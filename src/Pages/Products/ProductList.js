@@ -8,7 +8,7 @@ import { Column } from "primereact/column";
 import ProductDetails from "./ProductDetails";
 import { useProductListFull } from "../../data/productData"
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
-import { withFadeIn } from "../../hoc/withFadeIn";
+import { withFadeIn } from "../../components/hoc/withFadeIn";
 import { useEffect } from "react";
 
 const initialState = {

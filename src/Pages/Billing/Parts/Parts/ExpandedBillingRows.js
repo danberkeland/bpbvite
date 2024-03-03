@@ -4,7 +4,7 @@ import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { InputNumber } from "primereact/inputnumber";
 
-import { formatter, getRate } from "../../../../helpers/billingGridHelpers";
+import { formatter, getRate } from "../../billingGridHelpers";
 
 import { GrandTotal } from "../Parts/Parts/GrandTotal";
 
