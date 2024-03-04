@@ -11,6 +11,7 @@ import { compareBy } from "../utils/collectionFns/compareBy"
 import { useRoutes } from "./route/useRoutes"
 import { useZoneRoutes } from "./zoneRoute/useZoneRoutes"
 import { useInfoQBAuths } from "./infoQBAuths/useInfoQBAuths"
+import { useStandings } from "./standing/useStandings"
 
 const shouldFetch = true
 
@@ -58,9 +59,9 @@ export const useLegacyRoutes = () => {
 }
 
 export const useLegacyStanding = () => {
-  const { data:STD } = useListData({ tableName: "Standing", shouldFetch })
-  const { data:PRD } = useListData({ tableName: "Product", shouldFetch })
-  const { data:LOC } = useListData({ tableName: "Location", shouldFetch })
+  const { data:STD } = useStandings({ shouldFetch }) //useListData({ tableName: "Standing", shouldFetch })
+  const { data:PRD } = useProducts({ shouldFetch })
+  const { data:LOC } = useLocations({ shouldFetch })
   const calculateValue = () => (!!STD && !!PRD && !!LOC)
     ? sortBy(mapStandingItemsToLegacy(STD, PRD, LOC), 'timeStamp')
     : undefined
@@ -69,9 +70,9 @@ export const useLegacyStanding = () => {
 }
 
 export const useLegacyOrders = () => {
-  const { data:ORD } = useListData({ tableName: "Order", shouldFetch })
-  const { data:PRD } = useListData({ tableName: "Product", shouldFetch })
-  const { data:LOC } = useListData({ tableName: "Location", shouldFetch })
+  const { data:ORD } = useOrders({ shouldFetch })
+  const { data:PRD } = useProducts({ shouldFetch })
+  const { data:LOC } = useLocations({ shouldFetch })
   const calculateValue = () => (!!ORD && !!PRD && !!LOC)
     ? sortBy(mapOrdersToLegacy(ORD, PRD, LOC), 'prodName')
     : undefined

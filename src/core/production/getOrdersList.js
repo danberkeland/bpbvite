@@ -2,7 +2,7 @@ import { convertDatetoBPBDate } from "../../utils/_deprecated/convertDatetoBPBDa
 import { IsoDate } from "../../utils/dateTimeFns";
 import { uniqByN } from "../../utils/collectionFns/uniqByN";
 import { compareBy } from "../../utils/collectionFns/compareBy";
-import { addRoutes } from "../logistics/addRoutes";
+import { addRoutes } from "../logistics/addRoutes2";
 
 const _getFullOrders = (delivDate, database, includeHolding=false) => {
   // const [products, customers, routes, standing, orders] = database;

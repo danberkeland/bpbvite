@@ -1,8 +1,9 @@
 import { DateTime } from "luxon"
 import { compareBy } from "../../utils/collectionFns/compareBy";
 
+// Mostly original version; for reference only
 
-export const addRoutes = (delivDate, prodGrid, database) => {
+const addRoutes = (delivDate, prodGrid, database) => {
   const [products, customers, routes] = database;
   const sortedRoutes = routes.sort(compareBy(R => R.routeStart, 'desc'))
   

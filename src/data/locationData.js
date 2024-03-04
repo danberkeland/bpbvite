@@ -8,7 +8,7 @@ import { useMemo } from "react"
 import gqlFetcher from "./_fetchers"
 
 
-import * as yup from "yup"
+// import * as yup from "yup"
 import { sortBy } from "lodash"
 
 // const listLocationsSimple = /* GraphQL */ `
@@ -125,191 +125,8 @@ const listLocationsFull = /* GraphQL */ `
     }
   }
 `;
-const getLocationDetails = /* GraphQL */ `
-  query GetLocation($locNick: String!) {
-    getLocation(locNick: $locNick) {
-      Type
-      locNick
-      locName
-      subs {
-        items {
-          id
-          Type
-          authType
-          locNick
-          sub
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      zoneNick
-      zone {
-        zoneNick
-        zoneName
-        description
-        zoneFee
-        zoneRoute {
-          items {
-            routeNick
-          }
-        }
-        createdAt
-        updatedAt
-      }
-      creditApp {
-        id
-        firstName
-        lastName
-        companyName
-        phone
-        email
-        addr1
-        addr2
-        city
-        state
-        zip
-        locAddr1
-        locAddr2
-        locCity
-        locState
-        locZip
-        startDate
-        businessType
-        bankName
-        bankPhone
-        refName
-        refAddr1
-        refAddr2
-        refCity
-        refZip
-        refPhone
-        refEmail
-        refDescrip
-        signture
-        sigDate
-        sigName
-        sigTitle
-        createdAt
-        updatedAt
-      }
-      addr1
-      addr2
-      city
-      zip
-      email
-      orderCnfEmail
-      phone
-      firstName
-      lastName
-      toBePrinted
-      toBeEmailed
-      printDuplicate
-      terms
-      invoicing
-      latestFirstDeliv
-      latestFinalDeliv
-      webpageURL
-      picURL
-      gMap
-      specialInstructions
-      delivOrder
-      qbID
-      currentBalance
-      isActive
-      ttl
-      prodsNotAllowed {
-        items {
-          id
-          isAllowed
-          locNick
-          prodNick
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      customProd {
-        items {
-          id
-          wholePrice
-          locNick
-          prodNick
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      templateProd {
-        items {
-          id
-          locNick
-          prodNick
-          product {
-            prodNick
-            prodName
-            wholePrice
-            retailPrice
-            daysAvailable
-            leadTime
-            packSize
-          }
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      altLeadTimeByProduct {
-        items {
-          id
-          leadTime
-          locNick
-          prodNick
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-      locationCreditAppId
-    }
-  }
-`;
 
-const createLocationMutation = /* GraphQL */ `
-  mutation CreateLocation(
-    $input: CreateLocationInput!
-    $condition: ModelLocationConditionInput
-  ) {
-    createLocation(input: $input, condition: $condition) {
-      locNick
-      createdAt
-    }
-  }
-`;
-const updateLocationMutation = /* GraphQL */ `
-  mutation UpdateLocation(
-    $input: UpdateLocationInput!
-    $condition: ModelLocationConditionInput
-  ) {
-    updateLocation(input: $input, condition: $condition) {
-      locNick
-      createdAt
-    }
-  }
-`;
-const deleteLocationMutation = /* GraphQL */ `
-  mutation DeleteLocation(
-    $input: DeleteLocationInput!
-    $condition: ModelLocationConditionInput
-  ) {
-    deleteLocation(input: $input, condition: $condition) {
-      locNick
-      createdAt
-    }
-  }
-`;
+
 
 // /******************
 //  * QUERIES/CACHES *
@@ -350,6 +167,196 @@ export const revalidateLocationListFull = () => {
     { revalidate: true}
   )
 }
+
+
+
+// const getLocationDetails = /* GraphQL */ `
+//   query GetLocation($locNick: String!) {
+//     getLocation(locNick: $locNick) {
+//       Type
+//       locNick
+//       locName
+//       subs {
+//         items {
+//           id
+//           Type
+//           authType
+//           locNick
+//           sub
+//           createdAt
+//           updatedAt
+//         }
+//         nextToken
+//       }
+//       zoneNick
+//       zone {
+//         zoneNick
+//         zoneName
+//         description
+//         zoneFee
+//         zoneRoute {
+//           items {
+//             routeNick
+//           }
+//         }
+//         createdAt
+//         updatedAt
+//       }
+//       creditApp {
+//         id
+//         firstName
+//         lastName
+//         companyName
+//         phone
+//         email
+//         addr1
+//         addr2
+//         city
+//         state
+//         zip
+//         locAddr1
+//         locAddr2
+//         locCity
+//         locState
+//         locZip
+//         startDate
+//         businessType
+//         bankName
+//         bankPhone
+//         refName
+//         refAddr1
+//         refAddr2
+//         refCity
+//         refZip
+//         refPhone
+//         refEmail
+//         refDescrip
+//         signture
+//         sigDate
+//         sigName
+//         sigTitle
+//         createdAt
+//         updatedAt
+//       }
+//       addr1
+//       addr2
+//       city
+//       zip
+//       email
+//       orderCnfEmail
+//       phone
+//       firstName
+//       lastName
+//       toBePrinted
+//       toBeEmailed
+//       printDuplicate
+//       terms
+//       invoicing
+//       latestFirstDeliv
+//       latestFinalDeliv
+//       webpageURL
+//       picURL
+//       gMap
+//       specialInstructions
+//       delivOrder
+//       qbID
+//       currentBalance
+//       isActive
+//       ttl
+//       prodsNotAllowed {
+//         items {
+//           id
+//           isAllowed
+//           locNick
+//           prodNick
+//           createdAt
+//           updatedAt
+//         }
+//         nextToken
+//       }
+//       customProd {
+//         items {
+//           id
+//           wholePrice
+//           locNick
+//           prodNick
+//           createdAt
+//           updatedAt
+//         }
+//         nextToken
+//       }
+//       templateProd {
+//         items {
+//           id
+//           locNick
+//           prodNick
+//           product {
+//             prodNick
+//             prodName
+//             wholePrice
+//             retailPrice
+//             daysAvailable
+//             leadTime
+//             packSize
+//           }
+//           createdAt
+//           updatedAt
+//         }
+//         nextToken
+//       }
+//       altLeadTimeByProduct {
+//         items {
+//           id
+//           leadTime
+//           locNick
+//           prodNick
+//           createdAt
+//           updatedAt
+//         }
+//         nextToken
+//       }
+//       createdAt
+//       updatedAt
+//       locationCreditAppId
+//     }
+//   }
+// `;
+
+// const createLocationMutation = /* GraphQL */ `
+//   mutation CreateLocation(
+//     $input: CreateLocationInput!
+//     $condition: ModelLocationConditionInput
+//   ) {
+//     createLocation(input: $input, condition: $condition) {
+//       locNick
+//       createdAt
+//     }
+//   }
+// `;
+// const updateLocationMutation = /* GraphQL */ `
+//   mutation UpdateLocation(
+//     $input: UpdateLocationInput!
+//     $condition: ModelLocationConditionInput
+//   ) {
+//     updateLocation(input: $input, condition: $condition) {
+//       locNick
+//       createdAt
+//     }
+//   }
+// `;
+// const deleteLocationMutation = /* GraphQL */ `
+//   mutation DeleteLocation(
+//     $input: DeleteLocationInput!
+//     $condition: ModelLocationConditionInput
+//   ) {
+//     deleteLocation(input: $input, condition: $condition) {
+//       locNick
+//       createdAt
+//     }
+//   }
+// `;
+
+
 
 
 // /**
@@ -447,54 +454,54 @@ export const revalidateLocationListFull = () => {
 // }
 
 
-/***********
- * SCHEMAS *
- ***********/
+// /***********
+//  * SCHEMAS *
+//  ***********/
 
-const createLocationSchema = yup.object().shape({
-  Type: yup.string().default('Location'),
-  locNick: yup.string()
-    .required("Required")
-    .matches(/^[a-z]+$/, "must contain only lowercase letters")
-    // .notOneOf(locNicks, "this id is not available.")
-    .min(2, "Location ID must have at least 2 characters"),
-  locName: yup.string()
-    // .notOneOf(locNames, "this name is not available.")
-    .required("Required"),
+// const createLocationSchema = yup.object().shape({
+//   Type: yup.string().default('Location'),
+//   locNick: yup.string()
+//     .required("Required")
+//     .matches(/^[a-z]+$/, "must contain only lowercase letters")
+//     // .notOneOf(locNicks, "this id is not available.")
+//     .min(2, "Location ID must have at least 2 characters"),
+//   locName: yup.string()
+//     // .notOneOf(locNames, "this name is not available.")
+//     .required("Required"),
 
-  zoneNick: yup.string(),
-  addr1: yup.string(),
-  addr2: yup.string(),
-  city: yup.string(),
-  zip: yup.string(),
-  email: yup.array()
-    .transform(function(value,originalValue){
-      if (this.isType(value) && value !==null) {
-        return value;
-      }
-      return originalValue ? originalValue.split(/[\s,]+/) : [];
-    })
-    .of(yup.string().email(({ value }) => `${value} is not a valid email`)),
-  phone: yup.string()
-    .matches(/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/, "Phone number format xxx-xxx-xxxx"),
-  firstName: yup.string(),
-  lastName: yup.string(),
-  toBePrinted: yup.bool(),
-  toBeEmailed: yup.bool(),
-  printDuplicate: yup.bool(),
-  terms: yup.string(),
-  invoicing: yup.string(),
-  latestFirstDeliv: yup.number(),
-  latestFinalDeliv: yup.number(),
-  webpageURL: yup.string(),
-  picURL: yup.string(),
-  gMap: yup.string(),
-  specialInstructions: yup.string(),
-  delivOrder: yup.number().integer(),
-  qbID: yup.string(),
-  currentBalance: yup.string(),
-  isActive: yup.bool(),
-})
+//   zoneNick: yup.string(),
+//   addr1: yup.string(),
+//   addr2: yup.string(),
+//   city: yup.string(),
+//   zip: yup.string(),
+//   email: yup.array()
+//     .transform(function(value,originalValue){
+//       if (this.isType(value) && value !==null) {
+//         return value;
+//       }
+//       return originalValue ? originalValue.split(/[\s,]+/) : [];
+//     })
+//     .of(yup.string().email(({ value }) => `${value} is not a valid email`)),
+//   phone: yup.string()
+//     .matches(/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/, "Phone number format xxx-xxx-xxxx"),
+//   firstName: yup.string(),
+//   lastName: yup.string(),
+//   toBePrinted: yup.bool(),
+//   toBeEmailed: yup.bool(),
+//   printDuplicate: yup.bool(),
+//   terms: yup.string(),
+//   invoicing: yup.string(),
+//   latestFirstDeliv: yup.number(),
+//   latestFinalDeliv: yup.number(),
+//   webpageURL: yup.string(),
+//   picURL: yup.string(),
+//   gMap: yup.string(),
+//   specialInstructions: yup.string(),
+//   delivOrder: yup.number().integer(),
+//   qbID: yup.string(),
+//   currentBalance: yup.string(),
+//   isActive: yup.bool(),
+// })
 
 // const updateLocationSchema = yup.object().shape({
 //   Type: yup.string(),
