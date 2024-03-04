@@ -341,7 +341,7 @@ export default class ComposeNorthList {
       : new Date()
 
     const northSetoutRecord = QBInfo.find(item =>
-      item.id === tomorrow + "PradosetoutTime"
+      item.id === tomorrow + "CarltonsetoutTime"
     )
     const northSetoutTime = !!northSetoutRecord 
       ? new Date(northSetoutRecord.updatedAt) 
