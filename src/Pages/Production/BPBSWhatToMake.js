@@ -369,14 +369,7 @@ function BPBSWhatToMake() {
             ></Column>
           </DataTable>
         </React.Fragment>
-        <h2>Baguette Production</h2>
-        <DataTable value={baguetteStuff} className="p-datatable-sm">
-          <Column field="Prod" header="Product"></Column>
-          <Column field="Bucket" header="Bucket"></Column>
-          <Column field="Mix" header="Mix"></Column>
-          <Column field="Bake" header="Bake"></Column>
-        </DataTable>
-        <br />
+        
         <h2>Send Pockets North</h2>
         <DataTable value={pocketsNorth} className="p-datatable-sm">
           <Column field="forBake" header="Product"></Column>
