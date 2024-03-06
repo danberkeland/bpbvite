@@ -43,7 +43,7 @@ const RouteGrid = () => {
 
   // fortunately these both use the same order hook, so fetching is not
   // duplicated, and mutations to the order cache will update both
-  const { data:gridData } = useRouteGrid({ 
+  const { data:gridData, pradoPackData, higueraPackData } = useRouteGrid({ 
     reportDate: reportDateDT.toFormat('yyyy-MM-dd'), shouldFetch: true
   })
   const { 
@@ -133,6 +133,27 @@ const RouteGrid = () => {
           style={{width: "100%", marginTop: "1rem"}}
           disabled={routeOptions.includes('NOT ASSIGNED')}
         />
+
+        <Button label={<span>Prado<br/>Pack Lists</span>}
+          onClick={() => {
+            const gridData = pradoPackData?.pdfGrids
+            const fStr = `${reportDateISO}_Prado_Pack_All`
+            exportGrids({ gridData, fileName: fStr + '_Route_Grids.pdf' })
+          }} 
+          style={{width: "100%", marginTop: "3rem"}}
+          disabled={routeOptions.includes('NOT ASSIGNED') || !pradoPackData}
+        />
+
+        <Button label={<span>Higuera<br/>Pack Lists</span>}
+          onClick={() => {
+            const gridData = higueraPackData?.pdfGrids
+            const fStr = `${reportDateISO}_Higuera_Pack_All`
+            exportGrids({ gridData, fileName: fStr + '_Route_Grids.pdf' })
+          }} 
+          style={{width: "100%", marginTop: "1rem"}}
+          disabled={routeOptions.includes('NOT ASSIGNED') || !pradoPackData}
+        />
+
       </div>
 
       <div>
