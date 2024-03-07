@@ -16,6 +16,7 @@ import { useSettingsStore } from "../../../Contexts/SettingsZustand";
 import { FieldArray } from "formik";
 import { Dropdown } from "primereact/dropdown";
 import { useListData } from "../../../data/_listData";
+import { compareBy } from "../../../utils/collectionFns/compareBy";
 
 const BPB = new CustomInputs();
 
@@ -69,8 +70,8 @@ const handleDeleteCustLoc = (values, arrayHelpers, index) => {
 };
 
 function CustomerDescription(props) {
-  const { data:locationList } = useListData({ tableName: "Location", shouldFetch: true})
-  
+  const { data:__locationList } = useListData({ tableName: "Location", shouldFetch: true})
+  const locationList = (__locationList ?? []).sort(compareBy(L => L.locName))
 
   const [
     chosenLoc, 
@@ -111,12 +112,13 @@ function CustomerDescription(props) {
       label: item.locName
     })) : []
 
-  let leftOuttList = locationList
-    ? locationList.filter((sim) => !checkList.includes(sim.locNick)).map(item => ({
-      value: item.locNick,
-      label: item.locName
-    })
-      
+  let leftOuttList = !!locationList
+    ? locationList
+        .filter((sim) => !checkList.includes(sim.locNick))
+        .map(item => ({
+          value: item.locNick,
+          label: item.locName
+        })
     )
     : [];
   return (

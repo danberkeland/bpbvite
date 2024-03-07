@@ -320,7 +320,7 @@ export const deleteLocationUser = (event) => {
 };
 
 const createCognitoUser = (event) => {
-  return bpbRouterFetcher(event, "/createcognitouser");
+  return cognitoFetcher(event, "/createcognitouser");
 };
 
 const updateCognitoUser = (event) => {
