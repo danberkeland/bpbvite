@@ -212,21 +212,18 @@ export const checkForUpdates = async (
    * 
    * This will clean up a lot if we can move away from using the legacy database.
    * @param {CreateOrderInput} squareOrder 
-   * @returns 
+   * @returns {boolean}
    */
   const hasMatchInDb = squareOrder => {
-    const sqProdName = 
-      products.find(P => P.nickName = squareOrder.prodNick)?.prodName ?? "Brownie"
+    const squareOrderProdName = 
+      products.find(P => P.nickName === squareOrder.prodNick)?.prodName
 
     return retailOrders.some(dbOrder => 1
       && squareOrder.locNick === dbOrder.custName // << this is a special case where the 'nick and 'name are equal; see sqOrderToCreateOrderInput
-      && (0
-        || dbOrder.prodName === sqProdName
-        || (squareOrder.prodNick === "brn" && dbOrder.prodName === "Brownie")
-      )
+      && dbOrder.prodName === squareOrderProdName
     )
-
   }
+  console.log("retailOrders", retailOrders)
   
   let ordersToUpdate = structuredClone(orders)
   let squarePromises = []
@@ -245,20 +242,6 @@ export const checkForUpdates = async (
 
 
   }
-
-  // const squareInputs = squareOrders
-  //   .map(sqOrder => sqOrderToCreateOrderInput(sqOrder, products))
-  //   .filter(reformattedOrder => !hasMatchInDb(reformattedOrder))
-
-  // for (let input of squareInputs) {
-  //   squarePromises.push(
-  //     API.graphql(graphqlOperation(createOrder, { input } ))
-  //   )
-
-  //   // mutate ordersToUpdate to reflect expected DB changes
-  //   ordersToUpdate.push(input)
-
-  // }
 
   if (squarePromises.length) {
     await Promise.all(squarePromises).then(results => {
