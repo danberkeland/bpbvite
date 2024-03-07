@@ -60,11 +60,12 @@ const RouteGrid = () => {
   const { data:RTE } = useListData({ tableName: "Route", shouldFetch: true })
   const { data:LOC } = useListData({ tableName: "Location", shouldFetch: true })
 
+  const noteHelpRef = useRef()
   const [isEditingNote, setIsEditingNote] = useState(false)
 
   const [displayNote, setDisplayNote] = useState('')
   const NOTE = useNotesByType({ shouldFetch:true, Type: 'packList' })
-  const noteData = NOTE?.data.filter(N => N.when === reportDateISO)
+  const noteData = (NOTE?.data ?? []).filter(N => N.when === reportDateISO)
 
   // filter should return max 1 note; we're just reusing the list query,
   // so an array is returned
@@ -324,8 +325,18 @@ const RouteGrid = () => {
         }}>
 
           <div style={{color: "var(--bpb-text-color)", fontSize: "1.1rem"}}>
-            Note for {routeNick}
+            Note for {routeNick} <i className="pi pi-question-circle" style={{color: "hsl(218, 65%, 50%)"}} onClick={e => noteHelpRef.current.toggle(e)} />
           </div>
+          <OverlayPanel ref={noteHelpRef} style={{maxWidth: "18rem", padding: "1rem"}}>
+            <p>
+              A note entered here will show up below the {routeNick} grid on the printout.
+            </p>
+            <p>
+              Be careful with large, multi-line notes, or notes for large, 
+              page-filling tables. Text that goes passes the bottom of the page
+              will simply be cut off.
+            </p>
+          </OverlayPanel>
 
           {!isEditingNote &&  
             <div style={{maxWidth: "18rem", display:"flex", flexDirection:"column", alignItems: "flex-end"}}>

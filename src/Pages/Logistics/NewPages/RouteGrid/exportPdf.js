@@ -9,7 +9,7 @@ import { downloadPDF } from "../../../../utils/pdf/downloadPDF"
 export const exportRouteGridPdf = ({ gridData, reportDateDT, fileName, noteData=[] }) => {
 
   const notesDataByRouteNick = mapValues(
-    groupBy(noteData.filter(N => N.Type === 'packList'), N => N.ref),
+    groupBy(noteData.filter(N => N.Type === 'packList' && !!N.note), N => N.ref),
     groupArray => groupArray[0]
   )
     console.log("notesDataByRouteNick", notesDataByRouteNick)
