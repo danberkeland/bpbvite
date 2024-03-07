@@ -1,14 +1,14 @@
 import axios from "axios"
 import { API, graphqlOperation } from "aws-amplify"
-import { getInfoQBAuth } from "../../../graphql/queries"
+import { getInfoQBAuth } from "../graphql/queries"
 
 const qbEndpoints = {
   getAccessToken: "https://28ue1wrzng.execute-api.us-east-2.amazonaws.com/done",
-  get: "https://unfaeakk8g.execute-api.us-east-2.amazonaws.com/done",
-  create: "https://9u7sp5khrc.execute-api.us-east-2.amazonaws.com/done",
-  delete: "https://63m47lgp1b.execute-api.us-east-2.amazonaws.com/done",
-  getPdf: "https://47i7i665dd.execute-api.us-east-2.amazonaws.com/done",
-  sendEmail: "https://uhjpmnpz12.execute-api.us-east-2.amazonaws.com/emailQBInvoice"
+  get:            "https://unfaeakk8g.execute-api.us-east-2.amazonaws.com/done",
+  create:         "https://9u7sp5khrc.execute-api.us-east-2.amazonaws.com/done",
+  delete:         "https://63m47lgp1b.execute-api.us-east-2.amazonaws.com/done",
+  getPdf:         "https://47i7i665dd.execute-api.us-east-2.amazonaws.com/done",
+  sendEmail:      "https://uhjpmnpz12.execute-api.us-east-2.amazonaws.com/emailQBInvoice"
 }
 
 /**
