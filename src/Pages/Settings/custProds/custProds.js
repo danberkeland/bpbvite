@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
@@ -21,14 +21,19 @@ import {
 import { API, graphqlOperation } from "aws-amplify";
 
 import { useSettingsStore } from "../../../Contexts/SettingsZustand";
-import {
-  revalidateProductListFull,
-  useProductListFull,
-} from "../../../data/productData";
-import {
-  revalidateLocationListFull,
-  useLocationListFull,
-} from "../../../data/locationData";
+// import {
+//   revalidateProductListFul_l,
+//   useProductListFul_l,
+// } from "../../../data/productDat_a";
+
+// import {
+//   revalidateLocationListFul_l,
+//   useLocationListFul_l,
+// } from "../../../data/locationDat_a";
+import { useLocations } from "../../../data/location/useLocations";
+import { useListData } from "../../../data/_listData";
+import { compareBy, groupByObject, keyBy } from "../../../utils/collectionFns";
+import { useProducts } from "../../../data/product/useProducts";
 
 const clonedeep = require("lodash.clonedeep");
 
@@ -36,11 +41,59 @@ const CustProds = () => {
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
   const modifications = useSettingsStore((state) => state.isChange);
   const setModifications = useSettingsStore((state) => state.setIsChange);
-  const chosen = useSettingsStore((state) => state.chosen);
-  const setChosen = useSettingsStore((state) => state.setChosen);
+  // const chosen = useSettingsStore((state) => state.chosen);
+  // const setChosen = useSettingsStore((state) => state.setChosen);
 
-  const { data: products } = useProductListFull(true);
-  const { data: customers } = useLocationListFull(true);
+  // const { data: products } = useProductListFul_l(true);
+  // const { data: customers } = useLocationListFul_l(true);
+
+  const { data: products, mutate:revalidateProductListFull } = useProducts({ shouldFetch: true })
+
+  const { data: LOC, mutate:revalidateLocationListFull } = useLocations({ shouldFetch: true })
+  const { data: TMP } = useListData({ tableName: "TemplateProd", shouldFetch: true })
+  const { data: PNA } = useListData({ tableName: "ProdsNotAllowed", shouldFetch: true })
+  const { data: ALT } = useListData({ tableName: "AltPricing", shouldFetch: true })
+
+  const customers = useMemo(() => {
+    if (!LOC || !TMP || !PNA || !ALT) return undefined
+
+    const productDict = keyBy(products, P => P.prodNick)
+
+    const pnaByLocNick = groupByObject(PNA, pna => pna.locNick)
+    const tmpByLocNick = groupByObject(TMP, tmp => tmp.locNick)
+    const altByLocNick = groupByObject(ALT, alt => alt.locNick)
+
+    return LOC.map(L => ({
+      ...L,
+      prodsNotAllowed: { 
+        items: (pnaByLocNick[L.locNick] ?? []).map(pna => ({ 
+          ...pna,
+          product: {
+            prodNick: pna.prodNick,
+            prodName: productDict[pna.prodNick].prodName
+          }
+        })) 
+      },
+      customProd: { 
+        items: (altByLocNick[L.locNick] ?? []).map(alt => ({
+          ...alt,
+          product: {
+            prodNick: alt.prodNick,
+            prodName: productDict[alt.prodNick].prodName
+          }
+        }))
+      },
+      templateProd: {
+        items: (tmpByLocNick[L.locNick] ?? []).map(tmp => ({
+          ...tmp,
+          product: {
+            prodName: productDict[tmp.prodNick].prodName
+          }
+        }))
+      }
+    }))
+    .sort(compareBy(L => L.locName))
+  }, [LOC, TMP, PNA, ALT])
 
   const [productList, setProductList] = useState(products);
 
@@ -53,15 +106,17 @@ const CustProds = () => {
   ] = useState([]);
 
   const customerGroup = customers;
-  useEffect(() => {
-    setChosen("");
-  }, []);
+  // useEffect(() => {
+  //   setChosen("");
+  // }, []);
+  const [chosen, setChosen] = useState("")
 
   useEffect(() => {
     console.log("productLst", productList);
   }, [productList]);
 
   useEffect(() => {
+    if (!!customers && !!products && !!chosen) {
     try {
       let newProdList = clonedeep(products);
       for (let prod of newProdList) {
@@ -114,7 +169,8 @@ const CustProds = () => {
     } catch {
       console.log("not ready yet");
     }
-  }, [products, chosen]);
+    }
+  }, [customers, products, chosen]);
 
   const isIncluded = (data) => {
     return (

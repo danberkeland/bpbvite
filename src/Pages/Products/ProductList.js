@@ -6,10 +6,11 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
 import ProductDetails from "./ProductDetails";
-import { useProductListFull } from "../../data/productData"
+// import { useProductListFul_l } from "../../data/productDat_a"
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { withFadeIn } from "../../components/hoc/withFadeIn";
 import { useEffect } from "react";
+import { useProducts } from "../../data/product/useProducts";
 
 const initialState = {
   Type: "Product",
@@ -56,7 +57,10 @@ function ProductList({ selectedProduct, setSelectedProduct }) {
     prodName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
 
-  const {data: productList, errors: productListErrors} = useProductListFull(true);
+  // const {data: productList, errors: productListErrors} = useProductListFul_l(true);
+  const {data: productList, error: productListErrors} = useProducts({ shouldFetch: true });
+
+
   const formKeys = Object.keys(initialState)
   const tableData = productList?.map(item => {
     let cleanedItem = formKeys.reduce((cItem, key) => {
