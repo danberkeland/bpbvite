@@ -1,6 +1,5 @@
 import { useMemo } from "react"
 import { useLocation, useLocations } from "../../../data/location/useLocations"
-import { Data } from "../../../utils/dataFns.js"
 import { useLoadedGetRouteOptions, useLoadedGetServingRoutes } from "../../../data/routing/useRouting.js"
 import { useProducts } from "../../../data/product/useProducts"
 import { useLocationProductOverridesByLocNick } from "../../../data/locationProductOverride/useLocationProductOverrides.js"
@@ -13,6 +12,7 @@ import { useTemplateProdsByLocNick } from "../../../data/templateProd/useTemplat
 import { addMetadataToLocation, calculateCalendarSummary, calculateCustomizedProducts } from "./orderingPageCalcs.js"
 import { DateObj, OrderingUser } from "./orderingTypes.d.js"
 import { DateTime } from "luxon"
+import { compareBy } from "../../../utils/collectionFns.js"
 
 // Optimize queries a bit by reducing fields returned.
 // Don't call useLocations or useProducts elsewhere in the ordering page.
@@ -80,7 +80,7 @@ const useOrderingPageData = (
   })
 
   const locations = useMemo(() => {
-    return (isAdmin && !!LOC) ? Data.orderBy(LOC, [L => L.locName], ["asc"])
+    return (isAdmin && !!LOC) ? LOC.sort(compareBy(L => L.locName, "asc")) // Dat_a.orderBy(LOC, [L => L.locName], ["asc"])
       : !!loc ? [loc] 
       : undefined
   }, [loc, LOC, isAdmin])

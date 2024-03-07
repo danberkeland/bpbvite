@@ -2,7 +2,7 @@
 import { groupByArray } from "./collectionFns/groupByArray"
 import { groupByArrayIsEqual } from "./collectionFns/groupByArrayIsEqual"
 import { uniqBy } from "./collectionFns/uniqBy"
-import { mapValues } from "./objectFns/mapValues"
+import { mapValues } from "./objectFns"
 
 // Not sure if this kinds of type documentation 
 // is going to create good autocompletion...

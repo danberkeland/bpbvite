@@ -1,12 +1,12 @@
 import { useMemo } from "react";
 import { useLocations } from "../../../../data/location/useLocations";
 import { useProducts } from "../../../../data/product/useProducts";
-import { Data } from "../../../../utils/dataFns";
 import { DateTime } from "luxon";
-import { DBLocation, DBProduct } from "../../../../data/types.d.js";
+import { DBProduct } from "../../../../data/types.d.js";
 import { useCombinedRoutedOrdersByDate } from "../../../../data/production/useProductionData.js";
 import { useInfoQBAuths } from "../../../../data/infoQBAuths/useInfoQBAuths.js";
 import { DT } from "../../../../utils/dateTimeFns.js";
+import { compareBy, groupByArrayRdc, keyBy, sumByRdc } from "../../../../utils/collectionFns.js";
 
 // These equivalences cannot be queried directly from DB records;
 // better to hard code the values for now.
@@ -66,8 +66,7 @@ const useNorthListData = ({
     // const locations = LOC.reduce(Data._keyBy(L => L.locNick), {})
 
     /** @type {Object<string, DBProduct>} */
-    const products = PRD.reduce(Data._keyBy(P => P.prodNick), {})
-    
+    const products = keyBy(PRD, P => P.prodNick)
 
     // ***** Croissant List *****
 
@@ -75,7 +74,7 @@ const useNorthListData = ({
 
     // IMPORTANT rule: product list must be sorted by prodName (ascending) 
     // when we find by forBake
-    const sortedProducts = PRD.sort(Data.compareBy(P => P.prodName))
+    const sortedProducts = PRD.sort(compareBy(P => P.prodName))
     const freezerNorthInventory = initialCroissantRows.map(row => {
       const productRep = sortedProducts.find(P => P.forBake === row.forBake)
 
@@ -104,10 +103,10 @@ const useNorthListData = ({
     console.log("T1Baked", T1Baked)
 
     const frozensNeeded = [...T0Frozen, ...T1Baked]
-      .reduce(Data._bucketBy(order => prodNickToForBakeMap[order.prodNick]), [])
+      .reduce(groupByArrayRdc(order => prodNickToForBakeMap[order.prodNick]), [])
       .map(shapeTypeGroup => {
 
-        const qty = shapeTypeGroup.reduce(Data._sumBy(order => 
+        const qty = shapeTypeGroup.reduce(sumByRdc(order => 
           order.qty * products[order.prodNick].packSize), 0
         )
 

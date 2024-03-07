@@ -7,7 +7,7 @@
  */
 
 /**
- * Checks for equality of length, and for equality of values 
+ * Checks for equality of length, and for equality (===) of values 
  * on all corresponding indexes.
  * @param {SimpleArray} array1 
  * @param {SimpleArray} array2 

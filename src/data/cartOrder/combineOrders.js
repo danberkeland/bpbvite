@@ -1,6 +1,5 @@
 import { isoToDT } from "../../Pages/Production/NewPages/BPBN/utils.js"
-import { List } from "../../utils/listFns.js"
-import { Data } from "../../utils/dataFns.js"
+import { uniqBy } from "../../utils/collectionFns/uniqBy.js"
 /**@typedef {import('../types.d.js').DBOrder} DBOrder*/
 /**@typedef {import('../types.d.js').DBStanding} DBStanding*/
 
@@ -33,7 +32,7 @@ const toOrder = (standing, delivDate) => {
     delivDate,
     locNick, 
     prodNick,
-    ItemNote,
+    ItemNote: ItemNote ?? '',
     route,
     delivFee: null,
     qty,
@@ -68,8 +67,8 @@ const _combineOrdersGrug = (
   optDates,
 ) => {
   const dates = !!optDates
-    ? List.uniq(optDates)
-    : List.uniq(orders.map(order => order.delivDate))
+    ? uniqBy(optDates, x => x)
+    : uniqBy(orders.map(order => order.delivDate), x => x)
 
   return dates.length 
     ? dates.map(delivDate => {
@@ -82,7 +81,8 @@ const _combineOrdersGrug = (
         const S = _sByDate.filter(S => S.Type === "Standing")
         const H = _sByDate.filter(S => S.Type === "Holding")
 
-        return Data.uniqBy([...O, ...S, ...H],
+        return uniqBy(
+          [...O, ...S, ...H],
           item => `${item.isWhole}#${item.locNick}#${item.prodNick}`
         )
       })

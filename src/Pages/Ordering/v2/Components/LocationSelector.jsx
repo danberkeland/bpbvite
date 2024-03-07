@@ -2,8 +2,7 @@ import { AutoComplete } from "primereact/autocomplete"
 import React, { useRef, useState } from "react"
 import {  rankedSearch } from "../../../../utils/textSearch"
 import { DBLocation } from "../../../../data/types.d.js"
-import { Data } from "../../../../utils/dataFns.js"
-import { Button } from "primereact/button"
+import { compareBy } from "../../../../utils/collectionFns.js"
 // import { useOrderingPageLocations, useOrderingPageProducts } from "../stores.js"
 // import { useSettingsStore } from "../../../../Contexts/SettingsZustand.js"
 
@@ -156,7 +155,7 @@ const LocationSelector = ({
       displayValue={displayValue}
       setDisplayValue={setDisplayValue}
       displayField="locName"
-      data={locations?.sort(Data.compareBy(L => L.locName)) ?? []}
+      data={locations?.sort(compareBy(L => L.locName)) ?? []}
       searchFields={['locNick', 'locName']}
       itemTemplate={locationSelectorItemTemplate}
       placeholder={disabled ? "" : undefined}

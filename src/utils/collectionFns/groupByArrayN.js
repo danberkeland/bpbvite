@@ -3,7 +3,7 @@
 
 
 /**
- * Partitions data according to multiple inter fns.
+ * Partitions data according to multiple inter fn values.
  * 
  * Grouping requires matching values on each iter fn result.
  * Unlike the 'Object' flavor of groupBy, the array grouping comparisons
@@ -14,7 +14,7 @@
  * @param {((t: T) => Result)[]} iterFns
  * @returns {T[][]}
  */
-export function groupByArrayMultipleConditions(data, iterFns) {
+export function groupByArrayN(data, iterFns) {
 
   /** @type {Result[][]} */
   let prevResults = []

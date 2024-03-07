@@ -6,7 +6,7 @@ import {
 import { createColumns } from "./createColumns";
 
 import { sumBy } from "../../../utils/collectionFns/sumBy";
-import { objProject } from "../../../utils/objectFns/objProject";
+import { objProject } from "../../../utils/objectFns";
 import { compareBy } from "../../../utils/collectionFns/compareBy";
 import { tablePivot, tablePivotFlatten } from "../../../utils/tablePivot";
 import { getOrdersList as _getOrdersList } from "../../../core/production/getOrdersList";

@@ -6,10 +6,10 @@ import { useProducts } from "../product/useProducts";
 import { useRoutes } from "../route/useRoutes";
 import { useLoadedGetRouteOptions } from "../routing/useRouting";
 import { useLocationProductOverrides } from "../locationProductOverride/useLocationProductOverrides";
-import { Data } from "../../utils/dataFns.js";
 import { combineOrders } from "../cartOrder/combineOrders";
 import { overrideProduct } from "../locationProductOverride/overrideProduct.js";
 import { useMemo } from "react";
+import { keyBy } from "../../utils/collectionFns.js";
 
 /**
  * @param {Object} input
@@ -32,8 +32,8 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false }) => {
   const calcRoutedOrders = () => {
     if (!ORD || !STD || !LOC || !PRD || !OVR || !RTE || !getRoutes) return []
 
-    const locations = LOC.reduce(Data._keyBy(L => L.locNick), {})
-    const products = PRD.reduce(Data._keyBy(P => P.prodNick), {})
+    const locations = keyBy(LOC, L => L.locNick) // LOC.reduce(Data._keyBy(L => L.locNick), {})
+    const products = keyBy(PRD, P => P.prodNick) // PRD.reduce(Data._keyBy(P => P.prodNick), {})
 
     const _STD = useHolding ? STD : STD.filter(std => std.isStand === true)
 

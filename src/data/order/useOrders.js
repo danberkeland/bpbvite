@@ -1,7 +1,7 @@
 import { useMemo } from "react"
 import { useListData } from "../_listData.js"
 
-import { Data } from "../../utils/dataFns.js"
+import { compareBy, groupByArray } from "../../utils/collectionFns.js"
 
 /**
  * Cleans incoming data by separating out any "duplicate" records. Strategy to
@@ -28,11 +28,11 @@ const useOrdersGeneric = ({ shouldFetch, customQuery, variables }) => {
     /** @type {import('../types.d.js').DBOrder[]} */ 
     const orders = cacheData
 
-    const groupList = Data.bucketBy(orders, 
+    const groupList = groupByArray(orders, 
       I => `${I.isWhole}#${I.delivDate}#${I.locNick}#${I.prodNick}`
     )
     const sortedGroupList = groupList.map(grp => 
-      Data.orderBy(grp, [item => item.updatedOn], ["desc"])
+      grp.sort(compareBy(item => item.updatedOn, "desc"))
     )
     const returnData = sortedGroupList.map(grp => grp[0])
     const dupes = sortedGroupList.flatMap(grp => grp.slice(1))

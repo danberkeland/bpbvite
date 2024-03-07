@@ -1,7 +1,6 @@
 import { PICKUP_ZONES } from "../../constants/constants";
-import { Data } from "../../utils/dataFns";
-import { CartOrder, DBLocation, DBOrder, FulfillmentOption, Exte, ExtendedOrderItem } from "../types.d";
-
+import { groupByArray } from "../../utils/collectionFns";
+import { CartOrder, DBLocation, DBOrder, ExtendedOrderItem } from "../types.d";
 
 
 /**
@@ -13,7 +12,7 @@ import { CartOrder, DBLocation, DBOrder, FulfillmentOption, Exte, ExtendedOrderI
  */
 const constructCartOrders = (combinedOrders) => {
 
-  const groupedOrders = Data.bucketBy(
+  const groupedOrders = groupByArray(
     combinedOrders,
     order => `${order.locNick}#${order.delivDate}#${order.isWhole}`
   )

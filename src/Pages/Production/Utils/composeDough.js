@@ -20,15 +20,9 @@ import {
 import { sortAtoZDataByIndex } from "../../../utils/_deprecated/utils";
 
 import { getOrdersList } from "../../../core/production/getOrdersList"
-import { LegacyDatabase, LegacyProduct } from "../../../data/legacyData";
-import { round } from "lodash";
-import { sumBy } from "../../../utils/collectionFns/sumBy";
-import { uniqByRdc } from "../../../utils/collectionFns/uniqByRdc";
-import { sumByRdc } from "../../../utils/collectionFns/sumByRdc";
-import { groupByObject } from "../../../utils/collectionFns/groupByObject";
-import { mapValues } from "../../../utils/objectFns/mapValues";
-import { uniqBy } from "../../../utils/collectionFns/uniqBy";
-import { keyBy } from "../../../utils/collectionFns/keyBy";
+import { LegacyDatabase } from "../../../data/legacyData";
+import { mapValues } from "../../../utils/objectFns";
+import { groupByObject, keyBy, sumBy } from "../../../utils/collectionFns";
 
 
 const clonedeep = require("lodash.clonedeep");

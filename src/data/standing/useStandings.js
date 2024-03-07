@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 import { useListData } from "../_listData.js"
-import { Data } from "../../utils/dataFns.js"
+import { compareBy, groupByArray } from "../../utils/collectionFns.js"
 
 /**@typedef {import('../types.d.js').DBStanding} DBStanding*/ 
 
@@ -26,15 +26,14 @@ const useStandingsGeneric = ({shouldFetch, customQuery, variables}) => {
     /** @type {DBStanding[]} */ 
     const standings = cacheData
 
-    const groupList = Data.bucketBy(standings, 
+    const groupList = groupByArray(standings, 
       I => `${I.isWhole}#${I.dayOfWeek}#${I.locNick}#${I.prodNick}`
     )
     const sortedGroupList = groupList.map(grp => 
-      Data.orderBy(
-        grp, 
-        [(/** @type {DBStanding} */ item) => item.updatedAt], 
-        ["desc"]
-      )
+      grp.sort(compareBy(
+        (/** @type {DBStanding} */ item) => item.updatedAt, 
+        "desc"
+      ))
     )
     const returnData = sortedGroupList.map(grp => grp[0])
     const dupes = sortedGroupList.flatMap(grp => grp.slice(1))

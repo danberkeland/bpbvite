@@ -1,12 +1,12 @@
-import { Data } from "../../../utils/dataFns.js"
 import { preDBOverrides, postDBOverrides } from "../../../data/product/testOverrides.js"
 import { getOverrideProps } from "../../../data/locationProductOverride/overrideProduct.js"
-import { Obj } from "../../../utils/objectFns.js"
+import { mapValues } from "../../../utils/objectFns.js"
 import { DT, IsoDate } from "../../../utils/dateTimeFns.js"
 import { combineOrders } from "../../../data/cartOrder/combineOrders.js"
 import { DBOrder, DBStanding } from "../../../data/types.d.js"
 import { PICKUP_ZONES, WEEKDAYS_EEE, WEEKDAYS_NUM } from "../../../constants/constants.js"
 import { reformatProdName } from "../utils/reformatProdName.js"
+import { groupByObjectRdc, keyBy } from "../../../utils/collectionFns.js"
 
 
 const getSelectedDateList = (delivDtBegin, delivDtEnd, orderDT) => {
@@ -91,7 +91,7 @@ const calculateCustomizedProducts = (location, PRD, OVR, getOptions) => {
 
   })
 
-  customizedProducts = Data.keyBy(customizedProducts, P => P.prodNick)
+  customizedProducts = keyBy(customizedProducts, P => P.prodNick)
   
   return customizedProducts
   
@@ -104,9 +104,9 @@ const calculateCalendarSummary = (ORD, STN, isWhole) => {
   /** @type {Object.<string, DBStanding[]>} */
   const standingByDayOfWeek = 
     STN.filter(stn => stn.isWhole === isWhole && stn.isStand === true)
-      .reduce(Data._groupBy(stn => stn.dayOfWeek), {})
+      .reduce(groupByObjectRdc(stn => stn.dayOfWeek), {})
 
-  const dayOfWeekSummary = Obj.mapValues(
+  const dayOfWeekSummary = mapValues(
     standingByDayOfWeek,
     standingGroup => standingGroup.some(stn => stn.qty !== 0)
   )
@@ -115,7 +115,7 @@ const calculateCalendarSummary = (ORD, STN, isWhole) => {
   /** @type {Object.<string, DBOrder[]>} */
   const ordersByDate = 
     ORD.filter(ord => ord.isWhole === isWhole)
-      .reduce(Data._groupBy(ord => ord.delivDate), {})
+      .reduce(groupByObjectRdc(ord => ord.delivDate), {})
 
   const dateSummaryEntries = Object.keys(ordersByDate)
     .map(delivDate => {

@@ -1,9 +1,9 @@
 import React, { useRef, useState } from "react"
 import { AutoComplete } from "primereact/autocomplete"
 import { rankedSearch } from "../../../../utils/textSearch"
-import { Data } from "../../../../utils/dataFns.js"
 import { Button } from "primereact/button"
 import { useTemplateProdsByLocNick } from "../../../../data/templateProd/useTemplateProd.js"
+import { compareBy } from "../../../../utils/collectionFns.js"
 
 
 const ProductSelector = ({ 
@@ -39,12 +39,12 @@ const ProductSelector = ({
 
   const dropdownOptions = authClass === 'bpbfull'
     ? Object.values(products ?? {})
-        .sort(Data.compareBy(P => P.meta.reformattedProdName))
-        .sort(Data.compareBy(P => !TMP.some(tmp => tmp.prodNick === P.prodNick)))
+        .sort(compareBy(P => P.meta.reformattedProdName))
+        .sort(compareBy(P => !TMP.some(tmp => tmp.prodNick === P.prodNick)))
     : Object.values(products ?? {})
         .filter(P => P.defaultInclude === true)
-        .sort(Data.compareBy(P => P.meta.reformattedProdName))
-        .sort(Data.compareBy(P => !TMP.some(tmp => tmp.prodNick === P.prodNick)))
+        .sort(compareBy(P => P.meta.reformattedProdName))
+        .sort(compareBy(P => !TMP.some(tmp => tmp.prodNick === P.prodNick)))
   
   const [suggestions, setSuggestions] = useState(dropdownOptions)
     const ref = useRef(null)

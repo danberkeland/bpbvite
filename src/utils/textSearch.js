@@ -1,5 +1,4 @@
 import { min, sortBy } from "lodash";
-import { Data } from "./dataFns";
 
 const levenshteinDistance = (s, t) => {
   if (!s.length) return t.length;

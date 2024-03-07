@@ -4,8 +4,8 @@ import { CartCalendar } from "./CartCalendar"
 import { CartHeader } from "./CartHeader"
 import { CartItemList } from "./CartItemList"
 import { Button } from "primereact/button"
-import { Data } from "../../../../../utils/dataFns"
 import { round } from "lodash"
+import { sumByRdc } from "../../../../../utils/collectionFns"
 
 
 
@@ -28,7 +28,7 @@ const CartTab = ({
 
   const { cartChanges } = cartProps
   const cartTotal = cartChanges?.[0].items
-    .reduce(Data._sumBy(item => item.qty * item.rate), 0) ?? 0
+    .reduce(sumByRdc(item => item.qty * item.rate), 0) ?? 0
 
 
   return (

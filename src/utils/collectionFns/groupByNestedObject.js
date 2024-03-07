@@ -1,4 +1,5 @@
-import { mapValues } from "../objectFns/mapValues"
+import { mapValues } from "../objectFns"
+import { groupByArray } from "./groupByArray"
 import { groupByObject } from "./groupByObject"
 
 
@@ -26,26 +27,35 @@ const nestedGroupBy = (data, callbacks) => {
 
 
 
+/**
+ * @template T
+ * @param {string[]} keyArray 
+ * @param {[string, T[]]} entry
+ * @returns {[string[], T[]]} 
+ */
+const prependKeys = (keyArray, entry) => [[...keyArray, entry[0]], entry[1]]
 
 /**
- * @function
+ * Instead of recursively building up a nested object, we create an analogous
+ * array of entries, and extend it to support an array 'path' of keys to each
+ * group.
  * @template T
  * @param {T[]} data 
- * @param {Function[]} callbacks 
- * @returns {([ string[], T[] ])[]}
+ * @param {((t:T) => number|string|boolean|null)[]} iterFns 
+ * @returns {([string[], T[]])[]}
  */
-const nestedBucketByEntries = (data, callbacks) => {
+const nestedGroupByEntries = (data, iterFns) => {
 
   /** @type {([string[], T[]])[]} */
   let keyedData = [[[], data]]
 
-  for (let callback of callbacks) {
+  for (let iterFn of iterFns) {
 
-    keyedData = keyedData.flatMap(kv => {
-      let [keyArr, kData] = kv
+    keyedData = keyedData.flatMap(nestedEntry => {
+      let [keyArray, groupItems] = nestedEntry
 
-      return bucketByEntries(kData, callback)
-        .map(kvItem => prependKeys(keyArr, kvItem))
+      return groupByArray(groupItems, iterFn)
+        .map(kvItem => prependKeys(keyArray, kvItem))
       
     })
 

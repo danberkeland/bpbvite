@@ -1,7 +1,6 @@
 import { DBLocation, DBProduct, DBRoute, DBZoneRoute } from "../types.d"
-import { Data } from "../../utils/dataFns"
 import { RoutingLocation, RoutingProduct, RoutingRoute, WeekdayFlags } from "./types.d"
-import { List } from "../../utils/listFns"
+import { compareBy, uniqBy } from "../../utils/collectionFns"
 
 // Casting Functions that convert database items to a format tailored to
 // the routing domain. We try to use more generic/consistent attribute
@@ -392,8 +391,8 @@ const buildRoutePlan = (route, location, product, dayOfWeek, transferRoutes) => 
   if (!rp.error) {
     planCandidates = planCandidates
       .map(processPath => backSchedule(processPath))
-      .sort(Data.compareBy(ps => ps.length))
-      .sort(Data.compareBy(ps => ps[ps.length -1].begin.relDate - ps[0].end.relDate))
+      .sort(compareBy(ps => ps.length))
+      .sort(compareBy(ps => ps[ps.length -1].begin.relDate - ps[0].end.relDate))
 
     rp.steps = planCandidates[0]
     const rpDaysNeeded = rp.steps[0].end.relDate * -1 // relDate of last step is always 0
@@ -418,30 +417,41 @@ const getOptions = (location, product, dayOfWeek, routes) => {
 
   // const delivRoutes = routes.filter(R => !R.routeNick.includes("Pick up"))
   const pickupRoutes = routes.filter(R => R.routeNick.includes("Pick up"))
-  const pickupZoneNicks = List.uniq(pickupRoutes.flatMap(R => R.zonesServed))
+  const pickupZoneNicks = uniqBy(pickupRoutes.flatMap(R => R.zonesServed), x => x)
 
   let delivRoutePlans = routes // delivRoutes
     .filter(route => route.zonesServed.includes(location.zoneNick))
     .map(route => 
       buildRoutePlan(route, location, product, dayOfWeek, transferRoutes)
     )
-  // console.log("PLANS", delivRoutePlans)
-  delivRoutePlans = Data.orderBy(
-    delivRoutePlans,
-    [
-      (/**@type {FulfillmentPlan}*/ plan) => {
-        return plan.steps.length > 0
-          ? plan.steps[plan.steps.length - 1].begin.relDate - plan.steps[0].end.relDate
-          : 999
-      },
-      (/**@type {FulfillmentPlan}*/ plan) => {
-        return plan.steps.length > 0
-          ? plan.steps[plan.steps.length - 1].begin.time
-          : 999
-      },
-    ],
-    ["asc", "asc"]
-  )
+    .sort(compareBy((/**@type {FulfillmentPlan}*/ plan) => 
+      plan.steps.length > 0
+        ? plan.steps[plan.steps.length - 1].begin.time
+        : 999
+    ))
+    .sort(compareBy((/**@type {FulfillmentPlan}*/ plan) => 
+      plan.steps.length > 0
+        ? plan.steps[plan.steps.length - 1].begin.relDate - plan.steps[0].end.relDate
+        : 999
+    ))
+
+  // // console.log("PLANS", delivRoutePlans)
+  // delivRoutePlans = Dat_a.orderBy(
+  //   delivRoutePlans,
+  //   [
+  //     (/**@type {FulfillmentPlan}*/ plan) => {
+  //       return plan.steps.length > 0
+  //         ? plan.steps[plan.steps.length - 1].begin.relDate - plan.steps[0].end.relDate
+  //         : 999
+  //     },
+  //     (/**@type {FulfillmentPlan}*/ plan) => {
+  //       return plan.steps.length > 0
+  //         ? plan.steps[plan.steps.length - 1].begin.time
+  //         : 999
+  //     },
+  //   ],
+  //   ["asc", "asc"]
+  // )
 
   // const pickupRoutePlans = pickupRoutes.map(puRoute => {
   //   /**@type {RoutingLocation} */

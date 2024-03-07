@@ -5,11 +5,10 @@ import { InputText } from "primereact/inputtext"
 import React, { useEffect, useRef } from "react"
 import { useState } from "react"
 import { ProductSelector } from "../../Components/ProductSelector"
-import { Data } from "../../../../../utils/dataFns"
 import { constructCartItem } from "../../../../../data/cartOrder/cartOrders"
 import { Tag } from "primereact/tag"
-import { DT, IsoDate } from "../../../../../utils/dateTimeFns"
-import { isEqual } from "lodash"
+import { DT } from "../../../../../utils/dateTimeFns"
+import { compareBy, uniqByRdc } from "../../../../../utils/collectionFns"
 
 const infoColor = 'hsl(218, 65%, 50%)'
 const warnColor = 'hsl(45, 96%, 35%)'
@@ -54,14 +53,12 @@ const CartItemList = ({
       cartItems.every(cartItem => cartItem.prodNick !== tmpItem.prodNick)
       && (products?.[tmpItem.prodNick]?.defaultInclude === true || authClass === 'bpbfull')
     )
-    .reduce(Data._uniqBy(tmp => tmp.prodNick), [])
+    .reduce(uniqByRdc(tmp => tmp.prodNick), [])
 
   const tableData = cartItems
     .concat(visibleTemplateItems)
-    .sort(Data.compareBy(item => products?.[item.prodNick]?.meta.reformattedProdName))
-    .sort(Data.compareBy(item => 
-      item.Type === "Orders" && item.id === '' ? item.meta.idx : -1)
-    )
+    .sort(compareBy(item => products?.[item.prodNick]?.meta.reformattedProdName))
+    .sort(compareBy(item => item.Type === "Orders" && item.id === '' ? item.meta.idx : -1))
 
   const tableInfo = tableData.map(rowItem => {
     const baseIndex = rowItem.meta.idx
