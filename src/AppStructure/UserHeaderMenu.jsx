@@ -5,7 +5,7 @@ import { Menu } from "primereact/menu";
 
 import { useSettingsStore } from "../Contexts/SettingsZustand";
 
-import { useUserDetails } from "../data/users";
+import { useUserDetails } from "../data/user2/useUserDetails";
 
 export const UserHeaderMenu = ({ signOut }) => {
   const user = {
