@@ -1,13 +1,18 @@
 import jsPDF from "jspdf"
 import "jspdf-autotable"
-import { sortBy, uniqBy, groupBy, orderBy } from "lodash"
+import { sortBy, uniqBy, groupBy, orderBy, mapValues } from "lodash"
 import { checkQBValidation_v2 } from "../../../../data/QBHelpers"
 import axios from "axios"
 import { downloadPDF } from "../../../../utils/pdf/downloadPDF"
 
 /** Designed to work with the gridData object made with the useRouteGrid hook. */
-export const exportRouteGridPdf = ({ gridData, reportDateDT, fileName }) => {
+export const exportRouteGridPdf = ({ gridData, reportDateDT, fileName, noteData=[] }) => {
 
+  const notesDataByRouteNick = mapValues(
+    groupBy(noteData.filter(N => N.Type === 'packList'), N => N.ref),
+    groupArray => groupArray[0]
+  )
+    console.log("notesDataByRouteNick", notesDataByRouteNick)
   const sortedRouteNicks = orderBy(
     Object.keys(gridData), 
     routeNick => gridData[routeNick].printOrder,
@@ -69,6 +74,15 @@ export const exportRouteGridPdf = ({ gridData, reportDateDT, fileName }) => {
       margin: { top: 26 },
       styles: { fontSize: 12 },
     })
+
+    if (!!notesDataByRouteNick[routeNick]) {
+      doc.setFontSize(12)
+      doc.text(
+        20,
+        doc.lastAutoTable.finalY + 15,
+        ["Notes:", ""].concat(notesDataByRouteNick[routeNick].note.split('\n'))
+      )
+    }
 
         
   } // end for...

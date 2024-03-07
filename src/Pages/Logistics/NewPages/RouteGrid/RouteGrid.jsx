@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react"
+import React, { useEffect, useMemo, useRef } from "react"
 
 import { useRouteGrid } from "./data"
 import { useListData } from "../../../../data/_listData"
@@ -17,7 +17,7 @@ import { get, isEqual, keyBy, pickBy, set, sortBy } from "lodash"
 import { 
   exportRouteGridPdf, 
   exportInvoicePdf, 
-  exportSingleInvoice
+  // exportSingleInvoice
 } from "./exportPdf"
 
 import "./routeGrid.css"
@@ -26,10 +26,15 @@ import { useBillingDataByDate } from "../../../Billing/v2/data"
 import { InputNumber } from "primereact/inputnumber"
 import { submitAndPrintInvoice, submitOrder } from "../../../Billing/v2/submitFunctions"
 import { OverlayPanel } from "primereact/overlaypanel"
+import { useNotesByType } from "../../../../data/note/useNotes"
+import { InputTextarea } from "primereact/inputtextarea"
 
 const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
 
 const RouteGrid = () => {
+  const user = {
+    name: useSettingsStore(state => state.user)
+  }
   
   const [routeNick, setRouteNick] = useState('AM Pastry')
 
@@ -55,6 +60,36 @@ const RouteGrid = () => {
   const { data:RTE } = useListData({ tableName: "Route", shouldFetch: true })
   const { data:LOC } = useListData({ tableName: "Location", shouldFetch: true })
 
+  const [isEditingNote, setIsEditingNote] = useState(false)
+
+  const [displayNote, setDisplayNote] = useState('')
+  const NOTE = useNotesByType({ shouldFetch:true, Type: 'packList' })
+  const noteData = NOTE?.data.filter(N => N.when === reportDateISO)
+
+  // filter should return max 1 note; we're just reusing the list query,
+  // so an array is returned
+
+
+  // Single note only; supplemental note attributes must adhere to this format.
+  const noteTemplate = ({
+    Type: 'packList',
+    ref: routeNick,
+    when: reportDateISO,
+    note: '',
+    forWhom: null,
+    byWhom: user.name,
+    ttl: reportDateDT.plus({ days: 2 }).toSeconds(),
+  })
+
+  const dbNote = useMemo(() => {
+    return (NOTE?.data ?? []).filter(note =>
+      note.ref === routeNick && note.when === reportDateISO  
+    )[0]
+  }, [NOTE.data, routeNick, reportDateISO]) 
+  useEffect(() => {
+    setDisplayNote(!!dbNote ? (dbNote.note ?? '') : '')
+  }, [dbNote])
+
   const setIsLoading = useSettingsStore((state) => state.setIsLoading)
 
   if ( !gridData || !RTE || !LOC ) return <div>Loading...</div>
@@ -77,8 +112,8 @@ const RouteGrid = () => {
   const exportInvoices = ({ gridData, fileName }) => exportInvoicePdf({
     gridData, fileName, routes, locations, reportDateDT, setIsLoading
   })
-  const exportGrids = ({ gridData, fileName }) => exportRouteGridPdf({ 
-    gridData, fileName, reportDateDT 
+  const exportGrids = ({ gridData, fileName, noteData }) => exportRouteGridPdf({ 
+    gridData, fileName, reportDateDT, noteData
   })
 
   return (<>
@@ -105,7 +140,12 @@ const RouteGrid = () => {
         <ListBox 
           value={routeNick}
           options={routeOptions}
-          onChange={e => {if (e.value) setRouteNick(e.value)}}
+          onChange={e => {
+            if (e.value) {
+              setRouteNick(e.value)
+              setIsEditingNote(false)
+            }
+          }}
           style={{width:"10rem", marginTop: "1rem"}}
         />
 
@@ -116,7 +156,11 @@ const RouteGrid = () => {
               (value, key) => key === routeNick
             )
             const fStr = `${reportDateISO}_${routeNick.replace(" ", "_")}`
-            exportGrids({ gridData, fileName: fStr + '_Route_Grid.pdf' })
+            exportGrids({ 
+              gridData, 
+              fileName: fStr + '_Route_Grid.pdf',
+              noteData,
+            })
             exportInvoices({ gridData, fileName: fStr + '_Invoices.pdf' })
           }}      
           style={{width: "100%", marginTop: "1rem"}}
@@ -127,7 +171,11 @@ const RouteGrid = () => {
           onClick={() => {
             const gridData = pdfGrids
             const fStr = `${reportDateISO}_All`
-            exportGrids({ gridData, fileName: fStr + '_Route_Grids.pdf' })
+            exportGrids({ 
+              gridData, 
+              fileName: fStr + '_Route_Grids.pdf',
+              noteData,
+            })
             exportInvoices({ gridData, fileName: fStr + '_Invoices.pdf' })
           }} 
           style={{width: "100%", marginTop: "1rem"}}
@@ -138,7 +186,11 @@ const RouteGrid = () => {
           onClick={() => {
             const gridData = pradoPackData?.pdfGrids
             const fStr = `${reportDateISO}_Prado_Pack_All`
-            exportGrids({ gridData, fileName: fStr + '_Route_Grids.pdf' })
+            exportGrids({ 
+              gridData, 
+              fileName: fStr + '_Route_Grids.pdf',
+              noteData,
+            })
           }} 
           style={{width: "100%", marginTop: "3rem"}}
           disabled={routeOptions.includes('NOT ASSIGNED') || !pradoPackData}
@@ -148,7 +200,11 @@ const RouteGrid = () => {
           onClick={() => {
             const gridData = higueraPackData?.pdfGrids
             const fStr = `${reportDateISO}_Higuera_Pack_All`
-            exportGrids({ gridData, fileName: fStr + '_Route_Grids.pdf' })
+            exportGrids({ 
+              gridData, 
+              fileName: fStr + '_Route_Grids.pdf',
+              noteData,
+            })
           }} 
           style={{width: "100%", marginTop: "1rem"}}
           disabled={routeOptions.includes('NOT ASSIGNED') || !pradoPackData}
@@ -165,7 +221,11 @@ const RouteGrid = () => {
                 routeGridObj => routeGridObj.driver === "Long Driver"
               )
               const fStr = `${reportDateISO}_Long_Driver`
-              exportGrids({ gridData, fileName: fStr + '_Route_Grids.pdf' })
+              exportGrids({ 
+                gridData, 
+                fileName: fStr + '_Route_Grids.pdf',
+                noteData,
+              })
               exportInvoices({ gridData, fileName: fStr + '_Invoices.pdf' })
             }}
             icon="pi pi-fw pi-print"
@@ -178,7 +238,11 @@ const RouteGrid = () => {
                 routeGridObj => routeGridObj.driver === "AM Pastry"
               )
               const fStr = `${reportDateISO}_AM_Pastry`
-              exportGrids({ gridData, fileName: fStr + '_Route_Grids.pdf' })
+              exportGrids({ 
+                gridData, 
+                fileName: fStr + '_Route_Grids.pdf',
+                noteData,
+              })
               exportInvoices({ gridData, fileName: fStr + '_Invoices.pdf' })
             }}
             icon="pi pi-fw pi-print"
@@ -191,7 +255,11 @@ const RouteGrid = () => {
                 routeGridObj => routeGridObj.driver === "AM South"
               )
               const fStr = `${reportDateISO}_AM_South`
-              exportGrids({ gridData, fileName: fStr + '_Route_Grids.pdf' })
+              exportGrids({ 
+                gridData, 
+                fileName: fStr + '_Route_Grids.pdf',
+                noteData,
+              })
               exportInvoices({ gridData, fileName: fStr + '_Invoices.pdf' })
             }}
             icon="pi pi-fw pi-print"
@@ -246,6 +314,99 @@ const RouteGrid = () => {
             )
           })}
         </DataTable>
+        
+        <div style={{
+          marginBlock: "1rem",
+          background: "var(--bpb-surface-content)",
+          borderRadius: "3px",
+          width: "20rem",
+          padding: "1rem",
+        }}>
+
+          <div style={{color: "var(--bpb-text-color)", fontSize: "1.1rem"}}>
+            Note for {routeNick}
+          </div>
+
+          {!isEditingNote &&  
+            <div style={{maxWidth: "18rem", display:"flex", flexDirection:"column", alignItems: "flex-end"}}>
+              <div style={{
+                width: "100%",
+                padding: ".5rem",
+                marginBottom: "1rem",
+                color: "var(--bpb-text-color)",
+                background: "var(--bpb-surface-content)",
+                borderRadius: "3px",
+                whiteSpace: "pre-wrap",
+              }}>
+                {displayNote}
+              </div>
+              <Button 
+                //label="Edit Note"
+                className="p-button-rounded"
+                icon={!!displayNote ? "pi pi-pencil" : "pi pi-plus"}
+                onClick={() => setIsEditingNote(!isEditingNote)}
+              />
+            </div>
+          }
+
+          {isEditingNote && 
+            <div style={{maxWidth: "18rem", display:"flex", flexDirection:"column", alignItems: "flex-end"}}>
+              <InputTextarea 
+                value={displayNote}
+                onChange={e => setDisplayNote(e.target.value)}
+                rows={1}
+                autoResize
+                style={{width: "100%", display: "block", marginBottom:"1rem"}}
+                readOnly={!isEditingNote}
+                // disabled={isSubmitting}
+              />
+
+              <div>
+                <Button 
+                  icon="pi pi-times" 
+                  className="p-button-rounded p-button-outlined" 
+                  style={{marginRight: ".5rem"}} 
+                  onClick={() => setIsEditingNote(false)}
+                />
+                <Button 
+                  className="p-button-rounded"
+                  icon={!!dbNote?.note && !displayNote ? "pi pi-trash" : "pi pi-send"}
+                  onClick={async () => {
+                    if(!dbNote) {
+                      console.log("creating")
+                      console.log({ ...noteTemplate, note: displayNote })
+                      NOTE.updateLocalData(await NOTE.submitMutations(
+                        { createInputs: [{ ...noteTemplate, note: displayNote }] }
+                      ))
+
+                    } else {
+                      console.log("updating")
+                      console.log({ 
+                        id: dbNote.id, 
+                        note: displayNote 
+                      })
+                      NOTE.updateLocalData(await NOTE.submitMutations(
+                        { updateInputs: [{ 
+                          id: dbNote.id, 
+                          note: displayNote,
+                          byWhom: user.name, 
+                        }] }
+                      ))
+                    }
+                    setIsEditingNote(false)
+                  }}
+                  disabled={0
+                    || (!!dbNote && displayNote === dbNote.note)
+                    || (!dbNote && !displayNote)
+                  }
+                />
+              </div>
+            </div>
+          }
+        </div>
+
+
+
       </div>
     </div>
   </>)
@@ -410,5 +571,6 @@ const QtyShortInput = ({
     }
   }}
 />
+
 
 export { RouteGrid as default }
