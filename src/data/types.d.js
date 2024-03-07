@@ -68,6 +68,7 @@ let OrderItem
 //  * @property {string|null} updatedBy
 //  * @property {number|null} ttl
 //  */
+export { DBLocation } from "./location/types.d"
 
 /**@typedef {OrderHeader & OrderItem} */
 let DBOrder
@@ -137,43 +138,43 @@ let DBRoute
  */
 let DBZoneRoute
 
-/**
- * @typedef {Object} 
- * @property {string} Type
- * @property {string} locNick
- * @property {string} locName
- * @property {string} zoneNick
- * @property {FulfillmentOption|null} dfFulfill
- * @property {string|null} addr1
- * @property {string|null} addr2
- * @property {string|null} city
- * @property {string|null} zip
- * @property {string} email
- * @property {string|null} orderCnfEmail 
- * @property {string|null} phone 
- * @property {string|null} firstName
- * @property {string|null} lastName
- * @property {boolean} toBeEmailed
- * @property {boolean} toBePrinted
- * @property {boolean} printDuplicate
- * @property {string} terms
- * @property {string} invoicing
- * @property {number} latestFirstDeliv
- * @property {number} latestFinalDeliv
- * @property {string|null} webpageURL 
- * @property {string|null} picURL
- * @property {string|null} gMap
- * @property {string|null} specialInstructions
- * @property {number} delivOrder
- * @property {string} qbID
- * @property {string|null} currentBalance
- * @property {boolean} isActive
- * @property {number|null} ttl
- * @property {string[]|null} requests
- * @property {string} createdAt
- * @property {string} updatedAt
-*/
-let DBLocation
+// /**
+//  * @typedef {Object} 
+//  * @property {string} Type
+//  * @property {string} locNick
+//  * @property {string} locName
+//  * @property {string} zoneNick
+//  * @property {FulfillmentOption|null} dfFulfill
+//  * @property {string|null} addr1
+//  * @property {string|null} addr2
+//  * @property {string|null} city
+//  * @property {string|null} zip
+//  * @property {string} email
+//  * @property {string|null} orderCnfEmail 
+//  * @property {string|null} phone 
+//  * @property {string|null} firstName
+//  * @property {string|null} lastName
+//  * @property {boolean} toBeEmailed
+//  * @property {boolean} toBePrinted
+//  * @property {boolean} printDuplicate
+//  * @property {string} terms
+//  * @property {string} invoicing
+//  * @property {number} latestFirstDeliv
+//  * @property {number} latestFinalDeliv
+//  * @property {string|null} webpageURL 
+//  * @property {string|null} picURL
+//  * @property {string|null} gMap
+//  * @property {string|null} specialInstructions
+//  * @property {number} delivOrder
+//  * @property {string} qbID
+//  * @property {string|null} currentBalance
+//  * @property {boolean} isActive
+//  * @property {number|null} ttl
+//  * @property {string[]|null} requests
+//  * @property {string} createdAt
+//  * @property {string} updatedAt
+// */
+// let DBLocation
 
 /**
  * @typedef {Object}
@@ -327,6 +328,19 @@ let DBDoughComponentBackup
  */
 let DBInfoQBAuth
 
+/**
+ * @typedef {Object}
+ * @property {string} id: ID!
+ * @property {string|null} forWhom: String # who, if someone in particular, should see the note 
+ * @property {string|null} byWhom : String # who created/updated the note
+ * @property {string|null} when   : String # specify an applicable date if needed
+ * @property {string|null} note   : String # content of the note
+ * @property {string|null} ttl    : Int # particularly for notes with a "when" value that should auto-delete
+ * @property {string|null} Type   : String
+ * @property {string|null} ref    : String @index(name: "byRef", queryField: "notesByRef") # foreign key or other 'reference' for more fine-grained filtering, e.g. a locNick, prodNick, "long driver"...
+ */
+let DBNote
+
 export {
   DBOrder,
   CartOrder,
@@ -334,7 +348,7 @@ export {
   DBZone,
   DBRoute,
   DBZoneRoute,
-  DBLocation,
+  // DBLocation,
   DBLocationProductOverride,
   DBProduct,
   DBTemplateProd,
@@ -343,6 +357,7 @@ export {
   DBDoughBackup,
   DBDoughComponentBackup,
   DBInfoQBAuth,
+  DBNote,
   BpbHub,
   FulfillmentOption,
   ExtendedOrderHeader,
