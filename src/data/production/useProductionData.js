@@ -5,11 +5,12 @@ import { useLocations } from "../location/useLocations";
 import { useProducts } from "../product/useProducts";
 import { useRoutes } from "../route/useRoutes";
 import { useLoadedGetRouteOptions } from "../routing/useRouting";
-import { useLocationProductOverrides } from "../locationProductOverride/useLocationProductOverrides";
-import { combineOrders } from "../cartOrder/combineOrders";
-import { overrideProduct } from "../locationProductOverride/overrideProduct.js";
+// import { useLocationProductOverrides } from "../locationProductOverride/useLocationProductOverrides";
+import { combineOrders } from "../../core/production/combineOrders.js";
+// import { overrideProduct } from "../locationProductOverride/overrideProduct.js";
 import { useMemo } from "react";
 import { keyBy } from "../../utils/collectionFns.js";
+import { useOverrideProduct } from "../locationProductOverride/useOverrideProduct.js";
 
 /**
  * @param {Object} input
@@ -25,33 +26,41 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false }) => {
   const { data:STD } = useStandingsByDayOfWeek({ dayOfWeek, shouldFetch })
   const { data:LOC } = useLocations({ shouldFetch })
   const { data:PRD } = useProducts({ shouldFetch })
-  const { data:OVR } = useLocationProductOverrides({ shouldFetch })
   const { data:RTE } = useRoutes({ shouldFetch })
+  // const { data:OVR } = useLocationProductOverrides({ shouldFetch })
+  const overrideProduct = useOverrideProduct({ shouldFetch })
   const getRoutes = useLoadedGetRouteOptions({ shouldFetch })
 
   const calcRoutedOrders = () => {
-    if (!ORD || !STD || !LOC || !PRD || !OVR || !RTE || !getRoutes) return []
+    if (0
+      || !ORD 
+      || !STD 
+      || !LOC 
+      || !PRD 
+      || !RTE 
+      || !overrideProduct 
+      || !getRoutes
+    ) return undefined
 
     const locations = keyBy(LOC, L => L.locNick) // LOC.reduce(Data._keyBy(L => L.locNick), {})
     const products = keyBy(PRD, P => P.prodNick) // PRD.reduce(Data._keyBy(P => P.prodNick), {})
 
     const _STD = useHolding ? STD : STD.filter(std => std.isStand === true)
 
-    const splitBackporchCroixOrders = order => {
-      const shouldSplit = order.locNick === 'backporch' 
-        && products[order.prodNick].packGroup === 'baked pastries'
-        && products[order.prodNick].doughNick === 'Croissant'
+    // const splitBackporchCroixOrders = order => {
+    //   const shouldSplit = order.locNick === 'backporch' 
+    //     && products[order.prodNick].packGroup === 'baked pastries'
+    //     && products[order.prodNick].doughNick === 'Croissant'
 
-      return shouldSplit
-        ? [
-            { ...order, qty: Math.ceil(order.qty / 2), route: 'slopick' },
-            { ...order, qty: Math.ceil(order.qty / 2), route: 'atownpick' },
-          ]
-        : order
-    }
+    //   return shouldSplit
+    //     ? [
+    //         { ...order, qty: Math.ceil(order.qty / 2), route: 'slopick' },
+    //         { ...order, qty: Math.ceil(order.qty / 2), route: 'atownpick' },
+    //       ]
+    //     : order
+    // }
 
     const combinedRoutedOrders = combineOrders(ORD, _STD)
-      .flatMap(order => splitBackporchCroixOrders(order))
       .map(order => {
         const location = order.isWhole
           ? locations[order.locNick]
@@ -62,25 +71,26 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false }) => {
               latestFirstDeliv: 7,
               latestFinalDeliv: 11,
             }
-        const product = products[order.prodNick]
-        const override = OVR.find(ovr => 
-          ovr.locNick === location.locNick && ovr.prodNick === product.prodNick
-        )
-        const customizedProduct = overrideProduct(product, override)
+        // const product = products[order.prodNick]
+        // const override = OVR.find(ovr => 
+        //   ovr.locNick === location.locNick && ovr.prodNick === product.prodNick
+        // )
+        // const customizedProduct = overrideProduct(product, override)
+        // const customizedProduct = overrideProduct(product, order.locNick)
         
         const routeOptions = getRoutes(
           location, 
-          customizedProduct, 
+          overrideProduct(products[order.prodNick], order.locNick), 
           dayOfWeek
         )
-        const routePlan = routeOptions?.[order.route]?.[0]
-        const routeNick = routeOptions?.[order.route]?.[0]?.routeNick ?? "NOT ASSIGNED"
+        const routePlan = routeOptions?.[order.route ?? 'deliv']?.[0]
+        const routeNick = routeOptions?.[order.route ?? 'deliv']?.[0]?.routeNick ?? "NOT ASSIGNED"
         const route = RTE.find(R => R.routeNick === routeNick)
         return { 
           ...order, 
           meta: { 
-            routePlan,
             routeNick,
+            routePlan,
             route,
             location: {
               locName: location.locName.split("__")[0]
@@ -92,7 +102,12 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false }) => {
     return combinedRoutedOrders
   }
 
-  return { data: useMemo(calcRoutedOrders, [ORD, STD, LOC, PRD, OVR, RTE, getRoutes])}
+  return { 
+    data: useMemo(
+      calcRoutedOrders, 
+      [ORD, STD, LOC, PRD, RTE, overrideProduct, getRoutes]
+    )
+  }
 
 }
 

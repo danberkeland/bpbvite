@@ -1,7 +1,10 @@
 import { useMemo } from "react"
-import { useListData } from "../_listData.js"
+import { ListDataCache, useListData } from "../_listData.js"
 
 import { compareBy, groupByArray } from "../../utils/collectionFns.js"
+import { DBOrder } from "../types.d.js"
+
+
 
 /**
  * Cleans incoming data by separating out any "duplicate" records. Strategy to
@@ -10,10 +13,19 @@ import { compareBy, groupByArray } from "../../utils/collectionFns.js"
  * @param {boolean} input.shouldFetch
  * @param {'orderByDelivDate'|'orderByLocByDelivDate'} [input.customQuery]
  * @param {Object} [input.variables]
+ * @returns {ListDataCache & { dupes: DBOrder[] | undefined }}
  */
 const useOrdersGeneric = ({ shouldFetch, customQuery, variables }) => {
 
-  const { data:cacheData , ...otherCacheItems } = useListData({ 
+  const { 
+    data:cacheData, 
+    error,
+    isLoading,
+    isValidating,
+    mutate,
+    submitMutations,
+    updateLocalData
+  } = useListData({ 
     tableName: "Order", 
     shouldFetch,
     customQuery,
@@ -46,7 +58,12 @@ const useOrdersGeneric = ({ shouldFetch, customQuery, variables }) => {
 
   return { 
     ...useMemo(calculateValue, [cacheData]),
-    otherCacheItems 
+    error,
+    isLoading,
+    isValidating,
+    mutate,
+    submitMutations,
+    updateLocalData 
   }
 
 }

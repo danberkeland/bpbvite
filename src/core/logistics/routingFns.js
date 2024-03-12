@@ -1,4 +1,4 @@
-import { DBLocation, DBProduct, DBRoute, DBZoneRoute } from "../types.d"
+import { DBLocation, DBProduct, DBRoute, DBZoneRoute } from "../../data/types.d"
 import { RoutingLocation, RoutingProduct, RoutingRoute, WeekdayFlags } from "./types.d"
 import { compareBy, uniqBy } from "../../utils/collectionFns"
 
@@ -409,6 +409,7 @@ const buildRoutePlan = (route, location, product, dayOfWeek, transferRoutes) => 
  * @param {RoutingProduct} product 
  * @param {RoutingRoute[]} routes 
  * @param {WeekdayEEE} dayOfWeek 
+ * @returns {Object<string, FulfillmentPlan[]>}
  */
 const getOptions = (location, product, dayOfWeek, routes) => {
   const transferRoutes = routes.filter(R => 
@@ -435,41 +436,6 @@ const getOptions = (location, product, dayOfWeek, routes) => {
         : 999
     ))
 
-  // // console.log("PLANS", delivRoutePlans)
-  // delivRoutePlans = Dat_a.orderBy(
-  //   delivRoutePlans,
-  //   [
-  //     (/**@type {FulfillmentPlan}*/ plan) => {
-  //       return plan.steps.length > 0
-  //         ? plan.steps[plan.steps.length - 1].begin.relDate - plan.steps[0].end.relDate
-  //         : 999
-  //     },
-  //     (/**@type {FulfillmentPlan}*/ plan) => {
-  //       return plan.steps.length > 0
-  //         ? plan.steps[plan.steps.length - 1].begin.time
-  //         : 999
-  //     },
-  //   ],
-  //   ["asc", "asc"]
-  // )
-
-  // const pickupRoutePlans = pickupRoutes.map(puRoute => {
-  //   /**@type {RoutingLocation} */
-  //   const puLocation = {
-  //     locNick: location.locNick,
-  //     zoneNick: puRoute.zonesServed[0],
-  //     timeBegin: 0,
-  //     timeEnd: 2399,
-  //   }
-  //   return buildRoutePlan(
-  //     puRoute, 
-  //     puLocation, 
-  //     product, 
-  //     dayOfWeek, 
-  //     transferRoutes
-  //   )
-
-  // })
   const pickupPlansByZoneNickEntries = pickupZoneNicks.map(zoneNick => {
     /**@type {RoutingLocation} */
     const puLocation = {
@@ -490,12 +456,28 @@ const getOptions = (location, product, dayOfWeek, routes) => {
   // let routeOptions = Object.fromEntries(
   //   pickupRoutePlans.map(plan => [plan.routeNick, [plan]])
   // )
+  /** @type {Object<string, FulfillmentPlan[]>} */
   let routeOptions = Object.fromEntries(
     pickupPlansByZoneNickEntries
   )
   routeOptions.deliv = delivRoutePlans
   
   return routeOptions
+}
+
+/**
+ * 
+ * @param {RoutingLocation} location 
+ * @param {RoutingProduct} product 
+ * @param {WeekdayEEE} dayOfWeek 
+ * @param {'deliv'|'slopick'|'atownpick'} fflOption 
+ * @param {RoutingRoute[]} routes 
+ */
+const assignRoutePlan = (location, product, dayOfWeek, fflOption, routes) => {
+  const options = getOptions(location, product, dayOfWeek, routes)
+
+  return options[fflOption][0]
+
 }
 
 /**
@@ -519,5 +501,6 @@ export const Routing = {
     fromDBRoute,
   },
   getOptions,
+  assignRoutePlan,
   getServingRoutes,
 }

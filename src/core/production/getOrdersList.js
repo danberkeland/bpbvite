@@ -3,7 +3,16 @@ import { IsoDate } from "../../utils/dateTimeFns";
 import { uniqByN } from "../../utils/collectionFns/uniqByN";
 import { compareBy } from "../../utils/collectionFns/compareBy";
 import { addRoutes } from "../logistics/addRoutes2";
+import { LegacyDatabase } from "../../data/legacyData";
 
+
+/**
+ * 
+ * @param {string} delivDate 
+ * @param {LegacyDatabase} database 
+ * @param {boolean} includeHolding 
+ * @returns 
+ */
 const _getFullOrders = (delivDate, database, includeHolding=false) => {
   // const [products, customers, routes, standing, orders] = database;
 
@@ -45,6 +54,14 @@ const getFullProdOrders = (delivDate, database) =>
 //   zerosDelivFilter(...);
 //   buildGridOrderArray(...);
 //   addRoutes(...);
+
+/**
+ * 
+ * @param {string} delivDate 
+ * @param {LegacyDatabase} database 
+ * @param {boolean} includeHolding 
+ * @returns 
+ */
 const getOrdersList = (delivDate, database, includeHolding=false) => {
   // const [products, customers, routes, standing, orders] = database;
   const products  = database[0]

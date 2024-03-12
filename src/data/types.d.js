@@ -31,8 +31,8 @@ let OrderHeader
  * @property {number|null} SO     Not used
  * @property {number|null} isLate Not used
  * 
- * @property {string|null} createdOn
- * @property {string|null} updatedOn
+ * @property {string} createdOn
+ * @property {string} updatedOn
  * @property {string|null} updatedBy
  * @property {number|null} ttl
  */
@@ -325,6 +325,8 @@ let DBDoughComponentBackup
  * @property {string} id: ID!
  * @property {string} infoName: String
  * @property {string} infoContent: String
+ * @property {string} createdAt
+ * @property {string} updatedAt
  */
 let DBInfoQBAuth
 

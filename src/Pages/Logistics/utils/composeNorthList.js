@@ -10,9 +10,18 @@ import { objProject } from "../../../utils/objectFns";
 import { compareBy } from "../../../utils/collectionFns/compareBy";
 import { tablePivot, tablePivotFlatten } from "../../../utils/tablePivot";
 import { getOrdersList as _getOrdersList } from "../../../core/production/getOrdersList";
+import { LegacyDatabase, LegacyOrder } from "../../../data/legacyData";
+import { DBInfoQBAuth } from "../../../data/types.d";
   
 // New add routes fn might as well include driver attribute...
-const getOrdersList = (delivDate, database, includeHolding) => {
+/**
+ * 
+ * @param {string} delivDate 
+ * @param {LegacyDatabase} database 
+ * @param {boolean} [includeHolding=false] 
+ * @returns 
+ */
+const getOrdersList = (delivDate, database, includeHolding=false) => {
   const routes = database[2]
 
   return _getOrdersList(delivDate, database, includeHolding).map(order =>  {
@@ -193,6 +202,12 @@ export default class ComposeNorthList {
 
 
 
+  /**
+   * 
+   * @param {string} delivDate 
+   * @param {LegacyDatabase} database 
+   * @returns 
+   */
   returnCroixNorth = (delivDate, database) => {
     // const [products, customers, routes, standing, orders, d, dd, alt, QBInfo] = database;
     const products = database[0]
@@ -329,6 +344,13 @@ export default class ComposeNorthList {
   };
 
 
+  /**
+   * 
+   * @param {string} delivDate 
+   * @param {LegacyOrder[]} orders 
+   * @param {DBInfoQBAuth[]} QBInfo 
+   * @returns 
+   */
   getOrdersPlacedAfterDeadline = (delivDate, orders, QBInfo) => {
     // console.log("QBInfo", QBInfo);
     const tomorrow = tomBasedOnDelivDate(delivDate)
@@ -351,8 +373,8 @@ export default class ComposeNorthList {
       && ord.isWhole   === false
       && ord.delivDate === convertDatetoBPBDate(delivDate) 
       && (0
-        || (ord.route === "slopick"   && new Date(ord.updatedAt) > southSetoutTime)
-        || (ord.route === "atownpick" && new Date(ord.updatedAt) > northSetoutTime)
+        || (ord.route === "slopick"   && new Date(ord.timestamp) > southSetoutTime)
+        || (ord.route === "atownpick" && new Date(ord.timestamp) > northSetoutTime)
       )
     )
   };

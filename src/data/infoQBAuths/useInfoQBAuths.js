@@ -26,6 +26,8 @@ const useInfoQBAuths = ({ shouldFetch }) => {
 
     if (itemsToCleanUp.length > 20) {
       console.log("cleaning up infoQBAuths...")
+
+      // declaring the function contains the async to 1 spot
       const handleDeletion = async (deleteInputs) => {
         updateLocalData( await submitMutations({ deleteInputs }) )
       }
