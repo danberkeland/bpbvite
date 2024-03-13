@@ -19,7 +19,8 @@ export const exportNorthListPdf = (
   let tableSize = 13
   let titleSize = 15
 
-  const doc = new jsPDF("p", "mm", "a4")
+  // const doc = new jsPDF("p", "mm", "a4")
+  const doc = new jsPDF("portrait", "mm","letter")
 
   doc.setFontSize(20)
   doc.text(pageMargin, 20, `North Driver ${reportDateDT.toFormat('MM/dd/yyyy')}`)
@@ -101,8 +102,9 @@ export const exportNorthListPdf = (
 
 
   if (amNorthKeys.length > 0) {
+    doc.addPage('letter', 'landscape')
     doc.setFontSize(titleSize)
-    doc.text(pageMargin, finalY + tableToNextTitle, `AM North: Pack at Prado (Orders/Packs; 1 bz = 1 pack)`)
+    doc.text(10, 20, `AM North: Pack at Prado (Counts Packs; 1 bz = 1 pack)`)
 
     const firstColumn = { header: "Location", dataKey: "locNick" }
     const columns = [firstColumn].concat(amNorthKeys.map(prodNick => 
@@ -113,8 +115,8 @@ export const exportNorthListPdf = (
       body:    amNorthData,
       columns: columns,
   
-      margin: { left: 20, right: 20 },
-      startY: finalY + titleToNextTable,
+      margin: { top: 26 },
+      // startY: finalY + titleToNextTable,
       theme: "grid",
       styles: { fontSize: tableSize },
       headStyles: { fillColor: "#dddddd", textColor: "#111111" },
