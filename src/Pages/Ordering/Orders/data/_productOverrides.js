@@ -23,23 +23,26 @@ export const applyOverridesForRouteAssignment = ({
      overrides = { readyTime: 8.5 }
   }
 
+  // 2024-03-12: Reorganizing production tasks: ficelles can have a readyTime
+  // of 6 in all situations now.
+  
   // Ficelles baked north:
   // AM North and Pick up Carlton departs at 6.75.
   // Want to allow pickup but not AM North
-  else if (
-    product.prodNick === 'fic' 
-    && route.RouteDepart === 'Carlton'
-    //&& route.routeNick !== 'Pick up Carlton'
-  ) {
-    overrides = { readyTime: 9 }
-  }
+  // else if (
+  //   product.prodNick === 'fic' 
+  //   && route.RouteDepart === 'Carlton'
+  //   //&& route.routeNick !== 'Pick up Carlton'
+  // ) {
+  //   overrides = { readyTime: 9 }
+  // }
 
-  else if (
-    product.prodNick === 'fic' 
-    && ['cpr', 'field'].includes(location.locNick)
-  ) {
-    overrides = { readyTime: 6 }
-  }
+  // else if (
+  //   product.prodNick === 'fic' 
+  //   && ['cpr', 'field'].includes(location.locNick)
+  // ) {
+  //   overrides = { readyTime: 6 }
+  // }
 
   // // No ftmuff for south deliveries
   // else if (
