@@ -46,18 +46,6 @@ const prodNickToShapeTypeMap = {
   frmni: "mini",
 }
 
-// const croissantRowKeys = ["Almond", "ch", "pg", "mb", "pl", "sf", "mini"]
-
-// forBake is mostly used to find the product holding freezerNorth inventory counts.
-// const initialCroissantRows = [
-//   { forBake: "Almond", prodNick: "al" },
-//   { forBake: "ch",     prodNick: "ch" },
-//   { forBake: "pg",     prodNick: "pg" },
-//   { forBake: "mb",     prodNick: "mb" },
-//   { forBake: "pl",     prodNick: "pl" },
-//   { forBake: "mini",   prodNick: "mini" },
-// ]
-
 const summaryAttributes = [
   'locNick', 
   'prodNick', 
@@ -65,49 +53,6 @@ const summaryAttributes = [
   'qty', 
   'route'
 ]
-
-const generatePivot = (orderList, locations, products) => {
-  if (!orderList.length) return []
-
-  const pivotTable = tablePivot(
-    orderList,
-    { 
-      locNick: row => row.locNick, 
-      driver: row => row.meta.route.driver, 
-      route: row => row.meta.routeNick 
-    },
-    "prodNick",
-    cellData => sumBy(cellData, order => order.qty * products[order.prodNick].packSize)
-  )
-  .sort(compareBy(row => row.route))
-  .sort(compareBy(row => row.driver === 'Long Driver', 'desc'))
-  .map(row => {
-    const { locNick, driver } = row.rowProps
-    const locName = locations[locNick]?.locName ?? locNick
-
-    return {
-      ...row,
-      rowProps: { 
-        ...row.rowProps, 
-        locNameShort: (driver === "Long Driver" ? "": "* ") 
-          + (locName.length > 10 ? locName.substring(0,15) + "..." : locName) //+ truncate(row.customer, { length: 18 })
-      }
-    }
-  })
-
-  return pivotTable
-
-  // const flattenedPivotTable = tablePivotFlatten (pivotTable)
-
-
-  // const tableProdNicks = Object.keys(pivotTable[0].colProps).sort()
-  // const columnTemplate = tableProdNicks.length
-  //   ? createColumns(tableProdNicks)
-  //   : []
-  
-  // return [flattenedPivotTable, columnTemplate]
-
-}
 
 /**
  * 
@@ -301,7 +246,7 @@ const useNorthListData = ({
         route: row => row.meta.routeNick 
       },
       "prodNick",
-      cellData => sumBy(cellData, order => order.qty * products[order.prodNick].packSize)
+      cellData => sumBy(cellData, order => order.qty)
     )
     .sort(compareBy(row => row.route))
     .sort(compareBy(row => row.driver === 'Long Driver', 'desc'))

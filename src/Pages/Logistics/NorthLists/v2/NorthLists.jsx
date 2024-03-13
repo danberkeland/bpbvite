@@ -91,7 +91,7 @@ const NorthLists = () => {
       </DataTable>
 
       <h2>Shelf Products</h2>
-      <p>Counted as Ea. (example: 8 bz means 1 pack)</p>
+      <p style={{ fontWeight: "bold" }}>Counts Packs (example: 1 bz = 1 pack = 8 ea)</p>
       <DataTable
         value={shelfPivotTable}
         className="p-datatable-gridlines p-datatable-sm p-datatable-striped"
@@ -113,7 +113,7 @@ const NorthLists = () => {
       </DataTable>
 
       <h2>AM North: Pack at Prado</h2>
-      <p>Counted as Orders/Packs (example: 1 bz means 1 pack)</p>
+      <p style={{ fontWeight: "bold" }}>Counts Packs (example: 1 bz = 1 pack = 8 ea)</p>
       <DataTable
         value={AMNorthPradoPivotTable}
         className="p-datatable-gridlines p-datatable-sm p-datatable-striped"        

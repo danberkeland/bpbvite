@@ -71,7 +71,7 @@ export const exportNorthListPdf = (
     // finalY = doc.previousAutoTable.finalY
 
     doc.setFontSize(titleSize)
-    doc.text(pageMargin, finalY + tableToNextTitle, `Shelf Products (Each; 8 bz = 1 pack)`)
+    doc.text(pageMargin, finalY + tableToNextTitle, `Shelf Products - Counts Packs (example: 1 bz = 1 pack = 8 ea)`)
 
     const firstColumn = { header: "Location", dataKey: "locNameShort" }
     const columns = [firstColumn].concat(shelfColKeys.map(prodNick => 
@@ -104,7 +104,7 @@ export const exportNorthListPdf = (
   if (amNorthKeys.length > 0) {
     doc.addPage('letter', 'landscape')
     doc.setFontSize(titleSize)
-    doc.text(10, 20, `AM North: Pack at Prado (Counts Packs; 1 bz = 1 pack)`)
+    doc.text(10, 20, `AM North: Pack at Prado - Counts Packs (example: 1 bz = 1 pack = 8 ea)`)
 
     const firstColumn = { header: "Location", dataKey: "locNick" }
     const columns = [firstColumn].concat(amNorthKeys.map(prodNick => 
