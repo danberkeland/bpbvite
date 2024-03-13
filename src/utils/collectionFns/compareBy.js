@@ -17,6 +17,9 @@ const stdCompare = (a, b) =>
 
 /**
  * Used directly in Array.prototype.sort()
+ * 
+ * Reminder, sorting on boolean values puts false before true in ascending order.
+ * Just remember false is like 0, true is like 1.
  * @param {CompareCallbackFn} callback Function should a single value type of either string, number, or boolean.
  * @param {'asc'|'desc'} direction='asc' Default: ascending.
  * @returns {CompareFn}

@@ -151,16 +151,28 @@ const batchMutate = async ({
  * } TableNames
  */
 
+
 /**
- * @typedef {Object} ListDataCache
- * @property {Object[]} data
+ * @typedef
+ * @function 
+ * @param {Object} input
+ * @param {Object | Object[]} input.createInputs
+ * @param {Object | Object[]} input.updateInputs
+ * @param {Object | Object[]} input.deleteInputs
+ */
+let SubmitMutationFunction
+
+/**
+ * @typedef {Object} 
+ * @property {Object[] | undefined} data
  * @property {any} error
  * @property {boolean} isLoading
  * @property {boolean} isValidating
  * @property {function} mutate
- * @property {function} submitMutations
+ * @property {SubmitMutationFunction} submitMutations
  * @property {function} updateLocalData
  */
+export let ListDataCache
 
 // @param {typeof LIST_TABLES[number]} input.tableName
 // @param {number} input.variables.limit Integer; default 5000. 

@@ -2,20 +2,20 @@ import { useMemo } from "react";
 import { useRoutes } from "../route/useRoutes";
 import { DBLocation, DBProduct, DBRoute, DBZoneRoute } from "../types.d";
 import { useZoneRoutes } from "../zoneRoute/useZoneRoutes";
-import { Routing } from "./routingFns";
+import { Routing } from "../../core/logistics/routingFns";
 import { IsoDate } from "../../utils/dateTimeFns";
 
 
 /**
  * 
- * @param {DBRoute[]} routes 
- * @param {DBZoneRoute[]} zoneRoutes 
+ * @param {DBRoute[] | undefined} routes 
+ * @param {DBZoneRoute[] | undefined} zoneRoutes 
  */
 const buildGetRouteOptions = (routes, zoneRoutes) => {
   /**
    * @param {DBLocation} location 
    * @param {DBProduct} product 
-   * @param {import("./routingFns").WeekdayEEE} dayOfWeek 
+   * @param {import("../../core/logistics/routingFns").WeekdayEEE} dayOfWeek 
    */
   const _getOptions = !!routes && !!zoneRoutes 
     ? (location, product, dayOfWeek) => Routing.getOptions(
@@ -44,6 +44,8 @@ const useLoadedGetRouteOptions = ({ shouldFetch }) => {
   )
 
 }
+
+
 
 // TODO: 
 // Make a "Routing.getOptionsByDate" function that looks for & deals with

@@ -279,7 +279,8 @@ function AnimatedRoutes({ user, signOut }) {
             {/* <Route path="/Logistics/ByRoute/v1" element={<ByRoute />} /> */}
 
             <Route path="/Logistics/ByProduct"     element={<ByProduct />} />
-            <Route path="/Logistics/NorthLists"    element={<NorthList />} />
+            <Route path="/Logistics/NorthLists"    element={<NorthListV2 />} />
+            <Route path="/Logistics/NorthLists/v1" element={<NorthList />} />
             <Route path="/Logistics/NorthLists/v2" element={<NorthListV2 />} />
             <Route path="/Logistics/AMPastry"      element={<AMPastry />} />
             <Route path="/Logistics/RetailBags"    element={<RetailBags />} />

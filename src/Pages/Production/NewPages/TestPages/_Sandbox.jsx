@@ -7,6 +7,8 @@ import { groupByObject } from "../../../../utils/collectionFns/groupByObject";
 import { keyBy } from "../../../../utils/collectionFns/keyBy";
 import { useMemo } from "react";
 import { mapValues } from "../../../../utils/objectFns";
+import { useSquareOrders } from "../../../../data/square/fetchSquareOrders";
+// import { useSyncSquareOrders } from "../../../../core/checkForUpdates";
 
 export const Sandbox = () => {
   // const formType = useSettingsStore((state) => state.formType)
@@ -15,26 +17,26 @@ export const Sandbox = () => {
   // setFormType("verifyEmail")
 
   // console.log("formtype", formType)
-  const { data:LCU } = useLocationUser2s({ shouldFetch: true })
-  const { data:LOC } = useLocations({ shouldFetch: true })
-  const { data:USR } = useUser2s({ shouldFetch: true })
+  // const { data:LCU } = useLocationUser2s({ shouldFetch: true })
+  // const { data:LOC } = useLocations({ shouldFetch: true })
+  // const { data:USR } = useUser2s({ shouldFetch: true })
 
-  const locations = useMemo(() => !!LOC ? keyBy(LOC, L => L.locNick) : {}, [LOC])
-  const users = useMemo(() => !!USR ? keyBy(USR, U => U.id) : {}, [USR])
+  // const locations = useMemo(() => !!LOC ? keyBy(LOC, L => L.locNick) : {}, [LOC])
+  // const users = useMemo(() => !!USR ? keyBy(USR, U => U.id) : {}, [USR])
 
  
 
-  const [validLCU, invalidLCU] = useMemo(() => {
-    if (!LCU || !locations || ! users) return [[],[]]
+  // const [validLCU, invalidLCU] = useMemo(() => {
+  //   if (!LCU || !locations || ! users) return [[],[]]
 
-    const valid   = LCU?.filter(lcu => !!locations?.[lcu.locNick] && !!users[lcu.userID]) ?? []
-    const invalid = LCU?.filter(lcu => !locations?.[lcu.locNick] || !users[lcu.userID]) ?? []
-    return [valid, invalid]
+  //   const valid   = LCU?.filter(lcu => !!locations?.[lcu.locNick] && !!users[lcu.userID]) ?? []
+  //   const invalid = LCU?.filter(lcu => !locations?.[lcu.locNick] || !users[lcu.userID]) ?? []
+  //   return [valid, invalid]
 
-  }, [LCU, locations, users])
+  // }, [LCU, locations, users])
 
-  console.log(validLCU, invalidLCU)
-  if (invalidLCU.length) console.warn("Invalid Location User(s):", invalidLCU)
+  // console.log(validLCU, invalidLCU)
+  // if (invalidLCU.length) console.warn("Invalid Location User(s):", invalidLCU)
 
   // const tableData = validLCU.map(lcu => ({ 
   //   ...lcu,
@@ -59,19 +61,19 @@ export const Sandbox = () => {
   //
   // Managing a created user's settings involves coordinating with Cognito.
   // Managing existing user stuff involves editing their locationUser items.
-  const usersByEmailClass = groupByObject(USR??[], user => user.email)
-  const _withLCU = mapValues(usersByEmailClass, equivalentUsers => {
-    const { email, authClass, name, username } = equivalentUsers[0]
+  // const usersByEmailClass = groupByObject(USR??[], user => user.email)
+  // const _withLCU = mapValues(usersByEmailClass, equivalentUsers => {
+  //   const { email, authClass, name, username } = equivalentUsers[0]
     
-    return {
-      email, authClass, name, username,
-      user2s: equivalentUsers,
-      locationUsers: validLCU.filter(lcu => lcu.userID.endsWith(equivalentUsers[0].email)) // feels potentially buggy
-    }
-  })
+  //   return {
+  //     email, authClass, name, username,
+  //     user2s: equivalentUsers,
+  //     locationUsers: validLCU.filter(lcu => lcu.userID.endsWith(equivalentUsers[0].email)) // feels potentially buggy
+  //   }
+  // })
 
-  console.log("By Email:", usersByEmailClass)
-  console.log("User Email eqiv Classes:", _withLCU)
+  // console.log("By Email:", usersByEmailClass)
+  // console.log("User Email eqiv Classes:", _withLCU)
 
 
   // const legacyFormatData = validLCU.map(lcu => ({
@@ -87,21 +89,28 @@ export const Sandbox = () => {
 
   // }))
 
-  const subgroupHeaderTemplate = (data) => {
+  // const subgroupHeaderTemplate = (data) => {
 
-    return (<>
-      <div style={{ fontSize: "1.1rem", fontWeight: "bold" }}>
-        {data.location.locName}
-      </div>
-      <div style={{ fontSize: ".9rem", fontFamily: "monospace" }}>
-        {data.locNick}
-      </div>
-    </>)
-  }
+  //   return (<>
+  //     <div style={{ fontSize: "1.1rem", fontWeight: "bold" }}>
+  //       {data.location.locName}
+  //     </div>
+  //     <div style={{ fontSize: ".9rem", fontFamily: "monospace" }}>
+  //       {data.locNick}
+  //     </div>
+  //   </>)
+  // }
 
+
+  // const { data:squareOrders } = useSquareOrders({ shouldFetch: true })
+
+  // console.log("squareOrders", squareOrders)
+
+  // useSyncSquareOrders()
+  
   return (<>
 
-    <h1>User Management</h1>
+    <h1>Sandbox</h1>
 
     {/* <DataTable
       value={ tableData ?? []}

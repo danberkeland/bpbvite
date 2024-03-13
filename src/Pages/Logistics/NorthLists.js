@@ -367,6 +367,7 @@ function NorthList() {
       /> */}
       <WholeBox>
         <h1>LONG DRIVER</h1>
+        <a href="/logistics/NorthLists" style={{marginBottom: "1rem"}}>Link to New Version</a>
         <ButtonWrapper>
           <Button
             label="Print Long Driver North List"

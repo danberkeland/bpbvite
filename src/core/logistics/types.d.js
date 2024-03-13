@@ -3,10 +3,10 @@
 // that strip database items down to the essientials as they enter 
 // 'routing land' in the hopes of keeping things clean.
 
-/**@typedef {import('../types.d.js').DBRoute}     DBRoute */
-/**@typedef {import('../types.d.js').DBZoneRoute} DBZoneRoute */
-/**@typedef {import('../types.d.js').DBLocation}  DBLocation */
-/**@typedef {import('../types.d.js').DBProduct}   DBProduct */
+/**@typedef {import('../../data/types.d.js').DBRoute}     DBRoute */
+/**@typedef {import('../../data/types.d.js').DBZoneRoute} DBZoneRoute */
+/**@typedef {import('../../data/types.d.js').DBLocation}  DBLocation */
+/**@typedef {import('../../data/types.d.js').DBProduct}   DBProduct */
 
 
 /** @typedef {boolean[]} */ let WeekdayFlags

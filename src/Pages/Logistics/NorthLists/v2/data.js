@@ -2,17 +2,33 @@ import { useMemo } from "react";
 import { useLocations } from "../../../../data/location/useLocations";
 import { useProducts } from "../../../../data/product/useProducts";
 import { DateTime } from "luxon";
-import { DBProduct } from "../../../../data/types.d.js";
 import { useCombinedRoutedOrdersByDate } from "../../../../data/production/useProductionData.js";
 import { useInfoQBAuths } from "../../../../data/infoQBAuths/useInfoQBAuths.js";
 import { DT } from "../../../../utils/dateTimeFns.js";
-import { compareBy, groupByArrayRdc, keyBy, sumByRdc } from "../../../../utils/collectionFns.js";
+import { compareBy, keyBy, sumBy } from "../../../../utils/collectionFns.js";
+import { objProject } from "../../../../utils/objectFns.js";
+import { tablePivot, tablePivotFlatten } from "../../../../utils/tablePivot.js";
+
+
+/*
+For Nick's North List, 
+it should continue to include 
+  Driver Notes, 
+  Frozen and Baked Croix, 
+  and Shelf Products.  
+  
+All of the rustic bread groups can be removed and in their place should be 
+the grid for Prado pack of AM North.  
+I've been producing that manually for him in the mornings but if we could 
+have one button that he can push to produce that, would be ideal.
+
+*/
 
 // These equivalences cannot be queried directly from DB records;
 // better to hard code the values for now.
 
 /** maps ProdNicks to the forBake of some representative product */
-const prodNickToForBakeMap = {
+const prodNickToShapeTypeMap = {
   al: "Almond",
   fral: "Almond",
   ch: "ch",
@@ -30,167 +46,317 @@ const prodNickToForBakeMap = {
   frmni: "mini",
 }
 
-const croissantRowKeys = ["Almond", "ch", "pg", "mb", "pl", "sf", "mini"]
-
-// forBake is mostly used to find the product holding freezerNorth inventory counts.
-const initialCroissantRows = [
-  { forBake: "Almond", prodNick: "al" },
-  { forBake: "ch",     prodNick: "ch" },
-  { forBake: "pg",     prodNick: "pg" },
-  { forBake: "mb",     prodNick: "mb" },
-  { forBake: "pl",     prodNick: "pl" },
-  { forBake: "mini",   prodNick: "mini" },
+const summaryAttributes = [
+  'locNick', 
+  'prodNick', 
+  'delivDate', 
+  'qty', 
+  'route'
 ]
 
 /**
  * 
  * @param {Object} input
- * @param {DateTime} input.delivDT
+ * @param {DateTime} input.reportDT
  * @returns 
  */ 
 const useNorthListData = ({
-  delivDT
+  reportDT
 }) => {
   const { data:LOC } = useLocations({ shouldFetch: true })
   const { data:PRD } = useProducts({ shouldFetch: true })
   const { data:IQB }  = useInfoQBAuths({ shouldFetch: true })
-  const { data:T0Orders } = useCombinedRoutedOrdersByDate({ delivDT, useHolding: false })
-  const { data:T1Orders } = useCombinedRoutedOrdersByDate({ delivDT: delivDT.plus({ days: 1 }), useHolding: true })
+  const { data:T0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT, useHolding: false })
+  const { data:T1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: true })
   
-  const calcNorthLists = () => {
+
+  const calcCroixNorth = () => {
     if (!LOC || !PRD || !IQB || !T0Orders || !T1Orders) return []
-    console.log([LOC, PRD, IQB, T0Orders, T1Orders])
-    
 
-    // /** @type {Object<string, DBLocation>} */
-    // const locations = LOC.reduce(Data._keyBy(L => L.locNick), {})
-
-    /** @type {Object<string, DBProduct>} */
+    const T1Iso = reportDT.plus({ days: 1 }).toFormat('yyyy-MM-dd')
     const products = keyBy(PRD, P => P.prodNick)
 
-    // ***** Croissant List *****
-
-    // Frozen
-
-    // IMPORTANT rule: product list must be sorted by prodName (ascending) 
-    // when we find by forBake
+    // **** 1. freezerNorth data source ****
     const sortedProducts = PRD.sort(compareBy(P => P.prodName))
-    const freezerNorthInventory = initialCroissantRows.map(row => {
-      const productRep = sortedProducts.find(P => P.forBake === row.forBake)
 
-      return {
-        forBake: row.forBake, 
-        prodNick: row.prodNick, 
-        qty: productRep?.freezerNorth ?? 0
-      }
-    })
-    console.log(freezerNorthInventory)
-
-    const T0Frozen = T0Orders.filter(order => 1
-      && products[order.prodNick].bakedWhere.length > 1
+    // **** 2. Frozen orders to be sent north ****
+    const T0NorthFrozenOrders = T0Orders.filter(order => 1
       && products[order.prodNick].packGroup === "frozen pastries"
       && products[order.prodNick].doughNick === "Croissant"
-      && order.meta.route?.RouteDepart      === "Carlton"
+      && order.meta.route?.RouteDepart      === "Carlton" 
     )
-    console.log("T0Frozen", T0Frozen)
-
-    const T1Baked = T1Orders.filter(order => 1
+    const T1NorthBakedOrders = T1Orders.filter(order => 1
       && products[order.prodNick].bakedWhere.length > 1
       && products[order.prodNick].packGroup === "baked pastries"
       && products[order.prodNick].doughNick === "Croissant"
-      && order.meta.route?.RouteDepart      === "Carlton"
-    )   
-    console.log("T1Baked", T1Baked)
+      && order.meta.route?.RouteDepart      === "Carlton" 
+    )
 
-    const frozensNeeded = [...T0Frozen, ...T1Baked]
-      .reduce(groupByArrayRdc(order => prodNickToForBakeMap[order.prodNick]), [])
-      .map(shapeTypeGroup => {
+    // **** 3. Baked orders ****
+    const T0BakedOrders = T0Orders.filter(order => 1
+      && products[order.prodNick].bakedWhere.length > 1
+      && products[order.prodNick].packGroup === "baked pastries"
+      && products[order.prodNick].doughNick === "Croissant"
+    )
 
-        const qty = shapeTypeGroup.reduce(sumByRdc(order => 
-          order.qty * products[order.prodNick].packSize), 0
+    // **** 4. Orders after deadline ****
+    const southSetoutRecord = 
+      IQB.find(item => item.id === T1Iso + "PradosetoutTime")
+
+    const southSetoutTime = !!southSetoutRecord 
+      ? DT.fromIsoTs(southSetoutRecord.updatedAt).toMillis()
+      : DT.now().toMillis()
+
+    // const northSetoutRecord = 
+    //   IQB.find(item => item.id === T1Iso + "PradosetoutTime")
+
+    // const northSetoutTime = !!northSetoutRecord 
+    //   ? DT.fromIsoTs(northSetoutRecord.updatedAt).toMillis()
+    //   : DT.now().toMillis()
+
+    const retailOrdersAfterDeadline = T0Orders.filter(order => 1
+      && order.isWhole === false
+      && order.delivDate === T1Iso
+      && (0
+        || (1
+          && order.route === "slopick"   
+          && DT.fromIsoTs(order.updatedOn).toMillis() > southSetoutTime
         )
-
-        return { 
-          forBake: prodNickToForBakeMap[shapeTypeGroup[0].prodNick],
-          qty, 
-          items: shapeTypeGroup 
-        }
-      })
-
-    console.log("frozensNeeded", frozensNeeded)
-
-    // Baked
-    // Baked::orders after deadline
-    
-    const T1Iso = delivDT.plus({ days: 1}).toFormat('yyyy-MM-dd')
-
-    const bpbsSetoutRecord = 
-      IQB.find(item => item.id === T1Iso + "PradosetoutTime")?.updatedAt
-    
-    const bpbsSetoutTimestamp = bpbsSetoutRecord
-      ? DT.fromIsoTs(bpbsSetoutRecord).toMillis()
-      : undefined
-
-
-    const afterDeadlineOrders = T0Orders.filter(order => (
-      order.isWhole && (
-        order.route === "slopick"
+        // || (1
+        //   && order.route === "atownpick" 
+        //   && DT.fromIsoTs(order.updatedOn).toMillis() > northSetoutTime
+        // ) // want to count south orders only, which subtract from qty sent north
       )
-    ))
+      
+    )
 
+    let croixRows = [
+      { forBake: "Almond", prodNick: "al",   prod: "al",   frozenQty: 0, frozen: {}, bakedQty: 0, baked: {} },
+      { forBake: "ch",     prodNick: "ch",   prod: "ch",   frozenQty: 0, frozen: {}, bakedQty: 0, baked: {} },
+      { forBake: "pg",     prodNick: "pg",   prod: "pg",   frozenQty: 0, frozen: {}, bakedQty: 0, baked: {} },
+      { forBake: "mb",     prodNick: "mb",   prod: "mb",   frozenQty: 0, frozen: {}, bakedQty: 0, baked: {} },
+      { forBake: "pl",     prodNick: "pl",   prod: "pl",   frozenQty: 0, frozen: {}, bakedQty: 0, baked: {} },
+      { forBake: "sf",     prodNick: "sf",   prod: "sf",   frozenQty: 0, frozen: {}, bakedQty: 0, baked: {} },
+      { forBake: "mini",   prodNick: "mini", prod: "mini", frozenQty: 0, frozen: {}, bakedQty: 0, baked: {} },
+    ] 
 
-    // backporch orders
-    // getBackPorchBakeryOrders = (delivDate, database) => {
-    //   let BackPorchOrders = getOrdersList(today, database).filter(
-    //     (ord) =>
-    //       ord.custName === "Back Porch Bakery" && ord.doughType === "Croissant"
-    //   );
-    //   return BackPorchOrders;
-    // };
-    // const backporchOrders = T0Orders.filter(order => (1
-    //   && products[order.prodNick].packGroup === "baked pastries"
-    //   && products[order.prodNick].doughNick === "Croissant"  
-    // ))
+    for (let row of croixRows) { 
 
-  
+      // **** Frozen Column ****
+      const freezerNorth = 
+        sortedProducts.find(P => P.forBake === row.forBake)?.freezerNorth ?? 0
+
+      const frozenOrderItems = T0NorthFrozenOrders.filter(order => 
+        prodNickToShapeTypeMap[order.prodNick] === row.forBake
+      )
+      .map(order => objProject(order, summaryAttributes))
+
+      const frozenOrderQty = sumBy(frozenOrderItems, order => order.qty)
+      row.frozen.frozenOrderItems = frozenOrderItems
+      row.frozen.frozenOrderQty   = frozenOrderQty
+
+      const bakedOrderItems = T1NorthBakedOrders.filter(order => 
+        prodNickToShapeTypeMap[order.prodNick] === row.forBake
+      )
+      .map(order => order.locNick === "backporch"
+        ? { ...order, qty: Math.ceil(order.qty / 2) }
+        : order
+      )
+      .map(order => objProject(order, summaryAttributes))
+
+      const bakedOrderQty = sumBy(bakedOrderItems, order => order.qty)
+      row.frozen.bakedOrderItems = bakedOrderItems
+      row.frozen.bakedOrderQty   = bakedOrderQty
+
+      const qtyNeeded = frozenOrderQty + bakedOrderQty - freezerNorth
+      const adjustedQtyNeeded = row.prodNick === "al"
+        ? Math.max(0, qtyNeeded)
+        : row.prodNick === "mini" 
+          ? Math.max(0, Math.ceil(qtyNeeded / 12) * 12)
+          : Math.max(0, Math.ceil(qtyNeeded / 12) * 12 + 12)
+
+      row.frozenQty = adjustedQtyNeeded
+
+      // **** Baked Column ****
+      const backporchOrders = T0BakedOrders.filter(order => 1
+        && order.locNick === "backporch"
+        && prodNickToShapeTypeMap[order.prodNick] === row.forBake
+      ).map(order =>
+        objProject(order, summaryAttributes)  
+      )
+      const backporchQty = sumBy(backporchOrders, order => order.qty)
+      row.baked.backporchOrders = backporchOrders
+      row.baked.backporchQty    = backporchQty
+
+      const bpbextrasOrders = T0BakedOrders.filter(order => 1
+        && order.locNick === "bpbextras"
+        && prodNickToShapeTypeMap[order.prodNick] === row.forBake  
+      ).map(order => 
+        objProject(order, summaryAttributes)
+      )
+      const bpbextrasQty = sumBy(bpbextrasOrders, order => order.qty) // vulnerable to duplicate items
+      row.baked.bpbextrasOrders = bpbextrasOrders
+      row.baked.bpbextrasQty    = bpbextrasQty
+
+      const afterDeadlineOrders = retailOrdersAfterDeadline.filter(order => 
+        prodNickToShapeTypeMap[order.prodNick] === row.forBake  
+      )
+      .map(order => objProject(order, summaryAttributes))
+      const afterDeadlineQty = sumBy(afterDeadlineOrders, order => order.qty)
+      row.baked.afterDeadlineOrders = afterDeadlineOrders
+      row.baked.afterDeadlineQty    = afterDeadlineQty
+
+      const bakedQty = Math.max(
+        0,
+        Math.round(backporchQty / 2) - bpbextrasQty - afterDeadlineQty
+      )
+      row.bakedQty = bakedQty
+
+    }
+
+    return croixRows.filter(row => 0
+      || row.prodNick  !== "mini"
+      || row.bakedQty  !== 0
+      || row.frozenQty !== 0  
+    )
+
   }
 
-  return { data: useMemo(calcNorthLists, [LOC, PRD, IQB, T0Orders, T1Orders])}
+  const calcShelfProds = () => {
+    if (!LOC || !PRD || !T0Orders) return { pivotTable:[], columnKeys:[], flatTable:[] }
+
+    const locations = keyBy(LOC, P => P.locNick)
+    const products = keyBy(PRD, P => P.prodNick)
+
+    console.log("FICELLE ORDERS:", T0Orders.filter(order => order.prodNick === 'fic'))
+
+    const shelfProdOrders = T0Orders.filter(order => 1
+      && products[order.prodNick].bakedWhere.length === 1
+      && products[order.prodNick].bakedWhere.includes("Prado")
+      && order.meta.route?.RouteDepart === "Carlton"
+      && products[order.prodNick].packGroup !== "frozen pastries"
+      //&& !["fic", "mdch"].includes(order.prodNick)
+    )
+
+    // const pivotTable = generatePivot(shelfProdOrders, locations, products)
+
+    const pivotTable = tablePivot(
+      shelfProdOrders,
+      { 
+        locNick: row => row.locNick, 
+        driver: row => row.meta.route.driver, 
+        route: row => row.meta.routeNick 
+      },
+      "prodNick",
+      cellData => sumBy(cellData, order => order.qty)
+    )
+    .sort(compareBy(row => row.route))
+    .sort(compareBy(row => row.driver === 'Long Driver', 'desc'))
+    .map(row => {
+      const { locNick, driver } = row.rowProps
+      const locName = locations[locNick]?.locName ?? locNick
+  
+      return {
+        ...row,
+        rowProps: { 
+          ...row.rowProps, 
+          locNameShort: (driver === "Long Driver" ? "": "* ") 
+            + (locName.length > 10 ? locName.substring(0,15) + "..." : locName) //+ truncate(row.customer, { length: 18 })
+        }
+      }
+    })
+    const columnKeys = Object.keys(pivotTable[0]?.colProps)?.sort()
+    const flatTable = tablePivotFlatten(pivotTable)
+
+    return {
+      pivotTable,
+      columnKeys,
+      flatTable,
+    }
+
+  }
+
+  const calcAMNorthPradoPack = () => {
+    if (!LOC || !PRD || !T0Orders) return { pivotTable:[], columnKeys:[], flatTable:[] }
+
+    const locations = keyBy(LOC, P => P.locNick)
+    const products = keyBy(PRD, P => P.prodNick)
+
+    const shouldPackAtHiguera = order => 1
+    && products[order.prodNick].doughNick !== "French"
+    && (0
+      || products[order.prodNick].packGroup === 'rustic breads'
+      || products[order.prodNick].packGroup === 'retail'
+      || products[order.prodNick].packGroup === 'focaccia'
+    )
+
+    // const AMNorthOrders = T0Orders.filter(order => order.meta.routeNick === "AM North")
+
+
+    const AMNorthOrders = T0Orders.filter(order => 1
+      && !shouldPackAtHiguera(order)
+      && order.meta.routeNick === "AM North"
+      && order.isWhole
+      && order.qty !== 0
+    
+    ).sort(
+      compareBy(order => locations[order.locNick].delivOrder)
+    
+    )
+    // console.log("AMNorthOrderssihgftsedihtf", AMNorthOrders)
+
+
+    // const pivotTable = generatePivot(AMNorthOrders, locations, products)
+
+    const pivotTable = tablePivot(
+      AMNorthOrders,
+      { 
+        locNick: row => row.locNick, 
+        driver: row => row.meta.route.driver, 
+        route: row => row.meta.routeNick 
+      },
+      "prodNick",
+      cellData => sumBy(cellData, order => order.qty)
+    )
+    .sort(compareBy(row => row.route))
+    .sort(compareBy(row => row.driver === 'Long Driver', 'desc'))
+    .map(row => {
+      const { locNick, driver } = row.rowProps
+      const locName = locations[locNick]?.locName ?? locNick
+  
+      return {
+        ...row,
+        rowProps: { 
+          ...row.rowProps, 
+          locNameShort: (driver === "Long Driver" ? "": "* ") 
+            + (locName.length > 10 ? locName.substring(0,15) + "..." : locName) //+ truncate(row.customer, { length: 18 })
+        }
+      }
+    })
+    const columnKeys = Object.keys(pivotTable[0].colProps)
+      .sort(compareBy(prodNick => prodNick))
+      .sort(compareBy(prodNick => products[prodNick].doughNick))
+      .sort(compareBy(prodNick => products[prodNick].packGroup))
+
+    const flatTable = tablePivotFlatten(pivotTable)
+
+    return {
+      pivotTable,
+      columnKeys,
+      flatTable,
+    }
+
+  }
+
+  return { 
+    // data: useMemo(calcNorthLists, [LOC, PRD, IQB, T0Orders, T1Orders]),
+    useCalcCroixNorth:    () => useMemo(calcCroixNorth, [LOC, PRD, IQB, T0Orders, T1Orders]),
+    useCalcShelfProds:    () => useMemo(calcShelfProds, [LOC, PRD, T0Orders]),
+    useAMNorthPradoPack : () => useMemo(calcAMNorthPradoPack, [LOC, PRD, T0Orders]),
+  }
 
 }
 
 export { useNorthListData }
 
 
-// getOrdersPlacedAfterDeadline = (delivDate, database) => {
-//   const [products, customers, routes, standing, orders, d, dd, alt, QBInfo] =
-//     database;
-//   console.log("QBInfo", QBInfo);
-//   let qbidS = tomBasedOnDelivDate(delivDate) + "PradosetoutTime";
-//   let qbidN = tomBasedOnDelivDate(delivDate) + "CarltonsetoutTime";
-//   let southCompare = new Date();
-//   let northCompare = new Date();
-//   try {
-//     southCompare = new Date(
-//       QBInfo[QBInfo.findIndex((qb) => qb.id === qbidS)].updatedAt
-//     );
-//   } catch {}
-//   try {
-//     northCompare = new Date(
-//       QBInfo[QBInfo.findIndex((qb) => qb.id === qbidN)].updatedAt
-//     );
-//   } catch {}
-
-//   let todayOrders = orders.filter(
-//     (ord) =>
-//       (ord.route === "slopick" &&
-//         ord.delivDate === convertDatetoBPBDate(delivDate) &&
-//         new Date(ord.updatedAt) > southCompare &&
-//         ord.isWhole === false) ||
-//       (ord.route === "atownpick" &&
-//         ord.delivDate === convertDatetoBPBDate(delivDate) &&
-//         new Date(ord.updatedAt) > northCompare &&
-//         ord.isWhole === false)
-//   );
-//   return todayOrders;
-// };

@@ -6,9 +6,15 @@ import { updateProduct, updateDoughBackup } from "../graphql/mutations";
 import ComposeNorthList from "../Pages/Logistics/utils/composeNorthList";
 
 import { todayPlus } from "../utils/_deprecated/todayPlus";
-import { fetchSquareOrders, sqOrderToCreateOrderInput, sqOrderToLegacyOrder } from "../data/square/fetchSquareOrders";
+import { SqOrderResponseItem, fetchSquareOrders, sqOrderToCreateOrderInput, sqOrderToCreateOrderInputV2, sqOrderToLegacyOrder, useSquareOrders } from "../data/square/fetchSquareOrders";
 import { CreateOrderInput } from "../data/order/types.d";
 import { LegacyDatabase } from "../data/legacyData";
+import { ListDataCache } from "../data/_listData";
+import { useOrders } from "../data/order/useOrders";
+import { useProducts } from "../data/product/useProducts";
+import { useEffect, useRef, useState } from "react";
+import { useDoughs } from "../data/dough/useDoughs";
+import { DT } from "../utils/dateTimeFns";
 
 /**
  * 
@@ -163,7 +169,7 @@ export const checkForUpdates = async (
   let doughPromises  = []
 
   for (let dough of doughsToUpdate) {
-    if (dough.updatePreBucket!== tomorrow) {
+    if (dough.updatePreBucket !== tomorrow) {
       doughPromises.push(
         API.graphql(graphqlOperation(updateDoughBackup, { 
           input: {
@@ -264,5 +270,127 @@ export const checkForUpdates = async (
   
   setIsLoading(false)
   return DBToMod
+
+}
+
+
+export const useCheckForUpdates = () => {
+
+  usePreshapeFlip()
+  useBucketFlip()
+  useSyncSquareOrders()
+
+}
+
+
+function usePreshapeFlip() {
+
+  const checkCompleted = useRef(false)
+  const tomorrow = DT.today().plus({ days: 1 }).toFormat('yyyy-MM-dd')
+  const { 
+    data:products, 
+    submitMutations, 
+    updateLocalData 
+  } = useProducts({ shouldFetch: true })
+
+  useEffect(() => {
+    if (!products || checkCompleted.current) return
+
+    const updateInputs = products
+      .filter(D => D.updatePreDate !== tomorrow)
+      .map(P => ({
+        prodNick:      P.prodNick,
+        preshaped:     P.prepreshaped,
+        prepreshaped:  P.prepreshaped,
+        updatePreDate: tomorrow,
+      }))
+
+    const handleMutate = async (updateInputs) =>
+      updateLocalData(await submitMutations({ updateInputs }))
+
+    handleMutate(updateInputs)
+    checkCompleted.current = true
+    console.log("preshape check completed")
+
+  }, [products, submitMutations, updateLocalData, checkCompleted.current])
+
+}
+
+function useBucketFlip() {
+
+  const checkCompleted = useRef(false)
+  const tomorrow = DT.today().plus({ days: 1 }).toFormat('yyyy-MM-dd')
+  const { 
+    data:doughs, 
+    submitMutations, 
+    updateLocalData 
+  } = useDoughs({ shouldFetch: true })
+
+  useEffect(() => {
+    if (!doughs || checkCompleted.current) return
+
+    const updateInputs = doughs
+      .filter(D => D.updatePreBucket !== tomorrow)
+      .map(D => ({
+        id:              D.id,
+        bucketSets:      D.preBucketSets,
+        preBucketSets:   D.preBucketSets,
+        updatePreBucket: tomorrow
+      }))
+
+    const handleMutate = async (updateInputs) =>
+      updateLocalData(await submitMutations({ updateInputs }))
+
+    handleMutate(updateInputs)
+    checkCompleted.current = true
+    console.log("dough check completed")
+
+  }, [doughs, submitMutations, updateLocalData, checkCompleted.current])
+
+}
+
+function useSyncSquareOrders() {
+
+  const checkCompleted = useRef(false)
+
+  const { 
+    data:orders, 
+    submitMutations, 
+    updateLocalData 
+  } = useOrders({ shouldFetch: true })
+
+  const { data:products } = useProducts({ shouldFetch: true })
+  const { data:squareOrders } = 
+    useSquareOrders({ shouldFetch: !checkCompleted.current })
+
+
+  useEffect(() => {
+    if (!orders || !products || !squareOrders || checkCompleted.current) return 
+
+    console.log("square orders", squareOrders)
+
+    const retailOrders = orders.filter(order => order.isWhole === false)
+    const newRetailOrders = squareOrders.map(squareOrder =>
+      sqOrderToCreateOrderInputV2(squareOrder, products)
+    )
+
+    const createInputs = newRetailOrders.filter(newOrder => 
+      !retailOrders.some(retailOrder => 1
+        && retailOrder.locNick   === newOrder.locNick  // locNick will have transaction ID embedded, so no need to match on delivDate, route
+        && retailOrder.prodNick  === newOrder.prodNick
+      )  
+    )
+
+    const handleMutate = async createInputs => updateLocalData(
+      await submitMutations({ createInputs })
+    )
+
+    checkCompleted.current = true
+    handleMutate(createInputs)
+    console.log("square check completed")
+
+  }, [orders, products, squareOrders, submitMutations, updateLocalData])
+  
+
 
 }
