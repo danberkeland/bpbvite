@@ -11,6 +11,7 @@ import { combineOrders } from "../../core/production/combineOrders.js";
 import { useMemo } from "react";
 import { keyBy } from "../../utils/collectionFns.js";
 import { useOverrideProduct } from "../locationProductOverride/useOverrideProduct.js";
+import { DT } from "../../utils/dateTimeFns.js";
 
 /**
  * @param {Object} input
@@ -84,13 +85,23 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false }) => {
           dayOfWeek
         )
         const routePlan = routeOptions?.[order.route ?? 'deliv']?.[0]
+        const datedRoutePlan = {
+          ...routePlan,
+          steps: routePlan.steps.map(step => ({
+            ...step,
+            begin: { ...step.begin, date: DT.fromIso(order.delivDate).plus({ days: step.begin.relDate }).toFormat('yyyy-MM-dd')},
+            end:   { ...step.end,   date: DT.fromIso(order.delivDate).plus({ days: step.end.relDate }).toFormat('yyyy-MM-dd')},
+          }))
+        }
+        
+
         const routeNick = routeOptions?.[order.route ?? 'deliv']?.[0]?.routeNick ?? "NOT ASSIGNED"
         const route = RTE.find(R => R.routeNick === routeNick)
         return { 
           ...order, 
           meta: { 
             routeNick,
-            routePlan,
+            routePlan: datedRoutePlan,
             route,
             location: {
               locName: location.locName.split("__")[0]
