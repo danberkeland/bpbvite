@@ -11,7 +11,7 @@ import { useCheckForUpdates } from "../../../../core/checkForUpdates"
 
 
 const NorthLists = () => {
-  const reportDateDT = DT.today()
+  const reportDateDT = DT.today().plus({ days: 0 })
   const reportDate = reportDateDT.toFormat('yyyy-MM-dd')
 
   const { data:notes } = useDriverNotes({ reportDate })
@@ -19,9 +19,10 @@ const NorthLists = () => {
     useCalcCroixNorth,
     useCalcShelfProds,
     useAMNorthPradoPack,
-  } = useNorthListData({ reportDT: DT.today() })
+  } = useNorthListData({ reportDT: reportDateDT })
 
   const croixNorth = useCalcCroixNorth()
+
   const { 
     pivotTable:shelfPivotTable, 
     columnKeys:shelfColKeys, 
@@ -46,7 +47,7 @@ const NorthLists = () => {
 
   return (
     <div style={{margin: "auto", paddingInline: "10%", paddingBottom: "10rem"}}>
-      <h1>Long Driver List</h1>
+      <h1>Long Driver List {reportDateDT.toFormat('MM/dd/yyyy')}</h1>
 
       <a href="/logistics/NorthLists/v1" >Link to Old Version</a>
 

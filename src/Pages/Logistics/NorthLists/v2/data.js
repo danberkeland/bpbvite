@@ -228,12 +228,14 @@ const useNorthListData = ({
     const locations = keyBy(LOC, P => P.locNick)
     const products = keyBy(PRD, P => P.prodNick)
 
+    console.log("FICELLE ORDERS:", T0Orders.filter(order => order.prodNick === 'fic'))
+
     const shelfProdOrders = T0Orders.filter(order => 1
-      && products[order.prodNick].packGroup !== "frozen pastries"
       && products[order.prodNick].bakedWhere.length === 1
       && products[order.prodNick].bakedWhere.includes("Prado")
       && order.meta.route?.RouteDepart === "Carlton"
-      && !["fic", "mdch"].includes(order.prodNick)
+      && products[order.prodNick].packGroup !== "frozen pastries"
+      //&& !["fic", "mdch"].includes(order.prodNick)
     )
 
     // const pivotTable = generatePivot(shelfProdOrders, locations, products)
