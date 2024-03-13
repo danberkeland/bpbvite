@@ -41,7 +41,7 @@ export const useRouteGrid = ({ reportDate, shouldFetch }) => {
         order => order.isWhole,
         order => locations[order.locNick]?.delivOrder ?? 999,
       ],
-      ['asc', 'asc']
+      ['desc', 'asc']
     )
 
     const orders = ordersWithRetail.filter(order => order.isWhole)
