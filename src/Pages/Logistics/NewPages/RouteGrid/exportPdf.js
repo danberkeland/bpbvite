@@ -133,6 +133,9 @@ export const exportInvoicePdf = async ({
     location.toBePrinted === true
   )
 
+  // console.log("orderedUniqLocations", orderedUniqLocations)
+  // console.log("WHOLE", orderedLocations.filter(L => L.locNick === 'whole'))
+
   // proper qbID's are positive integer strings
   const locationsWithBadIDs = orderedUniqLocations.filter(location => 
     !(location.qbID.match(/^\d+$/))
