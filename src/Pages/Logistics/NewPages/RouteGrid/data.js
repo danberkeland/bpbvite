@@ -32,18 +32,23 @@ export const useRouteGrid = ({ reportDate, shouldFetch }) => {
         || products[order.prodNick].packGroup === 'focaccia'
       )
 
-    const orders = orderBy(
+    const ordersWithRetail = orderBy(
       prodOrders.filter(order => 1
-        && order.isWhole 
         && order.isStand !== false 
         && order.qty !== 0
       ),
-      order => locations[order.locNick].delivOrder,
-      'asc'
+      [
+        order => order.isWhole,
+        order => locations[order.locNick]?.delivOrder ?? 999,
+      ],
+      ['desc', 'asc']
     )
 
-    const higueraPackOrders = orders.filter(order => shouldPackAtHiguera(order))
+    const orders = ordersWithRetail.filter(order => order.isWhole)
+
     const pradoPackOrders = orders.filter(order => !shouldPackAtHiguera(order))
+    const higueraPackOrders = ordersWithRetail.filter(order => shouldPackAtHiguera(order))
+  
 
     // *** The following has been replaced with new logic farther below ***
     //
@@ -181,9 +186,9 @@ export const useRouteGrid = ({ reportDate, shouldFetch }) => {
     }
 
     return {
-      data: generateData(orders),
-      pradoPackData: generateData(pradoPackOrders),
-      higueraPackData: generateData(higueraPackOrders),
+      data:              generateData(orders),
+      pradoPackData:     generateData(pradoPackOrders),
+      higueraPackData:   generateData(higueraPackOrders),
     }
     
 
