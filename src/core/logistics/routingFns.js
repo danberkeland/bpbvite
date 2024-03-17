@@ -1,5 +1,5 @@
 import { DBLocation, DBProduct, DBRoute, DBZoneRoute } from "../../data/types.d"
-import { RoutingLocation, RoutingProduct, RoutingRoute, WeekdayFlags } from "./types.d"
+import { FulfillmentPlan, ProcessEvent, ProcessStep, RoutingLocation, RoutingProduct, RoutingRoute, WeekdayEEE, WeekdayFlags, WeekdayNum } from "./types.d"
 import { compareBy, uniqBy } from "../../utils/collectionFns"
 
 // Casting Functions that convert database items to a format tailored to
@@ -10,8 +10,8 @@ import { compareBy, uniqBy } from "../../utils/collectionFns"
 // but if it becomes an issue we can probably optimize our fetching pipeline
 // so that we aren't caching/copying as much data around.
 
-/** @typedef {'Sun'|'Mon'|'Tue'|'Wed'|'Thu'|'Fri'|'Sat'} WeekdayEEE */
-/** @typedef {0|1|2|3|4|5|6} WeekdayNum */
+// /** @typedef {'Sun'|'Mon'|'Tue'|'Wed'|'Thu'|'Fri'|'Sat'} */ let WeekdayEEE
+// /** @typedef {0|1|2|3|4|5|6} */ let WeekdayNum
 
 const legacyWeekdays = ["1", "2", "3", "4", "5", "6", "7"]
 
@@ -25,34 +25,37 @@ const _weekdayMap = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 }
  */
 const weekdayMap = (weekdayEEE) => _weekdayMap[weekdayEEE]
 
-/**
- * Point-in-time event object
- * @typedef {Object} ProcessEvent
- * @property {string} place Usually points to a hub, but could be a locNick
- * @property {WeekdayNum} weekday 
- * @property {number} relDate For scheduling sequences of events/steps
- * @property {number} time 
- * @property {WeekdayFlags} validDays Helper for validating a schedule
- */
-/**
- * Models things that occur over an interval of time.
- * Interval defined by a beginning event and an ending event.
- * @typedef {Object} ProcessStep
- * @property {string} name
- * @property {ProcessEvent} begin
- * @property {ProcessEvent} end
-*/
+// /**
+//  * Point-in-time event object
+//  * @typedef {Object} 
+//  * @property {string} place Usually points to a hub, but could be a locNick
+//  * @property {WeekdayNum} weekday 
+//  * @property {number} relDate For scheduling sequences of events/steps
+//  * @property {string} date    Initialized with empty string. It up to you to make sure a date has been calculated before using the date property
+//  * @property {number} time 
+//  * @property {WeekdayFlags} validDays Helper for validating a schedule
+//  */
+// let ProcessEvent
+// /**
+//  * Models things that occur over an interval of time.
+//  * Interval defined by a beginning event and an ending event.
+//  * @typedef {Object} 
+//  * @property {string} name
+//  * @property {ProcessEvent} begin
+//  * @property {ProcessEvent} end
+// */
+// let ProcessStep
 
-/**
- * @typedef {Object} FulfillmentPlan
- * @property {string}        locNick
- * @property {string}        prodNick
- * @property {string}        routeNick
- * @property {WeekdayEEE}    finishDay
- * @property {string|null}   error
- * @property {ProcessStep[]} steps
- */
-
+// /**
+//  * @typedef {Object} 
+//  * @property {string}        locNick
+//  * @property {string}        prodNick
+//  * @property {string}        routeNick
+//  * @property {WeekdayEEE}    finishDay
+//  * @property {string|null}   error
+//  * @property {ProcessStep[]} steps
+//  */
+// let FulfillmentPlan
 
 /**
  * @param {DBLocation} location 
@@ -290,6 +293,7 @@ const routeToProcessStep = route => ({
     place:     route.hubBegin,
     weekday:   0,
     relDate:   0,
+    date:      '',
     time:      route.timeBegin, 
     validDays: route.validDays,
   },
@@ -297,6 +301,7 @@ const routeToProcessStep = route => ({
     place:     route.hubEnd,
     weekday:   0,
     relDate:   0,
+    date:      '',
     time:      route.timeEnd, 
     validDays: route.validDays,
   }
@@ -329,6 +334,7 @@ const buildRoutePlan = (route, location, product, dayOfWeek, transferRoutes) => 
       place:     decidedBakeHub,
       weekday:   0, // to be determined
       relDate:   0, // to be determined
+      date:      '',
       time:      0, // dummy value; not used
       validDays: product.validDays,
     },
@@ -336,7 +342,8 @@ const buildRoutePlan = (route, location, product, dayOfWeek, transferRoutes) => 
       place:     decidedBakeHub,
       weekday:   0, // to be determined
       relDate:   0, // to be determined
-      time:   product.readyTime,
+      date:      '',
+      time:      product.readyTime,
       validDays: product.validDays,
     }
   }
