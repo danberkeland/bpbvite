@@ -71,6 +71,8 @@ import Bpbn2 from "../Pages/Production/NewPages/BPBN/Baker2/BpbnBaker2";
 import BPBNSetout from "../Pages/Production/NewPages/Setout/BPBNSetout";
 import BPBSSetout from "../Pages/Production/NewPages/Setout/BPBSSetout";
 import BpbnBuckets from "../Pages/Production/NewPages/BPBN/Buckets/BpbnBuckets";
+import Baker1 from "../Pages/Production/BPBN/Baker1";
+import Baker2 from "../Pages/Production/BPBN/Baker2";
 
 // Lazy Load:
 // const BPBNBaker1 = React.lazy(() => import('../Pages/Production/BPBNBaker1'))
@@ -209,6 +211,7 @@ function AnimatedRoutes({ user, signOut }) {
           <React.Fragment>
             {/* <Route path="/Ordering/v2" element={<OrdersPage />} /> */}
             <Route path="/Production/BPBNBaker1"    element={<Bpbn1 />} />
+            <Route path="/Production/BPBNBaker1/v3" element={<Baker1 />} />
             <Route path="/Production/BPBNBaker1/v2" element={<Bpbn1 />} />
             <Route path="/Production/BPBNBaker1/v1" element={<BPBNBaker1 />} />
 
@@ -218,6 +221,7 @@ function AnimatedRoutes({ user, signOut }) {
             <Route path="/BPBNProd/BPBNBaker1Backup/v1" element={<BPBNBaker1Backup />} />
 
             <Route path="/Production/BPBNBaker2"    element={<Bpbn2 />} />
+            <Route path="/Production/BPBNBaker2/v3" element={<Baker2 />} />
             <Route path="/Production/BPBNBaker2/v2" element={<Bpbn2 />} />
             <Route path="/Production/BPBNBaker2/v1" element={<BPBNBaker2 />} />
 
