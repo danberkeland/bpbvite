@@ -33,11 +33,11 @@ const stickerInfo = [
   { prodNick: 'bcwal', nPerBag: 6 },
   { prodNick: 'foc',   nPerBag: 3 },
   { prodNick: 'hfoc',  nPerBag: 3 },
-  { prodNick: 'rbag',  nPerBag: 0 },
-  { prodNick: 'rlev',  nPerBag: 0 },
-  { prodNick: 'rmlti', nPerBag: 0 },
-  { prodNick: 'rrye',  nPerBag: 0 },
-  { prodNick: 'roli',  nPerBag: 0 },
+  { prodNick: 'rbag',  nPerBag: 10 },
+  { prodNick: 'rlev',  nPerBag: 4 },
+  { prodNick: 'rmlti', nPerBag: 4 },
+  { prodNick: 'rrye',  nPerBag: 4 },
+  { prodNick: 'roli',  nPerBag: 4 },
 ]
 
 
@@ -105,31 +105,13 @@ export const useHigueraStickers = ({ reportDT, shouldFetch }) => {
 
     console.log("ORDERS:SERAWSR", T0Orders)
 
-    const shouldPackAtHiguera = order => 
-      isHigueraPackProduct(products[order.prodNick])
-
-    // const T0PackOrders = T0Orders.filter(order => 1 
-    //   && order.isStand !== false 
-    //   && order.qty !== 0 
-    //   && order.bakeRelDate === 0
-    //   && shouldPackAtHiguera(order)
-    // )
-
-    // const T1PackOrders = T1Orders.filter(order => 1 
-    //   && order.isStand !== false 
-    //   && order.qty !== 0 
-    //   && order.bakeRelDate === 0
-    //   && shouldPackAtHiguera(order)
-    // )
-
-    // console.log("TEST LUCYS:", T0Orders.filter(order => order.locNick === 'lucys'))
-    // console.log("TEST LUCYS:", T1Orders.filter(order => order.locNick === 'lucys'))
-
     return [...T1Orders, ...T0Orders].filter(order => 1
         && order.isStand !== false 
         && order.qty !== 0 
         && order.bakeRelDate === 0
-        && shouldPackAtHiguera(order)
+        && isHigueraPackProduct(products[order.prodNick])
+        && !['whole', 'slonat', 'backporch', 'bpbextras', 'bpbkit'].includes(order.locNick)
+        && !['Pick up Carlton'].includes(order.routeMeta.routeNick)
       )
       .map(order => {
         const nPerBag = stickerInfo.find(S => S.prodNick === order.prodNick)?.nPerBag ?? 0
@@ -197,7 +179,7 @@ export const useHigueraStickers = ({ reportDT, shouldFetch }) => {
         driver, 
         routeNick, 
         locName,
-        prodName,
+        prodNick,
         totalQty,
         prodIdx,
         prodStickerCount,
@@ -207,24 +189,18 @@ export const useHigueraStickers = ({ reportDT, shouldFetch }) => {
         displayDate,
       } = stickerItem
 
-      doc.setFontSize(12)
-      doc.text(`Order Date: ${displayDate}`, 0.2, .35, { align: "left" })
-
+      doc.setFontSize(16)
+      doc.text(`${locName}`, 0.2, 0.35)
 
       doc.setFontSize(10)
-      doc.text([
-        `Driver: ${driver}`,
-        `Route: ${routeNick}`,
-      ], 0.2, .55, { align: "left" })
+      doc.text(`${stickerIdx} of ${stickerCount}`, 3.8, 0.35, { align: "right" })
 
-      doc.setFontSize(12)
-      doc.text([
-        `${stickerIdx} of ${stickerCount}`,
-        `${locName}`,
-      ], 3.8, .35, { align: "right" })
+      doc.text(`${driver}: ${routeNick}`, 0.2, 0.6)
+      doc.text(`Date: ${displayDate}`, 3.8, 0.6, { align: "right" })
 
+      doc.setFontSize(20)
       doc.text([
-        `${stickerQty} ${prodName}` + (prodStickerCount > 1 ? ` (Total ${totalQty}, ${prodIdx} of ${prodStickerCount})` : '')
+        `${stickerQty} ${prodNick}` + (prodStickerCount > 1 ? ` (Total ${totalQty}, ${prodIdx} of ${prodStickerCount})` : ''),
       ], 0.2, 1.1, { align: "left" })
 
       if (idx < data.length - 1) doc.addPage([2, 4], 'landscape')
