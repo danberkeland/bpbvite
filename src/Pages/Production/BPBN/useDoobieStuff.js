@@ -1,14 +1,13 @@
-import { isoToDT } from "../../utils"
+import { DateTime } from "luxon"
 
 /**
  * @param {Object} input
- * @param {string} input.reportDate - 'yyyy-MM-dd' formatted date string
+ * @param {DateTime} input.reportDT - 'yyyy-MM-dd' formatted date string
  */
-export const useDoobieStuff = ({ reportDate }) => {
-  const reportDateDT = isoToDT(reportDate)
-  let yes = reportDateDT.ordinal % 2 === 0
+export const useDoobieStuff = ({ reportDT }) => {
+  let yes = reportDT.ordinal % 2 === 0
   
-  const doobieStuffx = [
+  const doobieStuff = [
     {
       Prod: "Doobie Buns",
       Bucket: "YES",
@@ -23,7 +22,7 @@ export const useDoobieStuff = ({ reportDate }) => {
     },
   ]
 
-  const doobieStuff = [
+  const doobieStuffx = [
     {
       Prod: "Doobie Buns",
       Bucket: "YES",
@@ -33,11 +32,11 @@ export const useDoobieStuff = ({ reportDate }) => {
     {
       Prod: "Siciliano",
       Bucket: "YES",
-      Mix: yes ? "NO" : "NO",
+      Mix: yes ? "YES" : "YES",
       Bake: yes ? "NO" : "NO",
     },
   ]
 
-  return doobieStuff
+  return { data:doobieStuff }
   
 }

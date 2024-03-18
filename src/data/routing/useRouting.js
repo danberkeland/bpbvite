@@ -1,34 +1,34 @@
 import { useMemo } from "react";
 import { useRoutes } from "../route/useRoutes";
-import { DBLocation, DBProduct, DBRoute, DBZoneRoute } from "../types.d";
+import { DBLocation, DBProduct } from "../types.d";
 import { useZoneRoutes } from "../zoneRoute/useZoneRoutes";
 import { Routing } from "../../core/logistics/routingFns";
-import { IsoDate } from "../../utils/dateTimeFns";
+// import { IsoDate } from "../../utils/dateTimeFns";
 
 
-/**
- * 
- * @param {DBRoute[] | undefined} routes 
- * @param {DBZoneRoute[] | undefined} zoneRoutes 
- */
-const buildGetRouteOptions = (routes, zoneRoutes) => {
-  /**
-   * @param {DBLocation} location 
-   * @param {DBProduct} product 
-   * @param {import("../../core/logistics/routingFns").WeekdayEEE} dayOfWeek 
-   */
-  const _getOptions = !!routes && !!zoneRoutes 
-    ? (location, product, dayOfWeek) => Routing.getOptions(
-        Routing.cast.fromDBLocation(location),
-        Routing.cast.fromDBProduct(product),
-        dayOfWeek,
-        routes.map(route => Routing.cast.fromDBRoute(route, zoneRoutes))
-      )
-    : undefined
+// /**
+//  * 
+//  * @param {DBRoute[] | undefined} routes 
+//  * @param {DBZoneRoute[] | undefined} zoneRoutes 
+//  */
+// const buildGetRouteOptions = (routes, zoneRoutes) => {
+//   /**
+//    * @param {DBLocation} location 
+//    * @param {DBProduct} product 
+//    * @param {import("../../core/logistics/routingFns").WeekdayEEE} dayOfWeek 
+//    */
+//   const _getOptions = !!routes && !!zoneRoutes 
+//     ? (location, product, dayOfWeek) => Routing.getOptions(
+//         Routing.cast.fromDBLocation(location),
+//         Routing.cast.fromDBProduct(product),
+//         dayOfWeek,
+//         routes.map(route => Routing.cast.fromDBRoute(route, zoneRoutes))
+//       )
+//     : undefined
 
-  return _getOptions
+//   return _getOptions
 
-}
+// }
 
 /**
  * Generates function pre-loaded with fetched route/zoneRoute data.
@@ -38,10 +38,29 @@ const useLoadedGetRouteOptions = ({ shouldFetch }) => {
   const { data:dbRoutes } = useRoutes({ shouldFetch })
   const { data:dbZoneRoutes } = useZoneRoutes({ shouldFetch })
 
-  return useMemo(
-    () => buildGetRouteOptions(dbRoutes, dbZoneRoutes), 
-    [dbRoutes, dbZoneRoutes]
-  )
+  // return useMemo(
+  //   () => buildGetRouteOptions(dbRoutes, dbZoneRoutes), 
+  //   [dbRoutes, dbZoneRoutes]
+  // )
+
+  return useMemo(() => {
+    if (!dbRoutes || !dbZoneRoutes) return undefined
+
+    /**
+     * @param {DBLocation} location 
+     * @param {DBProduct} product 
+     * @param {import("../../core/logistics/routingFns").WeekdayEEE} dayOfWeek 
+     */
+    const _getOptions = (location, product, dayOfWeek) => Routing.getOptions(
+      Routing.cast.fromDBLocation(location),
+      Routing.cast.fromDBProduct(product),
+      dayOfWeek,
+      dbRoutes.map(route => Routing.cast.fromDBRoute(route, dbZoneRoutes))
+    )
+
+    return _getOptions
+
+  }, [dbRoutes, dbZoneRoutes])
 
 }
 

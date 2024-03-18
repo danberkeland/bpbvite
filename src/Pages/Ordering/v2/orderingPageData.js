@@ -6,7 +6,7 @@ import { useLocationProductOverridesByLocNick } from "../../../data/locationProd
 
 import { useOrdersByLocNick } from "../../../data/order/useOrders.js"
 import { useStandingsByLocNick } from "../../../data/standing/useStandings.js"
-import { combineOrders } from "../../../data/cartOrder/combineOrders.js"
+import { combineOrders } from "../../../core/production/combineOrders.js"
 import { constructCartItem, constructCartOrder } from "../../../data/cartOrder/cartOrders.js"
 import { useTemplateProdsByLocNick } from "../../../data/templateProd/useTemplateProd.js"
 import { addMetadataToLocation, calculateCalendarSummary, calculateCustomizedProducts } from "./orderingPageCalcs.js"

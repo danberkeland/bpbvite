@@ -11,11 +11,29 @@ import { combineOrders } from "../../core/production/combineOrders.js";
 import { useMemo } from "react";
 import { keyBy } from "../../utils/collectionFns.js";
 import { useOverrideProduct } from "../locationProductOverride/useOverrideProduct.js";
+import { DT } from "../../utils/dateTimeFns.js";
+import { DBOrder, DBRoute } from "../types.d.js";
+import { FulfillmentPlan } from "../../core/logistics/types.d.js";
+
+
+/**
+ * @typedef {Object} CombinedOrderMeta
+ * @property {string} routeNick
+ * @property {FulfillmentPlan} routePlan
+ * @property {DBRoute | undefined} route
+ * @property {{ locName: string }} location
+ */
+
+/**
+ * @typedef {DBOrder & { meta:CombinedOrderMeta }} 
+*/
+let CombinedRoutedOrder 
 
 /**
  * @param {Object} input
  * @param {DateTime} input.delivDT 
  * @param {boolean} input.useHolding
+ * @return {{ data: (undefined | CombinedRoutedOrder[]) }}
  */
 const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false }) => {
   const delivDate = delivDT.toFormat('yyyy-MM-dd')
@@ -60,6 +78,7 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false }) => {
     //     : order
     // }
 
+    
     const combinedRoutedOrders = combineOrders(ORD, _STD)
       .map(order => {
         const location = order.isWhole
@@ -84,19 +103,34 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false }) => {
           dayOfWeek
         )
         const routePlan = routeOptions?.[order.route ?? 'deliv']?.[0]
+        const datedRoutePlan = {
+          ...routePlan,
+          steps: routePlan.steps.map(step => ({
+            ...step,
+            begin: { ...step.begin, date: DT.fromIso(order.delivDate).plus({ days: step.begin.relDate }).toFormat('yyyy-MM-dd')},
+            end:   { ...step.end,   date: DT.fromIso(order.delivDate).plus({ days: step.end.relDate }).toFormat('yyyy-MM-dd')},
+          }))
+        }
+        
+
         const routeNick = routeOptions?.[order.route ?? 'deliv']?.[0]?.routeNick ?? "NOT ASSIGNED"
         const route = RTE.find(R => R.routeNick === routeNick)
-        return { 
+        
+        /** @type {CombinedRoutedOrder} */
+        const combinedRoutedOrder = { 
           ...order, 
           meta: { 
             routeNick,
-            routePlan,
+            routePlan: datedRoutePlan,
             route,
             location: {
               locName: location.locName.split("__")[0]
             }
           }
         }
+
+        
+        return combinedRoutedOrder
       })
    
     return combinedRoutedOrders
@@ -112,5 +146,6 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false }) => {
 }
 
 export {
-  useCombinedRoutedOrdersByDate
+  useCombinedRoutedOrdersByDate,
+  CombinedRoutedOrder,
 }
