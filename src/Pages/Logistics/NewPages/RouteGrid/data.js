@@ -5,6 +5,8 @@ import { useProducts } from "../../../../data/product/useProducts"
 import { useLocations } from "../../../../data/location/useLocations"
 import { useRoutes } from "../../../../data/route/useRoutes"
 
+import { DBProduct } from "../../../../data/types.d"
+
 /**
  * The returned tableData and pdfGrids objects are keyed by routeNick, where
  * each value contains an object for displaying grid data in a DataTable
@@ -24,13 +26,14 @@ export const useRouteGrid = ({ reportDate, shouldFetch }) => {
     const products = keyBy(PRD, 'prodNick')
     const routes = keyBy(RTE, 'routeNick')
 
-    const shouldPackAtHiguera = order => 1
-      && products[order.prodNick].doughNick !== "French"
-      && (0
-        || products[order.prodNick].packGroup === 'rustic breads'
-        || products[order.prodNick].packGroup === 'retail'
-        || products[order.prodNick].packGroup === 'focaccia'
-      )
+    const isHigueraPackProduct = (/** @type {DBProduct} */ product) => 1
+      && product.doughNick !== "French"
+      && ['rustic breads', 'retail', 'focaccia'].includes(product.packGroup)
+
+    console.log("HIG PRD:", PRD.filter(P => isHigueraPackProduct(P)).map(P => ({ prodNick: P.prodNick })))
+
+    const shouldPackAtHiguera = order => 
+      isHigueraPackProduct(products[order.prodNick])
 
     const ordersWithRetail = orderBy(
       prodOrders.filter(order => 1

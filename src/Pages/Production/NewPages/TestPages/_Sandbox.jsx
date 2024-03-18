@@ -8,6 +8,9 @@ import { keyBy } from "../../../../utils/collectionFns/keyBy";
 import { useMemo } from "react";
 import { mapValues } from "../../../../utils/objectFns";
 import { useSquareOrders } from "../../../../data/square/fetchSquareOrders";
+import { useHigueraStickers } from "../../../Logistics/NewPages/RouteGrid/useHigueraStickers";
+import { DT } from "../../../../utils/dateTimeFns";
+import { Button } from "primereact/button";
 // import { useSyncSquareOrders } from "../../../../core/checkForUpdates";
 
 export const Sandbox = () => {
@@ -107,10 +110,22 @@ export const Sandbox = () => {
   // console.log("squareOrders", squareOrders)
 
   // useSyncSquareOrders()
+
+  const reportDateDT = DT.today()
+
+  const { data:higueraStickers, exportHigueraStickers } = useHigueraStickers({ 
+    reportDT: reportDateDT, shouldFetch: true
+  })
   
   return (<>
 
     <h1>Sandbox</h1>
+
+    <Button label={<span>Higuera<br/>Stickers</span>}
+        onClick={exportHigueraStickers}
+        style={{width: "100%", marginTop: "1rem"}}
+        // disabled={routeOptions.includes('NOT ASSIGNED') || !pradoPackData}
+      />
 
     {/* <DataTable
       value={ tableData ?? []}

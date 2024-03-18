@@ -28,6 +28,7 @@ import { submitAndPrintInvoice, submitOrder } from "../../../Billing/v2/submitFu
 import { OverlayPanel } from "primereact/overlaypanel"
 import { useNotesByType } from "../../../../data/note/useNotes"
 import { InputTextarea } from "primereact/inputtextarea"
+import { useHigueraStickers } from "./useHigueraStickers"
 
 const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
 
@@ -59,6 +60,10 @@ const RouteGrid = () => {
   })
   const { data:RTE } = useListData({ tableName: "Route", shouldFetch: true })
   const { data:LOC } = useListData({ tableName: "Location", shouldFetch: true })
+
+  // const { data:higueraStickers, exportHigueraStickers } = useHigueraStickers({ 
+  //   reportDT: reportDateDT, shouldFetch: true
+  // })
 
   const noteHelpRef = useRef()
   const [isEditingNote, setIsEditingNote] = useState(false)
@@ -210,6 +215,11 @@ const RouteGrid = () => {
           style={{width: "100%", marginTop: "1rem"}}
           disabled={routeOptions.includes('NOT ASSIGNED') || !pradoPackData}
         />
+        {/* <Button label={<span>Higuera<br/>Stickers</span>}
+          onClick={exportHigueraStickers}
+          style={{width: "100%", marginTop: "1rem"}}
+          disabled={routeOptions.includes('NOT ASSIGNED') || !pradoPackData}
+        /> */}
 
       </div>
 
