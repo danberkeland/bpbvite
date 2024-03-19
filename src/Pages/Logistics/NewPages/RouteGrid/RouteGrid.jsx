@@ -61,9 +61,9 @@ const RouteGrid = () => {
   const { data:RTE } = useListData({ tableName: "Route", shouldFetch: true })
   const { data:LOC } = useListData({ tableName: "Location", shouldFetch: true })
 
-  // const { data:higueraStickers, exportHigueraStickers } = useHigueraStickers({ 
-  //   reportDT: reportDateDT, shouldFetch: true
-  // })
+  const { data:higueraStickers, exportHigueraStickers } = useHigueraStickers({ 
+    reportDT: reportDateDT, shouldFetch: true
+  })
 
   const noteHelpRef = useRef()
   const [isEditingNote, setIsEditingNote] = useState(false)
@@ -215,11 +215,11 @@ const RouteGrid = () => {
           style={{width: "100%", marginTop: "1rem"}}
           disabled={routeOptions.includes('NOT ASSIGNED') || !pradoPackData}
         />
-        {/* <Button label={<span>Higuera<br/>Stickers</span>}
+        <Button label={<span>Higuera<br/>Stickers</span>}
           onClick={exportHigueraStickers}
           style={{width: "100%", marginTop: "1rem"}}
           disabled={routeOptions.includes('NOT ASSIGNED') || !pradoPackData}
-        /> */}
+        />
 
       </div>
 
