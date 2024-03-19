@@ -303,6 +303,15 @@ const BPBSWhatToMake = ({ initialDateOption='today' }={}) => {
           }))}  
           headerStyle={{...headerStyle}}
         />
+        {/* <Column header="Need Extra Early" 
+          body={(rowData => ExpandableCellTemplate({
+            dialogHeader: 'Fresh Items To Be Baked and Sent North',
+            colKey: 'needExtraEarlyCol',
+            rowData,
+            products,
+          }))}  
+          headerStyle={{...headerStyle}}
+        /> */}
       </DataTable>
 
       <h2 onClick={() => console.log(WTM?.pretzelData)}>Pretzels</h2>

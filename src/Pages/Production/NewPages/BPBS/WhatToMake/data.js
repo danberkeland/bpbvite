@@ -22,7 +22,7 @@ const isFreshProduct = (product) => product.readyTime < 15
   && product.doughNick !== "Pretzel Bun"    
 
 const canSendPocketsNorth = (product) => isFreshProduct(product)
-  && product.bakedWhere.includes("Carlton")
+  // && product.bakedWhere.includes("Carlton")
   && product.freezerThaw !== true;
 
 const shouldSendPocketsNorth = (product, order) => 
@@ -248,6 +248,12 @@ export const useBpbsWtmData = ({ shouldFetch, reportDate, reportRelDate }) => {
         const T0BTotal = sumBy(T0BaggedOrders, order => calcEa(order))
         const T1BTotal = sumBy(T1BaggedOrders, order => calcEa(order))
 
+        // orders baked and sent north same day
+        const B0NorthOrders = T0FreshOrders.filter(order => 0
+          || order.routeMeta.routeNick === "Pick up Carlton"
+          || order.locNick === "sandos"
+        )
+
         const makeTotalNeededEa = 
           relu(T0BTotal + T1BTotal - currentStockEa) + T0FTotal
 
@@ -265,6 +271,10 @@ export const useBpbsWtmData = ({ shouldFetch, reportDate, reportRelDate }) => {
           },
           needEarlyCol: {
             totalEa: relu(T0BTotal - currentStockEa) + T0FTotal
+          },
+          needExtraEarlyCol: {
+            orders: B0NorthOrders,
+            totalEa: sumBy(B0NorthOrders, order => calcEa(order))
           },
           makeTotalCol: {
             orders: [...T0FreshOrders, ...T0BaggedOrders, ...T1BaggedOrders],
