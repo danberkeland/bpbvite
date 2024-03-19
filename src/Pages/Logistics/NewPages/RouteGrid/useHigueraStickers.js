@@ -105,14 +105,25 @@ export const useHigueraStickers = ({ reportDT, shouldFetch }) => {
 
     console.log("ORDERS:SERAWSR", T0Orders)
 
-    return [...T1Orders, ...T0Orders].filter(order => 1
-        && order.isStand !== false 
-        && order.qty !== 0 
-        && order.bakeRelDate === 0
-        && isHigueraPackProduct(products[order.prodNick])
-        && !['whole', 'slonat', 'backporch', 'bpbextras', 'bpbkit'].includes(order.locNick)
-        && !['Pick up Carlton'].includes(order.routeMeta.routeNick)
-      )
+    const T1StickerOrders = T1Orders.filter(order => 1
+      && order.isStand !== false 
+      && order.qty !== 0 
+      && (order.bakeRelDate === 0 && !['hfoc', 'foc'].includes(order.prodNick))
+      && isHigueraPackProduct(products[order.prodNick])
+      && !['whole', 'slonat', 'backporch', 'bpbextras', 'bpbkit'].includes(order.locNick)
+      && !['Pick up Carlton'].includes(order.routeMeta.routeNick)
+    )
+
+    const T0StickerOrders = T0Orders.filter(order => 1
+      && order.isStand !== false 
+      && order.qty !== 0 
+      && (order.bakeRelDate === 0 || ['hfoc', 'foc'].includes(order.prodNick))
+      && isHigueraPackProduct(products[order.prodNick])
+      && !['whole', 'slonat', 'backporch', 'bpbextras', 'bpbkit'].includes(order.locNick)
+      && !['Pick up Carlton'].includes(order.routeMeta.routeNick)
+    )
+
+    return [...T1StickerOrders, ...T0StickerOrders]
       .map(order => {
         const nPerBag = stickerInfo.find(S => S.prodNick === order.prodNick)?.nPerBag ?? 0
         const nBags = nPerBag > 0 ? Math.ceil(order.qty / nPerBag) : 0
