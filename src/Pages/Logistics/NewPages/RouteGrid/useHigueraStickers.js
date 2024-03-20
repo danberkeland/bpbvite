@@ -105,14 +105,25 @@ export const useHigueraStickers = ({ reportDT, shouldFetch }) => {
 
     console.log("ORDERS:SERAWSR", T0Orders)
 
-    return [...T1Orders, ...T0Orders].filter(order => 1
-        && order.isStand !== false 
-        && order.qty !== 0 
-        && order.bakeRelDate === 0
-        && isHigueraPackProduct(products[order.prodNick])
-        && !['whole', 'slonat', 'backporch', 'bpbextras', 'bpbkit'].includes(order.locNick)
-        && !['Pick up Carlton'].includes(order.routeMeta.routeNick)
-      )
+    const T1StickerOrders = T1Orders.filter(order => 1
+      && order.isStand !== false 
+      && order.qty !== 0 
+      && (order.delivDate === T1 && order.delivLeadTime === 1 && !['hfoc', 'foc'].includes(order.prodNick))
+      && isHigueraPackProduct(products[order.prodNick])
+      && !['whole', 'slonat', 'backporch', 'bpbextras', 'bpbkit'].includes(order.locNick)
+      && !['Pick up Carlton'].includes(order.routeMeta.routeNick)
+    )
+
+    const T0StickerOrders = T0Orders.filter(order => 1
+      && order.isStand !== false 
+      && order.qty !== 0 
+      && (order.delivDate === T0 && order.delivLeadTime === 0 || ['hfoc', 'foc'].includes(order.prodNick))
+      && isHigueraPackProduct(products[order.prodNick])
+      && !['whole', 'slonat', 'backporch', 'bpbextras', 'bpbkit'].includes(order.locNick)
+      && !['Pick up Carlton'].includes(order.routeMeta.routeNick)
+    )
+
+    return [...T1StickerOrders, ...T0StickerOrders]
       .map(order => {
         const nPerBag = stickerInfo.find(S => S.prodNick === order.prodNick)?.nPerBag ?? 0
         const nBags = nPerBag > 0 ? Math.ceil(order.qty / nPerBag) : 0
@@ -168,12 +179,12 @@ export const useHigueraStickers = ({ reportDT, shouldFetch }) => {
 
   }
 
-  const exportHigueraStickers = () => {
-    if (!T0Orders || !T1Orders || !RTE || !LOC || !PRD) return undefined
+  const exportHigueraStickers = (stickerData) => {
+    if (!stickerData || !T0Orders || !T1Orders || !RTE || !LOC || !PRD) return undefined
 
     const doc = new jsPDF({ format: [2, 4], unit: "in", orientation: "l" })
     
-    calculateHigueraStickers().forEach((stickerItem, idx, data) => {
+    stickerData.forEach((stickerItem, idx, data) => {
 
       const { 
         driver, 

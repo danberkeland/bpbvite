@@ -20,7 +20,7 @@ export function uniqByN(data, iterFns) {
   let uniqArray = []
   
   const n = data.length
-  for (let i = 1; i < n; ++i) {
+  for (let i = 0; i < n; ++i) {
     const currResult = iterFns.map(iterFn => iterFn(data[i]))
 
     if (!prevResults.some(prevResult => simpleArrayIsEqual(prevResult, currResult))) {

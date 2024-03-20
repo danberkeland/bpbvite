@@ -208,7 +208,8 @@ export const useT0T7Data = ({ shouldFetch }) => {
 
       // packaging up the relevant tableCells for each countNick row
       const T = [0, 1, 2, 3, 4].map(countRelDate => 
-        tableCells[`${countNick}#${countRelDate}`]  
+        tableCells[`${countNick}#${countRelDate}`] 
+          ?? { countNick, countRelDate, totalQty: 0, items: [] }
       )
 
       // cumulative total CN is the sum of totalQtys for T0 to TN.

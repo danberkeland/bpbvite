@@ -27,7 +27,6 @@ export const useBaguetteDoughSummary = ({ reportDT }) => {
   const calculateDoughSummary = () => {
     if (!T0Orders || !T1Orders || !T2Orders || !T3Orders || !DGH || !PRD) return undefined
 
-
     const doughs = keyBy(DGH, D => D.doughName)
     const products = keyBy(PRD, P => P.prodNick)
     const baguetteDoughProducts = PRD
@@ -55,10 +54,10 @@ export const useBaguetteDoughSummary = ({ reportDT }) => {
     const doughData = baguetteDoughProducts.map(P => {
       const { preshaped, weight, forBake } = P
 
-      const preshapedWeight = round((preshaped ?? 0) * weight, 2)
+      const preshapedWeight = round((preshaped ?? 0) * weight, 1)
       const [weightT0, weightT1, weightT2] = 
         [B0Orders, B1Orders, B2Orders].map(BNOrders => round(
-          sumBy(BNOrders[forBake] ?? [], calcWeight), 2
+          sumBy(BNOrders[forBake] ?? [], calcWeight), 1
         ))
 
       // An oddball rule: Being short oli or bcw adds to our dough needs,
@@ -66,9 +65,9 @@ export const useBaguetteDoughSummary = ({ reportDT }) => {
       // baguette dough, so they get omitted from the surplus tally.
       const extraT0 = ['Olive Herb', 'Blue Cheese Walnut'].includes(forBake)
         ? 0
-        : Math.max(0, round(preshapedWeight - weightT0, 2))
+        : Math.max(0, round(preshapedWeight - weightT0, 1))
       
-      const shortT0 = Math.max(0, round(weightT0 - preshapedWeight, 2))
+      const shortT0 = Math.max(0, round(weightT0 - preshapedWeight, 1))
 
       return {
         forBake,
@@ -86,6 +85,8 @@ export const useBaguetteDoughSummary = ({ reportDT }) => {
     })
 
     const { oldDough, bucketSets, preBucketSets } = doughs['Baguette']
+    
+
 
     return doughData
 

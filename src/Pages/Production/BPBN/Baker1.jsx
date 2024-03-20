@@ -15,6 +15,7 @@ import { useDoobieStuff } from "./useDoobieStuff"
 import { useOtherPrepData } from "./useOtherPrepData"
 import { useBaguetteDoughSummary } from "./useBaguetteDoughSummary"
 import { round } from "lodash"
+import { useDoughs } from "../../../data/dough/useDoughs"
 
 
 
@@ -38,6 +39,9 @@ const Baker1 = () => {
   console.log("BAGUETTE DATA:", baguetteData)
 
   const { data:PRD=[] } = useProducts({ shouldFetch: true})
+  const { data:DGH } = useDoughs({ shouldFetch: true })
+  const baguetteDoughItem = DGH?.find(D => D.doughName === 'Baguette') ?? {}
+
   const products = keyBy(PRD, P => P.prodNick)
 
   return (
@@ -90,29 +94,33 @@ const Baker1 = () => {
           field="forBake" 
           footer="Total:" 
         />
-        <Column header="preshaped (lbs)" 
-          field="preshapedWeightT0" 
-          footer={options => round(sumBy(options.props.value ?? [], row => row.preshapedWeightT0), 1)} 
-        />
-        <Column header="surplus (lbs)"
-          field="extraT0"
-          footer={options => round(sumBy(options.props.value ?? [], row => row.extraT0), 1)}
-        />
-        <Column header="short (lbs)"
-          field="shortT0" 
-          footer={options => round(sumBy(options.props.value ?? [], row => row.shortT0), 1)}
-        />
-        <Column header="need T0 (lbs)"
-          field="weightT0"
+        <Column header="Bake Req"
+          // field="weightT0"
           body={rowData => DrilldownCellTemplate({ 
             dialogHeader: `${rowData.forBake} Orders, Baked Today`,
             cellValue: rowData.weightT0, 
             tableData: rowData.itemsT0 ?? [],
             products,
           })} 
+          style={{width: "5rem"}}
           footer={options => round(sumBy(options.props.value ?? [], row => row.weightT0), 1)}
         />
-        <Column header="need T1 (lbs)"
+        <Column header="preshaped" 
+          field="preshapedWeightT0" 
+          style={{width: "5rem"}}
+          footer={options => round(sumBy(options.props.value ?? [], row => row.preshapedWeightT0), 1)} 
+        />
+        <Column header="surplus"
+          field="extraT0"
+          style={{width: "5rem"}}
+          footer={options => round(sumBy(options.props.value ?? [], row => row.extraT0), 1)}
+        />
+        <Column header="short"
+          field="shortT0" 
+          style={{width: "5rem"}}
+          footer={options => round(sumBy(options.props.value ?? [], row => row.shortT0), 1)}
+        />
+        <Column header="Mix/Shape Req."
           // field="weightT1" 
           body={rowData => DrilldownCellTemplate({ 
             dialogHeader: `${rowData.forBake} Orders, Baked Today +1`,
@@ -122,7 +130,7 @@ const Baker1 = () => {
           })} 
           footer={options => round(sumBy(options.props.value ?? [], row => row.weightT1), 1)}
         />        
-        <Column header="need T2 (lbs)"
+        <Column header="Bucket Req."
           // field="weightT2" 
           body={rowData => DrilldownCellTemplate({ 
             dialogHeader: `${rowData.forBake} Orders, Baked Today +2`,
@@ -132,10 +140,11 @@ const Baker1 = () => {
           })} 
           footer={options => round(sumBy(options.props.value ?? [], row => row.weightT2), 1)}
         />
-
-
       </DataTable>
 
+      <div>
+
+      </div>
       
     </div>
   )
