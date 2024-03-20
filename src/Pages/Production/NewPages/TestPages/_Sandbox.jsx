@@ -122,7 +122,7 @@ export const Sandbox = () => {
     <h1>Sandbox</h1>
 
     <Button label={<span>Higuera<br/>Stickers</span>}
-        onClick={exportHigueraStickers}
+        onClick={() => exportHigueraStickers(higueraStickers)}
         style={{width: "100%", marginTop: "1rem"}}
         // disabled={routeOptions.includes('NOT ASSIGNED') || !pradoPackData}
       />
