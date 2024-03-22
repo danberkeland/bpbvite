@@ -44,8 +44,8 @@ const toOrder = (standing, delivDate) => {
     rate: null,
     SO: null,
     isLate: null,
-    createdOn:null,
-    updatedOn:null,
+    createdOn:'',
+    updatedOn:'',
     updatedBy: null,
     ttl: null,
   }
