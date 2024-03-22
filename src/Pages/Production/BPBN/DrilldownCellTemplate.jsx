@@ -1,19 +1,11 @@
 import React, { useState } from "react"
 
-import { useRusticData } from "./useRusticData"
-import { useProducts } from "../../../data/product/useProducts"
-
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 import { Dialog } from "primereact/dialog"
 
-import { DT } from "../../../utils/dateTimeFns"
-import { keyBy } from "../../../utils/collectionFns"
 import { formatHours } from "../../../utils/dateAndTime/formatHours"
 import { truncate } from "lodash"
-import { Button } from "primereact/button"
-// Enhances data with product info
-
 
 
 /**
