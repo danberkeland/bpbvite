@@ -74,6 +74,8 @@ import BpbnBuckets from "../Pages/Production/NewPages/BPBN/Buckets/BpbnBuckets";
 import Baker1 from "../Pages/Production/BPBN/Baker1";
 import Baker2 from "../Pages/Production/BPBN/Baker2";
 
+import{ default as BPBNBucketsV2 } from "../Pages/Production/BPBN/Buckets";
+
 // Lazy Load:
 // const BPBNBaker1 = React.lazy(() => import('../Pages/Production/BPBNBaker1'))
 // const BPBNBaker1Backup = React.lazy(() => import('../Pages/Production/BPBNBaker1Backup')) 
@@ -228,10 +230,10 @@ function AnimatedRoutes({ user, signOut }) {
             <Route path="/Production/Production" element={<Production />} />
             <Route path="/Production/WhoBake"    element={<WhoBake />} />
             <Route path="/Production/WhoShape"   element={<WhoShape />} />
-            <Route
-              path="/Production/BPBNBuckets"
-              element={<BPBNBuckets loc={"Carlton"} />}
-            />
+
+            <Route path="/Production/BPBNBuckets"    element={<BPBNBuckets loc={"Carlton"} />} />
+            <Route path="/Production/BPBNBuckets/v2" element={<BPBNBucketsV2 />} />
+            
             <Route path="/Production/BPBNBuckets/v2" element={<BpbnBuckets />} />
             <Route path="/Production/BPBSBuckets"    element={<BPBNBuckets loc={"Prado"} />} />
             <Route path="/Production/BPBNSetOut"     element={<BPBNSetout />} />

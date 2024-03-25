@@ -1,4 +1,20 @@
+# Files in This Directory
 
+Files for pages and components have a .jsx filetype
+
+## 'use' Files
+Files with names prefixed with 'use' correspond to a page (.jsx) file. They 
+house data hooks that handle calling fetching/caching data, and supplying that
+data to the transform functions that drives page content.
+
+## 'data' Files
+Files with names prefixed with 'data' house pure functions that typically take
+raw, fetched data or semi-processed data, and transform it into data that the
+page can render. Keeping the functions pure makes them more portable.
+
+## 'export' Files
+Files with names prefixed with 'export' house functions that use jsPDF to
+produce printable PDF files to aid production tasks.
 
 ## BPBN Baker2
 
