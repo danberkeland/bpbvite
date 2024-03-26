@@ -14,7 +14,7 @@ import { exportPastryPrepPdf } from "./exportPdf"
 
 import { recordSetoutTime, submitPrepreshaped } from "./submitFunctions"
 import { DrilldownCellTemplate } from "../BPBN/_components/DrilldownCellTemplate"
-import { useCheckUpdates } from "../../Utils/useCheckUpdates"
+import { useCheckForUpdates } from "../../../../core/checkForUpdates"
 
 const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
 // const todayDT = _todayDT.toFormat('MM-dd') === '12-24'
@@ -33,7 +33,7 @@ const SetoutByLocation = ({ reportLocation }) => {
   const productCache = useListData({ tableName: "Product", shouldFetch: true })
   const products = keyBy(productCache?.data, 'prodNick')
 
-  useCheckUpdates()
+  useCheckForUpdates()
 
   useEffect(() => {
     confirmDialog({

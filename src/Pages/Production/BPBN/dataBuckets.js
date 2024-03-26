@@ -36,8 +36,6 @@ export const calculateBucketsData = (PRD, DGH, R1Orders, R2Orders, R3Orders, R1,
   return DGH.map(D => {
     const ordersToCount = D.isBakeReady ? B1Orders : B2Orders
 
-    //  Summary Data
-    // ==============
     const summary = preshapeProducts.filter(P => 
       P.doughNick === D.doughName
     ).map(preshapeProduct => {

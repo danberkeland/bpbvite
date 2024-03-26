@@ -5,7 +5,7 @@ import { Column } from "primereact/column"
 import { Dialog } from "primereact/dialog"
 
 import { formatHours } from "../../../utils/dateAndTime/formatHours"
-import { truncate } from "lodash"
+import { round, sumBy, truncate } from "lodash"
 
 
 /**
@@ -47,6 +47,7 @@ export const DrilldownCellTemplate = ({
         visible={show}
         onHide={() => setShow(false)}
         header={dialogHeader}
+        headerStyle={{gap: "1rem"}}
       >
         <DataTable
           value={tableData}
@@ -54,6 +55,9 @@ export const DrilldownCellTemplate = ({
           // scrollable
           responsiveLayout="scroll"
           scrollHeight="50rem"
+          footer={() => <div style={{textAlign: "right"}}>
+            Total: {round(sumBy(tableData ?? [], rowData => rowData.qty * products[rowData.prodNick].packSize), 1)} Ea.
+          </div>}
         >
           <Column header="delivDate" body={row => row.delivDate.slice(5)} />
           <Column header="Route" field="meta.routeNick" />

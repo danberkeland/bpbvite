@@ -71,10 +71,10 @@ import Bpbn2 from "../Pages/Production/NewPages/BPBN/Baker2/BpbnBaker2";
 import BPBNSetout from "../Pages/Production/NewPages/Setout/BPBNSetout";
 import BPBSSetout from "../Pages/Production/NewPages/Setout/BPBSSetout";
 import BpbnBuckets from "../Pages/Production/NewPages/BPBN/Buckets/BpbnBuckets";
-import Baker1 from "../Pages/Production/BPBN/Baker1";
-import Baker2 from "../Pages/Production/BPBN/Baker2";
 
-import{ default as BPBNBucketsV2 } from "../Pages/Production/BPBN/Buckets";
+import Baker1 from "../Pages/Production/BPBN/PageBaker1";
+import Baker2 from "../Pages/Production/BPBN/PageBaker2";
+import{ default as BPBNBucketsV2 } from "../Pages/Production/BPBN/PageBuckets";
 
 // Lazy Load:
 // const BPBNBaker1 = React.lazy(() => import('../Pages/Production/BPBNBaker1'))

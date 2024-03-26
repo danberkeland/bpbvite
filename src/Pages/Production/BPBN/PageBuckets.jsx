@@ -9,7 +9,7 @@ import { InputText } from "primereact/inputtext"
 import { useState } from "react"
 import { Dialog } from "primereact/dialog"
 import { keyBy, sumBy } from "../../../utils/collectionFns"
-import { DrilldownCellTemplate } from "./DrilldownCellTemplate"
+import { DrilldownCellTemplate } from "./ComponentDrilldownCellTemplate"
 
 import { useBucketsData } from "./useBucketsData"
 import { printBucketStickers } from "./exportBucketStickers"

@@ -17,8 +17,8 @@ import { DoughInputs } from "./DoughInputs"
 
 import "./bpbnBaker1.css"
 import { useExportBpbn1 } from "./useExport"
-import { useCheckUpdates } from "../../../Utils/useCheckUpdates"
 import { getTodayDT, isoToDT } from "../utils"
+import { useCheckForUpdates } from "../../../../../core/checkForUpdates"
 
 // const SKIP_DATES = ['12-24']
 // const adjustDateTime = (dt) => SKIP_DATES.includes(dt.toFormat('MM-dd'))
@@ -80,7 +80,7 @@ const Bpbn1 = ({ initialDateOption='today' }) => {
   const { data:PRD } = useListData({ tableName: "Product", shouldFetch })
   const products = keyBy('prodNick')(PRD ?? [])
 
-  useCheckUpdates()
+  useCheckForUpdates()
 
   const exportBpbn1 = useExportBpbn1({ reportDate, shouldFetch })
   

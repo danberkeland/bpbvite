@@ -9,6 +9,7 @@ import { printCroixShapeList } from "./exportPdf"
 import { sortBy, sumBy } from "lodash"
 import { DateTime } from "luxon"
 import { Dialog } from "primereact/dialog"
+import { useCheckForUpdates } from "../../../../../core/checkForUpdates"
 
 // For counting croix we introduce a new naming convention: countNick.
 // countNicks are a subset of prodNicks. Products are assigned the same
@@ -38,6 +39,8 @@ export const CroixToMake = () => {
   const [sheetMake, setSheetMake] = useState({}) 
   const [isEditing, setisEditing] = useState(false)
   const [displayMode, setDisplayMode] = useState("proj") // "proj" or "daily"
+
+  useCheckForUpdates()
   
   useEffect(() => {
     if (!!tableRows) {
