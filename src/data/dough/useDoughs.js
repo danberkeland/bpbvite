@@ -10,9 +10,9 @@ const useDoughs = ({ shouldFetch }) => {
     useListData({ tableName: "DoughBackup", shouldFetch })
 
   /**@type {DBDoughBackup[] | undefined} */
-  const routes = data
+  const doughs = data
 
-  return { data: routes, ...otherCacheItems}
+  return { data: doughs, ...otherCacheItems}
 
 }
 

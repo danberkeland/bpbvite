@@ -1,4 +1,6 @@
 /**
+ * Can also be thought of as 'firstBy'. If the iterFn would return the same
+ * value on multiple items, uniqBy will keep the first and discard the rest.
  * @template T
  * @param {(t: T) => number|string|boolean|null|undefined} iterFn 
  * @returns {(prev: T[], curr: T) => T[]}

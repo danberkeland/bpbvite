@@ -65,6 +65,8 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false }) => {
 
     const _STD = useHolding ? STD : STD.filter(std => std.isStand === true)
 
+    console.log("ROUTE", RTE)
+
     // const splitBackporchCroixOrders = order => {
     //   const shouldSplit = order.locNick === 'backporch' 
     //     && products[order.prodNick].packGroup === 'baked pastries'

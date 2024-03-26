@@ -13,6 +13,7 @@ import jsPDF from "jspdf"
 import "jspdf-autotable"
 import { DateTime } from "luxon"
 import { DT } from "../../../../utils/dateTimeFns"
+import { divyUp } from "../../../../utils/divyUp"
 
 /**
  * If a prodNick is not included or if nPerBag is set to 0, 
@@ -41,27 +42,27 @@ const stickerInfo = [
 ]
 
 
-/**
- * Related to integer division. Splits {nItems} items 
- * as equally as possible into {nParts} parts.
- * @example ```
- * divyUp(10, 3) // [4, 3, 3]
- * ```
- * @param {number} nItems 
- * @param {number} nParts 
- * @returns {number[]}
- */
-function divyUp(nItems, nParts) {
-  if (!(nParts > 0)) return []
+// /**
+//  * Related to integer division. Splits {nItems} items 
+//  * as equally as possible into {nParts} parts.
+//  * @example ```
+//  * divyUp(10, 3) // [4, 3, 3]
+//  * ```
+//  * @param {number} nItems 
+//  * @param {number} nParts 
+//  * @returns {number[]}
+//  */
+// function divyUp(nItems, nParts) {
+//   if (!(nParts > 0)) return []
 
-  const quotient  = Math.floor(nItems / nParts)
-  const remainder = nItems % nParts
+//   const quotient  = Math.floor(nItems / nParts)
+//   const remainder = nItems % nParts
 
-  return (new Array(nParts))
-    .fill(quotient)
-    .map((q, idx) => idx < remainder ? q+1 : q)
+//   return (new Array(nParts))
+//     .fill(quotient)
+//     .map((q, idx) => idx < remainder ? q+1 : q)
 
-}
+// }
 
 const isHigueraPackProduct = (/** @type {DBProduct} */ product) => 1
   && product.doughNick !== "French"

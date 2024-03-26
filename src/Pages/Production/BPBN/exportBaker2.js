@@ -8,7 +8,7 @@ let titleFontSize = 14
 
 export const exportBaker2 = ({
   reportDT, 
-  rusticData,
+  rusticShapeData,
   otherPrepData,
   croixSetoutData,
 }) => {
@@ -22,7 +22,7 @@ export const exportBaker2 = ({
   let finalY = 20
 
   doc.autoTable({
-    body: rusticData,
+    body: rusticShapeData,
     columns: [
       { header: "Product", dataKey: "forBake" },
       { header: "Weight",  dataKey: "weight" },

@@ -429,9 +429,21 @@ const getOptions = (location, product, dayOfWeek, routes) => {
 
   let delivRoutePlans = routes // delivRoutes
     .filter(route => route.zonesServed.includes(location.zoneNick))
-    .map(route => 
-      buildRoutePlan(route, location, product, dayOfWeek, transferRoutes)
-    )
+    .map(route => {
+      // locations configured to a pick-up zone may still have orders set
+      // to 'deliv'; we want to avoid timing conflicts in these cases as well.
+      const _location = pickupRoutes.some(R => R.routeNick === route.routeNick)
+        ? { ...location, timeBegin: 0, timeEnd: 2399 }
+        : location
+
+      return buildRoutePlan(
+        route, 
+        _location, 
+        product, 
+        dayOfWeek, 
+        transferRoutes
+      )
+    })
     .sort(compareBy((/**@type {FulfillmentPlan}*/ plan) => 
       plan.steps.length > 0
         ? plan.steps[plan.steps.length - 1].begin.time
@@ -454,10 +466,10 @@ const getOptions = (location, product, dayOfWeek, routes) => {
 
     const routePlans = pickupRoutes
       .filter(route => route.zonesServed.includes(zoneNick))
-      .map(route => 
-        buildRoutePlan(route, puLocation, product, dayOfWeek, transferRoutes)
-      )
+      .map(route => buildRoutePlan(route, puLocation, product, dayOfWeek, transferRoutes))
+
     return [zoneNick, routePlans]
+
   })
 
   // let routeOptions = Object.fromEntries(

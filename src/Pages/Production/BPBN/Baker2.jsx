@@ -1,35 +1,34 @@
 import React, { useState } from "react"
 
-import { useRusticData } from "./useRusticData"
-import { useProducts } from "../../../data/product/useProducts"
-
+import { Button } from "primereact/button"
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
+
 import { DrilldownCellTemplate } from "./DrilldownCellTemplate"
+
+import { useProducts } from "../../../data/product/useProducts"
+import { useBaker2Data } from "./useBaker2Data"
+
+import { exportBaker2 } from "./exportBaker2"
 
 import { DT } from "../../../utils/dateTimeFns"
 import { keyBy } from "../../../utils/collectionFns"
-
-import { Button } from "primereact/button"
-import { useOtherPrepData } from "./useOtherPrepData"
-import { useCroixSetoutData } from "./useCroixSetoutData"
-import { exportBaker2 } from "./exportBaker2"
-
-
 
 const Baker2 = () => {
   const todayDT = DT.today()
   const [reportDT, setReportDT] = useState(todayDT)
   const isToday = reportDT.toMillis() === todayDT.toMillis()
-  
-  const { data:rusticData }      = useRusticData({ bakeDT: reportDT.plus({ days: 1 }), useHolding: true })
-  const { data:otherPrepData }   = useOtherPrepData({ bakeDT: reportDT })
-  const { data:croixSetoutData } = useCroixSetoutData({ bakeDT: reportDT.plus({ days: 1 }) })
+
+  const {
+    rusticShapeData,
+    otherPrepData,
+    croixSetoutData,
+  } = useBaker2Data({ reportDT })
   const { data:PRD=[], submitMutations, updateLocalData } = useProducts({ shouldFetch: true})
   const products = keyBy(PRD, P => P.prodNick)
 
   const submitPrepreshapes = async () => {
-    const updateInputs = rusticData?.map(row => ({
+    const updateInputs = rusticShapeData?.map(row => ({
       prodNick: row.representativeProdNick,
       prepreshaped: row.qty
     }))
@@ -54,7 +53,7 @@ const Baker2 = () => {
           submitPrepreshapes()
           exportBaker2({
             reportDT,
-            rusticData,
+            rusticShapeData,
             otherPrepData,
             croixSetoutData,
           })
@@ -62,7 +61,7 @@ const Baker2 = () => {
       />
 
       <DataTable 
-        value={rusticData ?? []}
+        value={rusticShapeData ?? []}
         size="small" 
         responsiveLayout="scroll"   
         className={isToday ? '' : 'not-today'}
