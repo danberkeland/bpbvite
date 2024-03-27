@@ -8,7 +8,7 @@ export const useDoobieStuff = ({ reportDate }) => {
   const reportDateDT = isoToDT(reportDate)
   let yes = reportDateDT.ordinal % 2 === 0
   
-  const doobieStuff = [
+  const doobieStuffx = [
     {
       Prod: "Doobie Buns",
       Bucket: "YES",
@@ -23,18 +23,18 @@ export const useDoobieStuff = ({ reportDate }) => {
     },
   ]
 
-  const doobieStuffx = [
+  const doobieStuff = [
     {
       Prod: "Doobie Buns",
       Bucket: "YES",
-      Mix: yes ? "NO" : "NO",
+      Mix: yes ? "YES" : "YES",
       Bake: yes ? "NO" : "NO",
     },
     {
       Prod: "Siciliano",
       Bucket: "YES",
-      Mix: yes ? "YES" : "YES",
-      Bake: yes ? "NO" : "NO",
+      Mix: yes ? "NO" : "NO",
+      Bake: yes ? "YES" : "YES",
     },
   ]
 
