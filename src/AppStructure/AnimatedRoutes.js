@@ -17,14 +17,19 @@ import CustomerNews from "../Pages/CustomerNews/CustomerNews";
 import CustomerBilling from "../Pages/CustomerBilling/CustomerBilling";
 import CustomerSettings from "../Pages/CustomerSettings/CustomerSettings";
 
+// Deprecated:
+
+// import BPBNBaker1 from "../Pages/Production/BPBNBaker1";
+// import BPBNBaker1Backup from "../Pages/Production/BPBNBaker1Backup";
+// import BPBNBaker2 from "../Pages/Production/BPBNBaker2";
+// import { default as SetOutV1 } from "../Pages/Production/BPBNSetout";
+
 // Load simultaneously:
+import BPBNBuckets from "../Pages/Production/BPBNBuckets";
+
 import OrdersPage from "../Pages/Ordering/v2/Ordering"; // group with lazy loaders while in testing
-import BPBNBaker1 from "../Pages/Production/BPBNBaker1";
-import BPBNBaker1Backup from "../Pages/Production/BPBNBaker1Backup";
-import BPBNBaker2 from "../Pages/Production/BPBNBaker2";
 import WhoBake from "../Pages/Production/WhoBake";
 import WhoShape from "../Pages/Production/WhoShape";
-import { default as SetOutV1 } from "../Pages/Production/BPBNSetout";
 import Production from "../Pages/Production/Production";
 import ProductsV1 from "../Pages/Products/Products";
 import { default as BillingV1} from "../Pages/Billing/Billing";
@@ -44,7 +49,6 @@ import BPBSWhatToMakeBackup from "../Pages/Production/BPBSWhatToMakeBackup";
 import BPBSMixPocket from "../Pages/Production/BPBSMixPocket";
 import CroixCountV1 from "../Pages/Production/CroixCount";
 import CroixToMake from "../Pages/Production/CroixToMake";
-import BPBNBuckets from "../Pages/Production/BPBNBuckets";
 import ByProduct from "../Pages/Logistics/ByProduct/ByProduct";
 import NorthList from "../Pages/Logistics/NorthLists";
 import NorthListV2 from "../Pages/Logistics/NorthLists/v2/NorthLists"
@@ -215,17 +219,17 @@ function AnimatedRoutes({ user, signOut }) {
             <Route path="/Production/BPBNBaker1"    element={<Bpbn1 />} />
             <Route path="/Production/BPBNBaker1/v3" element={<Baker1 />} />
             <Route path="/Production/BPBNBaker1/v2" element={<Bpbn1 />} />
-            <Route path="/Production/BPBNBaker1/v1" element={<BPBNBaker1 />} />
+            {/* <Route path="/Production/BPBNBaker1/v1" element={<BPBNBaker1 />} /> */}
 
             <Route path="/BPBNProd/BPBNBaker1Backup" 
               element={<Bpbn1 initialDateOption="tomorrow" />}
             />
-            <Route path="/BPBNProd/BPBNBaker1Backup/v1" element={<BPBNBaker1Backup />} />
+            {/* <Route path="/BPBNProd/BPBNBaker1Backup/v1" element={<BPBNBaker1Backup />} /> */}
 
             <Route path="/Production/BPBNBaker2"    element={<Bpbn2 />} />
             <Route path="/Production/BPBNBaker2/v3" element={<Baker2 />} />
             <Route path="/Production/BPBNBaker2/v2" element={<Bpbn2 />} />
-            <Route path="/Production/BPBNBaker2/v1" element={<BPBNBaker2 />} />
+            {/* <Route path="/Production/BPBNBaker2/v1" element={<BPBNBaker2 />} /> */}
 
             <Route path="/Production/Production" element={<Production />} />
             <Route path="/Production/WhoBake"    element={<WhoBake />} />
@@ -238,11 +242,11 @@ function AnimatedRoutes({ user, signOut }) {
             <Route path="/Production/BPBSBuckets"    element={<BPBNBuckets loc={"Prado"} />} />
             <Route path="/Production/BPBNSetOut"     element={<BPBNSetout />} />
             <Route path="/Production/BPBNSetOut/v2"  element={<BPBNSetout />} />
-            <Route path="/Production/BPBNSetOut/v1"  element={<SetOutV1 loc={"Carlton"} />} />
+            {/* <Route path="/Production/BPBNSetOut/v1"  element={<SetOutV1 loc={"Carlton"} />} /> */}
 
             <Route path="/Production/BPBSSetOut"    element={<BPBSSetout />} />
             <Route path="/Production/BPBSSetOut/v2" element={<BPBSSetout />} />
-            <Route path="/Production/BPBSSetOut/v1" element={<SetOutV1 loc={"Prado"} />} />
+            {/* <Route path="/Production/BPBSSetOut/v1" element={<SetOutV1 loc={"Prado"} />} /> */}
 
             <Route path="/Production/BPBSWhatToMake"    element={<BPBSWhatToMake />} />
             <Route path="/Production/BPBSWhatToMake/v2" element={<BPBSWhatToMake />} />
