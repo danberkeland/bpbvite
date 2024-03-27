@@ -235,8 +235,9 @@ function AnimatedRoutes({ user, signOut }) {
             <Route path="/Production/WhoBake"    element={<WhoBake />} />
             <Route path="/Production/WhoShape"   element={<WhoShape />} />
 
-            <Route path="/Production/BPBNBuckets"    element={<BPBNBuckets loc={"Carlton"} />} />
+            <Route path="/Production/BPBNBuckets/v1"    element={<BPBNBuckets loc={"Carlton"} />} />
             <Route path="/Production/BPBNBuckets/v2" element={<BPBNBucketsV2 />} />
+            <Route path="/Production/BPBNBuckets" element={<BPBNBucketsV2 />} />
             
             <Route path="/Production/BPBNBuckets/v2" element={<BpbnBuckets />} />
             <Route path="/Production/BPBSBuckets"    element={<BPBNBuckets loc={"Prado"} />} />

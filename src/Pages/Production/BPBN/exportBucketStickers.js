@@ -63,7 +63,7 @@ export const printBucketStickers = (
   )
   
   // The math is easy when the amounts are defined properly
-  const oldDoughToUse = Math.min(oldDough, batchWeight / 2)
+  const oldDoughToUse = Math.min(oldDough, batchWeight / 3)
   const batchFreshWeight = batchWeight - oldDoughToUse
 
   const totalAmount = sumBy(itemComponents, C => C.amount)

@@ -1,5 +1,3 @@
-/// doughs, , doughcomponents
-
 import { keyBy } from "lodash"
 import { CombinedRoutedOrder } from "../../../data/production/useProductionData"
 import { compareBy, sumBy, uniqByRdc } from "../../../utils/collectionFns"
@@ -22,9 +20,6 @@ export const calculateBucketsData = (PRD, DGH, R1Orders, R2Orders, R3Orders, R1,
 
   const calculateBakeDate = (/** @type {CombinedRoutedOrder} */ order) =>
     order.meta.routePlan.steps[0].begin.date
-
-  console.log("malformed orders:")
-  console.log([...R1Orders, ...R2Orders, ...R3Orders].filter(order => order.meta.routePlan.steps[0] === undefined))
   
   const B1Orders = [...R1Orders, ...R2Orders].filter(order => calculateBakeDate(order) === R1)
   const B2Orders = [...R2Orders, ...R3Orders].filter(order => calculateBakeDate(order) === R2)
@@ -34,31 +29,36 @@ export const calculateBucketsData = (PRD, DGH, R1Orders, R2Orders, R3Orders, R1,
     .reduce(uniqByRdc(P => P.forBake), [])
 
   return DGH.map(D => {
-    const ordersToCount = D.isBakeReady ? B1Orders : B2Orders
+    const ordersToCount = (D.isBakeReady ? B1Orders : B2Orders)
 
-    const summary = preshapeProducts.filter(P => 
-      P.doughNick === D.doughName
-    ).map(preshapeProduct => {
-      const { forBake, preshaped, weight } = preshapeProduct
-      
-      const forBakeOrders = ordersToCount.filter(order => 
-        products[order.prodNick].forBake === forBake
-      )
-      const neededEa = sumBy(forBakeOrders, 
-        order => order.qty * products[order.prodNick].packSize
-      )
+    const summary = preshapeProducts
+      .filter(P => P.doughNick === D.doughName)
+      .map(preshapeProduct => {
+        const { forBake, preshaped, weight } = preshapeProduct
+        
+        const forBakeOrders = ordersToCount
+          .filter(order => products[order.prodNick].forBake === forBake)
+          .sort(compareBy(order => order.prodNick))
+          .sort(compareBy(order => order.locNick))
+          .sort(compareBy(order => order.meta.routeNick))
+          .sort(compareBy(order => order.meta.route.routeStart))
+          .sort(compareBy(order => order.delivDate))
 
-      return {
-        forBake,
-        weight,
-        neededEa,
-        preshaped,
-        shortEa: Math.max(0, neededEa - preshaped),
-        surplusEa: Math.max(0, preshaped - neededEa),
-        items: forBakeOrders
-      }
+        const neededEa = sumBy(
+          forBakeOrders, 
+          order => order.qty * products[order.prodNick].packSize
+        )
 
-    })
+        return {
+          forBake,
+          weight,
+          neededEa,
+          preshaped,
+          shortEa: Math.max(0, neededEa - preshaped),
+          surplusEa: Math.max(0, preshaped - neededEa),
+          items: forBakeOrders
+        }
+      })
 
     return {
       ...D,
