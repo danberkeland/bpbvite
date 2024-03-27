@@ -15,6 +15,23 @@ import { useProducts } from "../data/product/useProducts";
 import { useEffect, useRef, useState } from "react";
 import { useDoughs } from "../data/dough/useDoughs";
 import { DT } from "../utils/dateTimeFns";
+import { useCombinedRoutedOrdersByDate } from "../data/production/useProductionData";
+import { DBProduct } from "../data/types.d";
+import { groupByArrayRdc, groupByObject, sumBy } from "../utils/collectionFns";
+import { mapValues } from "../utils/objectFns";
+
+
+
+/**For croissant orders, maps back to the shaped type consumed at setout*/
+const shapeTypeByProdNick = {
+  pl: 'pl', frpl: 'pl', al: 'pl', fral: 'pl',
+  ch: 'ch', frch: 'ch',
+  pg: 'pg', frpg: 'pg',
+  sf: 'sf', frsf: 'sf',
+  mb: 'mb', frmb: 'mb', unmb: 'mb',
+  mini: 'mini', frmini: 'mini',
+}
+
 
 /**
  * 
@@ -275,29 +292,122 @@ export const checkForUpdates = async (
 
 
 export const useCheckForUpdates = () => {
+  const tomorrowDT = DT.today().plus({ days: 1 })
+  const tomorrow = tomorrowDT.toFormat('yyyy-MM-dd')
 
-  usePreshapeFlip()
-  useBucketFlip()
-  useSyncSquareOrders()
+  const productCache = useProducts({ shouldFetch: true })
+  const doughCache   = useDoughs({ shouldFetch: true })
+  const orderCache   = useOrders({ shouldFetch: true })
+
+  const { data:squareOrders } = useSquareOrders({ shouldFetch: true })
+  const { data:T0Orders } = useCombinedRoutedOrdersByDate({ delivDT: tomorrowDT, useHolding: true, shouldFetch: true })
+  const { data:T1Orders } = useCombinedRoutedOrdersByDate({ delivDT: tomorrowDT, useHolding: true, shouldFetch: true })
+
+  useCroixCheck(productCache, T0Orders, T1Orders, tomorrow)
+  usePreshapeCheck(productCache, tomorrow)
+  useBucketFlip(doughCache, tomorrow)
+  useSyncSquareOrders(productCache.data, squareOrders, orderCache)
+
+}
+
+function useCroixCheck(productCache, T0Orders, T1Orders, tomorrow) {
+
+  const checkCompleted = useRef(false)
+  const { data:PRD, submitMutations, updateLocalData } = productCache
+  // const tomorrowDT = DT.today().plus({ days: 1 })
+  // const tomorrow = tomorrowDT.toFormat('yyyy-MM-dd')
+  // const { data:PRD, submitMutations, updateLocalData } = useProducts({ shouldFetch: true })
+  // const { data:T0Orders } = useCombinedRoutedOrdersByDate({ delivDT: tomorrowDT, useHolding: true, shouldFetch: true })
+  // const { data:T1Orders } = useCombinedRoutedOrdersByDate({ delivDT: tomorrowDT, useHolding: true, shouldFetch: true })
+
+  // Test if product is the one that should hold inventory info.
+  // This rule is so brittle we might as well explicitly list the items.
+  const isInventoryCroixProduct = (/** @type {DBProduct} */ product) => 1
+    && product.packGroup === "baked pastries" 
+    && product.doughNick === "Croissant"
+    && ['unmb', 'al'].includes(product.prodName)
+
+  useEffect(() => {
+    if (!PRD || !T0Orders || !T1Orders || checkCompleted.current) return
+
+    const frozenTotals = T0Orders
+      .filter(order => {
+        const product = PRD.find(P => P.prodNick === order.prodNick)
+        return 1
+          && product?.packGroup === 'frozen pastries'
+          && product.doughNick === 'Croissant'
+          && order.meta.route?.RouteDepart === 'Carlton'
+      })
+      .reduce(groupByArrayRdc(order => shapeTypeByProdNick[order.prodNick]), [])
+      .map(orderGroup => ({
+        shapeType: shapeTypeByProdNick[orderGroup[0].prodNick],
+        qty: sumBy(orderGroup, order => order.qty),
+      }))
+
+    const setoutTotals = T1Orders
+      .filter(order => {
+        const product = PRD.find(P => P.prodNick === order.prodNick)
+        return 1
+          && product?.packGroup === 'baked pastries'
+          && product.doughNick === 'Croissant'
+          && order.meta.route?.RouteDepart === 'Carlton'
+      })
+      .reduce(groupByArrayRdc(order => shapeTypeByProdNick[order.prodNick]), [])
+      .map(orderGroup => ({
+        shapeType: shapeTypeByProdNick[orderGroup[0].prodNick],
+        qty: sumBy(orderGroup, order => order.qty),
+      }))
+
+
+    const productsToUpdate = PRD.filter(P => 1
+      && isInventoryCroixProduct(P)
+      && P.freezerNorthFlag !== tomorrow
+    )
+
+    const updateInputs = productsToUpdate.map(updateProduct => {
+      const frozenQty = frozenTotals.find(item => item.shapeType === updateProduct.prodNick)?.qty ?? 0
+      const setoutQty = setoutTotals.find(item => item.shapeType === updateProduct.prodNick)?.qty ?? 0
+
+      const newNorthClosingQty = 0
+        + updateProduct.freezerNorthClosing 
+        + 12 * (Math.ceil((setoutQty + frozenQty - updateProduct.freezerNorthClosing) / 12))
+        - (setoutQty + frozenQty) 
+
+      return {
+        prodNick:            updateProduct.prodNick,
+        freezerCount:        updateProduct.freezerClosing,
+        freezerNorth:        updateProduct.freezerNorthClosing,
+        freezerNorthClosing: newNorthClosingQty,
+        freezerNorthFlag:    tomorrow,
+        sheetMake: 0,
+      } 
+    })
+    console.log(updateInputs)
+  
+    const handleMutate = async (updateInputs) =>
+      updateLocalData(await submitMutations({ updateInputs }))
+
+    handleMutate(updateInputs)
+    checkCompleted.current = true
+    console.log("croix check completed")
+
+  }, [tomorrow, PRD, T0Orders, T1Orders, submitMutations, updateLocalData])
 
 }
 
 
-function usePreshapeFlip() {
+function usePreshapeCheck(productCache, tomorrow) {
 
   const checkCompleted = useRef(false)
-  const tomorrow = DT.today().plus({ days: 1 }).toFormat('yyyy-MM-dd')
-  const { 
-    data:products, 
-    submitMutations, 
-    updateLocalData 
-  } = useProducts({ shouldFetch: true })
+  const { data:products, submitMutations, updateLocalData } = productCache
+  // const tomorrow = DT.today().plus({ days: 1 }).toFormat('yyyy-MM-dd')
+  // const { data:products, submitMutations, updateLocalData } = useProducts({ shouldFetch: true })
 
   useEffect(() => {
     if (!products || checkCompleted.current) return
 
     const updateInputs = products
-      .filter(D => D.updatePreDate !== tomorrow)
+      .filter(P => P.updatePreDate !== tomorrow)
       .map(P => ({
         prodNick:      P.prodNick,
         preshaped:     P.prepreshaped,
@@ -312,19 +422,16 @@ function usePreshapeFlip() {
     checkCompleted.current = true
     console.log("preshape check completed")
 
-  }, [products, submitMutations, updateLocalData, checkCompleted.current])
+  }, [tomorrow, products, submitMutations, updateLocalData])
 
 }
 
-function useBucketFlip() {
+function useBucketFlip(doughCache, tomorrow) {
 
   const checkCompleted = useRef(false)
-  const tomorrow = DT.today().plus({ days: 1 }).toFormat('yyyy-MM-dd')
-  const { 
-    data:doughs, 
-    submitMutations, 
-    updateLocalData 
-  } = useDoughs({ shouldFetch: true })
+  const { data:doughs, submitMutations, updateLocalData } = doughCache
+  // const tomorrow = DT.today().plus({ days: 1 }).toFormat('yyyy-MM-dd')
+  // const { data:doughs, submitMutations, updateLocalData } = useDoughs({ shouldFetch: true })
 
   useEffect(() => {
     if (!doughs || checkCompleted.current) return
@@ -345,24 +452,17 @@ function useBucketFlip() {
     checkCompleted.current = true
     console.log("dough check completed")
 
-  }, [doughs, submitMutations, updateLocalData, checkCompleted.current])
+  }, [tomorrow, doughs, submitMutations, updateLocalData])
 
 }
 
-function useSyncSquareOrders() {
+function useSyncSquareOrders(products, squareOrders, orderCache) {
 
   const checkCompleted = useRef(false)
-
-  const { 
-    data:orders, 
-    submitMutations, 
-    updateLocalData 
-  } = useOrders({ shouldFetch: true })
-
-  const { data:products } = useProducts({ shouldFetch: true })
-  const { data:squareOrders } = 
-    useSquareOrders({ shouldFetch: !checkCompleted.current })
-
+  const { data:orders, submitMutations, updateLocalData } = orderCache
+  // const { data:products } = useProducts({ shouldFetch: true })
+  // const { data:squareOrders } = useSquareOrders({ shouldFetch: !checkCompleted.current })
+  // const { data:orders, submitMutations, updateLocalData } = useOrders({ shouldFetch: true })
 
   useEffect(() => {
     if (!orders || !products || !squareOrders || checkCompleted.current) return 
@@ -391,6 +491,4 @@ function useSyncSquareOrders() {
 
   }, [orders, products, squareOrders, submitMutations, updateLocalData])
   
-
-
 }

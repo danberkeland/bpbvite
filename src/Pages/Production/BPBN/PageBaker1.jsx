@@ -4,7 +4,7 @@ import { useProducts } from "../../../data/product/useProducts"
 
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
-import { DrilldownCellTemplate } from "./DrilldownCellTemplate"
+import { DrilldownCellTemplate } from "./ComponentDrilldownCellTemplate"
 
 import { DT } from "../../../utils/dateTimeFns"
 import { keyBy, sumBy } from "../../../utils/collectionFns"
@@ -12,7 +12,7 @@ import { keyBy, sumBy } from "../../../utils/collectionFns"
 import { Button } from "primereact/button"
 import { round } from "lodash"
 import { useBaker1Data } from "./useBaker1Data"
-import { DoughInputs } from "./DoughInputs"
+import { DoughInputs } from "./ComponentDoughInputs"
 import { Dialog } from "primereact/dialog"
 import { exportBpbn1Pdf } from "./exportBaker1"
 import { useDoughs } from "../../../data/dough/useDoughs"
@@ -74,6 +74,8 @@ const Baker1 = () => {
 
   }
 
+  console.log("otherPrepData", otherPrepData)
+
   const { data:PRD=[] } = useProducts({ shouldFetch: true})
   const products = keyBy(PRD, P => P.prodNick)
 
@@ -120,6 +122,7 @@ const Baker1 = () => {
       <OtherPrepTable 
         value={otherPrepData}
         className={isToday ? '' : 'not-today'}
+        products={products}
       />
 
     
@@ -228,7 +231,7 @@ const RusticTable = ({ value, className, products }) =>
     <Column header="Short"  field="short" />
     <Column header={<span>Needed<br/>Early</span>}
       body={rowData => DrilldownCellTemplate({ 
-        dialogHeader: `Early ${rowData.forBake} Orders`,
+        dialogHeader: `Early ${rowData.forBake} Orders: AM North & Pick up Carlton`,
         cellValue: rowData.earlyQty, 
         tableData: rowData.earlyItems,
         products,

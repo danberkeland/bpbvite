@@ -4,7 +4,7 @@ import { Button } from "primereact/button"
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 
-import { DrilldownCellTemplate } from "./DrilldownCellTemplate"
+import { DrilldownCellTemplate } from "./ComponentDrilldownCellTemplate"
 
 import { useProducts } from "../../../data/product/useProducts"
 import { useBaker2Data } from "./useBaker2Data"

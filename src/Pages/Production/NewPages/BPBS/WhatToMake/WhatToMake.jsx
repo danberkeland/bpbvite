@@ -11,8 +11,8 @@ import { useListData } from "../../../../../data/_listData"
 import { keyBy, round, set, sumBy } from "lodash"
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog"
 import { exportBpbsWtmPdf } from "./exportPdf"
-import { useCheckUpdates } from "../../../Utils/useCheckUpdates"
 import { getTodayDT, isoToDT } from "../../BPBN/utils"
+import { useCheckForUpdates } from "../../../../../core/checkForUpdates"
 
 const SHOW_CALENDAR = false
 
@@ -64,7 +64,7 @@ const BPBSWhatToMake = ({ initialDateOption='today' }={}) => {
       : "rgb(191, 210, 218)"
   }
 
-  useCheckUpdates() // overnight flip routine, check square orders
+  useCheckForUpdates() // overnight flip routine, check square orders
 
   const { data:WTM } = useBpbsWtmData({ 
     shouldFetch: true, 

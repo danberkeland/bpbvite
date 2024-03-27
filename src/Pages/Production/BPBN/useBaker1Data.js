@@ -12,7 +12,7 @@ import { calculateBaguetteSummary } from "./dataBaguetteDough"
 import { DateTime } from "luxon"
 
 /**
- * Data is only intended to be generated for the current day and for tomorrow 
+ * Data is only intended to be generated for the current day, and for tomorrow 
  * as a backup report.
  * @param {Object} input
  * @param {DateTime} input.reportDT
@@ -28,10 +28,10 @@ export const useBaker1Data = ({ reportDT, calculateFor }) => {
     ? 'bucketSets'
     : 'preBucketSets'
 
-  const { data:T0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 0 }), useHolding: false})
-  const { data:T1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: true})
-  const { data:T2Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 2 }), useHolding: true})
-  const { data:T3Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 3 }), useHolding: true})
+  const { data:T0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 0 }), useHolding: false, shouldFetch: true })
+  const { data:T1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: true,  shouldFetch: true })
+  const { data:T2Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 2 }), useHolding: true,  shouldFetch: true })
+  const { data:T3Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 3 }), useHolding: true,  shouldFetch: true })
   
   const { data:DGH } = useDoughs({ shouldFetch: true })
   const { data:PRD } = useProducts({ shouldFetch: true})

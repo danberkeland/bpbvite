@@ -92,7 +92,7 @@ const batchMutate = async ({
     const [cResults, uResults, dResults] =
       await Promise.all([cPromises, uPromises, dPromises])
 
-    console.log(cResults, uResults, dResults)
+    // console.log(cResults, uResults, dResults)
     
     return ({
       createdItems: cResults.map(r => r.data?.[`create${tableName}`]),

@@ -9,7 +9,7 @@ import { InputText } from "primereact/inputtext"
 import { useState } from "react"
 import { Dialog } from "primereact/dialog"
 import { keyBy, sumBy } from "../../../utils/collectionFns"
-import { DrilldownCellTemplate } from "./DrilldownCellTemplate"
+import { DrilldownCellTemplate } from "./ComponentDrilldownCellTemplate"
 
 import { useBucketsData } from "./useBucketsData"
 import { printBucketStickers } from "./exportBucketStickers"
@@ -42,38 +42,40 @@ const Buckets = () => {
   return (
     <div style={{width: "60rem", margin:"auto", padding: "2rem 5rem 5rem 5rem"}}>
 
-      <h1>Carlton Dough Stickers</h1>
+      <h1>Higuera Dough Stickers</h1>
       {(doughList ?? []).filter(row => row.mixedWhere === 'Carlton').map((row, idx) => {
 
-        return (<div key={row.doughName} style={{marginBlock: "1rem"}}>
+        return (<div key={row.doughName} style={{marginBlock: "1rem", background: "var(--bpb-orange-vibrant-200)", padding: "0rem 1rem 1rem 1rem", borderRadius: ".5rem"}}>
 
-          <h2 style={{display: "inline"}}>
-            {row.doughName}: (need {row.needed.toFixed(2)} lb.) TOTAL: {(row.needed + row.buffer).toFixed(2)}
-          </h2>
-          <Button 
-            icon="pi pi-table" 
-            label="Info"
-            onClick={() => showTableAtIdx(idx)} 
-            style={{marginLeft: "2rem"}}
-          />
+          <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", color: "var(--bpb-text-color)" }}>
+            <h2 style={{display: "inline"}}>
+              {row.doughName}: (need {row.needed.toFixed(2)} lb.) TOTAL: {(row.needed + row.buffer).toFixed(2)}
+            </h2>
+            <Button 
+              icon="pi pi-table" 
+              label="Info"
+              onClick={() => showTableAtIdx(idx)} 
+              style={{marginLeft: "2rem"}}
+            />
+          </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 0.75fr", columnGap: "1rem", rowGap: "1rem", margin: "1rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1.75fr 1fr 1fr 0.75fr", columnGap: "1rem", rowGap: "1rem" }}>
             
             <div> 
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBlock: ".5rem" }}>
-                <div>Old Dough:</div>
+                <div style={{fontWeight: "bold"}}>Old Dough:</div>
                 <div>
                   <div className="p-inputgroup">
-                    <InputText value={row.oldDough} style={{ maxWidth: "7rem" }} />
+                    <InputText value={row.oldDough} style={{ maxWidth: "7rem", borderRight: "none" }} />
                     <span className="p-inputgroup-addon">lb.</span>
                   </div>
                 </div>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBlock: ".5rem" }}>
-                <div>Buffer Dough:</div>
+                <div style={{fontWeight: "bold"}}>Buffer Dough:</div>
                 <div>
                   <div className="p-inputgroup">
-                    <InputText value={row.buffer} style={{ maxWidth: "7rem" }} />
+                    <InputText value={row.buffer} style={{ maxWidth: "7rem", borderRight: "none" }} />
                     <span className="p-inputgroup-addon">lb.</span>
                   </div>
                 </div>
@@ -88,6 +90,7 @@ const Buckets = () => {
                 row.oldDough,
                 DCP,
               )}
+              style={{ borderRadius: "1rem", fontSize: "1.1rem" }}
             /> 
             <Button 
               label="Print Default Set"
@@ -97,6 +100,7 @@ const Buckets = () => {
                 row.oldDough,
                 DCP,
               )}
+              style={{ borderRadius: "1rem", fontSize: "1.1rem" }}
             /> 
             <Button 
               label="Half Batch"
@@ -106,6 +110,7 @@ const Buckets = () => {
                 row.oldDough,
                 DCP,
               )}
+              style={{ borderRadius: "1rem", fontSize: "1.1rem" }}
             /> 
           </div>
 

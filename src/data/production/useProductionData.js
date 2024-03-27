@@ -33,12 +33,12 @@ let CombinedRoutedOrder
  * @param {Object} input
  * @param {DateTime} input.delivDT 
  * @param {boolean} input.useHolding
+ * @param {boolean} input.shouldFetch
  * @return {{ data: (undefined | CombinedRoutedOrder[]) }}
  */
-const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false }) => {
+const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false, shouldFetch=true }) => {
   const delivDate = delivDT.toFormat('yyyy-MM-dd')
   const dayOfWeek = delivDT.toFormat('EEE')
-  const shouldFetch = true
 
   const { data:ORD } = useOrdersByDelivDate({ delivDate, shouldFetch })
   const { data:STD } = useStandingsByDayOfWeek({ dayOfWeek, shouldFetch })
@@ -64,8 +64,6 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false }) => {
     const products = keyBy(PRD, P => P.prodNick) // PRD.reduce(Data._keyBy(P => P.prodNick), {})
 
     const _STD = useHolding ? STD : STD.filter(std => std.isStand === true)
-
-    console.log("ROUTE", RTE)
 
     // const splitBackporchCroixOrders = order => {
     //   const shouldSplit = order.locNick === 'backporch' 
@@ -141,7 +139,7 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false }) => {
   return { 
     data: useMemo(
       calcRoutedOrders, 
-      [ORD, STD, LOC, PRD, RTE, overrideProduct, getRoutes]
+      [useHolding, dayOfWeek, ORD, STD, LOC, PRD, RTE, overrideProduct, getRoutes]
     )
   }
 

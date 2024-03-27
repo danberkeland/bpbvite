@@ -131,10 +131,10 @@ export const calculateBaguetteSummary = (T0Orders, T1Orders, T2Orders, T3Orders,
   //  Baguette Summary
   // ==================
   const baguetteSummary = {
-    needed: weightT1,
+    needed: round(weightT1, 2),
     buffer,
     short: shortT0,
-    stickerTotal: round(weightT1 + shortT0 + buffer, 1),
+    stickerTotal: round(weightT1 + shortT0 + buffer, 2),
   }
 
   //  Mix Summary

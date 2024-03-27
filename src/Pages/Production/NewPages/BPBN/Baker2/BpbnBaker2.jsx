@@ -12,8 +12,8 @@ import { useSettingsStore } from "../../../../../Contexts/SettingsZustand"
 import { useListData } from "../../../../../data/_listData"
 import { useBpbn2Data } from "../data/data"
 import { exportBpbn2Pdf } from "./exportPdf"
-import { useCheckUpdates } from "../../../Utils/useCheckUpdates"
 import { getTodayDT } from "../utils"
+import { useCheckForUpdates } from "../../../../../core/checkForUpdates"
 
 
 
@@ -96,7 +96,7 @@ const Bpbn2 = () => {
   } = useListData({ tableName: "Product", shouldFetch: true})
   const products = keyBy('prodNick')(PRD ?? {})
 
-  useCheckUpdates()
+  useCheckForUpdates()
   
   const handleExportPdf = async () => {
     if (!bpbn2data) {
