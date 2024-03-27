@@ -9,7 +9,7 @@ import { useLoadedGetRouteOptions } from "../routing/useRouting";
 import { combineOrders } from "../../core/production/combineOrders.js";
 // import { overrideProduct } from "../locationProductOverride/overrideProduct.js";
 import { useMemo } from "react";
-import { keyBy } from "../../utils/collectionFns.js";
+import { groupByObject, keyBy } from "../../utils/collectionFns.js";
 import { useOverrideProduct } from "../locationProductOverride/useOverrideProduct.js";
 import { DT } from "../../utils/dateTimeFns.js";
 import { DBOrder, DBRoute } from "../types.d.js";
@@ -64,20 +64,6 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false, shouldFetch=
     const products = keyBy(PRD, P => P.prodNick) // PRD.reduce(Data._keyBy(P => P.prodNick), {})
 
     const _STD = useHolding ? STD : STD.filter(std => std.isStand === true)
-
-    // const splitBackporchCroixOrders = order => {
-    //   const shouldSplit = order.locNick === 'backporch' 
-    //     && products[order.prodNick].packGroup === 'baked pastries'
-    //     && products[order.prodNick].doughNick === 'Croissant'
-
-    //   return shouldSplit
-    //     ? [
-    //         { ...order, qty: Math.ceil(order.qty / 2), route: 'slopick' },
-    //         { ...order, qty: Math.ceil(order.qty / 2), route: 'atownpick' },
-    //       ]
-    //     : order
-    // }
-
     
     const combinedRoutedOrders = combineOrders(ORD, _STD)
       .map(order => {
@@ -132,9 +118,19 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false, shouldFetch=
         
         return combinedRoutedOrder
       })
+
+    const { true:unassignedOrders, false:routedOrders=[] } = groupByObject(
+      combinedRoutedOrders,
+      order => !order.meta.route
+    )
+    if (!!unassignedOrders) {
+      console.warn("Routes not assigned to the folloiwing: ", unassignedOrders)
+    }
    
-    return combinedRoutedOrders
+    return routedOrders
   }
+
+  
 
   return { 
     data: useMemo(
