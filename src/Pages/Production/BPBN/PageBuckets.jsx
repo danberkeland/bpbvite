@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useRef } from "react"
 import { DataTable } from "primereact/datatable"
 import { DT } from "../../../utils/dateTimeFns"
 
@@ -8,117 +8,223 @@ import { InputText } from "primereact/inputtext"
 
 import { useState } from "react"
 import { Dialog } from "primereact/dialog"
-import { keyBy, sumBy } from "../../../utils/collectionFns"
+import { sumBy } from "../../../utils/collectionFns"
 import { DrilldownCellTemplate } from "./ComponentDrilldownCellTemplate"
 
 import { useBucketsData } from "./useBucketsData"
 import { printBucketStickers } from "./exportBucketStickers"
-import { round } from "lodash"
+import { debounce, round } from "lodash"
+import { useDoughs } from "../../../data/dough/useDoughs"
+import { useCheckForUpdates } from "../../../core/checkForUpdates"
 
+/** @type {React.CSSProperties} */
+const printButtonStyle = { 
+  borderRadius: "1rem", 
+  fontSize: "1.1rem", 
+  background: "rgb(89, 155, 49)", 
+  border: "solid 1px rgb(78, 135, 43)" 
+}
+
+const setAtIdx = (state, setState) => {
+  return (newValue, idx) => {
+    let newState = [...state]
+    newState[idx] = newValue
+    setState(newState)
+  }
+}
+
+/** 
+ * Avoid the need to wrap with useCallback by passing everything the function
+ * needs as an argument so that it can be extracted from the React component.
+ */
+const debouncedUpdateDough = debounce(
+  async (
+    updateItem, 
+    baseItem, 
+    eventTarget, 
+    submitMutations, 
+    updateLocalData,
+  ) => {
+
+    if (Object.keys(updateItem).some(key => baseItem[key] !== updateItem[key])) {
+      const response = await submitMutations({ updateInputs: [updateItem] })
+      console.log("response", response)
+      updateLocalData(response)
+      eventTarget.blur()
+    }
+
+  },
+  5000
+)
 
 const Buckets = () => {
   const reportDT = DT.today()
 
+  const { submitMutations, updateLocalData } = useDoughs({ shouldFetch: true })
   const { 
     doughList,
-    products:PRD=[],
+    products={},
     doughComponents:DCP=[],
-  } = useBucketsData({ reportDT })
+  } = useBucketsData({ reportDT, mixedWhere: 'Carlton' })
+
+  const [showTable,      setShowTable]      = useState([])
+  const [oldDoughValues, setOldDoughValues] = useState([])
+  const [bufferValues,   setBufferValues]   = useState([])
+  const setShowTableAtIdx      = setAtIdx(showTable,      setShowTable)
+  const setOldDoughValuesAtIdx = setAtIdx(oldDoughValues, setOldDoughValues)
+  const setBufferValuesAtIdx   = setAtIdx(bufferValues,   setBufferValues)
+
+  useEffect(() => {
+    if (!!doughList) {
+      setOldDoughValues(doughList.map(row => row.oldDough))
+      setBufferValues(doughList.map(row => row.buffer))
+    }
+  }, [doughList])
+
+  useCheckForUpdates()
   
-  const products = keyBy(PRD, P => P.prodNick)
-
-  const [showTable, setShowTable] = useState([])
-  const showTableAtIdx = idx => {
-    let newState = [...showTable]
-    newState[idx] = true
-    setShowTable(newState)
-  }
-  const hideTableAtIdx = idx => {
-    let newState = [...showTable]
-    newState[idx] = false
-    setShowTable(newState)
-  }
-
   return (
     <div style={{width: "60rem", margin:"auto", padding: "2rem 5rem 5rem 5rem"}}>
 
       <h1>Higuera Dough Stickers</h1>
-      {(doughList ?? []).filter(row => row.mixedWhere === 'Carlton').map((row, idx) => {
 
-        return (<div key={row.doughName} style={{marginBlock: "1rem", background: "var(--bpb-orange-vibrant-200)", padding: "0rem 1rem 1rem 1rem", borderRadius: ".5rem"}}>
+      <a href="/Production/BPBNBuckets/v1">Go to old version</a>
 
-          <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", color: "var(--bpb-text-color)" }}>
-            <h2 style={{display: "inline"}}>
-              {row.doughName}: (need {row.needed.toFixed(2)} lb.) TOTAL: {(row.needed + row.buffer).toFixed(2)}
-            </h2>
-            <Button 
-              icon="pi pi-table" 
-              label="Info"
-              onClick={() => showTableAtIdx(idx)} 
-              style={{marginLeft: "2rem"}}
-            />
+      {!doughList && <h2>Loading...</h2>}
+
+      {(doughList ?? []).map((row, idx) => 
+        <div 
+          key={row.doughName} 
+          style={{
+            marginBlock: "1rem", 
+            background: "var(--bpb-orange-vibrant-200)", 
+            padding: "0rem 1rem 1rem 1rem", 
+            borderRadius: ".5rem"
+          }}
+        >
+          <div style={{
+            display: "flex", 
+            justifyContent: "space-between", 
+            alignItems: "center", 
+            color: "var(--bpb-text-color)" 
+          }}>
+            <h2 style={{display: "inline"}}>{row.doughName}</h2>
+            
+            <div>
+              <span style={{fontSize: "1.5rem", fontWeight: "bold"}}>
+                (need {row.needed.toFixed(2)} lb.) TOTAL: {(row.needed + row.buffer).toFixed(2)}
+              </span>
+              
+              <Button 
+                icon="pi pi-table" 
+                label="Details"
+                onClick={() => setShowTableAtIdx(true, idx)} 
+                style={{marginLeft: "2rem"}}
+              />
+            </div>
           </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "1.75fr 1fr 1fr 0.75fr", columnGap: "1rem", rowGap: "1rem" }}>
+  
+          <div style={{ 
+            display: "grid", 
+            gridTemplateColumns: "1.75fr 1fr 1fr 0.75fr", 
+            columnGap: "1rem", 
+            rowGap: "1rem" 
+          }}>
             
             <div> 
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBlock: ".5rem" }}>
-                <div style={{fontWeight: "bold"}}>Old Dough:</div>
-                <div>
-                  <div className="p-inputgroup">
-                    <InputText value={row.oldDough} style={{ maxWidth: "7rem", borderRight: "none" }} />
-                    <span className="p-inputgroup-addon">lb.</span>
-                  </div>
-                </div>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBlock: ".5rem" }}>
-                <div style={{fontWeight: "bold"}}>Buffer Dough:</div>
-                <div>
-                  <div className="p-inputgroup">
-                    <InputText value={row.buffer} style={{ maxWidth: "7rem", borderRight: "none" }} />
-                    <span className="p-inputgroup-addon">lb.</span>
-                  </div>
-                </div>
-              </div>
-
+              <InputLabel htmlFor="old-dough-input" text="Old Dough: ">
+                <InputText 
+                  id="old-dough-input" 
+                  value={oldDoughValues[idx] ?? ''}
+                  inputMode="numeric"
+                  keyfilter="pnum"
+                  onFocus={e => e.target.select()}
+                  onChange={e => {
+                    if (/^\d{0,4}$|^\d{0,4}\.\d{0,2}$/.test(e.target.value)) {
+                      setOldDoughValuesAtIdx(e.target.value, idx)
+                      debouncedUpdateDough(
+                        { id: row.id, oldDough: Number(e.target.value ?? 0) },
+                        row,
+                        e.target,
+                        submitMutations, 
+                        updateLocalData,
+                      )
+                    }
+                  }}
+                  onKeyDown={e => {
+                    if (e.code === "Enter") e.currentTarget.blur()
+                    if (e.code === "Escape") {
+                      setOldDoughValuesAtIdx(row.oldDough, idx)
+                      debouncedUpdateDough.cancel()
+                      e.currentTarget.blur()
+                    }
+                  }}
+                  onBlur={() => debouncedUpdateDough.flush()}
+                  style={{ maxWidth: "7rem", borderRight: "none" }} 
+                />
+              </InputLabel>
+  
+              <InputLabel htmlFor="buffer-input" text="Buffer Dough: ">
+                <InputText 
+                  id="buffer-input" 
+                  value={bufferValues[idx] ?? ''}
+                  inputMode="numeric"
+                  keyfilter="pnum"
+                  onFocus={e => e.target.select()}
+                  onChange={e => {
+                    if (/^\d{0,4}$|^\d{0,4}\.\d{0,2}$/.test(e.target.value)) {
+                      setBufferValuesAtIdx(e.target.value, idx)
+                      debouncedUpdateDough(
+                        { id: row.id, buffer: Number(e.target.value ?? 0) },
+                        row,
+                        e.target,
+                        submitMutations, 
+                        updateLocalData,
+                      )
+                    }
+                  }} 
+                  onKeyDown={e => {
+                    if (e.code === "Enter") e.currentTarget.blur()
+                    if (e.code === "Escape") {
+                      setBufferValuesAtIdx(row.buffer, idx)
+                      debouncedUpdateDough.cancel()
+                      e.currentTarget.blur()
+                    }
+                  }}
+                  onBlur={() => debouncedUpdateDough.flush()}
+                  style={{ maxWidth: "7rem", borderRight: "none" }} 
+                />
+              </InputLabel>
             </div>
-            <Button 
-              label="Print Today Set"
+  
+            <Button label="Print Today Set"
               onClick={() => printBucketStickers(
                 row, 
-                row.needed + row.buffer - row.oldDough, 
-                row.oldDough,
-                DCP,
+                row.needed + bufferValues[idx], 
+                oldDoughValues[idx], 
+                DCP
               )}
-              style={{ borderRadius: "1rem", fontSize: "1.1rem" }}
+              style={printButtonStyle}
+            />
+            <Button label="Print Default Set"
+              onClick={() => printBucketStickers(row, row.batchSize, 0, DCP)}
+              style={printButtonStyle}         
             /> 
-            <Button 
-              label="Print Default Set"
+            <Button label="Half Batch"
               onClick={() => printBucketStickers(
                 row, 
-                row.batchSize, 
-                row.oldDough,
-                DCP,
+                round((row.needed + bufferValues[idx]) / 2, 2), 
+                oldDoughValues[idx], 
+                DCP
               )}
-              style={{ borderRadius: "1rem", fontSize: "1.1rem" }}
+              style={printButtonStyle}      
             /> 
-            <Button 
-              label="Half Batch"
-              onClick={() => printBucketStickers(
-                row, 
-                round((row.needed + row.buffer - row.oldDough) / 2, 2), 
-                row.oldDough,
-                DCP,
-              )}
-              style={{ borderRadius: "1rem", fontSize: "1.1rem" }}
-            /> 
+            
           </div>
-
-
-
+  
           <Dialog
             visible={showTable[idx]}
-            onHide={() => hideTableAtIdx(idx)}
+            onHide={() => setShowTableAtIdx(false, idx)}
             header={`${row.doughName} Dough - Prep for Baking Today +${row.targetRelDate}`}
             headerStyle={{gap: "1rem"}}
           >
@@ -126,27 +232,41 @@ const Buckets = () => {
               value={row.summary}
               responsiveLayout="scroll"
             >
-              <Column header="forBake"      
-                field="forBake" 
-                footer="Total:"  
-              />
+              <Column header="forBake" field="forBake" footer="Total:" />
               <Column header="Needed (lb.)" 
-                body={rowData => DrilldownCellTemplate({
-                  dialogHeader: `${rowData.forBake} Orders to Bake Today +${row.targetRelDate}`,
-                  cellValue: (rowData.neededEa * rowData.weight).toFixed(1),
-                  tableData: rowData.items,
+                body={r => DrilldownCellTemplate({
+                  dialogHeader: `${r.forBake} Orders to be Baked Today +${row.targetRelDate}`,
+                  cellValue: (r.neededEa * r.weight).toFixed(1),
+                  tableData: r.items,
                   products
                 })}
                 footer={options => sumBy(options.props.value ?? [], row => row.neededEa * row.weight).toFixed(2)}  
               />
-
+  
             </DataTable>
           </Dialog>
-        </div>)
-      })}
+        </div>
+      )}
     </div>
   )
 }
 
 export { Buckets as default }
+
+
+/** Custom component just for templating/formatting */
+const InputLabel = ({ text, htmlFor, children }) => 
+  <div style={{ 
+    width: "100%", 
+    display: "flex", 
+    justifyContent: "space-between", 
+    alignItems: "center", 
+    marginBlock: ".5rem" 
+  }}>
+    <label htmlFor={htmlFor} style={{fontWeight: "bold", color: "var(--bpb-text-color)" }}>{text}</label>
+    <div className="p-inputgroup" style={{width: "fit-content"}}>
+      {children}
+      <span className="p-inputgroup-addon">lb.</span>
+    </div>
+  </div>
 

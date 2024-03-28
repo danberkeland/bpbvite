@@ -400,6 +400,9 @@ function BPBNBuckets({ loc }) {
     <React.Fragment>
       <WholeBox>
         <h1>{loc} Dough Stickers</h1>
+
+        {loc === 'Carlton' && <a href="/Production/BPBNBuckets/v2">Go to new version</a>}
+
         {doughs.map((dough) => (
           <React.Fragment key={dough.id + "_firstFrag"}>
             <h3>
