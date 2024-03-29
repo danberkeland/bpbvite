@@ -1,7 +1,7 @@
 import { CombinedRoutedOrder } from "../../../data/production/useProductionData"
 
 import { DBProduct } from "../../../data/types.d"
-import { compareBy, groupByArrayRdc, groupByObject, keyBy, sumBy } from "../../../utils/collectionFns"
+import { compareBy, groupByArrayRdc, keyBy, sumBy } from "../../../utils/collectionFns"
 
 // import { useMemo } from "react"
 // import { DateTime } from "luxon"
@@ -44,14 +44,9 @@ export const calculateRustics = (T0Orders, T1Orders, PRD, bakeDate, preshapeType
   const sortedPRD = PRD.sort(compareBy(P => P.prodName))
   const products = keyBy(PRD, P => P.prodNick)
 
-  const { false:orders=[], true:unroutedOrders=[] } = groupByObject(
-    [...T0Orders, ...T1Orders],
-    order => order.meta.routeNick === "NOT ASSIGNED"
-  )
-  if (unroutedOrders.length) console.warn("Unrouted Orders:", unroutedOrders)
-
-  // *** Filter/Query functions ***
-
+  
+  //  Filter/Query functions
+  // ========================
   const testIsRustic = (/** @type {DBProduct} */ product) => 1
     && ["rustic breads", "retail"].includes(product.packGroup)
     && product.doughNick !== "French"
@@ -66,19 +61,25 @@ export const calculateRustics = (T0Orders, T1Orders, PRD, bakeDate, preshapeType
     && testIsRustic(products[order.prodNick]) === true
     && calculateBakeDate(order) === bakeDate
 
-  // *** Pipeline Functions ***
 
+  //  Transform
+  // ===========
+  /** @param {CombinedRoutedOrder} order */
+  const calcEa = order => order.qty * products[order.prodNick].packSize
+
+  /** @param {CombinedRoutedOrder[]} rowOrders */
   const toFormattedRow = rowOrders => {
     const { forBake, doughNick, weight } = 
       sortedPRD.find(P => P.prodNick === rowOrders[0].prodNick) ?? {}
 
-    const representativeProduct = sortedPRD.find(P => P.forBake === forBake)  // the product that holds preshaped, prepreshaped values for all items with the same forBake
+    /** the product that holds preshaped, prepreshaped values for all items with the same forBake */
+    const representativeProduct = sortedPRD.find(P => P.forBake === forBake)
 
     const shaped = preshapeType === 'preshape' 
       ? representativeProduct?.preshaped ?? 0
       : representativeProduct?.prepreshaped ?? 0
 
-    const qty = sumBy(rowOrders, order => order.qty * products[order.prodNick].packSize)
+    const qty = sumBy(rowOrders, order => calcEa(order))
 
     const short = shaped - qty
     const shortText = short > 0 ? `Over ${short}`
@@ -86,30 +87,27 @@ export const calculateRustics = (T0Orders, T1Orders, PRD, bakeDate, preshapeType
       : ''
 
     const earlyItems = rowOrders.filter(order => testIsNeededEarly(order))
-    const earlyQty = sumBy(earlyItems, order => order.qty * products[order.prodNick].packSize)
+    const earlyQty = sumBy(earlyItems, order => calcEa(order))
 
     return {
       forBake,
       representativeProdNick: representativeProduct?.prodNick,
       doughNick,
       weight,
-      items:  rowOrders,
       qty,
       shaped,
       short: shortText,
       earlyItems,
       earlyQty,
+      items:  rowOrders,
     }
 
   }
 
-  // *** Pipeline ***
-
-  return orders
+  //  Pipeline 
+  // ==========
+  return [...T0Orders, ...T1Orders]
     .filter(order => shouldInclude(order))
-    .sort(compareBy(order => order.meta.routeNick))
-    .sort(compareBy(order => order.meta.route.routeStart))
-    .sort(compareBy(order => order.delivDate))
     .reduce(groupByArrayRdc(order => products[order.prodNick].forBake), [])
     .map(rowOrders => toFormattedRow(rowOrders))
     .sort(compareBy(row => row.forBake))

@@ -6,6 +6,7 @@ import { Dialog } from "primereact/dialog"
 
 import { formatHours } from "../../../utils/dateAndTime/formatHours"
 import { round, sumBy, truncate } from "lodash"
+import { compareBy } from "../../../utils/collectionFns"
 
 
 /**
@@ -50,9 +51,15 @@ export const DrilldownCellTemplate = ({
         headerStyle={{gap: "1rem"}}
       >
         <DataTable
-          value={tableData}
+          value={tableData
+            .filter(order => order.qty !== 0)
+            .sort(compareBy(order => order.prodNick))
+            .sort(compareBy(order => order.locNick))
+            .sort(compareBy(order => order.meta.routeNick))
+            .sort(compareBy(order => order.meta.route.routeStart))
+            .sort(compareBy(order => order.delivDate))
+          }
           size="small"
-          // scrollable
           responsiveLayout="scroll"
           scrollHeight="50rem"
           footer={() => <div style={{textAlign: "right"}}>

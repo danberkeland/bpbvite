@@ -25,7 +25,12 @@ import CustomerSettings from "../Pages/CustomerSettings/CustomerSettings";
 // import { default as SetOutV1 } from "../Pages/Production/BPBNSetout";
 
 // Load simultaneously:
+import{ default as SetoutV3 } from "../Pages/Production/BPBN/PageSetout";
+
 import BPBNBuckets from "../Pages/Production/BPBNBuckets";
+import Baker1 from "../Pages/Production/BPBN/PageBaker1";
+import Baker2 from "../Pages/Production/BPBN/PageBaker2";
+import{ default as BPBNBucketsV2 } from "../Pages/Production/BPBN/PageBuckets";
 
 import OrdersPage from "../Pages/Ordering/v2/Ordering"; // group with lazy loaders while in testing
 import WhoBake from "../Pages/Production/WhoBake";
@@ -76,9 +81,7 @@ import BPBNSetout from "../Pages/Production/NewPages/Setout/BPBNSetout";
 import BPBSSetout from "../Pages/Production/NewPages/Setout/BPBSSetout";
 import BpbnBuckets from "../Pages/Production/NewPages/BPBN/Buckets/BpbnBuckets";
 
-import Baker1 from "../Pages/Production/BPBN/PageBaker1";
-import Baker2 from "../Pages/Production/BPBN/PageBaker2";
-import{ default as BPBNBucketsV2 } from "../Pages/Production/BPBN/PageBuckets";
+
 
 // Lazy Load:
 // const BPBNBaker1 = React.lazy(() => import('../Pages/Production/BPBNBaker1'))
@@ -246,8 +249,9 @@ function AnimatedRoutes({ user, signOut }) {
             {/* <Route path="/Production/BPBNSetOut/v1"  element={<SetOutV1 loc={"Carlton"} />} /> */}
 
             <Route path="/Production/BPBSSetOut"    element={<BPBSSetout />} />
-            <Route path="/Production/BPBSSetOut/v2" element={<BPBSSetout />} />
             {/* <Route path="/Production/BPBSSetOut/v1" element={<SetOutV1 loc={"Prado"} />} /> */}
+            <Route path="/Production/BPBSSetOut/v2" element={<BPBSSetout />} />
+            <Route path="/Production/BPBNSetOut/v3"  element={<SetoutV3 reportLocation="Carlton" />} />
 
             <Route path="/Production/BPBSWhatToMake"    element={<BPBSWhatToMake />} />
             <Route path="/Production/BPBSWhatToMake/v2" element={<BPBSWhatToMake />} />

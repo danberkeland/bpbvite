@@ -1,10 +1,10 @@
 import jsPDF from "jspdf"
 import "jspdf-autotable"
 
-let pageMargin = 20
-let tableToNextTitle = 4
-let titleToNextTable = tableToNextTitle + 2
-let titleFontSize = 14
+const pageMargin = 20
+const tableToNextTitle = 4
+const titleToNextTable = tableToNextTitle + 2
+const titleFontSize = 14
 
 export const exportBaker2 = ({
   reportDT, 
@@ -12,11 +12,10 @@ export const exportBaker2 = ({
   otherPrepData,
   croixSetoutData,
 }) => {
-  const displayDate = reportDT.toFormat('M/dd/yyyy')
 
   const doc = new jsPDF("p", "mm", "a4");
   doc.setFontSize(20);
-  doc.text(pageMargin, 20, `WhatToMake ${displayDate}`)
+  doc.text(`WhatToMake ${reportDT.toFormat('M/dd/yyyy')}`, pageMargin, 20)
   doc.setFontSize(titleFontSize)
 
   let finalY = 20

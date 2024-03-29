@@ -19,12 +19,8 @@ const Baker2 = () => {
   const [reportDT, setReportDT] = useState(todayDT)
   const isToday = reportDT.toMillis() === todayDT.toMillis()
 
-  const {
-    rusticShapeData,
-    otherPrepData,
-    croixSetoutData,
-  } = useBaker2Data({ reportDT })
-  const { data:PRD=[], submitMutations, updateLocalData } = useProducts({ shouldFetch: true})
+  const { rusticShapeData, otherPrepData, croixSetoutData } = useBaker2Data({ reportDT })
+  const { data:PRD=[], submitMutations, updateLocalData } = useProducts({ shouldFetch: true })
   const products = keyBy(PRD, P => P.prodNick)
 
   const submitPrepreshapes = async () => {
@@ -32,12 +28,9 @@ const Baker2 = () => {
       prodNick: row.representativeProdNick,
       prepreshaped: row.qty
     }))
-
-    // updateLocalData(
-    //   await submitMutations({ updateInputs })
-    // )
-
     console.log(updateInputs)
+
+    // updateLocalData(await submitMutations({ updateInputs }))
 
   }
 
@@ -109,12 +102,12 @@ const Baker2 = () => {
         style={{marginTop: "1rem"}}
         className={isToday ? '' : 'not-today'}
       >
-        <Column header="Product" field="prodNick" />
+        <Column header="Product" field="setoutKey" />
         <Column header="Qty"
           body={rowData => DrilldownCellTemplate({
-            dialogHeader: `${rowData.prodNick} Orders to be Shaped`,
-            cellValue: rowData.qty,
-            tableData: rowData.items,
+            dialogHeader: `${rowData.shapeType} Orders to be Shaped`,
+            cellValue: rowData.total,
+            tableData: rowData.orders,
             products
           })}
           style={{width: "6rem"}}

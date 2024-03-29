@@ -1,6 +1,6 @@
 import { CombinedRoutedOrder } from "../../../data/production/useProductionData"
 import { DBProduct } from "../../../data/types.d"
-import { compareBy, groupByArrayRdc, groupByObject, keyBy, sumBy } from "../../../utils/collectionFns"
+import { compareBy, groupByArrayRdc, keyBy, sumBy } from "../../../utils/collectionFns"
 
 // import { useMemo } from "react"
 // import { DateTime } from "luxon"
@@ -42,14 +42,8 @@ export const calculateOtherPrep = (T0Orders, T1Orders, PRD, bakeDate) => {
 
   const products = keyBy(PRD, P => P.prodNick)
 
-  const { false:orders=[], true:unroutedOrders=[] } = groupByObject(
-    [...T0Orders, ...T1Orders],
-    order => order.meta.routeNick === "NOT ASSIGNED"
-  )
-  if (unroutedOrders.length) console.warn("Unrouted Orders:", unroutedOrders)
-
-  // *** Filter/Query functions ***
-
+  //  Filter/Query functions
+  // ========================
   const calculateBakeDate = (/** @type {CombinedRoutedOrder} */ order) =>
     order.meta.routePlan.steps[0].begin.date
 
@@ -71,23 +65,28 @@ export const calculateOtherPrep = (T0Orders, T1Orders, PRD, bakeDate) => {
         || testIsFocaccia(products[order.prodNick]) === true
       )
 
-  // *** Pipeline Functions ***
 
+  //  Transform
+  // ===========
+  /** @param {CombinedRoutedOrder} order */
+  const calcEa = order => order.qty * products[order.prodNick].packSize
+
+  /** @param {CombinedRoutedOrder[]} rowOrders */
   const formatRow = rowOrders => {
-    const { prodNick, prodName, packSize } = products[rowOrders[0].prodNick]
+    const { prodNick, prodName } = products[rowOrders[0].prodNick]
 
     return {
       prodNick,
       prodName,
       items: rowOrders,
-      qty: sumBy(rowOrders, order => order.qty * packSize)
+      qty: sumBy(rowOrders, order => calcEa(order))
     }
 
   }
   
-  // *** Pipline ***
-
-  return orders
+  //  Pipeline 
+  // ==========
+  return [...T0Orders, ...T1Orders]
     .filter(order => shouldInclude(order))
     .reduce(groupByArrayRdc(order => order.prodNick), [])
     .map(rowOrders => formatRow(rowOrders))

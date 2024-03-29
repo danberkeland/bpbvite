@@ -61,9 +61,9 @@ export const calculateBaguetteSummary = (T0Orders, T1Orders, T2Orders, T3Orders,
     .reduce(uniqByRdc(P => P.forBake), [])
 
   const baguetteOrders = 
-    [...T0Orders, ...T1Orders, ...T2Orders, ...T3Orders].filter(order => 
-      products[order.prodNick].doughNick === "Baguette"  
-    )
+    [...T0Orders, ...T1Orders, ...T2Orders, ...T3Orders]
+      .filter(order => products[order.prodNick].doughNick === "Baguette")
+
   
   const calculateBakeDate = (/** @type {CombinedRoutedOrder} */ order) =>
     order.meta.routePlan.steps[0].begin.date
