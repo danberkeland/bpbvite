@@ -1,8 +1,9 @@
 import { sumByRdc } from "./sumByRdc";
 
 /**
- * @param {any[]} data
- * @param {(a: any) => number} iterFn
+ * @template T
+ * @param {T[]} data
+ * @param {(t: T) => number} iterFn
  * @returns {number}
  */
 export function sumBy(data, iterFn) {

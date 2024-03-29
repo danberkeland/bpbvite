@@ -1,4 +1,6 @@
 /**
+ * Warning: Implementing as a reducer callback seems to break type linting.
+ * It's safer to use the regular groupByObject.
  * @template T
  * @param {(t: T) => number|string|boolean|null|undefined} iterFn 
  * @returns {(prev: {[x: string]: T[]}, curr: T) => {[x: string]: T[]}}
