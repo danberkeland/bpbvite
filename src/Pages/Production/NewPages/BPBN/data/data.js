@@ -201,6 +201,10 @@ const useBpbnData = ({
 
         return {
           prodNick,                       // for reliable mutations
+          productRep: {
+            preshaped,
+            prepreshaped,
+          },
           forBake: key,
           qty: totalQty,
           items: sortBy([

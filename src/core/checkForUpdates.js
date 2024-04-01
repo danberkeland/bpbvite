@@ -294,6 +294,7 @@ export const checkForUpdates = async (
 export const useCheckForUpdates = () => {
   const tomorrowDT = DT.today().plus({ days: 1 })
   const tomorrow = tomorrowDT.toFormat('yyyy-MM-dd')
+  
 
   const productCache = useProducts({ shouldFetch: true })
   const doughCache   = useDoughs({ shouldFetch: true })
@@ -329,6 +330,9 @@ function useCroixCheck(productCache, T0Orders, T1Orders, tomorrow) {
 
   useEffect(() => {
     if (!PRD || !T0Orders || !T1Orders || checkCompleted.current) return
+    
+    console.log('Check update timestamp:', DT.now().toFormat('yyyy-MM-dd t'))
+    checkCompleted.current = true
 
     const frozenTotals = T0Orders
       .filter(order => {
@@ -388,7 +392,6 @@ function useCroixCheck(productCache, T0Orders, T1Orders, tomorrow) {
       updateLocalData(await submitMutations({ updateInputs }))
 
     handleMutate(updateInputs)
-    checkCompleted.current = true
     console.log("croix check completed")
 
   }, [tomorrow, PRD, T0Orders, T1Orders, submitMutations, updateLocalData])
@@ -406,6 +409,8 @@ function usePreshapeCheck(productCache, tomorrow) {
   useEffect(() => {
     if (!products || checkCompleted.current) return
 
+    checkCompleted.current = true
+
     const updateInputs = products
       .filter(P => P.updatePreDate !== tomorrow)
       .map(P => ({
@@ -419,7 +424,6 @@ function usePreshapeCheck(productCache, tomorrow) {
       updateLocalData(await submitMutations({ updateInputs }))
 
     handleMutate(updateInputs)
-    checkCompleted.current = true
     console.log("preshape check completed")
 
   }, [tomorrow, products, submitMutations, updateLocalData])
@@ -435,6 +439,7 @@ function useBucketFlip(doughCache, tomorrow) {
 
   useEffect(() => {
     if (!doughs || checkCompleted.current) return
+    checkCompleted.current = true
 
     const updateInputs = doughs
       .filter(D => D.updatePreBucket !== tomorrow)
@@ -449,7 +454,6 @@ function useBucketFlip(doughCache, tomorrow) {
       updateLocalData(await submitMutations({ updateInputs }))
 
     handleMutate(updateInputs)
-    checkCompleted.current = true
     console.log("dough check completed")
 
   }, [tomorrow, doughs, submitMutations, updateLocalData])
@@ -467,6 +471,7 @@ function useSyncSquareOrders(products, squareOrders, orderCache) {
   useEffect(() => {
     if (!orders || !products || !squareOrders || checkCompleted.current) return 
 
+    checkCompleted.current = true
     console.log("square orders", squareOrders)
 
     const retailOrders = orders.filter(order => order.isWhole === false)
@@ -485,7 +490,6 @@ function useSyncSquareOrders(products, squareOrders, orderCache) {
       await submitMutations({ createInputs })
     )
 
-    checkCompleted.current = true
     handleMutate(createInputs)
     console.log("square check completed")
 

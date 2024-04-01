@@ -105,6 +105,25 @@ const Bpbn2 = () => {
     }
 
     setIsLoading(true)
+
+    const updateInputs = getUpdateInputs({ 
+      rusticData, 
+      productsToUpdate: productRepsByListTypeByForBake.rustic,
+    })
+    console.log("updateInputs", updateInputs)
+
+    const gqlResponse = await submitProducts({ updateInputs })
+    console.log("result:", gqlResponse)
+    updateProductCache(gqlResponse)
+
+    if (gqlResponse.errors.length) {
+      setIsLoading(false)
+      alert(`
+        Error submitting prepreshaped numbers. Try again to submit correct numbers.\n
+        ${JSON.stringify(gqlResponse.errors, null, 2)}
+      `)
+    }
+
     exportBpbn2Pdf({
       reportDate, 
       shapeTotals: rusticData, 
@@ -112,13 +131,9 @@ const Bpbn2 = () => {
       croixSetoutTotals: croixData,
     })
 
-    const updateInputs = getUpdateInputs({ 
-      rusticData, 
-      productsToUpdate: productRepsByListTypeByForBake.rustic,
-    })
 
-    console.log("updateInputs", updateInputs)
-    updateProductCache( await submitProducts({ updateInputs }) )
+
+
     setIsLoading(false)
   }
 
@@ -149,9 +164,16 @@ const Bpbn2 = () => {
             tableData: rowData.items,
             products
           })}
+          
           style={{width: "6rem"}}
         />
-
+        <Column 
+          header="synced?"
+          body={row => row.productRep.prepreshaped === row.qty
+            ? <i className="pi pi-check-circle" style={{color:"green", paddingLeft: "1rem"}} />
+            : <i className="pi pi-times" style={{color:"red", paddingLeft: "1rem"}} />
+          }  
+        />
       </DataTable>
 
 
@@ -192,7 +214,6 @@ const Bpbn2 = () => {
           })}
           style={{width: "6rem"}}
         />
-
       </DataTable>
 
 
