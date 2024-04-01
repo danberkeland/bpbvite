@@ -42,9 +42,9 @@ export const calculateRustics = (T0Orders, T1Orders, PRD, bakeDate, preshapeType
 
   const productReps = PRD
     .filter(testIsRustic)
-    .sort(compareBy(P => P.prodName))
+    .sort(compareBy((/** @type {DBProduct} */ P) => P.prodName))
     .reduce(uniqByRdc(P => P.forBake), [])
-    .sort(compareBy(P => P.doughNick))
+    .sort(compareBy((/** @type {DBProduct} */ P) => P.doughNick))
 
   return productReps.map(productRep => {
     const { prodNick, forBake, doughNick, weight, preshaped, prepreshaped } = productRep

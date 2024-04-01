@@ -16,9 +16,8 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 
 import styled from "styled-components";
-import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
-import { checkForUpdates } from "../../core/checkForUpdates";
+import { useDoughs } from "../../data/dough/useDoughs";
 
 const WholeBox = styled.div`
   display: flex;
@@ -82,7 +81,7 @@ function BPBSMixPocket() {
   let twoDay  = todayPlus()[2];
 
   useEffect(() => {
-    console.log("todayPlus",todayPlus()[0])
+    // console.log("todayPlus",todayPlus()[0])
     if (todayPlus()[0] === '2023-12-24'){
       setDelivDate('2023-12-25')
     } else {
@@ -92,69 +91,48 @@ function BPBSMixPocket() {
 
   useEffect(() => {
     try{
-      console.log("pockets",pockets)
+      // console.log("pockets",pockets)
       let total = 0
       for (let pock of pockets){
         total = total + pock.pocketSize*pock.qty
       }
-      console.log("Total",total.toFixed(2))
+      // console.log("Total",total.toFixed(2))
 
       let newDoughs = clonedeep(doughs)
       let ind = doughs.findIndex(dg => dg.doughName === "French")
-      console.log("ind",ind)
+      // console.log("ind",ind)
       
       newDoughs[ind].needed = total.toFixed(2)
-      console.log("newDoughs",newDoughs)
+      // console.log("newDoughs",newDoughs)
       setDoughs(newDoughs)
 
 
     }catch{}
   },[pockets])
  
+  const { data: database } = useLegacyFormatDatabase({ checkForUpdates: true });
+  const { submitMutations, updateLocalData } = useDoughs({ shouldFetch: true })
   
-  
-  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
-  const ordersHasBeenChanged = useSettingsStore(
-    (state) => state.ordersHasBeenChanged
-  );
-  const setOrdersHasBeenChanged = useSettingsStore(
-    (state) => state.setOrdersHasBeenChanged
-  );
-  const { data: database } = useLegacyFormatDatabase();
-  
-  const checkComplete = useRef(false)
   useEffect(() => {
-    console.log("databaseTest", database);
-    if (database && checkComplete.current === false) {
-      checkForUpdates(
-        database,
-        ordersHasBeenChanged,
-        setOrdersHasBeenChanged,
-        delivDate,
-        setIsLoading
-      ).then((db) => gatherDoughInfo(db, delivDate));
-      checkComplete.current = true
+    if (database) {
+      let doughData = compose.returnDoughBreakDown(database, "Prado",delivDate);
+      let shortageData = shortage.getYoullBeShort(database,delivDate)
+      setDoughs(doughData.doughs);
+      // console.log("doughs",doughData)
+      setDoughComponents(doughData.doughComponents);
+      setPockets(doughData.pockets)
+      let short = 0
+      // console.log("shortage",shortageData)
+      for (let data of shortageData){
+        // console.log("data",data)
+        let shortNum
+        data.short>0 ? shortNum = data.short : shortNum = 0
+        short = (short + (Number(data.pocketWeight)*Number(shortNum)))
+      }
+      setShortWeight(short.toFixed(2))
     }
   }, [database]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  
-  const gatherDoughInfo = (database,delivDate) => {
-    let doughData = compose.returnDoughBreakDown(database, "Prado",delivDate);
-    let shortageData = shortage.getYoullBeShort(database,delivDate)
-    setDoughs(doughData.doughs);
-    console.log("doughs",doughData)
-    setDoughComponents(doughData.doughComponents);
-    setPockets(doughData.pockets)
-    let short = 0
-    console.log("shortage",shortageData)
-    for (let data of shortageData){
-      console.log("data",data)
-      let shortNum
-      data.short>0 ? shortNum = data.short : shortNum = 0
-      short = (short + (Number(data.pocketWeight)*Number(shortNum)))
-    }
-    setShortWeight(short.toFixed(2))
-  };
 
   const handleChange = (e) => {
     if (e.code === "Enter") {
@@ -179,30 +157,34 @@ function BPBSMixPocket() {
       id: id,
       [attr]: qty,
     };
+    // console.log("updateDetails", updateDetails)
+    const gqlResponse = await submitMutations({ updateInputs: [updateDetails] })
+    // console.log("gqlResponse", gqlResponse)
+    updateLocalData(gqlResponse)
 
-    try {
-      await API.graphql(
-        graphqlOperation(updateDoughBackup, { input: { ...updateDetails } })
-      );
-    } catch (error) {
-      console.log("error on fetching Dough List", error);
-    }
+    // try {
+    //   await API.graphql(
+    //     graphqlOperation(updateDoughBackup, { input: { ...updateDetails } })
+    //   );
+    // } catch (error) {
+    //   console.log("error on fetching Dough List", error);
+    // }
   };
 
   const handleClick = (e, amt, mixNumber, oldDough, neededDough) => {
     let oldStuff
-    console.log("oldDough",oldDough)
-    console.log("amt",amt*.2)
+    // console.log("oldDough",oldDough)
+    // console.log("amt",amt*.2)
     if (oldDough<(amt*.2)){
       oldStuff = oldDough
     } else {
       oldStuff = amt*.2
     }
-    console.log("oldStuff",oldStuff)
+    // console.log("oldStuff",oldStuff)
     amt = amt - oldStuff
     amt = amt/mixNumber
     let oldStuffDiv = oldStuff/mixNumber
-    console.log("oldStuffDiv",oldStuffDiv)
+    // console.log("oldStuffDiv",oldStuffDiv)
     let doughName = e.target.id.split("_")[0];
     let components = doughComponents.filter((dgh) => dgh.dough === doughName);
     let wetWeight = Number(
@@ -429,7 +411,7 @@ function BPBSMixPocket() {
     );
 
     
-    console.log("salty",saltyeastFilt)
+    // console.log("salty",saltyeastFilt)
     if (saltyeastFilt.length > 0) {
       doc.addPage({
         format: [2, 4],
@@ -494,7 +476,7 @@ function BPBSMixPocket() {
   };
 
   const handleInput = (e) => {
-    console.log("firstE",e)
+    // console.log("firstE",e)
     let weight = e.pocketSize
     return (
       <InputText
@@ -515,10 +497,10 @@ function BPBSMixPocket() {
 
   const handlePockChange = (e,weight) => {
     let value = e.target.value
-    console.log("pockets",pockets)
+    // console.log("pockets",pockets)
     let copyPockets = clonedeep(pockets)
     let ind = copyPockets.findIndex(cop => cop.pocketSize === weight)
-    console.log("ind",ind)
+    // console.log("ind",ind)
     if (ind>-1){
       copyPockets[ind].carryPocket = value
     }
@@ -527,7 +509,7 @@ function BPBSMixPocket() {
   }
 
   const handleExtraInput = (e) => {
-    console.log("firstE",e)
+    // console.log("firstE",e)
     let weight = e.pocketSize
     return (
       <InputText
@@ -550,7 +532,7 @@ function BPBSMixPocket() {
     let value = e.target.value
     let copyPockets = clonedeep(pockets)
     let ind = copyPockets.findIndex(cop => cop.pocketSize === weight)
-    console.log("ind",ind)
+    // console.log("ind",ind)
     if (ind>-1){
       copyPockets[ind].late = Number(value)
      
@@ -565,7 +547,7 @@ function BPBSMixPocket() {
   }
 
   const calcPanTotal = (e) => {
-    console.log("epan",e)
+    // console.log("epan",e)
     let final = Number(e.qtyFixed)-Number(e.carryPocket)+Number(e.late)
     let pan
     let per

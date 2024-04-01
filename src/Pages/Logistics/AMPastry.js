@@ -13,7 +13,7 @@ import ComposeAMPastry from "./utils/composeAMPastry";
 import styled from "styled-components";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
-import { checkForUpdates } from "../../core/checkForUpdates";
+// import { checkForUpdates } from "../../core/checkForUpdates";
 
 const WholeBox = styled.div`
   display: flex;
@@ -69,19 +69,19 @@ const getBinSize = (past) => {
 
 function AMPastry() {
   const [AMPastry, setAMPastry] = useState([]);
-  const [AMOthers, setAMOthers] = useState([]);
+  // const [AMOthers, setAMOthers] = useState([]);
 
   const [columnsAMPastry, setColumnsAMPastry] = useState([]);
-  const [columnsAMOthers, setColumnsAMOthers] = useState([]);
+  // const [columnsAMOthers, setColumnsAMOthers] = useState([]);
 
-  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
-  const ordersHasBeenChanged = useSettingsStore(
-    (state) => state.ordersHasBeenChanged
-  );
-  const setOrdersHasBeenChanged = useSettingsStore(
-    (state) => state.setOrdersHasBeenChanged
-  );
-  const { data: database } = useLegacyFormatDatabase();
+  // const setIsLoading = useSettingsStore((state) => state.setIsLoading);
+  // const ordersHasBeenChanged = useSettingsStore(
+  //   (state) => state.ordersHasBeenChanged
+  // );
+  // const setOrdersHasBeenChanged = useSettingsStore(
+  //   (state) => state.setOrdersHasBeenChanged
+  // );
+  const { data: database } = useLegacyFormatDatabase({ checkForUpdates: true });
 
   let delivDate = todayPlus()[0];
 
@@ -101,30 +101,18 @@ function AMPastry() {
   };
 
   const dynamicColumnsAMPastry = createDynamic(columnsAMPastry);
-  const dynamicColumnsAMOthers = createDynamic(columnsAMOthers);
+  // const dynamicColumnsAMOthers = createDynamic(columnsAMOthers);
 
-  const checkComplete = useRef(false)
   useEffect(() => {
     console.log("databaseTest", database);
-    if (database && checkComplete.current === false) {
-      checkForUpdates(
-        database,
-        ordersHasBeenChanged,
-        setOrdersHasBeenChanged,
-        delivDate,
-        setIsLoading
-      ).then((db) => gatherMakeInfo(db));
-      checkComplete.current = true
+    if (!!database) {
+      let AMPastryData = compose.returnAMPastryBreakDown(delivDate, database);
+      setAMPastry(AMPastryData.AMPastry);
+      setColumnsAMPastry(AMPastryData.columnsAMPastry);
+      // setAMOthers(AMPastryData.AMOthers);
+      // setColumnsAMOthers(AMPastryData.columnsAMOthers);
     }
   }, [database]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const gatherMakeInfo = (database) => {
-    let AMPastryData = compose.returnAMPastryBreakDown(delivDate, database);
-    setAMPastry(AMPastryData.AMPastry);
-    setColumnsAMPastry(AMPastryData.columnsAMPastry);
-    setAMOthers(AMPastryData.AMOthers);
-    setColumnsAMOthers(AMPastryData.columnsAMOthers);
-  };
 
   const exportAMPastryStickers = () => {
     const doc = new jsPDF({

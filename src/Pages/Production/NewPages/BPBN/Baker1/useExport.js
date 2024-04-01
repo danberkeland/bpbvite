@@ -53,6 +53,8 @@ export const useExportBpbn1 = ({ reportDate, shouldFetch }) => {
     const baguetteDoughItem = 
       doughCache.data.find(D => D.doughName === 'Baguette')
 
+    console.log("nBucketSets", nBucketSets)
+
     const updateInput = {
       id: baguetteDoughItem.id,
       preBucketSets: nBucketSets

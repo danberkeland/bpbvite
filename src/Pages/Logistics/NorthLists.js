@@ -13,9 +13,9 @@ import { convertDatetoBPBDate } from "../../utils/_deprecated/dateTimeHelpers";
 import ComposeNorthList from "./utils/composeNorthList";
 
 import styled from "styled-components";
-import { useSettingsStore } from "../../Contexts/SettingsZustand";
+// import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
-import { checkForUpdates } from "../../core/checkForUpdates";
+// import { checkForUpdates } from "../../core/checkForUpdates";
 // import { API, graphqlOperation } from "aws-amplify";
 // import { listNotes } from "../../graphql/queries";
 import { DateTime } from "luxon";
@@ -110,27 +110,34 @@ function NorthList() {
   const dynamicColumnsRetailStuff = createDynamic(columnsRetailStuff);
   const dynamicColumnsEarlyDeliveries = createDynamic(columnsEarlyDeliveries);
 
-  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
-  const ordersHasBeenChanged = useSettingsStore(
-    (state) => state.ordersHasBeenChanged
-  );
-  const setOrdersHasBeenChanged = useSettingsStore(
-    (state) => state.setOrdersHasBeenChanged
-  );
-  const { data: database } = useLegacyFormatDatabase();
+  // const setIsLoading = useSettingsStore((state) => state.setIsLoading);
+  // const ordersHasBeenChanged = useSettingsStore(
+  //   (state) => state.ordersHasBeenChanged
+  // );
+  // const setOrdersHasBeenChanged = useSettingsStore(
+  //   (state) => state.setOrdersHasBeenChanged
+  // );
+  const { data: database } = useLegacyFormatDatabase({ checkForUpdates: true});
 
-  const checkComplete = useRef(false)
   useEffect(() => {
     // console.log("databaseTest", database);
-    if (database && checkComplete.current === false) {
-      checkForUpdates(
-        database,
-        ordersHasBeenChanged,
-        setOrdersHasBeenChanged,
-        delivDate,
-        setIsLoading
-      ).then((db) => gatherMakeInfo(db, delivDate));
-      checkComplete.current = true
+    if (database) {
+      let northData = compose.returnNorthBreakDown(delivDate, database);
+      setCroixNorth(northData.croixNorth);
+      setShelfProdsNorth(northData.shelfProdsNorth);
+      setPocketsNorth(northData.pocketsNorth);
+      setCarltonToPrado(northData.CarltonToPrado);
+      setBaguettes(northData.Baguettes);
+      setOtherRustics(northData.otherRustics);
+      setRetailStuff(northData.retailStuff);
+      setEarlyDeliveries(northData.earlyDeliveries);
+      setColumnsShelfProdsNorth(northData.columnsShelfProdsNorth);
+      setColumnsPocketsNorth(northData.columnsPocketsNorth);
+      setColumnsCarltonToPrado(northData.columnsCarltonToPrado);
+      setColumnsBaguettes(northData.columnsBaguettes);
+      setColumnsOtherRustics(northData.columnsOtherRustics);
+      setColumnsRetailStuff(northData.columnsRetailStuff);
+      setColumnsEarlyDeliveries(northData.columnsEarlyDeliveries);
     }
 
   }, [database, delivDate]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -144,25 +151,6 @@ function NorthList() {
     )
   }, [notesData])
 
-
-  const gatherMakeInfo = (database) => {
-    let northData = compose.returnNorthBreakDown(delivDate, database);
-    setCroixNorth(northData.croixNorth);
-    setShelfProdsNorth(northData.shelfProdsNorth);
-    setPocketsNorth(northData.pocketsNorth);
-    setCarltonToPrado(northData.CarltonToPrado);
-    setBaguettes(northData.Baguettes);
-    setOtherRustics(northData.otherRustics);
-    setRetailStuff(northData.retailStuff);
-    setEarlyDeliveries(northData.earlyDeliveries);
-    setColumnsShelfProdsNorth(northData.columnsShelfProdsNorth);
-    setColumnsPocketsNorth(northData.columnsPocketsNorth);
-    setColumnsCarltonToPrado(northData.columnsCarltonToPrado);
-    setColumnsBaguettes(northData.columnsBaguettes);
-    setColumnsOtherRustics(northData.columnsOtherRustics);
-    setColumnsRetailStuff(northData.columnsRetailStuff);
-    setColumnsEarlyDeliveries(northData.columnsEarlyDeliveries);
-  };
 
   const exportNorthListPdf = () => {
     let finalY;

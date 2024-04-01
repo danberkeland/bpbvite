@@ -6,9 +6,7 @@ import { Button } from "primereact/button";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { InputText } from "primereact/inputtext";
 
-import { checkForUpdates } from "../../core/checkForUpdates";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
-import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
 
 import ToolBar from "./BPBNBaker1Parts/Toolbar";
@@ -26,8 +24,6 @@ import styled from "styled-components";
 
 import { API, graphqlOperation } from "aws-amplify";
 import { DateTime } from "luxon";
-
-import { BPBSWhatToMake as BPBSWhatToMakeNew } from "./NewPages/BPBS/WhatToMake/WhatToMake";
 
 const WholeBox = styled.div`
   display: flex;
@@ -66,42 +62,21 @@ function BPBSWhatToMake() {
   const diff = delivDateDT.diff(todayDT, "days").values.days
   const tomorrowSelected = diff === 1
 
-  
-  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
-  const ordersHasBeenChanged = useSettingsStore(
-    (state) => state.ordersHasBeenChanged
-  );
-  const setOrdersHasBeenChanged = useSettingsStore(
-    (state) => state.setOrdersHasBeenChanged
-  );
-  const { data: database } = useLegacyFormatDatabase();
+  const { data: database } = useLegacyFormatDatabase({ checkForUpdates: true });
 
-  const checkComplete = useRef(false)
   useEffect(() => {
-    console.log("databaseTest", database);
-    if (database && checkComplete.current === false) {
-      checkForUpdates(
-        database,
-        ordersHasBeenChanged,
-        setOrdersHasBeenChanged,
-        delivDate,
-        setIsLoading
-      ).then((db) => gatherMakeInfo(db));
-      checkComplete.current = true
+    if (database) {
+      let makeData = compose.returnMakeBreakDown(database, delivDate);
+      setYoullBeShort(makeData.youllBeShort);
+      setPocketsNorth(makeData.pocketsNorth);
+      setFreshProds(makeData.freshProds);
+      setShelfProds(makeData.shelfProds);
+      setPretzels(makeData.pretzels);
+      setFreezerProds(makeData.freezerProds);
+      setProducts(database[0]);
+      setBaguetteStuff(makeData.baguetteStuff);
     }
   }, [database, delivDate]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const gatherMakeInfo = (database) => {
-    let makeData = compose.returnMakeBreakDown(database, delivDate);
-    setYoullBeShort(makeData.youllBeShort);
-    setPocketsNorth(makeData.pocketsNorth);
-    setFreshProds(makeData.freshProds);
-    setShelfProds(makeData.shelfProds);
-    setPretzels(makeData.pretzels);
-    setFreezerProds(makeData.freezerProds);
-    setProducts(database[0]);
-    setBaguetteStuff(makeData.baguetteStuff);
-  };
 
   const checkDateAlert = (delivDate) => {
     if (delivDate !== today) {

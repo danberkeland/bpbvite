@@ -53,27 +53,25 @@ function WhoBake() {
   const [allOrders, setAllOrders] = useState([]);
 
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
-  const { data: database } = useLegacyFormatDatabase();
+  const { data:database } = useLegacyFormatDatabase({ checkForUpdates: false });
 
   let delivDate = todayPlus()[1];
 
   useEffect(() => {
-    gatherAllOrdersInfo(database);
+    if (database) {
+      setIsLoading(true);
+      try {
+        let allOrdersData = compose.returnAllOrdersBreakDown(
+          delivDate,
+          database,
+          "Carlton",
+          true
+        );
+        setAllOrders(allOrdersData.whoShape);
+        setIsLoading(false);
+      } catch {}
+    }
   }, [delivDate, database]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const gatherAllOrdersInfo = (database) => {
-    setIsLoading(true);
-    try {
-      let allOrdersData = compose.returnAllOrdersBreakDown(
-        delivDate,
-        database,
-        "Carlton",
-        true
-      );
-      setAllOrders(allOrdersData.whoShape);
-      setIsLoading(false);
-    } catch {}
-  };
 
   const exportWhoBakePdf = () => {
     let finalY;

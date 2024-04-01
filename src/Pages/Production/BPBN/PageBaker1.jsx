@@ -54,7 +54,7 @@ const Baker1 = () => {
     }
 
     exportBpbn1Pdf({
-      rusticData,
+      rusticData: rusticData.filter(row => row.qty !== 0),
       doobieStuff,
       otherPrepData,
       mixes: mixSummary,
@@ -64,6 +64,7 @@ const Baker1 = () => {
       displayDate: reportDT.toFormat('M/d/yyyy'),
       filename: `BPBN_Baker1_${reportDT.toFormat('yyyy-MM-dd')}.pdf`,
     })
+    console.log("nBucketSetsToMake", nBucketSetsToMake)
 
     const updateInput = {
       id: DGH.find(D => D.doughName === 'Baguette')?.id,
@@ -107,7 +108,7 @@ const Baker1 = () => {
 
       <h2>Rustics</h2>
       <RusticTable 
-        value={rusticData}
+        value={rusticData.filter(row => row.qty !== 0)}
         className={isToday ? '' : 'not-today'}
         products={products}
       />

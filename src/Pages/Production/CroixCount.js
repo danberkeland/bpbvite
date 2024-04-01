@@ -10,21 +10,13 @@ import ComposeNorthList from "../Logistics/utils/composeNorthList";
 
 import { convertDatetoBPBDate, todayPlus } from "../../utils/_deprecated/dateTimeHelpers";
 
-import { updateProduct } from "../../graphql/mutations";
-
-
-import { checkForUpdates } from "../../core/checkForUpdates";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
 
-
 import { API, graphqlOperation } from "aws-amplify";
-
-import jsPDF from "jspdf";
-import "jspdf-autotable";
+import { updateProduct } from "../../graphql/mutations";
 
 import styled from "styled-components";
-import { set } from "lodash";
 
 
 const WholeBox = styled.div`
@@ -110,39 +102,20 @@ function CroixCountV1() {
 
   
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
-  const ordersHasBeenChanged = useSettingsStore(
-    (state) => state.ordersHasBeenChanged
-  );
-  const setOrdersHasBeenChanged = useSettingsStore(
-    (state) => state.setOrdersHasBeenChanged
-  );
-  const { data: database } = useLegacyFormatDatabase();
+  const { data: database } = useLegacyFormatDatabase({ checkForUpdates: true});
 
-  const checkComplete = useRef(false)
   useEffect(() => {
     console.log("databaseTest", database);
-    if (database && checkComplete.current === false) {
-      checkForUpdates(
-        database,
-        ordersHasBeenChanged,
-        setOrdersHasBeenChanged,
-        delivDate,
-        setIsLoading
-      ).then((db) => gatherCroixInfo(db));
-      checkComplete.current = true
+    if (database) {
+      let makeData = compose.returnCroixBreakDown(database, delivDate);
+
+      setOpeningCount(makeData.openingCount);
+      setClosingCount(makeData.closingCount);
+      setOpeningNorthCount(makeData.openingNorthCount);
+      setClosingNorthCount(makeData.closingNorthCount);
+      setProducts(makeData.products);
     }
   }, [database]); // eslint-disable-line react-hooks/exhaustive-deps
-
-
-  const gatherCroixInfo = async (database) => {
-    let makeData = compose.returnCroixBreakDown(database, delivDate);
-
-    setOpeningCount(makeData.openingCount);
-    setClosingCount(makeData.closingCount);
-    setOpeningNorthCount(makeData.openingNorthCount);
-    setClosingNorthCount(makeData.closingNorthCount);
-    setProducts(makeData.products);
-  };
 
   const openingHeader = <div>Opening South</div>;
   const closeHeader = <div>Closing South</div>;

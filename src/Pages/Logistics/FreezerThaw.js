@@ -11,9 +11,9 @@ import ComposeFreezerThaw from "./utils/composeFreezerThaw";
 
 import styled from "styled-components";
 
-import { useSettingsStore } from "../../Contexts/SettingsZustand";
+// import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
-import { checkForUpdates } from "../../core/checkForUpdates";
+// import { checkForUpdates } from "../../core/checkForUpdates";
 
 const WholeBox = styled.div`
   display: flex;
@@ -26,41 +26,28 @@ const WholeBox = styled.div`
 const compose = new ComposeFreezerThaw();
 
 function FreezerThaw() {
-  const [freezerThaw, setFreezerThaw] = useState([]); console.log("freezerThaw", freezerThaw)
-  const [allProds, setAllProds] = useState([]); console.log("allProds", allProds)
+  const [freezerThaw, setFreezerThaw] = useState([]); //console.log("freezerThaw", freezerThaw)
+  const [allProds, setAllProds] = useState([]); //console.log("allProds", allProds)
 
-  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
-  const ordersHasBeenChanged = useSettingsStore(
-    (state) => state.ordersHasBeenChanged
-  );
-  const setOrdersHasBeenChanged = useSettingsStore(
-    (state) => state.setOrdersHasBeenChanged
-  );
-  const { data: database } = useLegacyFormatDatabase();
+  // const setIsLoading = useSettingsStore((state) => state.setIsLoading);
+  // const ordersHasBeenChanged = useSettingsStore(
+  //   (state) => state.ordersHasBeenChanged
+  // );
+  // const setOrdersHasBeenChanged = useSettingsStore(
+  //   (state) => state.setOrdersHasBeenChanged
+  // );
+  const { data: database } = useLegacyFormatDatabase({ checkForUpdates: true });
 
   let delivDate = todayPlus()[0];
 
-  const checkComplete = useRef(false)
   useEffect(() => {
-    console.log("databaseTest", database);
-    if (database && checkComplete.current === false) {
-      checkForUpdates(
-        database,
-        ordersHasBeenChanged,
-        setOrdersHasBeenChanged,
-        delivDate,
-        setIsLoading
-      ).then((db) => gatherFreezerThaw(db));
-      checkComplete.current = true
+    // console.log("databaseTest", database);
+    if (database) {
+      let { freezerThaw, allProds } = compose.returnFreezerThaw(database);
+      setFreezerThaw(freezerThaw);
+      setAllProds(allProds);
     }
-  }, [database]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const gatherFreezerThaw = (database) => {
-    let { freezerThaw, allProds } = compose.returnFreezerThaw(database);
-
-    setFreezerThaw(freezerThaw);
-    setAllProds(allProds);
-  };
+  }, [database]);
 
   const calcTotal = (e) => {
     return <div>{e.qty * e.packSize}</div>;

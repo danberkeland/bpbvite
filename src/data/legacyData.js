@@ -13,6 +13,7 @@ import { useInfoQBAuths } from "./infoQBAuths/useInfoQBAuths"
 import { useStandings } from "./standing/useStandings"
 import { useDoughs } from "./dough/useDoughs"
 import { useDoughComponents } from "./doughComponent/useDoughComponents"
+import { useCheckForUpdates } from "../core/checkForUpdates"
 
 const shouldFetch = true
 
@@ -125,7 +126,7 @@ export const useLegacyInfoQBAuths = () => {
  * so mutation/revalidation can be efficiently handled with those.
  * @returns {{ data: (LegacyDatabase | undefined) }}
 */
-export const useLegacyFormatDatabase = () => {
+export const useLegacyFormatDatabase = ({ checkForUpdates=false }={}) => {
   const { data:PRD } = useLegacyProducts()
   const { data:CUS } = useLegacyCustomers()
   const { data:RTE } = useLegacyRoutes()
@@ -138,6 +139,9 @@ export const useLegacyFormatDatabase = () => {
 
   // order is important! original order:
   // [products, customers, routes, standing, orders, doughs, doughComponents]
+
+  useCheckForUpdates(checkForUpdates)
+  
 
   /** @returns {LegacyDatabase | undefined} */
   const calcValue = () => (PRD && CUS && RTE && STD && ORD && DGH && DCP && IQB)
