@@ -1,5 +1,4 @@
 import { useMemo } from "react"
-import { useListData } from "./_listData"
 import { sortBy } from "lodash"
 import { useProducts } from "./product/useProducts"
 import { BpbHub, DBDoughBackup, DBDoughComponentBackup, DBInfoQBAuth, DBLocation, DBLocationUser2, DBOrder, DBProduct, DBRoute, DBStanding, DBZoneRoute, FulfillmentOption } from "./types.d"
@@ -12,6 +11,8 @@ import { useRoutes } from "./route/useRoutes"
 import { useZoneRoutes } from "./zoneRoute/useZoneRoutes"
 import { useInfoQBAuths } from "./infoQBAuths/useInfoQBAuths"
 import { useStandings } from "./standing/useStandings"
+import { useDoughs } from "./dough/useDoughs"
+import { useDoughComponents } from "./doughComponent/useDoughComponents"
 
 const shouldFetch = true
 
@@ -82,7 +83,7 @@ export const useLegacyOrders = () => {
 
 // Current system is in same format as legacy system for doughs
 export const useLegacyDoughs = () => {
-  const { data:DGH } = useListData({ tableName: "DoughBackup", shouldFetch })
+  const { data:DGH } = useDoughs({ shouldFetch })
   const calculateValue = () => !!DGH 
     ? mapDoughsToLegacy(DGH)
     : undefined
@@ -91,7 +92,7 @@ export const useLegacyDoughs = () => {
 }
 
 export const useLegacyDoughComponents = () => {
-  const { data:DCP } = useListData({ tableName: "DoughComponentBackup", shouldFetch })
+  const { data:DCP } = useDoughComponents({ shouldFetch })
   const calculateValue = () => !!DCP 
     ? mapDoughComponentsToLegacy(DCP)
     : undefined
