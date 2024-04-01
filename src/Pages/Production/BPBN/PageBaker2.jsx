@@ -44,11 +44,12 @@ const Baker2 = () => {
           submitPrepreshapes()
           exportBaker2({
             reportDT,
-            rusticShapeData,
+            rusticShapeData: rusticShapeData?.filter(row => row.qty !== 0),
             otherPrepData,
             croixSetoutData,
           })
-        }}  
+        }}
+        disabled={!rusticShapeData || !otherPrepData || !croixSetoutData}
       />
 
       <div>Using v3 <a href="/Production/BPBNBaker2/v2">Go to previous version</a></div>
