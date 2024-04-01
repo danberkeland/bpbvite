@@ -233,7 +233,7 @@ function AnimatedRoutes({ user, signOut }) {
             />
             {/* <Route path="/BPBNProd/BPBNBaker1Backup/v1" element={<BPBNBaker1Backup />} /> */}
 
-            <Route path="/Production/BPBNBaker2"    element={<Bpbn2 />} />
+            <Route path="/Production/BPBNBaker2"    element={<Baker2 />} />
             <Route path="/Production/BPBNBaker2/v3" element={<Baker2 />} />
             <Route path="/Production/BPBNBaker2/v2" element={<Bpbn2 />} />
             {/* <Route path="/Production/BPBNBaker2/v1" element={<BPBNBaker2 />} /> */}

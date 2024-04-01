@@ -29,9 +29,7 @@ const Baker2 = () => {
       prepreshaped: row.qty
     }))
     console.log(updateInputs)
-
-    // updateLocalData(await submitMutations({ updateInputs }))
-
+    updateLocalData(await submitMutations({ updateInputs }))
   }
 
   return (
@@ -41,7 +39,7 @@ const Baker2 = () => {
       <Button 
         label="Print Prep List" 
         icon="pi pi-print" 
-        style={{marginBottom: "2rem"}} 
+        style={{marginBottom: "1rem"}} 
         onClick={() => {
           submitPrepreshapes()
           exportBaker2({
@@ -53,11 +51,14 @@ const Baker2 = () => {
         }}  
       />
 
+      <div>Using v3 <a href="/Production/BPBNBaker2/v2">Go to previous version</a></div>
+
       <DataTable 
-        value={rusticShapeData ?? []}
+        value={(rusticShapeData ?? []).filter(row => row.qty !== 0)}
         size="small" 
         responsiveLayout="scroll"   
         className={isToday ? '' : 'not-today'}
+        style={{marginTop: "1rem"}}
       >
         <Column header="Product" field="forBake" />
         <Column header="Weight"  field="weight" />
@@ -70,6 +71,13 @@ const Baker2 = () => {
             products,
           })} 
           style={{width: "6rem"}}
+        />
+        <Column 
+          header="synced?"
+          body={row => row.productRep.prepreshaped === row.qty
+            ? <i className="pi pi-check-circle" style={{color:"green", paddingLeft: "1rem"}} />
+            : <i className="pi pi-times" style={{color:"red", paddingLeft: "1rem"}} />
+          }  
         />
       </DataTable>
 

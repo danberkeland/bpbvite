@@ -57,8 +57,8 @@ export const exportBaker2 = ({
   doc.autoTable({
     body: croixSetoutData,
     columns: [
-      { header: "Set Out", dataKey: "prodNick" },
-      { header: "Qty", dataKey: "qty" }, // can add pans + extra counts?
+      { header: "Set Out", dataKey: "setoutKey" },
+      { header: "Qty", dataKey: "total" }, // can add pans + extra counts?
     ],
 
     theme: "grid",

@@ -146,7 +146,10 @@ const Bpbn2 = () => {
         icon="pi pi-print" 
         onClick={handleExportPdf}
         disabled={isLoading}
+        style={{marginBottom: "1rem"}}
       />
+
+      <div>Using v2 <a href="/Production/BPBNBaker2">Go to current version</a></div>
 
       <DataTable 
         value={rusticData}
