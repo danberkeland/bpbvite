@@ -4,7 +4,7 @@ import { useProducts } from "../../../data/product/useProducts"
 
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
-import { DrilldownCellTemplate } from "./ComponentDrilldownCellTemplate"
+import { DrilldownCellTemplate } from "../ComponentDrilldownCellTemplate"
 
 import { DT } from "../../../utils/dateTimeFns"
 import { keyBy, sumBy } from "../../../utils/collectionFns"

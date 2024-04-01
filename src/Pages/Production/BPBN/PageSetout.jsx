@@ -1,5 +1,5 @@
 import { DT } from "../../../utils/dateTimeFns"
-import { DrilldownCellTemplate } from "./ComponentDrilldownCellTemplate"
+import { DrilldownCellTemplate } from "../ComponentDrilldownCellTemplate"
 import { useSetoutData } from "./useSetoutData"
 
 import { Button } from "primereact/button"

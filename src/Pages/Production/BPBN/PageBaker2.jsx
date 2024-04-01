@@ -4,7 +4,7 @@ import { Button } from "primereact/button"
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 
-import { DrilldownCellTemplate } from "./ComponentDrilldownCellTemplate"
+import { DrilldownCellTemplate } from "../ComponentDrilldownCellTemplate"
 
 import { useProducts } from "../../../data/product/useProducts"
 import { useBaker2Data } from "./useBaker2Data"
@@ -114,11 +114,9 @@ const Baker2 = () => {
         />
 
       </DataTable>
-
-
     </div>
   )
 
 }
 
-export { Baker2 as default }
+export { Baker2 as default } 

@@ -4,9 +4,9 @@ import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 import { Dialog } from "primereact/dialog"
 
-import { formatHours } from "../../../utils/dateAndTime/formatHours"
+import { formatHours } from "../../utils/dateAndTime/formatHours"
 import { round, sumBy, truncate } from "lodash"
-import { compareBy } from "../../../utils/collectionFns"
+import { compareBy } from "../../utils/collectionFns"
 
 
 /**

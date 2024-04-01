@@ -30,7 +30,8 @@ import{ default as SetoutV3 } from "../Pages/Production/BPBN/PageSetout";
 import BPBNBuckets from "../Pages/Production/BPBNBuckets";
 import Baker1 from "../Pages/Production/BPBN/PageBaker1";
 import Baker2 from "../Pages/Production/BPBN/PageBaker2";
-import{ default as BPBNBucketsV2 } from "../Pages/Production/BPBN/PageBuckets";
+import { default as BPBNBucketsV2 } from "../Pages/Production/BPBN/PageBuckets";
+
 
 import OrdersPage from "../Pages/Ordering/v2/Ordering"; // group with lazy loaders while in testing
 import WhoBake from "../Pages/Production/WhoBake";
@@ -51,6 +52,10 @@ import LocationProductOverrides from "../Pages/Settings/custProds/v2/LocationPro
 
 import { default as BPBSWhatToMakeV1 } from "../Pages/Production/BPBSWhatToMake";
 import BPBSWhatToMakeBackup from "../Pages/Production/BPBSWhatToMakeBackup";
+import BPBSWhatToMake from "../Pages/Production/NewPages/BPBS/WhatToMake/WhatToMake";
+import { default as WhatToMakeV3 } from "../Pages/Production/BPBS/PageWhatToMake";
+
+
 import BPBSMixPocket from "../Pages/Production/BPBSMixPocket";
 import CroixCountV1 from "../Pages/Production/CroixCount";
 import CroixToMake from "../Pages/Production/CroixToMake";
@@ -71,7 +76,6 @@ import Settings from "../Pages/Settings/Settings";
 import Remap from "../Pages/EODCounts/EODCountsRempas";
 import SpecialPacking from "../Pages/Production/NewPages/BPBS/SpecialPacking/SpecialPacking";
 import RouteGrid from "../Pages/Logistics/NewPages/RouteGrid/RouteGrid";
-import BPBSWhatToMake from "../Pages/Production/NewPages/BPBS/WhatToMake/WhatToMake";
 import CroixCount from "../Pages/Production/NewPages/Croix/CroixEOD/CroixCount";
 import SpecialOrders from "../Pages/Logistics/NewPages/SpecialOrders/SpecialOrders";
 import Products from "../Pages/Products/NewPage/Products";
@@ -254,6 +258,7 @@ function AnimatedRoutes({ user, signOut }) {
             <Route path="/Production/BPBNSetOut/v3"  element={<SetoutV3 reportLocation="Carlton" />} />
 
             <Route path="/Production/BPBSWhatToMake"    element={<BPBSWhatToMake />} />
+            <Route path="/Production/BPBSWhatToMake/v3" element={<WhatToMakeV3 />} />
             <Route path="/Production/BPBSWhatToMake/v2" element={<BPBSWhatToMake />} />
             <Route path="/Production/BPBSWhatToMake/v1" element={<BPBSWhatToMakeV1 />} />
 
