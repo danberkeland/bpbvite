@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -103,9 +103,10 @@ function AMPastry() {
   const dynamicColumnsAMPastry = createDynamic(columnsAMPastry);
   const dynamicColumnsAMOthers = createDynamic(columnsAMOthers);
 
+  const checkComplete = useRef(false)
   useEffect(() => {
     console.log("databaseTest", database);
-    database &&
+    if (database && checkComplete.current === false) {
       checkForUpdates(
         database,
         ordersHasBeenChanged,
@@ -113,6 +114,8 @@ function AMPastry() {
         delivDate,
         setIsLoading
       ).then((db) => gatherMakeInfo(db));
+      checkComplete.current = true
+    }
   }, [database]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const gatherMakeInfo = (database) => {

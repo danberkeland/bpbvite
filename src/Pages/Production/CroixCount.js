@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
@@ -118,10 +118,10 @@ function CroixCountV1() {
   );
   const { data: database } = useLegacyFormatDatabase();
 
-  
+  const checkComplete = useRef(false)
   useEffect(() => {
     console.log("databaseTest", database);
-    database &&
+    if (database && checkComplete.current === false) {
       checkForUpdates(
         database,
         ordersHasBeenChanged,
@@ -129,6 +129,8 @@ function CroixCountV1() {
         delivDate,
         setIsLoading
       ).then((db) => gatherCroixInfo(db));
+      checkComplete.current = true
+    }
   }, [database]); // eslint-disable-line react-hooks/exhaustive-deps
 
 

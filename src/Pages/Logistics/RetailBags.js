@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -56,9 +56,10 @@ function RetailBags() {
   let delivDate = todayPlus()[0];
   let tomorrow = todayPlus()[1];
 
+  const checkComplete = useRef(false)
   useEffect(() => {
     console.log("databaseTest", database);
-    database &&
+    if (database && checkComplete.current === false) {
       checkForUpdates(
         database,
         ordersHasBeenChanged,
@@ -66,6 +67,8 @@ function RetailBags() {
         delivDate,
         setIsLoading
       ).then((db) => gatherRetailBagInfo(db, delivDate));
+      checkComplete.current = true
+    }
   }, [database]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const gatherRetailBagInfo = (database) => {

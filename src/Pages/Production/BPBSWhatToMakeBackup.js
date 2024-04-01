@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -64,10 +64,10 @@ function BPBSWhatToMake() {
   );
   const { data: database } = useLegacyFormatDatabase();
 
-  
+  const checkComplete = useRef(false)
   useEffect(() => {
     console.log("databaseTest", database);
-    database &&
+    if (database && checkComplete.current === false) {
       checkForUpdates(
         database,
         ordersHasBeenChanged,
@@ -75,6 +75,8 @@ function BPBSWhatToMake() {
         delivDate,
         setIsLoading
       ).then((db) => gatherMakeInfo(db));
+      checkComplete.current = true
+    }
   }, [database, delivDate]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const gatherMakeInfo = (database) => {

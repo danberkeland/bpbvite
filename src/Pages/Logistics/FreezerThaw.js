@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -40,9 +40,10 @@ function FreezerThaw() {
 
   let delivDate = todayPlus()[0];
 
+  const checkComplete = useRef(false)
   useEffect(() => {
     console.log("databaseTest", database);
-    database &&
+    if (database && checkComplete.current === false) {
       checkForUpdates(
         database,
         ordersHasBeenChanged,
@@ -50,6 +51,8 @@ function FreezerThaw() {
         delivDate,
         setIsLoading
       ).then((db) => gatherFreezerThaw(db));
+      checkComplete.current = true
+    }
   }, [database]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const gatherFreezerThaw = (database) => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 
 import { InputText } from "primereact/inputtext";
@@ -122,9 +122,10 @@ function BPBSMixPocket() {
   );
   const { data: database } = useLegacyFormatDatabase();
   
+  const checkComplete = useRef(false)
   useEffect(() => {
     console.log("databaseTest", database);
-    database &&
+    if (database && checkComplete.current === false) {
       checkForUpdates(
         database,
         ordersHasBeenChanged,
@@ -132,6 +133,8 @@ function BPBSMixPocket() {
         delivDate,
         setIsLoading
       ).then((db) => gatherDoughInfo(db, delivDate));
+      checkComplete.current = true
+    }
   }, [database]); // eslint-disable-line react-hooks/exhaustive-deps
 
   

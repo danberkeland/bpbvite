@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 
 import { InputText } from "primereact/inputtext";
 
@@ -82,9 +82,10 @@ function BPBNBuckets({ loc }) {
   );
   const { data: database } = useLegacyFormatDatabase();
 
+  const checkComplete = useRef(false)
   useEffect(() => {
     console.log("databaseTest", database);
-    database &&
+    if (database && checkComplete.current === false) {
       checkForUpdates(
         database,
         ordersHasBeenChanged,
@@ -93,6 +94,8 @@ function BPBNBuckets({ loc }) {
         setIsLoading
       ).then((db) => gatherDoughInfo(db));
       console.log('database', database)
+      checkComplete.current = true
+    }
   }, [database]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {

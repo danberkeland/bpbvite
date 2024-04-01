@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -119,9 +119,10 @@ function NorthList() {
   );
   const { data: database } = useLegacyFormatDatabase();
 
+  const checkComplete = useRef(false)
   useEffect(() => {
     // console.log("databaseTest", database);
-    database &&
+    if (database && checkComplete.current === false) {
       checkForUpdates(
         database,
         ordersHasBeenChanged,
@@ -129,6 +130,9 @@ function NorthList() {
         delivDate,
         setIsLoading
       ).then((db) => gatherMakeInfo(db, delivDate));
+      checkComplete.current = true
+    }
+
   }, [database, delivDate]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const { data:notesData } = 
