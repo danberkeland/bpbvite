@@ -18,7 +18,7 @@ export const calculateRustics = (T0Orders, T1Orders, PRD, bakeDate, preshapeType
   //  Filter/Query functions
   // ========================
   const testIsRustic = (/** @type {DBProduct} */ product) => 
-    ['Baguette', 'County', 'Multi', 'Rye'].includes(product.doughNick)
+    ['Baguette', 'Country', 'Multi', 'Rye'].includes(product.doughNick)
 
   const calculateBakeDate = (/** @type {CombinedRoutedOrder} */ order) => 
     order.meta.routePlan.steps[0].begin.date
@@ -44,6 +44,7 @@ export const calculateRustics = (T0Orders, T1Orders, PRD, bakeDate, preshapeType
     .filter(testIsRustic)
     .sort(compareBy(P => P.prodName))
     .reduce(uniqByRdc(P => P.forBake), [])
+    .sort(compareBy(P => P.doughNick))
 
   return productReps.map(productRep => {
     const { prodNick, forBake, doughNick, weight, preshaped, prepreshaped } = productRep
