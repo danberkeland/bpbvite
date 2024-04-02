@@ -65,8 +65,9 @@ const Setout = ({ reportLocation }) => {
   const INQB = useInfoQBAuths({ shouldFetch: true })
 
   const setoutRecord = INQB.data?.find(item => 
-    item.id = reportDT.toFormat('yyyy-MM-dd') + reportLocation + 'setoutTime'
+    item.id === (reportDT.toFormat('yyyy-MM-dd') + reportLocation + 'setoutTime')
   )
+
   // const afterSetoutOrders = !setoutRecord 
   //   ? []
   //   : [...croix, ...other, ...almond].flatMap(row =>
