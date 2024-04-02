@@ -18,11 +18,18 @@ import { exportBpbn1Pdf } from "./exportBaker1"
 import { useDoughs } from "../../../data/dough/useDoughs"
 
 
-
-const Baker1 = () => {
+/**
+ * @param {Object} props
+ * @param {'today'|'tomorrow'} props.reportDay 
+ */
+const Baker1 = ({ reportDay='today' }) => {
   const todayDT = DT.today()
-  const [reportDT, setReportDT] = useState(todayDT)
+  const [reportDT, setReportDT] = useState(
+    todayDT.plus({ days: (reportDay === 'today' ? 0 : 1) })
+  )
   const isToday = reportDT.toMillis() === todayDT.toMillis()
+  const setToToday    = () => setReportDT(todayDT)
+  const setToTomorrow = () => setReportDT(todayDT.plus({ days: 1 }))
   
   const [showBaguetteDialog, setShowBaguetteDialog] = useState(false)
 
@@ -41,12 +48,9 @@ const Baker1 = () => {
     reportDT,
     calculateFor: isToday ? 'today' : 'tomorrow'
   })
-  console.log("early rustics", rusticData.map(row => row.earlyQty))
 
   const { data: DGH, submitMutations, updateLocalData } = useDoughs({ shouldFetch: true })
-  
-  const setToToday    = () => setReportDT(todayDT)
-  const setToTomorrow = () => setReportDT(todayDT.plus({ days: 1 }))
+
   const generatePdf   = async () => {
     if (!DGH || !nBucketSetsToMake) {
       console.error('Data not Loaded for export')
@@ -70,12 +74,11 @@ const Baker1 = () => {
       id: DGH.find(D => D.doughName === 'Baguette')?.id,
       preBucketSets: nBucketSetsToMake
     }
-    console.log("updateInput", updateInput)
-    // updateLocalData( await submitMutations({ updateInputs: [updateInput] }))
+    const gqlResponse = await submitMutations({ updateInputs: [updateInput] })
+    console.log(gqlResponse)
+    updateLocalData(gqlResponse)
 
   }
-
-  console.log("otherPrepData", otherPrepData)
 
   const { data:PRD=[] } = useProducts({ shouldFetch: true})
   const products = keyBy(PRD, P => P.prodNick)
@@ -105,6 +108,7 @@ const Baker1 = () => {
         disabled={!DGH || !nBucketSetsToMake}
         style={{marginBottom: "1rem"}} 
       />
+      <div>Using v3 <a href="/Production/BPBNBaker1/v2">Go to previous version</a></div>
 
       <h2>Rustics</h2>
       <RusticTable 
@@ -126,14 +130,14 @@ const Baker1 = () => {
         products={products}
       />
 
-    
-      <h2>Baguette Mixes</h2>     
-      <Button 
-        label="ShowDetails" 
-        icon="pi pi-table" 
-        onClick={() => setShowBaguetteDialog(true)}
-        style={{ marginBottom: "1rem" }}
-      />
+      <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+        <h2 style={{display: "inline-block"}}>Baguette Mixes</h2>     
+        <Button 
+          label="ShowDetails" 
+          icon="pi pi-table" 
+          onClick={() => setShowBaguetteDialog(true)}
+        />
+      </div>
  
       <Dialog
         header="Order Breakdown By Weight (lbs)"
@@ -216,6 +220,7 @@ const RusticTable = ({ value, className, products }) =>
     value={value ?? []}
     size="small" 
     responsiveLayout="scroll"   
+    style={{marginBottom: "2rem"}}
     className={className}
   >
     <Column header="Product" field="forBake" />
@@ -248,7 +253,7 @@ const DoobieStuffTable = ({ value, className }) =>
     value={value ?? []}
     size="small"
     responsiveLayout="scroll"  
-    style={{marginBottom: "1rem"}}
+    style={{marginBottom: "2rem"}}
     className={className}
   >
     <Column header="Prod"   field="Prod" />
@@ -264,7 +269,7 @@ const OtherPrepTable = ({ value, className, products }) =>
     value={value}
     size="small"
     responsiveLayout="scroll"
-    style={{marginTop: "1rem"}}
+    style={{marginBottom: "2rem"}}
     className={className}
   >
     <Column header="Product" field="prodName" />
@@ -285,6 +290,7 @@ const BaguetteSummaryTable = ({ value, className, products }) =>
     value={value}
     size="small" 
     responsiveLayout="scroll"   
+    style={{marginBottom: "2rem"}}
     className={className}
   >
     <Column header="Product"
@@ -298,7 +304,7 @@ const BaguetteSummaryTable = ({ value, className, products }) =>
         tableData: rowData.itemsT0 ?? [],
         products,
       })} 
-      style={{width: "5rem"}}
+      // style={{width: "5rem"}}
       footer={options => round(sumBy(options.props.value ?? [], row => row.weightT0), 1)}
     />
     <Column header="preshaped" 
@@ -316,7 +322,7 @@ const BaguetteSummaryTable = ({ value, className, products }) =>
       style={{width: "5rem"}}
       footer={options => round(sumBy(options.props.value ?? [], row => row.shortT0), 1)}
     />
-    <Column header="Shape Req."
+    <Column header="Mix/Shape Req."
       body={rowData => DrilldownCellTemplate({ 
         dialogHeader: `${rowData.forBake} Orders, Baked Today +1`,
         cellValue: rowData.weightT1, 
@@ -344,7 +350,7 @@ const BaguetteTableTemplate = ({ value, col1Header, className }) => {
       value={value} 
       size="small" 
       responsiveLayout="scroll"  
-      style={{marginBottom: "1rem"}}
+      style={{marginBottom: "2rem"}}
       className={className}
     >
       <Column header={col1Header} field='label' />
