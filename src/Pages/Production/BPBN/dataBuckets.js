@@ -38,11 +38,6 @@ export const calculateBucketsData = (PRD, DGH, R1Orders, R2Orders, R3Orders, R1,
         
         const forBakeOrders = ordersToCount
           .filter(order => products[order.prodNick].forBake === forBake)
-          .sort(compareBy(order => order.prodNick))
-          .sort(compareBy(order => order.locNick))
-          .sort(compareBy(order => order.meta.routeNick))
-          .sort(compareBy(order => order.meta.route.routeStart))
-          .sort(compareBy(order => order.delivDate))
 
         const neededEa = sumBy(
           forBakeOrders, 

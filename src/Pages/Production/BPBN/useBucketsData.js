@@ -23,8 +23,6 @@ export const useBucketsData = ({ reportDT, mixedWhere }) => {
   const { data:R3Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 3 }), useHolding: true, shouldFetch: true })
   const [R1, R2] = [1, 2].map(days => reportDT.plus({ days }).toFormat('yyyy-MM-dd'))
   
-  const { data:DCP } = useDoughComponents({ shouldFetch: true})
-
   const doughList = useMemo(() => {
     return !!mixedWhere 
       ? calculateBucketsData(PRD, DGH, R1Orders, R2Orders, R3Orders, R1, R2)?.filter(row => row.mixedWhere === mixedWhere)
@@ -39,7 +37,7 @@ export const useBucketsData = ({ reportDT, mixedWhere }) => {
   return {
     doughList,
     products,
-    doughComponents: DCP
+    doughComponents: useDoughComponents({ shouldFetch: true})?.data
   }
 
 }

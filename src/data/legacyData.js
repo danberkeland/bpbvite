@@ -1,5 +1,4 @@
 import { useMemo } from "react"
-import { useListData } from "./_listData"
 import { sortBy } from "lodash"
 import { useProducts } from "./product/useProducts"
 import { BpbHub, DBDoughBackup, DBDoughComponentBackup, DBInfoQBAuth, DBLocation, DBLocationUser2, DBOrder, DBProduct, DBRoute, DBStanding, DBZoneRoute, FulfillmentOption } from "./types.d"
@@ -12,6 +11,9 @@ import { useRoutes } from "./route/useRoutes"
 import { useZoneRoutes } from "./zoneRoute/useZoneRoutes"
 import { useInfoQBAuths } from "./infoQBAuths/useInfoQBAuths"
 import { useStandings } from "./standing/useStandings"
+import { useDoughs } from "./dough/useDoughs"
+import { useDoughComponents } from "./doughComponent/useDoughComponents"
+import { useCheckForUpdates } from "../core/checkForUpdates"
 
 const shouldFetch = true
 
@@ -82,7 +84,7 @@ export const useLegacyOrders = () => {
 
 // Current system is in same format as legacy system for doughs
 export const useLegacyDoughs = () => {
-  const { data:DGH } = useListData({ tableName: "DoughBackup", shouldFetch })
+  const { data:DGH } = useDoughs({ shouldFetch })
   const calculateValue = () => !!DGH 
     ? mapDoughsToLegacy(DGH)
     : undefined
@@ -91,7 +93,7 @@ export const useLegacyDoughs = () => {
 }
 
 export const useLegacyDoughComponents = () => {
-  const { data:DCP } = useListData({ tableName: "DoughComponentBackup", shouldFetch })
+  const { data:DCP } = useDoughComponents({ shouldFetch })
   const calculateValue = () => !!DCP 
     ? mapDoughComponentsToLegacy(DCP)
     : undefined
@@ -124,7 +126,7 @@ export const useLegacyInfoQBAuths = () => {
  * so mutation/revalidation can be efficiently handled with those.
  * @returns {{ data: (LegacyDatabase | undefined) }}
 */
-export const useLegacyFormatDatabase = () => {
+export const useLegacyFormatDatabase = ({ checkForUpdates=false }={}) => {
   const { data:PRD } = useLegacyProducts()
   const { data:CUS } = useLegacyCustomers()
   const { data:RTE } = useLegacyRoutes()
@@ -137,6 +139,9 @@ export const useLegacyFormatDatabase = () => {
 
   // order is important! original order:
   // [products, customers, routes, standing, orders, doughs, doughComponents]
+
+  useCheckForUpdates(checkForUpdates)
+  
 
   /** @returns {LegacyDatabase | undefined} */
   const calcValue = () => (PRD && CUS && RTE && STD && ORD && DGH && DCP && IQB)

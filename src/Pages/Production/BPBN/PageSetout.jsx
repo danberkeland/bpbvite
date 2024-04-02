@@ -1,5 +1,5 @@
 import { DT } from "../../../utils/dateTimeFns"
-import { DrilldownCellTemplate } from "./ComponentDrilldownCellTemplate"
+import { DrilldownCellTemplate } from "../ComponentDrilldownCellTemplate"
 import { useSetoutData } from "./useSetoutData"
 
 import { Button } from "primereact/button"
@@ -8,25 +8,70 @@ import { Column } from "primereact/column"
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog"
 import { useEffect } from "react"
 import { useInfoQBAuths } from "../../../data/infoQBAuths/useInfoQBAuths"
+import { DateTime } from "luxon"
+import { exportSetout } from "./exportSetout"
+
+/** @type {React.CSSProperties} */
+const greenChipStyle = {
+  width: "fit-content",
+  marginTop: ".5rem",
+  padding: ".2rem 1rem .2rem 1rem",
+  borderRadius: "1rem",
+  color: "var(--bpb-text-color)",
+  background: "#9af79d",
+  boxShadow: "0 2px 1px -1px rgba(0, 0, 0, 0.2),"
+    +" 0 1px 1px 0 rgba(0, 0, 0, 0.14), "
+    +"0 1px 3px 0 rgba(0, 0, 0, 0.12)",
+  textAlign: "center"
+}
+/** @type {React.CSSProperties} */
+const grayChipStyle = {
+  width: "fit-content",
+  marginTop: ".5rem",
+  padding: ".2rem 1rem .2rem 1rem",
+  borderRadius: "1rem",
+  color: "var(--bpb-text-color)",
+  background: "rgba(220, 220, 220, 0.5)",
+  boxShadow: "0 2px 1px -1px rgba(0, 0, 0, 0.2),"
+    +" 0 1px 1px 0 rgba(0, 0, 0, 0.14), "
+    +"0 1px 3px 0 rgba(0, 0, 0, 0.12)",
+  textAlign: "center"
+}
+// /** @type {React.CSSProperties} */
+// const yellowChipStyle = {
+//   width: "fit-content",
+//   marginTop: ".5rem",
+//   padding: ".2rem 1rem .2rem 1rem",
+//   background: "#FFECB3",
+//   border: "solid #d9a300",
+//   borderRadius: "1rem",
+//   borderWidth: "0px",
+//   color: "var(--bpb-text-color)",
+//   boxShadow: "0 2px 1px -1px rgba(0, 0, 0, 0.2),"
+//     +" 0 1px 1px 0 rgba(0, 0, 0, 0.14), "
+//     +"0 1px 3px 0 rgba(0, 0, 0, 0.12)",
+//   textAlign: "center"
+// }
 
 /**
- * 
  * @param {Object} props
  * @param {'Prado' | 'Carlton'} props.reportLocation 
- * @returns 
  */
-export const Setout = ({ reportLocation }) => {
+const Setout = ({ reportLocation }) => {
   const reportDT = DT.today()
 
-  const { north, south, products } = useSetoutData({ reportDT })
-  const { croix, other, almond } = reportLocation === 'Prado' ? north : south
+  const { croix=[], other=[], almond=[], products={} } = useSetoutData({ reportDT })
 
   const INQB = useInfoQBAuths({ shouldFetch: true })
 
   const setoutRecord = INQB.data?.find(item => 
     item.id = reportDT.toFormat('yyyy-MM-dd') + reportLocation + 'setoutTime'
   )
-  
+  // const afterSetoutOrders = !setoutRecord 
+  //   ? []
+  //   : [...croix, ...other, ...almond].flatMap(row =>
+  //     row.orders.filter(order => order.qtyUpdatedOn > setoutRecord.updatedAt)  
+  //   )  
 
   useEffect(() => {
     confirmDialog({
@@ -38,8 +83,26 @@ export const Setout = ({ reportLocation }) => {
   }, [])
 
   return (
-    <div>
+    <div style={{padding: "2rem 5rem 5rem 5rem", width: "50rem", margin: "auto" }}>
       <h1>{reportLocation} Pastry Prep {reportDT.toFormat('M/d/yyyy')}</h1>
+
+      <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+        <Button 
+          label="Print Carlton Setout List" 
+          onClick={() => exportSetout({
+            reportLocation,
+            reportDT,
+            croix,
+            other,
+            almond
+          })}  
+        />
+        {!!setoutRecord 
+          ? <div style={greenChipStyle}>Setout recorded at {DT.fromIsoTs(setoutRecord.updatedAt).toLocaleString(DateTime.TIME_SIMPLE)}</div>
+          : <div style={grayChipStyle}>Setout not yet recorded for today</div>
+        }
+      </div>
+      {/* {!!afterSetoutOrders.length && <div style={yellowChipStyle}>After-setout changes detected</div>} */}
 
       <h2>Set Out</h2>
       <DataTable 
@@ -104,3 +167,5 @@ export const Setout = ({ reportLocation }) => {
 
   )
 }
+
+export { Setout as default }

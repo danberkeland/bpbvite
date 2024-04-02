@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
@@ -14,13 +14,8 @@ import { convertDatetoBPBDate, todayPlus } from "../../utils/_deprecated/dateTim
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
-
-
-import { checkForUpdates } from "../../core/checkForUpdates";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
 import { useSettingsStore } from "../../Contexts/SettingsZustand";
-
-
 
 import { updateProduct } from "../../graphql/mutations";
 import { confirmDialog } from 'primereact/confirmdialog'
@@ -120,38 +115,22 @@ function CroixToMakeLegacy() {
 
   
   const setIsLoading = useSettingsStore((state) => state.setIsLoading);
-  const ordersHasBeenChanged = useSettingsStore(
-    (state) => state.ordersHasBeenChanged
-  );
-  const setOrdersHasBeenChanged = useSettingsStore(
-    (state) => state.setOrdersHasBeenChanged
-  );
-  const { data: database } = useLegacyFormatDatabase();
+  const { data:database } = useLegacyFormatDatabase({ checkForUpdates: true });
 
-  
   useEffect(() => {
     console.log("databaseTest", database);
-    database &&
-      checkForUpdates(
-        database,
-        ordersHasBeenChanged,
-        setOrdersHasBeenChanged,
-        delivDate,
-        setIsLoading
-      ).then((db) => gatherCroixInfo(db));
+    if (database) {
+      let makeData = compose.returnCroixBreakDown(database, delivDate);
+      setOpeningCount(makeData.openingCount);
+      setMakeCount(makeData.makeCount);
+      setClosingCount(makeData.closingCount);
+      console.log("prj",makeData.projectionCount)
+      setProjectionCount(makeData.projectionCount);
+      setProducts(makeData.products);
+      console.log("makeData.openingCount", makeData.openingCount)
+    }
   }, [database]); // eslint-disable-line react-hooks/exhaustive-deps
 
-
-  const gatherCroixInfo = (database) => {
-    let makeData = compose.returnCroixBreakDown(database, delivDate);
-    setOpeningCount(makeData.openingCount);
-    setMakeCount(makeData.makeCount);
-    setClosingCount(makeData.closingCount);
-    console.log("prj",makeData.projectionCount)
-    setProjectionCount(makeData.projectionCount);
-    setProducts(makeData.products);
-    console.log("makeData.openingCount", makeData.openingCount)
-  };
 
   const openingHeader = <div>Opening Freezer</div>;
 

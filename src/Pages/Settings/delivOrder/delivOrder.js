@@ -23,7 +23,7 @@ const DelivOrder = () => {
   const setOrdersHasBeenChanged = useSettingsStore(
     (state) => state.setOrdersHasBeenChanged
   );
-  const { data: database } = useLegacyFormatDatabase();
+  const { data:database } = useLegacyFormatDatabase({ checkForUpdates: false });
   // const [products = [], customers = [], routes = [], standing = [], orders = []] = database || [];
 
   useEffect(() => {

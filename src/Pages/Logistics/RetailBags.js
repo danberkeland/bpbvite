@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -11,9 +11,7 @@ import { convertDatetoBPBDate, todayPlus } from "../../utils/_deprecated/dateTim
 import ComposeRetailBags from "./utils/composeRetailBags";
 
 import styled from "styled-components";
-import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
-import { checkForUpdates } from "../../core/checkForUpdates";
 
 const WholeBox = styled.div`
   display: flex;
@@ -44,35 +42,19 @@ function RetailBags() {
   const [retailBags, setRetailBags] = useState();
   if (!!retailBags) {console.log("RETAIL BAGS:", retailBags)}
 
-  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
-  const ordersHasBeenChanged = useSettingsStore(
-    (state) => state.ordersHasBeenChanged
-  );
-  const setOrdersHasBeenChanged = useSettingsStore(
-    (state) => state.setOrdersHasBeenChanged
-  );
-  const { data: database } = useLegacyFormatDatabase();
+  const { data: database } = useLegacyFormatDatabase({ checkForUpdates: true });
 
   let delivDate = todayPlus()[0];
   let tomorrow = todayPlus()[1];
 
   useEffect(() => {
-    console.log("databaseTest", database);
-    database &&
-      checkForUpdates(
-        database,
-        ordersHasBeenChanged,
-        setOrdersHasBeenChanged,
-        delivDate,
-        setIsLoading
-      ).then((db) => gatherRetailBagInfo(db, delivDate));
-  }, [database]); // eslint-disable-line react-hooks/exhaustive-deps
+    // console.log("databaseTest", database);
+    if (database) {
+      let retailBagData = compose.returnRetailBags(database);
+      setRetailBags(retailBagData.retailBags);
+    }
+  }, [database]);
 
-  const gatherRetailBagInfo = (database) => {
-    let retailBagData = compose.returnRetailBags(database);
-
-    setRetailBags(retailBagData.retailBags);
-  };
 
   const exportListPdf = () => {
     let finalY;

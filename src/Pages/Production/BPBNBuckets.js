@@ -1,13 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 
 import { InputText } from "primereact/inputtext";
 
 import ComposeDough from "./Utils/composeDough";
 import ComposeWhatToMake from "./BPBSWhatToMakeUtils/composeWhatToMake";
-
-import { updateDough, updateDoughBackup } from "../../graphql/mutations";
-
-import { API, graphqlOperation } from "aws-amplify";
 
 import jsPDF from "jspdf";
 import "jspdf-autotable";
@@ -15,9 +11,8 @@ import "jspdf-autotable";
 import styled from "styled-components";
 import { todayPlus } from "../../utils/_deprecated/dateTimeHelpers";
 import { bagStickerSet } from "./Utils/bagStickerSet";
-import { useSettingsStore } from "../../Contexts/SettingsZustand";
 import { useLegacyFormatDatabase } from "../../data/legacyData";
-import { checkForUpdates } from "../../core/checkForUpdates";
+import { useDoughs } from "../../data/dough/useDoughs";
 
 const WholeBox = styled.div`
   display: flex;
@@ -73,26 +68,27 @@ function BPBNBuckets({ loc }) {
   const [doughs, setDoughs] = useState([]);
   const [doughComponents, setDoughComponents] = useState([]);
 
-  const setIsLoading = useSettingsStore((state) => state.setIsLoading);
-  const ordersHasBeenChanged = useSettingsStore(
-    (state) => state.ordersHasBeenChanged
-  );
-  const setOrdersHasBeenChanged = useSettingsStore(
-    (state) => state.setOrdersHasBeenChanged
-  );
-  const { data: database } = useLegacyFormatDatabase();
+
+  const { data: database } = useLegacyFormatDatabase({ checkForUpdates: true });
+  const { submitMutations, updateLocalData } = useDoughs({ shouldFetch: true })
 
   useEffect(() => {
-    console.log("databaseTest", database);
-    database &&
-      checkForUpdates(
-        database,
-        ordersHasBeenChanged,
-        setOrdersHasBeenChanged,
-        delivDate,
-        setIsLoading
-      ).then((db) => gatherDoughInfo(db));
-      console.log('database', database)
+    if (database) {
+      let doughData = compose.returnDoughBreakDown(database, loc, delivDate);
+      let pretzelInfo = composePretzel.returnOnlyPretzel(database, delivDate)
+      const index = doughData.doughs.findIndex(item => item.doughName === "Pretzel Bun");
+      
+      const totalPretzelWeight = pretzelInfo.pretzels.reduce((sum, item) => {
+        const itemWeight = item.makeTotal * item.weight;
+        return sum + itemWeight;
+      }, 0);
+      
+      try {doughData.doughs[index].needed = totalPretzelWeight} catch {}
+      
+      let finalDoughs = doughData.doughs.filter((dou) => dou.mixedWhere === loc);
+      setDoughs(finalDoughs);
+      setDoughComponents(doughData.doughComponents);
+    }
   }, [database]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -103,23 +99,6 @@ function BPBNBuckets({ loc }) {
       setDelivDate(todayPlus()[0]);
     }
   }, []);
-
-  const gatherDoughInfo = (database) => {
-    let doughData = compose.returnDoughBreakDown(database, loc, delivDate);
-    let pretzelInfo = composePretzel.returnOnlyPretzel(database, delivDate)
-    const index = doughData.doughs.findIndex(item => item.doughName === "Pretzel Bun");
-    
-    const totalPretzelWeight = pretzelInfo.pretzels.reduce((sum, item) => {
-      const itemWeight = item.makeTotal * item.weight;
-      return sum + itemWeight;
-    }, 0);
-    
-    try {doughData.doughs[index].needed = totalPretzelWeight} catch {}
-    
-    let finalDoughs = doughData.doughs.filter((dou) => dou.mixedWhere === loc);
-    setDoughs(finalDoughs);
-    setDoughComponents(doughData.doughComponents);
-  };
 
   const handleChange = (e) => {
     if (e.code === "Enter") {
@@ -149,13 +128,15 @@ function BPBNBuckets({ loc }) {
       [attr]: qty,
     };
 
-    try {
-      await API.graphql(
-        graphqlOperation(updateDoughBackup, { input: { ...updateDetails } })
-      );
-    } catch (error) {
-      console.log("error on fetching Dough List", error);
-    }
+    updateLocalData( await submitMutations({ updateInputs: [updateDetails] }) )
+
+    // try {
+    //   await API.graphql(
+    //     graphqlOperation(updateDoughBackup, { input: { ...updateDetails } })
+    //   );
+    // } catch (error) {
+    //   console.log("error on fetching Dough List", error);
+    // }
   };
 
   const handleClick = (e, amt, old) => {

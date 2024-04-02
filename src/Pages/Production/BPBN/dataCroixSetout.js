@@ -2,34 +2,6 @@ import { CombinedRoutedOrder } from "../../../data/production/useProductionData"
 import { DBProduct } from "../../../data/types.d"
 import { compareBy, groupByArrayRdc, groupByObject, keyBy, sumBy } from "../../../utils/collectionFns"
 
-// import { useMemo } from "react"
-// import { useProducts } from "../../../data/product/useProducts"
-// import { useCombinedRoutedOrdersByDate } from "../../../data/production/useProductionData"
-// import { DateTime } from "luxon"
-// /**
-//  * Despite being called 'prep', this list describes a baking task, so in most
-//  * cases the bake date will be the same as the delivery date.
-//  * @param {Object} input
-//  * @param {DateTime} input.bakeDT Query the correct orders by determining which date these orders will be baked, which will vary depending on the task
-//  */
-// export const useCroixSetoutData = ({ bakeDT }) => {
-//   const bakeDate = bakeDT.toFormat('yyyy-MM-dd')
-  
-//   // With current setup, we should expect baking & delivery to 
-//   // always land on the same day, but we'll keep the look-ahead just incase.
-//   const { data:T0Orders } = useCombinedRoutedOrdersByDate({ delivDT: bakeDT.plus({ days: 0 }), useHolding: true })
-//   const { data:T1Orders } = useCombinedRoutedOrdersByDate({ delivDT: bakeDT.plus({ days: 1 }), useHolding: true })
-//   const { data:PRD }      = useProducts({ shouldFetch: true })
-
-//   return { 
-//     data: useMemo(
-//       () => calculateCroixSetout(T0Orders, T1Orders, PRD, bakeDate), 
-//       [T0Orders, T1Orders, PRD, bakeDate]
-//     ) 
-//   }
-
-// }
-
 /**
  * @param {CombinedRoutedOrder[] | undefined} T0Orders 
  * @param {CombinedRoutedOrder[] | undefined} T1Orders 
@@ -40,12 +12,6 @@ export const calculateCroixSetout = (T0Orders, T1Orders, PRD, bakeDate) => {
   if (!T0Orders ||!T1Orders || !PRD) return undefined
 
   const products = keyBy(PRD, P => P.prodNick)
-
-  const { false:orders=[], true:unroutedOrders=[] } = groupByObject(
-    [...T0Orders, ...T1Orders],
-    order => order.meta.routeNick === "NOT ASSIGNED"
-  )
-  if (unroutedOrders.length) console.warn("Unrouted Orders:", unroutedOrders)
 
   // *** Filter/Query functions ***
 
@@ -85,7 +51,7 @@ export const calculateCroixSetout = (T0Orders, T1Orders, PRD, bakeDate) => {
   
   // *** Pipline ***
 
-  return orders
+  return [...T0Orders, ...T1Orders]
     .filter(order => shouldInclude(order))
     .map(order => adjustBackporchQty(order))
     .reduce(groupByArrayRdc(order => order.prodNick), [])

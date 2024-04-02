@@ -58,7 +58,7 @@ const Bpbn1 = ({ initialDateOption='today' }) => {
 
   // console.log("other prep data", otherPrepData)
 
-  const doobieStuff = useDoobieStuff({ reportDate })
+  const { data:doobieStuff } = useDoobieStuff({ reportDT: _reportDateDT })
 
   const { data:baguetteData } = useBaguetteData({ 
     currentDate: today,
@@ -82,7 +82,7 @@ const Bpbn1 = ({ initialDateOption='today' }) => {
 
   useCheckForUpdates()
 
-  const exportBpbn1 = useExportBpbn1({ reportDate, shouldFetch })
+  const exportBpbn1 = useExportBpbn1({ reportDT: _reportDateDT, shouldFetch })
   
   const DateOptionButtons = () => {
     return (

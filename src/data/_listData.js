@@ -115,9 +115,14 @@ const batchMutate = async ({
   // }
 
   } catch (err) {
-    console.error("async mutation failed; should use async revalidation")
+    console.error("mutation failed; should use async revalidation")
     console.error(err)
-    return undefined
+    return {
+      createdItems: [],
+      updatedItems: [],
+      deletedItems: [],
+      errors: err.errors
+    }
 
   }
 

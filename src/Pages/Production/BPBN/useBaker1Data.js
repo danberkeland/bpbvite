@@ -34,7 +34,7 @@ export const useBaker1Data = ({ reportDT, calculateFor }) => {
   const { data:T3Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 3 }), useHolding: true,  shouldFetch: true })
   
   const { data:DGH } = useDoughs({ shouldFetch: true })
-  const { data:PRD } = useProducts({ shouldFetch: true})
+  const { data:PRD } = useProducts({ shouldFetch: true })
 
   const rusticData = useMemo(
     () => calculateRustics(T0Orders, T1Orders, PRD, R0, preshapeType), 

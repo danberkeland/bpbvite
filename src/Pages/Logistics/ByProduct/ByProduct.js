@@ -36,7 +36,7 @@ function ByProduct() {
   const [database, setDatabase] = useState();
 
   // const setIsLoading = useSettingsStore((state) => state.setIsLoading);
-  const { data: db } = useLegacyFormatDatabase();
+  const { data: db } = useLegacyFormatDatabase({ checkForUpdates: false });
 
   useEffect(() => {
     try {

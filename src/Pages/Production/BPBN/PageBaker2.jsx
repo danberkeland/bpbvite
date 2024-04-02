@@ -4,7 +4,7 @@ import { Button } from "primereact/button"
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 
-import { DrilldownCellTemplate } from "./ComponentDrilldownCellTemplate"
+import { DrilldownCellTemplate } from "../ComponentDrilldownCellTemplate"
 
 import { useProducts } from "../../../data/product/useProducts"
 import { useBaker2Data } from "./useBaker2Data"
@@ -19,12 +19,8 @@ const Baker2 = () => {
   const [reportDT, setReportDT] = useState(todayDT)
   const isToday = reportDT.toMillis() === todayDT.toMillis()
 
-  const {
-    rusticShapeData,
-    otherPrepData,
-    croixSetoutData,
-  } = useBaker2Data({ reportDT })
-  const { data:PRD=[], submitMutations, updateLocalData } = useProducts({ shouldFetch: true})
+  const { rusticShapeData, otherPrepData, croixSetoutData } = useBaker2Data({ reportDT })
+  const { data:PRD=[], submitMutations, updateLocalData } = useProducts({ shouldFetch: true })
   const products = keyBy(PRD, P => P.prodNick)
 
   const submitPrepreshapes = async () => {
@@ -32,13 +28,8 @@ const Baker2 = () => {
       prodNick: row.representativeProdNick,
       prepreshaped: row.qty
     }))
-
-    // updateLocalData(
-    //   await submitMutations({ updateInputs })
-    // )
-
     console.log(updateInputs)
-
+    updateLocalData(await submitMutations({ updateInputs }))
   }
 
   return (
@@ -48,23 +39,27 @@ const Baker2 = () => {
       <Button 
         label="Print Prep List" 
         icon="pi pi-print" 
-        style={{marginBottom: "2rem"}} 
+        style={{marginBottom: "1rem"}} 
         onClick={() => {
           submitPrepreshapes()
           exportBaker2({
             reportDT,
-            rusticShapeData,
+            rusticShapeData: rusticShapeData?.filter(row => row.qty !== 0),
             otherPrepData,
             croixSetoutData,
           })
-        }}  
+        }}
+        disabled={!rusticShapeData || !otherPrepData || !croixSetoutData}
       />
 
+      <div>Using v3 <a href="/Production/BPBNBaker2/v2">Go to previous version</a></div>
+
       <DataTable 
-        value={rusticShapeData ?? []}
+        value={(rusticShapeData ?? []).filter(row => row.qty !== 0)}
         size="small" 
         responsiveLayout="scroll"   
         className={isToday ? '' : 'not-today'}
+        style={{marginTop: "1rem"}}
       >
         <Column header="Product" field="forBake" />
         <Column header="Weight"  field="weight" />
@@ -77,6 +72,13 @@ const Baker2 = () => {
             products,
           })} 
           style={{width: "6rem"}}
+        />
+        <Column 
+          header="synced?"
+          body={row => row.productRep.prepreshaped === row.qty
+            ? <i className="pi pi-check-circle" style={{color:"green", paddingLeft: "1rem"}} />
+            : <i className="pi pi-times" style={{color:"red", paddingLeft: "1rem"}} />
+          }  
         />
       </DataTable>
 
@@ -109,23 +111,21 @@ const Baker2 = () => {
         style={{marginTop: "1rem"}}
         className={isToday ? '' : 'not-today'}
       >
-        <Column header="Product" field="prodNick" />
+        <Column header="Product" field="setoutKey" />
         <Column header="Qty"
           body={rowData => DrilldownCellTemplate({
-            dialogHeader: `${rowData.prodNick} Orders to be Shaped`,
-            cellValue: rowData.qty,
-            tableData: rowData.items,
+            dialogHeader: `${rowData.shapeType} Orders to be Shaped`,
+            cellValue: rowData.total,
+            tableData: rowData.orders,
             products
           })}
           style={{width: "6rem"}}
         />
 
       </DataTable>
-
-
     </div>
   )
 
 }
 
-export { Baker2 as default }
+export { Baker2 as default } 
