@@ -13,7 +13,8 @@ import { exportBpbn1Pdf } from "./exportPdf"
  * database updates and pdf exports. Cache de-duplication lets us do this with
  * little extra overhead. Can be used on a dedicated "Closing/Backup" page.
 */
-export const useExportBpbn1 = ({ reportDate, shouldFetch }) => {
+export const useExportBpbn1 = ({ reportDT, shouldFetch }) => {
+  const reportDate = reportDT.toFormat('yyyy-MM-dd')
   const displayDate = isoToDT(reportDate).toFormat('M/dd/yyyy')
 
   const { rusticData, otherPrepData } = useBpbn1Data({
@@ -21,7 +22,7 @@ export const useExportBpbn1 = ({ reportDate, shouldFetch }) => {
     shouldShowZeroes: false,
     shouldFetch,
   })
-  const doobieStuff = useDoobieStuff({ reportDate })
+  const { data:doobieStuff } = useDoobieStuff({ reportDT })
   const { data:baguetteData } = useBaguetteData({ reportDate, shouldFetch })
 
   const doughCache = useListData({ tableName: "DoughBackup", shouldFetch })
