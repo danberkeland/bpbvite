@@ -373,6 +373,10 @@ const getBinsAndPans = ({ B1, products }) => {
       amount: "-- " + round(oliveQty * .08, 2).toFixed(2) + " lb."  
     },
     { 
+      label:"-- Herbs de Provence", 
+      amount: "-- " + round(oliveQty * .0625, 2).toFixed(2) + " cups"  
+    },
+    { 
       label:"BC Walnut", 
       amount: round(bcwalQty * 1.4, 2).toFixed(2) + " lb." 
     }, 
