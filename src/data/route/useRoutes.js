@@ -1,21 +1,10 @@
-import { useListData } from "../_listData"
+import { ListDataCache, useListData } from "../_listData"
 /**@typedef {import('../types.d.js').DBRoute} DBRoute */
 
 /**
  * @param {Object} input
  * @param {boolean} input.shouldFetch 
+ * @returns {ListDataCache<DBRoute>}
  */
-const useRoutes = ({ shouldFetch }) => {
-  const { data, ...otherCacheItems} = 
-    useListData({ tableName: "Route", shouldFetch })
-
-  /**@type {DBRoute[] | undefined} */
-  const routes = data
-
-  return { data: routes, ...otherCacheItems}
-
-}
-
-export {
-  useRoutes
-}
+export const useRoutes = ({ shouldFetch }) => 
+  useListData({ tableName: "Route", shouldFetch })

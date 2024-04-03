@@ -1,21 +1,15 @@
-import { useListData } from "../_listData"
+import { ListDataCache, useListData } from "../_listData"
 import { DBUser2 } from "../types.d"
 
 
+/**
+ * @param {Object} input
+ * @param {boolean} input.shouldFetch 
+ * @returns {ListDataCache<DBUser2>}
+ */
+const useUser2s = ({ shouldFetch }) =>
+  useListData({ tableName: "User2", shouldFetch })
 
-const useUser2s = ({ shouldFetch }) => {
-
-  const { data, ...rest } = useListData({ 
-    tableName: "User2", 
-    shouldFetch 
-  })
-
-  /**@type {DBUser2[] | undefined} */
-  const user2s = data
-
-  return { data:user2s, ...rest }
-
-}
 
 /**
  * Breaks out of the usual pattern -- this query joins location attributes

@@ -1,4 +1,4 @@
-import { useListData } from "../_listData"
+import { ListDataCache, useListData } from "../_listData"
 import { DBProduct } from "../types.d.js"
 
 /**
@@ -64,18 +64,7 @@ import { DBProduct } from "../types.d.js"
  * @param {Object} input
  * @param {boolean} input.shouldFetch 
  * @param {ProductKey[]} [input.projection]
+ * @returns {ListDataCache<DBProduct>}
  */
-const useProducts = ({ shouldFetch, projection }) => {
-  const { data, ...otherCacheItems} = 
+export const useProducts = ({ shouldFetch, projection }) => 
     useListData({ tableName: "Product", shouldFetch, projection })
-
-  /**@type {DBProduct[] | undefined} */
-  const products = data
-
-  return { data: products, ...otherCacheItems}
-
-}
-
-export {
-  useProducts
-}

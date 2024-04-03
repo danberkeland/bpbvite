@@ -1,21 +1,10 @@
-import { useListData } from "../_listData"
+import { ListDataCache, useListData } from "../_listData"
 import { DBDoughComponentBackup } from "../types.d.js"
 
 /**
  * @param {Object} input
  * @param {boolean} input.shouldFetch 
+ * @returns {ListDataCache<DBDoughComponentBackup>}
  */
-const useDoughComponents = ({ shouldFetch }) => {
-  const { data, ...otherCacheItems} = 
-    useListData({ tableName: "DoughComponentBackup", shouldFetch })
-
-  /**@type {DBDoughComponentBackup[] | undefined} */
-  const doughComponents = data
-
-  return { data: doughComponents, ...otherCacheItems }
-
-}
-
-export {
-  useDoughComponents
-}
+export const useDoughComponents = ({ shouldFetch }) => 
+  useListData({ tableName: "DoughComponentBackup", shouldFetch })

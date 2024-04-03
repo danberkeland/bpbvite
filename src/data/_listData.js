@@ -168,8 +168,9 @@ const batchMutate = async ({
 let SubmitMutationFunction
 
 /**
+ * @template T
  * @typedef {Object} 
- * @property {Object[] | undefined} data
+ * @property {T[] | undefined} data
  * @property {any} error
  * @property {boolean} isLoading
  * @property {boolean} isValidating
