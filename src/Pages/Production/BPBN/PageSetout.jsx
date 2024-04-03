@@ -6,7 +6,7 @@ import { Button } from "primereact/button"
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog"
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { useInfoQBAuths } from "../../../data/infoQBAuths/useInfoQBAuths"
 import { DateTime } from "luxon"
 import { exportSetout } from "./exportSetout"
@@ -73,14 +73,39 @@ const Setout = ({ reportLocation }) => {
   //     row.orders.filter(order => order.qtyUpdatedOn > setoutRecord.updatedAt)  
   //   )  
 
+  /**
+   * Gets executed on confirmation when the Setout page loads. Generates separate
+   * setout records for each location (Prado, Carlton).
+   * @param {Object} input
+   * @param {string} input.reportDate
+   * @param {'Carlton'|'Prado'} input.reportLocation 
+   */
+  const recordSetoutTime = async ({ reportDate, reportLocation }) => {
+    let input = {
+      id: reportDate + reportLocation + "setoutTime",
+      infoContent: "updated",
+      infoName: reportLocation + "setoutTime",
+    }
+
+    if (!!setoutRecord) {
+      INQB.updateLocalData(await INQB.submitMutations({ updateInputs: [input] }))
+    } else {
+      INQB.updateLocalData(await INQB.submitMutations({ createInputs: [input] }))
+    }
+  }
+
+  const msgDisplayed = useRef(false)
   useEffect(() => {
-    confirmDialog({
-      message: "Click YES to confirm these setout numbers will be used.",
-      header: "Confirmation",
-      icon: "pi pi-exclamation-triangle",
-      //accept: () => recordSetoutTime({ reportDate: todayISO, reportLocation}),
-    })
-  }, [])
+    if (!!INQB.data && !msgDisplayed.current) {
+      confirmDialog({
+        message: "Click YES to confirm these setout numbers will be used.",
+        header: "Confirmation",
+        icon: "pi pi-exclamation-triangle",
+        accept: () => recordSetoutTime({ reportDate: reportDT.toFormat('yyyy-MM-dd'), reportLocation }),
+      })
+      msgDisplayed.current = true
+    }
+  }, [INQB.data])
 
   return (
     <div style={{padding: "2rem 5rem 5rem 5rem", width: "50rem", margin: "auto" }}>
@@ -95,7 +120,8 @@ const Setout = ({ reportLocation }) => {
             croix,
             other,
             almond
-          })}  
+          })}
+          disabled={!INQB.data}
         />
         {!!setoutRecord 
           ? <div style={greenChipStyle}>Setout recorded at {DT.fromIsoTs(setoutRecord.updatedAt).toLocaleString(DateTime.TIME_SIMPLE)}</div>

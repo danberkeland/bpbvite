@@ -223,14 +223,12 @@ function AnimatedRoutes({ user, signOut }) {
         {(authClass === 'bpbfull' || authClass === 'bpbcrew') &&
           <React.Fragment>
             {/* <Route path="/Ordering/v2" element={<OrdersPage />} /> */}
-            <Route path="/Production/BPBNBaker1"    element={<Bpbn1 />} />
-            <Route path="/Production/BPBNBaker1/v3" element={<Baker1 />} />
+            <Route path="/Production/BPBNBaker1"    element={<Baker1 reportDay="today" />} />
+            <Route path="/Production/BPBNBaker1/v3" element={<Baker1 reportDay="today" />} />
             <Route path="/Production/BPBNBaker1/v2" element={<Bpbn1 />} />
             {/* <Route path="/Production/BPBNBaker1/v1" element={<BPBNBaker1 />} /> */}
 
-            <Route path="/BPBNProd/BPBNBaker1Backup" 
-              element={<Bpbn1 initialDateOption="tomorrow" />}
-            />
+            <Route path="/BPBNProd/BPBNBaker1Backup" element={<Baker1 reportDay="tomorrow" />} />
             {/* <Route path="/BPBNProd/BPBNBaker1Backup/v1" element={<BPBNBaker1Backup />} /> */}
 
             <Route path="/Production/BPBNBaker2"    element={<Baker2 />} />

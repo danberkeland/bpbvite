@@ -145,12 +145,13 @@ const Bpbn1 = ({ initialDateOption='today' }) => {
         onClick={exportBpbn1}
         //disabled={true}
       />
+      <div>Using v2 <a href="/Production/BPBNBaker1">Use current version</a></div>
 
       <DataTable 
         value={rusticData ?? []}
         size="small" 
         responsiveLayout="scroll"   
-        style={{marginBottom: "5rem"}}
+        style={{marginBottom: "5rem", marginTop: "1rem"}}
         className={dateOption === 'tomorrow' ? 'not-today' : ''}
       >
         <Column header="Product" field="forBake" />

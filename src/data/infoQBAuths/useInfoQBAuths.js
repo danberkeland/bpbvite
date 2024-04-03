@@ -6,7 +6,7 @@ import { DBInfoQBAuth } from "../types.d"
 
 const useInfoQBAuths = ({ shouldFetch }) => {
   
-  const { data, submitMutations, updateLocalData } 
+  const { data, submitMutations, updateLocalData, ...rest } 
     = useListData({ tableName: "InfoQBAuth", shouldFetch })
 
 
@@ -40,7 +40,7 @@ const useInfoQBAuths = ({ shouldFetch }) => {
   /**@type {DBInfoQBAuth[] | undefined} */
   const infoQbAuths = data
 
-  return { data:infoQbAuths }
+  return { data:infoQbAuths, submitMutations, updateLocalData, ...rest }
 
 }
 
