@@ -16,6 +16,7 @@ import { DoughInputs } from "./ComponentDoughInputs"
 import { Dialog } from "primereact/dialog"
 import { exportBpbn1Pdf } from "./exportBaker1"
 import { useDoughs } from "../../../data/dough/useDoughs"
+import { useCheckForUpdates } from "../../../core/checkForUpdates"
 
 
 /**
@@ -23,6 +24,9 @@ import { useDoughs } from "../../../data/dough/useDoughs"
  * @param {'today'|'tomorrow'} props.reportDay 
  */
 const Baker1 = ({ reportDay='today' }) => {
+
+  useCheckForUpdates()
+
   const todayDT = DT.today()
   const [reportDT, setReportDT] = useState(
     todayDT.plus({ days: (reportDay === 'today' ? 0 : 1) })

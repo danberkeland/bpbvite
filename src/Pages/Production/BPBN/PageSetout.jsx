@@ -6,10 +6,11 @@ import { Button } from "primereact/button"
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog"
-import { useEffect, useRef } from "react"
+import { useEffect, useMemo, useRef } from "react"
 import { useInfoQBAuths } from "../../../data/infoQBAuths/useInfoQBAuths"
 import { DateTime } from "luxon"
 import { exportSetout } from "./exportSetout"
+import { useCheckForUpdates } from "../../../core/checkForUpdates"
 
 /** @type {React.CSSProperties} */
 const greenChipStyle = {
@@ -58,7 +59,10 @@ const grayChipStyle = {
  * @param {'Prado' | 'Carlton'} props.reportLocation 
  */
 const Setout = ({ reportLocation }) => {
-  const reportDT = DT.today()
+
+  useCheckForUpdates()
+  
+  const reportDT = useMemo(() => DT.today() ,[])
 
   const { croix=[], other=[], almond=[], products={} } = useSetoutData({ reportDT })
 

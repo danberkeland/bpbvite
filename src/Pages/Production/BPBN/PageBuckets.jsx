@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react"
+import React, { useEffect, useMemo, useRef } from "react"
 import { DataTable } from "primereact/datatable"
 import { DT } from "../../../utils/dateTimeFns"
 
@@ -58,7 +58,10 @@ const debouncedUpdateDough = debounce(
 )
 
 const Buckets = () => {
-  const reportDT = DT.today()
+
+  useCheckForUpdates()
+
+  const reportDT = useMemo(() => DT.today(), [])
 
   const { submitMutations, updateLocalData } = useDoughs({ shouldFetch: true })
   const { 
@@ -80,8 +83,6 @@ const Buckets = () => {
       setBufferValues(doughList.map(row => row.buffer))
     }
   }, [doughList])
-
-  useCheckForUpdates()
   
   return (
     <div style={{width: "60rem", margin:"auto", padding: "2rem 5rem 5rem 5rem"}}>

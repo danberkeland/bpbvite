@@ -13,8 +13,12 @@ import { exportBaker2 } from "./exportBaker2"
 
 import { DT } from "../../../utils/dateTimeFns"
 import { keyBy } from "../../../utils/collectionFns"
+import { useCheckForUpdates } from "../../../core/checkForUpdates"
 
 const Baker2 = () => {
+
+  useCheckForUpdates()
+  
   const todayDT = DT.today()
   const [reportDT, setReportDT] = useState(todayDT)
   const isToday = reportDT.toMillis() === todayDT.toMillis()
