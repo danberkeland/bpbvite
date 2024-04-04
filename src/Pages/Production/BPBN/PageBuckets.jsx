@@ -59,7 +59,7 @@ const debouncedUpdateDough = debounce(
 
 const Buckets = () => {
 
-  useCheckForUpdates()
+  const checkForUpdatesCompleted = useCheckForUpdates()
 
   const reportDT = useMemo(() => DT.today(), [])
 
@@ -68,7 +68,7 @@ const Buckets = () => {
     doughList,
     products={},
     doughComponents:DCP=[],
-  } = useBucketsData({ reportDT, mixedWhere: 'Carlton' })
+  } = useBucketsData({ reportDT, mixedWhere: 'Carlton', shouldFetch: checkForUpdatesCompleted })
 
   const [showTable,      setShowTable]      = useState([])
   const [oldDoughValues, setOldDoughValues] = useState([])

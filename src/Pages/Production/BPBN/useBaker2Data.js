@@ -16,17 +16,16 @@ import { calculateSetoutCarlton } from "./dataSetout"
  * for the tomorrow/backup report.
  * @param {Object} input
  * @param {DateTime} input.reportDT
+ * @param {boolean} input.shouldFetch
  */
-export const useBaker2Data = ({ reportDT }) => {
+export const useBaker2Data = ({ reportDT, shouldFetch }) => {
   const [R0, R1] = [0, 1].map(daysAhead => reportDT.plus({ days: daysAhead }).toFormat('yyyy-MM-dd'))
 
-  const { data:T0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 0 }), useHolding: false, shouldFetch: true })
-  const { data:T1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: true, shouldFetch: true })
-  const { data:T2Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 2 }), useHolding: true, shouldFetch: true })
-  // const { data:T3Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 3 }), useHolding: true})
+  const { data:T0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 0 }), useHolding: false, shouldFetch })
+  const { data:T1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: true, shouldFetch })
+  const { data:T2Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 2 }), useHolding: true, shouldFetch })
   
-  //const { data:DGH } = useDoughs({ shouldFetch: true })
-  const { data:PRD } = useProducts({ shouldFetch: true})
+  const { data:PRD } = useProducts({ shouldFetch})
 
   // Shaped today => baked tomorrow; include holding orders
   const rusticShapeData = useMemo(
@@ -44,7 +43,7 @@ export const useBaker2Data = ({ reportDT }) => {
   // Setout today => bake tomorrow
   const croixSetoutData = useMemo(
     () => calculateSetoutCarlton(PRD, T1Orders),
-    [T1Orders, T2Orders, PRD, R1]
+    [T1Orders, PRD]
   )?.croix
 
   return {

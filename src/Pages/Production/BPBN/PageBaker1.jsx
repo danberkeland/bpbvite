@@ -25,7 +25,7 @@ import { useCheckForUpdates } from "../../../core/checkForUpdates"
  */
 const Baker1 = ({ reportDay='today' }) => {
 
-  useCheckForUpdates()
+  const checkForUpdatesCompleted = useCheckForUpdates()
 
   const todayDT = DT.today()
   const [reportDT, setReportDT] = useState(
@@ -50,7 +50,8 @@ const Baker1 = ({ reportDay='today' }) => {
     nBucketSetsToMake=null
   } = useBaker1Data({ 
     reportDT,
-    calculateFor: isToday ? 'today' : 'tomorrow'
+    calculateFor: isToday ? 'today' : 'tomorrow',
+    shouldFetch: checkForUpdatesCompleted,
   })
 
   const { data: DGH, submitMutations, updateLocalData } = useDoughs({ shouldFetch: true })

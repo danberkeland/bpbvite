@@ -5,12 +5,13 @@ import { useSetoutData } from "./useSetoutData"
 import { Button } from "primereact/button"
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
-import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog"
-import { useEffect, useMemo, useRef } from "react"
+import { ConfirmDialog } from "primereact/confirmdialog"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useInfoQBAuths } from "../../../data/infoQBAuths/useInfoQBAuths"
 import { DateTime } from "luxon"
 import { exportSetout } from "./exportSetout"
 import { useCheckForUpdates } from "../../../core/checkForUpdates"
+
 
 /** @type {React.CSSProperties} */
 const greenChipStyle = {
@@ -54,23 +55,30 @@ const grayChipStyle = {
 //   textAlign: "center"
 // }
 
+
 /**
  * @param {Object} props
  * @param {'Prado' | 'Carlton'} props.reportLocation 
  */
 const Setout = ({ reportLocation }) => {
 
-  useCheckForUpdates()
+  const checkForUpdatesCompleted = useCheckForUpdates()
   
   const reportDT = useMemo(() => DT.today() ,[])
 
-  const { croix=[], other=[], almond=[], products={} } = useSetoutData({ reportDT })
+  const { 
+    croix, 
+    other, 
+    almond, 
+    products={} 
+  } = useSetoutData({ reportDT, shouldFetch: checkForUpdatesCompleted })
 
   const INQB = useInfoQBAuths({ shouldFetch: true })
-
   const setoutRecord = INQB.data?.find(item => 
     item.id === (reportDT.toFormat('yyyy-MM-dd') + reportLocation + 'setoutTime')
   )
+
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false)
 
   // const afterSetoutOrders = !setoutRecord 
   //   ? []
@@ -101,16 +109,11 @@ const Setout = ({ reportLocation }) => {
 
   const msgDisplayed = useRef(false)
   useEffect(() => {
-    if (!!INQB.data && !msgDisplayed.current) {
-      confirmDialog({
-        message: "Click YES to confirm these setout numbers will be used.",
-        header: "Confirmation",
-        icon: "pi pi-exclamation-triangle",
-        accept: () => recordSetoutTime({ reportDate: reportDT.toFormat('yyyy-MM-dd'), reportLocation }),
-      })
+    if (!!INQB.data && !!croix && !msgDisplayed.current) {
+      setShowConfirmDialog(true)
       msgDisplayed.current = true
     }
-  }, [INQB.data])
+  }, [INQB.data, croix])
 
   return (
     <div style={{padding: "2rem 5rem 5rem 5rem", width: "50rem", margin: "auto" }}>
@@ -126,7 +129,7 @@ const Setout = ({ reportLocation }) => {
             other,
             almond
           })}
-          disabled={!INQB.data}
+          disabled={!INQB.data || !croix}
         />
         {!!setoutRecord 
           ? <div style={greenChipStyle}>Setout recorded at {DT.fromIsoTs(setoutRecord.updatedAt).toLocaleString(DateTime.TIME_SIMPLE)}</div>
@@ -138,7 +141,7 @@ const Setout = ({ reportLocation }) => {
 
       <h2>Set Out</h2>
       <DataTable 
-        value={croix}
+        value={croix ?? []}
         size="small"
         responsiveLayout="scroll"
       >
@@ -158,7 +161,7 @@ const Setout = ({ reportLocation }) => {
 
       <h2>Pastry Prep</h2>
       <DataTable 
-        value={other}
+        value={other ?? []}
         size="small"
         responsiveLayout="scroll"
       >
@@ -177,7 +180,7 @@ const Setout = ({ reportLocation }) => {
       {reportLocation === "Prado" && <>
         <h2>Almonds</h2>
         <DataTable 
-          value={almond} 
+          value={almond ?? []} 
           size="small"
           responsiveLayout="scroll"  
         >
@@ -194,7 +197,14 @@ const Setout = ({ reportLocation }) => {
         </DataTable>
       </>}
       
-      <ConfirmDialog />
+      <ConfirmDialog 
+        visible={showConfirmDialog}
+        onHide={() => setShowConfirmDialog(false)}
+        message="Click YES to confirm these setout numbers will be used."
+        header="Confirmation"
+        icon="pi pi-exclamation-triangle"
+        accept={() => recordSetoutTime({ reportDate: reportDT.toFormat('yyyy-MM-dd'), reportLocation })}
+      />
     </div>
 
   )

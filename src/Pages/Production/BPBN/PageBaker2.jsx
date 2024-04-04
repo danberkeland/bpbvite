@@ -17,13 +17,13 @@ import { useCheckForUpdates } from "../../../core/checkForUpdates"
 
 const Baker2 = () => {
 
-  useCheckForUpdates()
+  const checkForUpdatesCompleted = useCheckForUpdates()
   
   const todayDT = DT.today()
   const [reportDT, setReportDT] = useState(todayDT)
   const isToday = reportDT.toMillis() === todayDT.toMillis()
 
-  const { rusticShapeData, otherPrepData, croixSetoutData } = useBaker2Data({ reportDT })
+  const { rusticShapeData, otherPrepData, croixSetoutData } = useBaker2Data({ reportDT, shouldFetch: checkForUpdatesCompleted })
   const { data:PRD=[], submitMutations, updateLocalData } = useProducts({ shouldFetch: true })
   const products = keyBy(PRD, P => P.prodNick)
 

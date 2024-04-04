@@ -17,8 +17,9 @@ import { DateTime } from "luxon"
  * @param {Object} input
  * @param {DateTime} input.reportDT
  * @param {'today' | 'tomorrow'} input.calculateFor today => use preshaped & bucketSets; tomorrow => use prepreshaped & preBucketSets
+ * @param {boolean} input.shouldFetch
  */
-export const useBaker1Data = ({ reportDT, calculateFor }) => {
+export const useBaker1Data = ({ reportDT, calculateFor, shouldFetch }) => {
   const [R0, R1, R2] = [0, 1, 2].map(daysAhead => reportDT.plus({ days: daysAhead }).toFormat('yyyy-MM-dd'))
   const preshapeType = calculateFor === 'today'
     ? 'preshape'
@@ -28,13 +29,13 @@ export const useBaker1Data = ({ reportDT, calculateFor }) => {
     ? 'bucketSets'
     : 'preBucketSets'
 
-  const { data:T0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 0 }), useHolding: false, shouldFetch: true })
-  const { data:T1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: true,  shouldFetch: true })
-  const { data:T2Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 2 }), useHolding: true,  shouldFetch: true })
-  const { data:T3Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 3 }), useHolding: true,  shouldFetch: true })
+  const { data:T0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 0 }), useHolding: false, shouldFetch })
+  const { data:T1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: true,  shouldFetch })
+  const { data:T2Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 2 }), useHolding: true,  shouldFetch })
+  const { data:T3Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 3 }), useHolding: true,  shouldFetch })
   
-  const { data:DGH } = useDoughs({ shouldFetch: true })
-  const { data:PRD } = useProducts({ shouldFetch: true })
+  const { data:DGH } = useDoughs({ shouldFetch })
+  const { data:PRD } = useProducts({ shouldFetch })
 
   const rusticData = useMemo(
     () => calculateRustics(T0Orders, T1Orders, PRD, R0, preshapeType), 
@@ -50,7 +51,7 @@ export const useBaker1Data = ({ reportDT, calculateFor }) => {
 
   const { baguetteData, baguetteSummary, mixSummary, bins, pans, buckets, nBucketSetsToMake } = useMemo(
     () => calculateBaguetteSummary(T0Orders, T1Orders, T2Orders, T3Orders, DGH, PRD, R0, R1, R2, bucketSetType), 
-    [T0Orders, T1Orders, T2Orders, T3Orders, DGH, PRD, R0, R1, R2]
+    [T0Orders, T1Orders, T2Orders, T3Orders, DGH, PRD, R0, R1, R2, bucketSetType]
   )
 
   return {
