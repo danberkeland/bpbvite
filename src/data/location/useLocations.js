@@ -2,7 +2,7 @@ import useSWR from "swr"
 import gqlFetcher from "../_fetchers.js"
 import { defaultSwrOptions } from "../_constants.js"
 import { getLocation } from "../../graphqlCustom/queries/_getQueries.js"
-import { useListData } from "../_listData.js"
+import { ListDataCache, useListData } from "../_listData.js"
 import { DBLocation } from "../types.d.js"
 import { GraphQLResult } from '@aws-amplify/api-graphql'
 
@@ -45,21 +45,10 @@ type DBLocationAttribute =
  * @param {Object} input
  * @param {boolean} input.shouldFetch 
  * @param {DBLocationAttribute[]} input.projection
+ * @returns {ListDataCache<DBLocation>}
  */
-const useLocations = ({ shouldFetch, projection }: { shouldFetch:boolean, projection?:DBLocationAttribute[] }) => {
-    const { data, ...otherCacheItems} = 
-      useListData({ 
-        tableName: "Location", 
-        shouldFetch,
-        projection
-      })
-
-  /**@type {DBLocation[] | undefined} */
-  const locations:DBLocation[]|undefined = data
-
-  return { data: locations, ...otherCacheItems}
-  
-}
+const useLocations = ({ shouldFetch, projection }) => 
+  useListData({ tableName: "Location", shouldFetch, projection })
 
 
 /**

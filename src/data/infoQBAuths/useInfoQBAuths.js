@@ -1,9 +1,14 @@
 import { DateTime } from "luxon"
-import { useListData } from "../_listData"
+import { ListDataCache, useListData } from "../_listData"
 import { DT } from "../../utils/dateTimeFns"
 import { DBInfoQBAuth } from "../types.d"
 
-
+/**
+ * Has built-in cleanup routine
+ * @param {Object} input
+ * @param {boolean} input.shouldFetch 
+ * @returns {ListDataCache<DBInfoQBAuth>}
+ */
 const useInfoQBAuths = ({ shouldFetch }) => {
   
   const { data, submitMutations, updateLocalData, ...rest } 

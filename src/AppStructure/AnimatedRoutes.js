@@ -240,9 +240,9 @@ function AnimatedRoutes({ user, signOut }) {
             <Route path="/Production/WhoBake"    element={<WhoBake />} />
             <Route path="/Production/WhoShape"   element={<WhoShape />} />
 
-            <Route path="/Production/BPBNBuckets/v1"    element={<BPBNBuckets loc={"Carlton"} />} />
+            <Route path="/Production/BPBNBuckets/v1" element={<BPBNBuckets loc={"Carlton"} />} />
             <Route path="/Production/BPBNBuckets/v2" element={<BPBNBucketsV2 />} />
-            <Route path="/Production/BPBNBuckets" element={<BPBNBucketsV2 />} />
+            <Route path="/Production/BPBNBuckets"    element={<BPBNBucketsV2 />} />
             
             <Route path="/Production/BPBNBuckets/v2" element={<BpbnBuckets />} />
             <Route path="/Production/BPBSBuckets"    element={<BPBNBuckets loc={"Prado"} />} />
@@ -253,7 +253,7 @@ function AnimatedRoutes({ user, signOut }) {
             <Route path="/Production/BPBSSetOut"    element={<BPBSSetout />} />
             {/* <Route path="/Production/BPBSSetOut/v1" element={<SetOutV1 loc={"Prado"} />} /> */}
             <Route path="/Production/BPBSSetOut/v2" element={<BPBSSetout />} />
-            <Route path="/Production/BPBNSetOut/v3"  element={<SetoutV3 reportLocation="Carlton" />} />
+            <Route path="/Production/BPBNSetOut/v3" element={<SetoutV3 reportLocation="Carlton" />} />
 
             <Route path="/Production/BPBSWhatToMake"    element={<BPBSWhatToMake />} />
             <Route path="/Production/BPBSWhatToMake/v3" element={<WhatToMakeV3 />} />

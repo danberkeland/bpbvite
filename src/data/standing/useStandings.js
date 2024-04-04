@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { useListData } from "../_listData.js"
+import { ListDataCache, useListData } from "../_listData.js"
 import { compareBy, groupByArray } from "../../utils/collectionFns.js"
 
 /**@typedef {import('../types.d.js').DBStanding} DBStanding*/ 
@@ -10,6 +10,7 @@ import { compareBy, groupByArray } from "../../utils/collectionFns.js"
  * @param {boolean} input.shouldFetch
  * @param {'standingByDayOfWeek'|'standingByLocByDayOfWeek'} [input.customQuery]
  * @param {Object} [input.variables]
+ * @returns {ListDataCache<DBStanding> & { dupes:DBStanding[] | undefined}}
  */
 const useStandingsGeneric = ({shouldFetch, customQuery, variables}) => {
 
@@ -48,7 +49,7 @@ const useStandingsGeneric = ({shouldFetch, customQuery, variables}) => {
   
    return { 
     ...useMemo(calculateValue, [cacheData]),
-    otherCacheItems 
+    ...otherCacheItems 
   }
 
 }

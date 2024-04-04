@@ -13,7 +13,7 @@ import { DBOrder } from "../types.d.js"
  * @param {boolean} input.shouldFetch
  * @param {'orderByDelivDate'|'orderByLocByDelivDate'} [input.customQuery]
  * @param {Object} [input.variables]
- * @returns {ListDataCache & { dupes: DBOrder[] | undefined }}
+ * @returns {ListDataCache<DBOrder> & { dupes: DBOrder[] | undefined }}
  */
 const useOrdersGeneric = ({ shouldFetch, customQuery, variables }) => {
 
@@ -70,7 +70,7 @@ const useOrdersGeneric = ({ shouldFetch, customQuery, variables }) => {
 
 /**
  * @param {Object} input
- * @param {boolean} input.shouldFetch 
+ * @param {boolean} input.shouldFetch
  */
 const useOrders = ({ shouldFetch }) => useOrdersGeneric({ shouldFetch })
 
