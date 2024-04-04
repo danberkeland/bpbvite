@@ -12942,6 +12942,9 @@ export const createLocationProductOverride = /* GraphQL */ `
       readyTime
       daysAvailable
       wholePrice
+      latestFirstDeliv
+      latestFinalDeliv
+      zoneNick
       createdAt
       updatedAt
     }
@@ -12961,6 +12964,9 @@ export const updateLocationProductOverride = /* GraphQL */ `
       readyTime
       daysAvailable
       wholePrice
+      latestFirstDeliv
+      latestFinalDeliv
+      zoneNick
       createdAt
       updatedAt
     }
@@ -12980,6 +12986,9 @@ export const deleteLocationProductOverride = /* GraphQL */ `
       readyTime
       daysAvailable
       wholePrice
+      latestFirstDeliv
+      latestFinalDeliv
+      zoneNick
       createdAt
       updatedAt
     }
