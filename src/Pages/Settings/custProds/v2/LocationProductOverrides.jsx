@@ -16,7 +16,16 @@ import { sortBy } from "lodash"
 // import { useOverrideSyncData } from "./data/dataSyncing"
 
 const overrideAttributes = 
-  ['defaultInclude', 'leadTime', 'readyTime', 'daysAvailable', 'wholePrice']
+  [
+    'defaultInclude', 
+    'leadTime', 
+    'readyTime', 
+    'daysAvailable', 
+    'wholePrice',
+    'latestFirstDeliv',
+    'latestFinalDeliv',
+    'zoneNick',
+  ]
 
 const LocationProductOverrides = () => {
 
@@ -166,8 +175,7 @@ const LocationProductOverrides = () => {
                         overrideAttributes.every(att => submitData[att] === null) 
                           ? [{ id }] 
                           : []
-                      const updateInputs 
-                        = !!id && overrideAttributes.some(att => submitData[att] !== null) 
+                      const updateInputs = !!id && overrideAttributes.some(att => submitData[att] !== null) 
                           ? [{ id, ...submitData }] 
                           : []
 
@@ -214,7 +222,7 @@ const LocationProductOverrides = () => {
           }} 
         />
         <Column header="location"
-          style={{flex: "0 0 14rem"}}
+          style={{flex: "1 0 14rem"}}
           body={(row, opts) => opts.rowIndex === editingIdx
             ? locNick === null && row.locNick === null
               ? locNickInput({ 
@@ -228,7 +236,7 @@ const LocationProductOverrides = () => {
           }      
         />
         <Column header="product"
-          style={{flex: "0 0 10rem"}}
+          style={{flex: "1 0 10rem"}}
           body={(row, opts) => opts.rowIndex === editingIdx
             ? prodNick === null && row.prodNick === null
               ? prodNickInput({ 
@@ -241,7 +249,8 @@ const LocationProductOverrides = () => {
             : row.prodNick
           }      
         />
-        <Column header="Allowed?"
+        <Column header="defaultInclude"
+          style={{flex: "1 0 8.5rem"}}
           body={(row, opts) => opts.rowIndex === editingIdx 
             ? defaultIncludeInput({ 
                 data: editingRow, 
@@ -251,7 +260,7 @@ const LocationProductOverrides = () => {
             : JSON.stringify(row.defaultInclude ?? undefined)}
         />
         <Column header="leadTime" 
-          style={{flex: "0 0 6.5rem"}}
+          style={{flex: "1 0 7rem"}}
           body={(row, opts) => opts.rowIndex === editingIdx 
             ? intInput({
                 value: editingRow.leadTime,
@@ -262,7 +271,7 @@ const LocationProductOverrides = () => {
             : JSON.stringify(row.leadTime ?? undefined)}
         />
         <Column header="readyTime" 
-          style={{flex: "0 0 6.5rem"}}
+          style={{flex: "1 0 7rem"}}
           body={(row, opts) => opts.rowIndex === editingIdx 
             ? floatInput({
                 value: editingRow.readyTime,
@@ -274,7 +283,7 @@ const LocationProductOverrides = () => {
           }
         />
         <Column header="daysAvailable" 
-          style={{flex: "1 0 12rem"}}
+          style={{flex: "1 0 21rem"}}
           body={(row, opts) => opts.rowIndex === editingIdx 
             ? daysAvailableInput({
                 data: editingRow, 
@@ -285,7 +294,7 @@ const LocationProductOverrides = () => {
           }        
         />
         <Column header="wholePrice" 
-          style={{flex: "0 0 6.5rem"}}
+          style={{flex: "1 0 7rem"}}
           body={(row, opts) => opts.rowIndex === editingIdx 
             ? floatInput({
               value: editingRow.wholePrice,
@@ -294,6 +303,28 @@ const LocationProductOverrides = () => {
               disabled: !editingRow.locNick || !editingRow.prodNick
             })
             : JSON.stringify(row.wholePrice ?? undefined)}
+        />
+        <Column header="latestFirstDeliv" 
+          style={{flex: "1 0 9rem"}}
+          body={(row, opts) => opts.rowIndex === editingIdx 
+            ? floatInput({
+              value: editingRow.latestFirstDeliv,
+              onChange: e => setEditingRow({ ...editingRow, latestFirstDeliv: e.value }),
+              max: 23.99,
+              disabled: !editingRow.locNick || !editingRow.prodNick
+            })
+            : JSON.stringify(row.latestFirstDeliv ?? undefined)}
+        />
+        <Column header="latestFinalDeliv" 
+          style={{flex: "1 0 9rem"}}
+          body={(row, opts) => opts.rowIndex === editingIdx 
+            ? floatInput({
+              value: editingRow.latestFinalDeliv,
+              onChange: e => setEditingRow({ ...editingRow, latestFinalDeliv: e.value }),
+              max: 23.99,
+              disabled: !editingRow.locNick || !editingRow.prodNick
+            })
+            : JSON.stringify(row.latestFinalDeliv ?? undefined)}
         />
       </DataTable>
 
