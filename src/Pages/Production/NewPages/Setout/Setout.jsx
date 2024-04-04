@@ -68,7 +68,12 @@ const SetoutByLocation = ({ reportLocation }) => {
           //   productCache 
           // })
         }}
+        style={{marginBottom: "1rem"}}
       />
+
+      {reportLocation === 'Carlton' &&
+        <div>Using v2 <a href="/Production/BPBNSetOut">Go to current version</a></div>
+      }
       
       <h2>Set Out</h2>
       <DataTable 

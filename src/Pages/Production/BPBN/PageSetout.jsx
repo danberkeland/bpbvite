@@ -116,7 +116,7 @@ const Setout = ({ reportLocation }) => {
     <div style={{padding: "2rem 5rem 5rem 5rem", width: "50rem", margin: "auto" }}>
       <h1>{reportLocation} Pastry Prep {reportDT.toFormat('M/d/yyyy')}</h1>
 
-      <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+      <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem"}}>
         <Button 
           label="Print Carlton Setout List" 
           onClick={() => exportSetout({
@@ -134,6 +134,7 @@ const Setout = ({ reportLocation }) => {
         }
       </div>
       {/* {!!afterSetoutOrders.length && <div style={yellowChipStyle}>After-setout changes detected</div>} */}
+      <div>Using v3 <a href="/Production/BPBNSetOut/v2">Go to previous version</a></div>
 
       <h2>Set Out</h2>
       <DataTable 
