@@ -34,8 +34,8 @@ import { default as BPBNBucketsV2 } from "../Pages/Production/BPBN/PageBuckets";
 
 
 import OrdersPage from "../Pages/Ordering/v2/Ordering"; // group with lazy loaders while in testing
-import WhoBake from "../Pages/Production/WhoBake";
-import WhoShape from "../Pages/Production/WhoShape";
+// import WhoBake from "../Pages/Production/WhoBake";
+// import WhoShape from "../Pages/Production/WhoShape";
 import Production from "../Pages/Production/Production";
 import ProductsV1 from "../Pages/Products/Products";
 import { default as BillingV1} from "../Pages/Billing/Billing";
@@ -237,8 +237,8 @@ function AnimatedRoutes({ user, signOut }) {
             {/* <Route path="/Production/BPBNBaker2/v1" element={<BPBNBaker2 />} /> */}
 
             <Route path="/Production/Production" element={<Production />} />
-            <Route path="/Production/WhoBake"    element={<WhoBake />} />
-            <Route path="/Production/WhoShape"   element={<WhoShape />} />
+            {/* <Route path="/Production/WhoBake"    element={<WhoBake />} /> */}
+            {/* <Route path="/Production/WhoShape"   element={<WhoShape />} /> */}
 
             <Route path="/Production/BPBNBuckets/v1" element={<BPBNBuckets loc={"Carlton"} />} />
             <Route path="/Production/BPBNBuckets/v2" element={<BPBNBucketsV2 />} />
