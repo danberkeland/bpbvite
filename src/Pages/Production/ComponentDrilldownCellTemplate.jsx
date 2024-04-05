@@ -7,19 +7,21 @@ import { Dialog } from "primereact/dialog"
 import { formatHours } from "../../utils/dateAndTime/formatHours"
 import { round, sumBy, truncate } from "lodash"
 import { compareBy } from "../../utils/collectionFns"
+import { CombinedRoutedOrder } from "../../data/production/useProductionData"
 
 
 /**
- * 
+ * Meant spicifically for drilling down to routed orders
  * @param {Object} input
- * @param {any} [input.dialogHeader]
+ * @param {import("primereact/dialog").DialogTemplateType} [input.dialogHeader]
+ * @param {import("primereact/dialog").DialogTemplateType} [input.dialogFooter]
  * @param {string|number|null} input.cellValue
- * @param {Object[]} input.tableData
- * @param {Object} input.products 
- * @returns 
+ * @param {CombinedRoutedOrder[]} input.tableData
+ * @param {Object} input.products  
  */
 export const DrilldownCellTemplate = ({ 
   dialogHeader,
+  dialogFooter,
   cellValue, 
   tableData, 
   products 
@@ -48,6 +50,7 @@ export const DrilldownCellTemplate = ({
         visible={show}
         onHide={() => setShow(false)}
         header={dialogHeader}
+        footer={dialogFooter}
         headerStyle={{gap: "1rem"}}
       >
         <DataTable
