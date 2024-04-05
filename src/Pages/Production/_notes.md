@@ -1,8 +1,8 @@
-# BPBN Directory
+# Production Directory
 
 
 ## Files in This Directory
-File names that include "BPBN" or "BPBS" are applicable to that location.
+File names that include "BPBN" or "BPBS" apply just to that location.
 File names without either can be used for production reports at both locations.
 
 ### .jsx Files
