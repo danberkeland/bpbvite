@@ -16,7 +16,7 @@ import { useCheckForUpdates } from "../../../core/checkForUpdates"
 /** @type {React.CSSProperties} */
 const greenChipStyle = {
   width: "fit-content",
-  marginTop: ".5rem",
+  // marginTop: ".5rem",
   padding: ".2rem 1rem .2rem 1rem",
   borderRadius: "1rem",
   color: "var(--bpb-text-color)",
@@ -29,7 +29,7 @@ const greenChipStyle = {
 /** @type {React.CSSProperties} */
 const grayChipStyle = {
   width: "fit-content",
-  marginTop: ".5rem",
+  // marginTop: ".5rem",
   padding: ".2rem 1rem .2rem 1rem",
   borderRadius: "1rem",
   color: "var(--bpb-text-color)",
@@ -131,10 +131,8 @@ const Setout = ({ reportLocation }) => {
           })}
           disabled={!INQB.data || !croix}
         />
-        {!!setoutRecord 
-          ? <div style={greenChipStyle}>Setout recorded at {DT.fromIsoTs(setoutRecord.updatedAt).toLocaleString(DateTime.TIME_SIMPLE)}</div>
-          : <div style={grayChipStyle}>Setout not yet recorded for today</div>
-        }
+        {!!setoutRecord && <div style={greenChipStyle}>Setout recorded at {DT.fromIsoTs(setoutRecord.updatedAt).toLocaleString(DateTime.TIME_SIMPLE)}</div>}
+        {!!INQB.data && !setoutRecord && <div style={grayChipStyle}>Setout not yet recorded for today</div>}
       </div>
       {/* {!!afterSetoutOrders.length && <div style={yellowChipStyle}>After-setout changes detected</div>} */}
       <div>Using v3 <a href="/Production/BPBNSetOut/v2">Go to previous version</a></div>
