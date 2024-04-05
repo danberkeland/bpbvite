@@ -3,7 +3,7 @@ import TopNav from "./TopNav";
 import { NavSide } from "./Nav";
 import { AnimatePresence } from "framer-motion";
 import { useSettingsStore } from "../Contexts/SettingsZustand";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom"; 
 
 // import Ordering from "../Pages/Ordering/Ordering";
 import { CustomerProducts } from "../Pages/CustomerProducts/CustomerProducts";
@@ -25,18 +25,18 @@ import CustomerSettings from "../Pages/CustomerSettings/CustomerSettings";
 // import { default as SetOutV1 } from "../Pages/Production/BPBNSetout";
 
 // Load simultaneously:
-import{ default as SetoutV3 } from "../Pages/Production/BPBN/PageSetout";
+import{ default as SetoutV3 } from "../Pages/Production/PageSetout";
 
-import BPBNBuckets from "../Pages/Production/BPBNBuckets";
-import Baker1 from "../Pages/Production/BPBN/PageBaker1";
-import Baker2 from "../Pages/Production/BPBN/PageBaker2";
-import { default as BPBNBucketsV2 } from "../Pages/Production/BPBN/PageBuckets";
+import BPBNBuckets from "../Pages/Production/Legacy/BPBNBuckets";
+import Baker1 from "../Pages/Production/PageBPBNBaker1";
+import Baker2 from "../Pages/Production/PageBPBNBaker2";
+import { default as BPBNBucketsV2 } from "../Pages/Production/PageBPBNBuckets";
 
 
 import OrdersPage from "../Pages/Ordering/v2/Ordering"; // group with lazy loaders while in testing
 // import WhoBake from "../Pages/Production/WhoBake";
 // import WhoShape from "../Pages/Production/WhoShape";
-import Production from "../Pages/Production/Production";
+import Production from "../Pages/Production/PageProduction";
 import ProductsV1 from "../Pages/Products/Products";
 import { default as BillingV1} from "../Pages/Billing/Billing";
 import BillingV2 from "../Pages/Billing/v2/Billing";
@@ -50,15 +50,15 @@ import ManageTraining from "../Pages/Settings/ManageTraining/ManageTraining";
 import { default as CustProds } from "../Pages/Settings/custProds/custProds";
 import LocationProductOverrides from "../Pages/Settings/custProds/v2/LocationProductOverrides";
 
-import { default as BPBSWhatToMakeV1 } from "../Pages/Production/BPBSWhatToMake";
-import BPBSWhatToMakeBackup from "../Pages/Production/BPBSWhatToMakeBackup";
+import { default as BPBSWhatToMakeV1 } from "../Pages/Production/Legacy/BPBSWhatToMake";
+import BPBSWhatToMakeBackup from "../Pages/Production/Legacy/BPBSWhatToMakeBackup";
 import BPBSWhatToMake from "../Pages/Production/NewPages/BPBS/WhatToMake/WhatToMake";
-import { default as WhatToMakeV3 } from "../Pages/Production/BPBS/PageWhatToMake";
+import { default as WhatToMakeV3 } from "../Pages/Production/PageBPBSWhatToMake";
 
 
-import BPBSMixPocket from "../Pages/Production/BPBSMixPocket";
-import CroixCountV1 from "../Pages/Production/CroixCount";
-import CroixToMake from "../Pages/Production/CroixToMake";
+import BPBSMixPocket from "../Pages/Production/Legacy/BPBSMixPocket";
+import CroixCountV1 from "../Pages/Production/Legacy/CroixCount";
+import CroixToMake from "../Pages/Production/Legacy/CroixToMake";
 import ByProduct from "../Pages/Logistics/ByProduct/ByProduct";
 import NorthList from "../Pages/Logistics/NorthLists";
 import NorthListV2 from "../Pages/Logistics/NorthLists/v2/NorthLists"
