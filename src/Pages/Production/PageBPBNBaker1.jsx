@@ -56,13 +56,14 @@ const Baker1 = ({ reportDay='today' }) => {
 
   const { data: DGH, submitMutations, updateLocalData } = useDoughs({ shouldFetch: true })
 
-  const generatePdf   = async () => {
+  const handlePrint = async () => {
     if (!DGH || !nBucketSetsToMake) {
       console.error('Data not Loaded for export')
       return
     }
 
     exportBpbn1Pdf({
+      reportDT,
       rusticData: rusticData.filter(row => row.qty !== 0),
       doobieStuff,
       otherPrepData,
@@ -70,10 +71,7 @@ const Baker1 = ({ reportDay='today' }) => {
       bins,
       pans,
       buckets,
-      displayDate: reportDT.toFormat('M/d/yyyy'),
-      filename: `BPBN_Baker1_${reportDT.toFormat('yyyy-MM-dd')}.pdf`,
     })
-    console.log("nBucketSetsToMake", nBucketSetsToMake)
 
     const updateInput = {
       id: DGH.find(D => D.doughName === 'Baguette')?.id,
@@ -109,7 +107,7 @@ const Baker1 = ({ reportDay='today' }) => {
 
       <Button label="Print AM Bake List" 
         icon="pi pi-print"
-        onClick={generatePdf}
+        onClick={handlePrint}
         disabled={!DGH || !nBucketSetsToMake}
         style={{marginBottom: "1rem"}} 
       />

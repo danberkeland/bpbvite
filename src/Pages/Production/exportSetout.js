@@ -1,6 +1,23 @@
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
+const croixColumns = [
+  { header: "Frozen Croissants", dataKey: "setoutKey" },
+  { header: "Qty", dataKey: "total" },
+  { header: "Pans", dataKey: "pans" },
+  { header: "+", dataKey: "remainder" },
+]
+
+const otherColumns = [
+  { header: "Pastry Prep", dataKey: "rowKey" },
+  { header: "Qty", dataKey: "total" },
+]
+
+const almondColumns = [
+  { header: "Almond Prep", dataKey: "rowKey" },
+  { header: "Qty", dataKey: "total" },
+]
+
 export const exportSetout = ({ 
   reportLocation, 
   reportDT,
@@ -8,64 +25,34 @@ export const exportSetout = ({
   other,
   almond,
 }) => {
-
-  const pageMargin = 60
-  const tableToNextTitle = 12
-  const titleToNextTable = tableToNextTitle + 4
-  const tableFont = 11
-  const titleFont = 14
+  const pageMargin = 58
 
   const doc = new jsPDF("portrait", "mm", "letter")
-  doc.setFontSize(20)
-  doc.text(`${reportLocation} Pastry Prep ${reportDT.toFormat('M/d/yyyy')}`, pageMargin, 20)
-
   let finalY = 20
 
-  doc.setFontSize(titleFont);
-  doc.text('Set Out', pageMargin, finalY + tableToNextTitle);
-  doc.autoTable({
-    body: croix,
-    margin: pageMargin,
-    columns: [
-      { header: "Frozen Croissants", dataKey: "setoutKey" },
-      { header: "Qty", dataKey: "total" },
-      { header: "Pans", dataKey: "pans" },
-      { header: "+", dataKey: "remainder" },
-    ],
-    startY: finalY + titleToNextTable,
-    styles: { fontSize: tableFont },
-    theme: "grid",
-    headStyles: { fillColor: "#dddddd", textColor: "#111111" },
-  });
-
-  finalY = doc.previousAutoTable.finalY;
-  doc.autoTable({
-    body: other,
-    margin: pageMargin,
-    columns: [
-      { header: "Pastry Prep", dataKey: "rowKey" },
-      { header: "Qty", dataKey: "total" },
-    ],
-    startY: finalY + titleToNextTable,
-    styles: { fontSize: tableFont },
-    theme: "grid",
-    headStyles: { fillColor: "#dddddd", textColor: "#111111" },
-  });
-
-  if (!!almond?.length) {
-    finalY = doc.previousAutoTable.finalY;
+  const renderTable = (body, columns) => {
     doc.autoTable({
-      body: almond,
-      margin: pageMargin,
-      columns: [
-        { header: "Almond Prep", dataKey: "rowKey" },
-        { header: "Qty", dataKey: "total" },
-      ],
-      startY: finalY + titleToNextTable,
-      styles: { fontSize: tableFont },
+      body,
+      columns,
       theme: "grid",
-      headStyles: { fillColor: "#dddddd", textColor: "#111111" },
-    });
+      headStyles: { textColor: "#111111", fillColor: "#dddddd" },
+      styles: { fontSize: 11 },
+      margin: pageMargin,
+      startY: finalY + 16,
+    })
+    finalY = doc.previousAutoTable.finalY
+  }
+
+  doc.setFontSize(20)
+  doc.text(`${reportLocation} Pastry Prep ${reportDT.toFormat('MM/dd/yyyy')}`, pageMargin, 20)
+
+  doc.setFontSize(14);
+  doc.text('Set Out', pageMargin, finalY + 12);
+
+  renderTable(croix, croixColumns)
+  renderTable(other, otherColumns)
+  if (!!almond) {
+    renderTable(almond, almondColumns)
   }
 
   doc.save(`Setout_${reportLocation}_${reportDT.toFormat('yyyy-MM-dd')}.pdf`)

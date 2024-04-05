@@ -1,13 +1,6 @@
 import jsPDF from "jspdf"
 import "jspdf-autotable"
 
-let finalY
-let pageMargin = 20
-let tableToNextTitle = 12
-let titleToNextTable = tableToNextTitle + 4
-let tableFont = 11
-let titleFont = 14
-
 const rusticColumns = [
   { header: "Product",    dataKey: "forBake" },
   { header: "Qty",        dataKey: "qty" },
@@ -33,21 +26,8 @@ const baguetteColumns = [
   { header: "Amount", dataKey: "amount" },
 ]
 
-const buildTable = (title, doc, body, col) => {
-  doc.setFontSize(titleFont);
-  doc.text(pageMargin, finalY + tableToNextTitle, title);
-  doc.autoTable({
-    theme: "grid",
-    headStyles: {fillColor: "#dddddd", textColor: "#111111"},
-    body: body,
-    margin: pageMargin,
-    columns: col,
-    startY: finalY + titleToNextTable,
-    styles: { fontSize: tableFont },
-  })
-}
-
 export const exportBpbn1Pdf = ({ 
+  reportDT,
   rusticData,
   doobieStuff,
   otherPrepData,
@@ -55,23 +35,32 @@ export const exportBpbn1Pdf = ({
   bins,
   pans,
   buckets,
-  displayDate,
-  filename,
 }) => {
+  const margin = 20
+  
   const doc = new jsPDF("portrait", "mm", "letter")
+  let finalY = 20
+  const renderTable = (title, body, columns) => {
+    doc.setFontSize(14);
+    doc.text(title, margin, finalY + 12);
+    doc.autoTable({
+      columns,
+      body,
+      theme: "grid",
+      headStyles: {fillColor: "#dddddd", textColor: "#111111"},
+      margin,
+      startY: finalY + 16,
+      styles: { fontSize: 11 },
+    })
+    finalY = doc.previousAutoTable.finalY + 12
+  }
+  
   doc.setFontSize(20)
-  doc.text(pageMargin, 20, `What To Bake ${displayDate}`)
+  doc.text(`What To Bake ${reportDT.toFormat('MM/dd/yyyy')}`, margin, 20)
 
-  finalY = 20
-
-  buildTable(`Bake List`, doc, rusticData, rusticColumns)
-  finalY = doc.previousAutoTable.finalY + tableToNextTitle
-
-  buildTable(`Doobie Stuff`, doc, doobieStuff, doobieColumns)
-  finalY = doc.previousAutoTable.finalY + tableToNextTitle
-
-  buildTable(`Prep List`, doc, otherPrepData, otherPrepColumns)
-  finalY = doc.previousAutoTable.finalY + tableToNextTitle
+  renderTable(`Bake List`,    rusticData,    rusticColumns)
+  renderTable(`Doobie Stuff`, doobieStuff,   doobieColumns)
+  renderTable(`Prep List`,    otherPrepData, otherPrepColumns)
 
   doc.addPage()
   finalY = 20
@@ -81,30 +70,16 @@ export const exportBpbn1Pdf = ({
       doc.addPage()
       finalY = 20
     }
-    buildTable(
-      `Baguette Mix #${mix.mixNumber}`, 
-      doc, 
-      mix.components, 
-      baguetteColumns
-    )
-    finalY = doc.previousAutoTable.finalY + tableToNextTitle
-
+    renderTable(`Baguette Mix #${mix.mixNumber}`, mix.components, baguetteColumns)
   })
 
   doc.addPage()
   finalY = 20
 
-  buildTable(`Bins`, doc, bins, baguetteColumns)
-  finalY = doc.previousAutoTable.finalY + tableToNextTitle
+  renderTable(`Bins`,        bins,    baguetteColumns)
+  renderTable(`Pocket Pans`, pans,    baguetteColumns)
+  renderTable(`Bucket Sets`, buckets, baguetteColumns)
 
-  buildTable(`Pocket Pans`, doc, pans, baguetteColumns)
-  finalY = doc.previousAutoTable.finalY + tableToNextTitle
-
-  buildTable(`Bucket Sets`, doc, buckets, baguetteColumns)
-  finalY = doc.previousAutoTable.finalY + tableToNextTitle
-
-  doc.save(filename)
+  doc.save(`BPBN_Baker1_${reportDT.toFormat('yyyy-MM-dd')}.pdf`)
 
 }
-
-
