@@ -138,7 +138,7 @@ const WhatToMake = ({ reportDay='today' }) => {
         style={{ marginBottom: "1rem" }} 
       />
 
-      <div>Using v3 Go to previous version</div>      
+      <div>Using v3 (Testing) <a href="/Production/BPBSWhatToMake">Go back to v2</a></div>      
 
       <h2 onClick={() => console.log(frenchPocketData)}>Pocket Count</h2>
       <DataTable 

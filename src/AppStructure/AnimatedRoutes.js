@@ -50,8 +50,8 @@ import ManageTraining from "../Pages/Settings/ManageTraining/ManageTraining";
 import { default as CustProds } from "../Pages/Settings/custProds/custProds";
 import LocationProductOverrides from "../Pages/Settings/custProds/v2/LocationProductOverrides";
 
-import { default as BPBSWhatToMakeV1 } from "../Pages/Production/Legacy/BPBSWhatToMake";
-import BPBSWhatToMakeBackup from "../Pages/Production/Legacy/BPBSWhatToMakeBackup";
+// import { default as BPBSWhatToMakeV1 } from "../Pages/Production/Legacy/BPBSWhatToMake";
+// import BPBSWhatToMakeBackup from "../Pages/Production/Legacy/BPBSWhatToMakeBackup";
 import BPBSWhatToMake from "../Pages/Production/NewPages/BPBS/WhatToMake/WhatToMake";
 import { default as WhatToMakeV3 } from "../Pages/Production/PageBPBSWhatToMake";
 
@@ -259,7 +259,7 @@ function AnimatedRoutes({ user, signOut }) {
             <Route path="/Production/BPBSWhatToMake"    element={<BPBSWhatToMake />} />
             <Route path="/Production/BPBSWhatToMake/v3" element={<WhatToMakeV3 />} />
             <Route path="/Production/BPBSWhatToMake/v2" element={<BPBSWhatToMake />} />
-            <Route path="/Production/BPBSWhatToMake/v1" element={<BPBSWhatToMakeV1 />} />
+            {/* <Route path="/Production/BPBSWhatToMake/v1" element={<BPBSWhatToMakeV1 />} /> */}
 
             <Route path="/BPBSProd/BPBSWhatToMakeBackup"
               element={<BPBSWhatToMake initialDateOption="tomorrow" />}
@@ -267,9 +267,9 @@ function AnimatedRoutes({ user, signOut }) {
             <Route path="/BPBSProd/BPBSWhatToMakeBackup/v2"
               element={<BPBSWhatToMake initialDateOption="tomorrow" />}
             />
-            <Route path="/BPBSProd/BPBSWhatToMakeBackup/v1"
+            {/* <Route path="/BPBSProd/BPBSWhatToMakeBackup/v1"
               element={<BPBSWhatToMakeBackup />}
-            />
+            /> */}
             <Route
               path="/Production/BPBSMixPocket"
               element={<BPBSMixPocket />}

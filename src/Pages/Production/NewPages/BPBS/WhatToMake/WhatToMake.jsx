@@ -197,8 +197,11 @@ const BPBSWhatToMake = ({ initialDateOption='today' }={}) => {
 
       <Button label="Print What to Make List" 
         onClick={handlePrintPDF}  
+        style={{marginBottom: "1rem"}}
       />
       <ConfirmDialog />
+
+      <div>Using v2 <a href="/Production/BPBSWhatToMake/v3">Try v3 (testing)</a></div>
 
       <h2>Pocket Count</h2>
       <DataTable value={WTM.frenchPocketData}>
