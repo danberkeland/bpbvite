@@ -1,18 +1,26 @@
 import { useMemo } from "react"
 import { useLocationProductOverrides } from "./useLocationProductOverrides"
-import { DBProduct } from "../types.d"
+import { DBLocation, DBProduct } from "../types.d"
 import { postDBOverrides, preDBOverrides } from "../product/testOverrides"
 
-// Given a product and a location, should we modify any properties 
-// of the product? This function will handle that task.
-
+const PRODUCT_OVERRIDE_PROPS = [
+  'defaultInclude',
+  'leadTime',
+  'readyTime',
+  'daysAvailable',
+  'wholePrice',
+]
+const LOCATION_OVERRIDE_PROPS = [
+  'latestFirstDeliv',
+  'latestFinalDeliv',
+  'zoneNick',
+]
 
 export const useOverrideProduct = ({ shouldFetch }) => {
 
   const { data:OVR } = useLocationProductOverrides({ shouldFetch })
 
   const overrideProduct = useMemo(() => {
-
     if (!OVR) return undefined
     
     /**
@@ -38,7 +46,7 @@ export const useOverrideProduct = ({ shouldFetch }) => {
 
       const dbOverride = Object.fromEntries(
         Object.entries(_dbOverride).filter(entry => 1
-          && !["id", "createdAt", "updatedAt"].includes(entry[0])
+          && PRODUCT_OVERRIDE_PROPS.includes(entry[0])
           && entry[1] !== null
         )
       )
@@ -71,7 +79,47 @@ export const useOverrideProduct = ({ shouldFetch }) => {
 
   }, [OVR])
 
-  return overrideProduct
+  const overrideLocation = useMemo(() => {
+    if (!OVR) return undefined
+
+    /**
+     * Applies only DB overrides
+     * @param {DBLocation} location 
+     * @param {string} prodNick 
+     */
+    const overrideLocation = (location, prodNick) => {
+      const _dbOverride = OVR.find(item => 1
+        && item.locNick === location.locNick  
+        && item.prodNick === prodNick
+      ) ?? {}
+
+      const dbOverride = Object.fromEntries(
+        Object.entries(_dbOverride).filter(entry => 1
+          && LOCATION_OVERRIDE_PROPS.includes(entry[0])
+          && entry[1] !== null
+        )
+      )
+
+      /**@type {DBLocation} */
+      let locationWithOverrides = { ...location }
+
+      for (let key in dbOverride) {
+        if (location.hasOwnProperty(key)) {
+          locationWithOverrides[key] = dbOverride[key]
+        }
+      }
+
+      return locationWithOverrides
+    }
+
+    return overrideLocation
+
+  }, [OVR])
+
+  return {
+    overrideProduct,
+    overrideLocation,
+  }
 
 }
 

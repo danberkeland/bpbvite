@@ -721,11 +721,14 @@ type LocationProductOverride @model{
   id: ID!
   locNick: String! @index(name: "byLocNick", queryField: "locationProductOverridesByLocNick")
   prodNick: String!
-  defaultInclude: Boolean
+  defaultInclude: Boolean # begin product props...
   leadTime: Int
   readyTime: Float
   daysAvailable: [Int]
   wholePrice: Float
+  latestFirstDeliv: Float # begin location props...
+  latestFinalDeliv: Float
+  zoneNick: String
 }
 
 type Training @model {

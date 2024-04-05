@@ -412,6 +412,9 @@ export const locationProductOverrideAttributes = /* GraphQL */ `
   readyTime
   daysAvailable
   wholePrice
+  latestFirstDeliv
+  latestFinalDeliv
+  zoneNick
   createdAt
   updatedAt
 `

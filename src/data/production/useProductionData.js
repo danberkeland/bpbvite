@@ -46,7 +46,10 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false, shouldFetch=
   const { data:PRD } = useProducts({ shouldFetch })
   const { data:RTE } = useRoutes({ shouldFetch })
   // const { data:OVR } = useLocationProductOverrides({ shouldFetch })
-  const overrideProduct = useOverrideProduct({ shouldFetch })
+  const { 
+    overrideProduct,
+    overrideLocation,
+  } = useOverrideProduct({ shouldFetch })
   const getRoutes = useLoadedGetRouteOptions({ shouldFetch })
 
   const calcRoutedOrders = () => {
@@ -57,6 +60,7 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false, shouldFetch=
       || !PRD 
       || !RTE 
       || !overrideProduct 
+      || !overrideLocation
       || !getRoutes
     ) return undefined
 
@@ -76,15 +80,9 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false, shouldFetch=
               latestFirstDeliv: 7,
               latestFinalDeliv: 11,
             }
-        // const product = products[order.prodNick]
-        // const override = OVR.find(ovr => 
-        //   ovr.locNick === location.locNick && ovr.prodNick === product.prodNick
-        // )
-        // const customizedProduct = overrideProduct(product, override)
-        // const customizedProduct = overrideProduct(product, order.locNick)
         
         const routeOptions = getRoutes(
-          location, 
+          overrideLocation(location, order.prodNick), 
           overrideProduct(products[order.prodNick], order.locNick), 
           dayOfWeek
         )
@@ -135,7 +133,7 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false, shouldFetch=
   return { 
     data: useMemo(
       calcRoutedOrders, 
-      [useHolding, dayOfWeek, ORD, STD, LOC, PRD, RTE, overrideProduct, getRoutes]
+      [useHolding, dayOfWeek, ORD, STD, LOC, PRD, RTE, overrideProduct, overrideLocation, getRoutes]
     )
   }
 

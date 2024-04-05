@@ -240,11 +240,14 @@ let DBProduct
  * @property {string} id
  * @property {string} locNick
  * @property {string} prodNick
- * @property {boolean|null} defaultInclude
- * @property {number|null} leadTime
- * @property {number|null} readyTime
- * @property {[number|null]} daysAvailable
- * @property {number|null} wholePrice
+ * @property {boolean|null} defaultInclude product override
+ * @property {number|null} leadTime product override
+ * @property {number|null} readyTime product override
+ * @property {[number|null]} daysAvailable product override
+ * @property {number|null} wholePrice product override
+ * @property {number | null} latestFirstDeliv location override
+ * @property {number | null} latestFinalDeliv location override
+ * @property {string | null} zoneNick location override
  * @property {string} createdAt
  * @property {string} updatedAt
  */
