@@ -6,7 +6,7 @@ import { DateTime } from "luxon"
  */
 export const useDoobieStuff = ({ reportDT }) => {
   let yes = reportDT.ordinal % 2 === 0
-  
+  /*
   const doobieStuffx = [
     {
       Prod: "Doobie Buns",
@@ -21,7 +21,7 @@ export const useDoobieStuff = ({ reportDT }) => {
       Bake: yes ? "NO" : "NO",
     },
   ]
-
+  */
   const doobieStuff = [
      {
        Prod: "Doobie Buns",
