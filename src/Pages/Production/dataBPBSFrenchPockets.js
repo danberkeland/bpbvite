@@ -109,7 +109,20 @@ export const calculateFrenchPockets = (R0, R0Orders, R1Orders, PRD) => {
         prepreshaped,
         neededEa,
         neededItems,
-        surplusEa: preshaped - neededEa
+        surplusEa: preshaped - neededEa,
+        overEa: relu(preshaped - neededEa),
+        underEa: relu(neededEa - preshaped)
       }
     })
 }
+
+//  French Pocket Data
+// ====================
+// This dataset brings together 2 components.
+//
+// * Product data contains preshape and prepreshape info, which tells us what
+// we have on hand to meed order demands. These values always point to the 
+// current (and next) day.
+//
+// * Order data gets aggregated to determine production requirements for a given
+// date, based on the delivery dates we query for.

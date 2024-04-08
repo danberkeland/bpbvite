@@ -1,7 +1,9 @@
 import { keyBy } from "lodash"
 import { CombinedRoutedOrder } from "../../data/production/useProductionData"
-import { compareBy, sumBy, uniqByRdc } from "../../utils/collectionFns"
+import { compareBy, groupByArray, groupByArrayN, groupByArrayRdc, groupByObject, sumBy, uniqByRdc } from "../../utils/collectionFns"
 import { DBDoughBackup, DBProduct } from "../../data/types.d"
+
+const relu = x => x > 0 ? x : 0
 
 /**
  * @param {DBProduct[] | undefined} PRD 
@@ -27,6 +29,9 @@ export const calculateBucketsData = (PRD, DGH, R1Orders, R2Orders, R3Orders, R1,
   const preshapeProducts = PRD
     .sort(compareBy(P => P.prodName))
     .reduce(uniqByRdc(P => P.forBake), [])
+  const preshapeProductsByDoughNick = 
+    groupByObject(preshapeProducts, P => P.doughNick)
+
 
   return DGH.map(D => {
     const ordersToCount = (D.isBakeReady ? B1Orders : B2Orders)

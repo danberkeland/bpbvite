@@ -11,7 +11,7 @@ import { Dialog } from "primereact/dialog"
 import { sumBy } from "../../utils/collectionFns"
 import { DrilldownCellTemplate } from "./ComponentDrilldownCellTemplate"
 
-import { useBucketsData } from "./useBucketsData"
+import { useBucketsData } from "./useBPBNBucketsData"
 import { printBucketStickers } from "./exportBucketStickers"
 import { debounce, round } from "lodash"
 import { useDoughs } from "../../data/dough/useDoughs"
@@ -32,6 +32,8 @@ const setAtIdx = (state, setState) => {
     setState(newState)
   }
 }
+
+const fixDoughName = doughName => doughName === "Ciabatta" ? "Focaccia" : doughName
 
 /** 
  * Avoid the need to wrap with useCallback by passing everything the function
@@ -68,7 +70,7 @@ const Buckets = () => {
     doughList,
     products={},
     doughComponents:DCP=[],
-  } = useBucketsData({ reportDT, mixedWhere: 'Carlton', shouldFetch: checkForUpdatesCompleted })
+  } = useBucketsData({ reportDT, shouldFetch: checkForUpdatesCompleted })
 
   const [showTable,      setShowTable]      = useState([])
   const [oldDoughValues, setOldDoughValues] = useState([])
@@ -89,7 +91,7 @@ const Buckets = () => {
 
       <h1>Higuera Dough Stickers</h1>
 
-      <a href="/Production/BPBNBuckets/v1">Go to old version</a>
+      <div>Using v2 <a href="/Production/BPBNBuckets/v1">Go to previous version</a></div>
 
       {!doughList && <h2>Loading...</h2>}
 
@@ -109,7 +111,7 @@ const Buckets = () => {
             alignItems: "center", 
             color: "var(--bpb-text-color)" 
           }}>
-            <h2 style={{display: "inline"}}>{row.doughName}</h2>
+            <h2 style={{display: "inline"}}>{fixDoughName(row.doughName)}</h2>
             
             <div>
               <span style={{fontSize: "1.5rem", fontWeight: "bold"}}>
