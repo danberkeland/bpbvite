@@ -10,23 +10,26 @@ import { keyBy } from "../../utils/collectionFns"
 /**
  * @param {Object} input
  * @param {DateTime} input.reportDT
- * @param {'Prado' | 'Carlton' | undefined} input.mixedWhere
  * @param {boolean} input.shouldFetch  
  */
-export const useBucketsData = ({ reportDT, mixedWhere, shouldFetch }) => {
+export const useBucketsData = ({ reportDT, shouldFetch }) => {
+  const R1 = reportDT.plus({ days: 1 }).toFormat('yyyy-MM-dd')
+  const R2 = reportDT.plus({ days: 2 }).toFormat('yyyy-MM-dd')
 
   const { data:PRD } = useProducts({ shouldFetch })
   const { data:DGH } = useDoughs({ shouldFetch })
   const { data:R1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: true, shouldFetch })
   const { data:R2Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 2 }), useHolding: true, shouldFetch })
   const { data:R3Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 3 }), useHolding: true, shouldFetch })
-  const [R1, R2] = [1, 2].map(days => reportDT.plus({ days }).toFormat('yyyy-MM-dd'))
   
   const doughList = useMemo(() => {
-    return !!mixedWhere 
-      ? calculateBucketsData(PRD, DGH, R1Orders, R2Orders, R3Orders, R1, R2)?.filter(row => row.mixedWhere === mixedWhere)
-      : calculateBucketsData(PRD, DGH, R1Orders, R2Orders, R3Orders, R1, R2)
-  }, [PRD, DGH, R1Orders, R2Orders, R3Orders, R1, R2, mixedWhere])
+    return calculateBucketsData(
+      PRD, 
+      DGH?.filter(D => D.mixedWhere === 'Carlton'), 
+      R1Orders, R2Orders, R3Orders, 
+      R1, R2
+    )
+  }, [PRD, DGH, R1Orders, R2Orders, R3Orders, R1, R2])
 
   const products = useMemo(
     () => !!PRD ? keyBy(PRD, P => P.prodNick) : undefined,
@@ -35,8 +38,8 @@ export const useBucketsData = ({ reportDT, mixedWhere, shouldFetch }) => {
 
   return {
     doughList,
+    doughComponents: useDoughComponents({ shouldFetch })?.data,
     products,
-    doughComponents: useDoughComponents({ shouldFetch: true})?.data
   }
 
 }

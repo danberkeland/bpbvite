@@ -57,6 +57,8 @@ import { default as WhatToMakeV3 } from "../Pages/Production/PageBPBSWhatToMake"
 
 
 import BPBSMixPocket from "../Pages/Production/Legacy/BPBSMixPocket";
+import MixPocket from "../Pages/Production/PageBPBSMixPocket";
+
 import CroixCountV1 from "../Pages/Production/Legacy/CroixCount";
 import CroixToMake from "../Pages/Production/Legacy/CroixToMake";
 import ByProduct from "../Pages/Logistics/ByProduct/ByProduct";
@@ -84,6 +86,7 @@ import Bpbn2 from "../Pages/Production/NewPages/BPBN/Baker2/BpbnBaker2";
 import BPBNSetout from "../Pages/Production/NewPages/Setout/BPBNSetout";
 import BPBSSetout from "../Pages/Production/NewPages/Setout/BPBSSetout";
 import BpbnBuckets from "../Pages/Production/NewPages/BPBN/Buckets/BpbnBuckets";
+
 
 
 
@@ -270,10 +273,8 @@ function AnimatedRoutes({ user, signOut }) {
             {/* <Route path="/BPBSProd/BPBSWhatToMakeBackup/v1"
               element={<BPBSWhatToMakeBackup />}
             /> */}
-            <Route
-              path="/Production/BPBSMixPocket"
-              element={<BPBSMixPocket />}
-            />
+            <Route path="/Production/BPBSMixPocket" element={<BPBSMixPocket />} />
+            <Route path="/Production/BPBSMixPocket/v2" element={<MixPocket />} />
             <Route
               path="/Production/BPBSPacking"
               element={<SpecialPacking />}

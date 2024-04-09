@@ -5,7 +5,7 @@
 "Legacy" houses files that are mostly carry-overs from the previous system.
 "New Pages" houses files that can be considered a first attempt at a new system.
 The contents of both folders are deprecated/obsolete, and will eventually be
-replaces by the files in the Production directory.
+replaced by the files in the Production directory.
 
 ## Files in This Directory
 File names that include "BPBN" or "BPBS" apply just to that location.

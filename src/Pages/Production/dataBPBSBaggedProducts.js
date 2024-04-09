@@ -132,5 +132,16 @@ export const calculateBagged = (R0, R1, R0Orders, R1Orders, PRD) => {
     row => !!fudgeFrfrProps(row.productRep).freezerThaw
   )
 
-  return { shelfData, freezerData }
+  // console.log("SHELF:", shelfData)
+  return { 
+    shelfData: shelfData.filter(row => 0
+      || !['Pecan Pie', 'Pumpkin Pie'].includes(row.rowKey)
+      || row.delivEa !== 0
+      || row.needTodayEa !== 0
+      || row.totalItems.length !== 0
+    ), 
+    freezerData 
+  }
 }
+
+// const hideProductsIfZero = ['zcock', 'dtbz', 'frsl', 'pec', 'pknpie']

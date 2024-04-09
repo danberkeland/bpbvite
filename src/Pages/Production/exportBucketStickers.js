@@ -5,18 +5,24 @@ import "jspdf-autotable"
 
 import { DBDoughComponentBackup } from "../../data/types.d"
 
-
 /**
  * @param {Object} doughItem 
  * @param {number} batchWeight 
  * @param {number} oldDough 
  * @param {DBDoughComponentBackup[]} doughComponents 
+ * @param {Object} [options]
+ * @param {string} [options.dateString]
+ * @param {number} [options.splitNumber]
  */
 export const printBucketStickers = (
   doughItem, 
   batchWeight, 
   oldDough,
   doughComponents,
+  {
+    dateString,
+    splitNumber,
+  }={}
 ) => {
 
   const { doughName, saltInDry, hydration } = doughItem
@@ -76,39 +82,69 @@ export const printBucketStickers = (
   
   let isFirstPage = true
   let y = 0.7
-  const renderSticker = (doc, componentCategoryText, componentList) => {
+
+  const printBulkLine = (componentName, weight) => {
+
+    if (doughName === 'French' && componentName === "Water") {  
+      const _weight = Number(weight)
+      doc.text(String(Math.floor(_weight / 30)),  0.3, y)
+      doc.text('30 lb. buckets Water',            1.2, y)
+      y += 0.24
+      return (_weight % 30).toFixed(2)
+    }
+    if (doughName === 'French' && componentName === "Bread Flour") {
+      const _weight = Number(weight)
+      doc.text(String(Math.floor(_weight / 50)),  0.3, y)
+      doc.text('50 lb. bag Bread Flour',          1.2, y)
+      y += 0.24
+      return (_weight % 50).toFixed(2)
+    }
+  
+    return weight
+
+  }
+
+  const renderSticker = (componentCategoryText, componentList) => {
     if (!componentList.length) return
 
     if (!isFirstPage) { 
       doc.addPage([2, 4], "landscape") 
-    } 
-    else { 
+    } else { 
       isFirstPage = false 
+    }
+
+    if (dateString) {
+      doc.setFontSize(12)
+      doc.text(dateString, 3.8, 1.7, { align: "right" })
     }
 
     doc.setFontSize(14)
     doc.text(`${doughName} - ${componentCategoryText}`,   0.2, 0.36)
     doc.setFontSize(10)
-    doc.text(`${(batchWeight).toFixed(2)} lb. Batch`, 2.9, 0.36)
+    doc.text(`${splitNumber ? splitNumber + 'x ' : ''}${(batchWeight).toFixed(2)} lb. Batch`, 3.8, 0.36, { align: "right" })
     doc.setFontSize(12)
     y = 0.7
 
     for (let component of componentList) {
-      doc.text(calcWeight(component),        0.3, y)
-      doc.text(`lb.`,                        0.8, y)
-      doc.text(`${component.componentName}`, 1.2, y)
+      const { componentName } = component
+      const weight = calcWeight(component)
+      const remainder = printBulkLine(componentName, weight)
+
+      doc.text(remainder,          0.3, y)
+      doc.text(`lb.`,              0.8, y)
+      doc.text(`${componentName}`, 1.2, y)
       y += 0.24
     }
 
   }
   
-  renderSticker(doc, "Dry", [...dry, ...dryplus])
-  renderSticker(doc, "Wet", wet)
+  renderSticker("Dry", [...dry, ...dryplus])
+  renderSticker("Wet", wet)
   for (let component of lev) {
-    renderSticker(doc, component.componentName, component.subComponents)
+    renderSticker(component.componentName, component.subComponents)
   }
-  renderSticker(doc, "Add ins", post)
-  renderSticker(doc, "Salt & Yeast", saltyeast)
+  renderSticker("Add ins", post)
+  renderSticker("Salt & Yeast", saltyeast)
   doc.text(oldDoughToUse.toFixed(2), 0.3, y)
   doc.text(`lb.`,                    0.8, y)
   doc.text(`Old Dough`,              1.2, y)
@@ -116,3 +152,14 @@ export const printBucketStickers = (
   doc.save(`${doughName}_Stickers.pdf`)
 
 }
+
+// *** printBulkLine is a janky hook into the the normal rendering procedure
+// to display info for special cases, namely, for "Bread Flour" and "Water" 
+// components, only for French dough mixes.
+//
+// ex. if the mix calls for 175 lb bread flour,
+// we want to print a line that indicates 3x 50lb bags of bread flour,
+// then print second line for 25 lb bread flour in the usual format.
+//
+// this function just handles printing the bulk line, then returns
+// the remaining weight for printing as usual.
