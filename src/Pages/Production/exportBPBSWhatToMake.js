@@ -14,6 +14,7 @@ const freshColumns = [
   { header: "Total Deliv",   dataKey: "T0Ea" },
   { header: "Early",         dataKey: "earlyEa" },
   { header: "Bag EOD",       dataKey: "T1Ea" },
+  { header: "Make Total",    dataKey: "neededEa" }
 ]
 
 const shelfColumns = [

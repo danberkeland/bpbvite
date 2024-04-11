@@ -171,14 +171,12 @@ const WhatToMake = ({ reportDay='today' }) => {
         />
       </DataTable>
 
-
       <h2 onClick={() => console.log(freshData)}>Make Fresh</h2>
       <FreshTable 
         value={freshData ?? []}
         className={isToday ? '' : 'not-today'}
         products={products}
       />
-
 
       <h2 onClick={() => console.log(shelfData)}>Make For Shelf</h2>
       <ShelfFreezerTable 
@@ -187,15 +185,6 @@ const WhatToMake = ({ reportDay='today' }) => {
         products={products}
       />
       
-
-      <h2 onClick={() => console.log(freezerData)}>Pretzels</h2>
-      <PretzelTable 
-        value={pretzelData ?? []}
-        className={isToday ? '' : 'not-today'}
-        products={products}
-      />
-
-
       <h2 onClick={() => console.log(freezerData)}>Make For Freezer</h2>
       <ShelfFreezerTable 
         value={freezerData ?? []}
@@ -203,7 +192,12 @@ const WhatToMake = ({ reportDay='today' }) => {
         products={products}
       />
 
-
+      <h2 onClick={() => console.log(freezerData)}>Pretzels</h2>
+      <PretzelTable 
+        value={pretzelData ?? []}
+        className={isToday ? '' : 'not-today'}
+        products={products}
+      />
     </div>
   )
 
@@ -231,13 +225,13 @@ const FreshTable = ({ value, className, products }) =>
     />
     <Column header="Needed Early" 
       body={(rowData => DrilldownCellTemplate({
-        dialogHeader: 'Carlton (Going North) & Sandos Orders',
+        dialogHeader: 'Pick up Carlton/AM North Orders',
         cellValue: rowData.earlyEa,
         tableData: rowData.earlyItems,
         products,
       }))}  
     />
-    <Column header="Bag For Tomorrow" 
+    <Column header="Bag EOD" 
       body={(rowData => DrilldownCellTemplate({
         dialogHeader: 'Bake Ahead for Tomorrow',
         cellValue: rowData.T1Ea,
@@ -245,14 +239,14 @@ const FreshTable = ({ value, className, products }) =>
         products,
       }))}  
     />
-    {/* <Column header="Make Total" 
+    <Column header="Make Total" 
       body={(rowData => DrilldownCellTemplate({
         dialogHeader: 'Total Requirements',
         cellValue: rowData.neededEa,
         tableData: rowData.neededItems,
         products,
       }))}  
-    /> */}
+    />
   </DataTable>
 
 const PretzelTable = ({ value, className, products }) =>
@@ -264,14 +258,7 @@ const PretzelTable = ({ value, className, products }) =>
     className={className}
   >
     <Column header="Product" field="rowKey" />
-    <Column header="Bake Today"
-      body={rowData => DrilldownCellTemplate({
-        dialogHeader: 'Deliveries',
-        cellValue: rowData.bakeEa,
-        tableData: rowData.bakeItems,
-        products,
-      })}  
-    />
+
     <Column header="Shape for Tomorrow"
       body={rowData => DrilldownCellTemplate({
         dialogHeader: 'Deliveries',
@@ -285,6 +272,14 @@ const PretzelTable = ({ value, className, products }) =>
         dialogHeader: 'Today & Tomorrow Orders',
         cellValue: rowData.bagEa,
         tableData: rowData.bagItems,
+        products,
+      })}  
+    />
+    <Column header="Make Total"
+      body={rowData => DrilldownCellTemplate({
+        dialogHeader: 'Deliveries',
+        cellValue: rowData.bakeEa,
+        tableData: rowData.bakeItems,
         products,
       })}  
     />

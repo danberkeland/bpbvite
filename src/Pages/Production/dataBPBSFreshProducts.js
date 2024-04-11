@@ -56,7 +56,7 @@ export const calculateFresh = (R0, R1, R0Orders, R1Orders, PRD) => {
       const T0Items =     (freshB0OrdersByRowKey[rowKey] ?? []).filter(order => order.delivDate === R0)
       const T1Items =     (freshB0OrdersByRowKey[rowKey] ?? []).filter(order => order.delivDate === R1)
       const neededItems =  freshB0OrdersByRowKey[rowKey] ?? []
-      const earlyItems = T0Items.filter(order => order.meta.routeNick === 'Pick up Carlton' || order.locNick === 'sandos')
+      const earlyItems = T0Items.filter(order => ['AM North', 'Pick up Carlton'].includes(order.meta.routeNick))
 
       return {
         rowKey,
@@ -76,5 +76,9 @@ export const calculateFresh = (R0, R1, R0Orders, R1Orders, PRD) => {
         neededItems,
       }
     })
+    .filter(row => 0
+      || !['Cocktail Sliders', 'Dutch Burger Bun', 'French Slider'].includes(row.rowKey) 
+      || row.neededItems.length > 0
+    )
 
 }

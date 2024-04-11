@@ -73,6 +73,8 @@ const Setout = ({ reportLocation }) => {
     products={} 
   } = useSetoutData({ reportDT, reportLocation, shouldFetch: checkForUpdatesCompleted })
 
+  console.log("DATA", croix, other, almond)
+
   const INQB = useInfoQBAuths({ shouldFetch: true })
   const setoutRecord = INQB.data?.find(item => 
     item.id === (reportDT.toFormat('yyyy-MM-dd') + reportLocation + 'setoutTime')
@@ -117,7 +119,7 @@ const Setout = ({ reportLocation }) => {
 
   return (
     <div style={{padding: "2rem 5rem 5rem 5rem", width: "50rem", margin: "auto" }}>
-      <h1>{reportLocation} Pastry Prep {reportDT.toFormat('M/d/yyyy')}</h1>
+      <h1>{reportLocation} Pastry Prep {reportDT.toFormat('MM/dd/yyyy')}</h1>
 
       <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem"}}>
         <Button 
@@ -135,7 +137,9 @@ const Setout = ({ reportLocation }) => {
         {!!INQB.data && !setoutRecord && <div style={grayChipStyle}>Setout not yet recorded for today</div>}
       </div>
       {/* {!!afterSetoutOrders.length && <div style={yellowChipStyle}>After-setout changes detected</div>} */}
-      <div>Using v3 <a href="/Production/BPBNSetOut/v2">Go to previous version</a></div>
+      {reportLocation === 'Prado'   && <div>Using v3 <a href="/Production/BPBSSetOut/v2">Go to previous version</a></div>}
+      {reportLocation === 'Carlton' && <div>Using v3 <a href="/Production/BPBNSetOut/v2">Go to previous version</a></div>}
+
 
       <h2>Set Out</h2>
       <DataTable 

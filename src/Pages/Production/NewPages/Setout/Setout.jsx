@@ -71,9 +71,8 @@ const SetoutByLocation = ({ reportLocation }) => {
         style={{marginBottom: "1rem"}}
       />
 
-      {reportLocation === 'Carlton' &&
-        <div>Using v2 <a href="/Production/BPBNSetOut">Go to current version</a></div>
-      }
+      {reportLocation === 'Prado'   && <div>Using v2 <a href="/Production/BPBSSetOut/v3">Go to current version</a></div>}
+      {reportLocation === 'Carlton' && <div>Using v2 <a href="/Production/BPBNSetOut/v3">Go to current version</a></div>}
       
       <h2>Set Out</h2>
       <DataTable 

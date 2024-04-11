@@ -3,9 +3,13 @@
 
 ## Folders in This Directory
 "Legacy" houses files that are mostly carry-overs from the previous system.
-"New Pages" houses files that can be considered a first attempt at a new system.
+
+"NewPages" houses files that can be considered a first attempt at a new system.
 The contents of both folders are deprecated/obsolete, and will eventually be
 replaced by the files in the Production directory.
+
+"TestPages" houses content that can be loaded in "PageProduction.jsx" and is
+used to prototype new ideas.
 
 ## Files in This Directory
 File names that include "BPBN" or "BPBS" apply just to that location.

@@ -11,8 +11,9 @@ import { keyBy } from "../../utils/collectionFns"
  * @param {Object} input
  * @param {DateTime} input.reportDT
  * @param {boolean} input.shouldFetch  
+ * @param {'Carlton' | 'Prado'} input.mixedWhere  
  */
-export const useBucketsData = ({ reportDT, shouldFetch }) => {
+export const useBucketsData = ({ reportDT, shouldFetch, mixedWhere }) => {
   const R1 = reportDT.plus({ days: 1 }).toFormat('yyyy-MM-dd')
   const R2 = reportDT.plus({ days: 2 }).toFormat('yyyy-MM-dd')
 
@@ -25,11 +26,11 @@ export const useBucketsData = ({ reportDT, shouldFetch }) => {
   const doughList = useMemo(() => {
     return calculateBucketsData(
       PRD, 
-      DGH?.filter(D => D.mixedWhere === 'Carlton'), 
+      DGH?.filter(D => D.mixedWhere === mixedWhere), 
       R1Orders, R2Orders, R3Orders, 
       R1, R2
     )
-  }, [PRD, DGH, R1Orders, R2Orders, R3Orders, R1, R2])
+  }, [PRD, DGH, R1Orders, R2Orders, R3Orders, R1, R2, mixedWhere])
 
   const products = useMemo(
     () => !!PRD ? keyBy(PRD, P => P.prodNick) : undefined,

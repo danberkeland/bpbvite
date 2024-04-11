@@ -30,7 +30,7 @@ import{ default as SetoutV3 } from "../Pages/Production/PageSetout";
 import BPBNBuckets from "../Pages/Production/Legacy/BPBNBuckets";
 import Baker1 from "../Pages/Production/PageBPBNBaker1";
 import Baker2 from "../Pages/Production/PageBPBNBaker2";
-import { default as BPBNBucketsV2 } from "../Pages/Production/PageBPBNBuckets";
+import { default as PageBuckets } from "../Pages/Production/PageBuckets";
 
 
 import OrdersPage from "../Pages/Ordering/v2/Ordering"; // group with lazy loaders while in testing
@@ -76,7 +76,7 @@ import { default as NotesV2} from "../Pages/Settings/notes/Notes2";
 import { default as NotesV3 } from "../Pages/Settings/notes/v3/Notes";
 import Settings from "../Pages/Settings/Settings";
 import Remap from "../Pages/EODCounts/EODCountsRempas";
-import SpecialPacking from "../Pages/Production/NewPages/BPBS/SpecialPacking/SpecialPacking";
+// import SpecialPacking from "../Pages/Production/NewPages/BPBS/SpecialPacking/SpecialPacking";
 import RouteGrid from "../Pages/Logistics/NewPages/RouteGrid/RouteGrid";
 import CroixCount from "../Pages/Production/NewPages/Croix/CroixEOD/CroixCount";
 import SpecialOrders from "../Pages/Logistics/NewPages/SpecialOrders/SpecialOrders";
@@ -85,7 +85,8 @@ import Bpbn1 from "../Pages/Production/NewPages/BPBN/Baker1/BpbnBaker1";
 import Bpbn2 from "../Pages/Production/NewPages/BPBN/Baker2/BpbnBaker2";
 import BPBNSetout from "../Pages/Production/NewPages/Setout/BPBNSetout";
 import BPBSSetout from "../Pages/Production/NewPages/Setout/BPBSSetout";
-import BpbnBuckets from "../Pages/Production/NewPages/BPBN/Buckets/BpbnBuckets";
+import PageSpecialPacking from "../Pages/Production/PageSpecialPacking";
+import { PageCroissantProduction } from "../Pages/Production/PageCroissantProduction";
 
 
 
@@ -159,10 +160,10 @@ import BpbnBuckets from "../Pages/Production/NewPages/BPBN/Buckets/BpbnBuckets";
 
 
 function AnimatedRoutes({ user, signOut }) {
-  const setFormType = useSettingsStore((state) => state.setFormType);
-  const setAuthClass = useSettingsStore((state) => state.setAuthClass);
-  const setAccess = useSettingsStore((state) => state.setAccess);
-  const setUser = useSettingsStore((state) => state.setUser);
+  const setFormType   = useSettingsStore((state) => state.setFormType);
+  const setAuthClass  = useSettingsStore((state) => state.setAuthClass);
+  const setAccess     = useSettingsStore((state) => state.setAccess);
+  const setUser       = useSettingsStore((state) => state.setUser);
   const setUserObject = useSettingsStore((state) => state.setUserObject);
   const setCurrentLoc = useSettingsStore((state) => state.setCurrentLoc);
 
@@ -200,13 +201,12 @@ function AnimatedRoutes({ user, signOut }) {
       !currentLoc && setCurrentLoc(matchUser.locNick)
     }
 
-  }, [user2Items])
+  }, [user2Items, user, authClass, currentLoc])
 
   const location = useLocation();
 
   return (
-    <AnimatePresence>
-      <React.Fragment>
+    <AnimatePresence><>
       <UserHeaderMenu signOut={signOut} />
       {(authClass === 'bpbfull' || authClass === 'bpbcrew') && 
         <div className="top-nav-container">
@@ -214,136 +214,121 @@ function AnimatedRoutes({ user, signOut }) {
         </div>
       }
       <Suspense fallback={<div>Loading...</div>}>
-      <Routes location={location} key={location.pathname}>
+      <Routes location={location} key={`route-location.pathname`}>
+        <Route path="/" element={<NavSide />} />
+
         <Route path="/Ordering"         element={<Ordering2 />} />
         <Route path="/Ordering/v2"      element={<OrdersPage />} />
+
         <Route path="/CustomerNews"     element={<CustomerNews />} />
         <Route path="/CustomerBilling"  element={<CustomerBilling />} />
         <Route path="/CustomerSettings" element={<CustomerSettings />} />
         <Route path="/CustomerProducts" element={<CustomerProducts />} />
+
         <Route path="/remap" element={<Remap />} />
-        {/* {authClass !== "customer" && */}
-        {(authClass === 'bpbfull' || authClass === 'bpbcrew') &&
-          <React.Fragment>
-            {/* <Route path="/Ordering/v2" element={<OrdersPage />} /> */}
-            <Route path="/Production/BPBNBaker1"    element={<Baker1 reportDay="today" />} />
-            <Route path="/Production/BPBNBaker1/v3" element={<Baker1 reportDay="today" />} />
-            <Route path="/Production/BPBNBaker1/v2" element={<Bpbn1 />} />
-            {/* <Route path="/Production/BPBNBaker1/v1" element={<BPBNBaker1 />} /> */}
 
-            <Route path="/BPBNProd/BPBNBaker1Backup" element={<Baker1 reportDay="tomorrow" />} />
-            {/* <Route path="/BPBNProd/BPBNBaker1Backup/v1" element={<BPBNBaker1Backup />} /> */}
+        {(authClass === 'bpbfull' || authClass === 'bpbcrew') && <>
 
-            <Route path="/Production/BPBNBaker2"    element={<Baker2 />} />
-            <Route path="/Production/BPBNBaker2/v3" element={<Baker2 />} />
-            <Route path="/Production/BPBNBaker2/v2" element={<Bpbn2 />} />
-            {/* <Route path="/Production/BPBNBaker2/v1" element={<BPBNBaker2 />} /> */}
+          {/* Production::BPBN */}
+  
+          <Route path="/Production/BPBNBaker1/v2"  element={<Bpbn1 />} />
+          <Route path="/Production/BPBNBaker1/v3"  element={<Baker1 reportDay="today" />} />
+          <Route path="/Production/BPBNBaker1"     element={<Baker1 reportDay="today" />} />
+          <Route path="/BPBNProd/BPBNBaker1Backup" element={<Baker1 reportDay="tomorrow" />} />
 
-            <Route path="/Production/Production" element={<Production />} />
-            {/* <Route path="/Production/WhoBake"    element={<WhoBake />} /> */}
-            {/* <Route path="/Production/WhoShape"   element={<WhoShape />} /> */}
+          <Route path="/Production/BPBNBaker2/v2"  element={<Bpbn2 />} />
+          <Route path="/Production/BPBNBaker2/v3"  element={<Baker2 />} />
+          <Route path="/Production/BPBNBaker2"     element={<Baker2 />} />
 
-            <Route path="/Production/BPBNBuckets/v1" element={<BPBNBuckets loc={"Carlton"} />} />
-            <Route path="/Production/BPBNBuckets/v2" element={<BPBNBucketsV2 />} />
-            <Route path="/Production/BPBNBuckets"    element={<BPBNBucketsV2 />} />
-            
-            <Route path="/Production/BPBNBuckets/v2" element={<BpbnBuckets />} />
-            <Route path="/Production/BPBSBuckets"    element={<BPBNBuckets loc={"Prado"} />} />
-
-            <Route path="/Production/BPBNSetOut"    element={<SetoutV3 reportLocation="Carlton" />} />
-            <Route path="/Production/BPBNSetOut/v2" element={<BPBNSetout />} />
-            <Route path="/Production/BPBNSetOut/v3" element={<SetoutV3 reportLocation="Carlton" />} />
-            {/* <Route path="/Production/BPBNSetOut/v1"  element={<SetOutV1 loc={"Carlton"} />} /> */}
-
-            <Route path="/Production/BPBSSetOut"    element={<BPBSSetout />} />
-            {/* <Route path="/Production/BPBSSetOut/v1" element={<SetOutV1 loc={"Prado"} />} /> */}
-            <Route path="/Production/BPBSSetOut/v2" element={<BPBSSetout />} />
-
-            <Route path="/Production/BPBSWhatToMake"    element={<BPBSWhatToMake />} />
-            <Route path="/Production/BPBSWhatToMake/v3" element={<WhatToMakeV3 />} />
-            <Route path="/Production/BPBSWhatToMake/v2" element={<BPBSWhatToMake />} />
-            {/* <Route path="/Production/BPBSWhatToMake/v1" element={<BPBSWhatToMakeV1 />} /> */}
-
-            <Route path="/BPBSProd/BPBSWhatToMakeBackup"
-              element={<BPBSWhatToMake initialDateOption="tomorrow" />}
-            />
-            <Route path="/BPBSProd/BPBSWhatToMakeBackup/v2"
-              element={<BPBSWhatToMake initialDateOption="tomorrow" />}
-            />
-            {/* <Route path="/BPBSProd/BPBSWhatToMakeBackup/v1"
-              element={<BPBSWhatToMakeBackup />}
-            /> */}
-            <Route path="/Production/BPBSMixPocket" element={<BPBSMixPocket />} />
-            <Route path="/Production/BPBSMixPocket/v2" element={<MixPocket />} />
-            <Route
-              path="/Production/BPBSPacking"
-              element={<SpecialPacking />}
-            />
-
-            <Route path="/Production/CroixCount" element={<CroixCountV1 />} />
-            <Route path="/Production/CroixCount/v2" element={<CroixCount />} />
-            <Route path="/Production/CroixCount/v1" element={<CroixCountV1 />} />
-            
-            <Route path="/Production/CroixToMake" element={<CroixToMake />} />
-            <Route path="/Settings" element={<Settings />} />
-
-            <Route path="/Billing"    element={<BillingV1 />} />
-            <Route path="/Billing/v2" element={<BillingV2 />} />
-            <Route path="/Billing/v1" element={<BillingV1 />} />
-
-            <Route path="/EODCounts" element={<EODCounts />} />
-            <Route path="/Logistics" element={<Logistics />} />
-
-            <Route path="/Logistics/ByRoute"    element={<RouteGrid />} />
-            <Route path="/Logistics/ByRoute/v2" element={<RouteGrid />} />
-            {/* <Route path="/Logistics/ByRoute/v1" element={<ByRoute />} /> */}
-
-            <Route path="/Logistics/ByProduct"     element={<ByProduct />} />
-            <Route path="/Logistics/NorthLists"    element={<NorthListV2 />} />
-            <Route path="/Logistics/NorthLists/v1" element={<NorthList />} />
-            <Route path="/Logistics/NorthLists/v2" element={<NorthListV2 />} />
-            <Route path="/Logistics/AMPastry"      element={<AMPastry />} />
-            <Route path="/Logistics/RetailBags"    element={<RetailBags />} />
-
-            <Route path="/Logistics/SpecialOrders"    element={<SpecialOrders />} />
-            <Route path="/Logistics/SpecialOrders/v2" element={<SpecialOrders />} />
-            {/* <Route path="/Logistics/SpecialOrders/v1" element={<SpecialOrdersV1 />} /> */}
-
-            <Route path="/Logistics/FreezerThaw" element={<FreezerThaw />} />
-            <Route path="/Locations"    element={<LocationsNew />} />
-            <Route path="/Locations/v2" element={<LocationsNew />} />
-            <Route path="/Locations/v1" element={<Locations />} />
-
-            <Route path="/Products"    element={<Products />} />
-            <Route path="/Products/v2" element={<Products />} />
-            <Route path="/Products/v1" element={<ProductsV1 />} />
-
-            <Route
-              path="/Settings/ManageCustomers"
-              element={<ManageCustomers />}
-            />
-            <Route
-              path="/Settings/ManageTrainings"
-              element={<ManageTraining />}
-            />
-            <Route path="/Settings/custProds"    element={<CustProds />} />
-            <Route path="/Settings/custProds/v2" element={<LocationProductOverrides />} />
-            <Route path="/Settings/DelivOrder"   element={<DelivOrder />} />
-            <Route path="/Settings/editDough"    element={<EditDoughs />} />
-            <Route path="/Settings/editRoutes"   element={<EditRoutes />} />
-            <Route path="/Settings/editZones"    element={<EditZones2 />} />
-            <Route path="/Settings/Notes"        element={<NotesV3 />} />
-            <Route path="/Settings/Notes/v3"     element={<NotesV3 />} />
-            <Route path="/Settings/Notes/v2"     element={<NotesV2 />} />
+          <Route path="/Production/BPBNBuckets/v1" element={<BPBNBuckets loc={"Carlton"} />} />
+          <Route path="/Production/BPBNBuckets/v2" element={<PageBuckets mixedWhere="Carlton" />} />
+          <Route path="/Production/BPBNBuckets"    element={<PageBuckets mixedWhere="Carlton" />} />
           
-          </React.Fragment>
-        }
+          <Route path="/Production/BPBNSetOut"     element={<SetoutV3 reportLocation="Carlton" />} />
+          <Route path="/Production/BPBNSetOut/v2"  element={<BPBNSetout />} />
+          <Route path="/Production/BPBNSetOut/v3"  element={<SetoutV3 reportLocation="Carlton" />} />
 
-        <Route path="/" element={<NavSide />} />
+          {/* Production::BPBS */}
+
+          <Route path="/Production/BPBSWhatToMake/v2"     element={<BPBSWhatToMake />} />
+          <Route path="/Production/BPBSWhatToMake/v3"     element={<WhatToMakeV3 />} />
+          <Route path="/Production/BPBSWhatToMake"        element={<BPBSWhatToMake />} />
+          <Route path="/BPBSProd/BPBSWhatToMakeBackup/v2" element={<BPBSWhatToMake initialDateOption="tomorrow" />}/>
+          <Route path="/BPBSProd/BPBSWhatToMakeBackup"    element={<BPBSWhatToMake initialDateOption="tomorrow" />}/>
+
+          <Route path="/Production/BPBSMixPocket/v2"      element={<MixPocket />} />
+          <Route path="/Production/BPBSMixPocket"         element={<BPBSMixPocket />} />
+
+          <Route path="/Production/BPBSSetOut/v2"         element={<BPBSSetout />} />
+          <Route path="/Production/BPBSSetOut/v3"         element={<SetoutV3 reportLocation="Prado" />} />
+          <Route path="/Production/BPBSSetOut"            element={<SetoutV3 reportLocation="Prado" />} />
+
+          <Route path="/Production/BPBSBuckets"           element={<BPBNBuckets loc={"Prado"} />} />
+          <Route path="/Production/BPBSBuckets/v2"        element={<PageBuckets mixedWhere="Prado" />} />
+
+          <Route path="/Production/BPBSPacking"           element={<PageSpecialPacking />} />
+
+          {/* Production::Croix */}
+
+          <Route path="/Production/CroixCount/v1" element={<CroixCountV1 />} />
+          <Route path="/Production/CroixCount/v2" element={<CroixCount />} />
+          <Route path="/Production/CroixCount"    element={<CroixCountV1 />} />
+          
+          <Route path="/Production/CroixToMake"   element={<CroixToMake />} />
+          <Route path="/Production/CroixToMake/v2" element={<PageCroissantProduction />} />
+
+          {/* Production::Other */}
+
+          <Route path="/Production/Production" element={<Production />} />
+
+          {/* Logistics */}
+
+          <Route path="/Logistics"               element={<Logistics />} />
+          <Route path="/Logistics/ByRoute"       element={<RouteGrid />} />
+          <Route path="/Logistics/ByProduct"     element={<ByProduct />} />
+
+          <Route path="/Logistics/NorthLists/v1" element={<NorthList />} />
+          <Route path="/Logistics/NorthLists/v2" element={<NorthListV2 />} />
+          <Route path="/Logistics/NorthLists"    element={<NorthListV2 />} />
+
+          <Route path="/Logistics/AMPastry"      element={<AMPastry />} />
+          <Route path="/Logistics/RetailBags"    element={<RetailBags />} />
+          <Route path="/Logistics/SpecialOrders" element={<SpecialOrders />} />
+          <Route path="/Logistics/FreezerThaw"   element={<FreezerThaw />} />
+
+          <Route path="/EODCounts" element={<EODCounts />} />
+
+          <Route path="/Locations"    element={<LocationsNew />} />
+          <Route path="/Locations/v2" element={<LocationsNew />} />
+          <Route path="/Locations/v1" element={<Locations />} />
+
+          <Route path="/Products"    element={<Products />} />
+          <Route path="/Products/v2" element={<Products />} />
+          <Route path="/Products/v1" element={<ProductsV1 />} />
+
+          <Route path="/Billing"    element={<BillingV1 />} />
+          <Route path="/Billing/v2" element={<BillingV2 />} />
+          <Route path="/Billing/v1" element={<BillingV1 />} />
+
+          {/* Settings */}
+
+          <Route path="/Settings" element={<Settings />} />
+
+          <Route path="/Settings/ManageCustomers" element={<ManageCustomers />} />
+          <Route path="/Settings/ManageTrainings" element={<ManageTraining />} />
+          <Route path="/Settings/custProds"       element={<CustProds />} />
+          <Route path="/Settings/custProds/v2"    element={<LocationProductOverrides />} />
+          <Route path="/Settings/DelivOrder"      element={<DelivOrder />} />
+          <Route path="/Settings/editDough"       element={<EditDoughs />} />
+          <Route path="/Settings/editRoutes"      element={<EditRoutes />} />
+          <Route path="/Settings/editZones"       element={<EditZones2 />} />
+          <Route path="/Settings/Notes"           element={<NotesV3 />} />
+          <Route path="/Settings/Notes/v3"        element={<NotesV3 />} />
+          <Route path="/Settings/Notes/v2"        element={<NotesV2 />} />
+        </>}
       </Routes>
       </Suspense>
-      </React.Fragment>
-    </AnimatePresence>
+    </></AnimatePresence>
   );
 }
 
