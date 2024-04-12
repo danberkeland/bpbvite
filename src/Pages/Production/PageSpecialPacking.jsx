@@ -46,6 +46,7 @@ const PageSpecialPacking = () => {
 
       <h2>Frozen Pastries for Tomorrow</h2>
       <p>Warning: Order counts may change between now and tomorrow's delivery.</p>
+
       <PivotTableTemplate pivotData={R1Frozen ?? []} windowWidth={width} />
     </div>
   )

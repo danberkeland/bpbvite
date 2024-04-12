@@ -18,7 +18,6 @@ import { exportBpbn1Pdf } from "./exportBPBNBaker1"
 import { useDoughs } from "../../data/dough/useDoughs"
 import { useCheckForUpdates } from "../../core/checkForUpdates"
 
-
 /**
  * @param {Object} props
  * @param {'today'|'tomorrow'} props.reportDay 

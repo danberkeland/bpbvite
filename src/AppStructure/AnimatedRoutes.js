@@ -65,7 +65,7 @@ import ByProduct from "../Pages/Logistics/ByProduct/ByProduct";
 import NorthList from "../Pages/Logistics/NorthLists";
 import NorthListV2 from "../Pages/Logistics/NorthLists/v2/NorthLists"
 import AMPastry from "../Pages/Logistics/AMPastry";
-import RetailBags from "../Pages/Logistics/RetailBags";
+// import RetailBags from "../Pages/Logistics/RetailBags";
 // import { default as SpecialOrdersV1} from "../Pages/Logistics/SpecialOrders";
 // import FreezerThaw from "../Pages/Logistics/FreezerTha_w";
 import DelivOrder from "../Pages/Settings/delivOrder/delivOrder";
@@ -90,6 +90,7 @@ import { PageCroissantProduction } from "../Pages/Production/PageCroissantProduc
 import { CroixToMake } from "../Pages/Production/NewPages/Croix/CroixToMake/CroixToMake";
 import PageCroissantEodCounts from "../Pages/Production/PageCroissantEodCounts";
 import PageFreezerThaw from "../Pages/Logistics/PageFreezerThaw";
+import PageRetailBags from "../Pages/Logistics/PageRetailBags";
 
 
 
@@ -296,7 +297,10 @@ function AnimatedRoutes({ user, signOut }) {
           <Route path="/Logistics/NorthLists"    element={<NorthListV2 />} />
 
           <Route path="/Logistics/AMPastry"      element={<AMPastry />} />
-          <Route path="/Logistics/RetailBags"    element={<RetailBags />} />
+
+          {/* <Route path="/Logistics/RetailBags"    element={<RetailBags />} /> */}
+          <Route path="/Logistics/RetailBags"    element={<PageRetailBags />} />
+
           <Route path="/Logistics/SpecialOrders" element={<SpecialOrders />} />
 
           {/* <Route path="/Logistics/FreezerThaw"    element={<FreezerThaw />} /> */}
