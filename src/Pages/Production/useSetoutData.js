@@ -5,7 +5,6 @@ import { calculateSetoutCarlton, calculateSetoutPrado } from "./dataSetout"
 import { DateTime } from "luxon"
 
 /**
- * 
  * @param {Object} input
  * @param {DateTime} input.reportDT
  * @param {'Prado'|'Carlton'} input.reportLocation
@@ -22,7 +21,7 @@ export const useSetoutData = ({ reportDT, reportLocation, shouldFetch }) => {
     () => reportLocation === 'Prado' 
       ? calculateSetoutPrado(PRD, R1Orders, R2Orders, R3Orders)
       : calculateSetoutCarlton(PRD, R1Orders), 
-    [PRD, R1Orders]
+    [reportLocation, PRD, R1Orders, R2Orders, R3Orders]
   )
 
 }

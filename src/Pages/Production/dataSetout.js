@@ -69,8 +69,8 @@ const splitBackporchCroixOrder = (order, products) =>
     : order
 
 /**
- * Partition theorder set to a sufficient granularity in one
- * fell swoop, as opposed to the previous strategy that used
+ * Partition the order set to a sufficient granularity all at
+ * once, as opposed to the previous strategy that used
  * sucessive partitionings ('simpler', but more numerous). 
  * @param {string} datePrefix 
  * @param {CombinedRoutedOrder} order 
@@ -176,7 +176,7 @@ const calculateSetoutPrado = (PRD, R1Orders, R2Orders, R3Orders) => {
     R2PradoFrozenAlmond=[], R2PradoBakedAlmond=[], 
   } = groupByObject(_R2, order => classifyPastryOrder("R2", order, products))
   const { 
-    R3PradoBakedAlmond=[]
+    R3CarltonBakedAlmond=[]
   } = groupByObject(_R3, order => classifyPastryOrder("R3", order, products))
 
 
@@ -188,7 +188,7 @@ const calculateSetoutPrado = (PRD, R1Orders, R2Orders, R3Orders) => {
       ...R2PradoFrozenAlmond, // almond orders get counted as plains for setout
       ...R2CarltonFrozenAlmond, 
       ...R2PradoBakedAlmond, 
-      ...R3PradoBakedAlmond,
+      ...R3CarltonBakedAlmond,
     ],
     products
   )

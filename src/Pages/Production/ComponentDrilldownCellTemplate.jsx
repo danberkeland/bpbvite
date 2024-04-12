@@ -16,6 +16,7 @@ import { CombinedRoutedOrder } from "../../data/production/useProductionData"
  * @param {import("primereact/dialog").DialogTemplateType} [input.dialogHeader]
  * @param {import("primereact/dialog").DialogTemplateType} [input.dialogFooter]
  * @param {string|number|null} input.cellValue
+ * @param {React.CSSProperties} [input.cellStyle]
  * @param {CombinedRoutedOrder[]} input.tableData
  * @param {Object} input.products  
  */
@@ -23,6 +24,7 @@ export const DrilldownCellTemplate = ({
   dialogHeader,
   dialogFooter,
   cellValue, 
+  cellStyle={},
   tableData, 
   products 
 }) => {
@@ -35,6 +37,7 @@ export const DrilldownCellTemplate = ({
       style={{
         cursor: hasContent ? "pointer" : '',
         //textAlign: "right"
+        ...cellStyle
       }}
     >
       <div style={{display: "inline-block", width: "2.5rem"}}>

@@ -95,16 +95,23 @@ export function tablePivotSimple(
 }
 
 /** @typedef {Object<[k: string], (number | string | boolean | null)>} ObjectSimple */
-/** @typedef {(a: any) => number | string | boolean | null} IterFn */
+
 /** 
- * @typedef {Object<[k:string], (a: any) => number | string | boolean | null>} RowPartitionModel */
+ * @template T
+ * @typedef {(t: T) => number | string | boolean | null} IterFn 
+ */
+
+/** 
+ * @template T
+ * @typedef {Object<[k:string], IterFn<T>>} RowPartitionModel 
+ */
 
 /**
  * @template T
  * @param {T[]} data 
- * @param {RowPartitionModel} rowPartitionModel 
+ * @param {RowPartitionModel<T>} rowPartitionModel 
  * @param {string} pivotColumnAttribute 
- * @param {(a: any[]) => (number | string | boolean)} valueFn 
+ * @param {(t: T[]) => (number | string | boolean)} valueFn 
  * @returns 
  */
 export function tablePivot(

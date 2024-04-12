@@ -1,18 +1,13 @@
 import React, { useState } from "react";
 
-import { BPBTerminal } from "./NewPages/TestPages/BPBTerminal2";
-import { SevenDayList } from "./NewPages/TestPages/SevenDayList";
-import { Sandbox } from "./NewPages/TestPages/_Sandbox";
-import { BriocheCalc } from "./NewPages/TestPages/BriocheCalc";
-import { OrderReview } from "./NewPages/TestPages/OrderReview";
-import { OrderDomain } from "./NewPages/TestPages/OrderDomain";
-
+import { BPBTerminal } from "./TestPages/BPBTerminal2";
+import { Sandbox } from "./TestPages/_Sandbox";
+import { BriocheCalc } from "./TestPages/BriocheCalc";
+import { OrderReview } from "./TestPages/OrderReview";
 
 const bpbnPages = [
   {name: "Sandbox", component: <Sandbox />},
-  {name: "Order Domain", component: <OrderDomain />},
   {name: "Terminal", component: <BPBTerminal />},
-  {name: "Seven Day List", component: <SevenDayList />},
   {name: "Brioche Calculator", component: <BriocheCalc />},
   {name: "Order Review", component: <OrderReview />},
 

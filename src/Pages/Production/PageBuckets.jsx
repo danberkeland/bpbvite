@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react"
+import React, { useEffect, useMemo } from "react"
 import { DataTable } from "primereact/datatable"
 import { DT } from "../../utils/dateTimeFns"
 
@@ -11,7 +11,7 @@ import { Dialog } from "primereact/dialog"
 import { sumBy } from "../../utils/collectionFns"
 import { DrilldownCellTemplate } from "./ComponentDrilldownCellTemplate"
 
-import { useBucketsData } from "./useBPBNBucketsData"
+import { useBucketsData } from "./useBucketsData"
 import { printBucketStickers } from "./exportBucketStickers"
 import { debounce, round } from "lodash"
 import { useDoughs } from "../../data/dough/useDoughs"
@@ -59,18 +59,20 @@ const debouncedUpdateDough = debounce(
   5000
 )
 
-const Buckets = () => {
+/**
+ * 
+ * @param {Object} props
+ * @param {'Carlton'|'Prado'} props.mixedWhere 
+ */
+const Buckets = ({ mixedWhere }) => {
 
   const checkForUpdatesCompleted = useCheckForUpdates()
 
   const reportDT = useMemo(() => DT.today(), [])
 
   const { submitMutations, updateLocalData } = useDoughs({ shouldFetch: true })
-  const { 
-    doughList,
-    products={},
-    doughComponents:DCP=[],
-  } = useBucketsData({ reportDT, shouldFetch: checkForUpdatesCompleted })
+  const { doughList, products={}, doughComponents:DCP=[] } = 
+    useBucketsData({ reportDT, shouldFetch: checkForUpdatesCompleted, mixedWhere })
 
   const [showTable,      setShowTable]      = useState([])
   const [oldDoughValues, setOldDoughValues] = useState([])

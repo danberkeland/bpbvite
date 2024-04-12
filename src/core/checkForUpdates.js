@@ -107,7 +107,7 @@ function useCheckCroix(productCache, T0Orders, T1Orders, tomorrow, shouldCheck) 
     const productsToUpdate = PRD.filter(P => 1
       && P.packGroup === "baked pastries" 
       && P.doughNick === "Croissant"
-      && !['unmb', 'al'].includes(P.prodNick)
+      && !['unmb'].includes(P.prodNick)
       && P.freezerNorthFlag !== tomorrow
     )
 
