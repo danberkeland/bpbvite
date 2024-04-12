@@ -32,21 +32,21 @@ const PageSpecialPacking = () => {
       <p>Note: tables are not meant to display each customer's entire order.</p>
     
       <h2>Pretzel Items for Today</h2>
-      <PivotTableTemplate pivotData={R0Pretzel} windowWidth={width} />
+      <PivotTableTemplate pivotData={R0Pretzel ?? []} windowWidth={width} />
 
       <h2>Pretzel Items for Tomrrow</h2>
-      <PivotTableTemplate pivotData={R1Pretzel} windowWidth={width} />
+      <PivotTableTemplate pivotData={R1Pretzel ?? []} windowWidth={width} />
 
       <h2>Other Items for Tomorrow</h2>
       <p>Items that aren't shelved by default (ficelles, dutch sticks, etc.)</p>
-      <PivotTableTemplate pivotData={R1French} windowWidth={width} />
+      <PivotTableTemplate pivotData={R1French ?? []} windowWidth={width} />
 
       <h2>Frozen Pastries for Today</h2>
-      <PivotTableTemplate pivotData={R0Frozen} windowWidth={width} />
+      <PivotTableTemplate pivotData={R0Frozen ?? []} windowWidth={width} />
 
       <h2>Frozen Pastries for Tomorrow</h2>
       <p>Warning: Order counts may change between now and tomorrow's delivery.</p>
-      <PivotTableTemplate pivotData={R1Frozen} windowWidth={width} />
+      <PivotTableTemplate pivotData={R1Frozen ?? []} windowWidth={width} />
     </div>
   )
 }
