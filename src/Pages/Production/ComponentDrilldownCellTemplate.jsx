@@ -16,6 +16,7 @@ import { CombinedRoutedOrder } from "../../data/production/useProductionData"
  * @param {import("primereact/dialog").DialogTemplateType} [input.dialogHeader]
  * @param {import("primereact/dialog").DialogTemplateType} [input.dialogFooter]
  * @param {string|number|null} input.cellValue
+ * @param {'qty'|'ea'|'wt'} [input.valueType]
  * @param {React.CSSProperties} [input.cellStyle]
  * @param {CombinedRoutedOrder[]} input.tableData
  * @param {Object} input.products  
@@ -23,13 +24,25 @@ import { CombinedRoutedOrder } from "../../data/production/useProductionData"
 export const DrilldownCellTemplate = ({ 
   dialogHeader,
   dialogFooter,
+  valueType='ea',
   cellValue, 
   cellStyle={},
-  tableData, 
+  tableData,
   products 
 }) => {
   const [show, setShow] = useState(false)
   const hasContent = !!tableData.length
+
+  const valueTypeHeaderMap = {
+    qty: <div>Qty<br />(Pks.)</div>,
+    ea: 'Ea.',
+    wt: <div>Weight<br />(Lbs.)</div>,
+  }
+  const valueFunctionMap = {
+    qty: row => row.qty,
+    ea: (row, products) => row.qty * products[row.prodNick].packSize,
+    wt: (row, products) => row.qty * products[row.prodNick].packSize * products[row.prodNick].weight
+  }
 
   const cellTemplate = 
     <div 
@@ -69,7 +82,7 @@ export const DrilldownCellTemplate = ({
           responsiveLayout="scroll"
           scrollHeight="50rem"
           footer={() => <div style={{textAlign: "right"}}>
-            Total: {round(sumBy(tableData ?? [], rowData => rowData.qty * products[rowData.prodNick].packSize), 1)} Ea.
+            Total: {round(sumBy(tableData ?? [], rowData => valueFunctionMap[valueType](rowData, products)), 1)}
           </div>}
         >
           <Column header="delivDate" body={row => row.delivDate.slice(5)} />
@@ -89,8 +102,8 @@ export const DrilldownCellTemplate = ({
           />
 
           <Column header="Product" field="prodNick" />
-          <Column header="Ea."  
-            body={rowData => rowData.qty * products[rowData.prodNick].packSize}
+          <Column header={valueTypeHeaderMap[valueType]}  
+            body={rowData => valueFunctionMap[valueType](rowData, products)}
           />
 
         </DataTable>

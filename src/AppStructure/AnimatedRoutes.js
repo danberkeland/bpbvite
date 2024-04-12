@@ -60,14 +60,14 @@ import BPBSMixPocket from "../Pages/Production/Legacy/BPBSMixPocket";
 import MixPocket from "../Pages/Production/PageBPBSMixPocket";
 
 import CroixCountV1 from "../Pages/Production/Legacy/CroixCount";
-import CroixToMake from "../Pages/Production/Legacy/CroixToMake";
+// import CroixToMake from "../Pages/Production/Legacy/CroixToMake";
 import ByProduct from "../Pages/Logistics/ByProduct/ByProduct";
 import NorthList from "../Pages/Logistics/NorthLists";
 import NorthListV2 from "../Pages/Logistics/NorthLists/v2/NorthLists"
 import AMPastry from "../Pages/Logistics/AMPastry";
 import RetailBags from "../Pages/Logistics/RetailBags";
 // import { default as SpecialOrdersV1} from "../Pages/Logistics/SpecialOrders";
-import FreezerThaw from "../Pages/Logistics/FreezerThaw";
+// import FreezerThaw from "../Pages/Logistics/FreezerTha_w";
 import DelivOrder from "../Pages/Settings/delivOrder/delivOrder";
 import EditDoughs from "../Pages/Settings/editDough/editDough";
 import EditZones2 from "../Pages/Settings/editZones/editZones2";
@@ -87,6 +87,9 @@ import BPBNSetout from "../Pages/Production/NewPages/Setout/BPBNSetout";
 import BPBSSetout from "../Pages/Production/NewPages/Setout/BPBSSetout";
 import PageSpecialPacking from "../Pages/Production/PageSpecialPacking";
 import { PageCroissantProduction } from "../Pages/Production/PageCroissantProduction";
+import { CroixToMake } from "../Pages/Production/NewPages/Croix/CroixToMake/CroixToMake";
+import PageCroissantEodCounts from "../Pages/Production/PageCroissantEodCounts";
+import PageFreezerThaw from "../Pages/Logistics/PageFreezerThaw";
 
 
 
@@ -269,13 +272,14 @@ function AnimatedRoutes({ user, signOut }) {
           <Route path="/Production/BPBSPacking"           element={<PageSpecialPacking />} />
 
           {/* Production::Croix */}
-
+          
           <Route path="/Production/CroixCount/v1" element={<CroixCountV1 />} />
           <Route path="/Production/CroixCount/v2" element={<CroixCount />} />
+          <Route path="/Production/CroixCount/v3" element={<PageCroissantEodCounts />} />
           <Route path="/Production/CroixCount"    element={<CroixCountV1 />} />
           
-          <Route path="/Production/CroixToMake"   element={<CroixToMake />} />
-          <Route path="/Production/CroixToMake/v2" element={<PageCroissantProduction />} />
+          <Route path="/Production/CroixToMake/v2" element={<CroixToMake />} />
+          <Route path="/Production/CroixToMake"    element={<PageCroissantProduction />} />
 
           {/* Production::Other */}
 
@@ -294,7 +298,9 @@ function AnimatedRoutes({ user, signOut }) {
           <Route path="/Logistics/AMPastry"      element={<AMPastry />} />
           <Route path="/Logistics/RetailBags"    element={<RetailBags />} />
           <Route path="/Logistics/SpecialOrders" element={<SpecialOrders />} />
-          <Route path="/Logistics/FreezerThaw"   element={<FreezerThaw />} />
+
+          {/* <Route path="/Logistics/FreezerThaw"    element={<FreezerThaw />} /> */}
+          <Route path="/Logistics/FreezerThaw"   element={<PageFreezerThaw />} />
 
           <Route path="/EODCounts" element={<EODCounts />} />
 
