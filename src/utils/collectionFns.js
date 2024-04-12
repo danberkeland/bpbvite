@@ -1,3 +1,4 @@
+export * from "./collectionFns/chunk"
 export * from "./collectionFns/compareBy"
 export * from "./collectionFns/groupByArray"
 export * from "./collectionFns/groupByArrayIsEqual"
