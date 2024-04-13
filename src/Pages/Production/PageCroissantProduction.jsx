@@ -171,7 +171,7 @@ export const PageCroissantProduction = () => {
   return (
     <div style={{padding: "2rem 5rem 5rem 5rem", width: "65rem", margin: "auto"}}>
       <h1>Croissant Production {reportDT.toFormat('MM/dd/yyyy')}</h1>
-
+      <p>Using v3 <a href="/Production/CroixToMake/v2">Go to previous version</a></p>
       <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
         <Button label="Print Shape List" 
           icon="pi pi-print" 
@@ -233,13 +233,14 @@ export const PageCroissantProduction = () => {
       />}
 
       <h2 style={{marginTop: "4rem"}}>Almonds</h2>
-      <p>
+      {/* <p>
         Daily consumption totals are different from Setout totals. 
         This table tracks of when items are pulled from the freezer.
         Baked orders are pulled the day before delivery (they are either sent north or moved to the fridge), 
         while frozen orders are pulled the same day as delivery.
-      </p>
-      <p>With this setup, the closing and projected counts represent the total in the freezer at the EOD, the same as the above table.</p>
+      </p> */}
+      {/* <p>With this setup, the closing and projected counts represent the total in the freezer at the EOD, the same as the above table.</p> */}
+      <p>Closing Count = Total in Freezer at EOD</p>
       <DataTable
         value={almondData ?? []}
         style={{marginBlock: "2rem"}}

@@ -191,9 +191,9 @@ export const CroixToMake = () => {
     row.sheetMake !== sheetMake[row.countNick]
   )
 
-  return(<div>
+  return(<div style={{width: "55rem", margin: "auto"}}>
     <h1 style={{marginLeft: "1rem"}}>Croissant Production {today}</h1>
-
+    <p style={{marginLeft: "1rem"}}>Using v2 <a href="/Production/CroixToMake/v2">Go to current version</a></p>
     <div style={{
       display: "flex", 
       justifyContent: "space-between",

@@ -73,8 +73,6 @@ const Setout = ({ reportLocation }) => {
     products={} 
   } = useSetoutData({ reportDT, reportLocation, shouldFetch: checkForUpdatesCompleted })
 
-  console.log("DATA", croix, other, almond)
-
   const INQB = useInfoQBAuths({ shouldFetch: true })
   const setoutRecord = INQB.data?.find(item => 
     item.id === (reportDT.toFormat('yyyy-MM-dd') + reportLocation + 'setoutTime')
