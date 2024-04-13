@@ -3,7 +3,7 @@ import { DT } from "../../utils/dateTimeFns"
 import { useCroissantProduction } from "./useCroissantShapingData"
 import { Column } from "primereact/column"
 import { DrilldownCellTemplate } from "./ComponentDrilldownCellTemplate"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "primereact/button"
 import { InputNumber } from "primereact/inputnumber"
 import { useCheckForUpdates } from "../../core/checkForUpdates"
@@ -58,11 +58,7 @@ export const PageCroissantProduction = () => {
 
   const [isEditingCroix, setIsEditingCroix] = useState(false)
   const [sheetMakes,     setSheetMakes]     = useState([])
-  const toggleEditCroix = () => {
-    if (!croixData) return
-    setIsEditingCroix(!isEditingCroix)
-    setSheetMakes(croixData.map(row => row.sheetMake))
-  }
+  const toggleEditCroix = () => setIsEditingCroix(!isEditingCroix)
   const setSheetMakeAtIdx = (newValue, idx) => {
     console.log(newValue)
     setSheetMakes(Object.assign([...sheetMakes], { [idx]: newValue }))
@@ -84,11 +80,7 @@ export const PageCroissantProduction = () => {
 
   const [isEditingAlmond, setIsEditingAlmond] = useState(false)
   const [almondPrepQtys,  setAlmondPrepQtys]  = useState([])
-  const toggleEditAlmond = () => {
-    if (!almondData) return
-    setIsEditingAlmond(!isEditingAlmond)
-    setAlmondPrepQtys(almondData.map(row => row.sheetMake))
-  }
+  const toggleEditAlmond = () => setIsEditingAlmond(!isEditingAlmond)
   const setAlmondPrepQtyAtIdx = (newValue, idx) =>
     setAlmondPrepQtys(Object.assign([...almondPrepQtys], { [idx]: newValue }))
   const submitAlmondPrepQtys = async () => {
@@ -105,6 +97,12 @@ export const PageCroissantProduction = () => {
     updateProductCache(await submitProducts({ updateInputs }))
     toggleEditAlmond()
   }
+  useEffect(() => {
+    if (!!croixData && !!almondData) {
+      setSheetMakes(croixData.map(row => row.sheetMake))
+      setAlmondPrepQtys(almondData.map(row => row.sheetMake))
+    }
+  }, [croixData, almondData])
 
   const colHeaders = [
     displayMode === 'cum' 
