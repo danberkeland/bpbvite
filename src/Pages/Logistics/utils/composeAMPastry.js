@@ -8,6 +8,7 @@ import { getOrdersList } from "../../../core/production/getOrdersList";
 const makePivotTableAndColumns = (delivDate, database, filter) => {
 
   let fullOrder = getOrdersList(delivDate, database).filter(filter)
+  console.log(fullOrder.filter(order => order.custName.startsWith('Merry Hill')))
 
   const pivotTable = tablePivot(
     fullOrder,

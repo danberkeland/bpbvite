@@ -1,11 +1,11 @@
 import { useMemo } from "react"
-import { useProdOrdersByDate } from "../../../../data/useT0T7ProdOrders"
+import { useProdOrdersByDate } from "../../../data/useT0T7ProdOrders"
 import { groupBy, keyBy, mapValues, orderBy, sortBy, truncate, uniqBy } from "lodash"
-import { useProducts } from "../../../../data/product/useProducts"
-import { useLocations } from "../../../../data/location/useLocations"
-import { useRoutes } from "../../../../data/route/useRoutes"
+import { useProducts } from "../../../data/product/useProducts"
+import { useLocations } from "../../../data/location/useLocations"
+import { useRoutes } from "../../../data/route/useRoutes"
 
-import { DBProduct } from "../../../../data/types.d"
+import { DBProduct } from "../../../data/types.d"
 
 /**
  * The returned tableData and pdfGrids objects are keyed by routeNick, where

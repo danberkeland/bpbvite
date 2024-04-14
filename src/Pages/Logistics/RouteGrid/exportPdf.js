@@ -1,9 +1,9 @@
 import jsPDF from "jspdf"
 import "jspdf-autotable"
 import { sortBy, uniqBy, groupBy, orderBy, mapValues } from "lodash"
-import { checkQBValidation_v2 } from "../../../../data/QBHelpers"
+import { checkQBValidation_v2 } from "../../../data/QBHelpers"
 import axios from "axios"
-import { downloadPDF } from "../../../../utils/pdf/downloadPDF"
+import { downloadPDF } from "../../../utils/pdf/downloadPDF"
 
 /** Designed to work with the gridData object made with the useRouteGrid hook. */
 export const exportRouteGridPdf = ({ gridData, reportDateDT, fileName, noteData=[] }) => {

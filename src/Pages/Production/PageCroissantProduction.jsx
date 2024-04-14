@@ -3,11 +3,12 @@ import { DT } from "../../utils/dateTimeFns"
 import { useCroissantProduction } from "./useCroissantShapingData"
 import { Column } from "primereact/column"
 import { DrilldownCellTemplate } from "./ComponentDrilldownCellTemplate"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Button } from "primereact/button"
 import { InputNumber } from "primereact/inputnumber"
 import { useCheckForUpdates } from "../../core/checkForUpdates"
 import { exportCroissantProduction } from "./exportCroissantProduction"
+import { sumBy } from "../../utils/collectionFns"
 
 /** @type {React.CSSProperties} */
 const greenCellStyle = {
@@ -169,6 +170,7 @@ export const PageCroissantProduction = () => {
   return (
     <div style={{padding: "2rem 5rem 5rem 5rem", width: "65rem", margin: "auto"}}>
       <h1>Croissant Production {reportDT.toFormat('MM/dd/yyyy')}</h1>
+
       <p>Using v3 <a href="/Production/CroixToMake/v2">Go to previous version</a></p>
       <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
         <Button label="Print Shape List" 
@@ -197,6 +199,8 @@ export const PageCroissantProduction = () => {
             : (sheetMakes[options.rowIndex] ?? row.sheetMake)
           }    
           style={{paddingBlock: "0rem"}}
+          footer={() => `Σ ${sumBy(sheetMakes, x => x)}`}
+          footerStyle={{padding: "1rem"}}
         />
         {[0,1,2,3,4].map(relDate => 
           <Column 
@@ -233,7 +237,7 @@ export const PageCroissantProduction = () => {
       <h2 style={{marginTop: "4rem"}}>Almonds</h2>
       {/* <p>
         Daily consumption totals are different from Setout totals. 
-        This table tracks of when items are pulled from the freezer.
+        This table tracks when items are pulled from the freezer.
         Baked orders are pulled the day before delivery (they are either sent north or moved to the fridge), 
         while frozen orders are pulled the same day as delivery.
       </p> */}

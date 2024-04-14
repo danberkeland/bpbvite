@@ -44,7 +44,7 @@ type DBLocationAttribute =
 /**
  * @param {Object} input
  * @param {boolean} input.shouldFetch 
- * @param {DBLocationAttribute[]} input.projection
+ * @param {DBLocationAttribute[]} [input.projection]
  * @returns {ListDataCache<DBLocation>}
  */
 const useLocations = ({ shouldFetch, projection }) => 

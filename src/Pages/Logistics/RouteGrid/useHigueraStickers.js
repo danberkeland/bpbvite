@@ -1,19 +1,19 @@
 import { useMemo } from "react"
-import { useProdOrdersByDate } from "../../../../data/useT0T7ProdOrders"
-import { groupBy, keyBy, mapValues, orderBy, sortBy, truncate, uniqBy } from "lodash"
-import { useProducts } from "../../../../data/product/useProducts"
-import { useLocations } from "../../../../data/location/useLocations"
-import { useRoutes } from "../../../../data/route/useRoutes"
+import { useProdOrdersByDate } from "../../../data/useT0T7ProdOrders"
+import { keyBy } from "lodash"
+import { useProducts } from "../../../data/product/useProducts"
+import { useLocations } from "../../../data/location/useLocations"
+import { useRoutes } from "../../../data/route/useRoutes"
 
-import { DBProduct } from "../../../../data/types.d"
-import { compareBy } from "../../../../utils/collectionFns/compareBy"
-import { groupByArrayRdc } from "../../../../utils/collectionFns/groupByArrayRdc"
+import { DBProduct } from "../../../data/types.d"
+import { compareBy } from "../../../utils/collectionFns/compareBy"
+import { groupByArrayRdc } from "../../../utils/collectionFns/groupByArrayRdc"
 
 import jsPDF from "jspdf"
 import "jspdf-autotable"
 import { DateTime } from "luxon"
-import { DT } from "../../../../utils/dateTimeFns"
-import { divyUp } from "../../../../utils/divyUp"
+import { DT } from "../../../utils/dateTimeFns"
+import { divyUp } from "../../../utils/divyUp"
 
 /**
  * If a prodNick is not included or if nPerBag is set to 0, 
@@ -118,7 +118,7 @@ export const useHigueraStickers = ({ reportDT, shouldFetch }) => {
     const T0StickerOrders = T0Orders.filter(order => 1
       && order.isStand !== false 
       && order.qty !== 0 
-      && (order.delivDate === T0 && order.delivLeadTime === 0 || ['hfoc', 'foc'].includes(order.prodNick))
+      && ((order.delivDate === T0 && order.delivLeadTime === 0) || ['hfoc', 'foc'].includes(order.prodNick))
       && isHigueraPackProduct(products[order.prodNick])
       && !['whole', 'slonat', 'backporch', 'bpbextras', 'bpbkit'].includes(order.locNick)
       && !['Pick up Carlton'].includes(order.routeMeta.routeNick)
