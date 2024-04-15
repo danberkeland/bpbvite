@@ -121,7 +121,7 @@ const Setout = ({ reportLocation }) => {
 
       <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem"}}>
         <Button 
-          label="Print Carlton Setout List" 
+          label={`Print ${reportLocation} Setout List`} 
           onClick={() => exportSetout({
             reportLocation,
             reportDT,

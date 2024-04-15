@@ -21,7 +21,7 @@ export const exportCroissantProduction = ({
     body: gridRows,
     margin: 40,
     columns: [
-      { header: "Croix", dataKey: "countNick" },
+      { header: "Croix", dataKey: "prodNick" },
       { header: "Sheets", dataKey: "sheetMake" },
       { header: "Total", dataKey: "total" },
       { header: "Shaper 1"},

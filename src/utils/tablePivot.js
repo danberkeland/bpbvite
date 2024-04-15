@@ -41,7 +41,6 @@ import { mapValues } from "./objectFns"
  * @param {TableItemKey} rowPartitionAttribute
  * @param {TableItemKey} pivotColumnAttribute
  * @param {(o: Object[]) => (number|string|boolean|null)} [valueFn] - Function that aggregates cell items to a single (displayable) value -- e.g. sumBy, countBy, first value...
- * @returns {PivotTable}
  */
 export function tablePivotSimple(
   data, 
@@ -67,7 +66,7 @@ export function tablePivotSimple(
 
   const partedRows = partitionByRowKey(data)
 
-  /**@type {PivotTable} */
+  // /**@type {PivotTable} */
   const pivotedRows = partedRows.map(rowGroup => {
 
     const pivotData = Object.fromEntries(

@@ -62,7 +62,7 @@ import MixPocket from "../Pages/Production/PageBPBSMixPocket";
 import CroixCountV1 from "../Pages/Production/Legacy/CroixCount";
 // import CroixToMake from "../Pages/Production/Legacy/CroixToMake";
 import ByProduct from "../Pages/Logistics/ByProduct/ByProduct";
-import NorthList from "../Pages/Logistics/NorthLists";
+// import NorthList from "../Pages/Logistics/NorthLists";
 import NorthListV2 from "../Pages/Logistics/NorthLists/v2/NorthLists"
 import AMPastry from "../Pages/Logistics/AMPastry";
 // import RetailBags from "../Pages/Logistics/RetailBags";
@@ -77,9 +77,8 @@ import { default as NotesV3 } from "../Pages/Settings/notes/v3/Notes";
 import Settings from "../Pages/Settings/Settings";
 import Remap from "../Pages/EODCounts/EODCountsRempas";
 // import SpecialPacking from "../Pages/Production/NewPages/BPBS/SpecialPacking/SpecialPacking";
-import RouteGrid from "../Pages/Logistics/NewPages/RouteGrid/RouteGrid";
+import RouteGrid from "../Pages/Logistics/RouteGrid/RouteGrid";
 import CroixCount from "../Pages/Production/NewPages/Croix/CroixEOD/CroixCount";
-import SpecialOrders from "../Pages/Logistics/NewPages/SpecialOrders/SpecialOrders";
 import Products from "../Pages/Products/NewPage/Products";
 import Bpbn1 from "../Pages/Production/NewPages/BPBN/Baker1/BpbnBaker1";
 import Bpbn2 from "../Pages/Production/NewPages/BPBN/Baker2/BpbnBaker2";
@@ -91,6 +90,8 @@ import { CroixToMake } from "../Pages/Production/NewPages/Croix/CroixToMake/Croi
 import PageCroissantEodCounts from "../Pages/Production/PageCroissantEodCounts";
 import PageFreezerThaw from "../Pages/Logistics/PageFreezerThaw";
 import PageRetailBags from "../Pages/Logistics/PageRetailBags";
+import PageSpecialOrders from "../Pages/Logistics/PageSpecialOrders";
+import PageAMPastry from "../Pages/Logistics/PageAMPastry";
 
 
 
@@ -292,18 +293,15 @@ function AnimatedRoutes({ user, signOut }) {
           <Route path="/Logistics/ByRoute"       element={<RouteGrid />} />
           <Route path="/Logistics/ByProduct"     element={<ByProduct />} />
 
-          <Route path="/Logistics/NorthLists/v1" element={<NorthList />} />
+          {/* <Route path="/Logistics/NorthLists/v1" element={<NorthList />} /> */}
           <Route path="/Logistics/NorthLists/v2" element={<NorthListV2 />} />
           <Route path="/Logistics/NorthLists"    element={<NorthListV2 />} />
 
           <Route path="/Logistics/AMPastry"      element={<AMPastry />} />
+          <Route path="/Logistics/AMPastry/v2"   element={<PageAMPastry />} />
 
-          {/* <Route path="/Logistics/RetailBags"    element={<RetailBags />} /> */}
           <Route path="/Logistics/RetailBags"    element={<PageRetailBags />} />
-
-          <Route path="/Logistics/SpecialOrders" element={<SpecialOrders />} />
-
-          {/* <Route path="/Logistics/FreezerThaw"    element={<FreezerThaw />} /> */}
+          <Route path="/Logistics/SpecialOrders" element={<PageSpecialOrders />} />
           <Route path="/Logistics/FreezerThaw"   element={<PageFreezerThaw />} />
 
           <Route path="/EODCounts" element={<EODCounts />} />

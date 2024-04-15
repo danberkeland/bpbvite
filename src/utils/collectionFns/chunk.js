@@ -1,5 +1,3 @@
-
-
 /**
  * @template T
  * @param {T[]} collection 
@@ -7,9 +5,9 @@
  * @returns {T[][]} 
  * @example ```chunk([1, 2, 3, 4], 3) // [[1, 2, 3], [4]]```
  */
-export function chunk(collection, size) {
-  if (size <= 0) { 
-    console.error("Invalid Size: use a positive integer") 
+export function chunk(collection, chunkSize) {
+  if (chunkSize <= 0) { 
+    console.warn("Invalid Size: use a positive integer") 
     return []
   }
 
@@ -17,8 +15,8 @@ export function chunk(collection, size) {
   let currentChunkStartIdx = 0
 
   while(currentChunkStartIdx < collection.length) {
-    returnArray.push(collection.slice(currentChunkStartIdx, currentChunkStartIdx + size))
-    currentChunkStartIdx += size
+    returnArray.push(collection.slice(currentChunkStartIdx, currentChunkStartIdx + chunkSize))
+    currentChunkStartIdx += chunkSize
   }
 
   return returnArray
