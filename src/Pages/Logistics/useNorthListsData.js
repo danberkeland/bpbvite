@@ -1,13 +1,13 @@
 import { useMemo } from "react";
-import { useLocations } from "../../../../data/location/useLocations";
-import { useProducts } from "../../../../data/product/useProducts";
+import { useLocations } from "../../data/location/useLocations.js";
+import { useProducts } from "../../data/product/useProducts.js";
 import { DateTime } from "luxon";
-import { useCombinedRoutedOrdersByDate } from "../../../../data/production/useProductionData.js";
-import { useInfoQBAuths } from "../../../../data/infoQBAuths/useInfoQBAuths.js";
-import { DT } from "../../../../utils/dateTimeFns.js";
-import { compareBy, keyBy, sumBy } from "../../../../utils/collectionFns.js";
-import { objProject } from "../../../../utils/objectFns.js";
-import { tablePivot, tablePivotFlatten } from "../../../../utils/tablePivot.js";
+import { useCombinedRoutedOrdersByDate } from "../../data/production/useProductionData.js";
+import { useInfoQBAuths } from "../../data/infoQBAuths/useInfoQBAuths.js";
+import { DT } from "../../utils/dateTimeFns.js";
+import { compareBy, keyBy, sumBy } from "../../utils/collectionFns.js";
+import { objProject } from "../../utils/objectFns.js";
+import { tablePivot, tablePivotFlatten } from "../../utils/tablePivot.js";
 
 
 /*

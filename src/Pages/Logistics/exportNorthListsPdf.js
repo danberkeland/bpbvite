@@ -1,7 +1,7 @@
 
 import jsPDF from "jspdf"
 import "jspdf-autotable"
-import { sumBy } from "../../../../utils/collectionFns"
+import { sumBy } from "../../utils/collectionFns"
 
 export const exportNorthListPdf = (
   reportDateDT,

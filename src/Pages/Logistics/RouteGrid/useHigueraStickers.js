@@ -41,41 +41,9 @@ const stickerInfo = [
   { prodNick: 'roli',  nPerBag: 4 },
 ]
 
-
-// /**
-//  * Related to integer division. Splits {nItems} items 
-//  * as equally as possible into {nParts} parts.
-//  * @example ```
-//  * divyUp(10, 3) // [4, 3, 3]
-//  * ```
-//  * @param {number} nItems 
-//  * @param {number} nParts 
-//  * @returns {number[]}
-//  */
-// function divyUp(nItems, nParts) {
-//   if (!(nParts > 0)) return []
-
-//   const quotient  = Math.floor(nItems / nParts)
-//   const remainder = nItems % nParts
-
-//   return (new Array(nParts))
-//     .fill(quotient)
-//     .map((q, idx) => idx < remainder ? q+1 : q)
-
-// }
-
 const isHigueraPackProduct = (/** @type {DBProduct} */ product) => 1
   && product.doughNick !== "French"
   && ['rustic breads', 'retail', 'focaccia'].includes(product.packGroup)
-
-
-// /**
-//  * console.log function that can be inserted into an array method pipeline. 
-//  * Intended to be called with forEach.
-//  */
-// function feLog(...messages) {
-//   return (_, i, array) => { if (i === 0) { console.log(...messages, array) } }
-// }
 
 /**
  * 
@@ -101,10 +69,6 @@ export const useHigueraStickers = ({ reportDT, shouldFetch }) => {
     const locations = keyBy(LOC, 'locNick')
     const products = keyBy(PRD, 'prodNick')
     const routes = keyBy(RTE, 'routeNick')
-
-    // const ordersPackedToday = T0Orders.filter(order => order.routeMeta)
-
-    console.log("ORDERS:SERAWSR", T0Orders)
 
     const T1StickerOrders = T1Orders.filter(order => 1
       && order.isStand !== false 

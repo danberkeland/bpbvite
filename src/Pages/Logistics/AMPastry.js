@@ -244,6 +244,7 @@ function AMPastry() {
         {AMPastry.length > 0 && (
           <React.Fragment>
             <h3>AM Pastry</h3>
+            <p>Using v1 <a href="/Logistics/AMPastry">Go to current version</a></p>
             <DataTable
               className="p-datatable-gridlines p-datatable-sm p-datatable-striped"
               value={AMPastry}

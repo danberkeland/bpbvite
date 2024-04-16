@@ -1,4 +1,4 @@
-import { useNotesByTypeByRef } from "../../../data/note/useNotes"
+import { useNotesByTypeByRef } from "../../data/note/useNotes"
 
 export const useDriverNotes = ({ reportDate }) => {
 

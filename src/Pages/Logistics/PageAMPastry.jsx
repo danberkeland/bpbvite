@@ -12,10 +12,12 @@ import { Button } from "primereact/button"
 
 import jsPDF from "jspdf"
 import "jspdf-autotable"
-import { cartesian } from "../../utils/cartesianProduct"
 
 const useAMPastryData = ({ reportDT, shouldFetch }) => {
-  const { data:R0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT, useHolding: false, shouldFetch })
+  const { data:R0Orders } = useCombinedRoutedOrdersByDate({ 
+    delivDT: reportDT, 
+    useHolding: false, shouldFetch 
+  })
   const { data:PRD } = useProducts({ shouldFetch })
   const { data:LOC } = useLocations({ shouldFetch })
 
@@ -58,7 +60,7 @@ const useAMPastryData = ({ reportDT, shouldFetch }) => {
 }
 
 
-const exportAMPastryStickers = (pivotData, pivotColumnKeys, reportDT) => {
+const exportAMPastryStickers = (pivotData, reportDT) => {
   const [width, height] = [4, 2]
   const doc = new jsPDF({ orientation: "l", unit: "in", format: [height, width] })
 
@@ -79,7 +81,7 @@ const exportAMPastryStickers = (pivotData, pivotColumnKeys, reportDT) => {
 
 
   const renderSticker1 = (pivotRow) => {
-    const total = sumBy(Object.values(pivotRow.colProps), x => x)
+    const total = sumBy(Object.values(pivotRow.colProps), cell => cell.value)
     const binSize = total > 96 ? Math.ceil(total / 45) + ' x L'
       : total > 10 ? Math.ceil(total / 24) + ' x M'
       : '1 x S'
@@ -90,7 +92,7 @@ const exportAMPastryStickers = (pivotData, pivotColumnKeys, reportDT) => {
 
     doc.setFontSize(14);
     doc.text(pivotRow.rowProps.locName, 0.2, 0.36)
-    doc.text(reportDT.toFormat('M/d/yy'), width - 0.2, 0.36, { align: 'right' })
+    doc.text(reportDT.toFormat('MM/dd/yy'), width - 0.2, 0.36, { align: 'right' })
 
     doc.text(`${binSize}`, width - 0.2, height - 0.2, { align: "right" });
     
@@ -110,13 +112,25 @@ const exportAMPastryStickers = (pivotData, pivotColumnKeys, reportDT) => {
       renderSticker1(pivotRow)
     })
 
-  doc.save(`Pastry_Stickers_${reportDT.toFormat('yyyy-MM-dd')}`)
+  doc.save(`Pastry_Stickers_${reportDT.toFormat('yyyy-MM-dd')}.pdf`)
 
 }
 
-const exportAMPastryPdf = (pivotData, pivotColumnKeys) => {
-  const printData = tablePivotFlatten(pivotData)
+const exportAMPastryTable = (pivotData, pivotColumnKeys, reportDT) => {
+  const body = tablePivotFlatten(pivotData)
+  const columns = [
+    { header: "Customer", dataKey: "locNick" },
+    ...pivotColumnKeys.map(prodNick => (
+      { header: prodNick, dataKey: prodNick })
+    )
+  ]
 
+  const doc = new jsPDF({ orientation: "portrait", unit: "in", format: "letter" })
+
+  doc.setFontSize(20);
+  doc.text(`AM Pastry ${reportDT.toFormat('MM/dd/yyyy')}`, 0.50, 0.67);
+  doc.autoTable({ body, columns, startY: 1, styles: { fontSize: 11 } })
+  doc.save(`Pastry_List_${reportDT.toFormat('yyyy-MM-dd')}.pdf`)
 }
 
 const PageAMPastry = () => {
@@ -125,12 +139,12 @@ const PageAMPastry = () => {
   const { data:pivotData, pivotColumnKeys } = useAMPastryData({ reportDT, shouldFetch: true })
 
   return (
-    <div style={{padding: "2rem 5rem 5rem 5rem", maxWidth: "60rem", margin: "auto"}}>
+    <div style={{padding: "2rem 5rem 5rem 5rem", maxWidth: "64rem", margin: "auto"}}>
       <h1>AM Pastry Pack {reportDT.toFormat('MM/dd/yyyy')}</h1>
-
+      <p>Using v2 <a href="/Logistics/AMPastry/v1">Go to previous version</a></p>
       <div style={{ paddingBottom: "2rem", display: "flex", gap: "4rem" }}>
-        <Button label="Print Stickers" onClick={() => exportAMPastryStickers(pivotData, pivotColumnKeys, reportDT)} />
-        <Button label="Print List" />
+        <Button label="Print Stickers" onClick={() => exportAMPastryStickers(pivotData, reportDT)} />
+        <Button label="Print List" onClick={() => exportAMPastryTable(pivotData, pivotColumnKeys, reportDT)} />
       </div>
 
       <DataTable

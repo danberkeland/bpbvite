@@ -16,6 +16,7 @@ import { printBucketStickers } from "./exportBucketStickers"
 import { debounce, round } from "lodash"
 import { useDoughs } from "../../data/dough/useDoughs"
 import { useCheckForUpdates } from "../../core/checkForUpdates"
+import { printBaguette65Stickers } from "./exportBPBSBaguette65Stickers"
 
 /** @type {React.CSSProperties} */
 const printButtonStyle = { 
@@ -92,11 +93,7 @@ const Buckets = ({ mixedWhere }) => {
     <div style={{width: "60rem", margin:"auto", padding: "2rem 5rem 5rem 5rem"}}>
 
       <h1>Higuera Dough Stickers</h1>
-
-      <div>Using v2 <a href="/Production/BPBNBuckets/v1">Go to previous version</a></div>
-
       {!doughList && <h2>Loading...</h2>}
-
       {(doughList ?? []).map((row, idx) => 
         <div 
           key={row.doughName} 
@@ -226,6 +223,8 @@ const Buckets = ({ mixedWhere }) => {
             /> 
             
           </div>
+
+
   
           <Dialog
             visible={showTable[idx]}
@@ -252,6 +251,21 @@ const Buckets = ({ mixedWhere }) => {
           </Dialog>
         </div>
       )}
+
+      {mixedWhere === 'Prado' && 
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBlock: "1rem", 
+          background: "var(--bpb-orange-vibrant-200)", 
+          padding: "1rem", 
+          borderRadius: ".5rem"
+        }}>
+          <h2 style={{ display: "inline-block" }}>Baguette (65 lb. - 54 baguettes)</h2>
+          <Button label="Print 65 lb. Set" onClick={printBaguette65Stickers} style={printButtonStyle} />
+        </div>
+      }
     </div>
   )
 }
