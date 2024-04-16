@@ -18,7 +18,7 @@ export const useDoobieStuff = ({ reportDT }) => {
       Prod: "Siciliano",
       Bucket: "YES",
       Mix: yes ? "NO" : "NO",
-      Bake: yes ? "YES" : "YES",
+      Bake: yes ? "NO" : "NO",
     },
   ]
 
