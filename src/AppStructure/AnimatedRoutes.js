@@ -58,11 +58,9 @@ import { default as NotesV3 } from "../Pages/Settings/notes/v3/Notes";
 import Settings from "../Pages/Settings/Settings";
 import Remap from "../Pages/EODCounts/EODCountsRempas";
 import RouteGrid from "../Pages/Logistics/RouteGrid/RouteGrid";
-import CroixCount from "../Pages/Production/NewPages/Croix/CroixEOD/CroixCount";
 import Products from "../Pages/Products/NewPage/Products";
 import PageSpecialPacking from "../Pages/Production/PageSpecialPacking";
 import { PageCroissantProduction } from "../Pages/Production/PageCroissantProduction";
-import { CroixToMake } from "../Pages/Production/NewPages/Croix/CroixToMake/CroixToMake";
 import PageCroissantEodCounts from "../Pages/Production/PageCroissantEodCounts";
 import PageFreezerThaw from "../Pages/Logistics/PageFreezerThaw";
 import PageRetailBags from "../Pages/Logistics/PageRetailBags";
@@ -237,13 +235,8 @@ function AnimatedRoutes({ user, signOut }) {
 
           {/* Production::Croix */}
           
-          <Route path="/Production/CroixCount/v1"  element={<CroixCountV1 />} />
-          <Route path="/Production/CroixCount/v2"  element={<CroixCount />} />
-          <Route path="/Production/CroixCount/v3"  element={<PageCroissantEodCounts />} />
-          <Route path="/Production/CroixCount"     element={<CroixCountV1 />} />
-          
-          <Route path="/Production/CroixToMake/v2" element={<CroixToMake />} />
-          <Route path="/Production/CroixToMake"    element={<PageCroissantProduction />} />
+          <Route path="/Production/CroixCount"  element={<PageCroissantEodCounts />} />
+          <Route path="/Production/CroixToMake" element={<PageCroissantProduction />} />
 
           {/* Production::Other */}
 

@@ -12,7 +12,7 @@ const eodProdNicks = ['ch', 'mb', 'mini', 'pg', 'pl', 'sf']
 
 const useCroissantEodData = ({ reportDT, shouldFetch }) => {
   const { croixData } = useCroissantProduction({ reportDT, shouldFetch: true})
-  const { data:PRD } = useProducts({ shouldFetch })
+  const { data:PRD, submitMutations, updateLocalData } = useProducts({ shouldFetch })
 
   const calculateCroissantEod = () => {
     if (!croixData || !PRD) return { data: undefined }
@@ -35,14 +35,22 @@ const useCroissantEodData = ({ reportDT, shouldFetch }) => {
     return { data }
   }
   
-  return useMemo(calculateCroissantEod, [croixData, PRD])
+  return {
+    ...useMemo(calculateCroissantEod, [croixData, PRD]),
+    submitProducts: submitMutations,
+    updateProductCache: updateLocalData,
+  }
 
 }
 
 const PageCroissantEodCounts = () => {
   const reportDT = DT.today()
 
-  const { data:eodData } = useCroissantEodData({ reportDT, shouldFetch: true })
+  const { 
+    data:eodData, 
+    submitProducts, 
+    updateProductCache,
+  } = useCroissantEodData({ reportDT, shouldFetch: true })
   const [eodChanges, setEodChanges] = useState()
   useEffect(() => {
     if (!!eodData) setEodChanges(structuredClone(eodData))
@@ -50,17 +58,16 @@ const PageCroissantEodCounts = () => {
 
   const [editingAttribute, setEditingAttribute] = useState('')
 
-  console.log(eodData, eodChanges)
-
-  const submitChanges = () => {
-    if (!eodData) return
-    console.log(
-      eodChanges.filter((row, idx) => 
-        Object.keys(row).every(attribute => 
-          eodChanges[idx][attribute] === eodData[idx][attribute]
-        )
-      )
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const submitChanges = async () => {
+    if (!eodData || !eodChanges) return
+    setIsSubmitting(true)
+    const updateInputs = eodChanges.filter((row, idx) => 
+      Object.keys(row).some(attribute => eodChanges[idx][attribute] !== eodData[idx][attribute])
     )
+    updateProductCache(await submitProducts({ updateInputs }))
+    setEditingAttribute('')
+    setIsSubmitting(false)
   }
 
   const ToggleEditButton = ({ attribute }) => editingAttribute === attribute 
@@ -70,10 +77,11 @@ const PageCroissantEodCounts = () => {
             setEditingAttribute('')
             setEodChanges(structuredClone(eodData))
           }} 
+          disabled={isSubmitting}
         />
         <Button icon="pi pi-send"  className="p-button-rounded" 
           onClick={() => submitChanges()}
-          disabled={!eodData || !eodChanges || eodData.every((row, idx) => row[attribute] === eodChanges[idx][attribute])}
+          disabled={!eodData || !eodChanges || isSubmitting || eodData.every((row, idx) => row[attribute] === eodChanges[idx][attribute])}
         />
       </div>
     : <Button 
@@ -125,7 +133,8 @@ const PageCroissantEodCounts = () => {
           >
             <Column 
               header="Product"
-              field="prodNick" 
+              field="prodNick"
+              style={{width: "7rem"}}
             />
             <Column 
               header={<span>Opening <br/>Count</span>} 
@@ -135,7 +144,7 @@ const PageCroissantEodCounts = () => {
                 idx: options.rowIndex, 
               })}
               footer={ToggleEditButton({ attribute: 'freezerCount' })} 
-              style={{width: "8rem", padding: "0"}}
+              style={{width: "7rem", padding: "0"}}
               footerStyle={{paddingBlock: "1rem"}}
             />
             <Column 
@@ -146,7 +155,7 @@ const PageCroissantEodCounts = () => {
                 idx: options.rowIndex 
               })}
               footer={ToggleEditButton({ attribute: 'freezerClosing' })}
-              style={{width: "8rem", padding: "0"}}
+              style={{width: "7rem", padding: "0"}}
               footerStyle={{paddingBlock: "1rem"}}
             />
           </DataTable>
@@ -161,11 +170,12 @@ const PageCroissantEodCounts = () => {
             <Column 
               header="Product" 
               field="prodNick" 
+              style={{width: "7rem"}}
             />
             <Column 
               header={<span>Opening <br/>Count</span>} 
               field="freezerNorth" 
-              style={{width: "8rem", padding: "0"}}
+              style={{width: "7rem", padding: "0"}}
             />
             <Column 
               header={<span>Closing <br/>Count</span>} 
@@ -175,7 +185,7 @@ const PageCroissantEodCounts = () => {
                 idx: options.rowIndex 
               })}
               footer={ToggleEditButton({ attribute: 'freezerNorthClosing' })}
-              style={{width: "8rem", padding: "0"}}
+              style={{width: "7rem", padding: "0"}}
               footerStyle={{paddingBlock: "1rem"}}
             />
           </DataTable>
