@@ -59,15 +59,6 @@ const WhatToMake = ({ reportDay='today' }) => {
     pretzelData,
     freezerData,
   })
-  const confirmExportPdf = () => confirmDialog({
-    message:
-      "This is not the list for TODAY. " 
-      + "Are you sure this is the one you want to print?",
-    header: "Confirmation",
-    icon: "pi pi-exclamation-triangle",
-    accept: exportPdf,
-  })
-  const handleExportPdf = () => isToday ? exportPdf() : confirmExportPdf()
 
   const pocketInputTemplate = (row, options) => {
     const qtyChanged = 1
@@ -113,7 +104,6 @@ const WhatToMake = ({ reportDay='today' }) => {
   return (
     <div style={{ padding: "2rem 5rem 5rem 5rem", width: "50rem", margin: "auto" }}>
 
-
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <h1 style={{display: "inline-block", marginTop: "0"}}>BPBS What to Make<br/>{reportDT.toFormat('MM/dd/yyyy')}{!isToday ? ' (Backup)' : ''}</h1>
         <div style={{display: "flex", gap: "1rem"}}>
@@ -133,7 +123,7 @@ const WhatToMake = ({ reportDay='today' }) => {
       <Button 
         label="Print What to Make List" 
         icon="pi pi-print" 
-        onClick={handleExportPdf}
+        onClick={exportPdf}
         disabled={!isAllLoaded}
         style={{ marginBottom: "1rem" }} 
       />
@@ -315,7 +305,7 @@ const ShelfFreezerTable = ({ value, className, products }) =>
     <Column header="Need Today" field="needTodayEa" />
     <Column header="Make Total" field="totalEa"
       body={rowData => DrilldownCellTemplate({
-        dialogHeader: <div>Today & Tomorrow orders<br />EOD qtys will subtract from total</div>,
+        dialogHeader: <div>Today & tomorrow orders - <br />EOD qtys subtract if applicable</div>,
         dialogFooter: <div style={{fontWeight: "bold"}}>EOD count (Ea): {rowData.currentStockEa ?? 0}</div>,
         cellValue: rowData.totalEa,
         tableData: rowData.totalItems,

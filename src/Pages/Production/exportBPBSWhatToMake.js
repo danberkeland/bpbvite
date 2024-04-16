@@ -24,18 +24,18 @@ const shelfColumns = [
   { header: "Make Total",    dataKey: "totalEa" },
 ]
 
-const pretzelColumns = [
-  { header: "Pretzel Product", dataKey: "rowKey" },
-  { header: "Bake Today",      dataKey: "bakeEa" },
-  { header: "Shape Today",     dataKey: "shapeEa" },
-  { header: "Bag EOD",         dataKey: "bagEa" },
-]
-
 const freezerColumns = [
   { header: "Freezer Product", dataKey: "rowKey" },
   { header: "Total Deliv",     dataKey: "delivEa" },
   { header: "Need Today",      dataKey: "needTodayEa" },
   { header: "Make Total",      dataKey: "totalEa" },
+]
+
+const pretzelColumns = [
+  { header: "Pretzel Product", dataKey: "rowKey" },
+  { header: "Bake Today",      dataKey: "bakeEa" },
+  { header: "Shape Today",     dataKey: "shapeEa" },
+  { header: "Bag EOD",         dataKey: "bagEa" },
 ]
 
 export const exportWhatToMake = ({
@@ -70,10 +70,11 @@ export const exportWhatToMake = ({
 
   renderTable(frenchPocketData, getFrenchPocketColumns(isToday))
   doc.setFontSize(11)
-  doc.text("Early column counts AM North & Sandos orders", margin, startY)
+  doc.text("Early column counts AM North & Pick up Carlton orders", margin, startY)
   startY += 3
   renderTable(freshData, freshColumns)
   renderTable(shelfData, shelfColumns)
+  renderTable(freezerData, freezerColumns)
   doc.addPage()
   doc.text([
     'What to Make',
@@ -81,8 +82,7 @@ export const exportWhatToMake = ({
   ], 176, 20, { align: "right" })
   startY = 30
   renderTable(pretzelData, pretzelColumns)
-  renderTable(freezerData, freezerColumns)
-
+  
   doc.save(`BPBS_WhatToMake_${reportDT.toFormat('yyyy-MM-dd')}.pdf`);
 
 }
