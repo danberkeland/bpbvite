@@ -60,7 +60,6 @@ import Remap from "../Pages/EODCounts/EODCountsRempas";
 import RouteGrid from "../Pages/Logistics/RouteGrid/RouteGrid";
 import CroixCount from "../Pages/Production/NewPages/Croix/CroixEOD/CroixCount";
 import Products from "../Pages/Products/NewPage/Products";
-import Bpbn1 from "../Pages/Production/NewPages/BPBN/Baker1/BpbnBaker1";
 import Bpbn2 from "../Pages/Production/NewPages/BPBN/Baker2/BpbnBaker2";
 import BPBNSetout from "../Pages/Production/NewPages/Setout/BPBNSetout";
 import BPBSSetout from "../Pages/Production/NewPages/Setout/BPBSSetout";
@@ -215,8 +214,6 @@ function AnimatedRoutes({ user, signOut }) {
 
           {/* Production::BPBN */}
   
-          <Route path="/Production/BPBNBaker1/v2"  element={<Bpbn1 />} />
-          <Route path="/Production/BPBNBaker1/v3"  element={<Baker1 reportDay="today" />} />
           <Route path="/Production/BPBNBaker1"     element={<Baker1 reportDay="today" />} />
           <Route path="/BPBNProd/BPBNBaker1Backup" element={<Baker1 reportDay="tomorrow" />} />
 

@@ -110,7 +110,6 @@ const Baker1 = ({ reportDay='today' }) => {
         disabled={!DGH || !nBucketSetsToMake}
         style={{marginBottom: "1rem"}} 
       />
-      <div>Using v3 <a href="/Production/BPBNBaker1/v2">Go to previous version</a></div>
 
       <h2>Rustics</h2>
       <RusticTable 
