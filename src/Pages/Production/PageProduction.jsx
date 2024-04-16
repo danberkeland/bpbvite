@@ -4,13 +4,14 @@ import { BPBTerminal } from "./TestPages/BPBTerminal2";
 import { Sandbox } from "./TestPages/_Sandbox";
 import { BriocheCalc } from "./TestPages/BriocheCalc";
 import { OrderReview } from "./TestPages/OrderReview";
+import { HoldingOrders } from "./TestPages/HoldingOrders";
 
 const bpbnPages = [
   {name: "Sandbox", component: <Sandbox />},
   {name: "Terminal", component: <BPBTerminal />},
   {name: "Brioche Calculator", component: <BriocheCalc />},
+  {name: "Holding Orders", component: <HoldingOrders />},
   {name: "Order Review", component: <OrderReview />},
-
 ]
 
 const Production = () => {

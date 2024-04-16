@@ -235,13 +235,6 @@ export const PageCroissantProduction = () => {
       />}
 
       <h2 style={{marginTop: "4rem"}}>Almonds</h2>
-      {/* <p>
-        Daily consumption totals are different from Setout totals. 
-        This table tracks when items are pulled from the freezer.
-        Baked orders are pulled the day before delivery (they are either sent north or moved to the fridge), 
-        while frozen orders are pulled the same day as delivery.
-      </p> */}
-      {/* <p>With this setup, the closing and projected counts represent the total in the freezer at the EOD, the same as the above table.</p> */}
       <p>Closing Count = Total in Freezer at EOD</p>
       <DataTable
         value={almondData ?? []}
@@ -281,7 +274,7 @@ export const PageCroissantProduction = () => {
       <Button 
         label={isEditingAlmond ? "Cancel Edit" : "Edit Prepped" }
         onClick={toggleEditAlmond}
-        disabled={isEditingCroix}  
+        disabled={!almondData || isEditingCroix}  
       />
       {isEditingAlmond && <Button 
         label="Submit Changes" 

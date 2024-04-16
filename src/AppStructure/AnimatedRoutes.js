@@ -17,32 +17,21 @@ import CustomerNews from "../Pages/CustomerNews/CustomerNews";
 import CustomerBilling from "../Pages/CustomerBilling/CustomerBilling";
 import CustomerSettings from "../Pages/CustomerSettings/CustomerSettings";
 
-// Deprecated:
-
-// import BPBNBaker1 from "../Pages/Production/BPBNBaker1";
-// import BPBNBaker1Backup from "../Pages/Production/BPBNBaker1Backup";
-// import BPBNBaker2 from "../Pages/Production/BPBNBaker2";
-// import { default as SetOutV1 } from "../Pages/Production/BPBNSetout";
 
 // Load simultaneously:
 import{ default as SetoutV3 } from "../Pages/Production/PageSetout";
 
-import BPBNBuckets from "../Pages/Production/Legacy/BPBNBuckets";
 import Baker1 from "../Pages/Production/PageBPBNBaker1";
 import Baker2 from "../Pages/Production/PageBPBNBaker2";
 import { default as PageBuckets } from "../Pages/Production/PageBuckets";
 
-
 import OrdersPage from "../Pages/Ordering/v2/Ordering"; // group with lazy loaders while in testing
-// import WhoBake from "../Pages/Production/WhoBake";
-// import WhoShape from "../Pages/Production/WhoShape";
 import Production from "../Pages/Production/PageProduction";
 import ProductsV1 from "../Pages/Products/Products";
 import { default as BillingV1} from "../Pages/Billing/Billing";
 import BillingV2 from "../Pages/Billing/v2/Billing";
 import EODCounts from "../Pages/EODCounts/EODCounts";
 import Logistics from "../Pages/Logistics/Logistics"; 
-// import ByRoute from "../Pages/Logistics/ByRoute/ByRoute";
 import Locations from "../Pages/Locations/Locations";
 import LocationsNew from "../Pages/Locations/NewPage/Locations";
 import ManageCustomers from "../Pages/Settings/ManageCustomers/ManageCustomers";
@@ -50,24 +39,16 @@ import ManageTraining from "../Pages/Settings/ManageTraining/ManageTraining";
 import { default as CustProds } from "../Pages/Settings/custProds/custProds";
 import LocationProductOverrides from "../Pages/Settings/custProds/v2/LocationProductOverrides";
 
-// import { default as BPBSWhatToMakeV1 } from "../Pages/Production/Legacy/BPBSWhatToMake";
-// import BPBSWhatToMakeBackup from "../Pages/Production/Legacy/BPBSWhatToMakeBackup";
 import BPBSWhatToMake from "../Pages/Production/NewPages/BPBS/WhatToMake/WhatToMake";
 import { default as WhatToMakeV3 } from "../Pages/Production/PageBPBSWhatToMake";
-
 
 import BPBSMixPocket from "../Pages/Production/Legacy/BPBSMixPocket";
 import MixPocket from "../Pages/Production/PageBPBSMixPocket";
 
 import CroixCountV1 from "../Pages/Production/Legacy/CroixCount";
-// import CroixToMake from "../Pages/Production/Legacy/CroixToMake";
 import ByProduct from "../Pages/Logistics/ByProduct/ByProduct";
-// import NorthList from "../Pages/Logistics/NorthLists";
-import NorthListV2 from "../Pages/Logistics/NorthLists/v2/NorthLists"
+import NorthListV2 from "../Pages/Logistics/PageNorthLists"
 import AMPastry from "../Pages/Logistics/AMPastry";
-// import RetailBags from "../Pages/Logistics/RetailBags";
-// import { default as SpecialOrdersV1} from "../Pages/Logistics/SpecialOrders";
-// import FreezerThaw from "../Pages/Logistics/FreezerTha_w";
 import DelivOrder from "../Pages/Settings/delivOrder/delivOrder";
 import EditDoughs from "../Pages/Settings/editDough/editDough";
 import EditZones2 from "../Pages/Settings/editZones/editZones2";
@@ -76,7 +57,6 @@ import { default as NotesV2} from "../Pages/Settings/notes/Notes2";
 import { default as NotesV3 } from "../Pages/Settings/notes/v3/Notes";
 import Settings from "../Pages/Settings/Settings";
 import Remap from "../Pages/EODCounts/EODCountsRempas";
-// import SpecialPacking from "../Pages/Production/NewPages/BPBS/SpecialPacking/SpecialPacking";
 import RouteGrid from "../Pages/Logistics/RouteGrid/RouteGrid";
 import CroixCount from "../Pages/Production/NewPages/Croix/CroixEOD/CroixCount";
 import Products from "../Pages/Products/NewPage/Products";
@@ -94,9 +74,8 @@ import PageSpecialOrders from "../Pages/Logistics/PageSpecialOrders";
 import PageAMPastry from "../Pages/Logistics/PageAMPastry";
 
 
-
-
 // Lazy Load:
+
 // const BPBNBaker1 = React.lazy(() => import('../Pages/Production/BPBNBaker1'))
 // const BPBNBaker1Backup = React.lazy(() => import('../Pages/Production/BPBNBaker1Backup')) 
 // const BPBNBaker2 = React.lazy(() => import('../Pages/Production/BPBNBaker2'))
@@ -245,7 +224,6 @@ function AnimatedRoutes({ user, signOut }) {
           <Route path="/Production/BPBNBaker2/v3"  element={<Baker2 />} />
           <Route path="/Production/BPBNBaker2"     element={<Baker2 />} />
 
-          <Route path="/Production/BPBNBuckets/v1" element={<BPBNBuckets loc={"Carlton"} />} />
           <Route path="/Production/BPBNBuckets/v2" element={<PageBuckets mixedWhere="Carlton" />} />
           <Route path="/Production/BPBNBuckets"    element={<PageBuckets mixedWhere="Carlton" />} />
           
@@ -268,17 +246,16 @@ function AnimatedRoutes({ user, signOut }) {
           <Route path="/Production/BPBSSetOut/v3"         element={<SetoutV3 reportLocation="Prado" />} />
           <Route path="/Production/BPBSSetOut"            element={<SetoutV3 reportLocation="Prado" />} />
 
-          <Route path="/Production/BPBSBuckets"           element={<BPBNBuckets loc={"Prado"} />} />
-          <Route path="/Production/BPBSBuckets/v2"        element={<PageBuckets mixedWhere="Prado" />} />
+          <Route path="/Production/BPBSBuckets"           element={<PageBuckets mixedWhere="Prado" />} />
 
           <Route path="/Production/BPBSPacking"           element={<PageSpecialPacking />} />
 
           {/* Production::Croix */}
           
-          <Route path="/Production/CroixCount/v1" element={<CroixCountV1 />} />
-          <Route path="/Production/CroixCount/v2" element={<CroixCount />} />
-          <Route path="/Production/CroixCount/v3" element={<PageCroissantEodCounts />} />
-          <Route path="/Production/CroixCount"    element={<CroixCountV1 />} />
+          <Route path="/Production/CroixCount/v1"  element={<CroixCountV1 />} />
+          <Route path="/Production/CroixCount/v2"  element={<CroixCount />} />
+          <Route path="/Production/CroixCount/v3"  element={<PageCroissantEodCounts />} />
+          <Route path="/Production/CroixCount"     element={<CroixCountV1 />} />
           
           <Route path="/Production/CroixToMake/v2" element={<CroixToMake />} />
           <Route path="/Production/CroixToMake"    element={<PageCroissantProduction />} />
@@ -293,12 +270,11 @@ function AnimatedRoutes({ user, signOut }) {
           <Route path="/Logistics/ByRoute"       element={<RouteGrid />} />
           <Route path="/Logistics/ByProduct"     element={<ByProduct />} />
 
-          {/* <Route path="/Logistics/NorthLists/v1" element={<NorthList />} /> */}
           <Route path="/Logistics/NorthLists/v2" element={<NorthListV2 />} />
           <Route path="/Logistics/NorthLists"    element={<NorthListV2 />} />
 
-          <Route path="/Logistics/AMPastry"      element={<AMPastry />} />
-          <Route path="/Logistics/AMPastry/v2"   element={<PageAMPastry />} />
+          <Route path="/Logistics/AMPastry/v1"   element={<AMPastry />} />
+          <Route path="/Logistics/AMPastry"      element={<PageAMPastry />} />
 
           <Route path="/Logistics/RetailBags"    element={<PageRetailBags />} />
           <Route path="/Logistics/SpecialOrders" element={<PageSpecialOrders />} />

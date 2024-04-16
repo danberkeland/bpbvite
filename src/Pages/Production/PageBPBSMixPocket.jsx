@@ -90,8 +90,8 @@ const MixPocket = () => {
 
   const totalMixWeight = (0 
     + (frenchMixItem?.needed ?? 0) 
-    + (Number(buffer) ?? 0) 
-    + (Number(shortage) ?? 0)
+    + Number(buffer ?? 0)
+    + Number(shortage ?? 0)
     - sumBy((frenchPocketDataT0 ?? []).map((row, idx) => row.weight * carryQty[idx]), x => x)
   ).toFixed(2)
   const tableInputTemplate = ({ value, setValue }) => {
@@ -116,7 +116,7 @@ const MixPocket = () => {
           marginBottom: "2rem", 
           background: "var(--bpb-orange-vibrant-200)", 
           padding: "1rem 1rem 1rem 1rem", 
-          borderRadius: ".5rem",
+          borderRadius: ".25rem",
         }}>
           
           <div style={{padding: ".5rem"}}>
@@ -203,7 +203,7 @@ const MixPocket = () => {
           </div>
 
           <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: ".5rem", color: "var(--bpb-text-color)", fontWeight: "bold"}}>
-            <div>Need For Tomorrow:</div> <div>{frenchMixItem?.needed ?? 0} lb.</div>
+            <div>Need For Tomorrow:</div> <div>{(frenchMixItem?.needed ?? 0).toFixed(2)} lb.</div>
           </div>
 
           <div style={{padding: ".5rem", textAlign: "right", fontSize: "1.5rem", color: "var(--bpb-text-color)", fontWeight: "bold"}}>
@@ -211,51 +211,14 @@ const MixPocket = () => {
           </div>
         </div>
 
-        <h2>Print Stickers</h2>
-        <div style={{
-          marginBottom: "2rem", 
-          background: "var(--bpb-orange-vibrant-200)", 
-          padding: "1rem 1rem 1rem 1rem", 
-          borderRadius: ".5rem",
-        }}>
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
-            gridTemplateRows: "7rem 2rem 2rem", 
-            columnGap: "1rem", 
-            rowGap: ".5rem",
-            margin: ".5rem"
-          }}>
-            {[1,2,3,4,5,6,7,8,9].map(nMixes => (
-              <Button 
-                label={`${nMixes}x Mix`}
-                key={`${nMixes}-mix-button`}
-                style={printButtonStyle}
-                onClick={() => {
-                  if (!!doughComponents) {
-                    printBucketStickers(
-                      frenchMixItem,
-                      totalMixWeight,
-                      frenchMixItem?.oldDough ?? 0,
-                      doughComponents,
-                      {
-                        dateString: reportDT.toFormat('MM/dd/yyyy'),
-                        splitNumber: nMixes
-                      }
-                    )
-                  }
-                }}
-                disabled={!doughComponents}
-              />
-            ))}
-          </div>
-        </div>
+        
 
       </div>
 
       <h2>Adjust Pockets</h2>
       <DataTable
         value={frenchPocketData ?? []}
+        style={{marginBottom: "2rem"}}
       >
         <Column field="weight"    header="Pocket Size" />
         <Column field="preshaped" header="Available Today" />
@@ -297,6 +260,45 @@ const MixPocket = () => {
         />
       </DataTable>
 
+      <h2>Print Stickers</h2>
+        <div style={{
+          marginBottom: "2rem", 
+          background: "var(--bpb-orange-vibrant-200)", 
+          padding: "1rem 1rem 1rem 1rem", 
+          borderRadius: ".5rem",
+        }}>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr 1fr",
+            gridTemplateRows: "6rem", 
+            columnGap: "1rem", 
+            rowGap: ".5rem",
+            margin: ".5rem"
+          }}>
+            {[1,2,3,4].map(nMixes => (
+              <Button 
+                label={`${nMixes}x Mix`}
+                key={`${nMixes}-mix-button`}
+                style={printButtonStyle}
+                onClick={() => {
+                  if (!!doughComponents) {
+                    printBucketStickers(
+                      frenchMixItem,
+                      totalMixWeight,
+                      frenchMixItem?.oldDough ?? 0,
+                      doughComponents,
+                      {
+                        dateString: reportDT.toFormat('MM/dd/yyyy'),
+                        splitNumber: nMixes
+                      }
+                    )
+                  }
+                }}
+                disabled={!doughComponents}
+              />
+            ))}
+          </div>
+        </div>
 
     </div>
   )
