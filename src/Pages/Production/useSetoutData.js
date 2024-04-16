@@ -25,3 +25,23 @@ export const useSetoutData = ({ reportDT, reportLocation, shouldFetch }) => {
   )
 
 }
+
+/*
+
+Setout for non-almond croix can be derived from orders as follows:
+
+Filter all orders to products with doughNick === 'Croissant', excluding orders
+for bpbExtras. From there...
+
+BPBN Setout:
+* T+1 orders for baked pastries except al, with fulfillment out of the Carlton
+* Half qty of any order for 'backporch' for T+1
+
+BPBS Setout:
+* T+1 orders for baked pastries except al, with fulfillment out of Prado
+* Half qty of any order for 'backporch' for T+1
+* Add T+2 orders for fral to pl total
+* Add T+2 orders for al fulfilled from Prado to pl total
+* Add T+3 forders for al fulfilled from the Carlton to pl total
+
+*/

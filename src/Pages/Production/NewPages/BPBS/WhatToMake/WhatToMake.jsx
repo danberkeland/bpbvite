@@ -11,8 +11,8 @@ import { useListData } from "../../../../../data/_listData"
 import { keyBy, round, set, sumBy } from "lodash"
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog"
 import { exportBpbsWtmPdf } from "./exportPdf"
-import { getTodayDT, isoToDT } from "../../BPBN/utils"
 import { useCheckForUpdates } from "../../../../../core/checkForUpdates"
+import { DT } from "../../../../../utils/dateTimeFns"
 
 const SHOW_CALENDAR = false
 
@@ -22,7 +22,7 @@ const flexSplitStyle = {
   alignItems: "flex-start",
 }
 
-const todayDT = getTodayDT()
+const todayDT = DT.today()
 const today = todayDT.toFormat('yyyy-MM-dd')
 // const tomorrow = todayDT.plus({ days: 1 }).toFormat('yyyy-MM-dd')
 // const todayDisplay = todayDT.toFormat('MM/dd/yyyy')

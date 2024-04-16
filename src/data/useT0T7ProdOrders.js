@@ -8,7 +8,10 @@ import { preDBOverrides } from "../data/_productOverrides"
 
 import { useListData } from "./_listData"
 import { getRouteOptions } from "../Pages/Ordering/Orders/data/productHooks"
-import { getTodayDT, isoToDT } from "../Pages/Production/NewPages/BPBN/utils"
+// import { getTodayDT, isoToDT } from "../Pages/Production/NewPages/BPBN/utils"
+import { DT } from "../utils/dateTimeFns"
+const getTodayDT = DT.today()
+const isoToDT = isoDate => DT.fromIso(isoDate)
 
 // A hook to power all production/logistics reports. A bit overpowered for 
 // some reports, but with programmatic routing we can view several reports
