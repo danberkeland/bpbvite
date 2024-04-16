@@ -17,6 +17,7 @@ import { Dialog } from "primereact/dialog"
 import { exportBpbn1Pdf } from "./exportBPBNBaker1"
 import { useDoughs } from "../../data/dough/useDoughs"
 import { useCheckForUpdates } from "../../core/checkForUpdates"
+import "./stylesProduction.css"
 
 /**
  * @param {Object} props
