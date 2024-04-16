@@ -60,8 +60,6 @@ import Remap from "../Pages/EODCounts/EODCountsRempas";
 import RouteGrid from "../Pages/Logistics/RouteGrid/RouteGrid";
 import CroixCount from "../Pages/Production/NewPages/Croix/CroixEOD/CroixCount";
 import Products from "../Pages/Products/NewPage/Products";
-import BPBNSetout from "../Pages/Production/NewPages/Setout/BPBNSetout";
-import BPBSSetout from "../Pages/Production/NewPages/Setout/BPBSSetout";
 import PageSpecialPacking from "../Pages/Production/PageSpecialPacking";
 import { PageCroissantProduction } from "../Pages/Production/PageCroissantProduction";
 import { CroixToMake } from "../Pages/Production/NewPages/Croix/CroixToMake/CroixToMake";
@@ -221,8 +219,6 @@ function AnimatedRoutes({ user, signOut }) {
           <Route path="/Production/BPBNBuckets"    element={<PageBuckets mixedWhere="Carlton" />} />
           
           <Route path="/Production/BPBNSetOut"     element={<SetoutV3 reportLocation="Carlton" />} />
-          <Route path="/Production/BPBNSetOut/v2"  element={<BPBNSetout />} />
-          <Route path="/Production/BPBNSetOut/v3"  element={<SetoutV3 reportLocation="Carlton" />} />
 
           {/* Production::BPBS */}
 
@@ -234,13 +230,9 @@ function AnimatedRoutes({ user, signOut }) {
 
           <Route path="/Production/BPBSMixPocket/v2"      element={<MixPocket />} />
           <Route path="/Production/BPBSMixPocket"         element={<BPBSMixPocket />} />
-
-          <Route path="/Production/BPBSSetOut/v2"         element={<BPBSSetout />} />
-          <Route path="/Production/BPBSSetOut/v3"         element={<SetoutV3 reportLocation="Prado" />} />
+          
           <Route path="/Production/BPBSSetOut"            element={<SetoutV3 reportLocation="Prado" />} />
-
           <Route path="/Production/BPBSBuckets"           element={<PageBuckets mixedWhere="Prado" />} />
-
           <Route path="/Production/BPBSPacking"           element={<PageSpecialPacking />} />
 
           {/* Production::Croix */}

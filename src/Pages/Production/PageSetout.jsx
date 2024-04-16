@@ -135,9 +135,6 @@ const Setout = ({ reportLocation }) => {
         {!!INQB.data && !setoutRecord && <div style={grayChipStyle}>Setout not yet recorded for today</div>}
       </div>
       {/* {!!afterSetoutOrders.length && <div style={yellowChipStyle}>After-setout changes detected</div>} */}
-      {reportLocation === 'Prado'   && <div>Using v3 <a href="/Production/BPBSSetOut/v2">Go to previous version</a></div>}
-      {reportLocation === 'Carlton' && <div>Using v3 <a href="/Production/BPBNSetOut/v2">Go to previous version</a></div>}
-
 
       <h2>Set Out</h2>
       <DataTable 
