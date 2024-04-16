@@ -24,11 +24,11 @@ import{ default as SetoutV3 } from "../Pages/Production/PageSetout";
 import Baker1 from "../Pages/Production/PageBPBNBaker1";
 import Baker2 from "../Pages/Production/PageBPBNBaker2";
 import { default as PageBuckets } from "../Pages/Production/PageBuckets";
+import Production from "../Pages/Production/PageProduction";
 
 import OrdersPage from "../Pages/Ordering/v2/Ordering"; // group with lazy loaders while in testing
-import Production from "../Pages/Production/PageProduction";
 import ProductsV1 from "../Pages/Products/Products";
-import { default as BillingV1} from "../Pages/Billing/Billing";
+import { default as BillingV1 } from "../Pages/Billing/Billing";
 import BillingV2 from "../Pages/Billing/v2/Billing";
 import EODCounts from "../Pages/EODCounts/EODCounts";
 import Logistics from "../Pages/Logistics/Logistics"; 
@@ -60,7 +60,6 @@ import Remap from "../Pages/EODCounts/EODCountsRempas";
 import RouteGrid from "../Pages/Logistics/RouteGrid/RouteGrid";
 import CroixCount from "../Pages/Production/NewPages/Croix/CroixEOD/CroixCount";
 import Products from "../Pages/Products/NewPage/Products";
-import Bpbn2 from "../Pages/Production/NewPages/BPBN/Baker2/BpbnBaker2";
 import BPBNSetout from "../Pages/Production/NewPages/Setout/BPBNSetout";
 import BPBSSetout from "../Pages/Production/NewPages/Setout/BPBSSetout";
 import PageSpecialPacking from "../Pages/Production/PageSpecialPacking";
@@ -217,11 +216,8 @@ function AnimatedRoutes({ user, signOut }) {
           <Route path="/Production/BPBNBaker1"     element={<Baker1 reportDay="today" />} />
           <Route path="/BPBNProd/BPBNBaker1Backup" element={<Baker1 reportDay="tomorrow" />} />
 
-          <Route path="/Production/BPBNBaker2/v2"  element={<Bpbn2 />} />
-          <Route path="/Production/BPBNBaker2/v3"  element={<Baker2 />} />
           <Route path="/Production/BPBNBaker2"     element={<Baker2 />} />
 
-          <Route path="/Production/BPBNBuckets/v2" element={<PageBuckets mixedWhere="Carlton" />} />
           <Route path="/Production/BPBNBuckets"    element={<PageBuckets mixedWhere="Carlton" />} />
           
           <Route path="/Production/BPBNSetOut"     element={<SetoutV3 reportLocation="Carlton" />} />
