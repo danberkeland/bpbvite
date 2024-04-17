@@ -92,7 +92,7 @@ const Buckets = ({ mixedWhere }) => {
   return (
     <div style={{width: "60rem", margin:"auto", padding: "2rem 5rem 5rem 5rem"}}>
 
-      <h1>Higuera Dough Stickers</h1>
+      <h1>{mixedWhere} Dough Stickers</h1>
       {!doughList && <h2>Loading...</h2>}
       {(doughList ?? []).map((row, idx) => 
         <div 
