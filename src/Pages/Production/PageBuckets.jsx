@@ -171,18 +171,20 @@ const Buckets = ({ mixedWhere }) => {
                   id="buffer-input" 
                   value={bufferValues[idx] ?? ''}
                   inputMode="numeric"
-                  keyfilter="pnum"
+                  //keyfilter="pnum"
                   onFocus={e => e.target.select()}
                   onChange={e => {
-                    if (/^\d{0,4}$|^\d{0,4}\.\d{0,2}$/.test(e.target.value)) {
+                    if (/^\-?\d{0,4}$|^\-?\d{0,4}\.\d{0,2}$/.test(e.target.value)) {
                       setBufferValuesAtIdx(e.target.value, idx)
-                      debouncedUpdateDough(
-                        { id: row.id, buffer: Number(e.target.value ?? 0) },
-                        row,
-                        e.target,
-                        submitMutations, 
-                        updateLocalData,
-                      )
+                      if (!isNaN(Number(e.target.value))) {
+                        debouncedUpdateDough(
+                          { id: row.id, buffer: Number(e.target.value ?? 0) },
+                          row,
+                          e.target,
+                          submitMutations, 
+                          updateLocalData,
+                        )
+                      }
                     }
                   }} 
                   onKeyDown={e => {
@@ -193,7 +195,12 @@ const Buckets = ({ mixedWhere }) => {
                       e.currentTarget.blur()
                     }
                   }}
-                  onBlur={() => debouncedUpdateDough.flush()}
+                  onBlur={() => {
+                    debouncedUpdateDough.flush()
+                    if (isNaN(Number(bufferValues[idx]))) {
+                      setBufferValuesAtIdx(row.buffer, idx)
+                    }
+                  }}
                   style={{ maxWidth: "7rem", borderRight: "none" }} 
                 />
               </InputLabel>
