@@ -138,68 +138,6 @@ function useCheckCroix(productCache, T0Orders, T1Orders, tomorrow, shouldCheck) 
 
   }
 
-  // useEffect(() => {
-  //   if (!shouldCheck || checkCompleted.current || !PRD || !T0Orders || !T1Orders) return
-  //   /**
-  //    * @param {CombinedRoutedOrder[]} orderSet 
-  //    * @param {string} packGroup 
-  //    */
-  //   const getTotals = (orderSet, packGroup) => orderSet
-  //     .filter(order => {
-  //       const product = PRD.find(P => P.prodNick === order.prodNick)
-  //       return 1
-  //         && product?.packGroup === packGroup
-  //         && product.doughNick === 'Croissant'
-  //         && order.meta.route?.RouteDepart === 'Carlton'
-  //     })
-  //     .reduce(groupByArrayRdc(order => shapeTypeByProdNick[order.prodNick]), [])
-  //     .map(orderGroup => ({
-  //       shapeType: shapeTypeByProdNick[orderGroup[0].prodNick],
-  //       qty: sumBy(orderGroup, order => order.qty),
-  //     }))
-
-  //   const frozenTotals = getTotals(T0Orders, 'frozen pastries')
-  //   const setoutTotals = getTotals(T1Orders, 'baked pastries')
-
-  //   // Selecting the right products by category is so finicky, we might rather
-  //   // just test by ['ch', 'mb', 'mini', 'pg', 'pl', 'sf'].includes(P)
-  //   const productsToUpdate = PRD.filter(P => 1
-  //     && P.packGroup === "baked pastries" 
-  //     && P.doughNick === "Croissant"
-  //     && !['unmb', 'al'].includes(P.prodNick)
-  //     && P.freezerNorthFlag !== tomorrow
-  //   )
-
-  //   const updateInputs = productsToUpdate.map(updateProduct => {
-  //     const frozenQty = frozenTotals.find(item => item.shapeType === updateProduct.prodNick)?.qty ?? 0
-  //     const setoutQty = setoutTotals.find(item => item.shapeType === updateProduct.prodNick)?.qty ?? 0
-
-  //     const newNorthClosingQty = 0
-  //       + updateProduct.freezerNorthClosing 
-  //       + 12 * (Math.ceil((setoutQty + frozenQty - updateProduct.freezerNorthClosing) / 12))
-  //       - (setoutQty + frozenQty) 
-
-  //     return {
-  //       prodNick:            updateProduct.prodNick,
-  //       freezerCount:        updateProduct.freezerClosing,
-  //       freezerNorth:        updateProduct.freezerNorthClosing,
-  //       freezerNorthClosing: newNorthClosingQty,
-  //       freezerNorthFlag:    tomorrow,
-  //       sheetMake: 0,
-  //     } 
-  //   })
-  //   console.log(updateInputs)
-  
-  //   const handleMutate = async (updateInputs) =>
-  //     updateLocalData(await submitMutations({ updateInputs }))
-
-  //   handleMutate(updateInputs)
-  //   console.log("croix check completed")
-
-  //   checkCompleted.current = true
-
-  // }, [shouldCheck, tomorrow, PRD, T0Orders, T1Orders, submitMutations, updateLocalData])
-
   return checkCompleted.current
 
 }
@@ -234,28 +172,6 @@ function useCheckPreshape(productCache, tomorrow, shouldCheck) {
 
   }
 
-  // useEffect(() => {
-  //   if (!shouldCheck || checkCompleted.current || !products) return
-
-  //   const updateInputs = products
-  //     .filter(P => P.updatePreDate !== tomorrow)
-  //     .map(P => ({
-  //       prodNick:      P.prodNick,
-  //       preshaped:     P.prepreshaped,
-  //       prepreshaped:  P.prepreshaped,
-  //       updatePreDate: tomorrow,
-  //     }))
-
-  //   const handleMutate = async (updateInputs) =>
-  //     updateLocalData(await submitMutations({ updateInputs }))
-
-  //   handleMutate(updateInputs)
-  //   console.log("preshape check completed")
-
-  //   checkCompleted.current = true
-
-  // }, [tomorrow, products, submitMutations, updateLocalData, shouldCheck])
-
   return checkCompleted.current
 
 }
@@ -289,28 +205,6 @@ function useCheckBucket(doughCache, tomorrow, shouldCheck) {
     checkCompleted.current = true
 
   }
-
-  // useEffect(() => {
-  //   if (!shouldCheck || checkCompleted.current || !doughs) return
-
-  //   const updateInputs = doughs
-  //     .filter(D => D.updatePreBucket !== tomorrow)
-  //     .map(D => ({
-  //       id:              D.id,
-  //       bucketSets:      D.preBucketSets,
-  //       preBucketSets:   D.preBucketSets,
-  //       updatePreBucket: tomorrow
-  //     }))
-
-  //   const handleMutate = async (updateInputs) =>
-  //     updateLocalData(await submitMutations({ updateInputs }))
-
-  //   handleMutate(updateInputs)
-  //   console.log("dough check completed")
-
-  //   checkCompleted.current = true
-
-  // }, [tomorrow, doughs, submitMutations, updateLocalData, shouldCheck])
 
   return checkCompleted.current
 
@@ -350,34 +244,6 @@ function useSyncSquareOrders(products, squareOrders, orderCache, shouldCheck) {
     checkCompleted.current = true
 
   }
-
-  // useEffect(() => {
-  //   if (!shouldCheck || checkCompleted.current || !orders || !products || !squareOrders ) return 
-
-  //   console.log("square orders", squareOrders)
-
-  //   const retailOrders = orders.filter(order => order.isWhole === false)
-  //   const newRetailOrders = squareOrders.map(squareOrder =>
-  //     sqOrderToCreateOrderInputV2(squareOrder, products)
-  //   )
-
-  //   const createInputs = newRetailOrders.filter(newOrder => 
-  //     !retailOrders.some(retailOrder => 1
-  //       && retailOrder.locNick   === newOrder.locNick  // locNick will have transaction ID embedded, so no need to match on delivDate, route
-  //       && retailOrder.prodNick  === newOrder.prodNick
-  //     )  
-  //   )
-
-  //   const handleMutate = async createInputs => updateLocalData(
-  //     await submitMutations({ createInputs })
-  //   )
-
-  //   handleMutate(createInputs)
-  //   console.log("square check completed")
-
-  //   checkCompleted.current = true
-
-  // }, [orders, products, squareOrders, submitMutations, updateLocalData, shouldCheck])
 
   return checkCompleted.current
   
