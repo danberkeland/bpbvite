@@ -31,7 +31,6 @@ import ProductsV1 from "../Pages/Products/Products";
 import { default as BillingV1 } from "../Pages/Billing/Billing";
 import BillingV2 from "../Pages/Billing/v2/Billing";
 import EODCounts from "../Pages/EODCounts/EODCounts";
-import Logistics from "../Pages/Logistics/Logistics"; 
 import Locations from "../Pages/Locations/Locations";
 import LocationsNew from "../Pages/Locations/NewPage/Locations";
 import ManageCustomers from "../Pages/Settings/ManageCustomers/ManageCustomers";
@@ -45,10 +44,17 @@ import { default as WhatToMakeV3 } from "../Pages/Production/PageBPBSWhatToMake"
 import BPBSMixPocket from "../Pages/Production/Legacy/BPBSMixPocket";
 import MixPocket from "../Pages/Production/PageBPBSMixPocket";
 
-import CroixCountV1 from "../Pages/Production/Legacy/CroixCount";
+import Logistics from "../Pages/Logistics/Logistics"; 
+import RouteGrid from "../Pages/Logistics/RouteGrid/RouteGrid";
+import PageRouteGrid from "../Pages/Logistics/PageRouteGrid";
 import ByProduct from "../Pages/Logistics/ByProduct/ByProduct";
 import NorthListV2 from "../Pages/Logistics/PageNorthLists"
 import AMPastry from "../Pages/Logistics/AMPastry";
+import PageAMPastry from "../Pages/Logistics/PageAMPastry";
+import PageFreezerThaw from "../Pages/Logistics/PageFreezerThaw";
+import PageRetailBags from "../Pages/Logistics/PageRetailBags";
+import PageSpecialOrders from "../Pages/Logistics/PageSpecialOrders";
+
 import DelivOrder from "../Pages/Settings/delivOrder/delivOrder";
 import EditDoughs from "../Pages/Settings/editDough/editDough";
 import EditZones2 from "../Pages/Settings/editZones/editZones2";
@@ -56,17 +62,12 @@ import EditRoutes from "../Pages/Settings/editRoutes/editRoutes";
 import { default as NotesV2} from "../Pages/Settings/notes/Notes2";
 import { default as NotesV3 } from "../Pages/Settings/notes/v3/Notes";
 import Settings from "../Pages/Settings/Settings";
+
 import Remap from "../Pages/EODCounts/EODCountsRempas";
-import RouteGrid from "../Pages/Logistics/RouteGrid/RouteGrid";
 import Products from "../Pages/Products/NewPage/Products";
 import PageSpecialPacking from "../Pages/Production/PageSpecialPacking";
 import { PageCroissantProduction } from "../Pages/Production/PageCroissantProduction";
 import PageCroissantEodCounts from "../Pages/Production/PageCroissantEodCounts";
-import PageFreezerThaw from "../Pages/Logistics/PageFreezerThaw";
-import PageRetailBags from "../Pages/Logistics/PageRetailBags";
-import PageSpecialOrders from "../Pages/Logistics/PageSpecialOrders";
-import PageAMPastry from "../Pages/Logistics/PageAMPastry";
-
 
 // Lazy Load:
 
@@ -246,6 +247,7 @@ function AnimatedRoutes({ user, signOut }) {
 
           <Route path="/Logistics"               element={<Logistics />} />
           <Route path="/Logistics/ByRoute"       element={<RouteGrid />} />
+          <Route path="/Logistics/ByRoute/v3"    element={<PageRouteGrid />} />
           <Route path="/Logistics/ByProduct"     element={<ByProduct />} />
 
           <Route path="/Logistics/NorthLists/v2" element={<NorthListV2 />} />
