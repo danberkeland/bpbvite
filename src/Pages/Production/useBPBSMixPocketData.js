@@ -18,8 +18,8 @@ export const useMixPocketData = ({ reportDT, shouldFetch }) => {
   const R1 = reportDT.plus({ days: 1 }).toFormat('yyyy-MM-dd')
   const R2 = reportDT.plus({ days: 2 }).toFormat('yyyy-MM-dd')
 
-  const { data:PRD } = useProducts({ shouldFetch })
-  const { data:DGH, submitMutations, updateLocalData } = useDoughs({ shouldFetch })
+  const { data:PRD, submitMutations:submitProducts, updateLocalData:updateProductCache } = useProducts({ shouldFetch })
+  const { data:DGH, submitMutations:submitDoughs,   updateLocalData:updateDoughCache } = useDoughs({ shouldFetch })
   const { data:R0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 0 }), useHolding: false, shouldFetch })
   const { data:R1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: true,  shouldFetch })
   const { data:R2Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 2 }), useHolding: true,  shouldFetch })
@@ -34,13 +34,13 @@ export const useMixPocketData = ({ reportDT, shouldFetch }) => {
     )
   }, [PRD, DGH, R1Orders, R2Orders, R3Orders, R1, R2])
 
-  const frenchPocketDataT0 = useMemo(
+  const frenchPocketDataR0 = useMemo(
     () => calculateFrenchPockets(R0, R0Orders, R1Orders, PRD), 
     [R0, R0Orders, R1Orders, PRD]
   )
 
   // calculate needed amt for tomorrow
-  const frenchPocketData = useMemo(
+  const frenchPocketDataR1 = useMemo(
     () => calculateFrenchPockets(R1, R1Orders, R2Orders, PRD), 
     [R1, R1Orders, R1Orders, PRD]
   )
@@ -53,11 +53,13 @@ export const useMixPocketData = ({ reportDT, shouldFetch }) => {
   return {
     frenchMixItem: mixList?.[0],
     doughComponents: useDoughComponents({ shouldFetch })?.data,
-    frenchPocketDataT0,
-    frenchPocketData,
+    frenchPocketDataR0,
+    frenchPocketDataR1,
     products,
-    submitDough: submitMutations,
-    updateDoughCache: updateLocalData,
+    submitDoughs,
+    updateDoughCache,
+    submitProducts,
+    updateProductCache,
   }
 
 }

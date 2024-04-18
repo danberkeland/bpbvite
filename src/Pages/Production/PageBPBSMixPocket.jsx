@@ -57,34 +57,28 @@ const MixPocket = () => {
   const {
     frenchMixItem,
     doughComponents,
-    frenchPocketDataT0,
-    frenchPocketData,
+    frenchPocketDataR0,
+    frenchPocketDataR1,
     products,
-    submitDough,
+    submitDoughs,
     updateDoughCache,
+    submitProducts,
+    updateProductCache
   } = useMixPocketData({ reportDT, shouldFetch: true })
-  console.log("INFO:")
-  console.log("frenchMixItem", frenchMixItem)
-  console.log("frenchPocketData", frenchPocketData)
 
   const [shortage, setShortage] = useState()
   const [oldDough, setOldDough] = useState()
   const [buffer,   setBuffer]   = useState()
-  const [carryQty, setCarryQty] = useState([])
-  const [earlyQty, setEarlyQty] = useState([])
-  const setCarryQtyAtIdx = (newValue, idx) => setCarryQty(
-    Object.assign([...carryQty], { [idx]: newValue })
-  )
-  const setEarlyQtyAtIdx = (newValue, idx) => setEarlyQty(
-    Object.assign([...earlyQty], { [idx]: newValue })
+  const [surplusQtys, setSurplusQtys] = useState([])
+  const setSurplusQtyAtIdx = (newValue, idx) => setSurplusQtys(
+    Object.assign([...surplusQtys], { [idx]: newValue })
   )
 
   useEffect(() => {
-    if (!!frenchMixItem && !!frenchPocketDataT0) {
-      // setShortage(sumBy(frenchPocketDataT0, row => row.underEa * row.weight))
+    if (!!frenchMixItem && !!frenchPocketDataR0) {
       setOldDough(frenchMixItem.oldDough)
       setBuffer(frenchMixItem.buffer)
-      setCarryQty(frenchPocketDataT0.map(item => item.surplusEa))
+      setSurplusQtys(frenchPocketDataR0.map(item => item.surplusEa))
     }
   }, [frenchMixItem])
 
@@ -92,17 +86,67 @@ const MixPocket = () => {
     + (frenchMixItem?.needed ?? 0) 
     + Number(buffer ?? 0)
     + Number(shortage ?? 0)
-    - sumBy((frenchPocketDataT0 ?? []).map((row, idx) => row.weight * carryQty[idx]), x => x)
+    - sumBy((frenchPocketDataR0 ?? []).map((row, idx) => row.weight * surplusQtys[idx]), x => x)
   ).toFixed(2)
-  const tableInputTemplate = ({ value, setValue }) => {
+
+              // value: surplusQtys[options.rowIndex],
+            // setValue: newValue => setSurplusQtyAtIdx(newValue, options.rowIndex),
+  const surplusInputTemplate = ({ index }) => {
     return <InputNumber 
-      value={value}
+      value={surplusQtys[index]}
       min={-9999}
       max={9999}
       onFocus={e => e.target.select()}
-      onValueChange={e => setValue(e.value)}
+      onValueChange={e => {
+        if (!frenchPocketDataR0) return 
+
+        const diff = (e.value ?? 0) - frenchPocketDataR0[index].surplusEa
+        console.log("diff", diff)
+        console.log("old preshape", frenchPocketDataR0[index].preshaped)
+        console.log("new preshape", frenchPocketDataR0[index].preshaped + diff)
+
+        setSurplusQtyAtIdx(e.value, index)
+
+        
+      }}
       inputStyle={{width: "4rem"}}
     />
+  }
+
+  const pocketInputTemplate = (index) => {
+    const qtyChanged = 1
+      && !!frenchPocketDataR0?.[index]
+      && surplusQtys[index] !== frenchPocketDataR0[index].surplusEa
+
+    return (
+      <InputNumber 
+        value={surplusQtys[index]}
+        onFocus={e => e.target.select()}
+        onChange={e => setSurplusQtyAtIdx(e.value, index)}
+        onKeyDown={e => { if (e.code === "Enter") e.currentTarget.blur() }}
+        onBlur={async () => {
+          if (!frenchPocketDataR0) return
+
+          const { preshaped, surplusEa, prodNick } = frenchPocketDataR0[index]
+          const newSurplus = surplusQtys[index] ?? 0
+          setSurplusQtyAtIdx(newSurplus, index)
+
+          const submitItem = {
+            prodNick,
+            preshaped: preshaped - surplusEa + newSurplus
+          }
+          console.log("submitItem:", submitItem)
+          // updateProductCache( 
+          //   await submitProducts({ updateInputs: [submitItem] })
+          // )
+        }}
+        inputStyle={{
+          width: "4rem",
+          fontWeight: qtyChanged ? "bold" : undefined,
+          background: qtyChanged ? "#FFECB3" : undefined
+        }}
+      />
+    )
   }
 
   return (
@@ -151,7 +195,7 @@ const MixPocket = () => {
                       { id: frenchMixItem?.id, oldDough: Number(e.target.value ?? 0) },
                       frenchMixItem?.oldDough,
                       e.target,
-                      submitDough, 
+                      submitDoughs, 
                       updateDoughCache,
                     )
                   }
@@ -182,7 +226,7 @@ const MixPocket = () => {
                       { id: frenchMixItem?.id, buffer: Number(e.target.value ?? 0) },
                       frenchMixItem?.buffer,
                       e.target,
-                      submitDough, 
+                      submitDoughs, 
                       updateDoughCache,
                     )
                   }
@@ -210,36 +254,27 @@ const MixPocket = () => {
             TOTAL: {totalMixWeight} lb.
           </div>
         </div>
-
-        
-
       </div>
 
       <h2>Adjust Pockets</h2>
       <DataTable
-        value={frenchPocketData ?? []}
+        value={frenchPocketDataR1 ?? []}
         style={{marginBottom: "2rem"}}
       >
         <Column field="weight"    header="Pocket Size" />
         <Column field="preshaped" header="Available Today" />
-        <Column header="Surplus (+/-)" 
-          body={(_, options) => tableInputTemplate({
-            value: carryQty[options.rowIndex],
-            setValue: newValue => setCarryQtyAtIdx(newValue, options.rowIndex),
+        <Column header="Surplus Today (+/-)" 
+          body={(_, options) => surplusInputTemplate({
+            index: options.rowIndex
+            // value: surplusQtys[options.rowIndex],
+            // setValue: newValue => setSurplusQtyAtIdx(newValue, options.rowIndex),
           })}
         />
-        {/* <Column header="Early/Extra" 
-          body={(_, options) => tableInputTemplate({
-            value: earlyQty[options.rowIndex],
-            setValue: newValue => setEarlyQtyAtIdx(newValue, options.rowIndex),
-          })}
-        /> */}
         <Column header="Prep For Tomorrow" // header="Pocket Today" 
           field="neededEa" 
           body={(row, options) => 0
             + row.neededEa 
-            - (carryQty[options.rowIndex] ?? 0)
-            // + (earlyQty[options.rowIndex] ?? 0)
+            - (surplusQtys[options.rowIndex] ?? 0)
           }
           bodyStyle={{fontWeight: "bold"}}
           // body={rowData => DrilldownCellTemplate({
