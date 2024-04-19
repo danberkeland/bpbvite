@@ -13,6 +13,7 @@ import { DBDoughComponentBackup } from "../../data/types.d"
  * @param {Object} [options]
  * @param {string} [options.dateString]
  * @param {number} [options.splitNumber]
+ * @param {string[][]} [options.pocketLines] - contrived custom sticker text we add for just one case (french dough mixes)
  */
 export const printBucketStickers = (
   doughItem, 
@@ -22,6 +23,7 @@ export const printBucketStickers = (
   {
     dateString,
     splitNumber,
+    pocketLines,
   }={}
 ) => {
 
@@ -148,6 +150,22 @@ export const printBucketStickers = (
   doc.text(oldDoughToUse.toFixed(2), 0.3, y)
   doc.text(`lb.`,                    0.8, y)
   doc.text(`Old Dough`,              1.2, y)
+
+  if (pocketLines) {
+    doc.addPage([2, 4], "landscape")
+    doc.setFontSize(12)
+
+    y = 0.75
+    pocketLines.forEach(line => {
+      const [neededEa, weight, pansText] = line
+      doc.text(neededEa, 0.7, y, { baseline: 'middle'})
+      doc.text('x',      1.2, y, { baseline: 'middle'})
+      doc.text(weight,   1.5, y, { baseline: 'middle'})
+      doc.text(pansText, 2.0, y, { baseline: 'middle'})
+      y += 0.25
+    })
+
+  }
 
   doc.save(`${doughName}_Stickers.pdf`)
 
