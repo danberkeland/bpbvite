@@ -17,6 +17,7 @@ import { Dialog } from "primereact/dialog"
 import { exportBpbn1Pdf } from "./exportBPBNBaker1"
 import { useDoughs } from "../../data/dough/useDoughs"
 import { useCheckForUpdates } from "../../core/checkForUpdates"
+import "./stylesProduction.css"
 
 /**
  * @param {Object} props
@@ -110,7 +111,6 @@ const Baker1 = ({ reportDay='today' }) => {
         disabled={!DGH || !nBucketSetsToMake}
         style={{marginBottom: "1rem"}} 
       />
-      <div>Using v3 <a href="/Production/BPBNBaker1/v2">Go to previous version</a></div>
 
       <h2>Rustics</h2>
       <RusticTable 

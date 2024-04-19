@@ -10,7 +10,8 @@ import { Column } from "primereact/column"
 import { DataTable } from "primereact/datatable"
 import { InputTextarea } from "primereact/inputtextarea"
 import { useSettingsStore } from "../../../../Contexts/SettingsZustand"
-import { isoToDT } from "../../../Production/NewPages/BPBN/utils"
+import { DT } from "../../../../utils/dateTimeFns"
+const isoToDT = isoDate => DT.fromIso(isoDate)
 
 const jsToFormat = (jsDate, formatToken) => DateTime.fromJSDate(jsDate)
   .setZone('America/Los_Angeles')

@@ -20,7 +20,7 @@ const Baker2 = () => {
   const checkForUpdatesCompleted = useCheckForUpdates()
   
   const todayDT = DT.today()
-  const [reportDT, setReportDT] = useState(todayDT)
+  const [reportDT, _] = useState(todayDT)
   const isToday = reportDT.toMillis() === todayDT.toMillis()
 
   const { rusticShapeData, otherPrepData, croixSetoutData } = useBaker2Data({ reportDT, shouldFetch: checkForUpdatesCompleted })
@@ -55,8 +55,6 @@ const Baker2 = () => {
         }}
         disabled={!rusticShapeData || !otherPrepData || !croixSetoutData}
       />
-
-      <div>Using v3 <a href="/Production/BPBNBaker2/v2">Go to previous version</a></div>
 
       <DataTable 
         value={(rusticShapeData ?? []).filter(row => row.qty !== 0)}

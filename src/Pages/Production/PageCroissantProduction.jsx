@@ -171,7 +171,6 @@ export const PageCroissantProduction = () => {
     <div style={{padding: "2rem 5rem 5rem 5rem", width: "65rem", margin: "auto"}}>
       <h1>Croissant Production {reportDT.toFormat('MM/dd/yyyy')}</h1>
 
-      <p>Using v3 <a href="/Production/CroixToMake/v2">Go to previous version</a></p>
       <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
         <Button label="Print Shape List" 
           icon="pi pi-print" 
