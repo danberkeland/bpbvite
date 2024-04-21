@@ -76,18 +76,18 @@ const MixPocket = () => {
 
   useEffect(() => {
     if (!!frenchMixItem && !!frenchPocketDataR0) {
+      setShortage(0)
       setOldDough(frenchMixItem.oldDough)
       setBuffer(frenchMixItem.buffer)
       setSurplusQtys(frenchPocketDataR0.map(item => item.surplusEa))
     }
   }, [frenchMixItem])
 
-  const totalMixWeight = (0 
+  const totalMixWeight = 0 
     + (frenchMixItem?.needed ?? 0) 
     + Number(buffer ?? 0)
     + Number(shortage ?? 0)
     - sumBy((frenchPocketDataR0 ?? []).map((row, idx) => row.weight * surplusQtys[idx]), x => x)
-  ).toFixed(2)
 
               // value: surplusQtys[options.rowIndex],
             // setValue: newValue => setSurplusQtyAtIdx(newValue, options.rowIndex),
@@ -113,7 +113,7 @@ const MixPocket = () => {
     />
   }
 
-  const pocketInputTemplate = (index) => {
+  const pocketInputTemplate = ({ index }) => {
     const qtyChanged = 1
       && !!frenchPocketDataR0?.[index]
       && surplusQtys[index] !== frenchPocketDataR0[index].surplusEa
@@ -122,24 +122,24 @@ const MixPocket = () => {
       <InputNumber 
         value={surplusQtys[index]}
         onFocus={e => e.target.select()}
-        onChange={e => setSurplusQtyAtIdx(e.value, index)}
+        onValueChange={e => setSurplusQtyAtIdx(e.value, index)}
         onKeyDown={e => { if (e.code === "Enter") e.currentTarget.blur() }}
-        onBlur={async () => {
-          if (!frenchPocketDataR0) return
+        // onBlur={async () => {
+        //   if (!frenchPocketDataR0) return
 
-          const { preshaped, surplusEa, prodNick } = frenchPocketDataR0[index]
-          const newSurplus = surplusQtys[index] ?? 0
-          setSurplusQtyAtIdx(newSurplus, index)
+        //   const { preshaped, surplusEa, prodNick } = frenchPocketDataR0[index]
+        //   const newSurplus = surplusQtys[index] ?? 0
+        //   setSurplusQtyAtIdx(newSurplus, index)
 
-          const submitItem = {
-            prodNick,
-            preshaped: preshaped - surplusEa + newSurplus
-          }
-          console.log("submitItem:", submitItem)
-          // updateProductCache( 
-          //   await submitProducts({ updateInputs: [submitItem] })
-          // )
-        }}
+        //   const submitItem = {
+        //     prodNick,
+        //     preshaped: preshaped - surplusEa + newSurplus
+        //   }
+        //   console.log("submitItem:", submitItem)
+        //   // updateProductCache( 
+        //   //   await submitProducts({ updateInputs: [submitItem] })
+        //   // )
+        // }}
         inputStyle={{
           width: "4rem",
           fontWeight: qtyChanged ? "bold" : undefined,
@@ -164,7 +164,7 @@ const MixPocket = () => {
         }}>
           
           <div style={{padding: ".5rem"}}>
-            <InputLabel htmlFor="shortage"  text="Short Today:">
+            {/* <InputLabel htmlFor="shortage"  text="Short Today:">
               <InputText id="shortage" 
                 value={shortage ?? ''}
                 inputMode="numeric"
@@ -181,7 +181,7 @@ const MixPocket = () => {
                 style={{ maxWidth: "7rem", borderRight: "none" }}
                 disabled={!frenchMixItem}
               />
-            </InputLabel>
+            </InputLabel> */}
 
             <InputLabel htmlFor="old-dough" text="Old BULK Dough (to be thrown in mix):">
               <InputText id="old-dough" 
@@ -251,7 +251,7 @@ const MixPocket = () => {
           </div>
 
           <div style={{padding: ".5rem", textAlign: "right", fontSize: "1.5rem", color: "var(--bpb-text-color)", fontWeight: "bold"}}>
-            TOTAL: {totalMixWeight} lb.
+            TOTAL: {totalMixWeight.toFixed(2)} lb.
           </div>
         </div>
       </div>
@@ -263,34 +263,29 @@ const MixPocket = () => {
       >
         <Column field="weight"    header="Pocket Size" />
         <Column field="preshaped" header="Available Today" />
+        <Column header="Need for Tomorrow" field="neededEa" />
         <Column header="Surplus Today (+/-)" 
-          body={(_, options) => surplusInputTemplate({
+          body={(_, options) => pocketInputTemplate({
             index: options.rowIndex
             // value: surplusQtys[options.rowIndex],
             // setValue: newValue => setSurplusQtyAtIdx(newValue, options.rowIndex),
           })}
         />
+        
         <Column header="Prep For Tomorrow" // header="Pocket Today" 
-          field="neededEa" 
           body={(row, options) => 0
             + row.neededEa 
             - (surplusQtys[options.rowIndex] ?? 0)
           }
           bodyStyle={{fontWeight: "bold"}}
-          // body={rowData => DrilldownCellTemplate({
-          //   dialogHeader: 'Bake & Deliver Today',
-          //   cellValue: rowData.neededEa,
-          //   tableData: rowData.neededItems,
-          //   products,
-          // })}  
         />
-        <Column header="Pan Count" 
-          body={row => {
-            const panCount = panCountByWeight[row.weight]
-            const pans = Math.floor(row.neededEa / panCount)
-            const remainder = row.neededEa % panCount
-            return `(${panCount}/pan) ${pans} +${remainder}`
-          }}
+        <Column header="Pan Count" field="pansText"
+          // body={row => {
+          //   const panCount = panCountByWeight[row.weight]
+          //   const pans = Math.floor(row.neededEa / panCount)
+          //   const remainder = row.neededEa % panCount
+          //   return `(${panCount}/pan) ${pans} +${remainder}`
+          // }}
           style={{width: "9.5rem"}}
         />
       </DataTable>
@@ -324,7 +319,8 @@ const MixPocket = () => {
                       doughComponents,
                       {
                         dateString: reportDT.toFormat('MM/dd/yyyy'),
-                        splitNumber: nMixes
+                        splitNumber: nMixes,
+                        pocketLines: (frenchPocketDataR1 ?? []).map(row => row.stickerPansText)
                       }
                     )
                   }

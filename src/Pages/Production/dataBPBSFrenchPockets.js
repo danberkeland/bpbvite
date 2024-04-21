@@ -5,11 +5,11 @@ import { compareBy, groupByArrayRdc, groupByObject, keyBy, sumBy, uniqByRdc } fr
 
 
 
-
-
-
-
-
+const panCountByWeight = {
+  "0.25": 48,
+  "0.35": 35,
+  "1.2" : 16,
+}
 
 /** 
  * fudge frfr props so that orders end up at the end of the "French" grouping 
@@ -102,6 +102,12 @@ export const calculateFrenchPockets = (R0, R0Orders, R1Orders, PRD) => {
       const neededItems = frenchOrdersByWeight[weight] ?? []
       const neededEa = neededEaByWeight[weight]
 
+      const panCount = panCountByWeight[weight]
+      const pans = Math.floor(neededEa / panCount)
+      const remainder = neededEa % panCount
+      const pansText =  `(${panCount}/pan) ${pans} +${remainder}`
+      const stickerPansText = [String(neededEa), String(weight), pansText]
+
       return {
         prodNick,
         weight,
@@ -111,7 +117,9 @@ export const calculateFrenchPockets = (R0, R0Orders, R1Orders, PRD) => {
         neededItems,
         surplusEa: preshaped - neededEa,
         overEa: relu(preshaped - neededEa),
-        underEa: relu(neededEa - preshaped)
+        underEa: relu(neededEa - preshaped),
+        pansText,
+        stickerPansText,
       }
     })
 }

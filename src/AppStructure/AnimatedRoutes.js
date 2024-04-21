@@ -223,7 +223,7 @@ function AnimatedRoutes({ user, signOut }) {
 
           <Route path="/Production/BPBSWhatToMake/v2"     element={<BPBSWhatToMake />} />
           <Route path="/Production/BPBSWhatToMake/v3"     element={<WhatToMakeV3 />} />
-          <Route path="/Production/BPBSWhatToMake"        element={<BPBSWhatToMake />} />
+          <Route path="/Production/BPBSWhatToMake"        element={<WhatToMakeV3 />} />
           <Route path="/BPBSProd/BPBSWhatToMakeBackup/v2" element={<BPBSWhatToMake initialDateOption="tomorrow" />}/>
           <Route path="/BPBSProd/BPBSWhatToMakeBackup"    element={<BPBSWhatToMake initialDateOption="tomorrow" />}/>
 

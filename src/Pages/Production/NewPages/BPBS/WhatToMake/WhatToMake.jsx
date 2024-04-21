@@ -201,7 +201,7 @@ const BPBSWhatToMake = ({ initialDateOption='today' }={}) => {
       />
       <ConfirmDialog />
 
-      <div>Using v2 <a href="/Production/BPBSWhatToMake/v3">Try v3 (testing)</a></div>
+      <div>Using v2 <a href="/Production/BPBSWhatToMake/v3">Go to current version</a></div>
 
       <h2>Pocket Count</h2>
       <DataTable value={WTM.frenchPocketData}>

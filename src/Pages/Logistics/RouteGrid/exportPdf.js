@@ -121,10 +121,10 @@ export const exportInvoicePdf = async ({
   // through, so routeNicks are shoehorned into location objects. Be aware of 
   // this extra, non-standard property
   const orderedLocations = orderedRouteNicks.flatMap(routeNick => 
-      gridData[routeNick].body.map(row => ({
-        ...locations[row.locNick],
-        routeNick
-      })),
+    gridData[routeNick].body.map(row => ({
+      ...locations[row.locNick],
+      routeNick
+    })),
   )
 
   // uniqBy preserves order of first appearance. Batch print jobs should only 

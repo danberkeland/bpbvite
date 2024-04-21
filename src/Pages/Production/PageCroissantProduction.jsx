@@ -9,6 +9,7 @@ import { InputNumber } from "primereact/inputnumber"
 import { useCheckForUpdates } from "../../core/checkForUpdates"
 import { exportCroissantProduction } from "./exportCroissantProduction"
 import { sumBy } from "../../utils/collectionFns"
+import { round } from "lodash"
 
 /** @type {React.CSSProperties} */
 const greenCellStyle = {
@@ -191,14 +192,14 @@ export const PageCroissantProduction = () => {
         responsiveLayout="scroll"
       >
         <Column header="Product"       field="prodNick"     />
-        <Column header="Opening Count" field="freezerCount" />
+        <Column header="Opening Count" field="freezerCount" footer={`${displayMode === 'sum' ? 'Δ' : 'Σ'} Sheets:`} style={{width: "7.5rem"}} />
         <Column header="Sheets"  
           body={(row, options) => isEditingCroix 
             ? sheetInputTemplate(row, options.rowIndex)
             : (sheetMakes[options.rowIndex] ?? row.sheetMake)
           }    
           style={{paddingBlock: "0rem"}}
-          footer={() => `Σ ${sumBy(sheetMakes, x => x)}`}
+          footer={() => `+ ${sumBy(sheetMakes, x => x)}`}
           footerStyle={{padding: "1rem"}}
         />
         {[0,1,2,3,4].map(relDate => 
@@ -218,6 +219,10 @@ export const PageCroissantProduction = () => {
               })
             }}
             style={{width: "8rem", paddingBlock: "0rem"}}
+            footer={() => displayMode === 'sum' 
+              ? round(sumBy(croixData ?? [], row => row[`R${relDate}Sum`] / row.batchSize), 1)
+              : round(sumBy((croixData ?? []).map((row, idx) => ((sheetMakes[idx] ?? row.sheetMake) * row.batchSize + row[`R${relDate}Cum`]) / row.batchSize), x => x), 1)
+            }
           />
         )}
       </DataTable>
