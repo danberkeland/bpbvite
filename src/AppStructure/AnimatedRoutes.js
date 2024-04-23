@@ -67,6 +67,7 @@ import Products from "../Pages/Products/NewPage/Products";
 import PageSpecialPacking from "../Pages/Production/PageSpecialPacking";
 import { PageCroissantProduction } from "../Pages/Production/PageCroissantProduction";
 import PageCroissantEodCounts from "../Pages/Production/PageCroissantEodCounts";
+import PageOrderDashboard from "../Pages/Logistics/PageOrderDashboard";
 
 // Lazy Load:
 
@@ -211,11 +212,8 @@ function AnimatedRoutes({ user, signOut }) {
   
           <Route path="/Production/BPBNBaker1"     element={<Baker1 reportDay="today" />} />
           <Route path="/BPBNProd/BPBNBaker1Backup" element={<Baker1 reportDay="tomorrow" />} />
-
           <Route path="/Production/BPBNBaker2"     element={<Baker2 />} />
-
           <Route path="/Production/BPBNBuckets"    element={<PageBuckets mixedWhere="Carlton" />} />
-          
           <Route path="/Production/BPBNSetOut"     element={<SetoutV3 reportLocation="Carlton" />} />
 
           {/* Production::BPBS */}
@@ -247,7 +245,9 @@ function AnimatedRoutes({ user, signOut }) {
           <Route path="/Logistics"               element={<Logistics />} />
           <Route path="/Logistics/ByRoute"       element={<RouteGrid />} />
           <Route path="/Logistics/ByRoute/v3"    element={<PageRouteGrid />} />
+
           <Route path="/Logistics/ByProduct"     element={<ByProduct />} />
+          <Route path="/Logistics/ByProduct/v2"  element={<PageOrderDashboard />} />
 
           <Route path="/Logistics/NorthLists/v2" element={<NorthListV2 />} />
           <Route path="/Logistics/NorthLists"    element={<NorthListV2 />} />

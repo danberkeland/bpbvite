@@ -65,7 +65,7 @@ const calculateGridData = (R0Orders, LOC, RTE, products) => {
   }
 
   const routeGridPivot = tableData => 
-    tablePivot(tableData, rowPartitionModel, 'prodNick', cellData => cellData[0].qty)
+    tablePivot(tableData, rowPartitionModel, order => order.prodNick, cellData => cellData[0].qty)
     
   const generateData = orderSet => orderSet
     .sort(compareBy(order => locations[order.locNick]?.delivOrder ?? 999))

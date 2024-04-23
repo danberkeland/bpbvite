@@ -18,7 +18,7 @@ export const HoldingOrders = () => {
     ? tablePivot(
         STD.filter(std => !std.isStand),
         { prodNick: order => order.prodNick },
-        'dayOfWeek',
+        order => order.dayOfWeek,
         cellItems => cellItems[0].qty
       )
     : undefined

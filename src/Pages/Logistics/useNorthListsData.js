@@ -247,7 +247,7 @@ const useNorthListData = ({
         driver: row => row.meta.route.driver, 
         route: row => row.meta.routeNick 
       },
-      "prodNick",
+      row => row.prodNick,
       cellData => sumBy(cellData, order => order.qty)
     )
     .sort(compareBy(row => row.route))
@@ -315,7 +315,7 @@ const useNorthListData = ({
         driver: row => row.meta.route.driver, 
         route: row => row.meta.routeNick 
       },
-      "prodNick",
+      row => row.prodNick,
       cellData => sumBy(cellData, order => order.qty)
     )
     .sort(compareBy(row => row.route))
