@@ -59,8 +59,7 @@ import DelivOrder from "../Pages/Settings/delivOrder/delivOrder";
 import EditDoughs from "../Pages/Settings/editDough/editDough";
 import EditZones2 from "../Pages/Settings/editZones/editZones2";
 import EditRoutes from "../Pages/Settings/editRoutes/editRoutes";
-import { default as NotesV2} from "../Pages/Settings/notes/Notes2";
-import { default as NotesV3 } from "../Pages/Settings/notes/v3/Notes";
+import { default as PageNotes } from "../Pages/Settings/PageNotes";
 import Settings from "../Pages/Settings/Settings";
 
 import Remap from "../Pages/EODCounts/EODCountsRempas";
@@ -222,10 +221,10 @@ function AnimatedRoutes({ user, signOut }) {
           {/* Production::BPBS */}
 
           <Route path="/Production/BPBSWhatToMake/v2"     element={<BPBSWhatToMake />} />
-          <Route path="/Production/BPBSWhatToMake/v3"     element={<WhatToMakeV3 />} />
-          <Route path="/Production/BPBSWhatToMake"        element={<WhatToMakeV3 />} />
+          <Route path="/Production/BPBSWhatToMake/v3"     element={<WhatToMakeV3 reportDay="today" />} />
+          <Route path="/Production/BPBSWhatToMake"        element={<WhatToMakeV3 reportDay="today" />} />
           <Route path="/BPBSProd/BPBSWhatToMakeBackup/v2" element={<BPBSWhatToMake initialDateOption="tomorrow" />}/>
-          <Route path="/BPBSProd/BPBSWhatToMakeBackup"    element={<BPBSWhatToMake initialDateOption="tomorrow" />}/>
+          <Route path="/BPBSProd/BPBSWhatToMakeBackup"    element={<WhatToMakeV3 reportDay="tomorrow" />}/>
 
           <Route path="/Production/BPBSMixPocket/v2"      element={<MixPocket />} />
           <Route path="/Production/BPBSMixPocket"         element={<BPBSMixPocket />} />
@@ -286,9 +285,7 @@ function AnimatedRoutes({ user, signOut }) {
           <Route path="/Settings/editDough"       element={<EditDoughs />} />
           <Route path="/Settings/editRoutes"      element={<EditRoutes />} />
           <Route path="/Settings/editZones"       element={<EditZones2 />} />
-          <Route path="/Settings/Notes"           element={<NotesV3 />} />
-          <Route path="/Settings/Notes/v3"        element={<NotesV3 />} />
-          <Route path="/Settings/Notes/v2"        element={<NotesV2 />} />
+          <Route path="/Settings/Notes"           element={<PageNotes />} />
         </>}
       </Routes>
       </Suspense>
