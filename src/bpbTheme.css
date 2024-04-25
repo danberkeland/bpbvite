@@ -2943,7 +2943,8 @@ div.read-only-button > .p-disabled, .p-component:disabled {
   color: #6c757d;
 }
 .p-datatable .p-sortable-column.p-highlight {
-  background: #f8f9fa;
+  background: var(--bpb-orange-vibrant-050);
+  /* background: #f8f9fa; */
   color: #2196F3;
 }
 .p-datatable .p-sortable-column.p-highlight .p-sortable-column-icon {

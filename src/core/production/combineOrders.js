@@ -116,20 +116,23 @@ const _combineOrdersGrug = (
   // Kinda jank as this clashes with the Standing table's usage of the 
   // route attribute, but as of now application logic does not handle
   // standing orders with other route values well.
-  return allOrders.map(orderSet => {
-    const cartOrder = orderSet.find(order => order.Type === "Orders")
-    const effectiveRoute = !!cartOrder ? cartOrder.route : 'deliv'
+  return allOrders
+    .map(orderSet => {
+      const cartOrder = orderSet.find(order => order.Type === "Orders")
+      const effectiveRoute = !!cartOrder ? cartOrder.route : 'deliv'
 
-    return orderSet
-      .sort(compareBy(order => TypeOrderingFn(order.Type)))
-      .reduce(uniqByRdc(order => order.prodNick), [])
-      .map(order => ({ ...order, route: effectiveRoute }))
+      return orderSet
+        .sort(compareBy(order => TypeOrderingFn(order.Type)))
+        .reduce(uniqByRdc(order => order.prodNick), [])
+        .map(order => ({ ...order, route: effectiveRoute }))
 
-  }).flat()
+    })
+    .flat()
+    .map(order => order.isWhole ? order : ({ ...order, Type: 'Retail' }))
 
 
   // old strategy: deprecated b/c it doesn't ensure that all items belonging
-  // to the same order have the same route attribute. In the future we should.
+  // to the same order have the same route attribute. In the future we should
   // make sure that any edit to a standing order causes a full overwrite, so
   // that no decision logic is necessary at the individual attribute level.
 

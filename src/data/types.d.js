@@ -19,7 +19,7 @@ let OrderHeader
 /**
  * @typedef {Object}
  * @property {string | null} id
- * @property {'Orders'|'Standing'|'Holding'|'Template'} Type
+ * @property {'Orders'|'Standing'|'Holding'|'Retail'|'Template'} Type
  * @property {string} prodNick
  * 
  * @property {number} qty
