@@ -215,25 +215,10 @@ const calculateSetoutPrado = (PRD, R1Orders, R2Orders, R3Orders) => {
     },
   ]
 
-  const pradoSetoutCookie = R1Orders
-    .filter(order => 1
-      && ['chch', 'snik'].includes(order.prodNick)
-      && !(order.isWhole === false && order.meta.routeNick === 'Pick up Carlton')
-    )
-    .reduce(groupByArrayRdc(order => order.prodNick), [])
-    .map(orderGroup => ({
-      rowKey: orderGroup[0].prodNick,
-      total: sumBy(orderGroup, order => order.qty * products[order.prodNick].packSize),
-      orders: orderGroup
-    }))
-
-
-
   return {
     croix:  pradoSetoutCroix,
     other:  pradoSetoutOther,
     almond: pradoSetoutAlmond,
-    cookie: pradoSetoutCookie,
     products,
   }
 
@@ -267,7 +252,6 @@ const calculateSetoutCarlton = (PRD, R1Orders) => {
     croix: calculateSetoutCroix(R1CarltonBakedCroix, products), 
     other: calculateSetoutOther(R1CarltonBakedOther, products), 
     almond: undefined,
-    cookie: undefined,
     products,
   }
 

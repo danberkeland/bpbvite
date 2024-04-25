@@ -64,13 +64,12 @@ const Setout = ({ reportLocation }) => {
 
   const checkForUpdatesCompleted = useCheckForUpdates()
   
-  const reportDT = useMemo(() => DT.today() ,[])
+  const reportDT = useMemo(() => DT.today().plus({ days: 0 }) ,[])
 
   const { 
     croix, 
     other, 
     almond, 
-    cookie,
     products={} 
   } = useSetoutData({ reportDT, reportLocation, shouldFetch: checkForUpdatesCompleted })
 
@@ -123,7 +122,7 @@ const Setout = ({ reportLocation }) => {
       <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem"}}>
         <Button 
           label={`Print ${reportLocation} Setout List`} 
-          onClick={() => exportSetout({ reportLocation, reportDT, croix, other: (other ?? []).concat(cookie ?? []), almond })}
+          onClick={() => exportSetout({ reportLocation, reportDT, croix, other, almond })}
           disabled={!INQB.data || !croix}
         />
         {!!setoutRecord && <div style={greenChipStyle}>Setout recorded at {DT.fromIsoTs(setoutRecord.updatedAt).toLocaleString(DateTime.TIME_SIMPLE)}</div>}
@@ -153,7 +152,7 @@ const Setout = ({ reportLocation }) => {
 
       <h2>Pastry Prep</h2>
       <DataTable 
-        value={(other ?? []).concat(cookie ?? [])}
+        value={other ?? []}
         size="small"
         responsiveLayout="scroll"
       >
