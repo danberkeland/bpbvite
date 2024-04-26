@@ -30,7 +30,7 @@ const useSpecialOrdersData = ({ reportDT, shouldFetch }) => {
     }
 
     const [pradoData, carltonData] = [pradoOrders, carltonOrders].map(orders => 
-      tablePivot(orders, rowPartitionModel, 'prodNick', items => items[0].qty)
+      tablePivot(orders, rowPartitionModel, order => order.prodNick, items => items[0].qty)
     )
 
     return { pradoData, carltonData }

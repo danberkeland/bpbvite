@@ -49,8 +49,6 @@ const NorthLists = () => {
     <div style={{margin: "auto", paddingInline: "10%", paddingBottom: "10rem"}}>
       <h1>Long Driver List {reportDateDT.toFormat('MM/dd/yyyy')}</h1>
 
-      <a href="/logistics/NorthLists/v1" >Link to Old Version</a>
-
       <div style={{marginTop: "1rem", marginBottom: "2rem" }}>
         <Button 
           label="Print North List" 

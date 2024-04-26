@@ -109,20 +109,20 @@ export function tablePivotSimple(
  * @template T
  * @param {T[]} data 
  * @param {RowPartitionModel<T>} rowPartitionModel 
- * @param {string} pivotColumnAttribute 
+ * @param {IterFn<T>} colPartitionFn 
  * @param {(t: T[]) => (number | string | boolean)} valueFn 
  * @returns 
  */
 export function tablePivot(
   data, 
   rowPartitionModel, 
-  pivotColumnAttribute, 
+  colPartitionFn, 
   valueFn
 ) {
 
   const pivotColumnsTemplate = Object.fromEntries(
-    uniqBy(data, item => item[pivotColumnAttribute])
-      .map(item => [item[pivotColumnAttribute], { items: [], value: null }])
+    uniqBy(data, colPartitionFn)
+      .map(item => [colPartitionFn(item), { items: [], value: null }])
   )
   // console.log("pivotColumnsTemplate", pivotColumnsTemplate)
   
@@ -137,25 +137,14 @@ export function tablePivot(
   const pivotedRows = partitionedRows.map(rowGroup => {
 
     const pivotData = Object.fromEntries(
-      groupByArray(
-        rowGroup.map(row => row.row), 
-        item => item[pivotColumnAttribute]
-      ).map(colGroup => [
-        colGroup[0][pivotColumnAttribute], 
-        { 
-          items: colGroup.map(row => row.row), 
-          value: valueFn(colGroup) 
-        },
-      ])
+      groupByArray(rowGroup.map(row => row.row), colPartitionFn)
+      .map(colGroup => [colPartitionFn(colGroup[0]), { items: colGroup, value: valueFn(colGroup) }])
     )
 
     // console.log(pivotData)
     return {
       rowProps: rowGroup[0].rowProps,
-      colProps: {
-        ...pivotColumnsTemplate,
-        ...pivotData,
-      }
+      colProps: { ...pivotColumnsTemplate, ...pivotData }
     }
   })
 
@@ -181,3 +170,5 @@ export function tablePivotFlatten(pivotData) {
     }
   })
 }
+
+

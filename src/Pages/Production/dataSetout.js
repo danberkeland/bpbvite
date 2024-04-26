@@ -85,7 +85,7 @@ const classifyPastryOrder = (datePrefix, order, products) => {
   //   : undefined
 
   // FUTURE: may need to add a Higuera location
-  const bakePlace = bakedWhere.length === 1 ? bakedWhere[0] 
+  const bakePlace = bakedWhere.length === 1 ? bakedWhere[0]
     : order.meta.routeNick === 'Pick up Carlton' ? 'Carlton'
     : 'Prado'
 
@@ -192,7 +192,10 @@ const calculateSetoutPrado = (PRD, R1Orders, R2Orders, R3Orders) => {
     ],
     products
   )
-  const pradoSetoutOther = calculateSetoutOther(R1PradoBakedOther, products)
+  const pradoSetoutOther = calculateSetoutOther(
+    R1PradoBakedOther, 
+    products
+  )
 
   const freezerAlmondOrders = [
     ...R1PradoFrozenAlmond, 
@@ -238,6 +241,7 @@ const calculateSetoutCarlton = (PRD, R1Orders) => {
   const R1SetoutItems = R1Orders
     .filter(order => filterToSetoutItems(order, products))
     .flatMap(order => splitBackporchCroixOrder(order, products))
+    .filter(order => !(['chch', 'snik'].includes(order.prodNick)))  // Stupid cookie bs. Current intended behavior is for cookies not to show up on carlton setout.
 
   const { R1CarltonBakedCroix=[], R1CarltonBakedOther=[] } = groupByObject(
     R1SetoutItems,

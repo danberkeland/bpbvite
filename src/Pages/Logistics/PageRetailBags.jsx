@@ -40,7 +40,6 @@ const useRetailBagsData = ({ reportDT, shouldFetch }) => {
         R1TotalQty: sumBy(R1RetailOrdersByProdNick[P.prodNick] ?? [], order => order.qty),
       }))
       .sort(compareBy(row => row.prodName))
-      .sort(compareBy(row => !row.prodName.includes('(Retail)')))
 
     return { data, products }
   }

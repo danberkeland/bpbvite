@@ -44,7 +44,7 @@ export const Sandbox = () => {
         .map(orderSet => tablePivot(
           orderSet, 
           { locNick: item => item.locNick }, 
-          'prodNick', 
+          order => order.prodNick, 
           items => items[0].qty
         ))
 

@@ -43,11 +43,11 @@ const generateBasicPivotAndColumns = (orderList) => {
   const pivotTable = tablePivot(
     orderList,
     { customer: row => row.custName, driver: row => row.driver, route: row => row.route },
-    "prodNick",
+    row => row.prodNick,
     cellData => sumBy(cellData, order => order.qty * order.packSize)
   )
 
-  const flattenedPivotTable = tablePivotFlatten (pivotTable)
+  const flattenedPivotTable = tablePivotFlatten(pivotTable)
     .map(row => ({
       ...row,
       customerShort: (row.driver === "Long Driver" ? "": "* ") 

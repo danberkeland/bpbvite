@@ -2,7 +2,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 
 const croixColumns = [
-  { header: "Frozen Croissants", dataKey: "setoutKey" },
+  { header: "Set Out Croissants", dataKey: "setoutKey" },
   { header: "Qty", dataKey: "total" },
   { header: "Pans", dataKey: "pans" },
   { header: "+", dataKey: "remainder" },
@@ -46,14 +46,9 @@ export const exportSetout = ({
   doc.setFontSize(20)
   doc.text(`${reportLocation} Pastry Prep ${reportDT.toFormat('MM/dd/yyyy')}`, pageMargin, 20)
 
-  doc.setFontSize(14);
-  doc.text('Set Out', pageMargin, finalY + 12);
-
   renderTable(croix, croixColumns)
   renderTable(other, otherColumns)
-  if (!!almond) {
-    renderTable(almond, almondColumns)
-  }
+  if (!!almond) { renderTable(almond, almondColumns) }
 
   doc.save(`Setout_${reportLocation}_${reportDT.toFormat('yyyy-MM-dd')}.pdf`)
 

@@ -15,7 +15,7 @@ const buildTableData = orderList => tablePivot(
     routeNick:   order => order.meta.routeNick,
     locNick:     order => order.locNick,
   },
-  'prodNick',
+  order => order.prodNick,
   orders => sumBy(orders, order => order.qty)
 )
 .sort(compareBy(row => row.rowProps.locNick))

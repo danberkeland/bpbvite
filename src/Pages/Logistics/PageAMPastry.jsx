@@ -45,7 +45,7 @@ const useAMPastryData = ({ reportDT, shouldFetch }) => {
         routeNick: order => order.meta.routeNick,
         driver: order => order.meta.route.driver,
       },
-      'prodNick',
+      order => order.prodNick,
       items => items[0].qty,
     )
 

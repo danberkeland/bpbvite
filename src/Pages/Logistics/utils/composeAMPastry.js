@@ -17,7 +17,7 @@ const makePivotTableAndColumns = (delivDate, database, filter) => {
       delivOrder: row => row.delivOrder,
       route: row => row.route,
     },
-    "prodNick",
+    row => row.prodNick,
     cellItems => sumBy(cellItems, item => item.qty * item.packSize)
   )
 

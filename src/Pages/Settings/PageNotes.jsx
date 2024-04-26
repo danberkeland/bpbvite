@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { useListData } from "../../../../data/_listData"
+import { useListData } from "../../data/_listData"
 import { DateTime } from "luxon"
-import { countBy, keyBy, orderBy, sortBy } from "lodash"
+import { countBy, orderBy } from "lodash"
 
 import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup"
 import { Button } from "primereact/button"
@@ -9,8 +9,8 @@ import { Calendar } from "primereact/calendar"
 import { Column } from "primereact/column"
 import { DataTable } from "primereact/datatable"
 import { InputTextarea } from "primereact/inputtextarea"
-import { useSettingsStore } from "../../../../Contexts/SettingsZustand"
-import { DT } from "../../../../utils/dateTimeFns"
+import { useSettingsStore } from "../../Contexts/SettingsZustand"
+import { DT } from "../../utils/dateTimeFns"
 const isoToDT = isoDate => DT.fromIso(isoDate)
 
 const jsToFormat = (jsDate, formatToken) => DateTime.fromJSDate(jsDate)
@@ -25,12 +25,11 @@ const isoToFormat = (isoDate, formatToken) => DateTime
 
 const jsToIso = jsDate => jsToFormat(jsDate, 'yyyy-MM-dd')
 
-const Notes = () => {
+const PageNotes = () => {
   const user = {
     name: useSettingsStore(state => state.user)
   }
   const todayDT = DateTime.now().setZone('America/Los_Angeles').startOf('day')
-  const todayISO = todayDT.toFormat('yyyy-MM-dd')
 
   const [calendarDateJS, setCalendarDateJS] = 
     useState(todayDT.plus({ days: 1 }).toJSDate())
@@ -380,4 +379,4 @@ const EditCellTemplate = ({
   )
 }
 
-export { Notes as default }
+export { PageNotes as default }
