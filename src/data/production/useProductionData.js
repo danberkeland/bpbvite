@@ -134,7 +134,7 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false, shouldFetch=
   return { 
     data: useMemo(
       calcRoutedOrders, 
-      [useHolding, dayOfWeek, ORD, STD, LOC, PRD, RTE, overrideProduct, overrideLocation, getRoutes]
+      [useHolding, delivDate, dayOfWeek, ORD, STD, LOC, PRD, RTE, overrideProduct, overrideLocation, getRoutes]
     )
   }
 
