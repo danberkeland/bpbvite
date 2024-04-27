@@ -6,6 +6,7 @@ import { DT } from "../../utils/dateTimeFns"
 
 import "./stylesOrderDashboard.css"
 
+import { Button } from "primereact/button"
 import { SelectButton } from "primereact/selectbutton"
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
@@ -37,21 +38,12 @@ const useOrderDashboardData = ({ reportDT, shouldFetch }) => {
       return undefined
     }
 
-    return [
-      ...R0Orders,
-      ...R1Orders,
-      ...R2Orders,
-      ...R3Orders,
-      ...R4Orders,
-      ...R5Orders,
-      ...R6Orders,
-      ...R7Orders,
-    ]
-    .filter(order => !(order.Type === 'Retail' && order.prodNick === 'brn' && order.locNick.includes('__')))
-    .sort(compareBy(order => order.prodNick))
-    .sort(compareBy(order => products[order.prodNick].doughNick))
-    .sort(compareBy(order => products[order.prodNick].packGroup))
-    .sort(compareBy(order => order.meta.routePlan.steps[0].end.place))
+    return [...R0Orders, ...R1Orders, ...R2Orders, ...R3Orders, ...R4Orders, ...R5Orders, ...R6Orders, ...R7Orders ]
+      .filter(order => !(order.Type === 'Retail' && order.prodNick === 'brn' && order.locNick.includes('__')))
+      .sort(compareBy(order => order.prodNick))
+      .sort(compareBy(order => products[order.prodNick].doughNick))
+      .sort(compareBy(order => products[order.prodNick].packGroup))
+      .sort(compareBy(order => order.meta.routePlan.steps[0].end.place))
 
   }, [R0Orders, R1Orders, R2Orders, R3Orders, R4Orders, R5Orders, R6Orders, R7Orders, products])
 
@@ -94,8 +86,6 @@ const useOrderDashboardData = ({ reportDT, shouldFetch }) => {
   }
 
 }
-
-
 
 
 // Order Dashboard
@@ -249,12 +239,12 @@ const PageOrderDashboard = () => {
         <div>
           <Panel 
             header={<div>Shop</div>} 
-            toggleable 
-            collapsed={hideShops}
-            onToggle={() => {
-              if (hideShops === false) setTimeout(() => setSelectedShops([]), 300)
-              setHideShops(!hideShops)
-            }}
+            icons={
+              <i className={hideShops ? "pi pi-minus" : "pi pi-bars"} 
+                onClick={() => setHideShops(!hideShops)} 
+                style={{cursor: "pointer", paddingInline: ".5rem"}} 
+              />
+            }
             className="bpb-order-dash-panel" 
             style={{marginBottom: "1rem"}}
           >
@@ -268,12 +258,12 @@ const PageOrderDashboard = () => {
           </Panel>
           <Panel 
             header={<div>Pack Group</div>} 
-            toggleable 
-            collapsed={hidePackGroups} 
-            onToggle={() => {
-              if (hidePackGroups === false) setTimeout(() => setSelectedPackGroups([]), 300)
-              setHidePackGroups(!hidePackGroups)
-            }} 
+            icons={
+              <i className={hidePackGroups ? "pi pi-minus" : "pi pi-bars"} 
+                onClick={() => setHidePackGroups(!hidePackGroups)} 
+                style={{cursor: "pointer", paddingInline: ".5rem"}} 
+              />
+            }
             className="bpb-order-dash-panel" 
             style={{marginBottom: "1rem"}}
           >
@@ -287,12 +277,12 @@ const PageOrderDashboard = () => {
           </Panel>
           <Panel 
             header={<div>Dough Type</div>} 
-            toggleable
-            collapsed={hideDoughNicks}
-            onToggle={() => {
-              if (hideDoughNicks === false) setTimeout(() => setSelectedDoughNicks([]), 300)
-              setHideDoughNicks(!hideDoughNicks)
-            }} 
+            icons={
+              <i className={hideDoughNicks ? "pi pi-minus" : "pi pi-bars"} 
+                onClick={() => setHideDoughNicks(!hideDoughNicks)} 
+                style={{cursor: "pointer", paddingInline: ".5rem"}} 
+              />
+            }
             className="bpb-order-dash-panel" 
             style={{marginBottom: "1rem"}}
           >
@@ -305,13 +295,13 @@ const PageOrderDashboard = () => {
             />
           </Panel>
           <Panel 
-            header={<div>Route</div>} 
-            toggleable
-            collapsed={hideRouteNicks}
-            onToggle={() => {
-              if (hideRouteNicks === false) setTimeout(() => setSelectedRouteNicks([]), 300)
-              setHideRouteNicks(!hideRouteNicks)
-            }} 
+            header="Route"
+            icons={
+              <i className={hideRouteNicks ? "pi pi-minus" : "pi pi-bars"} 
+                onClick={() => setHideRouteNicks(!hideRouteNicks)} 
+                style={{cursor: "pointer", paddingInline: ".5rem"}} 
+              />
+            }
             className="bpb-order-dash-panel" 
             style={{marginBottom: "1rem"}}
           >
@@ -324,13 +314,13 @@ const PageOrderDashboard = () => {
             />
           </Panel>
           <Panel 
-            header={<div>Order Type</div>} 
-            toggleable
-            collapsed={hideOrderTypes}
-            onToggle={() => {
-              if (hideOrderTypes === false) setTimeout(() => setSelectedOrderTypes([]), 300)
-              setHideOrderTypes(!hideOrderTypes)
-            }} 
+            header="Order Type"
+            icons={
+              <i className={hideOrderTypes ? "pi pi-minus" : "pi pi-bars"} 
+                onClick={() => setHideOrderTypes(!hideOrderTypes)} 
+                style={{cursor: "pointer", paddingInline: ".5rem"}} 
+              />
+            }
             className="bpb-order-dash-panel" 
             style={{marginBottom: "1rem"}}
           >
