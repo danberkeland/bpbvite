@@ -19,3 +19,12 @@
 .p-panel.p-component.bpb-order-dash-panel .p-panel-content {
   padding: 0;
 }
+
+.p-panel.p-component.bpb-order-dash-panel.bpb-empty-panel-body .p-panel-content {
+  display: none;
+}
+
+.p-panel.p-component.bpb-order-dash-panel.bpb-order-dash-panel-search-header .p-panel-header {
+  padding: .5rem 1rem;
+  width: 100%;
+}
