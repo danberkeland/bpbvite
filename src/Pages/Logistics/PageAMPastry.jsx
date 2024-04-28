@@ -141,7 +141,7 @@ const PageAMPastry = () => {
   return (
     <div style={{padding: "2rem 5rem 5rem 5rem", maxWidth: "64rem", margin: "auto"}}>
       <h1>AM Pastry Pack {reportDT.toFormat('MM/dd/yyyy')}</h1>
-      <p>Using v2 <a href="/Logistics/AMPastry/v1">Go to previous version</a></p>
+      
       <div style={{ paddingBottom: "2rem", display: "flex", gap: "4rem" }}>
         <Button label="Print Stickers" onClick={() => exportAMPastryStickers(pivotData, reportDT)} />
         <Button label="Print List" onClick={() => exportAMPastryTable(pivotData, pivotColumnKeys, reportDT)} />
