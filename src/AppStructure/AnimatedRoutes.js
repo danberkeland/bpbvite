@@ -44,7 +44,6 @@ import BPBSMixPocket from "../Pages/Production/Legacy/BPBSMixPocket";
 import MixPocket from "../Pages/Production/PageBPBSMixPocket";
 
 import Logistics from "../Pages/Logistics/Logistics"; 
-import RouteGrid from "../Pages/Logistics/RouteGrid/RouteGrid";
 import PageRouteGrid from "../Pages/Logistics/PageRouteGrid";
 import ByProduct from "../Pages/Logistics/ByProduct/ByProduct";
 import NorthListV2 from "../Pages/Logistics/PageNorthLists"
@@ -238,8 +237,7 @@ function AnimatedRoutes({ user, signOut }) {
           {/* Logistics */}
 
           <Route path="/Logistics"               element={<Logistics />} />
-          <Route path="/Logistics/ByRoute"       element={<RouteGrid />} />
-          <Route path="/Logistics/ByRoute/v3"    element={<PageRouteGrid />} />
+          <Route path="/Logistics/ByRoute"       element={<PageRouteGrid />} />
 
           <Route path="/Logistics/ByProduct"     element={<ByProduct />} />
           <Route path="/Logistics/ByProduct/v2"  element={<PageOrderDashboard />} />
