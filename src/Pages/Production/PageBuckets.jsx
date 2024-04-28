@@ -18,6 +18,11 @@ import { useDoughs } from "../../data/dough/useDoughs"
 import { useCheckForUpdates } from "../../core/checkForUpdates"
 import { printBaguette65Stickers } from "./exportBPBSBaguette65Stickers"
 
+// Notes:
+//
+// Brioche dough is filtered from the dough list where data gets mapped to
+// ui components below, since its recipe is not properly set up yet.
+
 /** @type {React.CSSProperties} */
 const printButtonStyle = { 
   borderRadius: "1rem", 
@@ -94,7 +99,7 @@ const Buckets = ({ mixedWhere }) => {
 
       <h1>{mixedWhere} Dough Stickers</h1>
       {!doughList && <h2>Loading...</h2>}
-      {(doughList ?? []).map((row, idx) => 
+      {(doughList?.filter(D => D.doughName !== 'Brioche') ?? []).map((row, idx) => 
         <div 
           key={row.doughName} 
           style={{
