@@ -38,7 +38,6 @@ import ManageTraining from "../Pages/Settings/ManageTraining/ManageTraining";
 import { default as CustProds } from "../Pages/Settings/custProds/custProds";
 import LocationProductOverrides from "../Pages/Settings/custProds/v2/LocationProductOverrides";
 
-import BPBSWhatToMake from "../Pages/Production/NewPages/BPBS/WhatToMake/WhatToMake";
 import { default as WhatToMakeV3 } from "../Pages/Production/PageBPBSWhatToMake";
 
 import BPBSMixPocket from "../Pages/Production/Legacy/BPBSMixPocket";
@@ -218,10 +217,7 @@ function AnimatedRoutes({ user, signOut }) {
 
           {/* Production::BPBS */}
 
-          <Route path="/Production/BPBSWhatToMake/v2"     element={<BPBSWhatToMake />} />
-          <Route path="/Production/BPBSWhatToMake/v3"     element={<WhatToMakeV3 reportDay="today" />} />
           <Route path="/Production/BPBSWhatToMake"        element={<WhatToMakeV3 reportDay="today" />} />
-          <Route path="/BPBSProd/BPBSWhatToMakeBackup/v2" element={<BPBSWhatToMake initialDateOption="tomorrow" />}/>
           <Route path="/BPBSProd/BPBSWhatToMakeBackup"    element={<WhatToMakeV3 reportDay="tomorrow" />}/>
 
           <Route path="/Production/BPBSMixPocket/v2"      element={<MixPocket />} />
