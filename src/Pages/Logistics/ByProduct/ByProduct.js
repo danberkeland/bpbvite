@@ -57,6 +57,7 @@ function ByProduct() {
       <MainWrapper>
         <DescripWrapper>
           <ToolBar delivDate={delivDate} setDelivDate={setDelivDate} />
+          <p>Using v1 <a href='/logistics/byProduct/v2'>Try new version</a></p>
           <ProductGrid
             orderList={orderList}
             database={database}

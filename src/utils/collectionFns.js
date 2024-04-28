@@ -1,5 +1,6 @@
 export * from "./collectionFns/chunk"
 export * from "./collectionFns/compareBy"
+export * from "./collectionFns/countByRdc"
 export * from "./collectionFns/groupByArray"
 export * from "./collectionFns/groupByArrayIsEqual"
 export * from "./collectionFns/groupByArrayN"

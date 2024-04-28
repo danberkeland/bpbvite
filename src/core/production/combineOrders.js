@@ -27,6 +27,8 @@ const toOrder = (standing, delivDate) => {
     ItemNote,
     route,
     qty,
+    updatedAt,
+    updatedBy,
   } = standing
 
   return {
@@ -47,8 +49,8 @@ const toOrder = (standing, delivDate) => {
     SO: null,
     isLate: null,
     createdOn:'',
-    updatedOn:'',
-    updatedBy: null,
+    updatedOn:updatedAt,
+    updatedBy,
     ttl: null,
   }
 

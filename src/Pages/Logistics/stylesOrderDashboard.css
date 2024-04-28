@@ -1,11 +1,30 @@
-.p-panel.p-component.p-panel-toggleable.bpb-order-dash-panel {
-  .p-panel-header {
-    color: var(--bpb-text-color);
-    background: var(--bpb-orange-vibrant-200);
-    border-color: var(--bpb-surface-content-border);
-  }
+.p-panel.p-component.p-panel-toggleable.bpb-order-dash-panel .p-panel-header {
+  color: var(--bpb-text-color);
+  background: var(--bpb-orange-vibrant-200);
+  border-color: var(--bpb-surface-content-border);
+}
 
-  .p-panel-content {
+.p-panel.p-component.p-panel-toggleable.bpb-order-dash-panel .p-panel-content {
     padding: 0;
-  }
+}
+
+.p-panel.p-component.bpb-order-dash-panel .p-panel-header {
+  color: var(--bpb-text-color);
+  background: var(--bpb-orange-vibrant-200);
+  border-color: var(--bpb-surface-content-border);
+  display: flex;
+  justify-content: space-between;
+}
+
+.p-panel.p-component.bpb-order-dash-panel .p-panel-content {
+  padding: 0;
+}
+
+.p-panel.p-component.bpb-order-dash-panel.bpb-empty-panel-body .p-panel-content {
+  display: none;
+}
+
+.p-panel.p-component.bpb-order-dash-panel.bpb-order-dash-panel-search-header .p-panel-header {
+  padding: .5rem 1rem;
+  width: 100%;
 }

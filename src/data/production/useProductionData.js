@@ -46,6 +46,7 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false, shouldFetch=
   const { data:PRD } = useProducts({ shouldFetch })
   const { data:RTE } = useRoutes({ shouldFetch })
   // const { data:OVR } = useLocationProductOverrides({ shouldFetch })
+  
   const { 
     overrideProduct,
     overrideLocation,
@@ -69,7 +70,7 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false, shouldFetch=
 
     const _STD = useHolding ? STD : STD.filter(std => std.isStand === true)
     
-    const combinedRoutedOrders = combineOrders(ORD, _STD)
+    const combinedRoutedOrders = combineOrders(ORD, _STD, [delivDate])
       .map(order => {
         const location = order.isWhole
           ? locations[order.locNick]
@@ -122,7 +123,7 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false, shouldFetch=
       order => !order.meta.route
     )
     if (!!unassignedOrders) {
-      console.warn("Routes not assigned to the folloiwing: ", unassignedOrders)
+      console.warn("Routes not assigned to the following: ", unassignedOrders)
     }
    
     return routedOrders
@@ -133,7 +134,7 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false, shouldFetch=
   return { 
     data: useMemo(
       calcRoutedOrders, 
-      [useHolding, dayOfWeek, ORD, STD, LOC, PRD, RTE, overrideProduct, overrideLocation, getRoutes]
+      [useHolding, delivDate, dayOfWeek, ORD, STD, LOC, PRD, RTE, overrideProduct, overrideLocation, getRoutes]
     )
   }
 

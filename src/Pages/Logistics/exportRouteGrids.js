@@ -15,7 +15,14 @@ export const exportRouteGrids = (
   if (!pivotTables || !Object.keys(products).length) return
 
   const notesDataByRouteNick = mapValues(
-    groupByObject(noteData.filter(N => N.Type === 'packList' && !!N.note), N => N.ref),
+    groupByObject(
+      noteData.filter(N => 1
+        && !!N.note 
+        && N.Type === 'packList' 
+        && N.when === reportDT.toFormat('yyyy-MM-dd')
+      ), 
+      N => N.ref
+    ),
     groupArray => groupArray[0]
   )
 

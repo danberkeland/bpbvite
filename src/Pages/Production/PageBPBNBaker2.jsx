@@ -20,7 +20,7 @@ const Baker2 = () => {
   const checkForUpdatesCompleted = useCheckForUpdates()
   
   const todayDT = DT.today()
-  const [reportDT, _] = useState(todayDT)
+  const [reportDT, _] = useState(todayDT.plus({ days: 0 }))
   const isToday = reportDT.toMillis() === todayDT.toMillis()
 
   const { rusticShapeData, otherPrepData, croixSetoutData } = useBaker2Data({ reportDT, shouldFetch: checkForUpdatesCompleted })
