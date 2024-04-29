@@ -328,12 +328,12 @@ const PageOrderDashboard = () => {
 
           <Panel
             header={<div style={{width: "20rem", display: "flex", justifyContent: "space-between", alignItems: "center"}}>Product<ProductSelector selectedProdNicks={selectedProdNicks} setSelectedProdNicks={setSelectedProdNicks} /></div>}
-            icons={
-              <i className={hideProdNicks ? "pi pi-minus" : "pi pi-bars"} 
-                onClick={() => setHideProdNicks(!hideProdNicks)} 
-                style={{cursor: "pointer", paddingInline: ".5rem"}} 
-              />
-            }
+            // icons={
+            //   <i className={hideProdNicks ? "pi pi-minus" : "pi pi-bars"} 
+            //     onClick={() => setHideProdNicks(!hideProdNicks)} 
+            //     style={{cursor: "pointer", paddingInline: ".5rem"}} 
+            //   />
+            // }
             className="bpb-order-dash-panel bpb-order-dash-panel-search-header"
             style={{marginBottom: "1rem"}}
           >
@@ -577,7 +577,7 @@ const SearchBar = ({
     autoHighlight
     forceSelection
     spellCheck={false}
-    scrollHeight="40rem"
+    scrollHeight="25rem"
     style={style}
     inputStyle={inputStyle}
     panelStyle={panelStyle}

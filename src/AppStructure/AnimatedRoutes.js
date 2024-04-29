@@ -38,18 +38,15 @@ import ManageTraining from "../Pages/Settings/ManageTraining/ManageTraining";
 import { default as CustProds } from "../Pages/Settings/custProds/custProds";
 import LocationProductOverrides from "../Pages/Settings/custProds/v2/LocationProductOverrides";
 
-import BPBSWhatToMake from "../Pages/Production/NewPages/BPBS/WhatToMake/WhatToMake";
 import { default as WhatToMakeV3 } from "../Pages/Production/PageBPBSWhatToMake";
 
 import BPBSMixPocket from "../Pages/Production/Legacy/BPBSMixPocket";
 import MixPocket from "../Pages/Production/PageBPBSMixPocket";
 
 import Logistics from "../Pages/Logistics/Logistics"; 
-import RouteGrid from "../Pages/Logistics/RouteGrid/RouteGrid";
 import PageRouteGrid from "../Pages/Logistics/PageRouteGrid";
 import ByProduct from "../Pages/Logistics/ByProduct/ByProduct";
 import NorthListV2 from "../Pages/Logistics/PageNorthLists"
-import AMPastry from "../Pages/Logistics/AMPastry";
 import PageAMPastry from "../Pages/Logistics/PageAMPastry";
 import PageFreezerThaw from "../Pages/Logistics/PageFreezerThaw";
 import PageRetailBags from "../Pages/Logistics/PageRetailBags";
@@ -218,10 +215,7 @@ function AnimatedRoutes({ user, signOut }) {
 
           {/* Production::BPBS */}
 
-          <Route path="/Production/BPBSWhatToMake/v2"     element={<BPBSWhatToMake />} />
-          <Route path="/Production/BPBSWhatToMake/v3"     element={<WhatToMakeV3 reportDay="today" />} />
           <Route path="/Production/BPBSWhatToMake"        element={<WhatToMakeV3 reportDay="today" />} />
-          <Route path="/BPBSProd/BPBSWhatToMakeBackup/v2" element={<BPBSWhatToMake initialDateOption="tomorrow" />}/>
           <Route path="/BPBSProd/BPBSWhatToMakeBackup"    element={<WhatToMakeV3 reportDay="tomorrow" />}/>
 
           <Route path="/Production/BPBSMixPocket/v2"      element={<MixPocket />} />
@@ -243,8 +237,7 @@ function AnimatedRoutes({ user, signOut }) {
           {/* Logistics */}
 
           <Route path="/Logistics"               element={<Logistics />} />
-          <Route path="/Logistics/ByRoute"       element={<RouteGrid />} />
-          <Route path="/Logistics/ByRoute/v3"    element={<PageRouteGrid />} />
+          <Route path="/Logistics/ByRoute"       element={<PageRouteGrid />} />
 
           <Route path="/Logistics/ByProduct"     element={<ByProduct />} />
           <Route path="/Logistics/ByProduct/v2"  element={<PageOrderDashboard />} />
@@ -252,9 +245,7 @@ function AnimatedRoutes({ user, signOut }) {
           <Route path="/Logistics/NorthLists/v2" element={<NorthListV2 />} />
           <Route path="/Logistics/NorthLists"    element={<NorthListV2 />} />
 
-          <Route path="/Logistics/AMPastry/v1"   element={<AMPastry />} />
           <Route path="/Logistics/AMPastry"      element={<PageAMPastry />} />
-
           <Route path="/Logistics/RetailBags"    element={<PageRetailBags />} />
           <Route path="/Logistics/SpecialOrders" element={<PageSpecialOrders />} />
           <Route path="/Logistics/FreezerThaw"   element={<PageFreezerThaw />} />

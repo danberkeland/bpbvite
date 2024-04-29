@@ -68,6 +68,7 @@ const calculateGridData = (R0Orders, LOC, RTE, products) => {
     tablePivot(tableData, rowPartitionModel, order => order.prodNick, cellData => cellData[0].qty)
     
   const generateData = orderSet => orderSet
+    .filter(order => order.qty !== 0)
     .sort(compareBy(order => locations[order.locNick]?.delivOrder ?? 999))
     .sort(compareBy(order => routes[order.meta.routeNick].printOrder))
     .reduce(groupByArrayRdc(order => order.meta.routeNick), [])
