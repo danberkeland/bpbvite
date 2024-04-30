@@ -582,6 +582,7 @@ function BPBSMixPocket() {
     <React.Fragment>
       <WholeBox>
         <h1>BPBS French Mix/Pocket</h1>
+        <p>Using v1 <a href="/Production/BPBSMixPocket/v2">Go to current version</a></p>
         {doughs.filter(dgh => dgh.doughName==="French").map((dough) => (
           <React.Fragment key={dough.id + "_firstFrag"}>
             <h3>

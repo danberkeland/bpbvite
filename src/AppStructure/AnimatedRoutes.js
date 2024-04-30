@@ -45,7 +45,6 @@ import MixPocket from "../Pages/Production/PageBPBSMixPocket";
 
 import Logistics from "../Pages/Logistics/Logistics"; 
 import PageRouteGrid from "../Pages/Logistics/PageRouteGrid";
-import ByProduct from "../Pages/Logistics/ByProduct/ByProduct";
 import NorthListV2 from "../Pages/Logistics/PageNorthLists"
 import PageAMPastry from "../Pages/Logistics/PageAMPastry";
 import PageFreezerThaw from "../Pages/Logistics/PageFreezerThaw";
@@ -238,13 +237,8 @@ function AnimatedRoutes({ user, signOut }) {
 
           <Route path="/Logistics"               element={<Logistics />} />
           <Route path="/Logistics/ByRoute"       element={<PageRouteGrid />} />
-
-          <Route path="/Logistics/ByProduct"     element={<ByProduct />} />
-          <Route path="/Logistics/ByProduct/v2"  element={<PageOrderDashboard />} />
-
-          <Route path="/Logistics/NorthLists/v2" element={<NorthListV2 />} />
+          <Route path="/Logistics/ByProduct"     element={<PageOrderDashboard />} />
           <Route path="/Logistics/NorthLists"    element={<NorthListV2 />} />
-
           <Route path="/Logistics/AMPastry"      element={<PageAMPastry />} />
           <Route path="/Logistics/RetailBags"    element={<PageRetailBags />} />
           <Route path="/Logistics/SpecialOrders" element={<PageSpecialOrders />} />

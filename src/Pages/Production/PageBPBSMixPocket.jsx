@@ -152,7 +152,7 @@ const MixPocket = () => {
   return (
     <div style={{maxWidth: "50rem", padding: "2rem 5rem 5rem 5rem", margin: "auto"}}>
       <h1>BPBS French Mix/Pocket</h1>
-  
+      <p>Using v2 <a href="/Production/BPBSMixPocket">Go to previous version</a></p>
       <div style={{marginBlock: "1rem"}}>
 
         <h2>Adjust Mix Total</h2>
