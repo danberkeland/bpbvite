@@ -199,7 +199,7 @@ const OrderNotes = ({ locNick, user }) => {
             const updateItem = { 
               id, 
               Type: "ordering",
-              ref: "locNick",
+              ref: locNick,
               note: note.trim(), 
               forWhom, 
               byWhom: user.name, 
