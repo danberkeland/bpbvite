@@ -64,23 +64,31 @@ const exportAMPastryStickers = (pivotData, reportDT) => {
   const [width, height] = [4, 2]
   const doc = new jsPDF({ orientation: "l", unit: "in", format: [height, width] })
 
-  const displayNameModel = [
-    { prodNick: "bb",   displayName: "BB:",   y: 0.72, x1: 0.20, x2: 0.65 },
-    { prodNick: "brn",  displayName: "Brn:",  y: 0.98, x1: 0.20, x2: 0.65 },
-    { prodNick: "bd",   displayName: "Bd:",   y: 1.24, x1: 0.20, x2: 0.65 },
-    { prodNick: "sco",  displayName: "Sco:",  y: 1.50, x1: 0.20, x2: 0.65 },
-    { prodNick: "pg",   displayName: "PG:",   y: 0.72, x1: 1.46, x2: 1.91 },
-    { prodNick: "sf",   displayName: "SF:",   y: 0.98, x1: 1.46, x2: 1.91 },
-    { prodNick: "pl",   displayName: "Pl:",   y: 1.24, x1: 1.46, x2: 1.91 },
-    { prodNick: "ch",   displayName: "ch:",   y: 1.50, x1: 1.46, x2: 1.91 },
-    { prodNick: "al",   displayName: "Al:",   y: 0.72, x1: 2.72, x2: 3.37 },
-    { prodNick: "unmb", displayName: "unmb:", y: 0.98, x1: 2.72, x2: 3.37 },
-    { prodNick: "mb",   displayName: "mb:",   y: 1.24, x1: 2.72, x2: 3.37 },
-    { prodNick: "mini", displayName: "Mini:", y: 1.50, x1: 2.72, x2: 3.37 },
+  const mainItemDisplayModel = [
+    { prodNick: "bb",   displayName: "BB:",   y: 0.72, x1: 0.20, x2: 0.65, qty: 0 },
+    { prodNick: "brn",  displayName: "Brn:",  y: 0.98, x1: 0.20, x2: 0.65, qty: 0 },
+    { prodNick: "bd",   displayName: "Bd:",   y: 1.24, x1: 0.20, x2: 0.65, qty: 0 },
+    { prodNick: "sco",  displayName: "Sco:",  y: 1.50, x1: 0.20, x2: 0.65, qty: 0 },
+    { prodNick: "pg",   displayName: "PG:",   y: 0.72, x1: 1.46, x2: 1.91, qty: 0 },
+    { prodNick: "sf",   displayName: "SF:",   y: 0.98, x1: 1.46, x2: 1.91, qty: 0 },
+    { prodNick: "pl",   displayName: "Pl:",   y: 1.24, x1: 1.46, x2: 1.91, qty: 0 },
+    { prodNick: "ch",   displayName: "ch:",   y: 1.50, x1: 1.46, x2: 1.91, qty: 0 },
+    { prodNick: "al",   displayName: "Al:",   y: 0.72, x1: 2.72, x2: 3.37, qty: 0 },
+    { prodNick: "unmb", displayName: "unmb:", y: 0.98, x1: 2.72, x2: 3.37, qty: 0 },
+    { prodNick: "mb",   displayName: "mb:",   y: 1.24, x1: 2.72, x2: 3.37, qty: 0 },
+    { prodNick: "mini", displayName: "Mini:", y: 1.50, x1: 2.72, x2: 3.37, qty: 0 },
   ]
 
+  const secondaryItemDisplayModel = [
+    { prodNick: "chch", displayName: "chch:", y: 0.72, x1: 0.20, x2: 0.75, qty: 0 },
+    { prodNick: "snik", displayName: "snik:", y: 0.98, x1: 0.20, x2: 0.75, qty: 0 },
+  ]
 
   const renderSticker1 = (pivotRow) => {
+    const use2ndSticker = secondaryItemDisplayModel.some(item => 
+      !!pivotRow.colProps[item.prodNick]?.value
+    )
+
     const total = sumBy(Object.values(pivotRow.colProps), cell => cell.value)
     const binSize = total > 96 ? Math.ceil(total / 45) + ' x L'
       : total > 10 ? Math.ceil(total / 24) + ' x M'
@@ -91,17 +99,39 @@ const exportAMPastryStickers = (pivotData, reportDT) => {
     doc.text(`${pivotRow.rowProps.driver} :: ${pivotRow.rowProps.routeNick}`, 0.2, height - 0.2)
 
     doc.setFontSize(14);
-    doc.text(pivotRow.rowProps.locName, 0.2, 0.36)
-    doc.text(reportDT.toFormat('MM/dd/yy'), width - 0.2, 0.36, { align: 'right' })
+    doc.text(pivotRow.rowProps.locName + (use2ndSticker ? ' (1/2)' : ''), 0.2, 0.36)
+    doc.text(reportDT.toFormat('M/d'), width - 0.2, 0.36, { align: 'right' })
 
     doc.text(`${binSize}`, width - 0.2, height - 0.2, { align: "right" });
-    
-    displayNameModel.forEach(item => {
+
+    mainItemDisplayModel.forEach(item => {
       const qty = String(pivotRow.colProps[item.prodNick]?.value ?? '----') 
       doc.setTextColor(qty === '----' ? '#AAAAAA' : '#000000')
       doc.text(item.displayName, item.x1, item.y)
       doc.text(qty, item.x2, item.y)
     })
+
+    if (use2ndSticker) {
+      doc.addPage()
+
+      doc.setFontSize(10)
+      doc.setTextColor('#000000')
+      doc.text(`${pivotRow.rowProps.driver} :: ${pivotRow.rowProps.routeNick}`, 0.2, height - 0.2)
+  
+      doc.setFontSize(14);
+      doc.text(pivotRow.rowProps.locName + (use2ndSticker ? ' (2/2)' : ''), 0.2, 0.36)
+      doc.text(reportDT.toFormat('M/d'), width - 0.2, 0.36, { align: 'right' })
+  
+      doc.text(`${binSize}`, width - 0.2, height - 0.2, { align: "right" });
+  
+      secondaryItemDisplayModel.forEach(item => {
+        const qty = String(pivotRow.colProps[item.prodNick]?.value ?? '----') 
+        doc.setTextColor(qty === '----' ? '#AAAAAA' : '#000000')
+        doc.text(item.displayName, item.x1, item.y)
+        doc.text(qty, item.x2, item.y)
+      })
+
+    }
 
   }
 
