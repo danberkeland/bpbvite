@@ -23,7 +23,7 @@ import "./stylesProduction.css"
  * @param {Object} props
  * @param {'today'|'tomorrow'} props.reportDay 
  */
-const Baker1 = ({ reportDay='today' }) => {
+const PageBPBNBaker1 = ({ reportDay='today' }) => {
 
   const checkForUpdatesCompleted = useCheckForUpdates()
 
@@ -213,7 +213,7 @@ const Baker1 = ({ reportDay='today' }) => {
   )
 }
 
-export { Baker1 as default }
+export { PageBPBNBaker1 as default }
 
 
 

@@ -347,6 +347,8 @@ let DBInfoQBAuth
 let DBNote
 
 export {
+  OrderHeader,
+  OrderItem,
   DBOrder,
   CartOrder,
   DBStanding,

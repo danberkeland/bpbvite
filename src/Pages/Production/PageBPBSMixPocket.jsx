@@ -51,7 +51,7 @@ const debouncedUpdateDough = debounce(
   5000
 )
 
-const MixPocket = () => {
+const PageBPBSMixPocket = () => {
   const reportDT = DT.today()
 
   const {
@@ -336,7 +336,7 @@ const MixPocket = () => {
 
 }
 
-export { MixPocket as default }
+export { PageBPBSMixPocket as default }
 
 
 /** Custom component just for templating/formatting */

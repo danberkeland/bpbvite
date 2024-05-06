@@ -13,68 +13,68 @@ import { DT } from "../utils/dateTimeFns"
 const getTodayDT = () => DT.today()
 const isoToDT = isoDate => DT.fromIso(isoDate)
 
-// A hook to power all production/logistics reports. A bit overpowered for 
-// some reports, but with programmatic routing we can view several reports
-// without re-fetching data. 
-//
-// returns routed production orders for T+0 to T+7, relative to the
-// input reportDate (a yyyy-MM-dd formatted string)
-//
-// To keep the hook versatile, we avoid premature filtering.
-//
-// Holding orders are included for all dates, but can be omitted on the fly
-// by filtering with 'isStand === false'.
-//
-// orders for bpbextras is included as well. 
-//
-// returns a flattened list of cart & standing items, souped-up with extra 
-// indexes that allow for easy grouping/filtering.
+// // A hook to power all production/logistics reports. A bit overpowered for 
+// // some reports, but with programmatic routing we can view several reports
+// // without re-fetching data. 
+// //
+// // returns routed production orders for T+0 to T+7, relative to the
+// // input reportDate (a yyyy-MM-dd formatted string)
+// //
+// // To keep the hook versatile, we avoid premature filtering.
+// //
+// // Holding orders are included for all dates, but can be omitted on the fly
+// // by filtering with 'isStand === false'.
+// //
+// // orders for bpbextras is included as well. 
+// //
+// // returns a flattened list of cart & standing items, souped-up with extra 
+// // indexes that allow for easy grouping/filtering.
 
-// Possible future improvement could be to clean up the routeMeta object
-/** reportDate should be a yyyy-MM-dd formatted date string. */
-export const useT0T7ProdOrders = ({ shouldFetch, reportDate }) => {
+// // Possible future improvement could be to clean up the routeMeta object
+// /** reportDate should be a yyyy-MM-dd formatted date string. */
+// export const useT0T7ProdOrders = ({ shouldFetch, reportDate }) => {
 
-  const { data:cart } = useListData({ tableName: "Order", shouldFetch })
-  const { data:standing } = useListData({ tableName: "Standing", shouldFetch })
+//   const { data:cart } = useListData({ tableName: "Order", shouldFetch })
+//   const { data:standing } = useListData({ tableName: "Standing", shouldFetch })
 
-  const { data:PRD } = useListData({ tableName: "Product", shouldFetch })
-  const { data:LOC } = useListData({ tableName: "Location", shouldFetch })
-  const { data:RTE } = useListData({ tableName: "Route", shouldFetch })
-  const { data:ZRT } = useListData({ tableName: "ZoneRoute", shouldFetch })
+//   const { data:PRD } = useListData({ tableName: "Product", shouldFetch })
+//   const { data:LOC } = useListData({ tableName: "Location", shouldFetch })
+//   const { data:RTE } = useListData({ tableName: "Route", shouldFetch })
+//   const { data:ZRT } = useListData({ tableName: "ZoneRoute", shouldFetch })
 
-  const calculateValue = () => {
-    if (!cart || !standing || !PRD || !LOC || !RTE || !ZRT) return undefined
+//   const calculateValue = () => {
+//     if (!cart || !standing || !PRD || !LOC || !RTE || !ZRT) return undefined
 
-    if(cart.length > 4096 || standing.length > 4096) {
-      console.log("cart length:", cart.length)
-      console.log("standing length:", standing.length)
-    }
+//     if(cart.length > 4096 || standing.length > 4096) {
+//       console.log("cart length:", cart.length)
+//       console.log("standing length:", standing.length)
+//     }
 
-    const reportDateDT = DateTime.fromFormat(
-      reportDate, 'yyyy-MM-dd', { zone: 'America/Los_Angeles'}
-    )
-    const dateList = makeDateList({ startDateDT: reportDateDT, nDays:8 })
+//     const reportDateDT = DateTime.fromFormat(
+//       reportDate, 'yyyy-MM-dd', { zone: 'America/Los_Angeles'}
+//     )
+//     const dateList = makeDateList({ startDateDT: reportDateDT, nDays:8 })
 
-    const combinedOrders = combineOrdersOnDates({ dateList, cart, standing })
-    const combinedRoutedOrders = addRoutesToOrders({
-      orders:combinedOrders, PRD, LOC, RTE, ZRT 
-    })
+//     const combinedOrders = combineOrdersOnDates({ dateList, cart, standing })
+//     const combinedRoutedOrders = addRoutesToOrders({
+//       orders:combinedOrders, PRD, LOC, RTE, ZRT 
+//     })
 
-    return combinedRoutedOrders
-    // return combineOrdersOnDates({ 
-    //   dateList, cart, standing, PRD, LOC, RTE, ZRT 
-    // })
+//     return combinedRoutedOrders
+//     // return combineOrdersOnDates({ 
+//     //   dateList, cart, standing, PRD, LOC, RTE, ZRT 
+//     // })
 
-  }
+//   }
 
-  return { 
-    data: useMemo(
-      calculateValue, 
-      [reportDate, cart, standing, PRD, LOC, RTE, ZRT]
-    )
-  }
+//   return { 
+//     data: useMemo(
+//       calculateValue, 
+//       [reportDate, cart, standing, PRD, LOC, RTE, ZRT]
+//     )
+//   }
 
-}
+// }
 
 /** 
  * 'report Date' targets cart orders with the same delivDate, standing/holding
@@ -178,21 +178,21 @@ export const useProdOrdersByDate = ({
 
 
 
-/** 
- * Make a list of dates in various formats starting from the start date,
- * spanning the specified number of days. This helps label group cart and
- * standing orders consistenly so that they can be combined appropriately
- * into "an order".
- */
-const makeDateList = ({ startDateDT, nDays }) => {
-  return [...Array(nDays).keys()].map(daysAhead => ({
-    delivDate: startDateDT.plus({ days: daysAhead }).toFormat('yyyy-MM-dd'),
-    dayOfWeek: startDateDT.plus({ days: daysAhead }).toFormat('EEE'),
-    weekdayNum: startDateDT.plus({ days: daysAhead }).toFormat('E') % 7,
-    relDate: daysAhead,
-  }))
+// /** 
+//  * Make a list of dates in various formats starting from the start date,
+//  * spanning the specified number of days. This helps label group cart and
+//  * standing orders consistenly so that they can be combined appropriately
+//  * into "an order".
+//  */
+// const makeDateList = ({ startDateDT, nDays }) => {
+//   return [...Array(nDays).keys()].map(daysAhead => ({
+//     delivDate: startDateDT.plus({ days: daysAhead }).toFormat('yyyy-MM-dd'),
+//     dayOfWeek: startDateDT.plus({ days: daysAhead }).toFormat('EEE'),
+//     weekdayNum: startDateDT.plus({ days: daysAhead }).toFormat('E') % 7,
+//     relDate: daysAhead,
+//   }))
 
-}
+// }
 
 const combineOrdersOnDates = ({ 
   dateList, cart, standing

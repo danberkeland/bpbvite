@@ -75,6 +75,7 @@ function Billing() {
   return (
     <React.Fragment>
       <BasicContainer>
+        <p>Using legacy version <a href="/Billing">Go to new version</a></p>
         <h1>Billing</h1>
       </BasicContainer>
 

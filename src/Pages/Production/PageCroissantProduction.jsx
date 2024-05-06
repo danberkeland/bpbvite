@@ -41,7 +41,7 @@ const grayCellStyle = {
   borderRadius: "3px",
 }
 
-export const PageCroissantProduction = () => {
+const PageCroissantProduction = () => {
   const reportDT = DT.today()
 
   const checkForUpdatesCompleted = useCheckForUpdates()
@@ -289,3 +289,5 @@ export const PageCroissantProduction = () => {
     </div>
   )
 }
+
+export { PageCroissantProduction as default }
