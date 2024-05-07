@@ -15,7 +15,7 @@ import { DT } from "../../utils/dateTimeFns"
 import { keyBy } from "../../utils/collectionFns"
 import { useCheckForUpdates } from "../../core/checkForUpdates"
 
-const Baker2 = () => {
+const PageBPBNBaker2 = () => {
 
   const checkForUpdatesCompleted = useCheckForUpdates()
   
@@ -130,4 +130,4 @@ const Baker2 = () => {
 
 }
 
-export { Baker2 as default } 
+export { PageBPBNBaker2 as default } 

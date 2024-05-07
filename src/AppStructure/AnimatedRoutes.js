@@ -7,9 +7,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 
 // import Ordering from "../Pages/Ordering/Ordering";
 import { CustomerProducts } from "../Pages/CustomerProducts/CustomerProducts";
-
 import { useUser2sByEmail } from "../data/user2/useUser2s";
-
 import { UserHeaderMenu } from "./UserHeaderMenu";
 
 import Ordering2 from "../Pages/Ordering/Ordering2";
@@ -19,51 +17,53 @@ import CustomerSettings from "../Pages/CustomerSettings/CustomerSettings";
 
 
 // Load simultaneously:
-import{ default as SetoutV3 } from "../Pages/Production/PageSetout";
+import PageSetout              from "../Pages/Production/PageSetout";
+import PageBuckets             from "../Pages/Production/PageBuckets";
+import PageBPBNBaker1          from "../Pages/Production/PageBPBNBaker1";
+import PageBPBNBaker2          from "../Pages/Production/PageBPBNBaker2";
+import PageBPBSWhatToMake      from "../Pages/Production/PageBPBSWhatToMake";
+import BPBSMixPocket           from "../Pages/Production/Legacy/BPBSMixPocket";
+import PageBPBSMixPocket       from "../Pages/Production/PageBPBSMixPocket";
+import PageSpecialPacking      from "../Pages/Production/PageSpecialPacking";
+import PageCroissantProduction from "../Pages/Production/PageCroissantProduction";
+import PageCroissantEodCounts  from "../Pages/Production/PageCroissantEodCounts";
+import Production              from "../Pages/Production/PageProduction";
 
-import Baker1 from "../Pages/Production/PageBPBNBaker1";
-import Baker2 from "../Pages/Production/PageBPBNBaker2";
-import { default as PageBuckets } from "../Pages/Production/PageBuckets";
-import Production from "../Pages/Production/PageProduction";
+import Logistics          from "../Pages/Logistics/Logistics"; 
+import PageRouteGrid      from "../Pages/Logistics/PageRouteGrid";
+import PageOrderDashboard from "../Pages/Logistics/PageOrderDashboard";
+import NorthListV2        from "../Pages/Logistics/PageNorthLists"
+import PageAMPastry       from "../Pages/Logistics/PageAMPastry";
+import PageFreezerThaw    from "../Pages/Logistics/PageFreezerThaw";
+import PageRetailBags     from "../Pages/Logistics/PageRetailBags";
+import PageSpecialOrders  from "../Pages/Logistics/PageSpecialOrders";
 
 import OrdersPage from "../Pages/Ordering/v2/Ordering"; // group with lazy loaders while in testing
+
 import ProductsV1 from "../Pages/Products/Products";
-import { default as BillingV1 } from "../Pages/Billing/Billing";
-import BillingV2 from "../Pages/Billing/v2/Billing";
-import EODCounts from "../Pages/EODCounts/EODCounts";
-import Locations from "../Pages/Locations/Locations";
+import Products   from "../Pages/Products/NewPage/Products";
+
+import Locations    from "../Pages/Locations/Locations";
 import LocationsNew from "../Pages/Locations/NewPage/Locations";
-import ManageCustomers from "../Pages/Settings/ManageCustomers/ManageCustomers";
-import ManageTraining from "../Pages/Settings/ManageTraining/ManageTraining";
+
+import { default as BillingV1 } from "../Pages/Billing/Billing";
+import BillingV2                from "../Pages/Billing/v2/Billing";
+import PageInvoicing            from "../Pages/Billing/PageInvoicing";
+
+import EODCounts from "../Pages/EODCounts/EODCounts";
 import { default as CustProds } from "../Pages/Settings/custProds/custProds";
 import LocationProductOverrides from "../Pages/Settings/custProds/v2/LocationProductOverrides";
 
-import { default as WhatToMakeV3 } from "../Pages/Production/PageBPBSWhatToMake";
-
-import BPBSMixPocket from "../Pages/Production/Legacy/BPBSMixPocket";
-import MixPocket from "../Pages/Production/PageBPBSMixPocket";
-
-import Logistics from "../Pages/Logistics/Logistics"; 
-import PageRouteGrid from "../Pages/Logistics/PageRouteGrid";
-import NorthListV2 from "../Pages/Logistics/PageNorthLists"
-import PageAMPastry from "../Pages/Logistics/PageAMPastry";
-import PageFreezerThaw from "../Pages/Logistics/PageFreezerThaw";
-import PageRetailBags from "../Pages/Logistics/PageRetailBags";
-import PageSpecialOrders from "../Pages/Logistics/PageSpecialOrders";
-
-import DelivOrder from "../Pages/Settings/delivOrder/delivOrder";
-import EditDoughs from "../Pages/Settings/editDough/editDough";
-import EditZones2 from "../Pages/Settings/editZones/editZones2";
-import EditRoutes from "../Pages/Settings/editRoutes/editRoutes";
-import { default as PageNotes } from "../Pages/Settings/PageNotes";
-import Settings from "../Pages/Settings/Settings";
+import DelivOrder      from "../Pages/Settings/delivOrder/delivOrder";
+import EditDoughs      from "../Pages/Settings/editDough/editDough";
+import EditZones2      from "../Pages/Settings/editZones/editZones2";
+import EditRoutes      from "../Pages/Settings/editRoutes/editRoutes";
+import PageNotes       from "../Pages/Settings/PageNotes";
+import Settings        from "../Pages/Settings/Settings";
+import ManageCustomers from "../Pages/Settings/ManageCustomers/ManageCustomers";
+import ManageTraining  from "../Pages/Settings/ManageTraining/ManageTraining";
 
 import Remap from "../Pages/EODCounts/EODCountsRempas";
-import Products from "../Pages/Products/NewPage/Products";
-import PageSpecialPacking from "../Pages/Production/PageSpecialPacking";
-import { PageCroissantProduction } from "../Pages/Production/PageCroissantProduction";
-import PageCroissantEodCounts from "../Pages/Production/PageCroissantEodCounts";
-import PageOrderDashboard from "../Pages/Logistics/PageOrderDashboard";
 
 // Lazy Load:
 
@@ -206,23 +206,23 @@ function AnimatedRoutes({ user, signOut }) {
 
           {/* Production::BPBN */}
   
-          <Route path="/Production/BPBNBaker1"     element={<Baker1 reportDay="today" />} />
-          <Route path="/BPBNProd/BPBNBaker1Backup" element={<Baker1 reportDay="tomorrow" />} />
-          <Route path="/Production/BPBNBaker2"     element={<Baker2 />} />
+          <Route path="/Production/BPBNBaker1"     element={<PageBPBNBaker1 reportDay="today" />} />
+          <Route path="/BPBNProd/BPBNBaker1Backup" element={<PageBPBNBaker1 reportDay="tomorrow" />} />
+          <Route path="/Production/BPBNBaker2"     element={<PageBPBNBaker2 />} />
           <Route path="/Production/BPBNBuckets"    element={<PageBuckets mixedWhere="Carlton" />} />
-          <Route path="/Production/BPBNSetOut"     element={<SetoutV3 reportLocation="Carlton" />} />
+          <Route path="/Production/BPBNSetOut"     element={<PageSetout reportLocation="Carlton" />} />
 
           {/* Production::BPBS */}
 
-          <Route path="/Production/BPBSWhatToMake"        element={<WhatToMakeV3 reportDay="today" />} />
-          <Route path="/BPBSProd/BPBSWhatToMakeBackup"    element={<WhatToMakeV3 reportDay="tomorrow" />}/>
+          <Route path="/Production/BPBSWhatToMake"     element={<PageBPBSWhatToMake reportDay="today" />} />
+          <Route path="/BPBSProd/BPBSWhatToMakeBackup" element={<PageBPBSWhatToMake reportDay="tomorrow" />}/>
 
-          <Route path="/Production/BPBSMixPocket/v2"      element={<MixPocket />} />
-          <Route path="/Production/BPBSMixPocket"         element={<BPBSMixPocket />} />
+          <Route path="/Production/BPBSMixPocket/v2"   element={<PageBPBSMixPocket />} />
+          <Route path="/Production/BPBSMixPocket"      element={<BPBSMixPocket />} />
           
-          <Route path="/Production/BPBSSetOut"            element={<SetoutV3 reportLocation="Prado" />} />
-          <Route path="/Production/BPBSBuckets"           element={<PageBuckets mixedWhere="Prado" />} />
-          <Route path="/Production/BPBSPacking"           element={<PageSpecialPacking />} />
+          <Route path="/Production/BPBSSetOut"         element={<PageSetout reportLocation="Prado" />} />
+          <Route path="/Production/BPBSBuckets"        element={<PageBuckets mixedWhere="Prado" />} />
+          <Route path="/Production/BPBSPacking"        element={<PageSpecialPacking />} />
 
           {/* Production::Croix */}
           
@@ -254,7 +254,7 @@ function AnimatedRoutes({ user, signOut }) {
           <Route path="/Products/v2" element={<Products />} />
           <Route path="/Products/v1" element={<ProductsV1 />} />
 
-          <Route path="/Billing"    element={<BillingV1 />} />
+          <Route path="/Billing"    element={<PageInvoicing />} />
           <Route path="/Billing/v2" element={<BillingV2 />} />
           <Route path="/Billing/v1" element={<BillingV1 />} />
 

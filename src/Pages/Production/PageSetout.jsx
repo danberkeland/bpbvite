@@ -60,7 +60,7 @@ const grayChipStyle = {
  * @param {Object} props
  * @param {'Prado' | 'Carlton'} props.reportLocation 
  */
-const Setout = ({ reportLocation }) => {
+const PageSetout = ({ reportLocation }) => {
 
   const checkForUpdatesCompleted = useCheckForUpdates()
   
@@ -201,4 +201,4 @@ const Setout = ({ reportLocation }) => {
   )
 }
 
-export { Setout as default }
+export { PageSetout as default }

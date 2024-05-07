@@ -36,7 +36,7 @@ const PageRouteGrid = () => {
   useEffect(() => {
     if (!!pivotDataByRouteNick) {
       setRouteNick('AM Pastry')
-      console.log(pivotDataByRouteNick)
+      // console.log(pivotDataByRouteNick)
     }
   }, [pivotDataByRouteNick])
 

@@ -13,7 +13,7 @@ import { exportWhatToMake } from "./exportBPBSWhatToMake"
  * @param {Object} props
  * @param {'today'|'tomorrow'} props.reportDay
  */
-const WhatToMake = ({ reportDay='today' }) => {
+const PageBPBSWhatToMake = ({ reportDay='today' }) => {
 
   const todayDT = DT.today()
   const [reportDT, setReportDT] = useState(
@@ -191,7 +191,7 @@ const WhatToMake = ({ reportDay='today' }) => {
 
 }
 
-export { WhatToMake as default }
+export { PageBPBSWhatToMake as default }
 
 
 const FreshTable = ({ value, className, products }) =>
