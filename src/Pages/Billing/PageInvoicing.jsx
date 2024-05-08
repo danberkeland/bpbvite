@@ -550,7 +550,7 @@ const PageInvoicing = () => {
   }
 
   return(
-    <div style={{ padding: "2rem", margin: "auto", width: "fit-content"}}>
+    <div style={{ padding: "2rem", margin: "auto"}}>
       <p>Using newest version <a href="/Billing/v1">Go to legacy version</a></p>
       <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", paddingInline: "1rem", background: isToday ? todayColor : notTodayColor, borderRadius: "3px", marginBottom: "3px"}}>
         <div>
