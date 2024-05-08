@@ -264,7 +264,7 @@ const useInvoicingData = ({ reportDT, shouldFetch }) => {
           return { locNick, response: "", action: "transform", message: "Error: could not convert order to invoice", needsRetry: true }
         }
 
-        await sleep(idx * 150)
+        await sleep(idx * 350)
         return QB.invoice
           .get({ DocNumber: invoice.DocNumber, accessToken })
           .then(response => {
@@ -323,7 +323,6 @@ const PageInvoicing = () => {
 
   const handleDateChange = e => {
     setReportDT(DT.fromJs(e.value))
-    console.log(DT.fromJs(e.value).toFormat('yyyy-MM-dd'))
     setShowHelp(false)
     setLocNick(null)
     setInvoiceChanges(null)
@@ -551,7 +550,7 @@ const PageInvoicing = () => {
   }
 
   return(
-    <div style={{ padding: "2rem", margin: "auto"}}>
+    <div style={{ padding: "2rem", margin: "auto", width: "fit-content"}}>
       <p>Using newest version <a href="/Billing/v1">Go to legacy version</a></p>
       <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", paddingInline: "1rem", background: isToday ? todayColor : notTodayColor, borderRadius: "3px", marginBottom: "3px"}}>
         <div>
@@ -571,11 +570,11 @@ const PageInvoicing = () => {
           optionValue='locNick'
           itemTemplate={itemTemplate}
           onChange={handleLocNickChange}
-          listStyle={{ height: "calc(100vh - 20rem - 4px)" }}
+          listStyle={{ height: "calc(100vh - 23rem - 4px)" }}
           style={{border: "none"}}
         />
 
-        <ScrollPanel style={{ height: "calc(100vh - 20rem)", width: "100%", background: "var(--bpb-surface-content)", borderRadius: "3px"}}>
+        <ScrollPanel style={{ height: "calc(100vh - 23rem)", width: "100%", background: "var(--bpb-surface-content)", borderRadius: "3px"}}>
           <div style={{padding: "1rem"}}>
             {
               orderTemplate(invoiceChanges, selectedOrderDetails) 
