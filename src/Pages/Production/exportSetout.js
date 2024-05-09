@@ -13,6 +13,11 @@ const otherColumns = [
   { header: "Qty", dataKey: "total" },
 ]
 
+const frozenColumns = [
+  { header: "Frozen Pastry Prep", dataKey: "rowKey" },
+  { header: "Qty", dataKey: "total" },
+]
+
 const almondColumns = [
   { header: "Almond Prep", dataKey: "rowKey" },
   { header: "Qty", dataKey: "total" },
@@ -23,6 +28,7 @@ export const exportSetout = ({
   reportDT,
   croix,
   other,
+  frozen,
   almond,
 }) => {
   const pageMargin = 58
@@ -48,6 +54,7 @@ export const exportSetout = ({
 
   renderTable(croix, croixColumns)
   renderTable(other, otherColumns)
+  if (!!frozen) { renderTable(frozen, frozenColumns) }
   if (!!almond) { renderTable(almond, almondColumns) }
 
   doc.save(`Setout_${reportLocation}_${reportDT.toFormat('yyyy-MM-dd')}.pdf`)

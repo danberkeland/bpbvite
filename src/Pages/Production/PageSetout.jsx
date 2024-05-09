@@ -69,6 +69,7 @@ const PageSetout = ({ reportLocation }) => {
   const { 
     croix, 
     other, 
+    frozen,
     almond, 
     products={} 
   } = useSetoutData({ reportDT, reportLocation, shouldFetch: checkForUpdatesCompleted })
@@ -122,7 +123,7 @@ const PageSetout = ({ reportLocation }) => {
       <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem"}}>
         <Button 
           label={`Print ${reportLocation} Setout List`} 
-          onClick={() => exportSetout({ reportLocation, reportDT, croix, other, almond })}
+          onClick={() => exportSetout({ reportLocation, reportDT, croix, other, frozen, almond })}
           disabled={!INQB.data || !croix}
         />
         {!!setoutRecord && <div style={greenChipStyle}>Setout recorded at {DT.fromIsoTs(setoutRecord.updatedAt).toLocaleString(DateTime.TIME_SIMPLE)}</div>}
@@ -167,6 +168,26 @@ const PageSetout = ({ reportLocation }) => {
           })}
         />
       </DataTable>
+
+      {reportLocation === "Carlton" && <>
+        <h2>Frozen Pastry Prep</h2>
+        <DataTable 
+          value={frozen ?? []} 
+          size="small"
+          responsiveLayout="scroll"  
+        >
+          <Column header="" field="rowKey" />
+          <Column 
+            header="Qty"
+            body={row => DrilldownCellTemplate({
+              dialogHeader: `Almond orders for ${row.rowKey}`, 
+              cellValue: row.total, 
+              tableData: row.orders, 
+              products
+            })}
+          />
+        </DataTable>
+      </>}
 
       {reportLocation === "Prado" && <>
         <h2>Almonds</h2>

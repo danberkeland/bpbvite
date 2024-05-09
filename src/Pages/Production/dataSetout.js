@@ -137,7 +137,6 @@ const calculateSetoutOther = (orders, products) => orders
   }))
   .sort(compareBy(row => row.rowKey))
 
-
 /**
  * When generating a report for a date R0, we should collect orders from
  * dates R1, R2, and R3, which are 1, 2, and 3 days after R0, respectively.
@@ -218,6 +217,7 @@ const calculateSetoutPrado = (PRD, R1Orders, R2Orders, R3Orders) => {
   return {
     croix:  pradoSetoutCroix,
     other:  pradoSetoutOther,
+    frozen: undefined,
     almond: pradoSetoutAlmond,
     products,
   }
@@ -241,9 +241,8 @@ const calculateSetoutCarlton = (PRD, R1Orders) => {
   const R1SetoutItems = R1Orders
     .filter(order => filterToSetoutItems(order, products))
     .flatMap(order => splitBackporchCroixOrder(order, products))
-    .filter(order => !(['chch', 'snik'].includes(order.prodNick)))  // Stupid cookie bs. Current intended behavior is for cookies not to show up on carlton setout.
 
-  const { R1CarltonBakedCroix=[], R1CarltonBakedOther=[] } = groupByObject(
+  const { R1CarltonBakedCroix=[], R1CarltonBakedOther=[], R1CarltonFrozenOther=[] } = groupByObject(
     R1SetoutItems,
     order => classifyPastryOrder("R1", order, products)
   )
@@ -251,6 +250,7 @@ const calculateSetoutCarlton = (PRD, R1Orders) => {
   return { 
     croix: calculateSetoutCroix(R1CarltonBakedCroix, products), 
     other: calculateSetoutOther(R1CarltonBakedOther, products), 
+    frozen: calculateSetoutOther(R1CarltonFrozenOther, products),
     almond: undefined,
     products,
   }
