@@ -4,42 +4,43 @@ import { defaultSwrOptions } from "../_constants.js"
 import { getLocation } from "../../graphqlCustom/queries/_getQueries.js"
 import { ListDataCache, useListData } from "../_listData.js"
 import { DBLocation } from "../types.d.js"
-import { GraphQLResult } from '@aws-amplify/api-graphql'
 
-type DBLocationAttribute = 
-  "Type" |
-  "locNick" |
-  "locName" |
-  "zoneNick" |
-  "addr1" |
-  "addr2" |
-  "city" |
-  "zip" |
-  "email" |
-  "orderCnfEmail" |
-  "phone" |
-  "firstName" |
-  "lastName" |
-  "toBePrinted" |
-  "toBeEmailed" |
-  "printDuplicate" |
-  "terms" |
-  "invoicing" |
-  "latestFirstDeliv" |
-  "latestFinalDeliv" |
-  "dfFulfill" |
-  "webpageURL" |
-  "picURL" |
-  "gMap" |
-  "specialInstructions" |
-  "delivOrder" |
-  "qbID" |
-  "currentBalance" |
-  "isActive" |
-  "ttl" |
-  "createdAt" |
-  "updatedAt" |
-  "locationCreditAppId"
+/**
+ * @typedef {  "Type" |
+ * "locNick" |
+ * "locName" |
+ * "zoneNick" |
+ * "addr1" |
+ * "addr2" |
+ * "city" |
+ * "zip" |
+ * "email" |
+ * "orderCnfEmail" |
+ * "phone" |
+ * "firstName" |
+ * "lastName" |
+ * "toBePrinted" |
+ * "toBeEmailed" |
+ * "printDuplicate" |
+ * "terms" |
+ * "invoicing" |
+ * "latestFirstDeliv" |
+ * "latestFinalDeliv" |
+ * "dfFulfill" |
+ * "webpageURL" |
+ * "picURL" |
+ * "gMap" |
+ * "specialInstructions" |
+ * "delivOrder" |
+ * "qbID" |
+ * "currentBalance" |
+ * "isActive" |
+ * "ttl" |
+ * "createdAt" |
+ * "updatedAt" |
+ * "locationCreditAppId"
+ * } DBLocationAttribute
+ */
 
 /**
  * @param {Object} input

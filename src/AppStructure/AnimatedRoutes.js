@@ -11,10 +11,11 @@ import { useUser2sByEmail } from "../data/user2/useUser2s";
 import { UserHeaderMenu } from "./UserHeaderMenu";
 
 import Ordering2 from "../Pages/Ordering/Ordering2";
+import OrdersPage from "../Pages/Ordering/v2/Ordering"; // group with lazy loaders while in testing
+
 import CustomerNews from "../Pages/CustomerNews/CustomerNews";
 import CustomerBilling from "../Pages/CustomerBilling/CustomerBilling";
 import CustomerSettings from "../Pages/CustomerSettings/CustomerSettings";
-
 
 // Load simultaneously:
 import PageSetout              from "../Pages/Production/PageSetout";
@@ -38,7 +39,6 @@ import PageFreezerThaw    from "../Pages/Logistics/PageFreezerThaw";
 import PageRetailBags     from "../Pages/Logistics/PageRetailBags";
 import PageSpecialOrders  from "../Pages/Logistics/PageSpecialOrders";
 
-import OrdersPage from "../Pages/Ordering/v2/Ordering"; // group with lazy loaders while in testing
 
 import ProductsV1 from "../Pages/Products/Products";
 import Products   from "../Pages/Products/NewPage/Products";
@@ -64,6 +64,8 @@ import ManageCustomers from "../Pages/Settings/ManageCustomers/ManageCustomers";
 import ManageTraining  from "../Pages/Settings/ManageTraining/ManageTraining";
 
 import Remap from "../Pages/EODCounts/EODCountsRempas";
+import PageBPBNCarltonProduction from "../Pages/Production/PageBPBNCarltonProduction";
+import PageOrdering from "../Pages/Ordering/v3/PageOrdering";
 
 // Lazy Load:
 
@@ -193,7 +195,7 @@ function AnimatedRoutes({ user, signOut }) {
         <Route path="/" element={<NavSide />} />
 
         <Route path="/Ordering"         element={<Ordering2 />} />
-        <Route path="/Ordering/v2"      element={<OrdersPage />} />
+
 
         <Route path="/CustomerNews"     element={<CustomerNews />} />
         <Route path="/CustomerBilling"  element={<CustomerBilling />} />
@@ -204,13 +206,19 @@ function AnimatedRoutes({ user, signOut }) {
 
         {(authClass === 'bpbfull' || authClass === 'bpbcrew') && <>
 
+          <Route path="/Ordering/v2"      element={<OrdersPage />} />
+          <Route path="/Ordering/v3"      element={<PageOrdering />} />
+
           {/* Production::BPBN */}
   
-          <Route path="/Production/BPBNBaker1"     element={<PageBPBNBaker1 reportDay="today" />} />
-          <Route path="/BPBNProd/BPBNBaker1Backup" element={<PageBPBNBaker1 reportDay="tomorrow" />} />
-          <Route path="/Production/BPBNBaker2"     element={<PageBPBNBaker2 />} />
-          <Route path="/Production/BPBNBuckets"    element={<PageBuckets mixedWhere="Carlton" />} />
-          <Route path="/Production/BPBNSetOut"     element={<PageSetout reportLocation="Carlton" />} />
+          <Route path="/Production/BPBNBaker1"             element={<PageBPBNBaker1 reportDay="today" />} />
+          <Route path="/BPBNProd/BPBNBaker1Backup"         element={<PageBPBNBaker1 reportDay="tomorrow" />} />
+          <Route path="/Production/BPBNBaker2"             element={<PageBPBNBaker2 />} />
+          <Route path="/Production/BPBNBuckets"            element={<PageBuckets mixedWhere="Carlton" />} />
+          <Route path="/Production/BPBNSetOut"             element={<PageSetout reportLocation="Carlton" />} />
+          <Route path="/Production/BPBN/CarltonProduction" element={<PageBPBNCarltonProduction />} />
+          
+
 
           {/* Production::BPBS */}
 

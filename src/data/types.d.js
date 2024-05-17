@@ -122,13 +122,28 @@ let DBZone
  * @property {string} routeName
  * @property {number} routeStart
  * @property {number} routeTime
- * @property {BpbHub} RouteDepart
+ * @property {BpbHub} RouteDepart 
  * @property {BpbHub} RouteArrive
- * @property {string[]} RouteSched
+ * @property {string[]} RouteSched "1", ..., "7" are included to signal "Sun", ..., "Sat" are scheduled. Order not guaranteed.
  * @property {number} printOrder
  * @property {string} driver
  */
 let DBRoute
+
+/**
+ * Template route item from the DB as fetched by useListData
+ * @typedef {Object}
+ * @property {string} routeNick
+ * @property {string} routeName
+ * @property {number} routeStart
+ * @property {number} routeTime
+ * @property {BpbHub} RouteDepart
+ * @property {BpbHub} RouteArrive
+ * @property {boolean[]} RouteSched tuple of length 7. Boolean values on indexes 0 - 6 describe validity of days Sun - Sat.
+ * @property {number} printOrder
+ * @property {string} driver
+ */
+let DBRoute2
 
 /**
  * @typedef {Object}
@@ -354,6 +369,7 @@ export {
   DBStanding,
   DBZone,
   DBRoute,
+  DBRoute2,
   DBZoneRoute,
   // DBLocation,
   DBLocationProductOverride,

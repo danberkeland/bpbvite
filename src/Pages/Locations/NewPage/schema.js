@@ -58,22 +58,16 @@ export const useLocationSchema = ({ editMode }) => {
       
     // Billing
     qbID: yup.string().nullable(),
-    invoicing: yup.string().nullable(),
-    terms: yup.string().nullable(),
-    toBeEmailed: yup.bool(),
-    toBePrinted: yup.bool(),
-    printDuplicate: yup.bool(),
+    invoicing: yup.string(),
+    terms: yup.string(),
+    toBeEmailed: yup.bool().required(),
+    toBePrinted: yup.bool().required(),
+    printDuplicate: yup.bool().required(),
 
     zoneNick: yup.string().required(),
     dfFulfill: yup.string().nullable(),
-    latestFirstDeliv: yup
-      .number()
-      .min(0)
-      .lessThan(24),
-    latestFinalDeliv: yup
-      .number()
-      .min(0)
-      .lessThan(24),
+    latestFirstDeliv: yup.number().min(0).lessThan(24),
+    latestFinalDeliv: yup.number().min(0).lessThan(24),
     delivOrder: yup.number().nullable(),
   })
 
@@ -84,6 +78,7 @@ export const useLocationSchema = ({ editMode }) => {
 export const defaultLocation = {
   Type: "Location",
   locNick: "",
+
   // Address
   locName: "",
   addr1: "",
@@ -91,24 +86,28 @@ export const defaultLocation = {
   city: "",
   zip: "",
   gMap: "",
+
   // Contact,
   firstName: "",
   lastName: "",
   phone: "",
   email: "",
+
   // Billing
   qbID: "",
   invoicing: "",
-  // terms: "15",           // better to not set these for now.
-  // toBeEmailed: true,     // Some items may have unusual settings that
-  // toBePrinted: true,     // should be preserved.
-  // printDuplicate: false,
+  terms: "15",           // better to not set these for now.
+  toBeEmailed: true,     // Some items may have unusual settings that
+  toBePrinted: true,     // should be preserved.
+  printDuplicate: false,
+
   // Fulfillment
   zoneNick: "",
   dfFulfill: "",
   latestFirstDeliv: 7,
   latestFinalDeliv: 13,
   delivOrder: 0,
+
   // Others we may integrate in the future
   currentBalance: '',         // string
   picURL: '',                 // string

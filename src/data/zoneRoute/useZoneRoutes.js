@@ -1,21 +1,11 @@
-import { useListData } from "../_listData";
+import { ListDataCache, useListData } from "../_listData";
 /**@typedef {import('../types.d.js').DBZoneRoute} DBZoneRoute */
 
 /**
  * @param {Object} input
  * @param {boolean} input.shouldFetch 
+ * @returns {ListDataCache<DBZoneRoute>}
  */
-const useZoneRoutes = ({ shouldFetch }) => {
-  const { data, ...otherCacheItems } =  
-    useListData({ tableName: "ZoneRoute", shouldFetch })
+export const useZoneRoutes = ({ shouldFetch }) => 
+  useListData({ tableName: "ZoneRoute", shouldFetch })
 
-    /**@type {DBZoneRoute[] | undefined} */
-    const zones = data
-
-    return { data: zones, ...otherCacheItems}
-
-}
-
-export {
-  useZoneRoutes
-}
