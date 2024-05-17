@@ -11,14 +11,15 @@ import { calculateFrenchPockets } from "./dataBPBSFrenchPockets";
 /**
  * @param {Object} input
  * @param {DateTime} input.reportDT 
+ * @param {boolean} input.shouldFetch
  */
-export const useWhatToMake = ({ reportDT }) => {
+export const useWhatToMake = ({ reportDT, shouldFetch }) => {
   const R0 = reportDT.plus({ days: 0 }).toFormat('yyyy-MM-dd')
   const R1 = reportDT.plus({ days: 1 }).toFormat('yyyy-MM-dd')
  
-  const { data:R0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 0 }), useHolding: false, shouldFetch: true })
-  const { data:R1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: true,  shouldFetch: true })
-  const { data:R2Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 2 }), useHolding: true,  shouldFetch: true })
+  const { data:R0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 0 }), useHolding: false, shouldFetch })
+  const { data:R1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: true,  shouldFetch })
+  const { data:R2Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 2 }), useHolding: true,  shouldFetch })
 
   const { 
     data:PRD,
