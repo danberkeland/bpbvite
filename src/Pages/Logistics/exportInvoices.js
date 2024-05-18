@@ -3,6 +3,10 @@ import { groupByObject, uniqByRdc } from "../../utils/collectionFns"
 import { QB } from "../../data/qbApiFunctions"
 import { downloadPDF } from "../../utils/pdf/downloadPDF"
 
+async function sleep(millis) {
+  return new Promise(resolve => setTimeout(resolve, millis));
+}
+
 // May want to change input pivotData to simple location data to make
 // the function more versatile.
 
@@ -42,7 +46,10 @@ export const exportInvoices = async (
   }
   
   let pdfResponses = await Promise.all(
-    invoiceRows.map(row => QB.invoice.getPdf({ CustomerId: row.rowProps.qbID, delivDate, accessToken })
+    invoiceRows.map(async (row, idx) => {
+      await sleep(idx * 150)
+      return QB.invoice.getPdf({ CustomerId: row.rowProps.qbID, delivDate, accessToken })
+    }
   ))
 
   for (let i = 1; i <= 5; i++) {

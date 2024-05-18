@@ -8,12 +8,15 @@ import { Button } from "primereact/button"
 import { InputNumber } from "primereact/inputnumber"
 import { confirmDialog } from "primereact/confirmdialog"
 import { exportWhatToMake } from "./exportBPBSWhatToMake"
+import { useCheckForUpdates } from "../../core/checkForUpdates"
 
 /**
  * @param {Object} props
  * @param {'today'|'tomorrow'} props.reportDay
  */
 const PageBPBSWhatToMake = ({ reportDay='today' }) => {
+
+  const checkForUpdatesCompleted = useCheckForUpdates()
 
   const todayDT = DT.today()
   const [reportDT, setReportDT] = useState(
@@ -32,7 +35,7 @@ const PageBPBSWhatToMake = ({ reportDay='today' }) => {
     products={},
     submitProducts,
     updateProductCache,
-  } = useWhatToMake({ reportDT })
+  } = useWhatToMake({ reportDT, shouldFetch: checkForUpdatesCompleted })
   const isAllLoaded = !!freshData && !!shelfData && !!freezerData && pretzelData && frenchPocketData
 
   // console.log("freshData", freshData)

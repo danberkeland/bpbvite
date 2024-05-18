@@ -1,131 +1,199 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DT } from "../../../utils/dateTimeFns";
 import { useCombinedRoutedOrdersByDate } from "../../../data/production/useProductionData";
 import { DataTable } from "primereact/datatable";
 import { tablePivot } from "../../../utils/tablePivot";
 import { Column } from "primereact/column";
+import { InputText } from "primereact/inputtext"
 import { useProducts } from "../../../data/product/useProducts";
-import { compareBy, keyBy } from "../../../utils/collectionFns";
-import { DBProduct } from "../../../data/types.d";
+import { compareBy, countByRdc, keyBy } from "../../../utils/collectionFns";
+import { DBProduct, DBStanding } from "../../../data/types.d";
+import { useRoutes } from "../../../data/route/useRoutes";
+import { Divider } from "primereact/divider";
+import { Badge } from "primereact/badge"
+
+import { DataView } from 'primereact/dataview';
+import 'primeflex/primeflex.css'
+import { Button } from "primereact/button";
+
+import "./cartOrder.css"
+import { useStandingsByLocNickByDayOfWeek } from "../../../data/standing/useStandings";
+import { rankedSearch } from "../../../utils/textSearch";
+import { useLocation } from "../../../data/location/useLocations";
+import { useTemplateProdsByLocNick } from "../../../data/templateProd/useTemplateProd";
+import { useLocationProductOverridesByLocNick } from "../../../data/locationProductOverride/useLocationProductOverrides";
+
+const USDollar = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+})
 
 export const Sandbox = () => {
- 
-  const reportDateDT = DT.today()
+  const reportDT = DT.today()
+  const dayOfWeek = reportDT.toFormat('EEE')
 
-  const { data:orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDateDT, useHolding: false})
+  const locNick = 'backporch'
+  const shouldFetch = true
+   
+  const { data:loc } = useLocation({ locNick, shouldFetch: true})
+  const { data:ORD } = useStandingsByLocNickByDayOfWeek({ shouldFetch, locNick, dayOfWeek })
+  const FAVR = useTemplateProdsByLocNick({ locNick, shouldFetch })
+  const { data:overrides } = useLocationProductOverridesByLocNick({ locNick, shouldFetch })
+
+  const [orderChanges, setOrderChanges] = useState(/** @type {DBStanding[]} */([]))
+  useEffect(() => {
+    if (!!ORD) setOrderChanges(ORD.sort(compareBy(order => order.prodNick)))
+  }, [ORD])
+  
+  
   const { data:PRD } = useProducts({ shouldFetch: true })
+  const customizedProductList = (PRD ?? [])
+    .sort(compareBy(P => P.prodName))
+    .sort(compareBy(P => !(FAVR.data ?? []).some(f => f.prodNick === P.prodNick)))
+    .filter(P => P.defaultInclude || overrides?.some(o => o.prodNick === P.prodNick && o.defaultInclude === true))
 
-  const { 
-    goingUpTable=[], 
-    goingUpColKeys=[],
-    goingDownTable=[], 
-    goingDownColKeys=[],
-    slopickTable=[],
-    slopickColKeys=[],
-  } = useMemo(() => {
-    if (!orders || !PRD) return {} 
 
-    const products = keyBy(PRD, P => P.prodNick)
+  const [selectedProducts, setSelectedProducts] = useState({})
+  const nItemsSelected = Object.values(selectedProducts).reduce(countByRdc(v => !!v), 0)
+
+  const [cartView, setCartView] = useState('cart') // 'cart'|'add'
+  const selectedClass = "bpb-cart-view-button bpb-cart-view-button-selected"
+  const notSelectedClass = "bpb-cart-view-button bpb-cart-view-button-not-selected"
+  const changeToCartView = () => {
+    const productsToAdd = Object.entries(selectedProducts)
+      .filter(entry => entry[1] === true)
+      .map(entry => ({
+        Type: "Standing",
+        locNick,
+        prodNick: entry[0],
+        dayOfWeek,
+        qty: 0,
+        isWhole: true,
+        isStand: false,
+      }))
+
+    setOrderChanges(orderChanges.concat(productsToAdd).sort(compareBy(order => order.prodNick)))
     
-    const goingUpOrders = orders?.filter(order => ['backporch', 'bpbkit'].includes(order.locNick)) ?? []
-    const goingDownOrders = orders?.filter(order => ['slonat', 'whole'].includes(order.locNick)) ?? []
-    const slopickOrders = orders.filter(order => ['bpbextras'].includes(order.locNick))// ['Pick up SLO'].includes(order.meta.routeNick))
+    setCartView('cart')
+    setSelectedProducts({})
+    setQuery('')
+  }
 
-    const isHigueraPackProduct = (/** @type {DBProduct} */ product) => 1
-      && product.doughNick !== "French"
-      && ['rustic breads', 'retail', 'focaccia'].includes(product.packGroup)
+  /** 
+   * @param {DBProduct} P 
+   * @param {number} idx 
+   */
+  const itemTemplate = (P, idx) => {
+    const isSelected = !!selectedProducts[P.prodNick]
+    const favItem = FAVR.data?.find(fav => fav.prodNick === P.prodNick)
+    const isFavorite = !!favItem
+    const isLastItem = idx === displayProductList.length - 1
+    const unitPriceText = `${USDollar.format(P.wholePrice)}/${P.packSize > 1 ? 'pk' : 'ea'}`
 
-    console.log(goingUpOrders)
-    console.log(goingDownOrders)
-    console.log(slopickOrders)
-
-    const [goingUpTable, goingDownTable, slopickTable] = 
-      [goingUpOrders, goingDownOrders, slopickOrders]
-        .map(orderSet => tablePivot(
-          orderSet, 
-          { locNick: item => item.locNick }, 
-          order => order.prodNick, 
-          items => items[0].qty
-        ))
-
-    const [goingUpColKeys, goingDownColKeys, slopickColKeys] = 
-      [goingUpTable, goingDownTable, slopickTable].map(pivotData => 
-        Object.keys((pivotData[0] ?? {}).colProps)
-        .filter(prodNick => isHigueraPackProduct(products[prodNick]))
-        .sort(compareBy(prodNick => products[prodNick].prodNick))
-        .sort(compareBy(prodNick => products[prodNick].doughNick))
-        .sort(compareBy(prodNick => products[prodNick].packGroup))
-        .sort(compareBy(prodNick => products[prodNick].packGroupOrder))
-      )
-
-    return { 
-      goingUpTable, 
-      goingUpColKeys,
-      goingDownTable, 
-      goingDownColKeys,
-      slopickTable,
-      slopickColKeys,
+    const handleToggleFav = async () => {
+      if (!!favItem) {
+        FAVR.updateLocalData(await FAVR.submitMutations({ deleteInputs: [{ id: favItem.id }]}))
+      } else {
+        FAVR.updateLocalData(await FAVR.submitMutations({ createInputs: [{ locNick, prodNick: P.prodNick}]}))
+      }
     }
 
-  }, orders)
+    return (<>
+      <div style={{background: isSelected ? 'rgba(173, 216, 230, .8)' : '', borderRadius: isLastItem ? "0 0 3px 3px" : undefined, color: "var(--bpb-text-color)", paddingBlock: ".25rem"}}>
+        <div key={P.prodNick + '-' + idx} style={{ padding: ".25rem", width: "100%", display: "grid", gridTemplateColumns: "1fr 5rem", paddingInline: ".5rem" }}>
+          
+          <div>
+            <div style={{display: "flex", gap: ".5rem", alignItems: "baseline"}}>
+              <Button icon={isFavorite ? "pi pi-star-fill": "pi pi-star"} onClick={handleToggleFav} className="p-button-text" style={{padding: "0", width: "1.5rem", borderRadius: ".75rem"}} />
+              <div style={{fontWeight: "bold"}}>{P.prodName}</div>
+            </div>
+            <div style={{fontSize: ".9rem", paddingLeft: ".25rem"}}>
+              {P.leadTime} day lead  
+            </div>
 
-  console.log(goingUpTable)
-  console.log(goingDownTable)
-  console.log(slopickTable)
-  
-  return (<>
+          </div>
+          
+          <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+            {orderChanges?.some(order => order.prodNick === P.prodNick)
+              ? <div style={{paddingBlock: ".5rem"}}>in cart</div>
+              : <Button label={isSelected ? "Adding" : "Select"} className="p-button-rounded p-button-text p-overlay-badge" style={{alignSelf: "center"}} onClick={() => setSelectedProducts({...selectedProducts, [P.prodNick]: !selectedProducts[P.prodNick] })} />
+            }
+            {unitPriceText}
+          </div>
+        </div>
+      </div>
+      {/* {!isLastItem && 
+        <div style={{marginInline: "0.5rem"}}>
+          <Divider style={{marginBlock: "0.5rem"}} />
+        </div>
+      } */}
+    </>
+    )
+  }
 
-    <h1>Sandbox</h1>
 
 
-    <h2>Higuera - Other Orders</h2>
-
-    <h3>Long Drive - Up</h3>
+  const [query, setQuery] = useState('')
+  const displayProductList = rankedSearch(
+    query, 
+    customizedProductList, 
+    ['prodNick', 'prodName']
+  )
     
-    <DataTable
-      value={goingUpTable ?? []}
-      showGridlines
-      stripedRows
-      size="small"
-      
-    >
-      <Column header="Location" field="rowProps.locNick" />
-      {goingUpColKeys.map(prodNick => 
-          <Column key={`up-${prodNick}`} header={prodNick} field={`colProps.${prodNick}.value`} />
-      )}
-    </DataTable>
+  return (
+    <div style={{maxWidth: "28rem"}}>
+      <h1>Layout Testing</h1>
 
 
-    <h3>Long Drive - Down</h3>
+      <div style={{display: "flex", gap: "0.5rem", justifyContent: "space-between", alignItems: "center", background: "var(--bpb-orange-vibrant-100)", borderRadius: "3px", padding: ".5rem", marginBlock: "1rem"}}>
+        <button className={`${cartView === 'cart' ? selectedClass : notSelectedClass}`}
+          onClick={changeToCartView}
+        >
+          <i className="pi pi-shopping-cart p-overlay-badge">
+            {nItemsSelected > 0 && <Badge value={'+' + nItemsSelected} style={{borderRadius: "1rem"}} />}
+          </i>
+          <div className="bpb-cart-view-button-text">Your Order</div>
+        </button>
 
-    <DataTable
-      value={goingDownTable ?? []}
-      showGridlines
-      stripedRows
-      size="small"
+        <button className={cartView === 'add' ? selectedClass : notSelectedClass}
+          onClick={() => setCartView('add')}
+        >
+          <i className="pi pi-plus" />
+          <div className="bpb-cart-view-button-text">Add Items</div>
+        </button>
+      </div>
 
-    >
-      <Column header="Location" field="rowProps.locNick" />
-      {goingDownColKeys.map(prodNick => 
-        <Column key={`down-${prodNick}`} header={prodNick} field={`colProps.${prodNick}.value`} />
-      )}
-    </DataTable>
+      {cartView === 'cart' && 
+        <DataTable value={orderChanges} responsiveLayout="scroll">
+          <Column header="Product" field="prodNick" />
+          <Column header="Qty"     field="qty" />
+        </DataTable>
+      }
+      {cartView === 'add' &&
+        <div style={{background: "var(--bpb-orange-vibrant-100)", borderRadius: "3px"}}>
+          <div style={{padding: ".5rem"}}>
+            <span className="p-input-icon-right" style={{width: "100%"}}>
+              {!!query && <i className="pi pi-fw pi-times" onClick={() => setQuery('')} style={{cursor: "pointer"}} />}
+              <InputText 
+                placeholder="Find Items..."
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === "Escape") setQuery('')
+                  if (e.key === "Enter") e.currentTarget.blur()
+                }}
+                onFocus={e => e.target.select()}
+                style={{width: "100%"}}
+              />
+            </span>
+          </div>
+          {displayProductList.map((P, idx) => itemTemplate(P, idx))}
+        </div>
+      }
 
-    
-    <h3>Send To Prado</h3>
 
-    <DataTable
-      value={slopickTable ?? []}
-      showGridlines
-      stripedRows
-      size="small"
-    >
-      <Column header="Location" field="rowProps.locNick" />
-      {slopickColKeys.map(prodNick => 
-        <Column key={`slopick-${prodNick}`} header={prodNick} field={`colProps.${prodNick}.value`} />
-      )}
-    </DataTable>
-    
-  </>)
+
+    </div>
+  )
 }
 

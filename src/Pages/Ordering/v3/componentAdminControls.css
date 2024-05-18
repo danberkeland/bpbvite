@@ -1,0 +1,61 @@
+.admin-panel {
+  color: var(--bpb-orange-tone-300);
+  /* background: rgba(220, 220, 220, 0.95); */
+  background: var(--bpb-contrast-color);
+  padding: .5rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(144, 144, 144, 0.95);
+  border-radius: 3px;
+  width: 100%;
+  /* max-width: 26.5rem; */
+  /* min-width: 12.5rem; */
+}
+
+.admin-panel .split-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: .25rem .5rem;
+}
+
+.admin-panel .split-header h2 {
+  display: inline-block;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.admin-panel .split-header span {
+  font-family: monospace;
+  padding-inline: 6px;
+  background: hsl(240, 18%, 43%);
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.admin-panel .split-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: .5rem .5rem;
+    /* margin-left: auto; */
+}
+
+.admin-panel .split-body .location-select-container {
+  flex: 1 1 15rem;
+  margin: .25rem;
+}
+
+.admin-panel .split-body button {
+  padding-block: 4px;
+  color: var(--bpb-orange-tone-300);
+  background: hsl(240, 18%, 43%);
+  border: solid 1px hsl(240, 18%, 43%);
+  margin: .25rem;
+}
+
+.admin-panel .split-body button:hover {
+  color: var(--bpb-orange-tone-200);
+}
+   

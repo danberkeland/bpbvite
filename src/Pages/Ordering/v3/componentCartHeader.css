@@ -1,0 +1,30 @@
+.bpb-cart-header {
+  border-radius: 3px;
+  /* border: solid 1px var(--bpb-background-3); */
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: var(--bpb-orange-vibrant-200);
+}
+
+.bpb-cart-header .cart-header-dropdown .p-inputtext {
+  /* padding: .125rem .5rem; */
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--bpb-text-color);
+  border-color: var(--bpb-contrast-color);
+  background: var(--bpb-orange-vibrant-100);
+}
+
+.bpb-cart-header .p-dropdown {
+  background: var(--bpb-orange-vibrant-100);
+}
+
+.bpb-cart-header div.p-dropdown-trigger {
+  color: var(--bpb-orange-vibrant-200);
+  background: var(--bpb-contrast-color);
+}
+
+.bpb-cart-header .p-button.p-button-icon-only {
+  width: 2.75rem;
+  color: var(--bpb-orange-vibrant-200);
+}
