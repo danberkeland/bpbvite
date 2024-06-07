@@ -66,8 +66,8 @@ const useNorthListData = ({
   const { data:LOC } = useLocations({ shouldFetch: true })
   const { data:PRD } = useProducts({ shouldFetch: true })
   const { data:IQB }  = useInfoQBAuths({ shouldFetch: true })
-  const { data:T0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT, useHolding: false })
-  const { data:T1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: true })
+  const { data:T0Orders } = useCombinedRoutedOrdersByDate({ shouldFetch: true, useHolding: false, delivDT: reportDT })
+  const { data:T1Orders } = useCombinedRoutedOrdersByDate({ shouldFetch: true, useHolding: true,  delivDT: reportDT.plus({ days: 1 }) })
   
 
   const calcCroixNorth = () => {
@@ -230,13 +230,15 @@ const useNorthListData = ({
 
     console.log("FICELLE ORDERS:", T0Orders.filter(order => order.prodNick === 'fic'))
 
-    const shelfProdOrders = T0Orders.filter(order => 1
-      && products[order.prodNick].bakedWhere.length === 1
-      && products[order.prodNick].bakedWhere.includes("Prado")
-      && order.meta.route?.RouteDepart === "Carlton"
-      && products[order.prodNick].packGroup !== "frozen pastries"
-      //&& !["fic", "mdch"].includes(order.prodNick)
-    )
+    const shelfProdOrders = T0Orders
+      .filter(order => 1
+        && products[order.prodNick].bakedWhere.length === 1
+        && products[order.prodNick].bakedWhere.includes("Prado")
+        && order.meta.route?.RouteDepart === "Carlton"
+        && products[order.prodNick].packGroup !== "frozen pastries"
+        //&& !["fic", "mdch"].includes(order.prodNick)
+      )
+      .filter(order => !(order.isWhole === false && order.locNick.includes('__') && order.prodNick === 'brn'))
 
     // const pivotTable = generatePivot(shelfProdOrders, locations, products)
 
