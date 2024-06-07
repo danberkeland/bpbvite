@@ -11,14 +11,14 @@ export const useDoobieStuff = ({ reportDT }) => {
     {
       Prod: "Doobie Buns",
       Bucket: "YES",
-      Mix: yes ? "NO" : "NO",
-      Bake: yes ? "YES" : "YES",
+      Mix: yes ? "YES" : "YES",
+      Bake: yes ? "NO" : "NO",
     },
     {
       Prod: "Siciliano",
       Bucket: "YES",
-      Mix: yes ? "YES" : "YES",
-      Bake: yes ? "NO" : "NO",
+      Mix: yes ? "NO" : "NO",
+      Bake: yes ? "YES" : "YES",
     },
   ]
 
@@ -26,14 +26,14 @@ export const useDoobieStuff = ({ reportDT }) => {
      {
        Prod: "Doobie Buns",
        Bucket: "YES",
-       Mix: yes ? "YES" : "YES",
-       Bake: yes ? "NO" : "NO",
+       Mix: yes ? "NO" : "NO",
+       Bake: yes ? "YES" : "YES",
      },
      {
        Prod: "Siciliano",
        Bucket: "YES",
-       Mix: yes ? "NO" : "NO",
-       Bake: yes ? "YES" : "YES",
+       Mix: yes ? "YES" : "YES",
+       Bake: yes ? "NO" : "NO",
      },
    ]
 
