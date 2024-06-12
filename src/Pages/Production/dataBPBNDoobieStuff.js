@@ -7,11 +7,11 @@ import { DateTime } from "luxon"
 export const useDoobieStuff = ({ reportDT }) => {
   let yes = reportDT.ordinal % 2 === 0
   
-  const doobieStuffx = [
+  const doobieStuff = [
     {
       Prod: "Doobie Buns",
       Bucket: "YES",
-      Mix: yes ? "NO" : "NO",
+      Mix: yes ? "YES" : "YES",
       Bake: yes ? "NO" : "NO",
     },
     {
@@ -22,7 +22,7 @@ export const useDoobieStuff = ({ reportDT }) => {
     },
   ]
 
-  const doobieStuff = [
+  const doobieStuffx = [
      {
        Prod: "Doobie Buns",
        Bucket: "YES",
