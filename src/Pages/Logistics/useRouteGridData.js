@@ -203,8 +203,8 @@ const exportHigueraStickers = (R0, R0Orders, R1Orders, LOC, RTE, products) => {
 
 const useRouteGridData = ({ reportDT, shouldFetch }) => {
   const R0 = reportDT.toFormat('yyyy-MM-dd')
-  const { data:R0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 0 }), useHolding: false, shouldFetch })
-  const { data:R1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: false, shouldFetch })
+  const { data:R0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 0 }), useHolding: false, shouldFetch, showCustom: true })
+  const { data:R1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: false, shouldFetch, showCustom: true })
   const { data:LOC } = useLocations({ shouldFetch })
   const { data:RTE } = useRoutes({ shouldFetch })
   const { data:PRD } = useProducts({ shouldFetch })

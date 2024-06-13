@@ -32,11 +32,19 @@ let CombinedRoutedOrder
 /**
  * @param {Object} input
  * @param {DateTime} input.delivDT 
- * @param {boolean} input.useHolding
  * @param {boolean} input.shouldFetch
+ * @param {boolean} input.useHolding
+ * @param {boolean} [input.showCustom=false] Option for including the special product "Custom Order"
+ * @param {boolean} [input.showRetailBrn=false] Option for including the placeholder brownie
  * @return {{ data: (undefined | CombinedRoutedOrder[]) }}
  */
-const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false, shouldFetch=true }) => {
+const useCombinedRoutedOrdersByDate = ({ 
+  delivDT, 
+  shouldFetch=true,
+  useHolding=false, 
+  showCustom=false,
+  showRetailBrn=false,
+}) => {
   const delivDate = delivDT.toFormat('yyyy-MM-dd')
   const dayOfWeek = delivDT.toFormat('EEE')
 
@@ -71,7 +79,10 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false, shouldFetch=
     const _STD = useHolding ? STD : STD.filter(std => std.isStand === true)
     
     const combinedRoutedOrders = combineOrders(ORD, _STD, [delivDate])
-      .filter(order => order.prodNick !== 'cust')
+      .filter(order => 1 
+        && (showCustom || !(order.prodNick === 'cust'))
+        && (showRetailBrn || !(order.isWhole === false && order.locNick.includes('__') && order.prodNick === 'brn'))
+      )
       .map(order => {
         const location = order.isWhole
           ? locations[order.locNick]

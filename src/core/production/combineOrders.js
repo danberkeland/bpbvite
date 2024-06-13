@@ -177,7 +177,7 @@ const combineOrders = (orders, standingOrders, optDates) =>
  * Does not filter out holding orders.
  * @param {DBOrder[]} orders 
  * @param {DBStanding[]} standingOrders 
- * @param {string[]} [optDates] - Optional list of ISO dates; will force generation of combined orders on explicit dates
+ * @param {string[]} [optDates] - Optional list of ISO dates. Including forces generation of combined orders on specified dates. If undefined, parses dates out of the order items. If no cart items are present and dates are not specified, nothing will be generated.
  * @returns {DBOrder[][]}
 */
 const combineOrdersGrouped = (orders, standingOrders, optDates) =>

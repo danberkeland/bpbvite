@@ -66,7 +66,7 @@ const useNorthListData = ({
   const { data:LOC } = useLocations({ shouldFetch: true })
   const { data:PRD } = useProducts({ shouldFetch: true })
   const { data:IQB }  = useInfoQBAuths({ shouldFetch: true })
-  const { data:T0Orders } = useCombinedRoutedOrdersByDate({ shouldFetch: true, useHolding: false, delivDT: reportDT })
+  const { data:T0Orders } = useCombinedRoutedOrdersByDate({ shouldFetch: true, useHolding: false, delivDT: reportDT.plus({ days: 0 }) })
   const { data:T1Orders } = useCombinedRoutedOrdersByDate({ shouldFetch: true, useHolding: true,  delivDT: reportDT.plus({ days: 1 }) })
   
 
