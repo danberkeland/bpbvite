@@ -71,6 +71,7 @@ const useCombinedRoutedOrdersByDate = ({ delivDT, useHolding=false, shouldFetch=
     const _STD = useHolding ? STD : STD.filter(std => std.isStand === true)
     
     const combinedRoutedOrders = combineOrders(ORD, _STD, [delivDate])
+      .filter(order => order.prodNick !== 'cust')
       .map(order => {
         const location = order.isWhole
           ? locations[order.locNick]
