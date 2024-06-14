@@ -24,14 +24,16 @@ import "./stylesOrderDashboard.css"
 import { useLocations } from "../../data/location/useLocations"
 
 const useOrderDashboardData = ({ reportDT, shouldFetch }) => {
-  const { data:R0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 0 }), useHolding: false, shouldFetch })
-  const { data:R1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: true,  shouldFetch })
-  const { data:R2Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 2 }), useHolding: true,  shouldFetch })
-  const { data:R3Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 3 }), useHolding: true,  shouldFetch })
-  const { data:R4Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 4 }), useHolding: true,  shouldFetch })
-  const { data:R5Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 5 }), useHolding: true,  shouldFetch })
-  const { data:R6Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 6 }), useHolding: true,  shouldFetch })
-  const { data:R7Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 7 }), useHolding: true,  shouldFetch })
+  const showCustom = true
+  const showRetailBrn = true
+  const { data:R0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 0 }), useHolding: false, shouldFetch, showCustom, showRetailBrn })
+  const { data:R1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: true,  shouldFetch, showCustom, showRetailBrn })
+  const { data:R2Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 2 }), useHolding: true,  shouldFetch, showCustom, showRetailBrn })
+  const { data:R3Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 3 }), useHolding: true,  shouldFetch, showCustom, showRetailBrn })
+  const { data:R4Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 4 }), useHolding: true,  shouldFetch, showCustom, showRetailBrn })
+  const { data:R5Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 5 }), useHolding: true,  shouldFetch, showCustom, showRetailBrn })
+  const { data:R6Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 6 }), useHolding: true,  shouldFetch, showCustom, showRetailBrn })
+  const { data:R7Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 7 }), useHolding: true,  shouldFetch, showCustom, showRetailBrn })
   const { data:PRD }      = useProducts({ shouldFetch })
   const { data:RTE }      = useRoutes({ shouldFetch })
 
