@@ -165,7 +165,8 @@ const calculateSetoutPrado = (PRD, R1Orders, R2Orders, R3Orders) => {
   // on the same day. This *should* be a reasonable assumption.
   const { 
     R1PradoBakedCroix=[], 
-    R1PradoBakedOther=[], 
+    R1PradoBakedOther=[],
+    R1PradoFrozenOther=[],
     R1PradoBakedAlmond=[], 
     R1PradoFrozenAlmond=[], 
     R1CarltonFrozenAlmond=[],                  
@@ -192,7 +193,10 @@ const calculateSetoutPrado = (PRD, R1Orders, R2Orders, R3Orders) => {
     products
   )
   const pradoSetoutOther = calculateSetoutOther(
-    R1PradoBakedOther, 
+    [ 
+      ...R1PradoBakedOther, 
+      ...R1PradoFrozenOther
+    ], 
     products
   )
 
