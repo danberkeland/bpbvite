@@ -68,13 +68,23 @@ const deleteInvoice = ({ Id, SyncToken, accessToken }) => axios.post(
  * @returns 
  */
 const getPdf = ({ CustomerId, delivDate, accessToken }) => axios.post(
-    qbEndpoints.getPdf, 
-    { 
-      accessCode: "Bearer " + accessToken, 
-      delivDate, 
-      custID: CustomerId 
-    }
-  )
+  qbEndpoints.getPdf, 
+  { 
+    accessCode: "Bearer " + accessToken, 
+    delivDate, 
+    custID: CustomerId 
+  }
+)
+
+const getPdfByDocNumber = ({ CustomerRef, DocNumber, accessToken }) => axios.post(
+  qbEndpoints.getPdf,
+  {
+    accessToken: "Bearer " + accessToken,
+    CustomerRef,
+    DocNumber,
+  }
+)
+
 
 /**
  * @param {Object} input
@@ -95,6 +105,7 @@ export const QB = {
     create: createInvoice,
     delete: deleteInvoice,
     getPdf: getPdf,
+    getPdfByDocNumber: getPdfByDocNumber,
     sendEmail: sendEmail,
   }
 }
