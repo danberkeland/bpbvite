@@ -41,6 +41,8 @@ export const exportInvoices = async (
   
   const accessToken = await QB.getAccessToken()
   const delivDate = reportDT.toFormat('yyyy-MM-dd')
+  const [yyyy, mm, dd] = delivDate.split("-")
+
   if (!accessToken) {
     console.warn('Failed to grant access'); return
   }
@@ -48,7 +50,15 @@ export const exportInvoices = async (
   let pdfResponses = await Promise.all(
     invoiceRows.map(async (row, idx) => {
       await sleep(idx * 150)
-      return QB.invoice.getPdf({ CustomerId: row.rowProps.qbID, delivDate, accessToken })
+
+      // console.log('CustomerRef', row.rowProps.qbID)
+      // console.log('DocNumber', `${mm}${dd}${yyyy}${row.rowProps.locNick}`)
+      // return QB.invoice.getPdf({ CustomerId: row.rowProps.qbID, delivDate, accessToken })
+      return QB.invoice.getPdfByDocNumber({ 
+        CustomerRef: row.rowProps.qbID, 
+        DocNumber: `${mm}${dd}${yyyy}${row.rowProps.locNick}`, 
+        accessToken 
+      })
     }
   ))
 
@@ -62,10 +72,16 @@ export const exportInvoices = async (
     console.log("Some requests timed out:", timeouts)
     console.log(`Retry attempt ${i} of 5...`)
 
-    const retryPromises = pdfResponses.map((response, index) => hasTimeout(response)
-      ? QB.invoice.getPdf({ CustomerId: invoiceRows[index].rowProps.qbID, delivDate, accessToken })
+    const retryPromises = pdfResponses.map((response, index) => hasTimeout(response) 
+      // ? QB.invoice.getPdf({ CustomerId: invoiceRows[index].rowProps.qbID, delivDate, accessToken })
+      ? QB.invoice.getPdfByDocNumber({
+          CustomerRef: invoiceRows[index].rowProps.qbID,
+          DocNumber: `${mm}${dd}${yyyy}${invoiceRows[index].rowProps.locNick}`, 
+          accessToken
+        })
       : response
     )
+
     pdfResponses = await Promise.all(retryPromises)
     console.log("...with retrys:", pdfResponses)
     

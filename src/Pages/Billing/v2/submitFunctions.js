@@ -273,10 +273,15 @@ export const submitAndPrintInvoice = async ({
 
   let pdfResponse
   for (let i = 1; i <= 5; i++) {
-    pdfResponse = await QB.invoice.getPdf({ 
-      CustomerId: invoice.CustomerRef.value, 
-      delivDate: invoice.TxnDate, 
-      accessToken 
+    // pdfResponse = await QB.invoice.getPdf({ 
+    //   CustomerId: invoice.CustomerRef.value, 
+    //   delivDate: invoice.TxnDate, 
+    //   accessToken 
+    // })
+    pdfResponse = await QB.invoice.getPdfByDocNumber({
+      CustomerRef: invoice.CustomerRef.value,
+      DocNumber: invoice.DocNumber,
+      accessToken,
     })
     console.log("PDF response:", pdfResponse)
 
