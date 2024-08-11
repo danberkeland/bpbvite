@@ -38,6 +38,9 @@ export const exportInvoices = async (
   const hasTimeout = (response) => 1
     && typeof response?.data?.errorMessage === 'string'
     && response.data.errorMessage.includes("Task timed out")
+
+  const hasThrottleError = (response) => 1
+    && response?.data?.errorMessage?.endsWith('429')
   
   const accessToken = await QB.getAccessToken()
   const delivDate = reportDT.toFormat('yyyy-MM-dd')
@@ -49,7 +52,7 @@ export const exportInvoices = async (
   
   let pdfResponses = await Promise.all(
     invoiceRows.map(async (row, idx) => {
-      await sleep(idx * 150)
+      await sleep(idx * 500)
 
       // console.log('CustomerRef', row.rowProps.qbID)
       // console.log('DocNumber', `${mm}${dd}${yyyy}${row.rowProps.locNick}`)
@@ -63,16 +66,17 @@ export const exportInvoices = async (
   ))
 
   for (let i = 1; i <= 5; i++) {
-    const timeouts = pdfResponses.filter(response => hasTimeout(response))
+    console.log("responses:", pdfResponses)
+    const timeouts = pdfResponses.filter(response => hasTimeout(response) || hasThrottleError(response))
     if (timeouts.length === 0) {
       console.log("No timeouts encountered.")
       break
     }
 
-    console.log("Some requests timed out:", timeouts)
+    console.log("Some requests timed out or failed:", timeouts)
     console.log(`Retry attempt ${i} of 5...`)
 
-    const retryPromises = pdfResponses.map((response, index) => hasTimeout(response) 
+    const retryPromises = pdfResponses.map((response, index) => (hasTimeout(response) || hasThrottleError(response))
       // ? QB.invoice.getPdf({ CustomerId: invoiceRows[index].rowProps.qbID, delivDate, accessToken })
       ? QB.invoice.getPdfByDocNumber({
           CustomerRef: invoiceRows[index].rowProps.qbID,
@@ -110,12 +114,12 @@ export const exportInvoices = async (
 
     if (failures.some(rwl => hasTimeout(rwl.pdfResponse))) {
       alert(
-        "Fetch timed out for the following locations:\n\n"
+        "Fetch failed for the following locations:\n\n"
         + failures
             .filter(rwl => hasTimeout(rwl.pdfResponse))
             .map(rwl => `${rwl.routeNick} > ${rwl.locNick}`)
             .join('\n')
-        + "\n\nTry grabbing these invoices individually."
+        + "\n\nTry again or grab these invoices individually."
       )
     }
 
