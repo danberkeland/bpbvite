@@ -59,7 +59,7 @@ export const exportInvoices = async (
       // return QB.invoice.getPdf({ CustomerId: row.rowProps.qbID, delivDate, accessToken })
       return QB.invoice.getPdfByDocNumber({ 
         CustomerRef: row.rowProps.qbID, 
-        DocNumber: `${mm}${dd}${yyyy}${row.rowProps.locNick}`, 
+        DocNumber: `${mm}${dd}${yyyy}${row.rowProps.locNick?.slice(0,13)}`, 
         accessToken 
       })
     }
