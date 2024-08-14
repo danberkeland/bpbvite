@@ -264,7 +264,7 @@ const useInvoicingData = ({ reportDT, shouldFetch }) => {
           return { locNick, response: "", action: "transform", message: "Error: could not convert order to invoice", needsRetry: true }
         }
 
-        await sleep(idx * 350)
+        await sleep(idx * 500)
         return QB.invoice
           .get({ DocNumber: invoice.DocNumber, accessToken })
           .then(response => {
