@@ -66,6 +66,8 @@ import ManageTraining  from "../Pages/Settings/ManageTraining/ManageTraining";
 import Remap from "../Pages/EODCounts/EODCountsRempas";
 import PageBPBNCarltonProduction from "../Pages/Production/PageBPBNCarltonProduction";
 import PageOrdering from "../Pages/Ordering/v3/PageOrdering";
+// import { PageOrdering_v4 } from "../Pages/Ordering/v4/PageOrdering";
+import { PageQbAuthCallback } from "../Pages/Billing/PageQbAuthCallback";
 
 // Lazy Load:
 
@@ -208,6 +210,7 @@ function AnimatedRoutes({ user, signOut }) {
 
           <Route path="/Ordering/v2"      element={<OrdersPage />} />
           <Route path="/Ordering/v3"      element={<PageOrdering />} />
+          {/* <Route path="/Ordering/v4"      element={<PageOrdering_v4 />} /> */}
 
           {/* Production::BPBN */}
   
@@ -265,6 +268,7 @@ function AnimatedRoutes({ user, signOut }) {
           <Route path="/Billing"    element={<PageInvoicing />} />
           <Route path="/Billing/v2" element={<BillingV2 />} />
           <Route path="/Billing/v1" element={<BillingV1 />} />
+          <Route path="/qbAuthCallback" element={<PageQbAuthCallback />} />
 
           {/* Settings */}
 
@@ -279,6 +283,8 @@ function AnimatedRoutes({ user, signOut }) {
           <Route path="/Settings/editRoutes"      element={<EditRoutes />} />
           <Route path="/Settings/editZones"       element={<EditZones2 />} />
           <Route path="/Settings/Notes"           element={<PageNotes />} />
+          
+          
         </>}
       </Routes>
       </Suspense>
