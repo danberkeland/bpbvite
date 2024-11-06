@@ -1,0 +1,226 @@
+import { useMemo } from "react"
+import { DT } from "../../utils/dateTimeFns"
+import { CombinedRoutedOrder, useCombinedRoutedOrdersByDate } from "../../data/production/useProductionData"
+import { DateTime } from "luxon"
+import { useInvoiceSummaryByDate } from "../../data/invoice/useInvoice"
+import { useLocations } from "../../data/location/useLocations"
+import { compareBy, countBy, groupByArray, groupByObject, keyBy } from "../../utils/collectionFns"
+import { maxBy } from "lodash"
+import { useProducts } from "../../data/product/useProducts"
+import { useLocationProductOverrides } from "../../data/locationProductOverride/useLocationProductOverrides"
+import { useZones } from "../../data/zone/useZones"
+import { toQBInvoiceDeliveryLineItem, toQBInvoiceHeader, toQBInvoiceLineItem } from "../../core/billing/makeInvoice2"
+import { makeQbInvoice } from "../../core/billing/makeInvoice"
+
+export const useInvoicing2Data = ({ reportDT, isToday, isTomorrow, shouldFetch }) => {
+
+  const { data: INV, createItem, updateItem, deleteItem } = 
+    useInvoiceSummaryByDate({ TxnDate: reportDT.toFormat("yyyy-MM-dd"), shouldFetch })
+  const { data: LOC } = useLocations({ shouldFetch: true })
+  const { data: ORD } = useCombinedRoutedOrdersByDate({ 
+    delivDT: reportDT, 
+    showCustom: false,
+    showRetailBrn: false,
+    useHolding: false,
+    shouldFetch,
+  })
+  const { data: PRD } = useProducts({ shouldFetch })
+  const { data: OVR } = useLocationProductOverrides({ shouldFetch })
+  const { data: ZNE } = useZones({ shouldFetch })
+
+  const { 
+    rows, 
+    problemRows, 
+    orphanedInvoices, 
+    toQBInvoice, 
+    loadedMakeQbInvoice 
+  } = useMemo(() => {
+    if (!LOC || !ORD || !INV || !PRD || !OVR || !ZNE) {
+      return { 
+        rows: [], 
+        orphanedInvoices: [], 
+        toQBInvoice: undefined, 
+        loadedMakeQbInvoice: undefined 
+      }
+    }
+  
+    const locations = keyBy(LOC, L => L.locNick)
+    const products = keyBy(PRD, P => P.prodNick)
+    const zones = keyBy(ZNE, Z => Z.zoneNick)
+    const overrides = keyBy(OVR, O => `${O.locNick}#${O.prodNick}`)
+    
+    const ORD_wholesale = ORD.filter(O => O.isWhole)
+    const invoicesById = groupByObject(INV, I => I["CustomerRef.value"])
+  
+    const allRows = groupByArray(ORD_wholesale, O => O.locNick)
+      .flatMap(orderItemGroup => {
+        const { locNick } = orderItemGroup[0]
+        const location = locations[locNick]
+        const locNameDisplay = /^the /.test(location.locName.toLowerCase())
+          ? location.locName.slice(4) + ", " + location.locName.slice(0, 3)
+          : location.locName
+        const qbID = /^\d+$/.test(location?.qbID ?? "") ? location?.qbID : "n/a"
+        const nOrderItems = orderItemGroup.filter(item => item.qty !== 0).length
+        const isOrderDeleted = nOrderItems === 0
+
+        const orderLastEdited = DT.fromIsoTs(maxBy(orderItemGroup, item => item.updatedOn).updatedOn)
+        const expectedDocNumber = reportDT.toFormat('MMddyyyy') + locNick.slice(0,13)
+  
+        const invoicingStrategy = location.invoicing === "no invoice" ? "no invoice"
+          : location.toBeEmailed ? "email"
+          : location.toBePrinted ? "print only"
+          : "no invoice"
+        
+        const order = orderItemGroup.map(item => {
+          const override = overrides[`${item.locNick}#${item.prodNick}`]
+          const product = products[item.prodNick]
+          const locationDefaultRate = override?.wholePrice ?? product.wholePrice
+           
+          return {
+            ...item,
+            qtyShort: item.qtyShort ?? 0,
+            rate: item.rate ?? locationDefaultRate,
+            rateDefault: locationDefaultRate,
+          }
+        })
+        
+        const invoices = invoicesById[qbID] ?? [{ 
+          "CustomerRef.value": "",
+          DocNumber: "",
+          EmailStatus: "",
+          Id: "",
+          "MetaData.LastUpdatedTime": "",
+          SyncToken: "",
+        }]
+  
+  
+        return invoices.map(invoice => {
+        
+          let f = {} //flags
+          f.option_syncData  = location.invoicing !== "no invoice" && (!!location.toBeEmailed || !!location.toBePrinted)
+          f.option_sendEmail = location.invoicing !== "no invoice" && (!!location.toBeEmailed)
+
+          f.exists = !!invoice.Id
+          f.emailSent = f.exists && invoice.EmailStatus === "EmailSent"
+
+          f.dataExpected = f.option_syncData && !isOrderDeleted
+          f.emailExpected = f.option_sendEmail && !isOrderDeleted
+
+          const invoiceLastEditedTS = f.exists 
+            ? DT.fromIsoTs(invoice["MetaData.LastUpdatedTime"]).toMillis()
+            : 0
+          f.stale = f.exists && (invoiceLastEditedTS < orderLastEdited.toMillis())
+
+          f.outOfSync = 0
+            || (f.option_syncData && f.exists && (invoiceLastEditedTS < orderLastEdited.toMillis())) // invoice data is stale
+            || (f.option_syncData && !f.exists && !isOrderDeleted) // invoice data needs to be created
+
+          f.readyToCreate = f.option_syncData && !f.emailSent && !isOrderDeleted && !f.exists 
+          f.readyToUpdate = f.option_syncData && !f.emailSent && !isOrderDeleted && f.exists && f.stale
+          f.readyToDelete = f.option_syncData && !f.emailSent && isOrderDeleted  && f.exists && f.stale
+          f.readyToSyncData = f.readyToCreate || f.readyToUpdate || f.readyToDelete
+          f.readyToSyncDataStrict = f.readyToSyncData && (isToday || isTomorrow)
+
+          
+          f.readyToSendEmail = f.option_sendEmail && !isOrderDeleted && !f.emailSent && !f.readyToSyncData
+          f.readyToSendEmailStrict = f.readyToSendEmail && (isToday)
+          
+          const issues = {
+            staleAndSent: f.stale && f.emailSent,
+            invalidDocNumber: f.exists && invoice.DocNumber !== expectedDocNumber
+          }
+
+          return {
+            // row/order fields
+            location,
+            locNick,
+            locNameDisplay,
+            qbID,
+            order,
+            invoicingStrategy,
+            nOrderItems,
+            isOrderDeleted,
+            // invoice fields
+            invoice,
+            invoiceFlags: f,
+            issues,
+          }
+        })
+      })
+      .sort(compareBy(row => row.locNick))
+      .sort(compareBy(row => rankInvStrat(row.invoicingStrategy)))
+  
+    function rankInvStrat(strategy) {
+      switch (strategy[0]) {
+        case 'n': return 0
+        case 'p': return 1
+        default:  return 2
+      }
+    }
+  
+    // Orphaned invoices could arise from a special order & are not necessarily
+    // a validation error. We may want to simply display them on the side
+    const orphanedInvoices = INV.filter(I => 
+      Object.keys(invoicesById).every(qbID => qbID !== I["CustomerRef.value"])
+    )
+  
+    const rows = allRows.filter(row => !row.issues.invalidDocNumber)
+    const problemRows = allRows.filter(row => row.issues.invalidDocNumber)
+  
+  
+    /** @param {CombinedRoutedOrder[]} orderItems */
+    const toQBInvoice = (orderItems) => {
+      const orderHeader = orderItems[0]
+      const location = locations[orderHeader.locNick]
+      const zone = zones[location.zoneNick]
+  
+      const qbInvoiceHeader = toQBInvoiceHeader({ location, orderHeader })
+      const qbLineItems = orderItems
+        .filter(item => item.qty !== 0)
+        .sort(compareBy(item => products[item.prodNick].prodName))
+        .map((orderItem) => {
+          const product = products[orderItem.prodNick]
+          const override = overrides[`${orderItem.locNick}#${orderItem.prodNick}`]
+          const finalRate = orderItem.rate ?? override?.wholePrice ?? product.wholePrice
+          return { 
+            orderItem: { ...orderItem, rate: finalRate },
+            product,
+          }
+        })
+        .map(toQBInvoiceLineItem)
+  
+      const shouldChargeDelivery = 1
+        && orderHeader.route === 'deliv'
+        && orderItems.some(item => item.qty > (item.qtyShort ?? 0))
+      const delivFee = orderHeader.delivFee ?? zone.zoneFee
+      const qbDeliveryLineItem = shouldChargeDelivery
+        ? [toQBInvoiceDeliveryLineItem({
+            delivFee,
+            delivDate: orderHeader.delivDate
+          })]
+        : []
+  
+      return {
+        ...qbInvoiceHeader,
+        Line: qbLineItems.concat(qbDeliveryLineItem)
+      }
+    }
+  
+    const loadedMakeQbInvoice = (row) => {
+      const zoneFee = row.order[0].delivFee || zones[row.location.zoneNick].zoneFee
+      return makeQbInvoice(row.order, row.location, products, zoneFee)
+    }
+  
+    return { rows, problemRows, orphanedInvoices, toQBInvoice, loadedMakeQbInvoice }
+  
+  }, [LOC, ORD, INV, PRD, OVR, ZNE])
+
+
+  return { 
+    rows, 
+    problemRows, 
+    orphanedInvoices, 
+    toQBInvoice, 
+    loadedMakeQbInvoice 
+  }
+}

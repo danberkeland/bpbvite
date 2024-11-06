@@ -32,16 +32,18 @@ let CombinedRoutedOrder
 /**
  * @param {Object} input
  * @param {DateTime} input.delivDT 
- * @param {boolean} input.shouldFetch
- * @param {boolean} input.useHolding
- * @param {boolean} [input.showCustom=false] Option for including the special product "Custom Order"
- * @param {boolean} [input.showRetailBrn=false] Option for including the placeholder brownie
+ * @param {boolean} [input.shouldFetch=true]
+ * @param {boolean} [input.useRetail=true] Option to include Retail Orders
+ * @param {boolean} [input.useHolding=false] Option to include Holding Orders (e.g. for production calculations)
+ * @param {boolean} [input.showCustom=false] Option to include the special product "Custom Order"
+ * @param {boolean} [input.showRetailBrn=false] Option to include the placeholder brownie
  * @return {{ data: (undefined | CombinedRoutedOrder[]) }}
  */
 const useCombinedRoutedOrdersByDate = ({ 
   delivDT, 
   shouldFetch=true,
-  useHolding=false, 
+  useRetail=true,
+  useHolding=false,
   showCustom=false,
   showRetailBrn=false,
 }) => {
@@ -76,9 +78,10 @@ const useCombinedRoutedOrdersByDate = ({
     const locations = keyBy(LOC, L => L.locNick) // LOC.reduce(Data._keyBy(L => L.locNick), {})
     const products = keyBy(PRD, P => P.prodNick) // PRD.reduce(Data._keyBy(P => P.prodNick), {})
 
+    const _ORD = useRetail ? ORD : ORD.filter(ord => ord.isWhole === true)
     const _STD = useHolding ? STD : STD.filter(std => std.isStand === true)
     
-    const combinedRoutedOrders = combineOrders(ORD, _STD, [delivDate])
+    const combinedRoutedOrders = combineOrders(_ORD, _STD, [delivDate])
       .filter(order => 1 
         && (showCustom || !(order.prodNick === 'cust'))
         && (showRetailBrn || !(order.isWhole === false && order.locNick.includes('__') && order.prodNick === 'brn'))

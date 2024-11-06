@@ -54,13 +54,13 @@ const useLocations = ({ shouldFetch, projection }) =>
 
 /**
  * @param {Object} input
- * @param {string} input.locNick ID value for the desired location.
+ * @param {string|undefined} input.locNick ID value for the desired location.
  * @param {boolean} input.shouldFetch Fetches data only when true.
  * @returns {{ data:(DBLocation | undefined) }}
  */
 const useLocation = ({ locNick, shouldFetch }) => {
   const { data } = useSWR(
-    shouldFetch ? [getLocation, { locNick: locNick }] : null, 
+    (!!locNick && shouldFetch) ? [getLocation, { locNick: locNick }] : null, 
     gqlFetcher, 
     defaultSwrOptions
   )

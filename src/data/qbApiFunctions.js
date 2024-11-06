@@ -1,6 +1,6 @@
 import axios from "axios"
-import { API, graphqlOperation } from "aws-amplify"
-import { getInfoQBAuth } from "../graphql/queries"
+// import { API, graphqlOperation } from "aws-amplify"
+// import { getInfoQBAuth } from "../graphql/queries"
 
 const qbEndpoints = {
   getAccessToken: "https://28ue1wrzng.execute-api.us-east-2.amazonaws.com/done",
@@ -22,27 +22,25 @@ You will be directed to the login page now.`
 const getAccessToken = () => axios.get(qbEndpoints.getAccessToken)
   .then(response => {
     if (!response) throw new Error("QB Auth not valid")
+    // console.log("API GATEWAY RESPONSE:", response)
 
     const authUri = response?.data?.body?.authUri
-    if (!!authUri) {
+    if (!!authUri && response?.data?.statusCode === 301) {
+      console.warn("NEED LOGIN")
+      console.log(authUri)
       alert(alertMsg)
       window.location.href = authUri
     }
-    
-    console.log(response)
-    if (response?.data?.statusCode === 301) {
-      console.warn("NEED LOGIN")
-      console.log(authUri)
-    }
-  
-    return API.graphql(graphqlOperation(getInfoQBAuth, { id: "accessToken" }))
+
+    return response.data.body.accessToken
+    // return API.graphql(graphqlOperation(getInfoQBAuth, { id: "accessToken" }))
 
   })
-  .then(gqlResponse => gqlResponse.data.getInfoQBAuth.infoContent)
   .catch(err => {
     console.error(err)
     return undefined
   })
+  // .then(gqlResponse => gqlResponse.data.getInfoQBAuth.infoContent)
 
 /**
  * @param {Object} input
@@ -137,5 +135,71 @@ export const QB = {
     getPdf: getPdf,
     getPdfByDocNumber: getPdfByDocNumber,
     sendEmail: sendEmail,
+  }
+}
+
+//  v2
+// ****
+
+const getToken = () => axios
+  .post(qbEndpoints.qbGateway + "/token")
+  .then(r => r.data)
+
+const getPdf2 = Id => axios
+  .post(qbEndpoints.qbGateway + "/invoices/get-pdf", { Id })
+  .then(r => r.data)
+
+const queryByDocNumber = DocNumber => axios
+  .post(qbEndpoints.qbGateway + "/invoices/query/by-doc-number", { DocNumber })
+  .then(r => r.data)
+
+
+/** 
+ * Lambda returns data in a lightly compressed format, suitable for "flat" objects. 
+ * 
+ * Instead of an array of objects, e.g. [{ k1: a1, k2: a2 }, { k1: b1, k2: b2 }, ...]
+ * 
+ * we return [[k1, k2], [a1, a2], [b1, b2], ...], where object keys are defined in the first array,
+ * and values for each item are placed at the corresponding index in the following arrays. For long
+ * lists with verbose keys, this saves many redundant bytes of text.
+ * 
+*/
+const queryByTxnDate = TxnDate => axios
+  .post(qbEndpoints.qbGateway + "/invoices/query/by-date", { TxnDate })
+  .then(resp => {
+    const [keys, ...items] = resp.data
+    return items.length
+      ? items.map(item => Object.assign({}, ...keys.map((_, idx) => ({ [keys[idx]]: item[idx] }))))
+      : []
+  })
+
+const createInvoice2 = Invoice => {
+  if (Invoice.Id || Invoice.SyncToken) {
+    throw new Error("Invoice should not include Id or SyncToken")
+  }
+  return axios.post(qbEndpoints.qbGateway + "/invoices/create", { Invoice })
+}
+
+const updateInvoice2 = Invoice => {
+  if (!Invoice.Id || !Invoice.SyncToken) {
+    throw new Error("Expected Id and SyncToken")
+  }
+  return axios.post(qbEndpoints.qbGateway + "/invoices/create", { Invoice })
+}
+
+const deleteInvoice2 = ({ Id, SyncToken }) => axios
+  .post(qbEndpoints.qbGateway + "/invoices/delete", { Id, SyncToken })
+
+export const QB2 = {
+  getToken,
+  invoice: {
+    query: {
+      byDocNumber: queryByDocNumber,
+      byTxnDate: queryByTxnDate,
+    },
+    getPdf: getPdf2,
+    create: createInvoice2,
+    update: updateInvoice2,
+    delete: deleteInvoice2,
   }
 }

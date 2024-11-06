@@ -7,6 +7,10 @@ import { downloadPDF } from "../../../utils/pdf/downloadPDF"
 const hasTimeout = (response) => 
   !!response?.data?.errorMessage?.includes?.("Task timed out")
 
+async function sleep(millis) {
+  return new Promise(resolve => setTimeout(resolve, millis));
+}
+
 /**
  * Configurable wrapper for submit functions. This retry pattern is specific
  * to the QB serverless functions mediated by API Gateway. We detect timeouts
@@ -370,7 +374,9 @@ export const batchSubmitQbInvoices = async ({
   })
 
 
-  const createResults = createLocNicks.map(locNick => {
+  const createResults = createLocNicks.map((locNick, idx) => {
+    sleep(idx * 400)
+
     const invoice = convertOrderToInvoice({ 
       cartOrder:billingDataByLocNick[locNick] 
     })

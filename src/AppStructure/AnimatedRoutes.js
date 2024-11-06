@@ -49,6 +49,7 @@ import LocationsNew from "../Pages/Locations/NewPage/Locations";
 import { default as BillingV1 } from "../Pages/Billing/Billing";
 import BillingV2                from "../Pages/Billing/v2/Billing";
 import PageInvoicing            from "../Pages/Billing/PageInvoicing";
+import PageInvoicing2           from "../Pages/Billing/PageInvoicing2";
 
 import EODCounts from "../Pages/EODCounts/EODCounts";
 import { default as CustProds } from "../Pages/Settings/custProds/custProds";
@@ -265,7 +266,9 @@ function AnimatedRoutes({ user, signOut }) {
           <Route path="/Products/v2" element={<Products />} />
           <Route path="/Products/v1" element={<ProductsV1 />} />
 
-          <Route path="/Billing"    element={<PageInvoicing />} />
+          <Route path="/Billing" element={<PageInvoicing2 />} />
+          <Route path="/Billing/v4" element={<PageInvoicing2 />} />
+          <Route path="/Billing/v3" element={<PageInvoicing />} />
           <Route path="/Billing/v2" element={<BillingV2 />} />
           <Route path="/Billing/v1" element={<BillingV1 />} />
           <Route path="/qbAuthCallback" element={<PageQbAuthCallback />} />

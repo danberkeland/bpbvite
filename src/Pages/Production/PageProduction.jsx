@@ -5,6 +5,7 @@ import { Sandbox } from "./TestPages/_Sandbox";
 import { BriocheCalc } from "./TestPages/BriocheCalc";
 import { OrderReview } from "./TestPages/OrderReview";
 import { HoldingOrders } from "./TestPages/HoldingOrders";
+import { ApiTest } from "./TestPages/ApiTest";
 
 const bpbnPages = [
   {name: "Sandbox", component: <Sandbox />},
@@ -12,6 +13,7 @@ const bpbnPages = [
   {name: "Brioche Calculator", component: <BriocheCalc />},
   {name: "Holding Orders", component: <HoldingOrders />},
   {name: "Order Review", component: <OrderReview />},
+  {name: "API Test", component: <ApiTest />},
 ]
 
 const Production = () => {

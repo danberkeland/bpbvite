@@ -551,7 +551,7 @@ const PageInvoicing = () => {
 
   return(
     <div style={{ padding: "2rem", margin: "auto"}}>
-      <p>Using newest version <a href="/Billing/v1">Go to legacy version</a></p>
+      <p>Using v3. <a href="/Billing">Go to latest version</a></p>
       <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", paddingInline: "1rem", background: isToday ? todayColor : notTodayColor, borderRadius: "3px", marginBottom: "3px"}}>
         <div>
           <h1 style={{color: "var(--bpb-text-color)", display: "inline-block", marginBlock: ".5rem"}}>Invoicing {reportDT.toFormat('MM/dd/yyyy')}</h1>

@@ -1,9 +1,10 @@
-import { useListData } from "../_listData";
-/**@typedef {import('../types.d.js').DBZone[]} DBZone */
+import { ListDataCache, useListData } from "../_listData";
+import { DBZone } from "../types.d.js";
 
 /**
  * @param {Object} input
  * @param {boolean} input.shouldFetch 
+ * @returns {ListDataCache<DBZone>}
  */
 const useZones = ({ shouldFetch }) => {
   const { data, ...otherCacheItems } =  
