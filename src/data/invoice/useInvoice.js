@@ -18,8 +18,8 @@ export const useInvoiceSummaryByDate = ({ TxnDate, shouldFetch=true }) => {
     { ...defaultSwrOptions, shouldRetryOnError: true }
   )
 
-  const mergeResponseData = resp => {
-    console.log("response:", resp)
+  const castToQueryItem = resp => {
+    // console.log("response:", resp)
     const { 
       Id, 
       DocNumber, 
@@ -29,7 +29,7 @@ export const useInvoiceSummaryByDate = ({ TxnDate, shouldFetch=true }) => {
       MetaData 
     } = resp.data.Invoice
 
-    const newItem = { 
+    return { 
       Id, 
       DocNumber, 
       SyncToken, 
@@ -38,49 +38,75 @@ export const useInvoiceSummaryByDate = ({ TxnDate, shouldFetch=true }) => {
       "MetaData.LastUpdatedTime": MetaData.LastUpdatedTime 
     }
 
-    let newData = [...cache.data]
-    const prevItemIdx = cache?.data?.findIndex(item => item.DocNumber === newItem.DocNumber)
-    if (prevItemIdx >= 0) {
-      console.log("match found at idx " + prevItemIdx)
-      newData[prevItemIdx] = newItem
-    } else {
-      console.log("appending new data")
-      newData = newData.concat([newItem])
+  }
+
+  /**
+   * @param {Object} args
+   * @param {any | any[]} [args.created] 
+   * @param {any | any[]} [args.updated] 
+   * @param {any | any[]} [args.deleted]
+   * @param {any | any[] | null} [args.errors] 
+   * @param {any[] | undefined} [args.currentData] 
+   */
+  const updateLocalData = ({ created=[], updated=[], deleted=[], errors=null }) => {
+    if (!!errors) {
+      console.log("response had errors; aborting", errors)
     }
 
-    cache.mutate(newData, { revalidate: false })
-    return {
-      data: newItem,
-      errors: null,
+    const newData = { 
+      C: [created].flat(), 
+      U: [updated].flat(), 
+      D: [deleted].flat()
     }
+
+    cache.mutate(
+      newData, 
+      {
+        revalidate: false,
+        populateCache: (newData, currentData) => structuredClone(currentData)
+          .filter(item => (newData.D.find(d => d.Id === item.Id) === undefined))
+          .map(item => (newData.U.find(u => u.Id === item.Id) ?? item))
+          .concat(newData.C)
+      }
+    )
+
   }
 
   const updateItem = Invoice => QB2.invoice
     .update(Invoice)
-    .then(mergeResponseData)
-    .catch(e => ({ data: null, errors: e }))
+    .then(response => {
+      return { updated: castToQueryItem(response), errors: null }
+    })
+    .catch(e => ({ errors: e }))
 
   const createItem = Invoice => QB2.invoice
     .create(Invoice)
-    .then(mergeResponseData)
-    .catch(e => ({ data: null, errors: e }))
+    .then(response => {
+      return { created: castToQueryItem(response), errors: null }
+    })
+    .catch(e => ({ errors: e }))
     
   const deleteItem = ({ Id, SyncToken }) => QB2.invoice
     .delete({ Id, SyncToken })
-    .then(resp => {
-      console.log("response:", resp)
-     
-      cache.mutate(
-        cache.data.filter(item => item.Id != resp.data.Invoice.Id), 
-        { revalidate: false }
-      )
-      return {
-        data: { Id },
-        errors: null
-      }
+    .then(response => {
+      return { deleted: { Id: response.data.Invoice.Id }, errors: null }
     })
-    .catch(e => ({ data: null, errors: e }))
+    .catch(e => ({ errors: e }))
 
-  return { ...cache, createItem, updateItem, deleteItem }
+  const sendEmail = ({ Id }) => QB2.invoice
+    .sendEmail({ Id })
+    .then(response => {
+      return { updated: castToQueryItem(response), errors: null }
+    })
+    .catch(e => ({ errors: e }))
+
+  return { 
+    ...cache, 
+    createItem, 
+    updateItem, 
+    deleteItem,
+    sendEmail,
+    updateLocalData,
+  }
 
 }

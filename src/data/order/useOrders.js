@@ -3,8 +3,11 @@ import { ListDataCache, useListData } from "../_listData.js"
 
 import { compareBy, groupByArray } from "../../utils/collectionFns.js"
 import { DBOrder } from "../types.d.js"
+import { objPickByEntries } from "../../utils/objectFns.js"
+import { orderValidation } from "./changesets.js"
+import { CreateOrderInput, UpdateOrderInput, DeleteOrderInput } from "./changesets.js"
 
-
+const stripUndefinedFields = (object) => objPickByEntries(object, (k,v) => v !== undefined)
 
 /**
  * Cleans incoming data by separating out any "duplicate" records. Strategy to
@@ -13,9 +16,10 @@ import { DBOrder } from "../types.d.js"
  * @param {boolean} input.shouldFetch
  * @param {'orderByDelivDate'|'orderByLocByDelivDate'} [input.customQuery]
  * @param {Object} [input.variables]
+ * @param {boolean} [input.useValidations]
  * @returns {ListDataCache<DBOrder> & { dupes: DBOrder[] | undefined }}
  */
-const useOrdersGeneric = ({ shouldFetch, customQuery, variables }) => {
+const useOrdersGeneric = ({ shouldFetch, customQuery, variables, useValidations=false }) => {
 
   const { 
     data:cacheData, 
@@ -35,7 +39,9 @@ const useOrdersGeneric = ({ shouldFetch, customQuery, variables }) => {
   //console.log("CACHE DATA", cacheData)
 
   const calculateValue = () => {
-    if (!cacheData) return { data: undefined, dupes: undefined }
+    if (!cacheData || !submitMutations) {
+      return { data: undefined, dupes: undefined, submitMutations: undefined }
+    }
 
     /** @type {import('../types.d.js').DBOrder[]} */ 
     const orders = cacheData
@@ -52,8 +58,37 @@ const useOrdersGeneric = ({ shouldFetch, customQuery, variables }) => {
     if (dupes.length) {
       console.warn("warning: duplicate orders found", dupes)
     }
-    return { data: returnData, dupes }
 
+    
+    
+    /**
+     * Uses yup validations
+     * strips fields with undefined values before submitting
+     * @param {Object} args
+     * @property {CreateOrderInput[]} args.createInputs 
+     * @property {UpdateOrderInput[]} args.updateInputs 
+     * @property {DeleteOrderInput[]} args.deleteInputs 
+     */
+    const _submitMutations = ({ createInputs, updateInputs, deleteInputs }) => {
+
+      const errors = orderValidation.validateOrderInputs({ createInputs, updateInputs, deleteInputs })
+      if (errors !== null) { 
+        console.warn("validation failed:", errors)
+        return
+      }
+
+      return submitMutations({
+        createInputs: createInputs.map(stripUndefinedFields),
+        updateInputs: updateInputs.map(stripUndefinedFields),
+        deleteInputs: deleteInputs.map(stripUndefinedFields),
+      })
+    }
+
+    return { 
+      data: returnData, 
+      dupes, 
+      submitMutations: useValidations ? _submitMutations : submitMutations 
+    }
   }
 
   return { 
@@ -62,8 +97,8 @@ const useOrdersGeneric = ({ shouldFetch, customQuery, variables }) => {
     isLoading,
     isValidating,
     mutate,
-    submitMutations,
-    updateLocalData 
+    // submitMutations,
+    updateLocalData,
   }
 
 }

@@ -1,7 +1,8 @@
 import { groupByObject, uniqByRdc } from "../../utils/collectionFns"
 
-import { QB } from "../../data/qbApiFunctions"
+import { QB, QB2 } from "../../data/qbApiFunctions"
 import { downloadPDF } from "../../utils/pdf/downloadPDF"
+import { zip } from "lodash";
 
 async function sleep(millis) {
   return new Promise(resolve => setTimeout(resolve, millis));
@@ -66,7 +67,7 @@ export const exportInvoices = async (
   ))
 
   for (let i = 1; i <= 5; i++) {
-    console.log("responses:", pdfResponses)
+    console.log("responses:", zip(invoiceRows, pdfResponses))
     const timeouts = pdfResponses.filter(response => hasTimeout(response) || hasThrottleError(response))
     if (timeouts.length === 0) {
       console.log("No timeouts encountered.")
@@ -128,6 +129,115 @@ export const exportInvoices = async (
   const pdfs = successes.flatMap(rwl => 
     rwl.printDuplicate ? [rwl, rwl] : rwl
   ).map(rwl => rwl.pdfResponse.data)
+
+  downloadPDF(pdfs, `${fileIdString}_Invoices_${reportDT.toFormat('yyyy-MM-dd')}`)
+  setIsLoading(false)
+  
+}
+
+
+
+
+export const exportInvoices2 = async (
+  pivotTables,
+  reportDT,
+  fileIdString,
+  setIsLoading,
+) => {
+  if (!pivotTables) return
+  setIsLoading(true)
+
+  // invoice list should be sorted by route.printOrder > location.delivOrder.
+  // pivot tables already accomplish this.
+  const maybeInvoiceRows = pivotTables
+    .flat()
+    .filter(row => row.rowProps.toBePrinted)
+    .reduce(uniqByRdc(row => row.rowProps.locNick), []) // a location may show up on 2 routes (e.g. lincoln)
+  
+  // proper qbID's are positive integer strings
+  const badIdRows = maybeInvoiceRows.filter(row => /^\d+$/.test(row.rowProps.qbID) === false)
+  if (badIdRows.length) console.warn(
+    "Bad IDs encountered:", 
+    badIdRows.map(L => ({ locNick: L.locNick, qbID: L.qbID }))
+  )
+  
+  const delivDate = reportDT.toFormat('yyyy-MM-dd')
+  const [yyyy, mm, dd] = delivDate.split("-")
+    
+  const invoices = await QB2.invoice.query.byTxnDate(delivDate)
+  console.log("got invoices:", invoices)
+  const invoiceRows = maybeInvoiceRows
+    .filter(row => /^\d+$/.test(row.rowProps.qbID) === true)
+    .map(row => {
+      const DocNumber = mm + dd + yyyy + row.rowProps.locNick
+      const matchInvoice = invoices.find(i => 1 
+        && i["CustomerRef.value"] === row.rowProps.qbID 
+        && i.DocNumber === DocNumber
+      )
+      return { 
+        ...row, 
+        matchInvoice,
+        result: { data: null, error: null }
+      }
+    })
+
+  const missingInvoiceItems = invoiceRows.filter(row => !row.matchInvoice)
+  const requestItems = invoiceRows.filter(row => !!row.matchInvoice)
+
+  let pdfResponses = [...requestItems]
+  let errorResponses = []
+  for (let i = 1; i <= 3; i++) {
+    console.log(`Attempt ${i} of 3...`)
+
+    for (let j = 0; j < pdfResponses.length; j++) {
+      if (pdfResponses[j].result.data === null) {
+        const newResult = await QB2.invoice
+          .getPdf({ Id: pdfResponses[j].matchInvoice.Id })
+          .then(data => ({ data, error: null }))
+          .catch(error => ({ data: null, error }))
+
+        pdfResponses[j].result = newResult
+      }
+    }
+
+    errorResponses = pdfResponses
+      .filter(r => r.result.error !== null)
+      .map(r => ({ locNick: r.rowProps.locNick, error: r.result.error }))
+
+    console.log("results", pdfResponses.map(r => r.result))
+
+    if (errorResponses.length) {
+      console.warn("errors encountered:", errorResponses)
+    } else {
+      console.log("Got all items")
+      break
+    }
+    await sleep(1000)
+
+  }
+
+  console.log(`Fetch success count: ${requestItems.length - errorResponses.length}/${requestItems.length}`)
+  
+  const pdfs = pdfResponses
+    .filter(r => !!r.result.data)
+    .flatMap(r => r.rowProps.printDuplicate 
+      ? [r.result.data, r.result.data] 
+      : r.result.data
+    )
+
+  // Report Errors
+  let missingMsg
+  if (missingInvoiceItems.length) {
+    missingMsg = `Invoice data not found for:`
+    console.warn(missingMsg)
+    console.log(missingInvoiceItems)
+  }
+  let fetchFailMsg
+  if (errorResponses.length) {
+    fetchFailMsg = `Fetch Failed for:`
+    console.warn(fetchFailMsg)
+    console.log(errorResponses)
+  }
 
   downloadPDF(pdfs, `${fileIdString}_Invoices_${reportDT.toFormat('yyyy-MM-dd')}`)
   setIsLoading(false)

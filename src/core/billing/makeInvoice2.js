@@ -172,7 +172,15 @@ const toQBInvoiceHeader = ({
  */
 
 /**
- * Remember to use the unit price as derived from the order,
+ * @typedef {Object} ToQBInvoiceLineItemCorrectionOrderProps
+ * @property {number} qty
+ * @property {number|null} qtyShort
+ * @property {number} rate
+ * @property {string} delivDate
+ */
+
+/**
+ * Remember to use the rate as derived/calculated for the order,
  * Which could be the product's default price, or a customer-specific
  * default (specified in LocationProductOverrides), or a custom price
  * set on a per-order basis.
@@ -190,6 +198,29 @@ const toQBInvoiceLineItem = ({
   Description: description ?? prodName,
   UnitPrice: rate, 
   Qty: qty, 
+  ItemRef_name: prodName,
+  ItemRef_value: qbID, 
+  ServiceDate: delivDate
+})
+
+/**
+ * Remember to use the rate as derived/calculated for the order,
+ * Which could be the product's default price, or a customer-specific
+ * default (specified in LocationProductOverrides), or a custom price
+ * set on a per-order basis.
+ * @param {Object} input
+ * @param {ToQBInvoiceLineItemProductProps} input.product
+ * @param {ToQBInvoiceLineItemCorrectionOrderProps} input.orderItem
+ * @param {string} [input.description] The line item description defaults to the product's prodName if not specified.
+ */
+export const toQBInvoiceLineItemCorrection = ({ 
+  product: { prodName, qbID },
+  orderItem: { rate, qty, qtyShort, delivDate },
+  description,
+}) => makeLineItem({
+  Description: description ?? (`${prodName} - not delivered`),
+  UnitPrice: rate, 
+  Qty: Math.min(qtyShort ?? 0, qty) * -1, 
   ItemRef_name: prodName,
   ItemRef_value: qbID, 
   ServiceDate: delivDate

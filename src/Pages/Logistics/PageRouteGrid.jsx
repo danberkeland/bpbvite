@@ -8,7 +8,10 @@ import { InputTextarea } from "primereact/inputtextarea"
 import { useSettingsStore } from "../../Contexts/SettingsZustand"
 import { useRouteGridData } from "./useRouteGridData"
 import { exportRouteGrids } from "./exportRouteGrids"
-import { exportInvoices } from "./exportInvoices"
+import { 
+  // exportInvoices, 
+  exportInvoices2 
+} from "./exportInvoices"
 
 import { useEffect, useRef, useState } from "react"
 import { compareBy } from "../../utils/collectionFns"
@@ -56,7 +59,7 @@ const PageRouteGrid = () => {
 
   const handleExport = (data, fileIdString) => {
     exportRouteGrids(data, NTE, reportDT, products, fileIdString)
-    exportInvoices(data, reportDT, fileIdString, setIsLoading)
+    exportInvoices2(data, reportDT, fileIdString, setIsLoading)
   }
   const exportAll     = () => handleExport(pivotDataByRouteNick, "All_Routes")
   const exportCurrent = () => handleExport(pivotDataByRouteNick?.filter(grid => grid[0].rowProps.routeNick === routeNick), routeNick.replace(/ /g, '_'))

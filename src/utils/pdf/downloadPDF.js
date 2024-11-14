@@ -1,5 +1,9 @@
 import { PDFDocument } from "pdf-lib";
 
+/**
+ * @param {any[]} pdfs 
+ * @param {string} name 
+ */
 export const downloadPDF = async (pdfs, name) => {
     
   const mergedPdf = await PDFDocument.create();

@@ -553,3 +553,20 @@ div .photoBox {
   margin: 50px 20px;
   
 }
+
+
+/* Utility Classes */
+
+@media only screen and (max-width: 399px)  { .show-min-xs  { display: none; } }
+@media only screen and (max-width: 639px)  { .show-min-sm  { display: none; } }
+@media only screen and (max-width: 767px)  { .show-min-md  { display: none; } }
+@media only screen and (max-width: 1023px) { .show-min-lg  { display: none; } }
+/* @media only screen and (max-width: 1279px) { .show-min-xl  { display: none; } } */
+/* @media only screen and (max-width: 1535px) { .show-min-2xl { display: none; } } */
+
+@media only screen and (min-width: 400px)  { .show-max-xs  { display: none; } }
+@media only screen and (min-width: 640px)  { .show-max-sm  { display: none; } }
+@media only screen and (min-width: 768px)  { .show-max-md  { display: none; } }
+@media only screen and (min-width: 1024px) { .show-max-lg  { display: none; } }
+/* @media only screen and (min-width: 1280px) { .show-max-xl  { display: none; } } */
+/* @media only screen and (min-width: 1536px) { .show-max-2xl { display: none; } } */

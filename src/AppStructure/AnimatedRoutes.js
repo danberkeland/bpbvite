@@ -46,8 +46,8 @@ import Products   from "../Pages/Products/NewPage/Products";
 import Locations    from "../Pages/Locations/Locations";
 import LocationsNew from "../Pages/Locations/NewPage/Locations";
 
-import { default as BillingV1 } from "../Pages/Billing/Billing";
-import BillingV2                from "../Pages/Billing/v2/Billing";
+// import { default as BillingV1 } from "../Pages/Billing/Billing";
+// import BillingV2                from "../Pages/Billing/v2/Billing";
 import PageInvoicing            from "../Pages/Billing/PageInvoicing";
 import PageInvoicing2           from "../Pages/Billing/PageInvoicing2";
 
@@ -269,8 +269,8 @@ function AnimatedRoutes({ user, signOut }) {
           <Route path="/Billing" element={<PageInvoicing2 />} />
           <Route path="/Billing/v4" element={<PageInvoicing2 />} />
           <Route path="/Billing/v3" element={<PageInvoicing />} />
-          <Route path="/Billing/v2" element={<BillingV2 />} />
-          <Route path="/Billing/v1" element={<BillingV1 />} />
+          {/* <Route path="/Billing/v2" element={<BillingV2 />} /> */}
+          {/* <Route path="/Billing/v1" element={<BillingV1 />} /> */}
           <Route path="/qbAuthCallback" element={<PageQbAuthCallback />} />
 
           {/* Settings */}

@@ -145,7 +145,7 @@ const getToken = () => axios
   .post(qbEndpoints.qbGateway + "/token")
   .then(r => r.data)
 
-const getPdf2 = Id => axios
+const getPdf2 = ({ Id }) => axios
   .post(qbEndpoints.qbGateway + "/invoices/get-pdf", { Id })
   .then(r => r.data)
 
@@ -153,6 +153,28 @@ const queryByDocNumber = DocNumber => axios
   .post(qbEndpoints.qbGateway + "/invoices/query/by-doc-number", { DocNumber })
   .then(r => r.data)
 
+
+// /**
+//  * @typedef {Object} InvoiceQueryItem
+//  * @property {string} [Id]
+//  * @property {string} [DocNumber]
+//  * @property {string} [SyncToken]
+//  * @property {string} [EmailStatus]
+//  * @property {string} [CustomerRef.value]
+//  * @property {string} [Metadata.LastUpdatedTime]
+//  * 
+//  */
+
+/**
+ * @typedef {{
+ *  ['Id']:string, 
+ *  ['DocNumber']:string,
+ *  ['SyncToken']:string,
+ *  ['EmailStatus']:string,
+ *  ['CustomerRef.value']:string,
+ *  ['Metadata.LastUpdatedTime']:string,
+ * }} InvoiceQueryItem
+ */
 
 /** 
  * Lambda returns data in a lightly compressed format, suitable for "flat" objects. 
@@ -163,14 +185,19 @@ const queryByDocNumber = DocNumber => axios
  * and values for each item are placed at the corresponding index in the following arrays. For long
  * lists with verbose keys, this saves many redundant bytes of text.
  * 
+ * @param {string} TxnDate
 */
 const queryByTxnDate = TxnDate => axios
   .post(qbEndpoints.qbGateway + "/invoices/query/by-date", { TxnDate })
   .then(resp => {
     const [keys, ...items] = resp.data
-    return items.length
-      ? items.map(item => Object.assign({}, ...keys.map((_, idx) => ({ [keys[idx]]: item[idx] }))))
-      : []
+
+    /** @type {InvoiceQueryItem[]} */
+    const data = items.map(item => Object.assign({}, ...keys.map((_, idx) => ({ [keys[idx]]: item[idx] }))))
+    return data
+    // return items.length
+    //   ? items.map(item => Object.assign({}, ...keys.map((_, idx) => ({ [keys[idx]]: item[idx] }))))
+    //   : []
   })
 
 const createInvoice2 = Invoice => {
@@ -190,6 +217,9 @@ const updateInvoice2 = Invoice => {
 const deleteInvoice2 = ({ Id, SyncToken }) => axios
   .post(qbEndpoints.qbGateway + "/invoices/delete", { Id, SyncToken })
 
+const sendEmail2 = ({ Id }) => axios
+  .post(qbEndpoints.qbGateway + "/invoices/send-email", { Id })
+
 export const QB2 = {
   getToken,
   invoice: {
@@ -201,5 +231,6 @@ export const QB2 = {
     create: createInvoice2,
     update: updateInvoice2,
     delete: deleteInvoice2,
+    sendEmail: sendEmail2,
   }
 }
