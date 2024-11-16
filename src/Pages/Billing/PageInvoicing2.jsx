@@ -81,6 +81,7 @@ function InvoiceTable({ reportDT, todayDT }) {
     toQBInvoice, 
     loadedMakeQbInvoice,
     batchGetPdfs,
+    batchPrintPdfGrids,
   } = useInvoicing2Data({ reportDT, isToday, isTomorrow, shouldFetch: true })
 
   const syncData = async (row) => {
@@ -133,7 +134,8 @@ function InvoiceTable({ reportDT, todayDT }) {
 
   const [pdfFetchCount, setPdfFetchCount] = useState(null)
   const confirmBatchGetPdf = () => {
-    if (!batchGetPdfs) return
+    if (!batchGetPdfs || !batchPrintPdfGrids) return
+    resetLocationQuery()
     confirmDialog({
       message: 'Download PDF invoices?',
       header: 'Confirm',
@@ -141,6 +143,7 @@ function InvoiceTable({ reportDT, todayDT }) {
       accept: async () => {
         setIsLoading(true)
         await batchGetPdfs(setPdfFetchCount)
+        batchPrintPdfGrids()
         setIsLoading(false)
         setPdfFetchCount(null)
       },
@@ -269,13 +272,20 @@ function InvoiceTable({ reportDT, todayDT }) {
             </Button>
           }
           {(isTomorrow) &&
-            <Button onClick={confirmBatchGetPdf} disabled={!allItemsSynced || isLoading}>
+            <Button onClick={confirmBatchGetPdf} disabled={!allItemsSynced || isLoading || !batchGetPdfs || !batchPrintPdfGrids}>
               <span>
                 Get PDFs<br/>
                 ({ pdfFetchCount !== null ? pdfFetchCount : (allItemsSynced ? "Ready" : `sync all first`) })
               </span>
             </Button>
           }
+          {/* {(isTomorrow) &&
+            <Button onClick={batchPrintPdfGrids} disabled={!rows || isLoading}>
+              <span>
+                Print Grids
+              </span>
+            </Button>
+          } */}
         </div>
         <Button label="Help" onClick={() => { setShowHelp(true) }} />
       </div>

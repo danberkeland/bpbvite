@@ -4,8 +4,8 @@ import { CombinedRoutedOrder, useCombinedRoutedOrdersByDate } from "../../data/p
 import { DateTime } from "luxon"
 import { useInvoiceSummaryByDate } from "../../data/invoice/useInvoice"
 import { useLocations } from "../../data/location/useLocations"
-import { compareBy, countBy, groupByArray, groupByArrayRdc, groupByObject, keyBy, uniqByRdc } from "../../utils/collectionFns"
-import { maxBy } from "lodash"
+import { compareBy, countBy, groupByArray, groupByArrayN, groupByArrayRdc, groupByObject, keyBy, uniqByRdc } from "../../utils/collectionFns"
+import { maxBy, truncate } from "lodash"
 import { useProducts } from "../../data/product/useProducts"
 import { useLocationProductOverrides } from "../../data/locationProductOverride/useLocationProductOverrides"
 import { useZones } from "../../data/zone/useZones"
@@ -13,6 +13,9 @@ import { toQBInvoiceDeliveryLineItem, toQBInvoiceHeader, toQBInvoiceLineItem } f
 import { makeQbInvoice } from "../../core/billing/makeInvoice"
 import { QB2 } from "../../data/qbApiFunctions"
 import { downloadPDF } from "../../utils/pdf/downloadPDF"
+import { useNotesByType } from "../../data/note/useNotes"
+import { mapValues } from "../../utils/objectFns"
+import { printGridPages } from "../../core/printing/routeGridPdfs"
 
 export const useInvoicing2Data = ({ reportDT, isToday, isTomorrow, shouldFetch }) => {
 
@@ -28,6 +31,7 @@ export const useInvoicing2Data = ({ reportDT, isToday, isTomorrow, shouldFetch }
   const { data: PRD } = useProducts({ shouldFetch })
   const { data: OVR } = useLocationProductOverrides({ shouldFetch })
   const { data: ZNE } = useZones({ shouldFetch })
+  const { data:NTE } = useNotesByType({ shouldFetch: isTomorrow, Type: 'packList' })
 
   const { 
     rows, 
@@ -36,8 +40,9 @@ export const useInvoicing2Data = ({ reportDT, isToday, isTomorrow, shouldFetch }
     loadedMakeQbInvoice,
     getPdfRequestItems,
     batchGetPdfs,
+    batchPrintPdfGrids,
   } = useMemo(() => {
-    if (!LOC || !ORD || !INV || !PRD || !OVR || !ZNE) {
+    if (!LOC || !ORD || !INV || !PRD || !OVR || !ZNE || (isTomorrow && !NTE)) {
       return { 
         rows: [], 
         orphanedInvoices: [], 
@@ -45,6 +50,7 @@ export const useInvoicing2Data = ({ reportDT, isToday, isTomorrow, shouldFetch }
         loadedMakeQbInvoice: undefined,
         getPdfRequestItems: undefined,
         batchGetPdfs: undefined,
+        batchPrintPdfGrids: undefined,
       }
     }
   
@@ -245,7 +251,7 @@ export const useInvoicing2Data = ({ reportDT, isToday, isTomorrow, shouldFetch }
     const getPdfRequestItems = () => ORD
       .filter(ord => locations[ord.locNick].toBePrinted)
       .sort(compareBy(ord => locations[ord.locNick].locName))
-      .sort(compareBy(ord => locations[ord.locNick].delivOrder))
+      .sort(compareBy(ord => locations[ord.locNick]?.delivOrder ?? 999))
       .sort(compareBy(ord => ord.meta.route?.printOrder ?? 0))
       .reduce(uniqByRdc(ord => ord.locNick), []) // a location may show up on 2 routes (e.g. lincoln)
       .map(ord => {
@@ -261,7 +267,7 @@ export const useInvoicing2Data = ({ reportDT, isToday, isTomorrow, shouldFetch }
     const batchGetPdfs = async (setPdfFetchCount) => {
       let requestItems = ORD_wholesale
         .filter(ord => locations[ord.locNick].toBePrinted)
-        .sort(compareBy(ord => locations[ord.locNick].delivOrder))
+        .sort(compareBy(ord => locations[ord.locNick]?.delivOrder ?? 999))
         .sort(compareBy(ord => ord.meta.route?.printOrder ?? 0))
         .reduce(uniqByRdc(ord => ord.locNick), []) // a location may show up on 2 routes (e.g. lincoln)
         .map(ord => {
@@ -311,10 +317,100 @@ export const useInvoicing2Data = ({ reportDT, isToday, isTomorrow, shouldFetch }
         )
       }
     }
+
+    const isBpbLocation = (item) => ['backporch', 'bpbkit', 'bpbextras'].includes(item.locNick)
+
+    /** @param {CombinedRoutedOrder[]} tableItems */
+    const toGridTable = (tableItems) => {
+      const pivotKeys = tableItems
+        .reduce(uniqByRdc(i => i.prodNick), [])
+        .map(i => i.prodNick)
+        .sort(compareBy(pn => pn))
+        .sort(compareBy(pn => products[pn]?.doughNick))
+        .sort(compareBy(pn => products[pn]?.packGroup))
+
+      const columns = [{ header: "Location", dataKey: "displayName" }]
+        .concat(pivotKeys.map(prodNick => ({ header: prodNick, dataKey: prodNick })))
+
+      const body = tableItems
+        .reduce(groupByArrayRdc(item => item.locNick), [])
+        .map(row => {
+          const locName = row[0].meta.location.locName
+          const displayName = truncate(locName, { length: 16 })
+            
+          return Object.assign(
+            { displayName }, 
+            ...pivotKeys.map(prodNick =>
+              ({ [prodNick]: row.find(item => item.prodNick === prodNick)?.qty ?? ""})
+            )
+          )
+        })
+
+      return { body, columns }
+      
+    }
+
+    const batchPrintPdfGrids = !NTE ? undefined : () => {
+
+      const notesDataByRouteNick = mapValues(
+        groupByObject(
+          NTE.filter(N => 1
+            && !!N.note 
+            && N.Type === 'packList' 
+            && N.when === reportDT.toFormat('yyyy-MM-dd')
+          ), 
+          N => N.ref
+        ),
+        groupArray => groupArray[0]
+      )
+
+      const preppedItems = ORD_wholesale
+        .filter(ord => ord.qty !==0)
+        .sort(compareBy(orderItem => locations[orderItem.locNick]?.delivOrder ?? 999))
+        .sort(compareBy(orderItem => orderItem.meta.route?.printOrder ?? 0))
+
+      const pages = preppedItems
+        .reduce(groupByArrayRdc(item => item.meta.routeNick), [])
+        .map(routeGroupItems => {
+          const routeNick = routeGroupItems[0].meta.routeNick
+          const bpbItems = routeGroupItems.filter(item => isBpbLocation(item))
+          const regItems = routeGroupItems.filter(item => !isBpbLocation(item))
+          const tables = [bpbItems, regItems]
+            .filter(t => t.length > 0)
+            .map(tableItems => toGridTable(tableItems))
+
+          const header = `${routeNick} ${reportDT.toFormat('MM/dd/yyyy')}`
+
+          const notes = notesDataByRouteNick[routeNick]?.note
+
+          const noteLines = !!notes 
+            ? ["Notes:", ""].concat(notes.split('\n'))
+            : null
+
+          return {
+            header,
+            tables,
+            noteLines,
+          }
+        })
+
+      const fileName = `All_Routes_Grids_${reportDT.toFormat('yyyy-MM-dd')}`
+
+      printGridPages(pages, fileName)
+
+    }
   
-    return { rows, invoicesForReview, toQBInvoice, loadedMakeQbInvoice, getPdfRequestItems, batchGetPdfs }
+    return { 
+      rows, 
+      invoicesForReview, 
+      toQBInvoice, 
+      loadedMakeQbInvoice, 
+      getPdfRequestItems, 
+      batchGetPdfs ,
+      batchPrintPdfGrids,
+    }
   
-  }, [LOC, ORD, INV, PRD, OVR, ZNE])
+  }, [LOC, ORD, INV, PRD, OVR, ZNE, NTE, isToday, isTomorrow])
 
 
   return { 
@@ -324,5 +420,6 @@ export const useInvoicing2Data = ({ reportDT, isToday, isTomorrow, shouldFetch }
     loadedMakeQbInvoice,
     // getPdfRequestItems,
     batchGetPdfs,
+    batchPrintPdfGrids,
   }
 }
