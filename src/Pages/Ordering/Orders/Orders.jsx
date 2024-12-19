@@ -508,6 +508,7 @@ export const Orders = ({ useTestAuth }) => {
                   {...dateProps}
                   locNick={locNick}
                   inline={wSize === 'lg'}
+                  showHolidays={user.authClass !== 'bpbfull'}
                 />
 
                 <AddItemMenu

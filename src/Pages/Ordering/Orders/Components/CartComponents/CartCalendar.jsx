@@ -30,6 +30,7 @@ export const CartCalendar = ({
   dateUpdated,
   todayDT,
   inline,
+  showHolidays,
   // handleSelectionUpdate,
 }) => {
   const { data:orderSummary } = useOrderCalendarSummary({ 
@@ -57,7 +58,7 @@ export const CartCalendar = ({
     const isRecentDelete = orderSummary?.byDate?.[calendarDate]?.isRecentDelete
 
     const fulfillment = orderSummary?.byDate?.[calendarDate]?.fulfillment
-
+    
 
     return (
       <div 
@@ -70,12 +71,12 @@ export const CartCalendar = ({
               ? "bpb-date-cell-standing" 
               : "bpb-date-cell-none"
         }
-        // style={
-        //   isXmas ? xmasStyle 
-        //     : isRecentDelete ? backgroundDeleteStyle 
-        //     : {}
-        // }
-        //onClick={() => console.log(calendarDate, hasCart, hasStanding)}
+        style={
+          (showHolidays && isXmas) ? xmasStyle 
+            : isRecentDelete ? backgroundDeleteStyle 
+            : {}
+        }
+        onClick={() => console.log(calendarDate, hasCart, hasStanding)}
       >
         {date.day}
       </div>
