@@ -2,9 +2,6 @@ import { CombinedRoutedOrder } from "../../data/production/useProductionData"
 import { DBProduct } from "../../data/types.d";
 import { compareBy, groupByArrayRdc, groupByObject, keyBy, sumBy, uniqByRdc } from "../../utils/collectionFns";
 
-
-
-
 const panCountByWeight = {
   "0.25": 48,
   "0.35": 35,
@@ -41,7 +38,8 @@ export const calculateFrenchPockets = (R0, R0Orders, R1Orders, PRD) => {
   )
   const T1frenchOrders = R1Orders.filter(order => 1 
     && products[order.prodNick].doughNick === "French"
-    && order.meta.routePlan.steps[0].end.date === R0
+    && order.delivDate !== order.meta.routePlan.steps[0].end.date
+    // && order.meta.routePlan.steps[0].end.date === R0
   )
   const frenchOrdersByWeight = groupByObject([...T0frenchOrders, ...T1frenchOrders], 
     order => products[order.prodNick].weight
@@ -72,14 +70,15 @@ export const calculateFrenchPockets = (R0, R0Orders, R1Orders, PRD) => {
         R0Orders.filter(order => 1
           && fudgeFrfrProps(products[order.prodNick]).forBake === forBake
           && order.delivDate !== order.meta.routePlan.steps[0].end.date
-          && order.delivDate === R0
+          // && order.delivDate === R0
         ), 
         calcEa
       )
       const R1BaggedEa = sumBy(
         R1Orders.filter(order => 1
           && fudgeFrfrProps(products[order.prodNick]).forBake === forBake
-          && order.meta.routePlan.steps[0].end.date === R0
+          && order.delivDate !== order.meta.routePlan.steps[0].end.date
+          // && order.meta.routePlan.steps[0].end.date === R0
         ),
         calcEa
       )

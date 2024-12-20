@@ -10,6 +10,7 @@ import { calculateOtherPrep } from "./dataBPBNOtherPrep"
 import { calculateBaguetteSummary } from "./dataBPBNBaguetteDough"
 
 import { DateTime } from "luxon"
+import { holidayShift } from "../../utils/dateAndTime/holidayShift"
 
 /**
  * Data is only intended to be generated for the current day, and for tomorrow 
@@ -20,7 +21,22 @@ import { DateTime } from "luxon"
  * @param {boolean} input.shouldFetch
  */
 export const useBaker1Data = ({ reportDT, calculateFor, shouldFetch }) => {
-  const [R0, R1, R2] = [0, 1, 2].map(daysAhead => reportDT.plus({ days: daysAhead }).toFormat('yyyy-MM-dd'))
+  // const [R0, R1, R2] = [0, 1, 2]
+  //   .map(daysAhead => reportDT.plus({ days: daysAhead }))
+  //   .map(dt => dt.toFormat('yyyy-MM-dd'))
+
+  // const { data:T0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 0 }), useHolding: false, shouldFetch })
+  // const { data:T1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: true,  shouldFetch })
+  // const { data:T2Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 2 }), useHolding: true,  shouldFetch })
+  // const { data:T3Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 3 }), useHolding: true,  shouldFetch })
+
+  const [D0, D1, D2, D3] = [0, 1, 2, 3]
+    .map(daysAhead => reportDT.plus({ days: daysAhead }))
+    .map(holidayShift)
+  
+  const [R0, R1, R2] = [D0, D1, D2]
+    .map(dt => dt.toFormat('yyyy-MM-dd'))
+
   const preshapeType = calculateFor === 'today'
     ? 'preshape'
     : 'prepreshape'
@@ -29,11 +45,11 @@ export const useBaker1Data = ({ reportDT, calculateFor, shouldFetch }) => {
     ? 'bucketSets'
     : 'preBucketSets'
 
-  const { data:T0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 0 }), useHolding: false, shouldFetch })
-  const { data:T1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: true,  shouldFetch })
-  const { data:T2Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 2 }), useHolding: true,  shouldFetch })
-  const { data:T3Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 3 }), useHolding: true,  shouldFetch })
-  
+  const { data:T0Orders } = useCombinedRoutedOrdersByDate({ delivDT: D0, useHolding: false, shouldFetch })
+  const { data:T1Orders } = useCombinedRoutedOrdersByDate({ delivDT: D1, useHolding: true,  shouldFetch })
+  const { data:T2Orders } = useCombinedRoutedOrdersByDate({ delivDT: D2, useHolding: true,  shouldFetch })
+  const { data:T3Orders } = useCombinedRoutedOrdersByDate({ delivDT: D3, useHolding: true,  shouldFetch })
+
   const { data:DGH } = useDoughs({ shouldFetch })
   const { data:PRD } = useProducts({ shouldFetch })
 

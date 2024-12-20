@@ -4,6 +4,7 @@ import { useProducts } from "../../data/product/useProducts";
 import { compareBy, keyBy, sumBy } from "../../utils/collectionFns";
 import { tablePivot } from "../../utils/tablePivot";
 import { useMemo } from "react";
+import { holidayShift } from "../../utils/dateAndTime/holidayShift";
 
 /** @param {CombinedRoutedOrder[]} orderList */
 const buildTableData = orderList => tablePivot(
@@ -29,10 +30,14 @@ const buildTableData = orderList => tablePivot(
  * @param {boolean} input.shouldFetch
  */
 export const useSpecialPacking = ({ reportDT, shouldFetch }) => {
-  const R0 = reportDT.plus({ days: 0 }).toFormat('yyyy-MM-dd')
+  const [D0, D1] = [0, 1]
+    .map(daysAhead => reportDT.plus({ days: daysAhead }))
+    .map(holidayShift)
 
-  const { data:R0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 0 }), useHolding: false, shouldFetch })
-  const { data:R1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: true,  shouldFetch })
+  const R0 = D0.toFormat('yyyy-MM-dd')
+
+  const { data:R0Orders } = useCombinedRoutedOrdersByDate({ delivDT: D0, useHolding: false, shouldFetch })
+  const { data:R1Orders } = useCombinedRoutedOrdersByDate({ delivDT: D1, useHolding: true,  shouldFetch })
   const { data:PRD } = useProducts({ shouldFetch })
 
   const calculateSpecialPacking = () => {
@@ -50,19 +55,22 @@ export const useSpecialPacking = ({ reportDT, shouldFetch }) => {
 
     const R0pretzelData = R0Orders.filter(order => 1
       && products[order.prodNick].doughNick === 'Pretzel Bun'
-      && order.meta.routePlan.steps[0].end.date === R0 // <<< "Baking is completed on R0"
+      // && order.meta.routePlan.steps[0].end.date === R0 // <<< "Baking is completed on R0"
+      && order.meta.routePlan.steps[0].end.date === order.delivDate
       && order.qty !== 0
     )
     const R1pretzelData = R1Orders.filter(order => 1
       && products[order.prodNick].doughNick === 'Pretzel Bun'
-      && order.meta.routePlan.steps[0].end.date === R0 // <<< "Baked is completed on R0"
+      // && order.meta.routePlan.steps[0].end.date === R0 // <<< "Baked is completed on R0"
+      && order.meta.routePlan.steps[0].end.date !== order.delivDate
       && order.qty !== 0
     )
     const R1FrenchData = R1Orders.filter(order => 1
       && products[order.prodNick].doughNick === 'French'
       && products[order.prodNick].readyTime < 15
       && !(['rdch', 'frfr'].includes(order.prodNick))
-      && order.meta.routePlan.steps[0].end.date === R0 // <<< "Baked is completed on R0"
+      // && order.meta.routePlan.steps[0].end.date === R0 // <<< "Baked is completed on R0"
+      && order.meta.routePlan.steps[0].end.date !== order.delivDate
       && order.qty !== 0
     )
     const R0FrozenPastryData = R0Orders.filter(order => 1

@@ -42,18 +42,19 @@ export const calculateBagged = (R0, R1, R0Orders, R1Orders, PRD) => {
   const freshR0Orders = R0Orders.filter(order => 1 // "baked & delivered on the same date". In practice only frfr will be used in the returned dataset
     && isBaggedProduct(fudgeFrfrProps(products[order.prodNick]))
     && order.delivDate === order.meta.routePlan.steps[0].end.date
-    && order.delivDate === R0
+    // && order.delivDate === R0
   )
   
   const baggedR0Orders = R0Orders.filter(order => 1 // "baked & delivered on different dates". In practice this means baked the day before delivery.
     && isBaggedProduct(fudgeFrfrProps(products[order.prodNick]))  
     && order.delivDate !== order.meta.routePlan.steps[0].end.date
-    && order.delivDate === R0
+    // && order.delivDate === R0
   )
   
   const baggedR1Orders = R1Orders.filter(order => 1
     && isBaggedProduct(fudgeFrfrProps(products[order.prodNick]))  
-    && order.meta.routePlan.steps[0].end.date === R0
+    && order.delivDate !== order.meta.routePlan.steps[0].end.date
+    // && order.meta.routePlan.steps[0].end.date === R0
   )
   // console.log("fresh r0", freshR0Orders)
   // console.log("bagged r0", baggedR0Orders)

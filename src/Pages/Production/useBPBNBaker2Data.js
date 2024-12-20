@@ -8,6 +8,7 @@ import { calculateOtherPrep } from "./dataBPBNOtherPrep"
 
 import { DateTime } from "luxon"
 import { calculateSetoutCarlton } from "./dataSetout"
+import { holidayShift } from "../../utils/dateAndTime/holidayShift"
 
 /**
  * Data is only intended to be generated for the current day and for tomorrow 
@@ -19,11 +20,20 @@ import { calculateSetoutCarlton } from "./dataSetout"
  * @param {boolean} input.shouldFetch
  */
 export const useBaker2Data = ({ reportDT, shouldFetch }) => {
-  const [R0, R1] = [0, 1].map(daysAhead => reportDT.plus({ days: daysAhead }).toFormat('yyyy-MM-dd'))
+  // const [R0, R1] = [0, 1].map(daysAhead => reportDT.plus({ days: daysAhead }).toFormat('yyyy-MM-dd'))
+  // const { data:T0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 0 }), useHolding: false, shouldFetch })
+  // const { data:T1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: true, shouldFetch })
+  // const { data:T2Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 2 }), useHolding: true, shouldFetch })
+  const [D0, D1, D2] = [0, 1, 2]
+    .map(daysAhead => reportDT.plus({ days: daysAhead }))
+    .map(holidayShift)
 
-  const { data:T0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 0 }), useHolding: false, shouldFetch })
-  const { data:T1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: true, shouldFetch })
-  const { data:T2Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 2 }), useHolding: true, shouldFetch })
+  const [R0, R1] = [D0, D1]
+    .map(dt => dt.toFormat('yyyy-MM-dd'))
+
+  const { data:T0Orders } = useCombinedRoutedOrdersByDate({ delivDT: D0, useHolding: false, shouldFetch })
+  const { data:T1Orders } = useCombinedRoutedOrdersByDate({ delivDT: D1, useHolding: true, shouldFetch })
+  const { data:T2Orders } = useCombinedRoutedOrdersByDate({ delivDT: D2, useHolding: true, shouldFetch })
   
   const { data:PRD } = useProducts({ shouldFetch})
 

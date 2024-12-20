@@ -3,6 +3,7 @@ import { useProducts } from "../../data/product/useProducts"
 import { useCombinedRoutedOrdersByDate } from "../../data/production/useProductionData"
 import { calculateSetoutCarlton, calculateSetoutPrado } from "./dataSetout"
 import { DateTime } from "luxon"
+import { holidayShift } from "../../utils/dateAndTime/holidayShift"
 
 /**
  * @param {Object} input
@@ -11,11 +12,15 @@ import { DateTime } from "luxon"
  * @param {boolean} input.shouldFetch 
  */
 export const useSetoutData = ({ reportDT, reportLocation, shouldFetch }) => {
+  const [D1, D2, D3] = [1, 2, 3]
+    .map(daysAhead => reportDT.plus({ days: daysAhead }))
+    .map(holidayShift)
+  
 
   const { data:PRD } = useProducts({ shouldFetch })
-  const { data:R1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: true, shouldFetch })
-  const { data:R2Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 2 }), useHolding: true, shouldFetch: shouldFetch && reportLocation === 'Prado' })
-  const { data:R3Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 3 }), useHolding: true, shouldFetch: shouldFetch && reportLocation === 'Prado' })
+  const { data:R1Orders } = useCombinedRoutedOrdersByDate({ delivDT: D1, useHolding: true, shouldFetch })
+  const { data:R2Orders } = useCombinedRoutedOrdersByDate({ delivDT: D2, useHolding: true, shouldFetch: shouldFetch && reportLocation === 'Prado' })
+  const { data:R3Orders } = useCombinedRoutedOrdersByDate({ delivDT: D3, useHolding: true, shouldFetch: shouldFetch && reportLocation === 'Prado' })
 
   return useMemo(
     () => reportLocation === 'Prado' 

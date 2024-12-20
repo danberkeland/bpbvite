@@ -7,6 +7,7 @@ import { calculateFresh } from "./dataBPBSFreshProducts";
 import { calculateBagged } from "./dataBPBSBaggedProducts";
 import { calculatePretzel } from "./dataBPBSPretzel";
 import { calculateFrenchPockets } from "./dataBPBSFrenchPockets";
+import { holidayShift } from "../../utils/dateAndTime/holidayShift";
 
 /**
  * @param {Object} input
@@ -14,12 +15,23 @@ import { calculateFrenchPockets } from "./dataBPBSFrenchPockets";
  * @param {boolean} input.shouldFetch
  */
 export const useWhatToMake = ({ reportDT, shouldFetch }) => {
-  const R0 = reportDT.plus({ days: 0 }).toFormat('yyyy-MM-dd')
-  const R1 = reportDT.plus({ days: 1 }).toFormat('yyyy-MM-dd')
+  const [D0, D1, D2] = [0, 1, 2]
+    .map(daysAhead => reportDT.plus({ days: daysAhead }))
+    .map(holidayShift)
+
+  const [R0, R1] = [D0, D1]
+    .map(dt => dt.toFormat('yyyy-MM-dd'))
  
-  const { data:R0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 0 }), useHolding: false, shouldFetch })
-  const { data:R1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: true,  shouldFetch })
-  const { data:R2Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 2 }), useHolding: true,  shouldFetch })
+  const { data:R0Orders } = useCombinedRoutedOrdersByDate({ delivDT: D0, useHolding: false, shouldFetch })
+  const { data:R1Orders } = useCombinedRoutedOrdersByDate({ delivDT: D1, useHolding: true,  shouldFetch })
+  const { data:R2Orders } = useCombinedRoutedOrdersByDate({ delivDT: D2, useHolding: true,  shouldFetch })
+
+  // const R0 = reportDT.plus({ days: 0 }).toFormat('yyyy-MM-dd')
+  // const R1 = reportDT.plus({ days: 1 }).toFormat('yyyy-MM-dd')
+ 
+  // const { data:R0Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 0 }), useHolding: false, shouldFetch })
+  // const { data:R1Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 1 }), useHolding: true,  shouldFetch })
+  // const { data:R2Orders } = useCombinedRoutedOrdersByDate({ delivDT: reportDT.plus({ days: 2 }), useHolding: true,  shouldFetch })
 
   const { 
     data:PRD,
