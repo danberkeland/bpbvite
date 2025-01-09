@@ -7,20 +7,20 @@ export const ItemNoteInput = ({
   cartHeader, setCartHeader, disabled 
 }) => {
   return (<>
-      <InputLabel label="Delivery Note" 
+      <InputLabel label="PO Number" 
         htmlFor="input-note"
         disabled={disabled}
-        helpHeader="Delivery Note"
-        helpText={<>
-          <p>
-            Delivery notes will be printed on our paper invoices and are 
-            meant to assist with your own record keeping.
-          </p>
-          <p>
-            For now, we're better equipped to handle special requests for your order
-            through the hotline.
-          </p>
-        </>}
+        // helpHeader="Delivery Note"
+        // helpText={<>
+        //   <p>
+        //     Delivery notes will be printed on our paper invoices and are 
+        //     meant to assist with your own record keeping.
+        //   </p>
+        //   <p>
+        //     For now, we're better equipped to handle special requests for your order
+        //     through the hotline.
+        //   </p>
+        // </>}
       >
         {/* <div id="with-box-shadow"> */}
           <InputTextarea

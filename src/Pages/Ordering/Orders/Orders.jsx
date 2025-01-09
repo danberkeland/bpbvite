@@ -547,16 +547,18 @@ export const Orders = ({ useTestAuth }) => {
  
               </div>
 
-              <div style={{
-                width: wSize === 'lg' ? "17rem" : "100%",
-                marginBlock: "1rem",
-              }}>
-                <ItemNoteInput 
-                  cartHeader={cartHeader}
-                  setCartHeader={setCartHeader}
-                  disabled={disableInputs}
-                />
-              </div>
+              {(locNick === 'whole' || locNick === 'whole2') &&
+                <div style={{
+                  width: wSize === 'lg' ? "17rem" : "100%",
+                  marginBlock: "1rem",
+                }}>
+                  <ItemNoteInput 
+                    cartHeader={cartHeader}
+                    setCartHeader={setCartHeader}
+                    disabled={disableInputs}
+                  />
+                </div>
+              }
 
             </div> {/* End column-1 */}
 
@@ -692,15 +694,15 @@ export const Orders = ({ useTestAuth }) => {
                   order will end up in the wrong place!
                 </p>
 
-                <h4>Delivery Note</h4>
-                <p>
+                {/* <h4>Delivery Note</h4> */}
+                {/* <p>
                   Delivery notes will be printed on our paper invoices and are 
                   meant to assist with your own record keeping.
-                </p>
-                <p>
+                </p> */}
+                {/* <p>
                   For now, we're better equipped to handle special requests 
                   for your order through the hotline.
-                </p>
+                </p> */}
               </AccordionTab>
 
               {!standingBlacklist.includes(user.locNick) &&
