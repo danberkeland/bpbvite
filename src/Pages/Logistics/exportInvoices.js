@@ -169,7 +169,7 @@ export const exportInvoices2 = async (
   const invoiceRows = maybeInvoiceRows
     .filter(row => /^\d+$/.test(row.rowProps.qbID) === true)
     .map(row => {
-      const DocNumber = mm + dd + yyyy + row.rowProps.locNick
+      const DocNumber = mm + dd + yyyy + row.rowProps.locNick.slice(0,13)
       const matchInvoice = invoices.find(i => 1 
         && i["CustomerRef.value"] === row.rowProps.qbID 
         && i.DocNumber === DocNumber
