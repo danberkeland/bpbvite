@@ -3,6 +3,12 @@
 
 
 "@types/aws-lambda@^8.10.92":
-  "integrity" "sha512-mYWsrM5YPmnyJru7kMDX8RYSc486sDqVOP1kUdotthD3YjJ57iTBN3N7MMtL1qdVoPW2YmCnNnWscyidmPe6Gw=="
-  "resolved" "https://registry.npmjs.org/@types/aws-lambda/-/aws-lambda-8.10.103.tgz"
-  "version" "8.10.103"
+  version "8.10.103"
+  resolved "https://registry.npmjs.org/@types/aws-lambda/-/aws-lambda-8.10.103.tgz"
+  integrity sha512-mYWsrM5YPmnyJru7kMDX8RYSc486sDqVOP1kUdotthD3YjJ57iTBN3N7MMtL1qdVoPW2YmCnNnWscyidmPe6Gw==
+
+"grabproductbyid@file:":
+  version "2.0.0"
+  resolved "file:"
+  dependencies:
+    grabproductbyid "file:"

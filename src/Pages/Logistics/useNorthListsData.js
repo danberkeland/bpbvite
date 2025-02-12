@@ -155,12 +155,19 @@ const useNorthListData = ({
       row.frozen.frozenOrderItems = frozenOrderItems
       row.frozen.frozenOrderQty   = frozenOrderQty
 
-      const bakedOrderItems = T1NorthBakedOrders.filter(order => 
+      /*const bakedOrderItems = T1NorthBakedOrders.filter(order => 
         prodNickToShapeTypeMap[order.prodNick] === row.forBake
       )
       .map(order => order.locNick === "backporch"
         ? { ...order, qty: Math.ceil(order.qty / 2) }
         : order
+      )
+      .map(order => objProject(order, summaryAttributes))*/
+
+      const bakedOrderItems = T1NorthBakedOrders.filter(order => 
+        prodNickToShapeTypeMap[order.prodNick] === row.forBake
+      )
+      .map(order => order
       )
       .map(order => objProject(order, summaryAttributes))
 
@@ -206,10 +213,13 @@ const useNorthListData = ({
       row.baked.afterDeadlineOrders = afterDeadlineOrders
       row.baked.afterDeadlineQty    = afterDeadlineQty
 
-      const bakedQty = Math.max(
+      /*const bakedQty = Math.max(
         0,
         Math.round(backporchQty / 2) - bpbextrasQty - afterDeadlineQty
-      )
+      )*/
+
+      const bakedQty = 0
+
       row.bakedQty = bakedQty
 
     }

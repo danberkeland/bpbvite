@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "moment": "^2.29.4",
-    "momnet": "^2.29.1"
+    "momnet": "^2.29.1",
+    "nodejs": "file:"
   }
 }
