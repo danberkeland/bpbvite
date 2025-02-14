@@ -1,0 +1,1 @@
+This workspace should contain pure functions that handle business logic
