@@ -45,6 +45,8 @@ const filterToSetoutItems = (order, products) => 1
     || order.locNick !== 'bpbextras'
   )
 
+   
+
 //  Some Absolute Brain-Rot that needs to be deprecated and deleted ASAP
 // ======================================================================
 /**
@@ -52,7 +54,7 @@ const filterToSetoutItems = (order, products) => 1
  * @param {CombinedRoutedOrder} order 
  * @param {{[x: string]: DBProduct}} products 
  */
-const splitBackporchCroixOrder = (order, products) => 
+/*const splitBackporchCroixOrder = (order, products) => 
   order.locNick === 'backporch' && isBakedCroix(products[order.prodNick])
     ? [
       {
@@ -66,8 +68,9 @@ const splitBackporchCroixOrder = (order, products) =>
         meta: { ...order.meta, routeNick: "Pick up Carlton " } // The trailing space will get this item grouped with Prado orders instead.
       }
     ]
-    : order
+    : order*/
 
+const splitBackporchCroixOrder = (order, products) => order
 /**
  * Partition the order set to a sufficient granularity all at
  * once, as opposed to the previous strategy that used

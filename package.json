@@ -13,6 +13,7 @@
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "amplify": "0.0.11",
+    "authmodel": "file:",
     "aws-amplify": "^5.2.5",
     "axios": "^0.27.2",
     "dompurify": "^3.0.0",

@@ -72,7 +72,7 @@ export const useCroissantProduction = ({ reportDT, shouldFetch }) => {
       ...R7Orders,
     ].filter(order => 1
       && products[order.prodNick].doughNick === 'Croissant'
-      && order.locNick !== 'bpbextras'
+      //&& order.locNick !== 'bpbextras'
       && order.delivDate.slice(5) !== '12-25'
     )
 
