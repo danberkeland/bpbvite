@@ -15,7 +15,7 @@ import { useOrderingPageData } from "./orderingPageData.js"
 import { DBLocation } from "../../../data/types.d.jsx"
 import { useWindowSize } from "../../../utils/useWindowSize.js"
 
-// import "./ordering.css"
+// import "./ordering.css  "
 import { DateObj } from "./orderingTypes.d.js"
 import { getSelectedDateList } from "./orderingPageCalcs.js"
 import { isEqual } from "lodash"
