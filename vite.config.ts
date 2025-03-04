@@ -3,7 +3,7 @@ import commonjs from 'vite-plugin-commonjs';
 import react from '@vitejs/plugin-react-swc';
 
 export default defineConfig({
-  base: '/',
+  base: '/bpbvite/',
   plugins: [react(), commonjs()], // Fixed array syntax
   define: { global: 'window' },
   test: {
