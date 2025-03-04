@@ -3,7 +3,7 @@ import commonjs from 'vite-plugin-commonjs';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  base: '/bpbvite/',
+  base: '/',
   plugins: [react(), commonjs()], // Fixed array syntax
   define: { global: 'window' },
   test: {
@@ -20,6 +20,12 @@ export default defineConfig({
   },
   esbuild: {
     loader: 'jsx',
-    include: /src\/.*\.js$/, // Apply loader to .js files in src/
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      loader: {
+        '.js': 'jsx',
+      },
+    },
   },
 });
