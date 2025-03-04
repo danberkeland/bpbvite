@@ -218,6 +218,6 @@ const batchTasksArticle =
   <p>
     Use 'Sync data with Qb'. The button should show 'all items synced' 
     when finished. Then use 'Get PDFs' to download a backup set of inovoices. 
-    This works the same as on the 'Logistics > By Route' page.
+    This works the same as on the 'Logistics - By Route' page.
   </p>
 </div>

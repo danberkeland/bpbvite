@@ -13,8 +13,8 @@
 // of these 'primitive' hooks.
 
 import useSWR from 'swr'
-import gqlFetcher, { gqlFetcherNoAwait } from './_fetchers'
-import { defaultSwrOptions, LIMIT, LIST_TABLES, TABLE_PKS } from './_constants'
+import gqlFetcher, { gqlFetcherNoAwait } from './_fetchers.jsx'
+import { defaultSwrOptions, LIMIT, LIST_TABLES, TABLE_PKS } from './_constants.js'
 import * as listQueries from '../graphqlCustom/queries/_listQueries.js'
 import * as mutations from '../graphqlCustom/mutations/mutations.js'
 

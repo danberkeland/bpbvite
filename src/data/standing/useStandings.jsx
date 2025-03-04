@@ -2,7 +2,7 @@ import { useMemo } from "react"
 import { ListDataCache, useListData } from "../_listData.js"
 import { compareBy, groupByArray } from "../../utils/collectionFns.js"
 
-/**@typedef {import('../types.d.js').DBStanding} DBStanding*/ 
+/**@typedef {import('../types.d.jsx').DBStanding} DBStanding*/ 
 
 /**
  * Cleans incoming data by separating out any "duplicate" records.

@@ -1,12 +1,12 @@
 import { preDBOverrides, postDBOverrides } from "../../../data/product/testOverrides.js"
-import { getOverrideProps } from "../../../data/locationProductOverride/overrideProduct.js"
+import { getOverrideProps } from "../../../data/locationProductOverride/overrideProduct.jsx"
 import { mapValues } from "../../../utils/objectFns.js"
 import { DT, IsoDate } from "../../../utils/dateTimeFns.js"
-import { DBOrder, DBStanding } from "../../../data/types.d.js"
-import { PICKUP_ZONES, WEEKDAYS_EEE, WEEKDAYS_NUM } from "../../../constants/constants.js"
+import { DBOrder, DBStanding } from "../../../data/types.d.jsx"
+import { PICKUP_ZONES, WEEKDAYS_EEE, WEEKDAYS_NUM } from "../../../constants/constants.jsx"
 import { reformatProdName } from "../utils/reformatProdName.js"
 import { groupByObjectRdc, keyBy } from "../../../utils/collectionFns.js"
-import { combineOrders } from "../../../core/production/combineOrders.js"
+import { combineOrders } from "../../../core/production/combineOrders.jsx"
 
 
 const getSelectedDateList = (delivDtBegin, delivDtEnd, orderDT) => {

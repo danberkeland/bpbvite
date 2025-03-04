@@ -1,5 +1,5 @@
-import { ListDataCache, useListData } from "../_listData"
-import { DBProduct } from "../types.d.js"
+import { ListDataCache, useListData } from "../_listData.js"
+import { DBProduct } from "../types.d.jsx"
 
 /**
  * @typedef {"Type"

@@ -1,9 +1,9 @@
 import { useMemo } from "react";
-import { useLocations } from "../../data/location/useLocations.js";
-import { useProducts } from "../../data/product/useProducts.js";
+import { useLocations } from "../../data/location/useLocations.jsx";
+import { useProducts } from "../../data/product/useProducts.jsx";
 import { DateTime } from "luxon";
-import { useCombinedRoutedOrdersByDate } from "../../data/production/useProductionData.js";
-import { useInfoQBAuths } from "../../data/infoQBAuths/useInfoQBAuths.js";
+import { useCombinedRoutedOrdersByDate } from "../../data/production/useProductionData.jsx";
+import { useInfoQBAuths } from "../../data/infoQBAuths/useInfoQBAuths.jsx";
 import { DT } from "../../utils/dateTimeFns.js";
 import { compareBy, keyBy, sumBy } from "../../utils/collectionFns.js";
 import { objProject } from "../../utils/objectFns.js";

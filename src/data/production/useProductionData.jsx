@@ -1,19 +1,19 @@
 import { DateTime } from "luxon";
-import { useOrdersByDelivDate } from "../order/useOrders";
-import { useStandingsByDayOfWeek } from "../standing/useStandings";
-import { useLocations } from "../location/useLocations";
-import { useProducts } from "../product/useProducts";
-import { useRoutes } from "../route/useRoutes";
-import { useLoadedGetRouteOptions } from "../routing/useRouting";
+import { useOrdersByDelivDate } from "../order/useOrders.jsx";
+import { useStandingsByDayOfWeek } from "../standing/useStandings.jsx";
+import { useLocations } from "../location/useLocations.jsx";
+import { useProducts } from "../product/useProducts.jsx";
+import { useRoutes } from "../route/useRoutes.js";
+import { useLoadedGetRouteOptions } from "../routing/useRouting.jsx";
 // import { useLocationProductOverrides } from "../locationProductOverride/useLocationProductOverrides";
-import { combineOrders } from "../../core/production/combineOrders.js";
+import { combineOrders } from "../../core/production/combineOrders.jsx";
 // import { overrideProduct } from "../locationProductOverride/overrideProduct.js";
 import { useMemo } from "react";
 import { groupByObject, keyBy } from "../../utils/collectionFns.js";
-import { useOverrideProduct } from "../locationProductOverride/useOverrideProduct.js";
+import { useOverrideProduct } from "../locationProductOverride/useOverrideProduct.jsx";
 import { DT } from "../../utils/dateTimeFns.js";
-import { DBOrder, DBRoute } from "../types.d.js";
-import { FulfillmentPlan } from "../../core/logistics/types.d.js";
+import { DBOrder, DBRoute } from "../types.d.jsx";
+import { FulfillmentPlan } from "../../core/logistics/types.d.jsx";
 
 
 /**

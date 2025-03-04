@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react"
 import { AutoComplete } from "primereact/autocomplete"
 import { rankedSearch } from "../../../utils/textSearch"
 import { Button } from "primereact/button"
-import { useTemplateProdsByLocNick } from "../../../data/templateProd/useTemplateProd.js"
+import { useTemplateProdsByLocNick } from "../../../data/templateProd/useTemplateProd.jsx"
 import { compareBy } from "../../../utils/collectionFns.js"
 
 

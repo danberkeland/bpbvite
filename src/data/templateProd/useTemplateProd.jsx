@@ -1,5 +1,5 @@
-import { ListDataCache, useListData } from "../_listData"
-import { DBTemplateProd } from "../types.d.js"
+import { ListDataCache, useListData } from "../_listData.js"
+import { DBTemplateProd } from "../types.d.jsx"
 
 /**
  * @param {Object} input

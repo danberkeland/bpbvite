@@ -1,9 +1,9 @@
 
-import { compareBy, groupByArray, groupByArrayN, uniqByRdc } from "../../utils/collectionFns"
+import { compareBy, groupByArray, groupByArrayN, uniqByRdc } from "../../utils/collectionFns.js"
 import { uniqBy } from "../../utils/collectionFns/uniqBy.js"
 import { DT } from "../../utils/dateTimeFns.js"
-/**@typedef {import('../../data/types.d.js').DBOrder} DBOrder*/
-/**@typedef {import('../../data/types.d.js').DBStanding} DBStanding*/
+/**@typedef {import('../../data/types.d.jsx').DBOrder} DBOrder*/
+/**@typedef {import('../../data/types.d.jsx').DBStanding} DBStanding*/
 
 const isoToDT = isoDate => DT.fromIso(isoDate)
 

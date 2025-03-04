@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react"
 
-import { useSettingsStore } from "../../../Contexts/SettingsZustand"
+import { useSettingsStore } from "../../../Contexts/SettingsZustand.jsx"
 import { DT } from "../../../utils/dateTimeFns"
 import { TabMenu } from "primereact/tabmenu"
 import { Dialog } from "primereact/dialog"
@@ -12,7 +12,7 @@ import { AdminControls } from "./Components/AdminControls.jsx"
 
 import { buildTabModel } from "./Tabs/tabModel.js"
 import { useOrderingPageData } from "./orderingPageData.js"
-import { DBLocation } from "../../../data/types.d.js"
+import { DBLocation } from "../../../data/types.d.jsx"
 import { useWindowSize } from "../../../utils/useWindowSize.js"
 
 // import "./ordering.css"

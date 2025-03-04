@@ -1,5 +1,5 @@
-import { ListDataCache, useListData } from "../_listData";
-import { DBZone } from "../types.d.js";
+import { ListDataCache, useListData } from "../_listData.js";
+import { DBZone } from "../types.d.jsx";
 
 /**
  * @param {Object} input

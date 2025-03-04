@@ -1,7 +1,7 @@
 import { AutoComplete } from "primereact/autocomplete"
 import React, { useRef, useState } from "react"
 import {  rankedSearch } from "../../../../utils/textSearch"
-import { DBLocation } from "../../../../data/types.d.js"
+import { DBLocation } from "../../../../data/types.d.jsx"
 import { compareBy } from "../../../../utils/collectionFns.js"
 // import { useOrderingPageLocations, useOrderingPageProducts } from "../stores.js"
 // import { useSettingsStore } from "../../../../Contexts/SettingsZustand.js"

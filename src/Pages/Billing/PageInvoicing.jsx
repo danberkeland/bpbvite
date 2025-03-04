@@ -635,7 +635,7 @@ const helpTemplate = (goToMainScreen) =>
     <p>Our usual method for handling invoice adjustments, especially in the case of shorted qtys, is to simply adjust the order qty. This corrects the billed amount, but this stealthy change may be tricky for customers to review and audit. Recording a separate qty short will create a separate invoice line with a negative qty, and hence a negative subtotal. The invoice will still bill the correct amount, but in a more explicit way.</p>
 
     <h3>Unit Price</h3>
-    <p>Set a custom price in a one-off fashion here. To set a permanent custom price for a particular customer/product, go to Settings > Customer Product Setup.</p>
+    <p>Set a custom price in a one-off fashion here. To set a permanent custom price for a particular customer/product, go to Settings -  Customer Product Setup.</p>
     <p>To convert an order to a sample, set the price to 0. Customers who use the ordering page will see the item marked as a sample and will be unable to edit the qty.</p>
 
     <br/>

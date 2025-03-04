@@ -1,5 +1,5 @@
 import { ListDataCache, useListData } from "../_listData";
-/**@typedef {import('../types.d.js').DBZoneRoute} DBZoneRoute */
+/**@typedef {import('../types.d.jsx').DBZoneRoute} DBZoneRoute */
 
 /**
  * @param {Object} input

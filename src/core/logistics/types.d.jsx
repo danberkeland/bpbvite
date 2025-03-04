@@ -4,7 +4,7 @@
 // 'routing land' in the hopes of keeping things clean.
 
 // /**@typedef {import('../../data/types.d.js').DBRoute}     DBRoute */
-/**@typedef {import('../../data/types.d.js').DBZoneRoute} DBZoneRoute */
+/**@typedef {import('../../data/types.d.jsx').DBZoneRoute} DBZoneRoute */
 // /**@typedef {import('../../data/types.d.js').DBLocation}  DBLocation */
 // /**@typedef {import('../../data/types.d.js').DBProduct}   DBProduct */
 

@@ -4,7 +4,7 @@ import { keyBy,  sortBy } from "lodash"
 import { DateTime } from "luxon"
 import { useMemo } from "react"
 
-import { preDBOverrides } from "../data/_productOverrides"
+import { preDBOverrides } from "./_productOverrides"
 
 import { useListData } from "./_listData"
 import { getRouteOptions } from "../Pages/Ordering/Orders/data/productHooks"

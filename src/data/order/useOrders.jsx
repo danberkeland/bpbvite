@@ -2,10 +2,10 @@ import { useMemo } from "react"
 import { ListDataCache, useListData } from "../_listData.js"
 
 import { compareBy, groupByArray } from "../../utils/collectionFns.js"
-import { DBOrder } from "../types.d.js"
+import { DBOrder } from "../types.d.jsx"
 import { objPickByEntries } from "../../utils/objectFns.js"
-import { orderValidation } from "./changesets.js"
-import { CreateOrderInput, UpdateOrderInput, DeleteOrderInput } from "./changesets.js"
+import { orderValidation } from "./changesets.jsx"
+import { CreateOrderInput, UpdateOrderInput, DeleteOrderInput } from "./changesets.jsx"
 
 const stripUndefinedFields = (object) => objPickByEntries(object, (k,v) => v !== undefined)
 
@@ -43,7 +43,7 @@ const useOrdersGeneric = ({ shouldFetch, customQuery, variables, useValidations=
       return { data: undefined, dupes: undefined, submitMutations: undefined }
     }
 
-    /** @type {import('../types.d.js').DBOrder[]} */ 
+    /** @type {import('../types.d.jsx').DBOrder[]} */ 
     const orders = cacheData
 
     const groupList = groupByArray(orders, 

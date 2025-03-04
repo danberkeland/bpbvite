@@ -1,5 +1,5 @@
 import { ListDataCache, useListData } from "../_listData"
-import { DBDoughBackup } from "../types.d.js"
+import { DBDoughBackup } from "../types.d.jsx"
 
 /**
  * @param {Object} input

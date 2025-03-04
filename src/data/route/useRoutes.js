@@ -1,7 +1,7 @@
 import { useMemo } from "react"
-import { ListDataCache, useListData } from "../_listData"
-import { DBRoute2 } from "../types.d.js"
-/**@typedef {import('../types.d.js').DBRoute} DBRoute */
+import { ListDataCache, useListData } from "../_listData.js"
+import { DBRoute2 } from "../types.d.jsx"
+/**@typedef {import('../types.d.jsx').DBRoute} DBRoute */
 
 /**
  * @param {Object} input

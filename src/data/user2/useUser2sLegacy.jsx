@@ -1,7 +1,7 @@
 // DEPRECATED
 
 import useSWR from "swr";
-import gqlFetcher from "../../data/_fetchers";
+import gqlFetcher from "../_fetchers";
 import { useMemo } from "react";
 import { compareBy } from "../../utils/collectionFns/compareBy";
 
