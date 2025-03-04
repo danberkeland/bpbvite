@@ -56,6 +56,7 @@
     "zustand": "^4.1.1"
   },
   "scripts": {
+    "start": "vite start",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "dev": "vite",
