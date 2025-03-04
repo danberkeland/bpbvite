@@ -1,5 +1,7 @@
 {
   "name": "bpbadmin3",
+  "homepage": "https://danberkeland.github.io/bpbvite/",
+  "type": "module",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -54,11 +56,10 @@
     "zustand": "^4.1.1"
   },
   "scripts": {
-    "start": "vite",
-    "build": "tsc && vite build",
-    "serve": "vite preview",
-    "test": "vitest",
-    "test:coverage": "vitest run --coverage --watch=false"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
+    "dev": "vite",
+    "build": "vite build"
   },
   "eslintConfig": {
     "extends": [
