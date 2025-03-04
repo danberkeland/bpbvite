@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import commonjs from 'vite-plugin-commonjs';
-import react from '@vitejs/plugin-react-swc';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   base: '/bpbvite/',
