@@ -210,7 +210,7 @@ const batchTasksArticle =
     and 'all items sent' when everything is completed successfully.
   </p>
 
-  <h3>For Tomorrow's Orders</h3>
+  <h3>For Tomorrow's Orders </h3>
   <p>
     Tomorrow's order data needs to be sent to QB so that the crew can download 
     and print PDF invoices tomorrow.
