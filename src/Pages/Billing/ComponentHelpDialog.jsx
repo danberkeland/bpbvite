@@ -205,7 +205,7 @@ const batchTasksArticle =
     Today's inovices need to be possibly updated, then sent by email. 
   </p>
   <p>
-    Use the 'Sync data with QB' button first if some emails are not ready to send, 
+    Use  the 'Sync data with QB' button first if some emails are not ready to send, 
     then use the 'Send Emails' button. The buttons should show 'all items synced' 
     and 'all items sent' when everything is completed successfully.
   </p>
