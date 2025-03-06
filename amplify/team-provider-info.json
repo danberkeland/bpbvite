@@ -1,0 +1,15 @@
+{
+  "devtwo": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-bpbadmin2-devtwo-113532-authRole",
+      "UnauthRoleArn": "arn:aws:iam::191477602114:role/amplify-bpbadmin2-devtwo-113532-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::191477602114:role/amplify-bpbadmin2-devtwo-113532-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-bpbadmin2-devtwo-113532-deployment",
+      "UnauthRoleName": "amplify-bpbadmin2-devtwo-113532-unauthRole",
+      "StackName": "amplify-bpbadmin2-devtwo-113532",
+      "StackId": "arn:aws:cloudformation:us-east-2:191477602114:stack/amplify-bpbadmin2-devtwo-113532/dd3b1650-23a0-11ed-a7cc-02a84e8f2060",
+      "AmplifyAppId": "d2nhue3419gd8g"
+    }
+  }
+}
