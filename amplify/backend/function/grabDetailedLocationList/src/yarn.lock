@@ -3,12 +3,6 @@
 
 
 "@types/aws-lambda@^8.10.92":
-  version "8.10.104"
-  resolved "https://registry.npmjs.org/@types/aws-lambda/-/aws-lambda-8.10.104.tgz"
-  integrity sha512-HXZJH8aBa06re9NCtFudOr21izYZycgXIVjd8vFBSNSf6Ca4GYD77TfKqwYgcDqv4olqj5KK+Ks7Xi5IXFbNGA==
-
-"grabdetailedlocationlist@file:":
-  version "2.0.0"
-  resolved "file:"
-  dependencies:
-    grabdetailedlocationlist "file:"
+  "integrity" "sha512-HXZJH8aBa06re9NCtFudOr21izYZycgXIVjd8vFBSNSf6Ca4GYD77TfKqwYgcDqv4olqj5KK+Ks7Xi5IXFbNGA=="
+  "resolved" "https://registry.npmjs.org/@types/aws-lambda/-/aws-lambda-8.10.104.tgz"
+  "version" "8.10.104"

@@ -3,12 +3,6 @@
 
 
 "@types/aws-lambda@^8.10.92":
-  version "8.10.102"
-  resolved "https://registry.npmjs.org/@types/aws-lambda/-/aws-lambda-8.10.102.tgz"
-  integrity sha512-BT05v46n9KtSHa9SgGuOvm49eSruJ9utD8iNXpdpuUVYk8wOcqmm1LEzpNRkrXxD0CULc38sdLpk6q3Wa2WOwg==
-
-"testinggrql@file:":
-  version "2.0.0"
-  resolved "file:"
-  dependencies:
-    testinggrql "file:"
+  "integrity" "sha512-BT05v46n9KtSHa9SgGuOvm49eSruJ9utD8iNXpdpuUVYk8wOcqmm1LEzpNRkrXxD0CULc38sdLpk6q3Wa2WOwg=="
+  "resolved" "https://registry.npmjs.org/@types/aws-lambda/-/aws-lambda-8.10.102.tgz"
+  "version" "8.10.102"
