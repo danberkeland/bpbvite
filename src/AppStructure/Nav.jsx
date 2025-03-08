@@ -1,8 +1,6 @@
 import React from "react";
 import { useSettingsStore } from "../Contexts/SettingsZustand";
 
-import "./index.css";
-import "./bpbTheme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 
