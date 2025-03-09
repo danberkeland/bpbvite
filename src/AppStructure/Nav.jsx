@@ -31,7 +31,7 @@ export function NavSide() {
   const itemsAuth1 = [
     { 
       label: "Ordering", 
-      icon: "pi pi-fw pi-shopping-cart", 
+      icon: "pi pi-shopping-cart", 
       command: () => navigate("/Ordering") 
     },
     {
