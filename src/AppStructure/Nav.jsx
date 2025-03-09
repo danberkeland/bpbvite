@@ -16,7 +16,7 @@ export function NavSide() {
   const navigate = (path) => window.location = path
 
   const itemsAuth2 = [
-    { label: "Ordering", icon: "pi pi-fw pi-shopping-cart", command: () => navigate("/Ordering") },
+    { label: "Ordering", icon: "pi pi-shopping-cart", command: () => navigate("/Ordering") },
     { label: "Products", icon: "pi pi-fw pi-tags",          command: () => navigate("/CustomerProducts") },
     // { label: "Billing", icon: "pi pi-fw pi-dollar" },
     // { label: "Settings", icon: "pi pi-fw pi-cog" },
