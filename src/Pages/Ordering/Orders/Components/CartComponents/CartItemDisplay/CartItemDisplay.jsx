@@ -254,7 +254,7 @@ export const CartItemDisplay = ({
       value={sortBy(cartItems, i => products[i.prodNick].prodName)} 
       responsiveLayout="scroll"
       footer={footerTemplate}
-      scrollable={wSize === 'lg'}
+      //scrollable={wSize === 'lg'}
       scrollHeight={wSize === 'lg' ? "40rem" : undefined}
       style={{
         border: "none",
@@ -266,6 +266,7 @@ export const CartItemDisplay = ({
       }}
     >
       <Column
+        npm run dev
         header={productHeaderTemplate}
         headerStyle={{
           color: "hsl(37, 100%, 10%)",
