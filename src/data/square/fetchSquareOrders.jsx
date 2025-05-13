@@ -108,8 +108,8 @@ export const sqOrderToCreateOrderInput = (sqOrder, products) => {
     rate:          null,
 
     isWhole:   false,
-    locNick:   sqOrder.custName + "__" + sqOrder.source,
-    source: sqOrder.source,
+    locNick:   sqOrder.custName + "__" + sqOrder.id,
+   
     delivDate: delivDate,
     ItemNote:  "paid",
     route:     sqOrder.location === LOC_ID_BPBN ? "atownpick" : "slopick",
@@ -149,9 +149,9 @@ export const sqOrderToCreateOrderInputV2 = (sqOrder, products) => {
     rate:          null,
 
     isWhole:   false,
-    locNick:   sqOrder.custName + "__" + sqOrder.source,
+    locNick:   sqOrder.custName + "__" + sqOrder.id,
     delivDate: delivDate,
-    source: sqOrder.source,
+   
     ItemNote:  "paid",
     route:     sqOrder.location === LOC_ID_BPBN ? "atownpick" : "slopick",
     delivFee:  null,
@@ -185,13 +185,13 @@ export const sqOrderToLegacyOrder = (sqOrder, products) => {
     prodName:      product?.prodName ?? "Brownie",
     qty:           Number(sqOrder.qty),
     qtyShort:      null,
-    source: sqOrder.source,
+   
     qtyUpdatedOn:  timestamp,
     sameDayMaxQty: Number(sqOrder.qty),
     rate:          null,
 
     isWhole:       false,
-    custName:      sqOrder.custName + "__" + sqOrder.source,
+    custName:      sqOrder.custName + "__" + sqOrder.id,
     delivDate:     delivDate,
     PONote:        "paid",
     route:         sqOrder.location === LOC_ID_BPBN ? "atownpick" : "slopick",
