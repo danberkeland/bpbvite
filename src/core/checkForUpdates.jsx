@@ -52,6 +52,8 @@ export const useCheckForUpdates = (shouldCheck=true) => {
   const completedCheckPreshape = useCheckPreshape(productCache, tomorrow, shouldCheck && completedCheckCroix)
   const completedCheckSquare   = useSyncSquareOrders(productCache.data, squareOrders, orderCache, shouldCheck)
 
+  console.log('squareOrders', squareOrders)
+
   return 1 
     && completedCheckBucket 
     && completedCheckCroix 

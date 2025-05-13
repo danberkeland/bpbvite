@@ -96,7 +96,9 @@ export const LocationForm = ({ editMode, rowData, show, setShow }) => {
     return categories[cKey].some(field => !!formik.errors[field] && formik.touched[field]) 
       ? <>
           <span>{cKey}</span>
+
           <span className="p-overlay-badge">
+
             <Badge 
               style={{transform: "translate(120%,-50%)"}} 
               className="p-badge-sm" severity="danger" 

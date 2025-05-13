@@ -22,10 +22,10 @@ const useSpecialOrdersData = ({ reportDT, shouldFetch }) => {
 
     const retailOrders = ORD.filter(order => order.isWhole === false && order.qty !== 0)
     const { slopick:pradoOrders=[], atownpick:carltonOrders=[] } = groupByObject(retailOrders, order => order.route)
-
+    
     const rowPartitionModel = {
       locNick: order => order.locNick,
-      displayName: order => truncate(order.locNick.split('__')[0], { length: 18 }),
+      displayName: order => order.locNick,//truncate(order.locNick.split('__')[0], { length: 18 }),
       isSquareOrder: order => order.locNick.includes('__') ? '*' : '',
     }
 
