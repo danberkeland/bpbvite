@@ -25,8 +25,9 @@ const useSpecialOrdersData = ({ reportDT, shouldFetch }) => {
     
     const rowPartitionModel = {
       locNick: order => order.locNick,
-      displayName: order => order.locNick,//truncate(order.locNick.split('__')[0], { length: 18 }),
+      displayName: order => truncate(order.locNick.split('__')[0], { length: 18 }),
       isSquareOrder: order => order.locNick.includes('__') ? '*' : '',
+      isHigueraPack: order => order.locNick.includes('Online') ? '*' : '',
     }
 
     const [pradoData, carltonData] = [pradoOrders, carltonOrders].map(orders => 
@@ -48,6 +49,7 @@ const exportSpecialOrderTablePdf = (pivotData, reportLocationStr, reportDT) => {
   const pivotColumns = Object.keys(pivotData[0]?.colProps).sort()
   const columns = [
     { header: "Sq?",      dataKey: "isSquareOrder" },
+    { header: "Hi",  dataKey: "isHigueraPack"},
     { header: "Customer", dataKey: "displayName" },
     ...pivotColumns.map(prodNick => (
       { header: prodNick, dataKey: prodNick }
@@ -112,7 +114,7 @@ const PageSpecialOrders = () => {
         <h2>Prado</h2>
         <Button label="BPBS List" icon="pi pi-print" onClick={printPrado} />
       </div>
-      <PivotTableTemplate pivotData={pradoData} />
+      <PivotTableTemplate pivotData={pradoData} hig/>
       
     </div>
   )
@@ -122,7 +124,7 @@ export { PageSpecialOrders as default }
 
 
 
-const PivotTableTemplate = ({ pivotData }) =>       
+const PivotTableTemplate = ({ pivotData, hig }) =>       
   <DataTable
     value={pivotData ?? []}
     size="small"
@@ -135,6 +137,13 @@ const PivotTableTemplate = ({ pivotData }) =>
       body={row => !!row?.rowProps?.isSquareOrder ? <i className="pi pi-check" /> : ''} 
       style={{width: "3rem", textAlign: "center"}} 
     />
+    {hig && (
+  <Column 
+    header={<span>Higuera<br/>Pack?</span>} 
+    body={row => !!row?.rowProps?.isHigueraPack ? <i className="pi pi-check" /> : ''} 
+    style={{ width: "3rem", textAlign: "center" }} 
+  />
+)}
     <Column 
       header="Customer" 
       field="rowProps.displayName" 

@@ -42,7 +42,7 @@ export const fetchSquareOrders = () => fetch(SQ_URL).then(response => {
 
 const fetcher = query => fetch(query).then(response => {
   console.log("fetch sq:", response.status + (response.ok ? " ok" : ''))
-  console.log('response', response.json())
+ 
   return response.json()
 })
 
@@ -76,7 +76,7 @@ export const useSquareOrders = ({ shouldFetch }) => {
  * @typedef {Object} 
  * @property {string} custName
  * @property {string} delivDate
- * @property {string} source
+ *
  * @property {string} id - transaction id; may apply to more than 1 product (line item)
  * @property {string} location - The Square location id indicating BPBN or BPBS
  * @property {string} item - points to the product
@@ -108,7 +108,7 @@ export const sqOrderToCreateOrderInput = (sqOrder, products) => {
     rate:          null,
 
     isWhole:   false,
-    locNick:   sqOrder.custName + "__" + sqOrder.id,
+    locNick:   sqOrder.custName + "__" + sqOrder.source,
    
     delivDate: delivDate,
     ItemNote:  "paid",
@@ -137,7 +137,7 @@ export const sqOrderToCreateOrderInputV2 = (sqOrder, products) => {
   const product = products.find(P => sqOrder.item.includes(P.squareID))
   const delivDate = sqOrder.delivDate.split("T")[0]
   const timestamp = new Date().toISOString()
-  console.log('sq', sq)
+ 
 
   return {
     Type:          'Orders',
@@ -149,7 +149,7 @@ export const sqOrderToCreateOrderInputV2 = (sqOrder, products) => {
     rate:          null,
 
     isWhole:   false,
-    locNick:   sqOrder.custName + "__" + sqOrder.id,
+    locNick:   sqOrder.custName + "__" + sqOrder.source,
     delivDate: delivDate,
    
     ItemNote:  "paid",
@@ -191,7 +191,7 @@ export const sqOrderToLegacyOrder = (sqOrder, products) => {
     rate:          null,
 
     isWhole:       false,
-    custName:      sqOrder.custName + "__" + sqOrder.id,
+    custName:      sqOrder.custName + "__" + sqOrder.source,
     delivDate:     delivDate,
     PONote:        "paid",
     route:         sqOrder.location === LOC_ID_BPBN ? "atownpick" : "slopick",

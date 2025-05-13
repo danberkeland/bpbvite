@@ -239,7 +239,7 @@ function useSyncSquareOrders(products, squareOrders, orderCache, shouldCheck) {
         && retailOrder.prodNick  === newOrder.prodNick
       )  
     )
-
+    console.log('createInputs', createInputs)
     handleCreate(createInputs, submitMutations, updateLocalData)
     // updateLocalData(await submitMutations({ createInputs }))
     console.log("square check completed")
