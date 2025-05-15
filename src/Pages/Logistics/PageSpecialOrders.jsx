@@ -112,8 +112,10 @@ const PageSpecialOrders = () => {
 
       <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
         <h2>Prado</h2>
+        
         <Button label="BPBS List" icon="pi pi-print" onClick={printPrado} />
       </div>
+      <h3>Ignore if "Higuera Pack" is checked.  Otherwise, pack and take to Higuera by 7 AM.</h3>
       <PivotTableTemplate pivotData={pradoData} hig/>
       
     </div>
