@@ -10,7 +10,7 @@ const shapeTypeByProdNick = {
   pg: 'pg', frpg: 'pg',
   sf: 'sf', frsf: 'sf',
   mb: 'mb', frmb: 'mb', unmb: 'mb',
-  mini: 'mini', frmini: 'mini',
+  mini: 'mini', frmni: 'mini',
 }
 
 const panQtyByShapeType = { ch: 12, mb: 6, mini: 15, pg: 12, pl: 12, sf: 12 }

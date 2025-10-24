@@ -26,7 +26,7 @@ const shapeTypeByProdNick = {
   pg: 'pg', frpg: 'pg',
   sf: 'sf', frsf: 'sf',
   mb: 'mb', frmb: 'mb', unmb: 'mb',
-  mini: 'mini', frmini: 'mini',
+  mini: 'mini', frmni: 'mini',
 }
 
 /**
@@ -51,6 +51,8 @@ export const useCheckForUpdates = (shouldCheck=true) => {
   const completedCheckCroix    = useCheckCroix(productCache, T0Orders, T1Orders, tomorrow, shouldCheck)
   const completedCheckPreshape = useCheckPreshape(productCache, tomorrow, shouldCheck && completedCheckCroix)
   const completedCheckSquare   = useSyncSquareOrders(productCache.data, squareOrders, orderCache, shouldCheck)
+
+  console.log('squareOrders', squareOrders)
 
   return 1 
     && completedCheckBucket 
@@ -237,7 +239,7 @@ function useSyncSquareOrders(products, squareOrders, orderCache, shouldCheck) {
         && retailOrder.prodNick  === newOrder.prodNick
       )  
     )
-
+    console.log('createInputs', createInputs)
     handleCreate(createInputs, submitMutations, updateLocalData)
     // updateLocalData(await submitMutations({ createInputs }))
     console.log("square check completed")

@@ -14,7 +14,7 @@ const shapeTypeByProdNick = {
   pg: 'pg', frpg: 'pg',
   sf: 'sf', frsf: 'sf',
   mb: 'mb', frmb: 'mb', unmb: 'mb',
-  mini: 'mini', frmini: 'mini',
+  mini: 'mini', frmni: 'mini',
 }
 
 // "Given a croissant order, how many days before do we need to pull an item from the prado freezer"?
