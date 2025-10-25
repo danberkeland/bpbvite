@@ -279,8 +279,9 @@ function AnimatedRoutes({ user, signOut }) {
 
           <Route path="/Settings/ManageCustomers" element={<ManageCustomers />} />
           <Route path="/Settings/ManageTrainings" element={<ManageTraining />} />
-          <Route path="/Settings/custProds"       element={<CustProds />} />
+          <Route path="/Settings/custProds/v1"    element={<CustProds />} />
           <Route path="/Settings/custProds/v2"    element={<LocationProductOverrides />} />
+          <Route path="/Settings/custProds"       element={<LocationProductOverrides />} />
           <Route path="/Settings/DelivOrder"      element={<DelivOrder />} />
           <Route path="/Settings/editDough"       element={<EditDoughs />} />
           <Route path="/Settings/editRoutes"      element={<EditRoutes />} />

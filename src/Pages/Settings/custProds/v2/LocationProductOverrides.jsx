@@ -11,7 +11,10 @@ import { InputNumber } from "primereact/inputnumber"
 import { Checkbox } from "primereact/checkbox"
 import { InputSwitch } from "primereact/inputswitch"
 
-import { sortBy } from "lodash"
+import { 
+  sortBy, 
+  // uniqBy 
+} from "lodash"
 // import { useLegacyOverrideData } from "./data/legacyOverrideData"
 // import { useOverrideSyncData } from "./data/dataSyncing"
 
@@ -39,11 +42,6 @@ const LocationProductOverrides = () => {
   const [locNick, setLocNick] = useState(null)
   const [prodNick, setProdNick] = useState(null)
 
-
-  
-
-
-
   const { 
     data:overrides,
     submitMutations,
@@ -52,11 +50,26 @@ const LocationProductOverrides = () => {
 
   // if (!!overrides) console.log("OVERRIDES:", overrides)
 
-  // const { data:legacyOverrides=[] } = useLegacyOverrideData() 
-  // const { data:syncData } = useOverrideSyncData()
-
-
-
+  // const { data:legacyOverrides } = useLegacyOverrideData()
+  // if (!!overrides && !!legacyOverrides) {
+    
+  //   const _ovr = overrides.map(x => ({ key: `${x.locNick}#${x.prodNick}`, ...x }))
+  //   const _lovr = legacyOverrides.map(x => ({ key: `${x.locNick}#${x.prodNick}`, ...x }))
+  //   const keys = uniqBy(_ovr.map(x => x.key).concat(_lovr.map(x => x.key)), x => x)
+  //   const comparisonData = keys.map(key => ({
+  //     key,
+  //     oldItem: { 
+  //       defaultInclude: _lovr.find(x => x.key === key)?.defaultInclude ?? null,
+  //       wholePrice: _lovr.find(x => x.key === key)?.wholePrice ?? null 
+  //     },
+  //     newItem: { 
+  //       defaultInclude: _ovr.find(x => x.key === key)?.defaultInclude ?? null,
+  //       wholePrice: _ovr.find(x => x.key === key)?.wholePrice ?? null 
+  //     },
+  //   }))
+  //   console.log('out of sync defaultInclude:', sortBy(comparisonData.filter(x => x.oldItem.defaultInclude !== x.newItem.defaultInclude), x => x.key))
+  //   console.log('out of sync wholePrice:', sortBy(comparisonData.filter(x => x.oldItem.wholePrice !== x.newItem.wholePrice), x => x.key))
+  // }
 
   const [tableData, setTableData] = useState([])
   const [editingRow, setEditingRow] = useState(null)
@@ -304,7 +317,8 @@ const LocationProductOverrides = () => {
             })
             : JSON.stringify(row.wholePrice ?? undefined)}
         />
-        <Column header="latestFirstDeliv" 
+        {/* These overrides are not fully implemented elsewhere in the app */}
+        {/* <Column header="latestFirstDeliv" 
           style={{flex: "1 0 9rem"}}
           body={(row, opts) => opts.rowIndex === editingIdx 
             ? floatInput({
@@ -325,7 +339,7 @@ const LocationProductOverrides = () => {
               disabled: !editingRow.locNick || !editingRow.prodNick
             })
             : JSON.stringify(row.latestFinalDeliv ?? undefined)}
-        />
+        /> */}
       </DataTable>
 
 

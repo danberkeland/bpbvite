@@ -1,6 +1,6 @@
 import { useListData } from "../../../../data/_listData";
 import { useMemo } from "react";
-import { cloneDeep, flatten, groupBy, orderBy, sortBy } from "lodash";
+import { cloneDeep, flatten, groupBy, keyBy, orderBy, sortBy } from "lodash";
 import { useLocationDetails } from "./locationHooks";
 import { 
   applyOverridesForRouteAssignment, 
@@ -41,18 +41,22 @@ export const useCustomizedProducts = ({
   const { data:PRD } = useListData({
     tableName: "Product", shouldFetch
   })
-  const { data:PNA } = useListData({ 
-    tableName: "ProdsNotAllowed", shouldFetch
-  }) 
-  const { data:APR } = useListData({ 
-    tableName: "AltPricing", shouldFetch
-  })   
-  const { data:ALT } = useListData({ 
-    tableName: "AltLeadTime", shouldFetch
-  }) 
+
+  // const { data:PNA } = useListData({ 
+  //   tableName: "ProdsNotAllowed", shouldFetch
+  // }) 
+  // const { data:APR } = useListData({ 
+  //   tableName: "AltPricing", shouldFetch
+  // })   
+  // const { data:ALT } = useListData({ 
+  //   tableName: "AltLeadTime", shouldFetch
+  // }) 
   const { data:TPR } = useListData({ 
     tableName: "TemplateProd", shouldFetch
   }) 
+  const { data:OVR } = useListData({
+    tableName: "LocationProductOverride", shouldFetch
+  })
 
   const { data:location } = useLocationDetails({ locNick, shouldFetch })
   const { data:RTE } = useListData({ tableName:"Route", shouldFetch})
@@ -60,7 +64,7 @@ export const useCustomizedProducts = ({
 
   const composeCustomizedProducts = () => {
     // if (!PRD || !PNA || !APR || !ALT || !TPR || !location || !RTE || !zoneRoutes) {
-    if ([PRD, PNA, APR, ALT, TPR, location, RTE, ZRT].some(D => !D)) {
+    if ([PRD, TPR, OVR, location, RTE, ZRT].some(D => !D)) {
       return undefined
     }
 
@@ -80,16 +84,15 @@ export const useCustomizedProducts = ({
     // if duplicates are found (delete all but first item)
     // For now we can sort multiple items newest to oldest so that we tend
     // to read/mutate the newest item by choosing items[0].
-    const [_PNA, _APR, _ALT, _TPR] = [PNA, APR, ALT, TPR].map(items => { 
+    const [_TPR] = [TPR].map(items => { 
       const _filtered = items.filter(i => i.locNick === locNick)
       const _sorted = orderBy(_filtered, ['updatedAt'], ['desc'])
       const _grouped = groupBy(_sorted, item => item.prodNick)
 
       return _grouped
     })
+    const _OVR = keyBy(OVR.filter(x => x.locNick === locNick), x => x.prodNick)
     const routeDict = Object.fromEntries(RTE.map(R => [R.routeNick, R]))
-
-
 
     const _projectionWithOverrides = PRD.map(product => ({
       ...product,
@@ -99,29 +102,44 @@ export const useCustomizedProducts = ({
 
     ).map(product => {
       // nested 'items' attribute preserves gql response format
-      const prodsNotAllowed = { items: _PNA[product.prodNick] ?? [] }
-      const altPricing = { items: _APR[product.prodNick] ?? [] }
-      const altLeadTime = { items: _ALT[product.prodNick] ?? [] }
+      // const prodsNotAllowed = { items: _PNA[product.prodNick] ?? [] } // obsoleted; using V2Override.wholePrice
+      // const altPricing = { items: _APR[product.prodNick] ?? [] } // obsoleted; using V2Override.wholePrice
+      // const altLeadTime = { items: _ALT[product.prodNick] ?? [] } // obsoleted; using V2Override.leadTime
+
       const templateProd = { items: _TPR[product.prodNick]  ?? [] }
       //console.log(product.prodNick, product.packSize)
+
+      // introducing v2 overrides. For now these values have a precedence 
+      // between the legacy override & default behavior.
+      // Note: v2 defaultInclude has a different behavior than the
+      // v1 prodsNowAllowed item. v2 is a stable value that stays the same
+      // even when the default value changes.
+
+      const V2Override = _OVR[product.prodNick]
 
       return ({
         isWhole: product.isWhole,
         // isRetail: product.isRetail, // often null; use isWhole === false?
-        defaultInclude: prodsNotAllowed.items.length
-          ? !product.defaultInclude
+        // defaultInclude: prodsNotAllowed.items.length ? !product.defaultInclude
+        //   : (V2Override?.defaultInclude ?? product.defaultInclude),
+        defaultInclude: V2Override?.defaultInclude ?? product.defaultInclude,
           //? prodsNotAllowed.items[0].defaultInclude
-          : product.defaultInclude,
           // Previous logic does not look at the isAllowed value, rather,
           // it only checks the existence of the record to decide
           // whether or not to negate the product's default rule.
         prodNick: product.prodNick,
         prodName: product.prodName,
-        wholePrice: altPricing.items[0]?.wholePrice ?? product.wholePrice,
-        readyTime: product.readyTime,
+        wholePrice: // altPricing.items[0]?.wholePrice ?? // obsoleted legacy override
+          V2Override?.wholePrice 
+          ?? product.wholePrice,
+        readyTime: V2Override?.readyTime
+          ?? product.readyTime,
         bakedWhere: product.bakedWhere,
-        leadTime: altLeadTime.items[0]?.leadTime ?? product.leadTime,
-        daysAvailable: product.daysAvailable,
+        leadTime: // altLeadTime.items[0]?.leadTime ?? // obsoleted legacy override
+          V2Override?.leadTime
+          ?? product.leadTime,
+        daysAvailable: V2Override?.daysAvailable
+          ?? product.daysAvailable,
         packGroup: product.packGroup,
         packSize: product.packSize || 1,
         doughNick: product.doughNick,
@@ -129,15 +147,17 @@ export const useCustomizedProducts = ({
         // retailDescrip: product.retailDescrip, // often null
         retailPrice: product.retailPrice,
         squareID: product.squareID,
-        prodsNotAllowed,
-        altPricing,
-        altLeadTime,
+        // prodsNotAllowed,
+        // altPricing,
+        // altLeadTime,
         templateProd,
+        lpOverride: V2Override,
         meta: {
           baseAttributes: {
             defaultInclude: product.defaultInclude,
             wholePrice: product.wholePrice,
             leadTime: product.leadTime,
+            readyTime: product.readyTime,
           },
         }
 
@@ -201,7 +221,7 @@ export const useCustomizedProducts = ({
 
   const products = useMemo(
     composeCustomizedProducts, 
-    [PRD, PNA, APR, ALT, TPR, location, RTE, ZRT, format, locNick]
+    [PRD, TPR, location, RTE, ZRT, format, locNick]
   )
 
   return {
