@@ -26,7 +26,7 @@ const getLineItem = ({ prodName, Description, qbID, rate, qty, delivDate }) => (
       value: qbID,
     },
     ServiceDate: delivDate,
-    ClassRef: { value: "3600000000001292604"},
+    //ClassRef: { value: "3600000000001292604"},
     ItemAccountRef: {
       name: "Uncategorized Income",
     },
