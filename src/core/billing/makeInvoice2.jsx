@@ -97,7 +97,12 @@ const makeLineItem = ({
     },
     ServiceDate,
     ClassRef: {
-      value: BPBN.includes(ItemRef_value) ? "1000000001" : "3600000000001292604",
+      value:
+        Description === "DELIVERY"
+          ? "1002"
+          : BPBN.includes(ItemRef_value)
+          ? "1000000001"
+          : "3600000000001292604",
     },
     // ItemAccountRef: { name: "Uncategorized Income" },
   },
