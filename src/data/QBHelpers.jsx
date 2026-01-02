@@ -78,9 +78,9 @@ export const createQBInvItem = (count, ord, qbID, delivDate) => {
           name: ord.prodName,
           value: qbID,
         },
-        ItemAccountRef: {
-          name: "Uncategorized Income",
-        },
+        //ItemAccountRef: {
+        //  name: "Uncategorized Income",
+        //},
         TaxCodeRef: {
           value: "TAX",
         },
