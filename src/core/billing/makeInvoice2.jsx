@@ -73,7 +73,7 @@ const makeInvoiceHeader = ({
  * @param {string|null} input.ItemRef_value i.e. Product.qbID
  * @param {string}      input.ServiceDate delivDate
  */
-const BPBN = ["255", "240"];
+const BPBN = ["255","434","237","257","288","254","272","252","261","262","247","240","286","423","253","241","285","440","427","431"];
 
 const roundToTwo = (num) => Math.round(num * 100) / 100;
 
