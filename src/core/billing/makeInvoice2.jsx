@@ -53,7 +53,7 @@ const makeInvoiceHeader = ({
     BillAddr: { Line1, CountrySubDivisionCode: "CA", PostalCode },
     ShipAddr: { Line1, Line2 },
     FreeFormAddress: true,
-    ClassRef: { value: "3600000000001292604"},
+    //ClassRef: { value: "3600000000001292604"},
     SalesTermRef: { name: SalesTermRef_name },
     DueDate,
     ShipDate,
@@ -89,7 +89,7 @@ const makeLineItem = ({
     UnitPrice,
     ItemRef: { name: ItemRef_name, value: ItemRef_value},
     ServiceDate,
-    //ClassRef: { value: "3600000000001292604"},
+    ClassRef: { value: "3600000000001292604"},
     //ItemAccountRef: { name: "Uncategorized Income" },
   },
   Amount: round(UnitPrice * Qty, 2), // number, not (numeric) string
