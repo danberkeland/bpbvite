@@ -246,7 +246,12 @@ const toQBInvoiceDeliveryLineItem = ({
   Qty: 1,
   ItemRef_name: "Sales",
   ItemRef_value: "1", 
-  ServiceDate: delivDate
+  ServiceDate: delivDate,
+   SalesItemLineDetail: {
+   
+    ClassRef: { value: "1000000002"}
+  }
+  
 })
 
 
