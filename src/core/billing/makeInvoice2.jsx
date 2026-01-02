@@ -73,13 +73,17 @@ const makeInvoiceHeader = ({
  * @param {string|null} input.ItemRef_value i.e. Product.qbID
  * @param {string}      input.ServiceDate delivDate
  */
-const makeLineItem = ({ 
-  Description, 
-  UnitPrice, 
-  Qty, 
+const BPBN = [255, 240];
+
+const roundToTwo = (num) => Math.round(num * 100) / 100;
+
+const makeLineItem = ({
+  Description,
+  UnitPrice,
+  Qty,
   ItemRef_name,
-  ItemRef_value, 
-  ServiceDate 
+  ItemRef_value,
+  ServiceDate,
 }) => ({
   DetailType: "SalesItemLineDetail",
   Description,
@@ -87,13 +91,18 @@ const makeLineItem = ({
     TaxCodeRef: { value: "TAX" },
     Qty,
     UnitPrice,
-    ItemRef: { name: ItemRef_name, value: ItemRef_value},
+    ItemRef: {
+      name: ItemRef_name,
+      value: ItemRef_value,
+    },
     ServiceDate,
-    ClassRef: { value: "3600000000001292604"},
-    //ItemAccountRef: { name: "Uncategorized Income" },
+    ClassRef: {
+      value: BPBN.includes(ItemRef_value) ? "1000000001" : "3600000000001292604",
+    },
+    // ItemAccountRef: { name: "Uncategorized Income" },
   },
-  Amount: round(UnitPrice * Qty, 2), // number, not (numeric) string
-})
+  Amount: roundToTwo(UnitPrice * Qty), // number, not string
+});
 
 
 
