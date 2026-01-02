@@ -71,7 +71,9 @@ export const createQBInvItem = (count, ord, qbID, delivDate) => {
       DetailType: "SalesItemLineDetail",
       SalesItemLineDetail: {
         ServiceDate: delivDate,
-
+        ClassRef: {
+          value: "3600000000001292604"
+        },
         UnitPrice: ord.rate,
         Qty: ord.qty,
         ItemRef: {
