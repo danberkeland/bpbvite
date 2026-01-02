@@ -99,7 +99,7 @@ const makeLineItem = ({
     ClassRef: {
       value:
         Description === "DELIVERY"
-          ? "1002"
+          ? "1000000002"
           : BPBN.includes(ItemRef_value)
           ? "1000000001"
           : "3600000000001292604",
