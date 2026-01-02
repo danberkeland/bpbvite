@@ -82,7 +82,7 @@ const getInvoiceHeader = ({
     BillAddr: { Line1: addr1, CountrySubDivisionCode: "CA", PostalCode: zip },
     ShipAddr: { Line1: addr1, Line2: addr2 },
     FreeFormAddress: true,
-    //ClassRef: { value: "3600000000001292604", name: "Wholesale" },
+    ClassRef: { value: "3600000000001292604"},
     SalesTermRef: { name: terms },
     DueDate: delivDT.plus({ days: 15 }).toFormat('yyyy-MM-dd'), // net 15 is the only currently supported option
     ShipDate: delivDate,

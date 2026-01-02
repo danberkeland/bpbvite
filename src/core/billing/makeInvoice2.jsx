@@ -53,7 +53,7 @@ const makeInvoiceHeader = ({
     BillAddr: { Line1, CountrySubDivisionCode: "CA", PostalCode },
     ShipAddr: { Line1, Line2 },
     FreeFormAddress: true,
-    //ClassRef: { value: "3600000000001292604", name: "Wholesale" },
+    ClassRef: { value: "3600000000001292604"},
     SalesTermRef: { name: SalesTermRef_name },
     DueDate,
     ShipDate,
