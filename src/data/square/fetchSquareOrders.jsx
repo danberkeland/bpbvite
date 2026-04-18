@@ -86,6 +86,23 @@ export const useSquareOrders = ({ shouldFetch }) => {
 export let SqOrderResponseItem
 
 
+// Note on mapping sq orders to app (retail) orders:
+//
+// Syncing sq orders to the app requires querying sq orders and 
+// matching them up with existing retail orders so that they are not not 
+// created redundantly in the app.
+// 
+// A critical difference between sq orders and app orders is that a customer
+// can order the same item multiple times on the same date & for the same
+// pickup date. To get sq orders mapped over to retail orders correctly, we
+// need to be able to distinguish one transaction from another, so we need to 
+// save & check the sqOrder.id. We do so by appending it to the customer's name
+// and storing it in the locNick field. Using sqOrder.source instead of
+// sqOrder.id could cause the app to erroneously point two sq order line items
+// to the same app (retail) order, failing to sync one of those line items to
+// the app.
+
+
 /**
  * Data plumbing. Maps to orders in current data format
  * @param {SqOrderResponseItem} sqOrder 
@@ -108,7 +125,7 @@ export const sqOrderToCreateOrderInput = (sqOrder, products) => {
     rate:          null,
 
     isWhole:   false,
-    locNick:   sqOrder.custName + "__" + sqOrder.source,
+    locNick:   sqOrder.custName + "__" + sqOrder.id,
    
     delivDate: delivDate,
     ItemNote:  "paid",
@@ -149,7 +166,7 @@ export const sqOrderToCreateOrderInputV2 = (sqOrder, products) => {
     rate:          null,
 
     isWhole:   false,
-    locNick:   sqOrder.custName + "__" + sqOrder.source,
+    locNick:   sqOrder.custName + "__" + sqOrder.id,
     delivDate: delivDate,
    
     ItemNote:  "paid",
@@ -191,7 +208,7 @@ export const sqOrderToLegacyOrder = (sqOrder, products) => {
     rate:          null,
 
     isWhole:       false,
-    custName:      sqOrder.custName + "__" + sqOrder.source,
+    custName:      sqOrder.custName + "__" + sqOrder.id,
     delivDate:     delivDate,
     PONote:        "paid",
     route:         sqOrder.location === LOC_ID_BPBN ? "atownpick" : "slopick",
