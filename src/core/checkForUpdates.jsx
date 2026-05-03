@@ -229,9 +229,9 @@ function useSyncSquareOrders(products, squareOrders, orderCache, shouldCheck) {
     console.log("square orders", squareOrders)
 
     const retailOrders = orders.filter(order => order.isWhole === false)
-    const newRetailOrders = squareOrders.map(squareOrder =>
-      sqOrderToCreateOrderInputV2(squareOrder, products)
-    )
+    const newRetailOrders = squareOrders
+      .filter(order => order.source !== 'Point of Sale') // should only import online orders
+      .map(order => sqOrderToCreateOrderInputV2(order, products))
 
     const createInputs = newRetailOrders.filter(newOrder => 
       !retailOrders.some(retailOrder => 1

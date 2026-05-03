@@ -74,13 +74,14 @@ export const useSquareOrders = ({ shouldFetch }) => {
 
 /** 
  * @typedef {Object} 
- * @property {string} custName
- * @property {string} delivDate
+ * @property {string|undefined} custName
+ * @property {string|undefined} delivDate
  *
  * @property {string} id - transaction id; may apply to more than 1 product (line item)
  * @property {string} location - The Square location id indicating BPBN or BPBS
  * @property {string} item - points to the product
  * @property {number} qty
+ * @property {string} source
  * 
  */
 export let SqOrderResponseItem
