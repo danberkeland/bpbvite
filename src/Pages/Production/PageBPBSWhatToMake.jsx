@@ -303,7 +303,7 @@ const ShelfFreezerTable = ({ value, className, products }) =>
         products,
       })}  
     /> */}
-    <Column header="Need Today" field="needTodayEa" />
+    <Column header="Need Today" field="needTodayEaCellValue" />
     <Column header="Make Total" field="totalEa"
       body={rowData => DrilldownCellTemplate({
         dialogHeader: <div>Today & tomorrow orders - <br />EOD qtys subtract if applicable</div>,

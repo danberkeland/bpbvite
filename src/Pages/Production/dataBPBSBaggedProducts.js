@@ -96,11 +96,16 @@ export const calculateBagged = (R0, R1, R0Orders, R1Orders, PRD) => {
       const T0BaggedEa = sumBy(T0BaggedItems, calcEa)
       const T1BaggedEa = sumBy(T1BaggedItems, calcEa)
 
-      const earlyItems = T0FreshItems.filter(order => 
-        order.meta.routeNick === 'Pick up Carlton' || order.locNick === 'sandos'
+      // logic copied from dataBPBSFreshProducts.js. In practice we're only expecting to pick out frfr on AM North with this.
+      const earlyItems = T0FreshItems.filter(order => 0
+        || ['AM North', 'Pick up Carlton'].includes(order.meta.routeNick) 
+        || (['sandos', 'kortado'].includes(order.locNick) && order.prodNick === 'fic')
       )
+      const earlyEa = sumBy(earlyItems, calcEa)
 
       const needTodayEa = relu(T0BaggedEa - currentStockEa) + T0FreshEa
+      const needTodayEaCellValue = `${needTodayEa}` + (earlyEa > 0 ? ` (${earlyEa} early)` : '')
+
       const baseTotalEa = relu(T0BaggedEa + T1BaggedEa - currentStockEa) + T0FreshEa
       const totalEa = Math.ceil((baseTotalEa + bakeExtraTotal) / batchSize) * batchSize
 
@@ -118,10 +123,11 @@ export const calculateBagged = (R0, R1, R0Orders, R1Orders, PRD) => {
         delivEa: T0FreshEa + T0BaggedEa,
         delivItems: [...T0FreshItems, ...T0BaggedItems],
 
-        earlyEa: sumBy(earlyItems, calcEa),
+        earlyEa,
         earlyItems,
         
         needTodayEa,
+        needTodayEaCellValue,
 
         totalEa,
         totalItems: [...T0FreshItems, ...T0BaggedItems, ...T1BaggedItems],

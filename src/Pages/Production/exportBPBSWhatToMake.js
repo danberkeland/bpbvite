@@ -20,7 +20,7 @@ const freshColumns = [
 const shelfColumns = [
   { header: "Shelf Product", dataKey: "rowKey" },
   { header: "Total Deliv",   dataKey: "delivEa" },
-  { header: "Need Today",    dataKey: "needTodayEa" },
+  { header: "Need Today",    dataKey: "needTodayEaCellValue" },
   { header: "Make Total",    dataKey: "totalEa" },
 ]
 
