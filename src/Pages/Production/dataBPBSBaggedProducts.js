@@ -97,11 +97,34 @@ export const calculateBagged = (R0, R1, R0Orders, R1Orders, PRD) => {
       const T1BaggedEa = sumBy(T1BaggedItems, calcEa)
 
       // logic copied from dataBPBSFreshProducts.js. In practice we're only expecting to pick out frfr on AM North with this.
-      const earlyItems = T0FreshItems.filter(order => 0
+      const earlyFreshItems = T0FreshItems.filter(order => 0
         || ['AM North', 'Pick up Carlton'].includes(order.meta.routeNick) 
-        || (['sandos', 'kortado'].includes(order.locNick) && order.prodNick === 'fic')
       )
-      const earlyEa = sumBy(earlyItems, calcEa)
+      // const earlyEa = sumBy(earlyFreshItems, calcEa)
+      const earlyFreshEa = sumBy(earlyFreshItems, calcEa)
+
+      // *********************
+      // * START FRENCH TEST *
+      // *********************
+      // Piloting a feature to display bagged items needed early.
+      // As with fresh items, "early" means it goes north in the AM.
+      // For bagged items, they are only needed early if they go north in the AM
+      // **and** are not covered by shelf stock.
+      // May expand to other products, but it only makes sense to do this for 
+      // ones whose first bake comes out of the ovens early enough.
+
+      const earlyBaggedItems = T0BaggedItems.filter(order => 1
+        && rowKey === 'French'
+        && ['AM North', 'Pick up Carlton'].includes(order.meta.routeNick)
+      )
+      const nRequiredEarlyEa = sumBy(earlyBaggedItems, calcEa)
+      const earlyBaggedEa = relu(nRequiredEarlyEa - currentStock)
+
+      const earlyEa = earlyFreshEa + earlyBaggedEa
+
+      // *******************
+      // * END FRENCH TEST *
+      // *******************
 
       const needTodayEa = relu(T0BaggedEa - currentStockEa) + T0FreshEa
       const needTodayEaCellValue = `${needTodayEa}` + (earlyEa > 0 ? ` (${earlyEa} early)` : '')
@@ -124,7 +147,7 @@ export const calculateBagged = (R0, R1, R0Orders, R1Orders, PRD) => {
         delivItems: [...T0FreshItems, ...T0BaggedItems],
 
         earlyEa,
-        earlyItems,
+        earlyItems: earlyFreshItems,
         
         needTodayEa,
         needTodayEaCellValue,
