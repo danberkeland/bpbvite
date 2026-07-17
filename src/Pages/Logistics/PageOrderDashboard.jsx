@@ -130,7 +130,7 @@ const PageOrderDashboard = () => {
   const [hideLocNicks, setHideLocNicks] = useState(true)
 
   const [selectedProdNicks, setSelectedProdNicks] = useState([])
-  const [hideProdNicks, setHideProdNicks] = useState(true)
+  const [hideProdNicks, setHideProdNicks] = useState(false)
 
   const [selectedShops, setSelectedShops] = useState([])
   const [hideShops, setHideShops] = useState(true)
@@ -174,7 +174,7 @@ const PageOrderDashboard = () => {
     setSelectedOrderTypes([])
     setSelectedEditDates([])
     setHideLocNicks(true)
-    setHideProdNicks(true)
+    setHideProdNicks(false)
     setHideShops(true)
     setHidePackGroups(true)
     setHideDoughNicks(true)
@@ -185,6 +185,14 @@ const PageOrderDashboard = () => {
     setRowPartitionAttribute('prodNick')
     setAggregationDate('deliv')
     setDisplayAmount('qty')
+  }
+
+  const reviewOrders = () => {
+    resetState()
+    setHideLocNicks(false)
+    setHideProdNicks(true)
+    setSelectedEditDates([0])
+    setHideUpdatedBy(false)
   }
 
   //  Table Config Fns
@@ -203,9 +211,9 @@ const PageOrderDashboard = () => {
     }
   }
 
-  const reportOrderDT = DT.now().plus({ hours: 4 }).startOf('day')
+  const reportOrderDT = DT.now().plus({ hours: 0 }).startOf('day')
   const getOrderEditDaysAgo = timestamp => 
-    reportOrderDT.diff(DT.fromIsoTs(timestamp).plus({ hours: 4 }).startOf('day'), 'days').days
+    reportOrderDT.diff(DT.fromIsoTs(timestamp).plus({ hours: 0 }).startOf('day'), 'days').days
 
   const applyUiFilters = (/**@type {CombinedRoutedOrder[]|undefined}*/orders) => {
     if (!products || !orders) return orders
@@ -219,7 +227,7 @@ const PageOrderDashboard = () => {
     if (selectedOrderTypes.length > 0) _orders = _orders.filter(o => selectedOrderTypes.includes(o.Type))
     if (selectedEditDates.length > 0)  _orders = _orders.filter(o => selectedEditDates.some(dateDuration => 0
       || dateDuration === getOrderEditDaysAgo(o.updatedOn)
-      || (dateDuration === 3 && dateDuration < getOrderEditDaysAgo(o.updatedOn))
+      // || (dateDuration === 3 && dateDuration < getOrderEditDaysAgo(o.updatedOn))
     ))
     
     return _orders
@@ -232,10 +240,12 @@ const PageOrderDashboard = () => {
 
   const buildRowPartitionModel = () => {
     let model = {}
-    if (!products || rowPartitionAttribute === 'prodNick') {
-      Object.assign(model, { rowKey: order => order.prodNick })
-    } else {
-      Object.assign(model, { rowKey: order => products[order.prodNick][rowPartitionAttribute] ?? order.prodNick })
+    if (!hideProdNicks) {
+      if (!products || rowPartitionAttribute === 'prodNick') {
+        Object.assign(model, { rowKey: order => order.prodNick })
+      } else {
+        Object.assign(model, { rowKey: order => products[order.prodNick][rowPartitionAttribute] ?? order.prodNick })
+      }
     }
     if (!hideLocNicks)   Object.assign(model, { locNick:   order => order.locNick })
     if (!hideShops)      Object.assign(model, { shop:      order => order.meta.routePlan.steps[0].end.place })
@@ -330,12 +340,12 @@ const PageOrderDashboard = () => {
 
           <Panel
             header={<div style={{width: "20rem", display: "flex", justifyContent: "space-between", alignItems: "center"}}>Product<ProductSelector selectedProdNicks={selectedProdNicks} setSelectedProdNicks={setSelectedProdNicks} /></div>}
-            // icons={
-            //   <i className={hideProdNicks ? "pi pi-minus" : "pi pi-bars"} 
-            //     onClick={() => setHideProdNicks(!hideProdNicks)} 
-            //     style={{cursor: "pointer", paddingInline: ".5rem"}} 
-            //   />
-            // }
+            icons={
+              <i className={hideProdNicks ? "pi pi-minus" : "pi pi-bars"} 
+                onClick={() => setHideProdNicks(!hideProdNicks)} 
+                style={{cursor: "pointer", paddingInline: ".5rem"}} 
+              />
+            }
             className="bpb-order-dash-panel bpb-order-dash-panel-search-header"
             style={{marginBottom: "1rem"}}
           >
@@ -485,6 +495,7 @@ const PageOrderDashboard = () => {
                 style={{marginBottom: "1rem"}}
               >
               </Panel>
+              <Button label="Review Orders" onClick={reviewOrders} />
             </div>
           </div>
 
