@@ -122,7 +122,7 @@ export const LocationDropdown = ({
             </pre>
           </>
         }
-        delay={150}
+        delay={10}
         spellCheck="false"
         autoHighlight
         completeMethod={search}
