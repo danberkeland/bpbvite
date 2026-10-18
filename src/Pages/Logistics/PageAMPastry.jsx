@@ -80,8 +80,11 @@ const exportAMPastryStickers = (pivotData, reportDT) => {
   ]
 
   const secondaryItemDisplayModel = [
-    { prodNick: "chch", displayName: "chch:", y: 0.72, x1: 0.20, x2: 0.75, qty: 0 },
-    { prodNick: "snik", displayName: "snik:", y: 0.98, x1: 0.20, x2: 0.75, qty: 0 },
+    { prodNick: "chch",  displayName: "chch:",  y: 0.72, x1: 0.20, x2: 0.75, qty: 0 },
+    { prodNick: "snik",  displayName: "snik:",  y: 0.98, x1: 0.20, x2: 0.75, qty: 0 },
+    { prodNick: "dbfdg", displayName: "dbfdg:", y: 1.24, x1: 0.20, x2: 0.75, qty: 0 },
+    { prodNick: "oat",   displayName: "oat:",   y: 1.50, x1: 0.20, x2: 0.75, qty: 0 },
+    { prodNick: "pbck",  displayName: "pbck:",  y: 0.72, x1: 1.46, x2: 2.00, qty: 0 },
   ]
 
   const renderSticker1 = (pivotRow) => {
